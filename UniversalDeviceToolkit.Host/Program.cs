@@ -129,6 +129,9 @@ public static class Program
         DashboardHandlers.Register(rpc);
         AutomationHandlers.Register(rpc);
         MacroHandlers.Register(rpc);
+        KeyboardBacklightHandlers.Register(rpc);
+        OptimizationHandlers.Register(rpc);
+        PluginHandlers.Register(rpc);
 
         _ = flags;
     }

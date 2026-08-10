@@ -206,6 +206,67 @@ export default {
         cli: 'CLI'
       }
     },
+    keyboard: {
+      title: '键盘背光',
+      unsupported: '此设备不支持键盘背光控制',
+      rgb: {
+        preset: '预设',
+        settings: '背光设置',
+        effect: '效果',
+        speed: '速度',
+        brightness: '亮度',
+        zones: '分区颜色',
+        presets: {
+          off: '关闭',
+          one: '预设 1',
+          two: '预设 2',
+          three: '预设 3',
+          four: '预设 4'
+        },
+        effectOptions: {
+          static: '静态',
+          breath: '呼吸',
+          smooth: '流光',
+          waveRtl: '波浪（右→左）',
+          waveLtr: '波浪（左→右）'
+        },
+        speedOptions: {
+          slowest: '最慢',
+          slow: '慢',
+          fast: '快',
+          fastest: '最快'
+        },
+        brightnessOptions: {
+          low: '低',
+          high: '高'
+        }
+      },
+      spectrum: {
+        brightness: '亮度',
+        profile: '配置文件',
+        logo: 'Logo 灯',
+        effects: '效果列表',
+        colors: '颜色数量',
+        addEffect: '添加效果',
+        deleteEffect: '删除效果',
+        noEffects: '暂无效果',
+        effectTypes: {
+          always: '常亮',
+          rainbowScrew: '彩虹旋转',
+          rainbowWave: '彩虹波浪',
+          colorChange: '变色',
+          colorWave: '彩色波浪',
+          colorPulse: '彩色脉冲',
+          smooth: '流光',
+          rain: '雨滴',
+          ripple: '涟漪',
+          type: '打字',
+          audioBounce: '音频跳动',
+          audioRipple: '音频涟漪',
+          auroraSync: 'Aurora 同步'
+        }
+      }
+    },
     automation: {
       title: '自动化',
       enable: '启用自动化',
@@ -234,6 +295,87 @@ export default {
       clear: '清空',
       play: '播放',
       empty: '此键尚无宏序列'
+    },
+    plugins: {
+      title: '插件扩展',
+      search: '搜索插件',
+      filterAll: '全部',
+      filterInstalled: '已安装',
+      filterNotInstalled: '未安装',
+      refresh: '刷新',
+      total: '共 {{count}} 个',
+      summary: '已安装 {{count}} 个',
+      updatable: '{{count}} 个可更新',
+      install: '安装',
+      update: '更新',
+      updateAvailable: '可更新',
+      uninstall: '卸载',
+      uninstallConfirm: '确定要卸载此插件吗？',
+      uninstallFailed: '卸载失败',
+      installed: '已安装',
+      online: '在线',
+      installing: '安装中…',
+      offline: '在线商店不可用，当前仅显示本地已安装插件',
+      empty: '暂无插件',
+      dependencies: '依赖',
+      dependenciesBlocked: '该插件存在未满足的依赖，无法卸载',
+      details: '详情',
+      usageGuide: '使用指南',
+      changelog: '更新日志'
+    },
+    optimization: {
+      title: 'Windows 优化',
+      tabs: {
+        optimization: '系统优化',
+        cleanup: '空间清理',
+        driverDownload: '驱动下载',
+        networkAcceleration: '网络加速'
+      },
+      recommended: '推荐',
+      selected: '已选',
+      selectedActions: '选中的动作',
+      noSelection: '未选择任何动作',
+      selectRecommended: '选择推荐',
+      applyRecommended: '应用全部推荐',
+      apply: '应用',
+      clear: '清除（还原）',
+      applied: '已应用',
+      applyFailed: '应用失败（可能需要管理员权限）',
+      reverted: '已还原',
+      revertFailed: '还原失败（可能需要管理员权限）',
+      estimate: '估算大小',
+      estimateResult: '可释放空间',
+      runCleanup: '运行清理',
+      cleanupHint: '运行清理将按自定义清理规则执行。',
+      cleanupConfirm: '确定要运行清理吗？',
+      cleanupDone: '清理完成',
+      cleanupFailed: '清理失败',
+      network: {
+        status: '运行状态',
+        running: '运行中',
+        stopped: '未运行',
+        backendReady: '后端就绪',
+        backendNotReady: '后端未就绪',
+        config: '基本配置',
+        accelerationEnabled: '启用加速',
+        mode: '加速模式',
+        modes: {
+          off: '关闭',
+          systemProxy: '系统代理',
+          hosts: 'Hosts 加速',
+          diagnosticsOnly: '诊断模式'
+        },
+        save: '保存配置',
+        saved: '配置已保存',
+        saveFailed: '保存配置失败',
+        start: '启动',
+        stop: '停止',
+        startFailed: '启动失败',
+        stopFailed: '停止失败'
+      },
+      driverDownload: {
+        comingSoon: '驱动下载将在后续版本中提供'
+      }
     },
     about: {
       title: '关于',

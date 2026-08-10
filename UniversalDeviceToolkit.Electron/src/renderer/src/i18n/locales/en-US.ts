@@ -206,6 +206,67 @@ export default {
         cli: 'CLI'
       }
     },
+    keyboard: {
+      title: 'Keyboard Backlight',
+      unsupported: 'Keyboard backlight is not supported on this device',
+      rgb: {
+        preset: 'Preset',
+        settings: 'Backlight Settings',
+        effect: 'Effect',
+        speed: 'Speed',
+        brightness: 'Brightness',
+        zones: 'Zone Colors',
+        presets: {
+          off: 'Off',
+          one: 'Preset 1',
+          two: 'Preset 2',
+          three: 'Preset 3',
+          four: 'Preset 4'
+        },
+        effectOptions: {
+          static: 'Static',
+          breath: 'Breath',
+          smooth: 'Smooth',
+          waveRtl: 'Wave (RTL)',
+          waveLtr: 'Wave (LTR)'
+        },
+        speedOptions: {
+          slowest: 'Slowest',
+          slow: 'Slow',
+          fast: 'Fast',
+          fastest: 'Fastest'
+        },
+        brightnessOptions: {
+          low: 'Low',
+          high: 'High'
+        }
+      },
+      spectrum: {
+        brightness: 'Brightness',
+        profile: 'Profile',
+        logo: 'Logo Light',
+        effects: 'Effects',
+        colors: 'Colors',
+        addEffect: 'Add Effect',
+        deleteEffect: 'Delete',
+        noEffects: 'No effects',
+        effectTypes: {
+          always: 'Always',
+          rainbowScrew: 'Rainbow Screw',
+          rainbowWave: 'Rainbow Wave',
+          colorChange: 'Color Change',
+          colorWave: 'Color Wave',
+          colorPulse: 'Color Pulse',
+          smooth: 'Smooth',
+          rain: 'Rain',
+          ripple: 'Ripple',
+          type: 'Type',
+          audioBounce: 'Audio Bounce',
+          audioRipple: 'Audio Ripple',
+          auroraSync: 'Aurora Sync'
+        }
+      }
+    },
     automation: {
       title: 'Automation',
       enable: 'Enable automation',
@@ -234,6 +295,87 @@ export default {
       clear: 'Clear',
       play: 'Play',
       empty: 'No macro sequence for this key yet'
+    },
+    plugins: {
+      title: 'Plugins & Extensions',
+      search: 'Search plugins',
+      filterAll: 'All',
+      filterInstalled: 'Installed',
+      filterNotInstalled: 'Not Installed',
+      refresh: 'Refresh',
+      total: '{{count}} total',
+      summary: '{{count}} installed',
+      updatable: '{{count}} update(s) available',
+      install: 'Install',
+      update: 'Update',
+      updateAvailable: 'Update Available',
+      uninstall: 'Uninstall',
+      uninstallConfirm: 'Uninstall this plugin?',
+      uninstallFailed: 'Failed to uninstall',
+      installed: 'Installed',
+      online: 'Online',
+      installing: 'Installing…',
+      offline: 'Online store is unavailable; showing locally installed plugins only',
+      empty: 'No plugins found',
+      dependencies: 'Dependencies',
+      dependenciesBlocked: 'This plugin has unsatisfied dependencies and cannot be uninstalled',
+      details: 'Details',
+      usageGuide: 'Usage Guide',
+      changelog: 'Changelog'
+    },
+    optimization: {
+      title: 'Windows Optimization',
+      tabs: {
+        optimization: 'Optimization',
+        cleanup: 'Cleanup',
+        driverDownload: 'Driver Download',
+        networkAcceleration: 'Network Acceleration'
+      },
+      recommended: 'Recommended',
+      selected: 'Selected',
+      selectedActions: 'Selected Actions',
+      noSelection: 'No actions selected',
+      selectRecommended: 'Select Recommended',
+      applyRecommended: 'Apply All Recommended',
+      apply: 'Apply',
+      clear: 'Clear (Revert)',
+      applied: 'Applied',
+      applyFailed: 'Failed to apply (administrator rights may be required)',
+      reverted: 'Reverted',
+      revertFailed: 'Failed to revert (administrator rights may be required)',
+      estimate: 'Estimate Size',
+      estimateResult: 'Reclaimable space',
+      runCleanup: 'Run Cleanup',
+      cleanupHint: 'Cleanup runs your custom cleanup rules.',
+      cleanupConfirm: 'Run cleanup now?',
+      cleanupDone: 'Cleanup finished',
+      cleanupFailed: 'Cleanup failed',
+      network: {
+        status: 'Status',
+        running: 'Running',
+        stopped: 'Stopped',
+        backendReady: 'Backend ready',
+        backendNotReady: 'Backend not ready',
+        config: 'Basic Config',
+        accelerationEnabled: 'Enable acceleration',
+        mode: 'Mode',
+        modes: {
+          off: 'Off',
+          systemProxy: 'System Proxy',
+          hosts: 'Hosts',
+          diagnosticsOnly: 'Diagnostics Only'
+        },
+        save: 'Save Config',
+        saved: 'Config saved',
+        saveFailed: 'Failed to save config',
+        start: 'Start',
+        stop: 'Stop',
+        startFailed: 'Failed to start',
+        stopFailed: 'Failed to stop'
+      },
+      driverDownload: {
+        comingSoon: 'Driver download will be available in a future version'
+      }
     },
     about: {
       title: 'About',

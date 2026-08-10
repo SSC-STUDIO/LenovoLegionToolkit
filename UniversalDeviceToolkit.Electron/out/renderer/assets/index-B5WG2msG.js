@@ -16039,16 +16039,16 @@ function proxyObject(obj, extendProps) {
   }
   return obj;
 }
-function toArray$4(children, option = {}) {
+function toArray$5(children, option = {}) {
   let ret = [];
   React.Children.forEach(children, (child) => {
     if ((child === void 0 || child === null) && !option.keepEmpty) {
       return;
     }
     if (Array.isArray(child)) {
-      ret = ret.concat(toArray$4(child));
+      ret = ret.concat(toArray$5(child));
     } else if (isFragment$1(child) && child.props) {
-      ret = ret.concat(toArray$4(child.props.children, option));
+      ret = ret.concat(toArray$5(child.props.children, option));
     } else {
       ret.push(child);
     }
@@ -16309,8 +16309,8 @@ function SingleObserver(props, ref) {
   }) : mergedChildren;
 }
 const RefSingleObserver = /* @__PURE__ */ reactExports.forwardRef(SingleObserver);
-function _extends$1j() {
-  _extends$1j = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1l() {
+  _extends$1l = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -16321,17 +16321,17 @@ function _extends$1j() {
     }
     return target;
   };
-  return _extends$1j.apply(this, arguments);
+  return _extends$1l.apply(this, arguments);
 }
 const INTERNAL_PREFIX_KEY = "rc-observer-key";
 function ResizeObserver$1(props, ref) {
   const {
     children
   } = props;
-  const childNodes = typeof children === "function" ? [children] : toArray$4(children);
+  const childNodes = typeof children === "function" ? [children] : toArray$5(children);
   return childNodes.map((child, index) => {
     const key2 = child?.key || `${INTERNAL_PREFIX_KEY}-${index}`;
-    return /* @__PURE__ */ reactExports.createElement(RefSingleObserver, _extends$1j({}, props, {
+    return /* @__PURE__ */ reactExports.createElement(RefSingleObserver, _extends$1l({}, props, {
       key: key2,
       ref: index === 0 ? ref : void 0
     }), child);
@@ -20708,8 +20708,8 @@ const IconBase = (props) => {
   });
 };
 IconBase.displayName = "IconReact";
-function _extends$1i() {
-  _extends$1i = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1k() {
+  _extends$1k = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -20720,7 +20720,7 @@ function _extends$1i() {
     }
     return target;
   };
-  return _extends$1i.apply(this, arguments);
+  return _extends$1k.apply(this, arguments);
 }
 const Icon$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -20752,7 +20752,7 @@ const Icon$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     msTransform: `rotate(${rotate2}deg)`,
     transform: `rotate(${rotate2}deg)`
   } : void 0;
-  return /* @__PURE__ */ reactExports.createElement("span", _extends$1i({
+  return /* @__PURE__ */ reactExports.createElement("span", _extends$1k({
     role: "img",
     "aria-label": icon.name
   }, restProps, {
@@ -20765,6 +20765,68 @@ const Icon$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     style: svgStyle
   }));
 });
+function _extends$1j() {
+  _extends$1j = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i2 = 1; i2 < arguments.length; i2++) {
+      var source = arguments[i2];
+      for (var key2 in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key2)) {
+          target[key2] = source[key2];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$1j.apply(this, arguments);
+}
+const CheckCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1j({}, props, {
+  ref,
+  icon: CheckCircleFilledSvg
+}));
+const RefIcon$y = /* @__PURE__ */ reactExports.forwardRef(CheckCircleFilled);
+var CloseCircleFilled$1 = {};
+var hasRequiredCloseCircleFilled;
+function requireCloseCircleFilled() {
+  if (hasRequiredCloseCircleFilled) return CloseCircleFilled$1;
+  hasRequiredCloseCircleFilled = 1;
+  Object.defineProperty(CloseCircleFilled$1, "__esModule", { value: true });
+  var CloseCircleFilled2 = { "icon": { "tag": "svg", "attrs": { "fill-rule": "evenodd", "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z" } }] }, "name": "close-circle", "theme": "filled" };
+  CloseCircleFilled$1.default = CloseCircleFilled2;
+  return CloseCircleFilled$1;
+}
+var CloseCircleFilledExports = /* @__PURE__ */ requireCloseCircleFilled();
+const CloseCircleFilledSvg = /* @__PURE__ */ getDefaultExportFromCjs(CloseCircleFilledExports);
+function _extends$1i() {
+  _extends$1i = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i2 = 1; i2 < arguments.length; i2++) {
+      var source = arguments[i2];
+      for (var key2 in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key2)) {
+          target[key2] = source[key2];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$1i.apply(this, arguments);
+}
+const CloseCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1i({}, props, {
+  ref,
+  icon: CloseCircleFilledSvg
+}));
+const RefIcon$x = /* @__PURE__ */ reactExports.forwardRef(CloseCircleFilled);
+var CloseOutlined$1 = {};
+var hasRequiredCloseOutlined;
+function requireCloseOutlined() {
+  if (hasRequiredCloseOutlined) return CloseOutlined$1;
+  hasRequiredCloseOutlined = 1;
+  Object.defineProperty(CloseOutlined$1, "__esModule", { value: true });
+  var CloseOutlined2 = { "icon": { "tag": "svg", "attrs": { "fill-rule": "evenodd", "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z" } }] }, "name": "close", "theme": "outlined" };
+  CloseOutlined$1.default = CloseOutlined2;
+  return CloseOutlined$1;
+}
+var CloseOutlinedExports = /* @__PURE__ */ requireCloseOutlined();
+const CloseOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(CloseOutlinedExports);
 function _extends$1h() {
   _extends$1h = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
@@ -20779,23 +20841,23 @@ function _extends$1h() {
   };
   return _extends$1h.apply(this, arguments);
 }
-const CheckCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1h({}, props, {
+const CloseOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1h({}, props, {
   ref,
-  icon: CheckCircleFilledSvg
+  icon: CloseOutlinedSvg
 }));
-const RefIcon$x = /* @__PURE__ */ reactExports.forwardRef(CheckCircleFilled);
-var CloseCircleFilled$1 = {};
-var hasRequiredCloseCircleFilled;
-function requireCloseCircleFilled() {
-  if (hasRequiredCloseCircleFilled) return CloseCircleFilled$1;
-  hasRequiredCloseCircleFilled = 1;
-  Object.defineProperty(CloseCircleFilled$1, "__esModule", { value: true });
-  var CloseCircleFilled2 = { "icon": { "tag": "svg", "attrs": { "fill-rule": "evenodd", "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64c247.4 0 448 200.6 448 448S759.4 960 512 960 64 759.4 64 512 264.6 64 512 64zm127.98 274.82h-.04l-.08.06L512 466.75 384.14 338.88c-.04-.05-.06-.06-.08-.06a.12.12 0 00-.07 0c-.03 0-.05.01-.09.05l-45.02 45.02a.2.2 0 00-.05.09.12.12 0 000 .07v.02a.27.27 0 00.06.06L466.75 512 338.88 639.86c-.05.04-.06.06-.06.08a.12.12 0 000 .07c0 .03.01.05.05.09l45.02 45.02a.2.2 0 00.09.05.12.12 0 00.07 0c.02 0 .04-.01.08-.05L512 557.25l127.86 127.87c.04.04.06.05.08.05a.12.12 0 00.07 0c.03 0 .05-.01.09-.05l45.02-45.02a.2.2 0 00.05-.09.12.12 0 000-.07v-.02a.27.27 0 00-.05-.06L557.25 512l127.87-127.86c.04-.04.05-.06.05-.08a.12.12 0 000-.07c0-.03-.01-.05-.05-.09l-45.02-45.02a.2.2 0 00-.09-.05.12.12 0 00-.07 0z" } }] }, "name": "close-circle", "theme": "filled" };
-  CloseCircleFilled$1.default = CloseCircleFilled2;
-  return CloseCircleFilled$1;
+const RefIcon$w = /* @__PURE__ */ reactExports.forwardRef(CloseOutlined);
+var ExclamationCircleFilled$1 = {};
+var hasRequiredExclamationCircleFilled;
+function requireExclamationCircleFilled() {
+  if (hasRequiredExclamationCircleFilled) return ExclamationCircleFilled$1;
+  hasRequiredExclamationCircleFilled = 1;
+  Object.defineProperty(ExclamationCircleFilled$1, "__esModule", { value: true });
+  var ExclamationCircleFilled2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" } }] }, "name": "exclamation-circle", "theme": "filled" };
+  ExclamationCircleFilled$1.default = ExclamationCircleFilled2;
+  return ExclamationCircleFilled$1;
 }
-var CloseCircleFilledExports = /* @__PURE__ */ requireCloseCircleFilled();
-const CloseCircleFilledSvg = /* @__PURE__ */ getDefaultExportFromCjs(CloseCircleFilledExports);
+var ExclamationCircleFilledExports = /* @__PURE__ */ requireExclamationCircleFilled();
+const ExclamationCircleFilledSvg = /* @__PURE__ */ getDefaultExportFromCjs(ExclamationCircleFilledExports);
 function _extends$1g() {
   _extends$1g = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
@@ -20810,23 +20872,23 @@ function _extends$1g() {
   };
   return _extends$1g.apply(this, arguments);
 }
-const CloseCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1g({}, props, {
+const ExclamationCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1g({}, props, {
   ref,
-  icon: CloseCircleFilledSvg
+  icon: ExclamationCircleFilledSvg
 }));
-const RefIcon$w = /* @__PURE__ */ reactExports.forwardRef(CloseCircleFilled);
-var CloseOutlined$1 = {};
-var hasRequiredCloseOutlined;
-function requireCloseOutlined() {
-  if (hasRequiredCloseOutlined) return CloseOutlined$1;
-  hasRequiredCloseOutlined = 1;
-  Object.defineProperty(CloseOutlined$1, "__esModule", { value: true });
-  var CloseOutlined2 = { "icon": { "tag": "svg", "attrs": { "fill-rule": "evenodd", "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z" } }] }, "name": "close", "theme": "outlined" };
-  CloseOutlined$1.default = CloseOutlined2;
-  return CloseOutlined$1;
+const RefIcon$v = /* @__PURE__ */ reactExports.forwardRef(ExclamationCircleFilled);
+var InfoCircleFilled$1 = {};
+var hasRequiredInfoCircleFilled;
+function requireInfoCircleFilled() {
+  if (hasRequiredInfoCircleFilled) return InfoCircleFilled$1;
+  hasRequiredInfoCircleFilled = 1;
+  Object.defineProperty(InfoCircleFilled$1, "__esModule", { value: true });
+  var InfoCircleFilled2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" } }] }, "name": "info-circle", "theme": "filled" };
+  InfoCircleFilled$1.default = InfoCircleFilled2;
+  return InfoCircleFilled$1;
 }
-var CloseOutlinedExports = /* @__PURE__ */ requireCloseOutlined();
-const CloseOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(CloseOutlinedExports);
+var InfoCircleFilledExports = /* @__PURE__ */ requireInfoCircleFilled();
+const InfoCircleFilledSvg = /* @__PURE__ */ getDefaultExportFromCjs(InfoCircleFilledExports);
 function _extends$1f() {
   _extends$1f = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
@@ -20841,73 +20903,11 @@ function _extends$1f() {
   };
   return _extends$1f.apply(this, arguments);
 }
-const CloseOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1f({}, props, {
-  ref,
-  icon: CloseOutlinedSvg
-}));
-const RefIcon$v = /* @__PURE__ */ reactExports.forwardRef(CloseOutlined);
-var ExclamationCircleFilled$1 = {};
-var hasRequiredExclamationCircleFilled;
-function requireExclamationCircleFilled() {
-  if (hasRequiredExclamationCircleFilled) return ExclamationCircleFilled$1;
-  hasRequiredExclamationCircleFilled = 1;
-  Object.defineProperty(ExclamationCircleFilled$1, "__esModule", { value: true });
-  var ExclamationCircleFilled2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm-32 232c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V296zm32 440a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" } }] }, "name": "exclamation-circle", "theme": "filled" };
-  ExclamationCircleFilled$1.default = ExclamationCircleFilled2;
-  return ExclamationCircleFilled$1;
-}
-var ExclamationCircleFilledExports = /* @__PURE__ */ requireExclamationCircleFilled();
-const ExclamationCircleFilledSvg = /* @__PURE__ */ getDefaultExportFromCjs(ExclamationCircleFilledExports);
-function _extends$1e() {
-  _extends$1e = Object.assign ? Object.assign.bind() : function(target) {
-    for (var i2 = 1; i2 < arguments.length; i2++) {
-      var source = arguments[i2];
-      for (var key2 in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key2)) {
-          target[key2] = source[key2];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends$1e.apply(this, arguments);
-}
-const ExclamationCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1e({}, props, {
-  ref,
-  icon: ExclamationCircleFilledSvg
-}));
-const RefIcon$u = /* @__PURE__ */ reactExports.forwardRef(ExclamationCircleFilled);
-var InfoCircleFilled$1 = {};
-var hasRequiredInfoCircleFilled;
-function requireInfoCircleFilled() {
-  if (hasRequiredInfoCircleFilled) return InfoCircleFilled$1;
-  hasRequiredInfoCircleFilled = 1;
-  Object.defineProperty(InfoCircleFilled$1, "__esModule", { value: true });
-  var InfoCircleFilled2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm32 664c0 4.4-3.6 8-8 8h-48c-4.4 0-8-3.6-8-8V456c0-4.4 3.6-8 8-8h48c4.4 0 8 3.6 8 8v272zm-32-344a48.01 48.01 0 010-96 48.01 48.01 0 010 96z" } }] }, "name": "info-circle", "theme": "filled" };
-  InfoCircleFilled$1.default = InfoCircleFilled2;
-  return InfoCircleFilled$1;
-}
-var InfoCircleFilledExports = /* @__PURE__ */ requireInfoCircleFilled();
-const InfoCircleFilledSvg = /* @__PURE__ */ getDefaultExportFromCjs(InfoCircleFilledExports);
-function _extends$1d() {
-  _extends$1d = Object.assign ? Object.assign.bind() : function(target) {
-    for (var i2 = 1; i2 < arguments.length; i2++) {
-      var source = arguments[i2];
-      for (var key2 in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key2)) {
-          target[key2] = source[key2];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends$1d.apply(this, arguments);
-}
-const InfoCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1d({}, props, {
+const InfoCircleFilled = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$1f({}, props, {
   ref,
   icon: InfoCircleFilledSvg
 }));
-const RefIcon$t = /* @__PURE__ */ reactExports.forwardRef(InfoCircleFilled);
+const RefIcon$u = /* @__PURE__ */ reactExports.forwardRef(InfoCircleFilled);
 const Context$1 = /* @__PURE__ */ reactExports.createContext({});
 const MotionProvider = (props) => {
   const {
@@ -21477,8 +21477,8 @@ function diffKeys(prevKeys = [], currentKeys = []) {
   });
   return list;
 }
-function _extends$1c() {
-  _extends$1c = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1e() {
+  _extends$1e = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -21489,7 +21489,7 @@ function _extends$1c() {
     }
     return target;
   };
-  return _extends$1c.apply(this, arguments);
+  return _extends$1e.apply(this, arguments);
 }
 const MOTION_PROP_NAMES = ["eventProps", "visible", "children", "motionName", "motionAppear", "motionEnter", "motionLeave", "motionLeaveImmediately", "motionDeadline", "removeOnLeave", "leavedClassName", "onAppearPrepare", "onAppearStart", "onAppearActive", "onAppearEnd", "onEnterStart", "onEnterActive", "onEnterEnd", "onLeaveStart", "onLeaveActive", "onLeaveEnd"];
 function genCSSMotionList(transitionSupport, CSSMotion$1 = CSSMotion) {
@@ -21567,7 +21567,7 @@ function genCSSMotionList(transitionSupport, CSSMotion$1 = CSSMotion) {
         ...eventProps
       }, index) => {
         const visible = status === STATUS_ADD || status === STATUS_KEEP;
-        return /* @__PURE__ */ reactExports.createElement(CSSMotion$1, _extends$1c({}, motionProps, {
+        return /* @__PURE__ */ reactExports.createElement(CSSMotion$1, _extends$1e({}, motionProps, {
           key: eventProps.key,
           visible,
           eventProps,
@@ -21696,7 +21696,7 @@ const genAlertTypeStyle = (bgColor, iconColor, alertCls) => ({
     color: iconColor
   }
 });
-const genBaseStyle$9 = (token2) => {
+const genBaseStyle$a = (token2) => {
   const {
     componentCls,
     motionDurationSlow: duration,
@@ -21873,7 +21873,7 @@ const genActionStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$s = (token2) => {
+const prepareComponentToken$t = (token2) => {
   const paddingHorizontal = 12;
   return {
     borderRadius: token2.borderRadiusLG,
@@ -21882,7 +21882,7 @@ const prepareComponentToken$s = (token2) => {
     withDescriptionPadding: `${token2.paddingMD}px ${token2.paddingContentHorizontalLG}px`
   };
 };
-const useStyle$B = genStyleHooks("Alert", (token2) => [genBaseStyle$9(token2), genTypeStyle(token2), genActionStyle(token2)], prepareComponentToken$s);
+const useStyle$D = genStyleHooks("Alert", (token2) => [genBaseStyle$a(token2), genTypeStyle(token2), genActionStyle(token2)], prepareComponentToken$t);
 const IconNode = (props) => {
   const {
     icon,
@@ -21895,10 +21895,10 @@ const IconNode = (props) => {
     errorIcon
   } = props;
   const iconMapFilled = {
-    success: successIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$x, null),
-    info: infoIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$t, null),
-    error: errorIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$w, null),
-    warning: warningIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$u, null)
+    success: successIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$y, null),
+    info: infoIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$u, null),
+    error: errorIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$x, null),
+    warning: warningIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$v, null)
   };
   return /* @__PURE__ */ reactExports.createElement("span", {
     className,
@@ -21915,7 +21915,7 @@ const CloseIconNode = (props) => {
     className,
     style: style2
   } = props;
-  const mergedCloseIcon = closeIcon === true || closeIcon === void 0 ? /* @__PURE__ */ reactExports.createElement(RefIcon$v, null) : closeIcon;
+  const mergedCloseIcon = closeIcon === true || closeIcon === void 0 ? /* @__PURE__ */ reactExports.createElement(RefIcon$w, null) : closeIcon;
   return isClosable ? /* @__PURE__ */ reactExports.createElement("button", {
     type: "button",
     onClick: handleClose,
@@ -21971,7 +21971,7 @@ const Alert$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     errorIcon
   } = useComponentConfig("alert");
   const prefixCls = getPrefixCls("alert", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$B(prefixCls);
+  const [hashId, cssVarCls] = useStyle$D(prefixCls);
   const {
     onClose: closableOnClose,
     afterClose: closableAfterClose
@@ -22711,8 +22711,8 @@ function Arrow$1(props) {
     }
   }, content);
 }
-function _extends$1b() {
-  _extends$1b = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1d() {
+  _extends$1d = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -22723,7 +22723,7 @@ function _extends$1b() {
     }
     return target;
   };
-  return _extends$1b.apply(this, arguments);
+  return _extends$1d.apply(this, arguments);
 }
 function Mask$1(props) {
   const {
@@ -22737,7 +22737,7 @@ function Mask$1(props) {
   if (!mask) {
     return null;
   }
-  return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1b({}, motion2, {
+  return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1d({}, motion2, {
     motionAppear: true,
     visible: open2,
     removeOnLeave: true
@@ -22785,8 +22785,8 @@ function useOffsetStyle(isMobile2, ready, open2, align, offsetR, offsetB, offset
   }
   return offsetStyle;
 }
-function _extends$1a() {
-  _extends$1a = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1c() {
+  _extends$1c = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -22797,7 +22797,7 @@ function _extends$1a() {
     }
     return target;
   };
-  return _extends$1a.apply(this, arguments);
+  return _extends$1c.apply(this, arguments);
 }
 const Popup$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -22905,7 +22905,7 @@ const Popup$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onResize: onInternalResize,
     disabled: !open2
   }, (resizeObserverRef) => {
-    return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1a({
+    return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$1c({
       motionAppear: true,
       motionEnter: true,
       motionLeave: true,
@@ -22958,13 +22958,13 @@ const Popup$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
 });
 const TriggerContext = /* @__PURE__ */ reactExports.createContext(null);
 const UniqueContext = /* @__PURE__ */ reactExports.createContext(null);
-function toArray$3(val) {
+function toArray$4(val) {
   return val ? Array.isArray(val) ? val : [val] : [];
 }
 function useAction(action, showAction, hideAction) {
   return reactExports.useMemo(() => {
-    const mergedShowAction = toArray$3(showAction ?? action);
-    const mergedHideAction = toArray$3(hideAction ?? action);
+    const mergedShowAction = toArray$4(showAction ?? action);
+    const mergedHideAction = toArray$4(hideAction ?? action);
     const showActionSet = new Set(mergedShowAction);
     const hideActionSet = new Set(mergedHideAction);
     if (showActionSet.has("hover") && !showActionSet.has("click")) {
@@ -23648,8 +23648,8 @@ function useTargetState() {
   });
   return [trigger2, open2, options, onVisibleChanged];
 }
-function _extends$19() {
-  _extends$19 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1b() {
+  _extends$1b = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -23660,7 +23660,7 @@ function _extends$19() {
     }
     return target;
   };
-  return _extends$19.apply(this, arguments);
+  return _extends$1b.apply(this, arguments);
 }
 const UniqueContainer = (props) => {
   const {
@@ -23691,7 +23691,7 @@ const UniqueContainer = (props) => {
     sizeStyle.width = popupSize.width;
     sizeStyle.height = popupSize.height;
   }
-  return /* @__PURE__ */ React.createElement(CSSMotion, _extends$19({
+  return /* @__PURE__ */ React.createElement(CSSMotion, _extends$1b({
     motionAppear: true,
     motionEnter: true,
     motionLeave: true,
@@ -25019,7 +25019,7 @@ function useClosable$1(closable) {
   const closableAriaProps = reactExports.useMemo(() => pickAttrs(closableConfig, true), [closableConfig]);
   return [!!closable, closableConfig, closableAriaProps];
 }
-const Progress$1 = ({
+const Progress$2 = ({
   className,
   style: style2,
   percent
@@ -25029,8 +25029,8 @@ const Progress$1 = ({
   value: percent,
   style: style2
 });
-function _extends$18() {
-  _extends$18 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$1a() {
+  _extends$1a = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -25041,7 +25041,7 @@ function _extends$18() {
     }
     return target;
   };
-  return _extends$18.apply(this, arguments);
+  return _extends$1a.apply(this, arguments);
 }
 const Notification = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -25084,7 +25084,7 @@ const Notification = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const [hovering, setHovering] = reactExports.useState(false);
   const [onResume, onPause] = useNoticeTimer(duration, onInternalClose, setPercent);
   const validPercent = 100 - Math.min(Math.max(percent * 100, 0), 100);
-  const Progress2 = components2?.progress || Progress$1;
+  const Progress2 = components2?.progress || Progress$2;
   reactExports.useEffect(() => {
     if (!pauseOnHover) {
       return;
@@ -25165,7 +25165,7 @@ const Notification = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     mergedStyle["--notification-y"] = `${mergedOffset}px`;
   }
   const mergedRole = role ?? rootProps?.role ?? "alert";
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$18({}, rootProps, {
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$1a({}, rootProps, {
     ref,
     role: mergedRole,
     "data-notification-index": mergedNotificationIndex,
@@ -25177,7 +25177,7 @@ const Notification = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onClick,
     onMouseEnter: onInternalMouseEnter,
     onMouseLeave: onInternalMouseLeave
-  }), contentNode, actionsNode, mergedClosable && /* @__PURE__ */ reactExports.createElement("button", _extends$18({
+  }), contentNode, actionsNode, mergedClosable && /* @__PURE__ */ reactExports.createElement("button", _extends$1a({
     className: clsx(`${noticePrefixCls}-close`, classNames?.close),
     "aria-label": "Close"
   }, closeBtnAriaProps, {
@@ -25201,8 +25201,8 @@ const NotificationProvider = ({
     value: context
   }, children);
 };
-function _extends$17() {
-  _extends$17 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$19() {
+  _extends$19 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -25213,7 +25213,7 @@ function _extends$17() {
     }
     return target;
   };
-  return _extends$17.apply(this, arguments);
+  return _extends$19.apply(this, arguments);
 }
 const Content$3 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -25236,14 +25236,14 @@ const Content$3 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     "--top-notificiation-height": `${topNoticeHeight}px`,
     "--top-notificiation-width": `${topNoticeWidth}px`
   };
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$17({}, restProps, {
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$19({}, restProps, {
     className: clsx(contentPrefixCls, `${contentPrefixCls}-${heightStatus}`, className),
     style: contentStyle,
     ref
   }));
 });
-function _extends$16() {
-  _extends$16 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$18() {
+  _extends$18 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -25254,7 +25254,7 @@ function _extends$16() {
     }
     return target;
   };
-  return _extends$16.apply(this, arguments);
+  return _extends$18.apply(this, arguments);
 }
 const noticeSlotKeys = ["wrapper", "root", "icon", "section", "title", "description", "actions", "close", "progress"];
 function fillClassNames(classNamesList) {
@@ -25304,7 +25304,7 @@ const NotificationListItem = (props) => {
     setNodeSize(strKey, node2);
   }, [setNodeSize, strKey]);
   const ref = useComposeRef(nodeRef, setItemRef);
-  return /* @__PURE__ */ reactExports.createElement(Notification, _extends$16({}, notificationConfig, restProps, {
+  return /* @__PURE__ */ reactExports.createElement(Notification, _extends$18({}, notificationConfig, restProps, {
     ref,
     className: clsx(contextClassNames?.notice, config.className, className),
     style: {
@@ -25405,7 +25405,7 @@ const NotificationList = (props) => {
     className: classNames?.listContent,
     style: styles?.listContent,
     ref: contentRef
-  }, /* @__PURE__ */ reactExports.createElement(CSSMotionList, _extends$16({
+  }, /* @__PURE__ */ reactExports.createElement(CSSMotionList, _extends$18({
     component: false,
     keys: keys2,
     motionAppear: true
@@ -25701,8 +25701,8 @@ function requireLoadingOutlined() {
 }
 var LoadingOutlinedExports = /* @__PURE__ */ requireLoadingOutlined();
 const LoadingOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(LoadingOutlinedExports);
-function _extends$15() {
-  _extends$15 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$17() {
+  _extends$17 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -25713,13 +25713,13 @@ function _extends$15() {
     }
     return target;
   };
-  return _extends$15.apply(this, arguments);
+  return _extends$17.apply(this, arguments);
 }
-const LoadingOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$15({}, props, {
+const LoadingOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$17({}, props, {
   ref,
   icon: LoadingOutlinedSvg
 }));
-const RefIcon$s = /* @__PURE__ */ reactExports.forwardRef(LoadingOutlined);
+const RefIcon$t = /* @__PURE__ */ reactExports.forwardRef(LoadingOutlined);
 function fallbackProp(...args) {
   return args.find((arg) => arg !== void 0);
 }
@@ -25738,7 +25738,7 @@ const useAllowClear$1 = (options) => {
       return false;
     }
     return {
-      clearIcon: fallbackProp(isPlainObject(allowClear) ? allowClear?.clearIcon : clearIcon, isPlainObject(contextAllowClear) ? contextAllowClear?.clearIcon : contextClearIcon, /* @__PURE__ */ React.createElement(RefIcon$w, null)),
+      clearIcon: fallbackProp(isPlainObject(allowClear) ? allowClear?.clearIcon : clearIcon, isPlainObject(contextAllowClear) ? contextAllowClear?.clearIcon : contextClearIcon, /* @__PURE__ */ React.createElement(RefIcon$x, null)),
       disabled: (isPlainObject(allowClear) ? allowClear?.disabled : void 0) ?? (isPlainObject(contextAllowClear) ? contextAllowClear?.disabled : void 0)
     };
   }, [allowClear, clearIcon, contextAllowClear, contextClearIcon, defaultAllowClear]);
@@ -25819,7 +25819,7 @@ const computeClosable = (propCloseCollection, contextCloseCollection, fallbackCl
   const propConfig = computeClosableConfig(propCloseCollection?.closable, propCloseCollection?.closeIcon);
   const contextConfig = computeClosableConfig(contextCloseCollection?.closable, contextCloseCollection?.closeIcon);
   const mergedFallback = {
-    closeIcon: /* @__PURE__ */ React.createElement(RefIcon$v, null),
+    closeIcon: /* @__PURE__ */ React.createElement(RefIcon$w, null),
     ...fallbackCloseCollection
   };
   const mergedConfig = mergeClosableConfigs(propConfig, contextConfig, mergedFallback);
@@ -25834,7 +25834,7 @@ const useClosable = (propCloseCollection, contextCloseCollection, fallbackCloseC
   const [contextLocale] = useLocale("global", localeValues.global);
   return React.useMemo(() => {
     return computeClosable(propCloseCollection, contextCloseCollection, {
-      closeIcon: /* @__PURE__ */ React.createElement(RefIcon$v, null),
+      closeIcon: /* @__PURE__ */ React.createElement(RefIcon$w, null),
       ...fallbackCloseCollection
     }, contextLocale.close);
   }, [propCloseCollection, contextCloseCollection, fallbackCloseCollection, contextLocale.close]);
@@ -26357,7 +26357,7 @@ const genNotificationPlacementStyle = (token2) => {
   };
 };
 const DEFAULT_COLLAPSED_STACK_VISIBLE_COUNT = 3;
-const prepareComponentToken$r = (token2) => ({
+const prepareComponentToken$s = (token2) => ({
   zIndexPopup: token2.zIndexPopupBase + CONTAINER_MAX_OFFSET + 50,
   width: 384,
   progressBg: `linear-gradient(90deg, ${token2.colorPrimaryBorderHover}, ${token2.colorPrimary})`,
@@ -26491,7 +26491,7 @@ const genNotificationListStyle = (token2, config) => {
     }
   };
 };
-genSubStyleComponent(["Notification", "PurePanel"], (token2) => genPurePanelStyle(prepareNotificationToken(token2)), prepareComponentToken$r);
+genSubStyleComponent(["Notification", "PurePanel"], (token2) => genPurePanelStyle(prepareNotificationToken(token2)), prepareComponentToken$s);
 const sharedGenerateStyle = (token2, config) => {
   const itemStyle = config.itemStyle ?? genNotificationStyle;
   return [genNotificationListStyle(token2, config), itemStyle(token2), genNotificationPlacementStyle(token2)];
@@ -26501,7 +26501,7 @@ genStyleHooks("Notification", (token2) => {
   return sharedGenerateStyle(notificationToken, {
     listWidthKey: "width"
   });
-}, prepareComponentToken$r);
+}, prepareComponentToken$s);
 const prepareMessageToken = (token2) => {
   const messagePaddingVertical = token2.calc(token2.controlHeightLG).sub(token2.calc(token2.fontSize).mul(token2.lineHeight)).div(2).equal();
   const messagePaddingHorizontal = token2.paddingSM;
@@ -26512,7 +26512,7 @@ const prepareMessageToken = (token2) => {
     notificationPaddingHorizontal: messagePaddingHorizontal
   });
 };
-const prepareComponentToken$q = (token2) => ({
+const prepareComponentToken$r = (token2) => ({
   zIndexPopup: token2.zIndexPopupBase + CONTAINER_MAX_OFFSET + 10,
   contentBg: token2.colorBgElevated,
   contentPadding: `${(token2.controlHeightLG - token2.fontSize * token2.lineHeight) / 2}px ${token2.paddingSM}px`
@@ -26613,23 +26613,23 @@ const generateMessagePurePanelStyle = (token2) => {
     }
   };
 };
-const PurePanelStyle = genSubStyleComponent(["Message", "PurePanel"], (token2) => generateMessagePurePanelStyle(prepareMessageToken(token2)), prepareComponentToken$q);
+const PurePanelStyle = genSubStyleComponent(["Message", "PurePanel"], (token2) => generateMessagePurePanelStyle(prepareMessageToken(token2)), prepareComponentToken$r);
 const generateMessageStyle = (token2) => ({
   [token2.componentCls]: genMessageItemStyle(token2)
 });
-const useStyle$A = genStyleHooks("Message", (token2) => {
+const useStyle$C = genStyleHooks("Message", (token2) => {
   const messageToken = prepareMessageToken(token2);
   return [sharedGenerateStyle(messageToken, {
     stackVisibleCount: 1,
     itemStyle: generateMessageStyle
   }), generateMessageStackStyle(messageToken)];
-}, prepareComponentToken$q);
+}, prepareComponentToken$r);
 const TypeIcon = {
-  info: /* @__PURE__ */ reactExports.createElement(RefIcon$t, null),
-  success: /* @__PURE__ */ reactExports.createElement(RefIcon$x, null),
-  error: /* @__PURE__ */ reactExports.createElement(RefIcon$w, null),
-  warning: /* @__PURE__ */ reactExports.createElement(RefIcon$u, null),
-  loading: /* @__PURE__ */ reactExports.createElement(RefIcon$s, null)
+  info: /* @__PURE__ */ reactExports.createElement(RefIcon$u, null),
+  success: /* @__PURE__ */ reactExports.createElement(RefIcon$y, null),
+  error: /* @__PURE__ */ reactExports.createElement(RefIcon$x, null),
+  warning: /* @__PURE__ */ reactExports.createElement(RefIcon$v, null),
+  loading: /* @__PURE__ */ reactExports.createElement(RefIcon$t, null)
 };
 const getMessageIcon = (type2, icon) => icon || type2 && TypeIcon[type2] || null;
 const PurePanel$7 = (props) => {
@@ -26654,7 +26654,7 @@ const PurePanel$7 = (props) => {
   const prefixCls = staticPrefixCls || getPrefixCls("message");
   const noticePrefixCls = `${prefixCls}-notice`;
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$A(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$C(prefixCls, rootCls);
   const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, messageClassNames], [contextStyles, styles], {
     props
   });
@@ -26717,7 +26717,7 @@ const Wrapper = ({
   prefixCls
 }) => {
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$A(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$C(prefixCls, rootCls);
   return /* @__PURE__ */ reactExports.createElement(NotificationProvider, {
     classNames: {
       list: clsx(hashId, cssVarCls, rootCls)
@@ -26765,7 +26765,7 @@ const Holder = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const [mergedClassNames, mergedStyles] = useMergeSemantic([message2?.classNames, classNames], [message2?.styles, contextStyleRoot, styles], {
     props
   });
-  const getStyle = () => getPlacementOffsetStyle(top ?? DEFAULT_OFFSET);
+  const getStyle2 = () => getPlacementOffsetStyle(top ?? DEFAULT_OFFSET);
   const getClassName = () => clsx({
     [`${prefixCls}-rtl`]: rtl ?? direction === "rtl"
   });
@@ -26773,7 +26773,7 @@ const Holder = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const stackConfig = useStackConfig(stack2, DEFAULT_STACK_CONFIG);
   const [api, holder] = useNotification({
     prefixCls,
-    style: getStyle,
+    style: getStyle2,
     className: getClassName,
     motion: getNotificationMotion,
     // closable=false requires-no closeIcon
@@ -26990,7 +26990,7 @@ const genWaveStyle = (token2) => {
     }
   };
 };
-const useStyle$z = genComponentStyleHook("Wave", genWaveStyle);
+const useStyle$B = genComponentStyleHook("Wave", genWaveStyle);
 const TARGET_CLS = `${defaultPrefixCls}-wave-target`;
 const isValidWaveColor = (color2) => {
   if (!color2) {
@@ -27182,7 +27182,7 @@ const Wave = (props) => {
   } = reactExports.useContext(ConfigContext);
   const containerRef = reactExports.useRef(null);
   const prefixCls = getPrefixCls("wave");
-  const hashId = useStyle$z(prefixCls);
+  const hashId = useStyle$B(prefixCls);
   const showWave = useWave(containerRef, clsx(prefixCls, hashId), component, colorSource);
   React.useEffect(() => {
     const node2 = containerRef.current;
@@ -27246,7 +27246,7 @@ const genSpaceCompactStyle = (token2) => {
     }
   };
 };
-const useStyle$y = genStyleHooks(["Space", "Compact"], genSpaceCompactStyle, () => ({}), {
+const useStyle$A = genStyleHooks(["Space", "Compact"], genSpaceCompactStyle, () => ({}), {
   // Space component don't apply extra font style
   // https://github.com/ant-design/ant-design/issues/40315
   resetStyle: false
@@ -27313,7 +27313,7 @@ const Compact$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const [mergedOrientation, mergedVertical] = useOrientation(orientation, vertical, direction);
   const mergedSize = useSize((ctx) => size ?? ctx);
   const prefixCls = getPrefixCls("space-compact", customizePrefixCls);
-  const [hashId] = useStyle$y(prefixCls);
+  const [hashId] = useStyle$A(prefixCls);
   const clx = clsx(prefixCls, hashId, {
     [`${prefixCls}-rtl`]: directionConfig === "rtl",
     [`${prefixCls}-block`]: block,
@@ -27324,7 +27324,7 @@ const Compact$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   reactExports.useImperativeHandle(ref, () => ({
     nativeElement: nativeElementRef.current
   }));
-  const childNodes = toArray$4(children);
+  const childNodes = toArray$5(children);
   const nodes = reactExports.useMemo(() => childNodes.map((child, i2) => {
     const key2 = child?.key || `${prefixCls}-item-${i2}`;
     return /* @__PURE__ */ reactExports.createElement(CompactItem, {
@@ -27479,7 +27479,7 @@ const InnerLoadingIcon = /* @__PURE__ */ reactExports.forwardRef((props, ref) =>
     className: mergedIconCls,
     style: style2,
     ref
-  }, /* @__PURE__ */ React.createElement(RefIcon$s, {
+  }, /* @__PURE__ */ React.createElement(RefIcon$t, {
     className: iconClassName
   }));
 });
@@ -28614,8 +28614,8 @@ function useComponent(components2) {
     return [slider || Slider$2];
   }, [components2]);
 }
-function _extends$14() {
-  _extends$14 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$16() {
+  _extends$16 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -28626,7 +28626,7 @@ function _extends$14() {
     }
     return target;
   };
-  return _extends$14.apply(this, arguments);
+  return _extends$16.apply(this, arguments);
 }
 const HUE_COLORS = [{
   color: "rgb(255, 0, 0)",
@@ -28705,7 +28705,7 @@ const ColorPicker$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     disabled,
     color: colorValue
   };
-  const defaultPanel = /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Picker, _extends$14({
+  const defaultPanel = /* @__PURE__ */ React.createElement(React.Fragment, null, /* @__PURE__ */ React.createElement(Picker, _extends$16({
     onChange: handleChange
   }, sharedSliderProps, {
     onChangeComplete
@@ -28715,7 +28715,7 @@ const ColorPicker$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     className: clsx(`${prefixCls}-slider-group`, {
       [`${prefixCls}-slider-group-disabled-alpha`]: disabledAlpha
     })
-  }, /* @__PURE__ */ React.createElement(Slider2, _extends$14({}, sharedSliderProps, {
+  }, /* @__PURE__ */ React.createElement(Slider2, _extends$16({}, sharedSliderProps, {
     type: "hue",
     colors: HUE_COLORS,
     min: 0,
@@ -28723,7 +28723,7 @@ const ColorPicker$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     value: colorValue.getHue(),
     onChange: onHueChange,
     onChangeComplete: onHueChangeComplete
-  })), !disabledAlpha && /* @__PURE__ */ React.createElement(Slider2, _extends$14({}, sharedSliderProps, {
+  })), !disabledAlpha && /* @__PURE__ */ React.createElement(Slider2, _extends$16({}, sharedSliderProps, {
     type: "alpha",
     colors: [{
       percent: 0,
@@ -28863,8 +28863,8 @@ function requireRightOutlined() {
 }
 var RightOutlinedExports = /* @__PURE__ */ requireRightOutlined();
 const RightOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(RightOutlinedExports);
-function _extends$13() {
-  _extends$13 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$15() {
+  _extends$15 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -28875,21 +28875,21 @@ function _extends$13() {
     }
     return target;
   };
-  return _extends$13.apply(this, arguments);
+  return _extends$15.apply(this, arguments);
 }
-const RightOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$13({}, props, {
+const RightOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$15({}, props, {
   ref,
   icon: RightOutlinedSvg
 }));
-const RefIcon$r = /* @__PURE__ */ reactExports.forwardRef(RightOutlined);
-function _extends$12() {
-  return _extends$12 = Object.assign ? Object.assign.bind() : function(n) {
+const RefIcon$s = /* @__PURE__ */ reactExports.forwardRef(RightOutlined);
+function _extends$14() {
+  return _extends$14 = Object.assign ? Object.assign.bind() : function(n) {
     for (var e2 = 1; e2 < arguments.length; e2++) {
       var t = arguments[e2];
       for (var r2 in t) ({}).hasOwnProperty.call(t, r2) && (n[r2] = t[r2]);
     }
     return n;
-  }, _extends$12.apply(null, arguments);
+  }, _extends$14.apply(null, arguments);
 }
 const PanelContent = /* @__PURE__ */ React.forwardRef((props, ref) => {
   const {
@@ -28966,7 +28966,7 @@ const CollapsePanel$1 = /* @__PURE__ */ React.forwardRef((props, ref) => {
   const iconNodeInner = typeof expandIcon === "function" ? expandIcon(props) : /* @__PURE__ */ React.createElement("i", {
     className: "arrow"
   });
-  const iconNode = iconNodeInner && /* @__PURE__ */ React.createElement("div", _extends$12({
+  const iconNode = iconNodeInner && /* @__PURE__ */ React.createElement("div", _extends$14({
     className: clsx(`${prefixCls}-expand-icon`, customizeClassNames?.icon),
     style: styles?.icon
   }, ["header", "icon"].includes(collapsible) ? collapsibleProps : {}), iconNodeInner);
@@ -28982,15 +28982,15 @@ const CollapsePanel$1 = /* @__PURE__ */ React.forwardRef((props, ref) => {
     style: styles?.header,
     ...["header", "icon"].includes(collapsible) ? {} : collapsibleProps
   };
-  return /* @__PURE__ */ React.createElement("div", _extends$12({}, resetProps, {
+  return /* @__PURE__ */ React.createElement("div", _extends$14({}, resetProps, {
     ref,
     className: collapsePanelClassNames
-  }), /* @__PURE__ */ React.createElement("div", headerProps, showArrow && iconNode, /* @__PURE__ */ React.createElement("span", _extends$12({
+  }), /* @__PURE__ */ React.createElement("div", headerProps, showArrow && iconNode, /* @__PURE__ */ React.createElement("span", _extends$14({
     className: clsx(`${prefixCls}-title`, customizeClassNames?.title),
     style: styles?.title
   }, collapsible === "header" ? collapsibleProps : {}), header), ifExtraExist && /* @__PURE__ */ React.createElement("div", {
     className: `${prefixCls}-extra`
-  }, extra)), /* @__PURE__ */ React.createElement(CSSMotion, _extends$12({
+  }, extra)), /* @__PURE__ */ React.createElement(CSSMotion, _extends$14({
     visible: isActive2,
     leavedClassName: `${prefixCls}-panel-hidden`
   }, openMotion, {
@@ -29074,7 +29074,7 @@ const convertItemsToNodes$1 = (items, props) => {
     } else {
       isActive2 = activeKey.indexOf(key2) > -1;
     }
-    return /* @__PURE__ */ React.createElement(CollapsePanel$1, _extends$12({}, restProps, {
+    return /* @__PURE__ */ React.createElement(CollapsePanel$1, _extends$14({}, restProps, {
       classNames: mergeSemanticClassNames(collapseClassNames, classNames),
       styles: mergeSemanticStyles(collapseStyles, styles),
       prefixCls,
@@ -29160,7 +29160,7 @@ function useItems$1(items, rawChildren, props) {
   if (Array.isArray(items)) {
     return convertItemsToNodes$1(items, props);
   }
-  return toArray$4(rawChildren).map((child, index) => getNewChild(child, index, props));
+  return toArray$5(rawChildren).map((child, index) => getNewChild(child, index, props));
 }
 function getActiveKeysArray(activeKey) {
   let currentActiveKey = activeKey;
@@ -29216,7 +29216,7 @@ const Collapse$2 = /* @__PURE__ */ React.forwardRef((props, ref) => {
     classNames: customizeClassNames,
     styles
   });
-  return /* @__PURE__ */ React.createElement("div", _extends$12({
+  return /* @__PURE__ */ React.createElement("div", _extends$14({
     ref,
     className: collapseClassName,
     style: style2,
@@ -29255,7 +29255,7 @@ const CollapsePanel = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     className: collapsePanelClassName
   });
 });
-const genBaseStyle$8 = (token2) => {
+const genBaseStyle$9 = (token2) => {
   const {
     componentCls,
     contentBg,
@@ -29519,7 +29519,7 @@ const genGhostStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$p = (token2) => {
+const prepareComponentToken$q = (token2) => {
   const componentToken = {
     headerPadding: `${unit$1(token2.paddingSM)} ${unit$1(token2.padding)}`,
     headerPaddingSM: `${unit$1(token2.paddingXS)} ${unit$1(token2.paddingSM)} ${unit$1(token2.paddingXS)} ${unit$1(token2.paddingXS)}`,
@@ -29535,12 +29535,12 @@ const prepareComponentToken$p = (token2) => {
   };
   return componentToken;
 };
-const useStyle$x = genStyleHooks("Collapse", (token2) => {
+const useStyle$z = genStyleHooks("Collapse", (token2) => {
   const collapseToken = merge$1(token2, {
     collapsePanelBorderRadius: token2.borderRadiusLG
   });
-  return [genBaseStyle$8(collapseToken), genBorderlessStyle$1(collapseToken), genGhostStyle(collapseToken), genArrowStyle(collapseToken), genCollapseMotion(collapseToken)];
-}, prepareComponentToken$p);
+  return [genBaseStyle$9(collapseToken), genBorderlessStyle$1(collapseToken), genGhostStyle(collapseToken), genArrowStyle(collapseToken), genCollapseMotion(collapseToken)];
+}, prepareComponentToken$q);
 const Collapse = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
     getPrefixCls,
@@ -29571,7 +29571,7 @@ const Collapse = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const mergedSize = useSize((ctx) => customizeSize ?? ctx ?? "middle");
   const prefixCls = getPrefixCls("collapse", customizePrefixCls);
   const rootPrefixCls = getPrefixCls();
-  const [hashId, cssVarCls] = useStyle$x(prefixCls);
+  const [hashId, cssVarCls] = useStyle$z(prefixCls);
   const mergedPlacement = expandIconPlacement ?? expandIconPosition ?? "start";
   const mergedProps = {
     ...props,
@@ -29586,7 +29586,7 @@ const Collapse = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   });
   const mergedExpandIcon = expandIcon ?? contextExpandIcon;
   const renderExpandIcon = reactExports.useCallback((panelProps = {}) => {
-    const icon = isFunction$1(mergedExpandIcon) ? mergedExpandIcon(panelProps) : /* @__PURE__ */ reactExports.createElement(RefIcon$r, {
+    const icon = isFunction$1(mergedExpandIcon) ? mergedExpandIcon(panelProps) : /* @__PURE__ */ reactExports.createElement(RefIcon$s, {
       rotate: panelProps.isActive ? direction === "rtl" ? -90 : 90 : void 0,
       "aria-label": panelProps.isActive ? "expanded" : "collapsed"
     });
@@ -29608,7 +29608,7 @@ const Collapse = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }), [rootPrefixCls, prefixCls]);
   const items = reactExports.useMemo(() => {
     if (children) {
-      return toArray$4(children).map((child) => child);
+      return toArray$5(children).map((child) => child);
     }
     return null;
   }, [children]);
@@ -29764,7 +29764,7 @@ const prepareToken$3 = (token2) => {
   });
   return buttonToken;
 };
-const prepareComponentToken$o = (token2) => {
+const prepareComponentToken$p = (token2) => {
   const contentFontSize = token2.contentFontSize ?? token2.fontSize;
   const contentFontSizeSM = token2.contentFontSizeSM ?? token2.fontSize;
   const contentFontSizeLG = token2.contentFontSizeLG ?? token2.fontSizeLG;
@@ -30296,7 +30296,7 @@ const genBlockButtonStyle = (token2) => {
     }
   };
 };
-const useStyle$w = genStyleHooks("Button", (token2) => {
+const useStyle$y = genStyleHooks("Button", (token2) => {
   const buttonToken = prepareToken$3(token2);
   return [
     // Shared
@@ -30312,7 +30312,7 @@ const useStyle$w = genStyleHooks("Button", (token2) => {
     // Button Group
     genGroupStyle$1(buttonToken)
   ];
-}, prepareComponentToken$o, {
+}, prepareComponentToken$p, {
   unitless: {
     fontWeight: true,
     contentLineHeight: true,
@@ -30500,7 +30500,7 @@ const Compact = genSubStyleComponent(["Button", "compact"], (token2) => {
     genCompactItemVerticalStyle(buttonToken),
     genButtonCompactStyle(buttonToken)
   ];
-}, prepareComponentToken$o);
+}, prepareComponentToken$p);
 function getLoadingConfig(loading) {
   if (isPlainObject(loading)) {
     let delay = loading?.delay;
@@ -30552,7 +30552,7 @@ const InternalCompoundedButton = /* @__PURE__ */ React.forwardRef((props, ref) =
     autoFocus,
     ...rest
   } = props;
-  const childNodes = toArray$4(children);
+  const childNodes = toArray$5(children);
   const mergedType = type2 || "default";
   const {
     getPrefixCls,
@@ -30600,7 +30600,7 @@ const InternalCompoundedButton = /* @__PURE__ */ React.forwardRef((props, ref) =
   const mergedColorText = isDanger ? "dangerous" : mergedColor;
   const mergedInsertSpace = autoInsertSpace ?? contextAutoInsertSpace ?? true;
   const prefixCls = getPrefixCls("btn", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$w(prefixCls);
+  const [hashId, cssVarCls] = useStyle$y(prefixCls);
   const disabled = reactExports.useContext(DisabledContext);
   const mergedDisabled = customDisabled ?? disabled;
   const groupSize = reactExports.useContext(GroupSizeContext);
@@ -30938,8 +30938,8 @@ const MemoChildren = /* @__PURE__ */ reactExports.memo(({
 }) => children, (_, {
   shouldUpdate
 }) => !shouldUpdate);
-function _extends$11() {
-  _extends$11 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$13() {
+  _extends$13 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -30950,7 +30950,7 @@ function _extends$11() {
     }
     return target;
   };
-  return _extends$11.apply(this, arguments);
+  return _extends$13.apply(this, arguments);
 }
 const Panel = /* @__PURE__ */ React.forwardRef((props, ref) => {
   const {
@@ -31032,7 +31032,7 @@ const Panel = /* @__PURE__ */ React.forwardRef((props, ref) => {
   }, [closable, closeIcon, prefixCls]);
   const ariaProps = pickAttrs(closableObj, true);
   const closeBtnIsDisabled = typeof closable === "object" && closable.disabled;
-  const closerNode = closable ? /* @__PURE__ */ React.createElement("button", _extends$11({
+  const closerNode = closable ? /* @__PURE__ */ React.createElement("button", _extends$13({
     type: "button",
     onClick: onClose,
     "aria-label": "Close"
@@ -31044,7 +31044,7 @@ const Panel = /* @__PURE__ */ React.forwardRef((props, ref) => {
   const content = /* @__PURE__ */ React.createElement("div", {
     className: clsx(`${prefixCls}-container`, modalClassNames?.container),
     style: modalStyles?.container
-  }, closerNode, headerNode, /* @__PURE__ */ React.createElement("div", _extends$11({
+  }, closerNode, headerNode, /* @__PURE__ */ React.createElement("div", _extends$13({
     className: clsx(`${prefixCls}-body`, modalClassNames?.body),
     style: {
       ...bodyStyle,
@@ -31072,8 +31072,8 @@ const Panel = /* @__PURE__ */ React.forwardRef((props, ref) => {
     shouldUpdate: visible || forceRender
   }, modalRender ? modalRender(content) : content));
 });
-function _extends$10() {
-  _extends$10 = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$12() {
+  _extends$12 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -31084,7 +31084,7 @@ function _extends$10() {
     }
     return target;
   };
-  return _extends$10.apply(this, arguments);
+  return _extends$12.apply(this, arguments);
 }
 const Content$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -31131,7 +31131,7 @@ const Content$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, ({
     className: motionClassName,
     style: motionStyle
-  }, motionRef) => /* @__PURE__ */ reactExports.createElement(Panel, _extends$10({}, props, {
+  }, motionRef) => /* @__PURE__ */ reactExports.createElement(Panel, _extends$12({}, props, {
     ref: panelRef,
     title,
     ariaId,
@@ -31145,8 +31145,8 @@ const Content$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     className: clsx(className, motionClassName)
   })));
 });
-function _extends$$() {
-  _extends$$ = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$11() {
+  _extends$11 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -31157,7 +31157,7 @@ function _extends$$() {
     }
     return target;
   };
-  return _extends$$.apply(this, arguments);
+  return _extends$11.apply(this, arguments);
 }
 const Mask = (props) => {
   const {
@@ -31176,7 +31176,7 @@ const Mask = (props) => {
   }, ({
     className: motionClassName,
     style: motionStyle
-  }, ref) => /* @__PURE__ */ reactExports.createElement("div", _extends$$({
+  }, ref) => /* @__PURE__ */ reactExports.createElement("div", _extends$11({
     ref,
     style: {
       ...motionStyle,
@@ -31185,8 +31185,8 @@ const Mask = (props) => {
     className: clsx(`${prefixCls}-mask`, motionClassName, className)
   }, maskProps)));
 };
-function _extends$_() {
-  _extends$_ = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$10() {
+  _extends$10 = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -31197,7 +31197,7 @@ function _extends$_() {
     }
     return target;
   };
-  return _extends$_.apply(this, arguments);
+  return _extends$10.apply(this, arguments);
 }
 const Dialog = (props) => {
   const {
@@ -31300,7 +31300,7 @@ const Dialog = (props) => {
     ...modalStyles?.wrapper,
     display: !animatedVisible ? "none" : null
   };
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$_({
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$10({
     className: clsx(`${prefixCls}-root`, rootClassName),
     style: rootStyle
   }, pickAttrs(props, {
@@ -31316,13 +31316,13 @@ const Dialog = (props) => {
     },
     maskProps,
     className: modalClassNames?.mask
-  }), /* @__PURE__ */ reactExports.createElement("div", _extends$_({
+  }), /* @__PURE__ */ reactExports.createElement("div", _extends$10({
     className: clsx(`${prefixCls}-wrap`, wrapClassName, modalClassNames?.wrapper),
     ref: wrapperRef,
     onClick: onWrapperClick,
     onMouseDown: onWrapperMouseDown,
     style: mergedStyle
-  }, wrapProps), /* @__PURE__ */ reactExports.createElement(Content$2, _extends$_({}, props, {
+  }, wrapProps), /* @__PURE__ */ reactExports.createElement(Content$2, _extends$10({}, props, {
     isFixedPos,
     ref: contentRef,
     closable,
@@ -31334,8 +31334,8 @@ const Dialog = (props) => {
     motionName: getMotionName(prefixCls, transitionName, animation)
   }))));
 };
-function _extends$Z() {
-  _extends$Z = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$$() {
+  _extends$$ = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -31346,7 +31346,7 @@ function _extends$Z() {
     }
     return target;
   };
-  return _extends$Z.apply(this, arguments);
+  return _extends$$.apply(this, arguments);
 }
 const DialogWrap = (props) => {
   const {
@@ -31395,7 +31395,7 @@ const DialogWrap = (props) => {
     autoDestroy: false,
     getContainer: getContainer2,
     autoLock: scrollLock && (visible || animatedVisible)
-  }, /* @__PURE__ */ reactExports.createElement(Dialog, _extends$Z({}, restProps, {
+  }, /* @__PURE__ */ reactExports.createElement(Dialog, _extends$$({}, restProps, {
     destroyOnHidden,
     afterClose: () => {
       const closableObj = closable && typeof closable === "object" ? closable : {};
@@ -31447,7 +31447,7 @@ const Context = /* @__PURE__ */ reactExports.createContext({
   }
 });
 const ListContext$1 = /* @__PURE__ */ reactExports.createContext(null);
-function toArray$2(value) {
+function toArray$3(value) {
   if (value === void 0 || value === null) {
     return [];
   }
@@ -32641,7 +32641,7 @@ async function finishOnFirstFailed(rulePromises) {
   });
 }
 function getNamePath(path) {
-  return toArray$2(path);
+  return toArray$3(path);
 }
 function cloneByNamePathList(store, namePathList) {
   let newStore = {};
@@ -32761,8 +32761,8 @@ async function delayFrame() {
     });
   });
 }
-function _extends$Y() {
-  _extends$Y = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$_() {
+  _extends$_ = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -32773,7 +32773,7 @@ function _extends$Y() {
     }
     return target;
   };
-  return _extends$Y.apply(this, arguments);
+  return _extends$_.apply(this, arguments);
 }
 const EMPTY_ERRORS = [];
 const EMPTY_WARNINGS = [];
@@ -33038,7 +33038,7 @@ class Field extends reactExports.PureComponent {
           if (!validateTrigger) {
             return true;
           }
-          const triggerList = toArray$2(validateTrigger);
+          const triggerList = toArray$3(validateTrigger);
           return triggerList.includes(triggerName);
         });
       }
@@ -33131,7 +33131,7 @@ class Field extends reactExports.PureComponent {
         isFunction: true
       };
     }
-    const childList = toArray$4(children);
+    const childList = toArray$5(children);
     if (childList.length !== 1 || !/* @__PURE__ */ reactExports.isValidElement(childList[0])) {
       return {
         child: childList,
@@ -33206,7 +33206,7 @@ class Field extends reactExports.PureComponent {
         originTriggerFunc(...args);
       }
     };
-    const validateTriggerList = toArray$2(mergedValidateTrigger || []);
+    const validateTriggerList = toArray$3(mergedValidateTrigger || []);
     validateTriggerList.forEach((triggerName) => {
       const originTrigger = control[triggerName];
       control[triggerName] = (...args) => {
@@ -33264,7 +33264,7 @@ function WrapperField({
   if (!isMergedListField) {
     key2 = `_${(namePath || []).join("_")}`;
   }
-  return /* @__PURE__ */ reactExports.createElement(Field, _extends$Y({
+  return /* @__PURE__ */ reactExports.createElement(Field, _extends$_({
     key: key2,
     name: namePath,
     isListField: isMergedListField
@@ -34344,8 +34344,8 @@ const FormProvider = ({
     }
   }, children);
 };
-function _extends$X() {
-  _extends$X = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$Z() {
+  _extends$Z = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -34356,7 +34356,7 @@ function _extends$X() {
     }
     return target;
   };
-  return _extends$X.apply(this, arguments);
+  return _extends$Z.apply(this, arguments);
 }
 const Form = (props, ref) => {
   const {
@@ -34456,7 +34456,7 @@ const Form = (props, ref) => {
   if (Component === false) {
     return wrapperNode;
   }
-  return /* @__PURE__ */ reactExports.createElement(Component, _extends$X({}, restProps, {
+  return /* @__PURE__ */ reactExports.createElement(Component, _extends$Z({}, restProps, {
     ref: nativeElementRef,
     onSubmit: (event) => {
       event.preventDefault();
@@ -34801,7 +34801,7 @@ const genSkeletonElementButton = (token2) => {
     ...genSkeletonElementButtonShape(token2, controlHeightSM, `${skeletonButtonCls}-sm`)
   };
 };
-const genBaseStyle$7 = (token2) => {
+const genBaseStyle$8 = (token2) => {
   const {
     componentCls,
     skeletonAvatarCls,
@@ -34932,7 +34932,7 @@ const genBaseStyle$7 = (token2) => {
     }
   };
 };
-const prepareComponentToken$n = (token2) => {
+const prepareComponentToken$o = (token2) => {
   const {
     colorFillContent,
     colorFill
@@ -34950,7 +34950,7 @@ const prepareComponentToken$n = (token2) => {
     paragraphLiHeight: token2.controlHeight / 2
   };
 };
-const useStyle$v = genStyleHooks("Skeleton", (token2) => {
+const useStyle$x = genStyleHooks("Skeleton", (token2) => {
   const {
     componentCls,
     calc
@@ -34969,8 +34969,8 @@ const useStyle$v = genStyleHooks("Skeleton", (token2) => {
     skeletonLoadingBackground: `linear-gradient(90deg, ${token2.gradientFromColor} 25%, ${token2.gradientToColor} 37%, ${token2.gradientFromColor} 63%)`,
     skeletonLoadingMotionDuration: "1.4s"
   });
-  return genBaseStyle$7(skeletonToken);
-}, prepareComponentToken$n, {
+  return genBaseStyle$8(skeletonToken);
+}, prepareComponentToken$o, {
   deprecatedTokens: [["color", "gradientFromColor"], ["colorGradientEnd", "gradientToColor"]]
 });
 const SkeletonAvatar = (props) => {
@@ -34990,7 +34990,7 @@ const SkeletonAvatar = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$v(prefixCls);
+  const [hashId, cssVarCls] = useStyle$x(prefixCls);
   const mergedSize = useSize((ctx) => customSize ?? ctx);
   const cls = clsx(prefixCls, `${prefixCls}-element`, {
     [`${prefixCls}-active`]: active
@@ -35027,7 +35027,7 @@ const SkeletonButton = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$v(prefixCls);
+  const [hashId, cssVarCls] = useStyle$x(prefixCls);
   const mergedSize = useSize((ctx) => customSize ?? ctx);
   const cls = clsx(prefixCls, `${prefixCls}-element`, {
     [`${prefixCls}-active`]: active,
@@ -35063,7 +35063,7 @@ const SkeletonNode = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$v(prefixCls);
+  const [hashId, cssVarCls] = useStyle$x(prefixCls);
   const cls = clsx(prefixCls, `${prefixCls}-element`, {
     [`${prefixCls}-active`]: active
   }, hashId, classNames?.root, className, rootClassName, cssVarCls);
@@ -35112,7 +35112,7 @@ const SkeletonInput = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$v(prefixCls);
+  const [hashId, cssVarCls] = useStyle$x(prefixCls);
   const mergedSize = useSize((ctx) => customSize ?? ctx);
   const cls = clsx(prefixCls, `${prefixCls}-element`, {
     [`${prefixCls}-active`]: active,
@@ -35245,7 +35245,7 @@ const Skeleton = /* @__PURE__ */ React.forwardRef((props, ref) => {
     styles: contextStyles
   } = useComponentConfig("skeleton");
   const prefixCls = getPrefixCls("skeleton", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$v(prefixCls);
+  const [hashId, cssVarCls] = useStyle$x(prefixCls);
   const mergedProps = {
     ...props,
     avatar,
@@ -35384,7 +35384,7 @@ const NormalOkBtn = () => {
 function renderCloseIcon(prefixCls, closeIcon) {
   return /* @__PURE__ */ React.createElement("span", {
     className: `${prefixCls}-close-x`
-  }, closeIcon || /* @__PURE__ */ React.createElement(RefIcon$v, {
+  }, closeIcon || /* @__PURE__ */ React.createElement(RefIcon$w, {
     className: `${prefixCls}-close-icon`
   }));
 }
@@ -35883,7 +35883,7 @@ const prepareToken$2 = (token2) => {
   });
   return modalToken;
 };
-const prepareComponentToken$m = (token2) => ({
+const prepareComponentToken$n = (token2) => ({
   footerBg: "transparent",
   headerBg: "transparent",
   titleLineHeight: token2.lineHeightHeading5,
@@ -35905,10 +35905,10 @@ const prepareComponentToken$m = (token2) => ({
   confirmBtnsMarginTop: token2.wireframe ? token2.marginLG : token2.marginSM,
   mask: true
 });
-const useStyle$u = genStyleHooks("Modal", (token2) => {
+const useStyle$w = genStyleHooks("Modal", (token2) => {
   const modalToken = prepareToken$2(token2);
   return [genModalStyle(modalToken), genRTLStyle(modalToken), genModalMaskStyle(modalToken), initZoomMotion(modalToken, "zoom"), genResponsiveWidthStyle(modalToken)];
-}, prepareComponentToken$m, {
+}, prepareComponentToken$n, {
   unitless: {
     titleLineHeight: true
   }
@@ -36006,7 +36006,7 @@ const Modal$1 = (props) => {
     onClose?.();
   };
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$u(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$w(prefixCls, rootCls);
   const wrapClassNameExtended = clsx(wrapClassName, {
     [`${prefixCls}-centered`]: centered ?? contextCentered,
     [`${prefixCls}-wrap-rtl`]: direction === "rtl"
@@ -36026,7 +36026,7 @@ const Modal$1 = (props) => {
   }) : null;
   const [rawClosable, mergedCloseIcon, closeBtnIsDisabled, ariaProps] = useClosable(pickClosable(props), pickClosable(modalContext), {
     closable: true,
-    closeIcon: /* @__PURE__ */ reactExports.createElement(RefIcon$v, {
+    closeIcon: /* @__PURE__ */ reactExports.createElement(RefIcon$w, {
       className: `${prefixCls}-close-icon`
     }),
     closeIconRender: (icon) => renderCloseIcon(prefixCls, icon)
@@ -36227,7 +36227,7 @@ const genModalConfirmStyle = (token2) => {
 const Confirm = genSubStyleComponent(["Modal", "confirm"], (token2) => {
   const modalToken = prepareToken$2(token2);
   return genModalConfirmStyle(modalToken);
-}, prepareComponentToken$m, {
+}, prepareComponentToken$n, {
   // confirm is weak than modal since no conflict here
   order: -1e3
 });
@@ -36260,16 +36260,16 @@ const ConfirmContent = (props) => {
   if (icon === void 0) {
     switch (type2) {
       case "info":
-        mergedIcon = fallbackProp(infoIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$t, null));
+        mergedIcon = fallbackProp(infoIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$u, null));
         break;
       case "success":
-        mergedIcon = fallbackProp(successIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$x, null));
+        mergedIcon = fallbackProp(successIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$y, null));
         break;
       case "error":
-        mergedIcon = fallbackProp(errorIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$w, null));
+        mergedIcon = fallbackProp(errorIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$x, null));
         break;
       default:
-        mergedIcon = fallbackProp(warningIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$u, null));
+        mergedIcon = fallbackProp(warningIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$v, null));
     }
   }
   const mergedOkCancel = okCancel ?? type2 === "confirm";
@@ -36865,8 +36865,8 @@ function useSelectTriggerControl(elements, open2, triggerOpen, customizedTrigger
     return () => window.removeEventListener("mousedown", onGlobalMouseDown);
   }, [onGlobalMouseDown]);
 }
-function _extends$W() {
-  _extends$W = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$Y() {
+  _extends$Y = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -36877,7 +36877,7 @@ function _extends$W() {
     }
     return target;
   };
-  return _extends$W.apply(this, arguments);
+  return _extends$Y.apply(this, arguments);
 }
 const getBuiltInPlacements$1 = (popupMatchSelectWidth) => {
   const adjustX = popupMatchSelectWidth === true ? 0 : 1;
@@ -36967,7 +36967,7 @@ const SelectTrigger = (props, ref) => {
   reactExports.useImperativeHandle(ref, () => ({
     getPopupElement: () => triggerPopupRef.current?.popupElement
   }));
-  return /* @__PURE__ */ reactExports.createElement(Trigger, _extends$W({}, restProps, {
+  return /* @__PURE__ */ reactExports.createElement(Trigger, _extends$Y({}, restProps, {
     showAction: onPopupVisibleChange ? ["click"] : [],
     hideAction: onPopupVisibleChange ? ["click"] : [],
     popupPlacement: placement || (direction === "rtl" ? "bottomRight" : "bottomLeft"),
@@ -37379,7 +37379,7 @@ function Placeholder(props) {
   }, placeholder);
 }
 const SelectContext = /* @__PURE__ */ reactExports.createContext(null);
-function toArray$1(value) {
+function toArray$2(value) {
   if (Array.isArray(value)) {
     return value;
   }
@@ -37405,8 +37405,8 @@ function getTitle(item) {
   }
   return title;
 }
-function _extends$V() {
-  _extends$V = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$X() {
+  _extends$X = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -37417,7 +37417,7 @@ function _extends$V() {
     }
     return target;
   };
-  return _extends$V.apply(this, arguments);
+  return _extends$X.apply(this, arguments);
 }
 const SingleContent = /* @__PURE__ */ reactExports.forwardRef(({
   inputProps
@@ -37492,7 +37492,7 @@ const SingleContent = /* @__PURE__ */ reactExports.forwardRef(({
     className: clsx(`${prefixCls}-content`, showHasValueCls && `${prefixCls}-content-has-value`, mergedSearchValue && `${prefixCls}-content-has-search-value`, hasOptionStyle && `${prefixCls}-content-has-option-style`, classNames?.content),
     style: styles?.content,
     title: hasOptionStyle ? void 0 : optionTitle
-  }, renderValue, /* @__PURE__ */ reactExports.createElement(Input$3, _extends$V({
+  }, renderValue, /* @__PURE__ */ reactExports.createElement(Input$3, _extends$X({
     ref
   }, inputProps, {
     value: mergedSearchValue,
@@ -37547,7 +37547,7 @@ function InternalItem$1(props, ref) {
   if (mergedHidden) {
     overflowProps["aria-hidden"] = true;
   }
-  let itemNode = /* @__PURE__ */ reactExports.createElement(Component, _extends$12({
+  let itemNode = /* @__PURE__ */ reactExports.createElement(Component, _extends$14({
     className: clsx(!invalidate && prefixCls, className),
     style: {
       ...overflowStyle,
@@ -37613,7 +37613,7 @@ const InternalRawItem = (props, ref) => {
       component: Component = "div",
       ...restProps2
     } = props;
-    return /* @__PURE__ */ reactExports.createElement(Component, _extends$12({}, restProps2, {
+    return /* @__PURE__ */ reactExports.createElement(Component, _extends$14({}, restProps2, {
       ref
     }));
   }
@@ -37627,7 +37627,7 @@ const InternalRawItem = (props, ref) => {
   } = props;
   return /* @__PURE__ */ reactExports.createElement(OverflowContext.Provider, {
     value: null
-  }, /* @__PURE__ */ reactExports.createElement(Item$3, _extends$12({
+  }, /* @__PURE__ */ reactExports.createElement(Item$3, _extends$14({
     ref,
     className: clsx(contextClassName, className)
   }, restContext, restProps)));
@@ -37815,7 +37815,7 @@ function Overflow(props, ref) {
     }, renderRawItem(item, index));
   } : (item, index) => {
     const key2 = getKey2(item, index);
-    return /* @__PURE__ */ reactExports.createElement(Item$3, _extends$12({}, itemSharedProps, {
+    return /* @__PURE__ */ reactExports.createElement(Item$3, _extends$14({}, itemSharedProps, {
       order: index,
       key: key2,
       item,
@@ -37837,19 +37837,19 @@ function Overflow(props, ref) {
       ...itemSharedProps,
       ...restContextProps
     }
-  }, renderRawRest(omittedItems)) : /* @__PURE__ */ reactExports.createElement(Item$3, _extends$12({}, itemSharedProps, restContextProps), typeof mergedRenderRest === "function" ? mergedRenderRest(omittedItems) : mergedRenderRest);
-  const overflowNode = /* @__PURE__ */ reactExports.createElement(Component, _extends$12({
+  }, renderRawRest(omittedItems)) : /* @__PURE__ */ reactExports.createElement(Item$3, _extends$14({}, itemSharedProps, restContextProps), typeof mergedRenderRest === "function" ? mergedRenderRest(omittedItems) : mergedRenderRest);
+  const overflowNode = /* @__PURE__ */ reactExports.createElement(Component, _extends$14({
     className: clsx(!invalidate && prefixCls, className),
     style: style2,
     ref
-  }, restProps), prefix2 && /* @__PURE__ */ reactExports.createElement(Item$3, _extends$12({}, itemSharedProps, {
+  }, restProps), prefix2 && /* @__PURE__ */ reactExports.createElement(Item$3, _extends$14({}, itemSharedProps, {
     responsive: isResponsive,
     responsiveDisabled: !shouldResponsive,
     order: -1,
     className: `${itemPrefixCls}-prefix`,
     registerSize: registerPrefixSize,
     display: true
-  }), prefix2), mergedData.map(internalRenderItemNode), showRest ? restNode : null, suffix && /* @__PURE__ */ reactExports.createElement(Item$3, _extends$12({}, itemSharedProps, {
+  }), prefix2), mergedData.map(internalRenderItemNode), showRest ? restNode : null, suffix && /* @__PURE__ */ reactExports.createElement(Item$3, _extends$14({}, itemSharedProps, {
     responsive: isResponsive,
     responsiveDisabled: !shouldResponsive,
     order: mergedDisplayCount,
@@ -37896,8 +37896,8 @@ const TransBtn = (props) => {
     className: clsx(className.split(/\s+/).map((cls) => `${cls}-icon`))
   }, children));
 };
-function _extends$U() {
-  _extends$U = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$W() {
+  _extends$W = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -37908,7 +37908,7 @@ function _extends$U() {
     }
     return target;
   };
-  return _extends$U.apply(this, arguments);
+  return _extends$W.apply(this, arguments);
 }
 function itemKey(value) {
   return value.key ?? value.value;
@@ -38032,7 +38032,7 @@ const MultipleContent = /* @__PURE__ */ reactExports.forwardRef(function Multipl
     data: displayValues,
     renderItem,
     renderRest,
-    suffix: /* @__PURE__ */ reactExports.createElement(Input$3, _extends$U({
+    suffix: /* @__PURE__ */ reactExports.createElement(Input$3, _extends$W({
       ref,
       disabled,
       readOnly: !inputEditable
@@ -38115,8 +38115,8 @@ function isValidateOpenKey(currentKeyCode) {
     ].includes(currentKeyCode)
   );
 }
-function _extends$T() {
-  _extends$T = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$V() {
+  _extends$V = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -38127,7 +38127,7 @@ function _extends$T() {
     }
     return target;
   };
-  return _extends$T.apply(this, arguments);
+  return _extends$V.apply(this, arguments);
 }
 const DEFAULT_OMIT_PROPS = ["value", "onChange", "removeIcon", "placeholder", "maxTagCount", "maxTagTextLength", "maxTagPlaceholder", "choiceTransitionName", "onInputKeyDown", "onPopupScroll", "tabIndex", "activeValue", "onSelectorRemove", "focused"];
 const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput2(props, ref) {
@@ -38264,13 +38264,13 @@ const SelectInput = /* @__PURE__ */ reactExports.forwardRef(function SelectInput
         ref: composeRef(RootComponent.ref, rootRef)
       });
     }
-    return /* @__PURE__ */ reactExports.createElement(RootComponent, _extends$T({}, mergedProps, {
+    return /* @__PURE__ */ reactExports.createElement(RootComponent, _extends$V({}, mergedProps, {
       ref: rootRef
     }));
   }
   return /* @__PURE__ */ reactExports.createElement(SelectInputContext.Provider, {
     value: contextValue
-  }, /* @__PURE__ */ reactExports.createElement("div", _extends$T({}, omit(domProps, ariaKeys), {
+  }, /* @__PURE__ */ reactExports.createElement("div", _extends$V({}, omit(domProps, ariaKeys), {
     // Style
     ref: rootRef,
     className,
@@ -38316,8 +38316,8 @@ function useComponents(components2, getInputElement, getRawInputElement) {
     };
   }, [components2, getInputElement, getRawInputElement]);
 }
-function _extends$S() {
-  _extends$S = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$U() {
+  _extends$U = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -38328,7 +38328,7 @@ function _extends$S() {
     }
     return target;
   };
-  return _extends$S.apply(this, arguments);
+  return _extends$U.apply(this, arguments);
 }
 const isMultiple$1 = (mode) => mode === "tags" || mode === "multiple";
 const BaseSelect = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
@@ -38667,7 +38667,7 @@ const BaseSelect = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     [`${prefixCls}-customize-input`]: customizeInputElement,
     [`${prefixCls}-show-search`]: showSearch
   });
-  let renderNode2 = /* @__PURE__ */ reactExports.createElement(SelectInput, _extends$S({}, restProps, {
+  let renderNode2 = /* @__PURE__ */ reactExports.createElement(SelectInput, _extends$U({}, restProps, {
     // Ref
     ref: containerRef,
     prefixCls,
@@ -38730,8 +38730,8 @@ const OptGroup = () => null;
 OptGroup.isSelectOptGroup = true;
 const Option = () => null;
 Option.isSelectOption = true;
-function _extends$R() {
-  _extends$R = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$T() {
+  _extends$T = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -38742,7 +38742,7 @@ function _extends$R() {
     }
     return target;
   };
-  return _extends$R.apply(this, arguments);
+  return _extends$T.apply(this, arguments);
 }
 const Filler = /* @__PURE__ */ reactExports.forwardRef(({
   height,
@@ -38786,7 +38786,7 @@ const Filler = /* @__PURE__ */ reactExports.forwardRef(({
         onInnerResize();
       }
     }
-  }, /* @__PURE__ */ reactExports.createElement("div", _extends$R({
+  }, /* @__PURE__ */ reactExports.createElement("div", _extends$T({
     style: innerStyle,
     className: clsx({
       [`${prefixCls}-holder-inner`]: prefixCls
@@ -39647,8 +39647,8 @@ function getSpinSize(containerSize = 0, scrollRange = 0) {
   baseSize = Math.max(baseSize, MIN_SIZE);
   return Math.floor(baseSize);
 }
-function _extends$Q() {
-  _extends$Q = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$S() {
+  _extends$S = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -39659,7 +39659,7 @@ function _extends$Q() {
     }
     return target;
   };
-  return _extends$Q.apply(this, arguments);
+  return _extends$S.apply(this, arguments);
 }
 const EMPTY_DATA = [];
 const ScrollStyle = {
@@ -40025,7 +40025,7 @@ function RawList(props, ref) {
   if (isRTL) {
     containerProps.dir = "rtl";
   }
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$Q({
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$S({
     ref: containerRef,
     style: {
       ...style2,
@@ -40092,8 +40092,8 @@ List$1.displayName = "List";
 function isPlatformMac() {
   return /(mac\sos|macintosh)/i.test(navigator.appVersion);
 }
-function _extends$P() {
-  _extends$P = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$R() {
+  _extends$R = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -40104,7 +40104,7 @@ function _extends$P() {
     }
     return target;
   };
-  return _extends$P.apply(this, arguments);
+  return _extends$R.apply(this, arguments);
 }
 function isTitleType(content) {
   return typeof content === "string" || typeof content === "number";
@@ -40320,7 +40320,7 @@ const OptionList = (_, ref) => {
     } = item;
     const attrs = pickAttrs(itemData, true);
     const mergedLabel = getLabel(item);
-    return item ? /* @__PURE__ */ reactExports.createElement("div", _extends$P({
+    return item ? /* @__PURE__ */ reactExports.createElement("div", _extends$R({
       "aria-label": typeof mergedLabel === "string" && !group ? mergedLabel : null
     }, attrs, {
       key: index
@@ -40333,7 +40333,7 @@ const OptionList = (_, ref) => {
     role: "listbox",
     id: `${id}_list`
   };
-  return /* @__PURE__ */ reactExports.createElement(reactExports.Fragment, null, virtual && /* @__PURE__ */ reactExports.createElement("div", _extends$P({}, a11yProps, {
+  return /* @__PURE__ */ reactExports.createElement(reactExports.Fragment, null, virtual && /* @__PURE__ */ reactExports.createElement("div", _extends$R({}, a11yProps, {
     style: {
       height: 0,
       width: 0,
@@ -40398,7 +40398,7 @@ const OptionList = (_, ref) => {
     if (title !== void 0) {
       optionTitle = title;
     }
-    return /* @__PURE__ */ reactExports.createElement("div", _extends$P({}, pickAttrs(passedProps), !virtual ? getItemAriaProps(item, itemIndex) : {}, {
+    return /* @__PURE__ */ reactExports.createElement("div", _extends$R({}, pickAttrs(passedProps), !virtual ? getItemAriaProps(item, itemIndex) : {}, {
       "aria-selected": virtual ? void 0 : isAriaSelected(value),
       "aria-disabled": mergedDisabled,
       className: optionClassName,
@@ -40467,7 +40467,7 @@ const useCache = ((labeledValues, valueOptions) => {
   return [filledLabeledValues, getOption];
 });
 function includes(test, search) {
-  return toArray$1(test).join("").toUpperCase().includes(search);
+  return toArray$2(test).join("").toUpperCase().includes(search);
 }
 const useFilterOptions = ((options, fieldNames, searchValue, filterOption, optionFilterProp) => {
   return reactExports.useMemo(() => {
@@ -40532,7 +40532,7 @@ function convertNodeToOption(node2) {
   };
 }
 function convertChildrenToData(nodes, optionOnly = false) {
-  return toArray$4(nodes).map((node2, index) => {
+  return toArray$5(nodes).map((node2, index) => {
     if (!/* @__PURE__ */ reactExports.isValidElement(node2) || !node2.type) {
       return null;
     }
@@ -40625,8 +40625,8 @@ function useSearchConfig(showSearch, props, mode) {
     return [isObject2 || mode === "combobox" || mode === "tags" || mode === "multiple" && showSearch === void 0 ? true : showSearch, searchConfig];
   }, [mode, showSearch, filterOption, searchValue, optionFilterProp, filterSort, onSearch, autoClearSearchValue]);
 }
-function _extends$O() {
-  _extends$O = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$Q() {
+  _extends$Q = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -40637,7 +40637,7 @@ function _extends$O() {
     }
     return target;
   };
-  return _extends$O.apply(this, arguments);
+  return _extends$Q.apply(this, arguments);
 }
 const OMIT_DOM_PROPS = ["inputValue"];
 function isRawValue(value) {
@@ -40733,7 +40733,7 @@ const Select$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     options: mergedOptions
   } = parsedOptions;
   const convert2LabelValues = reactExports.useCallback((draftValues) => {
-    const valueList = toArray$1(draftValues);
+    const valueList = toArray$2(draftValues);
     return valueList.map((val) => {
       let rawValue;
       let rawLabel;
@@ -41002,7 +41002,7 @@ const Select$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, [maxCount, parsedOptions, displayOptions, onActiveValue, mergedDefaultActiveFirstOption, onInternalSelect, menuItemSelectedIcon, rawValues, mergedFieldNames, virtual, popupMatchSelectWidth, direction, listHeight, listItemHeight, childrenAsData, optionRender, classNames, styles]);
   return /* @__PURE__ */ reactExports.createElement(SelectContext.Provider, {
     value: selectContext
-  }, /* @__PURE__ */ reactExports.createElement(BaseSelect, _extends$O({}, restProps, {
+  }, /* @__PURE__ */ reactExports.createElement(BaseSelect, _extends$Q({}, restProps, {
     // >>> MISC
     id: mergedId,
     prefixCls,
@@ -41220,7 +41220,7 @@ const genSharedEmptyStyle = (token2) => {
     }
   };
 };
-const useStyle$t = genStyleHooks("Empty", (token2) => {
+const useStyle$v = genStyleHooks("Empty", (token2) => {
   const {
     componentCls,
     controlHeightLG,
@@ -41260,7 +41260,7 @@ const Empty = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     image: contextImage
   } = useComponentConfig("empty");
   const prefixCls = getPrefixCls("empty", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$t(prefixCls);
+  const [hashId, cssVarCls] = useStyle$v(prefixCls);
   const contextStyleRoot = useSemanticRootStyle(contextStyle);
   const styleRoot = useSemanticRootStyle(style2);
   const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, classNames], [contextStyles, contextStyleRoot, styles, styleRoot], {
@@ -42112,7 +42112,7 @@ const genSelectInputStyle = (token2) => {
     ]
   };
 };
-const prepareComponentToken$l = (token2) => {
+const prepareComponentToken$m = (token2) => {
   const {
     fontSize,
     lineHeight,
@@ -42173,7 +42173,7 @@ const prepareComponentToken$l = (token2) => {
   };
   return componentToken;
 };
-const genBaseStyle$6 = (token2) => {
+const genBaseStyle$7 = (token2) => {
   const {
     antCls,
     componentCls,
@@ -42280,7 +42280,7 @@ const genSelectStyle = (token2) => {
     // ==                       LTR                       ==
     // =====================================================
     // Base
-    genBaseStyle$6(token2),
+    genBaseStyle$7(token2),
     // Dropdown
     genSingleStyle(token2),
     // =====================================================
@@ -42309,7 +42309,7 @@ const useSelectStyle = genStyleHooks("Select", (token2, {
     selectHeight: token2.controlHeight
   });
   return [genSelectStyle(selectToken), genSelectInputStyle(selectToken)];
-}, prepareComponentToken$l, {
+}, prepareComponentToken$m, {
   unitless: {
     optionLineHeight: true,
     optionSelectedFontWeight: true
@@ -42327,6 +42327,68 @@ function requireCheckOutlined() {
 }
 var CheckOutlinedExports = /* @__PURE__ */ requireCheckOutlined();
 const CheckOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(CheckOutlinedExports);
+function _extends$P() {
+  _extends$P = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i2 = 1; i2 < arguments.length; i2++) {
+      var source = arguments[i2];
+      for (var key2 in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key2)) {
+          target[key2] = source[key2];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$P.apply(this, arguments);
+}
+const CheckOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$P({}, props, {
+  ref,
+  icon: CheckOutlinedSvg
+}));
+const RefIcon$r = /* @__PURE__ */ reactExports.forwardRef(CheckOutlined);
+var DownOutlined$1 = {};
+var hasRequiredDownOutlined;
+function requireDownOutlined() {
+  if (hasRequiredDownOutlined) return DownOutlined$1;
+  hasRequiredDownOutlined = 1;
+  Object.defineProperty(DownOutlined$1, "__esModule", { value: true });
+  var DownOutlined2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" } }] }, "name": "down", "theme": "outlined" };
+  DownOutlined$1.default = DownOutlined2;
+  return DownOutlined$1;
+}
+var DownOutlinedExports = /* @__PURE__ */ requireDownOutlined();
+const DownOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(DownOutlinedExports);
+function _extends$O() {
+  _extends$O = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i2 = 1; i2 < arguments.length; i2++) {
+      var source = arguments[i2];
+      for (var key2 in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key2)) {
+          target[key2] = source[key2];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$O.apply(this, arguments);
+}
+const DownOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$O({}, props, {
+  ref,
+  icon: DownOutlinedSvg
+}));
+const RefIcon$q = /* @__PURE__ */ reactExports.forwardRef(DownOutlined);
+var SearchOutlined$1 = {};
+var hasRequiredSearchOutlined;
+function requireSearchOutlined() {
+  if (hasRequiredSearchOutlined) return SearchOutlined$1;
+  hasRequiredSearchOutlined = 1;
+  Object.defineProperty(SearchOutlined$1, "__esModule", { value: true });
+  var SearchOutlined2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z" } }] }, "name": "search", "theme": "outlined" };
+  SearchOutlined$1.default = SearchOutlined2;
+  return SearchOutlined$1;
+}
+var SearchOutlinedExports = /* @__PURE__ */ requireSearchOutlined();
+const SearchOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(SearchOutlinedExports);
 function _extends$N() {
   _extends$N = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
@@ -42341,73 +42403,11 @@ function _extends$N() {
   };
   return _extends$N.apply(this, arguments);
 }
-const CheckOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$N({}, props, {
-  ref,
-  icon: CheckOutlinedSvg
-}));
-const RefIcon$q = /* @__PURE__ */ reactExports.forwardRef(CheckOutlined);
-var DownOutlined$1 = {};
-var hasRequiredDownOutlined;
-function requireDownOutlined() {
-  if (hasRequiredDownOutlined) return DownOutlined$1;
-  hasRequiredDownOutlined = 1;
-  Object.defineProperty(DownOutlined$1, "__esModule", { value: true });
-  var DownOutlined2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z" } }] }, "name": "down", "theme": "outlined" };
-  DownOutlined$1.default = DownOutlined2;
-  return DownOutlined$1;
-}
-var DownOutlinedExports = /* @__PURE__ */ requireDownOutlined();
-const DownOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(DownOutlinedExports);
-function _extends$M() {
-  _extends$M = Object.assign ? Object.assign.bind() : function(target) {
-    for (var i2 = 1; i2 < arguments.length; i2++) {
-      var source = arguments[i2];
-      for (var key2 in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key2)) {
-          target[key2] = source[key2];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends$M.apply(this, arguments);
-}
-const DownOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$M({}, props, {
-  ref,
-  icon: DownOutlinedSvg
-}));
-const RefIcon$p = /* @__PURE__ */ reactExports.forwardRef(DownOutlined);
-var SearchOutlined$1 = {};
-var hasRequiredSearchOutlined;
-function requireSearchOutlined() {
-  if (hasRequiredSearchOutlined) return SearchOutlined$1;
-  hasRequiredSearchOutlined = 1;
-  Object.defineProperty(SearchOutlined$1, "__esModule", { value: true });
-  var SearchOutlined2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M909.6 854.5L649.9 594.8C690.2 542.7 712 479 712 412c0-80.2-31.3-155.4-87.9-212.1-56.6-56.7-132-87.9-212.1-87.9s-155.5 31.3-212.1 87.9C143.2 256.5 112 331.8 112 412c0 80.1 31.3 155.5 87.9 212.1C256.5 680.8 331.8 712 412 712c67 0 130.6-21.8 182.7-62l259.7 259.6a8.2 8.2 0 0011.6 0l43.6-43.5a8.2 8.2 0 000-11.6zM570.4 570.4C528 612.7 471.8 636 412 636s-116-23.3-158.4-65.6C211.3 528 188 471.8 188 412s23.3-116.1 65.6-158.4C296 211.3 352.2 188 412 188s116.1 23.2 158.4 65.6S636 352.2 636 412s-23.3 116.1-65.6 158.4z" } }] }, "name": "search", "theme": "outlined" };
-  SearchOutlined$1.default = SearchOutlined2;
-  return SearchOutlined$1;
-}
-var SearchOutlinedExports = /* @__PURE__ */ requireSearchOutlined();
-const SearchOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(SearchOutlinedExports);
-function _extends$L() {
-  _extends$L = Object.assign ? Object.assign.bind() : function(target) {
-    for (var i2 = 1; i2 < arguments.length; i2++) {
-      var source = arguments[i2];
-      for (var key2 in source) {
-        if (Object.prototype.hasOwnProperty.call(source, key2)) {
-          target[key2] = source[key2];
-        }
-      }
-    }
-    return target;
-  };
-  return _extends$L.apply(this, arguments);
-}
-const SearchOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$L({}, props, {
+const SearchOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$N({}, props, {
   ref,
   icon: SearchOutlinedSvg
 }));
-const RefIcon$o = /* @__PURE__ */ reactExports.forwardRef(SearchOutlined);
+const RefIcon$p = /* @__PURE__ */ reactExports.forwardRef(SearchOutlined);
 function useIcons({
   suffixIcon,
   contextSuffixIcon,
@@ -42430,7 +42430,7 @@ function useIcons({
   componentName
 }) {
   return reactExports.useMemo(() => {
-    const mergedClearIcon = fallbackProp(clearIcon, contextClearIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$w, null));
+    const mergedClearIcon = fallbackProp(clearIcon, contextClearIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$x, null));
     const getSuffixIconNode = (arrowIcon) => {
       if (suffixIcon === null && !hasFeedback && !showArrow) {
         return null;
@@ -42441,7 +42441,7 @@ function useIcons({
     if (suffixIcon !== void 0) {
       mergedSuffixIcon = getSuffixIconNode(suffixIcon);
     } else if (loading) {
-      mergedSuffixIcon = getSuffixIconNode(fallbackProp(loadingIcon, contextLoadingIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$s, {
+      mergedSuffixIcon = getSuffixIconNode(fallbackProp(loadingIcon, contextLoadingIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$t, {
         spin: true
       })));
     } else {
@@ -42450,13 +42450,13 @@ function useIcons({
         showSearch
       }) => {
         if (open2 && showSearch) {
-          return getSuffixIconNode(fallbackProp(searchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$o, null)));
+          return getSuffixIconNode(fallbackProp(searchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$p, null)));
         }
-        return getSuffixIconNode(fallbackProp(contextSuffixIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$p, null)));
+        return getSuffixIconNode(fallbackProp(contextSuffixIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$q, null)));
       };
     }
-    const mergedItemIcon = fallbackProp(menuItemSelectedIcon, contextMenuItemSelectedIcon, multiple ? /* @__PURE__ */ reactExports.createElement(RefIcon$q, null) : null);
-    const mergedRemoveIcon = fallbackProp(removeIcon, contextRemoveIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$v, null));
+    const mergedItemIcon = fallbackProp(menuItemSelectedIcon, contextMenuItemSelectedIcon, multiple ? /* @__PURE__ */ reactExports.createElement(RefIcon$r, null) : null);
+    const mergedRemoveIcon = fallbackProp(removeIcon, contextRemoveIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$w, null));
     return {
       clearIcon: mergedClearIcon,
       suffixIcon: mergedSuffixIcon,
@@ -42934,8 +42934,8 @@ const placements$2 = {
     targetOffset: targetOffset$1
   }
 };
-function _extends$K() {
-  _extends$K = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$M() {
+  _extends$M = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -42946,7 +42946,7 @@ function _extends$K() {
     }
     return target;
   };
-  return _extends$K.apply(this, arguments);
+  return _extends$M.apply(this, arguments);
 }
 const Tooltip$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -43004,7 +43004,7 @@ const Tooltip$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     };
     return /* @__PURE__ */ reactExports.cloneElement(child, ariaProps);
   };
-  return /* @__PURE__ */ reactExports.createElement(Trigger, _extends$K({
+  return /* @__PURE__ */ reactExports.createElement(Trigger, _extends$M({
     popupClassName: classNames?.root,
     prefixCls,
     popup: /* @__PURE__ */ reactExports.createElement(Popup, {
@@ -43571,7 +43571,7 @@ const genTooltipStyle = (token2) => {
     }
   ];
 };
-const prepareComponentToken$k = (token2) => ({
+const prepareComponentToken$l = (token2) => ({
   zIndexPopup: token2.zIndexPopupBase + 70,
   maxWidth: 250,
   ...getArrowOffsetToken({
@@ -43582,7 +43582,7 @@ const prepareComponentToken$k = (token2) => ({
     borderRadiusOuter: Math.min(token2.borderRadiusOuter, 4)
   }))
 });
-const useStyle$s = (prefixCls, rootCls, injectStyle = true) => {
+const useStyle$u = (prefixCls, rootCls, injectStyle = true) => {
   const useStyle2 = genStyleHooks("Tooltip", (token2) => {
     const {
       borderRadius,
@@ -43598,7 +43598,7 @@ const useStyle$s = (prefixCls, rootCls, injectStyle = true) => {
       tooltipBg: colorBgSpotlight
     });
     return [genTooltipStyle(TooltipToken), initZoomMotion(token2, "zoom-big-fast")];
-  }, prepareComponentToken$k, {
+  }, prepareComponentToken$l, {
     resetStyle: false,
     // Popover use Tooltip as internal component. We do not need to handle this.
     injectStyle
@@ -43655,7 +43655,7 @@ const PurePanel$5 = (props) => {
   const prefixCls = getPrefixCls("tooltip", customizePrefixCls);
   const rootPrefixCls = getPrefixCls();
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$s(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$u(prefixCls, rootCls);
   const colorInfo = parseColor(rootPrefixCls, prefixCls, color2);
   const arrowContentStyle = colorInfo.arrowStyle;
   const innerStyles = reactExports.useMemo(() => {
@@ -43805,7 +43805,7 @@ const InternalTooltip = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
   const childProps = child.props;
   const childCls = !childProps.className || typeof childProps.className === "string" ? clsx(childProps.className, openClassName || `${prefixCls}-open`) : childProps.className;
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$s(prefixCls, rootCls, !injectFromPopover);
+  const [hashId, cssVarCls] = useStyle$u(prefixCls, rootCls, !injectFromPopover);
   const colorInfo = parseColor(rootPrefixCls, prefixCls, color2);
   const arrowContentStyle = colorInfo.arrowStyle;
   const themeCls = clsx(rootCls, hashId, cssVarCls);
@@ -43869,7 +43869,7 @@ const Tooltip = InternalTooltip;
 Tooltip._InternalPanelDoNotUseOrYouWillBeFired = PurePanel$5;
 Tooltip.UniqueProvider = UniqueProvider;
 const FALL_BACK_ORIGIN = "50%";
-const genBaseStyle$5 = (token2) => {
+const genBaseStyle$6 = (token2) => {
   const {
     componentCls,
     popoverColor,
@@ -43980,7 +43980,7 @@ const genColorStyle = (token2) => {
     })
   };
 };
-const prepareComponentToken$j = (token2) => {
+const prepareComponentToken$k = (token2) => {
   const {
     lineWidth,
     controlHeight,
@@ -44014,7 +44014,7 @@ const prepareComponentToken$j = (token2) => {
     innerContentPadding: wireframe ? `${paddingSM}px ${popoverPaddingHorizontal}px` : 0
   };
 };
-const useStyle$r = genStyleHooks("Popover", (token2) => {
+const useStyle$t = genStyleHooks("Popover", (token2) => {
   const {
     colorBgElevated,
     colorText
@@ -44023,8 +44023,8 @@ const useStyle$r = genStyleHooks("Popover", (token2) => {
     popoverBg: colorBgElevated,
     popoverColor: colorText
   });
-  return [genBaseStyle$5(popoverToken), genColorStyle(popoverToken), initZoomMotion(popoverToken, "zoom-big")];
-}, prepareComponentToken$j, {
+  return [genBaseStyle$6(popoverToken), genColorStyle(popoverToken), initZoomMotion(popoverToken, "zoom-big")];
+}, prepareComponentToken$k, {
   resetStyle: false,
   deprecatedTokens: [["width", "titleMinWidth"], ["minWidth", "titleMinWidth"]]
 });
@@ -44099,7 +44099,7 @@ const PurePanel$4 = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("popover", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$r(prefixCls);
+  const [hashId, cssVarCls] = useStyle$t(prefixCls);
   return /* @__PURE__ */ reactExports.createElement(RawPurePanel, {
     ...restProps,
     prefixCls,
@@ -44140,7 +44140,7 @@ const InternalPopover = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
   const mergedMouseEnterDelay = mouseEnterDelay ?? contextMouseEnterDelay ?? 0.1;
   const mergedMouseLeaveDelay = mouseLeaveDelay ?? contextMouseLeaveDelay ?? 0.1;
   const prefixCls = getPrefixCls("popover", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$r(prefixCls);
+  const [hashId, cssVarCls] = useStyle$t(prefixCls);
   const rootPrefixCls = getPrefixCls();
   const mergedArrow = useMergedArrow(popoverArrow, contextArrow);
   const mergedTrigger = trigger2 || contextTrigger || "hover";
@@ -44216,8 +44216,8 @@ function requireLeftOutlined() {
 }
 var LeftOutlinedExports = /* @__PURE__ */ requireLeftOutlined();
 const LeftOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(LeftOutlinedExports);
-function _extends$J() {
-  _extends$J = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$L() {
+  _extends$L = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -44228,13 +44228,13 @@ function _extends$J() {
     }
     return target;
   };
-  return _extends$J.apply(this, arguments);
+  return _extends$L.apply(this, arguments);
 }
-const LeftOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$J({}, props, {
+const LeftOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$L({}, props, {
   ref,
   icon: LeftOutlinedSvg
 }));
-const RefIcon$n = /* @__PURE__ */ reactExports.forwardRef(LeftOutlined);
+const RefIcon$o = /* @__PURE__ */ reactExports.forwardRef(LeftOutlined);
 const {
   ESC: ESC$1,
   TAB
@@ -44361,8 +44361,8 @@ const placements$1 = {
     targetOffset
   }
 };
-function _extends$I() {
-  _extends$I = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$K() {
+  _extends$K = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -44373,7 +44373,7 @@ function _extends$I() {
     }
     return target;
   };
-  return _extends$I.apply(this, arguments);
+  return _extends$K.apply(this, arguments);
 }
 const Dropdown = /* @__PURE__ */ React.forwardRef((props, ref) => {
   const {
@@ -44472,7 +44472,7 @@ const Dropdown = /* @__PURE__ */ React.forwardRef((props, ref) => {
   if (!triggerHideAction && trigger2.indexOf("contextMenu") !== -1) {
     triggerHideAction = ["click"];
   }
-  return /* @__PURE__ */ React.createElement(Trigger, _extends$I({
+  return /* @__PURE__ */ React.createElement(Trigger, _extends$K({
     builtinPlacements: placements2
   }, otherProps, {
     prefixCls,
@@ -44927,8 +44927,8 @@ function warnItemProp({
   });
   return restInfo;
 }
-function _extends$H() {
-  _extends$H = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$J() {
+  _extends$J = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -44939,7 +44939,7 @@ function _extends$H() {
     }
     return target;
   };
-  return _extends$H.apply(this, arguments);
+  return _extends$J.apply(this, arguments);
 }
 class LegacyMenuItem extends reactExports.Component {
   render() {
@@ -44951,7 +44951,7 @@ class LegacyMenuItem extends reactExports.Component {
     } = this.props;
     const passedProps = omit(restProps, ["eventKey", "popupClassName", "popupOffset", "onTitleClick"]);
     warningOnce$1(!attribute, "`attribute` of Menu.Item is deprecated. Please pass attribute directly.");
-    return /* @__PURE__ */ reactExports.createElement(ForwardOverflow.Item, _extends$H({}, attribute, {
+    return /* @__PURE__ */ reactExports.createElement(ForwardOverflow.Item, _extends$J({}, attribute, {
       title: typeof title === "string" ? title : void 0
     }, passedProps, {
       ref: elementRef
@@ -45048,7 +45048,7 @@ const InternalMenuItem = /* @__PURE__ */ reactExports.forwardRef((props, ref) =>
   if (props.role === "option") {
     optionRoleProps["aria-selected"] = selected;
   }
-  let renderNode2 = /* @__PURE__ */ reactExports.createElement(LegacyMenuItem, _extends$H({
+  let renderNode2 = /* @__PURE__ */ reactExports.createElement(LegacyMenuItem, _extends$J({
     ref: legacyMenuItemRef,
     elementRef: mergedEleRef,
     role: role === null ? "none" : role || "menuitem",
@@ -45100,13 +45100,13 @@ function MenuItem$1(props, ref) {
   if (measure) {
     return null;
   }
-  return /* @__PURE__ */ reactExports.createElement(InternalMenuItem, _extends$H({}, props, {
+  return /* @__PURE__ */ reactExports.createElement(InternalMenuItem, _extends$J({}, props, {
     ref
   }));
 }
 const MenuItem$2 = /* @__PURE__ */ reactExports.forwardRef(MenuItem$1);
-function _extends$G() {
-  _extends$G = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$I() {
+  _extends$I = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -45117,7 +45117,7 @@ function _extends$G() {
     }
     return target;
   };
-  return _extends$G.apply(this, arguments);
+  return _extends$I.apply(this, arguments);
 }
 const InternalSubMenuList = ({
   className,
@@ -45129,7 +45129,7 @@ const InternalSubMenuList = ({
     mode,
     rtl
   } = reactExports.useContext(MenuContext$1);
-  return /* @__PURE__ */ reactExports.createElement("ul", _extends$G({
+  return /* @__PURE__ */ reactExports.createElement("ul", _extends$I({
     className: clsx(prefixCls, rtl && `${prefixCls}-rtl`, `${prefixCls}-sub`, `${prefixCls}-${mode === "inline" ? "inline" : "vertical"}`, className),
     role: "menu"
   }, restProps, {
@@ -45139,7 +45139,7 @@ const InternalSubMenuList = ({
 };
 const SubMenuList = /* @__PURE__ */ reactExports.forwardRef(InternalSubMenuList);
 function parseChildren(children, keyPath) {
-  return toArray$4(children).map((child, index) => {
+  return toArray$5(children).map((child, index) => {
     if (/* @__PURE__ */ reactExports.isValidElement(child)) {
       const {
         key: key2
@@ -45323,8 +45323,8 @@ function PopupTrigger({
     fresh: true
   }, children);
 }
-function _extends$F() {
-  _extends$F = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$H() {
+  _extends$H = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -45335,7 +45335,7 @@ function _extends$F() {
     }
     return target;
   };
-  return _extends$F.apply(this, arguments);
+  return _extends$H.apply(this, arguments);
 }
 function InlineSubMenuList({
   id,
@@ -45379,7 +45379,7 @@ function InlineSubMenuList({
   return /* @__PURE__ */ reactExports.createElement(InheritableContextProvider, {
     mode: fixedMode,
     locked: !sameModeRef.current
-  }, /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$F({
+  }, /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$H({
     visible: mergedOpen
   }, mergedMotion, {
     forceRender: forceSubMenuRender,
@@ -45396,8 +45396,8 @@ function InlineSubMenuList({
     }, children);
   }));
 }
-function _extends$E() {
-  _extends$E = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$G() {
+  _extends$G = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -45408,7 +45408,7 @@ function _extends$E() {
     }
     return target;
   };
-  return _extends$E.apply(this, arguments);
+  return _extends$G.apply(this, arguments);
 }
 const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -45546,7 +45546,7 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
   }, /* @__PURE__ */ reactExports.createElement("i", {
     className: `${subMenuPrefixCls}-arrow`
   })), [mode, mergedExpandIcon, props, open2, subMenuPrefixCls]);
-  let titleNode = /* @__PURE__ */ reactExports.createElement("div", _extends$E({
+  let titleNode = /* @__PURE__ */ reactExports.createElement("div", _extends$G({
     role: "menuitem",
     style: directionStyle,
     className: `${subMenuPrefixCls}-title`,
@@ -45601,7 +45601,7 @@ const InternalSubMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => 
       onVisibleChange: onPopupVisibleChange
     }, titleNode);
   }
-  let listNode = /* @__PURE__ */ reactExports.createElement(ForwardOverflow.Item, _extends$E({
+  let listNode = /* @__PURE__ */ reactExports.createElement(ForwardOverflow.Item, _extends$G({
     ref,
     role: "none"
   }, restProps, {
@@ -45657,7 +45657,7 @@ const SubMenu$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   if (measure) {
     renderNode2 = childList;
   } else {
-    renderNode2 = /* @__PURE__ */ reactExports.createElement(InternalSubMenu, _extends$E({
+    renderNode2 = /* @__PURE__ */ reactExports.createElement(InternalSubMenu, _extends$G({
       ref
     }, props), childList);
   }
@@ -45682,8 +45682,8 @@ function Divider$1({
     style: style2
   });
 }
-function _extends$D() {
-  _extends$D = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$F() {
+  _extends$F = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -45694,7 +45694,7 @@ function _extends$D() {
     }
     return target;
   };
-  return _extends$D.apply(this, arguments);
+  return _extends$F.apply(this, arguments);
 }
 const InternalMenuItemGroup = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -45710,7 +45710,7 @@ const InternalMenuItemGroup = /* @__PURE__ */ reactExports.forwardRef((props, re
     styles
   } = reactExports.useContext(MenuContext$1);
   const groupPrefixCls = `${prefixCls}-item-group`;
-  return /* @__PURE__ */ reactExports.createElement("li", _extends$D({
+  return /* @__PURE__ */ reactExports.createElement("li", _extends$F({
     ref,
     role: "presentation"
   }, restProps, {
@@ -45738,12 +45738,12 @@ const MenuItemGroup = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   if (measure) {
     return childList;
   }
-  return /* @__PURE__ */ reactExports.createElement(InternalMenuItemGroup, _extends$D({
+  return /* @__PURE__ */ reactExports.createElement(InternalMenuItemGroup, _extends$F({
     ref
   }, omit(props, ["warnKey"])), childList);
 });
-function _extends$C() {
-  _extends$C = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$E() {
+  _extends$E = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -45754,7 +45754,7 @@ function _extends$C() {
     }
     return target;
   };
-  return _extends$C.apply(this, arguments);
+  return _extends$E.apply(this, arguments);
 }
 function convertItemsToNodes(list, components2, prefixCls) {
   const {
@@ -45776,25 +45776,25 @@ function convertItemsToNodes(list, components2, prefixCls) {
       const mergedKey = key2 ?? `tmp-${index}`;
       if (children || type2 === "group") {
         if (type2 === "group") {
-          return /* @__PURE__ */ reactExports.createElement(MergedMenuItemGroup, _extends$C({
+          return /* @__PURE__ */ reactExports.createElement(MergedMenuItemGroup, _extends$E({
             key: mergedKey
           }, restProps, {
             title: label
           }), convertItemsToNodes(children, components2, prefixCls));
         }
-        return /* @__PURE__ */ reactExports.createElement(MergedSubMenu, _extends$C({
+        return /* @__PURE__ */ reactExports.createElement(MergedSubMenu, _extends$E({
           key: mergedKey
         }, restProps, {
           title: label
         }), convertItemsToNodes(children, components2, prefixCls));
       }
       if (type2 === "divider") {
-        return /* @__PURE__ */ reactExports.createElement(MergedDivider, _extends$C({
+        return /* @__PURE__ */ reactExports.createElement(MergedDivider, _extends$E({
           key: mergedKey
         }, restProps));
       }
       const hasExtra = !!extra || extra === 0;
-      return /* @__PURE__ */ reactExports.createElement(MergedMenuItem, _extends$C({
+      return /* @__PURE__ */ reactExports.createElement(MergedMenuItem, _extends$E({
         key: mergedKey
       }, restProps, {
         extra,
@@ -45825,8 +45825,8 @@ function parseItems(children, items, keyPath, components2, prefixCls) {
   }
   return parseChildren(childNodes, keyPath);
 }
-function _extends$B() {
-  _extends$B = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$D() {
+  _extends$D = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -45837,7 +45837,7 @@ function _extends$B() {
     }
     return target;
   };
-  return _extends$B.apply(this, arguments);
+  return _extends$D.apply(this, arguments);
 }
 const EMPTY_LIST = [];
 const Menu$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
@@ -46098,7 +46098,7 @@ const Menu$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       }, child)
     ))
   );
-  const container = /* @__PURE__ */ reactExports.createElement(ForwardOverflow, _extends$B({
+  const container = /* @__PURE__ */ reactExports.createElement(ForwardOverflow, _extends$D({
     id,
     ref: containerRef,
     prefixCls: `${prefixCls}-overflow`,
@@ -46192,8 +46192,8 @@ function requireBarsOutlined() {
 }
 var BarsOutlinedExports = /* @__PURE__ */ requireBarsOutlined();
 const BarsOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(BarsOutlinedExports);
-function _extends$A() {
-  _extends$A = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$C() {
+  _extends$C = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -46204,13 +46204,13 @@ function _extends$A() {
     }
     return target;
   };
-  return _extends$A.apply(this, arguments);
+  return _extends$C.apply(this, arguments);
 }
-const BarsOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$A({}, props, {
+const BarsOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$C({}, props, {
   ref,
   icon: BarsOutlinedSvg
 }));
-const RefIcon$m = /* @__PURE__ */ reactExports.forwardRef(BarsOutlined);
+const RefIcon$n = /* @__PURE__ */ reactExports.forwardRef(BarsOutlined);
 const LayoutContext = /* @__PURE__ */ reactExports.createContext({
   siderHook: {
     addSider: () => null,
@@ -46288,7 +46288,7 @@ const genLayoutStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$i = (token2) => {
+const prepareComponentToken$j = (token2) => {
   const {
     colorBgLayout,
     controlHeight,
@@ -46324,7 +46324,7 @@ const prepareComponentToken$i = (token2) => {
   };
 };
 const DEPRECATED_TOKENS = [["colorBgBody", "bodyBg"], ["colorBgHeader", "headerBg"], ["colorBgTrigger", "triggerBg"]];
-const useStyle$q = genStyleHooks("Layout", genLayoutStyle, prepareComponentToken$i, {
+const useStyle$s = genStyleHooks("Layout", genLayoutStyle, prepareComponentToken$j, {
   deprecatedTokens: DEPRECATED_TOKENS
 });
 const genSiderStyle = (token2) => {
@@ -46434,7 +46434,7 @@ const genSiderStyle = (token2) => {
     }
   };
 };
-const useStyle$p = genStyleHooks(["Layout", "Sider"], genSiderStyle, prepareComponentToken$i, {
+const useStyle$r = genStyleHooks(["Layout", "Sider"], genSiderStyle, prepareComponentToken$j, {
   deprecatedTokens: DEPRECATED_TOKENS
 });
 const dimensionMaxMap = {
@@ -46515,7 +46515,7 @@ const Sider$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     direction
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("layout-sider", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$p(prefixCls);
+  const [hashId, cssVarCls] = useStyle$r(prefixCls);
   const responsiveHandlerRef = reactExports.useRef(null);
   responsiveHandlerRef.current = (mql) => {
     setBelow(mql.matches);
@@ -46557,11 +46557,11 @@ const Sider$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     onClick: toggle,
     className: clsx(`${prefixCls}-zero-width-trigger`, `${prefixCls}-zero-width-trigger-${reverseArrow ? "right" : "left"}`),
     style: zeroWidthTriggerStyle
-  }, trigger2 || /* @__PURE__ */ reactExports.createElement(RefIcon$m, null)) : null;
+  }, trigger2 || /* @__PURE__ */ reactExports.createElement(RefIcon$n, null)) : null;
   const reverseIcon = direction === "rtl" === !reverseArrow;
   const iconObj = {
-    expanded: reverseIcon ? /* @__PURE__ */ reactExports.createElement(RefIcon$r, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$n, null),
-    collapsed: reverseIcon ? /* @__PURE__ */ reactExports.createElement(RefIcon$n, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$r, null)
+    expanded: reverseIcon ? /* @__PURE__ */ reactExports.createElement(RefIcon$s, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$o, null),
+    collapsed: reverseIcon ? /* @__PURE__ */ reactExports.createElement(RefIcon$o, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$s, null)
   };
   const status = collapsed ? "collapsed" : "expanded";
   const defaultTrigger = iconObj[status];
@@ -46617,8 +46617,8 @@ function requireEllipsisOutlined() {
 }
 var EllipsisOutlinedExports = /* @__PURE__ */ requireEllipsisOutlined();
 const EllipsisOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(EllipsisOutlinedExports);
-function _extends$z() {
-  _extends$z = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$B() {
+  _extends$B = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -46629,13 +46629,13 @@ function _extends$z() {
     }
     return target;
   };
-  return _extends$z.apply(this, arguments);
+  return _extends$B.apply(this, arguments);
 }
-const EllipsisOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$z({}, props, {
+const EllipsisOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$B({}, props, {
   ref,
   icon: EllipsisOutlinedSvg
 }));
-const RefIcon$l = /* @__PURE__ */ reactExports.forwardRef(EllipsisOutlined);
+const RefIcon$m = /* @__PURE__ */ reactExports.forwardRef(EllipsisOutlined);
 const MenuContext = /* @__PURE__ */ reactExports.createContext({
   prefixCls: "",
   firstLevel: true,
@@ -46717,7 +46717,7 @@ const MenuItem = (props) => {
     tooltipProps.title = null;
     tooltipProps.open = false;
   }
-  const childrenLength = toArray$4(children).length;
+  const childrenLength = toArray$5(children).length;
   let returnNode = /* @__PURE__ */ reactExports.createElement(MenuItem$2, {
     ...omit(props, ["title", "icon", "danger"]),
     className: clsx(firstLevel ? classNames?.item : classNames?.subMenu?.item, {
@@ -47593,7 +47593,7 @@ const getBaseStyle = (token2) => {
     }
   ];
 };
-const prepareComponentToken$h = (token2) => {
+const prepareComponentToken$i = (token2) => {
   const {
     colorPrimary,
     colorError,
@@ -47710,7 +47710,7 @@ const prepareComponentToken$h = (token2) => {
     itemWidth: activeBarWidth ? `calc(100% + ${activeBarBorderWidth}px)` : `calc(100% - ${itemMarginInline * 2}px)`
   };
 };
-const useStyle$o = (prefixCls, rootCls = prefixCls, injectStyle = true) => {
+const useStyle$q = (prefixCls, rootCls = prefixCls, injectStyle = true) => {
   const useStyle2 = genStyleHooks("Menu", (token2) => {
     const {
       colorBgElevated,
@@ -47789,7 +47789,7 @@ const useStyle$o = (prefixCls, rootCls = prefixCls, injectStyle = true) => {
       initSlideMotion(menuToken, "slide-down"),
       initZoomMotion(menuToken, "zoom-big")
     ];
-  }, prepareComponentToken$h, {
+  }, prepareComponentToken$i, {
     deprecatedTokens: [["colorGroupTitle", "groupTitleColor"], ["radiusItem", "itemBorderRadius"], ["radiusSubMenuItem", "subMenuItemBorderRadius"], ["colorItemText", "itemColor"], ["colorItemTextHover", "itemHoverColor"], ["colorItemTextHoverHorizontal", "horizontalItemHoverColor"], ["colorItemTextSelected", "itemSelectedColor"], ["colorItemTextSelectedHorizontal", "horizontalItemSelectedColor"], ["colorItemTextDisabled", "itemDisabledColor"], ["colorDangerItemText", "dangerItemColor"], ["colorDangerItemTextHover", "dangerItemHoverColor"], ["colorDangerItemTextSelected", "dangerItemSelectedColor"], ["colorDangerItemBgActive", "dangerItemActiveBg"], ["colorDangerItemBgSelected", "dangerItemSelectedBg"], ["colorItemBg", "itemBg"], ["colorItemBgHover", "itemHoverBg"], ["colorSubItemBg", "subMenuItemBg"], ["colorItemBgActive", "itemActiveBg"], ["colorItemBgSelectedHorizontal", "horizontalItemSelectedBg"], ["colorActiveBarWidth", "activeBarWidth"], ["colorActiveBarHeight", "activeBarHeight"], ["colorActiveBarBorderSize", "activeBarBorderWidth"], ["colorItemBgSelected", "itemSelectedBg"]],
     // Dropdown will handle menu style self. We do not need to handle this.
     injectStyle,
@@ -47945,7 +47945,7 @@ const InternalMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   };
   const prefixCls = getPrefixCls("menu", customizePrefixCls || overrideObj.prefixCls);
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$o(prefixCls, rootCls, !override);
+  const [hashId, cssVarCls] = useStyle$q(prefixCls, rootCls, !override);
   const menuClassName = clsx(`${prefixCls}-${theme2}`, contextClassName, className);
   const mergedExpandIcon = reactExports.useMemo(() => {
     if (isFunction$1(expandIcon) || isEmptyIcon(expandIcon)) {
@@ -47980,7 +47980,7 @@ const InternalMenu = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     value: contextValue
   }, /* @__PURE__ */ reactExports.createElement(ExportMenu, {
     getPopupContainer,
-    overflowedIndicator: /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
+    overflowedIndicator: /* @__PURE__ */ reactExports.createElement(RefIcon$m, null),
     overflowedIndicatorPopupClassName: clsx(prefixCls, `${prefixCls}-${theme2}`, overflowedIndicatorPopupClassName),
     classNames: {
       list: mergedClassNames.list,
@@ -48025,22 +48025,22 @@ Menu.Item = MenuItem;
 Menu.SubMenu = SubMenu;
 Menu.Divider = MenuDivider;
 Menu.ItemGroup = MenuItemGroup;
-function toArray(candidate) {
+function toArray$1(candidate) {
   if (candidate === void 0 || candidate === false) {
     return [];
   }
   return Array.isArray(candidate) ? candidate : [candidate];
 }
 function toNamePathStr(name) {
-  const namePath = toArray(name);
+  const namePath = toArray$1(name);
   return namePath.join("_");
 }
 const RadioGroupContext = /* @__PURE__ */ reactExports.createContext(void 0);
 const RadioGroupContextProvider = RadioGroupContext.Provider;
 const RadioOptionTypeContext = /* @__PURE__ */ reactExports.createContext(void 0);
 const RadioOptionTypeContextProvider = RadioOptionTypeContext.Provider;
-function _extends$y() {
-  _extends$y = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$A() {
+  _extends$A = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -48051,9 +48051,9 @@ function _extends$y() {
     }
     return target;
   };
-  return _extends$y.apply(this, arguments);
+  return _extends$A.apply(this, arguments);
 }
-const Checkbox = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+const Checkbox$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
     prefixCls = "rc-checkbox",
     className,
@@ -48110,7 +48110,7 @@ const Checkbox = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     title,
     style: style2,
     ref: holderRef
-  }, /* @__PURE__ */ reactExports.createElement("input", _extends$y({}, inputProps, {
+  }, /* @__PURE__ */ reactExports.createElement("input", _extends$A({}, inputProps, {
     className: `${prefixCls}-input`,
     ref: inputRef,
     onChange: handleChange,
@@ -48592,7 +48592,7 @@ const getRadioButtonStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$g = (token2) => {
+const prepareComponentToken$h = (token2) => {
   const {
     wireframe,
     padding,
@@ -48634,7 +48634,7 @@ const prepareComponentToken$g = (token2) => {
     radioBgColor: wireframe ? colorBgContainer : colorPrimary
   };
 };
-const useStyle$n = genStyleHooks("Radio", (token2) => {
+const useStyle$p = genStyleHooks("Radio", (token2) => {
   const {
     controlOutline,
     controlOutlineWidth
@@ -48646,7 +48646,7 @@ const useStyle$n = genStyleHooks("Radio", (token2) => {
     radioButtonFocusShadow
   });
   return [getGroupRadioStyle(radioToken), getRadioBasicStyle(radioToken), getRadioButtonStyle(radioToken)];
-}, prepareComponentToken$g, {
+}, prepareComponentToken$h, {
   unitless: {
     radioSize: true,
     dotSize: true
@@ -48688,7 +48688,7 @@ const InternalRadio = (props, ref) => {
   const isButtonType = (groupContext?.optionType || radioOptionTypeContext) === "button";
   const prefixCls = isButtonType ? `${radioPrefixCls}-button` : radioPrefixCls;
   const rootCls = useCSSVarCls(radioPrefixCls);
-  const [hashId, cssVarCls] = useStyle$n(radioPrefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$p(radioPrefixCls, rootCls);
   const radioProps = {
     ...restProps
   };
@@ -48733,7 +48733,7 @@ const InternalRadio = (props, ref) => {
     onMouseLeave: props.onMouseLeave,
     title,
     onClick: onLabelClick
-  }, /* @__PURE__ */ reactExports.createElement(Checkbox, {
+  }, /* @__PURE__ */ reactExports.createElement(Checkbox$2, {
     ...radioProps,
     className: clsx(mergedClassNames.icon, {
       [TARGET_CLS]: !isButtonType
@@ -48797,7 +48797,7 @@ const RadioGroup = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const prefixCls = getPrefixCls("radio", customizePrefixCls);
   const groupPrefixCls = `${prefixCls}-group`;
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$n(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$p(prefixCls, rootCls);
   let childrenToRender = children;
   if (options && options.length > 0) {
     childrenToRender = options.map((option) => {
@@ -49822,7 +49822,7 @@ const useSharedStyle = genStyleHooks(["Input", "Shared"], (token2) => {
 }, initComponentToken, {
   resetFont: false
 });
-const useStyle$m = genStyleHooks(["Input", "Component"], (token2) => {
+const useStyle$o = genStyleHooks(["Input", "Component"], (token2) => {
   const inputToken = merge$1(token2, initInputToken(token2));
   return [
     genGroupStyle(inputToken),
@@ -49850,8 +49850,8 @@ function requirePlusOutlined() {
 }
 var PlusOutlinedExports = /* @__PURE__ */ requirePlusOutlined();
 const PlusOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(PlusOutlinedExports);
-function _extends$x() {
-  _extends$x = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$z() {
+  _extends$z = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -49862,13 +49862,13 @@ function _extends$x() {
     }
     return target;
   };
-  return _extends$x.apply(this, arguments);
+  return _extends$z.apply(this, arguments);
 }
-const PlusOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$x({}, props, {
+const PlusOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$z({}, props, {
   ref,
   icon: PlusOutlinedSvg
 }));
-const RefIcon$k = /* @__PURE__ */ reactExports.forwardRef(PlusOutlined);
+const RefIcon$l = /* @__PURE__ */ reactExports.forwardRef(PlusOutlined);
 const TabContext = /* @__PURE__ */ reactExports.createContext(null);
 const useIndicator = (options) => {
   const {
@@ -50271,8 +50271,8 @@ const ExtraContent = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     ref
   }, content) : null;
 });
-function _extends$w() {
-  _extends$w = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$y() {
+  _extends$y = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -50283,7 +50283,7 @@ function _extends$w() {
     }
     return target;
   };
-  return _extends$w.apply(this, arguments);
+  return _extends$y.apply(this, arguments);
 }
 const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -50435,7 +50435,7 @@ const OperationNode = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const overlayClassName = clsx(popupClassName, {
     [`${dropdownPrefix}-rtl`]: rtl
   });
-  const moreNode = mobile ? null : /* @__PURE__ */ reactExports.createElement(Dropdown, _extends$w({
+  const moreNode = mobile ? null : /* @__PURE__ */ reactExports.createElement(Dropdown, _extends$y({
     prefixCls: dropdownPrefix,
     overlay,
     visible: tabs.length ? open2 : false,
@@ -50574,8 +50574,8 @@ const TabNode = (props) => {
   }, closeIcon || editable.removeIcon || "×"));
   return renderWrapper ? renderWrapper(node2) : node2;
 };
-function _extends$v() {
-  _extends$v = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$x() {
+  _extends$x = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -50586,7 +50586,7 @@ function _extends$v() {
     }
     return target;
   };
-  return _extends$v.apply(this, arguments);
+  return _extends$x.apply(this, arguments);
 }
 const getTabSize = (tab, containerRect) => {
   const {
@@ -50606,7 +50606,7 @@ const getTabSize = (tab, containerRect) => {
   }
   return [offsetWidth, offsetHeight, offsetLeft, offsetTop];
 };
-const getSize$2 = (refObj) => {
+const getSize$3 = (refObj) => {
   const {
     offsetWidth = 0,
     offsetHeight = 0
@@ -50978,15 +50978,15 @@ const TabNavList = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     updateTabSizes();
   }, [tabs.map((tab) => tab.key).join("_")]);
   const onListHolderResize = useUpdate(() => {
-    const containerSize = getSize$2(containerRef);
-    const extraLeftSize = getSize$2(extraLeftRef);
-    const extraRightSize = getSize$2(extraRightRef);
+    const containerSize = getSize$3(containerRef);
+    const extraLeftSize = getSize$3(extraLeftRef);
+    const extraRightSize = getSize$3(extraRightRef);
     setContainerExcludeExtraSize([containerSize[0] - extraLeftSize[0] - extraRightSize[0], containerSize[1] - extraLeftSize[1] - extraRightSize[1]]);
-    const newAddSize = getSize$2(innerAddButtonRef);
+    const newAddSize = getSize$3(innerAddButtonRef);
     setAddSize(newAddSize);
-    const newOperationSize = getSize$2(operationsRef);
+    const newOperationSize = getSize$3(operationsRef);
     setOperationSize(newOperationSize);
-    const tabContentFullSize = getSize$2(tabListRef);
+    const tabContentFullSize = getSize$3(tabListRef);
     setTabContentSize([tabContentFullSize[0] - newAddSize[0], tabContentFullSize[1] - newAddSize[1]]);
     updateTabSizes();
   });
@@ -51081,7 +51081,7 @@ const TabNavList = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       ...indicatorStyle,
       ...styles?.indicator
     }
-  }))))), /* @__PURE__ */ reactExports.createElement(OperationNode$1, _extends$v({}, props, {
+  }))))), /* @__PURE__ */ reactExports.createElement(OperationNode$1, _extends$x({}, props, {
     removeAriaLabel: locale2?.removeAriaLabel,
     ref: operationsRef,
     prefixCls,
@@ -51127,8 +51127,8 @@ const TabPane$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     ref
   }, children);
 });
-function _extends$u() {
-  _extends$u = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$w() {
+  _extends$w = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -51139,7 +51139,7 @@ function _extends$u() {
     }
     return target;
   };
-  return _extends$u.apply(this, arguments);
+  return _extends$w.apply(this, arguments);
 }
 const TabPanelList = (props) => {
   const {
@@ -51177,7 +51177,7 @@ const TabPanelList = (props) => {
       ...restTabProps
     } = item;
     const active = key2 === activeKey;
-    return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$u({
+    return /* @__PURE__ */ reactExports.createElement(CSSMotion, _extends$w({
       key: key2,
       visible: active,
       forceRender,
@@ -51186,7 +51186,7 @@ const TabPanelList = (props) => {
     }, animated.tabPaneMotion), ({
       style: motionStyle,
       className: motionClassName
-    }, ref) => /* @__PURE__ */ reactExports.createElement(TabPane$1, _extends$u({}, restTabProps, {
+    }, ref) => /* @__PURE__ */ reactExports.createElement(TabPane$1, _extends$w({}, restTabProps, {
       prefixCls: contentPrefixCls,
       id,
       tabKey: key2,
@@ -51231,8 +51231,8 @@ function useAnimateConfig$1(animated = {
   }
   return mergedAnimated;
 }
-function _extends$t() {
-  _extends$t = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$v() {
+  _extends$v = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -51243,7 +51243,7 @@ function _extends$t() {
     }
     return target;
   };
-  return _extends$t.apply(this, arguments);
+  return _extends$v.apply(this, arguments);
 }
 let uuid = 0;
 const Tabs$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
@@ -51339,7 +51339,7 @@ const Tabs$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, [tabs, prefixCls]);
   return /* @__PURE__ */ reactExports.createElement(TabContext.Provider, {
     value: memoizedValue
-  }, /* @__PURE__ */ reactExports.createElement("div", _extends$t({
+  }, /* @__PURE__ */ reactExports.createElement("div", _extends$v({
     ref,
     id,
     className: clsx(prefixCls, `${prefixCls}-${tabPosition}`, {
@@ -51347,9 +51347,9 @@ const Tabs$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       [`${prefixCls}-editable`]: editable,
       [`${prefixCls}-rtl`]: rtl
     }, className)
-  }, restProps), /* @__PURE__ */ reactExports.createElement(TabNavListWrapper, _extends$t({}, tabNavBarProps, {
+  }, restProps), /* @__PURE__ */ reactExports.createElement(TabNavListWrapper, _extends$v({}, tabNavBarProps, {
     renderTabBar
-  })), /* @__PURE__ */ reactExports.createElement(TabPanelList, _extends$t({
+  })), /* @__PURE__ */ reactExports.createElement(TabPanelList, _extends$v({
     destroyOnHidden
   }, sharedProps, {
     bodyStyle: styles?.body,
@@ -51403,7 +51403,7 @@ function useLegacyItems(items, children) {
       destroyOnHidden: item.destroyOnHidden ?? item.destroyInactiveTabPane
     }));
   }
-  const childrenItems = toArray$4(children).map((node2) => {
+  const childrenItems = toArray$5(children).map((node2) => {
     if (/* @__PURE__ */ reactExports.isValidElement(node2)) {
       const {
         key: key2,
@@ -52312,7 +52312,7 @@ const genTabsStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$f = (token2) => {
+const prepareComponentToken$g = (token2) => {
   const {
     cardHeight,
     cardHeightSM,
@@ -52357,7 +52357,7 @@ const prepareComponentToken$f = (token2) => {
     cardGutter: token2.marginXXS / 2
   };
 };
-const useStyle$l = genStyleHooks("Tabs", (token2) => {
+const useStyle$n = genStyleHooks("Tabs", (token2) => {
   const tabsToken = merge$1(token2, {
     // `cardPadding` is empty by default, so we could calculate with dynamic `cardHeight`
     tabsCardPadding: token2.cardPadding,
@@ -52368,7 +52368,7 @@ const useStyle$l = genStyleHooks("Tabs", (token2) => {
     tabsHorizontalItemMarginRTL: `0 0 0 ${unit$1(token2.horizontalItemGutter)}`
   });
   return [genSizeStyle$2(tabsToken), genRtlStyle$1(tabsToken), genPositionStyle(tabsToken), genDropdownStyle(tabsToken), genCardStyle$1(tabsToken), genTabsStyle(tabsToken), genMotionStyle(tabsToken)];
-}, prepareComponentToken$f);
+}, prepareComponentToken$g);
 const TabPane = () => null;
 const InternalTabs = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -52415,7 +52415,7 @@ const InternalTabs = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("tabs", customizePrefixCls);
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$l(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$n(prefixCls, rootCls);
   const tabsRef = reactExports.useRef(null);
   reactExports.useImperativeHandle(ref, () => ({
     nativeElement: tabsRef.current
@@ -52429,8 +52429,8 @@ const InternalTabs = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       }) => {
         onEdit?.(editType === "add" ? event : key2, editType);
       },
-      removeIcon: removeIcon ?? tabs?.removeIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$v, null),
-      addIcon: (addIcon ?? tabs?.addIcon) || /* @__PURE__ */ reactExports.createElement(RefIcon$k, null),
+      removeIcon: removeIcon ?? tabs?.removeIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$w, null),
+      addIcon: (addIcon ?? tabs?.addIcon) || /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
       showAdd: hideAdd !== true
     };
   }
@@ -52490,7 +52490,7 @@ const InternalTabs = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     style: mergedStyles.root,
     editable,
     more: {
-      icon: tabs?.more?.icon ?? tabs?.moreIcon ?? moreIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$l, null),
+      icon: tabs?.more?.icon ?? tabs?.moreIcon ?? moreIcon ?? /* @__PURE__ */ reactExports.createElement(RefIcon$m, null),
       transitionName: `${rootPrefixCls}-slide-up`,
       ...more
     },
@@ -52849,7 +52849,7 @@ const genCardSizeStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$e = (token2) => ({
+const prepareComponentToken$f = (token2) => ({
   headerBg: "transparent",
   headerFontSize: token2.fontSizeLG,
   headerFontSizeSM: token2.fontSize,
@@ -52865,7 +52865,7 @@ const prepareComponentToken$e = (token2) => ({
   bodyPadding: token2.bodyPadding ?? token2.paddingLG,
   headerPadding: token2.headerPadding ?? token2.paddingLG
 });
-const useStyle$k = genStyleHooks("Card", (token2) => {
+const useStyle$m = genStyleHooks("Card", (token2) => {
   const cardToken = merge$1(token2, {
     cardShadow: token2.boxShadowCard,
     cardHeadPadding: token2.padding,
@@ -52878,7 +52878,7 @@ const useStyle$k = genStyleHooks("Card", (token2) => {
     // Size
     genCardSizeStyle(cardToken)
   ];
-}, prepareComponentToken$e);
+}, prepareComponentToken$f);
 const ActionNode = (props) => {
   const {
     actionClasses,
@@ -52949,10 +52949,10 @@ const Card$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const onTabChange = (key2) => {
     props.onTabChange?.(key2);
   };
-  const childNodes = reactExports.useMemo(() => toArray$4(children), [children]);
+  const childNodes = reactExports.useMemo(() => toArray$5(children), [children]);
   const isContainGrid = reactExports.useMemo(() => childNodes.some((child) => /* @__PURE__ */ reactExports.isValidElement(child) && child.type === CardGrid), [childNodes]);
   const prefixCls = getPrefixCls("card", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$k(prefixCls);
+  const [hashId, cssVarCls] = useStyle$m(prefixCls);
   const loadingBlock = /* @__PURE__ */ reactExports.createElement(Skeleton, {
     loading: true,
     active: true,
@@ -53165,6 +53165,443 @@ function debounce(delay, callback, options) {
     debounceMode: atBegin !== false
   });
 }
+const genCheckboxStyle = (token2) => {
+  const {
+    checkboxCls,
+    checkboxSize,
+    lineWidth
+  } = token2;
+  const wrapperCls = `${checkboxCls}-wrapper`;
+  const hoverMediaQuery = "@media (hover: hover) and (pointer: fine)";
+  return [
+    // ===================== Basic =====================
+    {
+      // Group
+      [`${checkboxCls}-group`]: {
+        ...resetComponent(token2),
+        display: "inline-flex",
+        flexWrap: "wrap",
+        columnGap: token2.marginXS,
+        // Group > Grid
+        [`> ${token2.antCls}-row`]: {
+          flex: 1
+        }
+      },
+      // Wrapper
+      [wrapperCls]: {
+        ...resetComponent(token2),
+        display: "inline-flex",
+        alignItems: "baseline",
+        cursor: "pointer",
+        // Fix checkbox & radio in flex align #30260
+        "&:after": {
+          display: "inline-block",
+          width: 0,
+          overflow: "hidden",
+          content: "'\\a0'"
+        },
+        // Checkbox near checkbox
+        [`& + ${wrapperCls}`]: {
+          marginInlineStart: 0
+        }
+      },
+      // Wrapper > Checkbox
+      [checkboxCls]: {
+        ...resetComponent(token2),
+        position: "relative",
+        whiteSpace: "nowrap",
+        lineHeight: 1,
+        cursor: "pointer",
+        // To make alignment right when `controlHeight` is changed
+        // Ref: https://github.com/ant-design/ant-design/issues/41564
+        alignSelf: "center",
+        // Styles moved from inner
+        boxSizing: "border-box",
+        display: "block",
+        width: checkboxSize,
+        height: checkboxSize,
+        direction: "ltr",
+        backgroundColor: token2.colorBgContainer,
+        border: `${unit$1(lineWidth)} ${token2.lineType} ${token2.colorBorder}`,
+        borderRadius: token2.borderRadiusSM,
+        borderCollapse: "separate",
+        transition: `all ${token2.motionDurationSlow}`,
+        flex: "none",
+        ...genNoMotionStyle(),
+        // Checkmark
+        "&:after": {
+          boxSizing: "border-box",
+          position: "absolute",
+          top: `calc(${checkboxSize} / 2 - ${lineWidth})`,
+          insetInlineStart: `calc(${checkboxSize} / 4 - ${lineWidth})`,
+          display: "table",
+          width: token2.calc(checkboxSize).div(14).mul(5).equal(),
+          height: token2.calc(checkboxSize).div(14).mul(8).equal(),
+          border: `${unit$1(token2.lineWidthBold)} solid ${token2.colorWhite}`,
+          borderTop: 0,
+          borderInlineStart: 0,
+          transform: "rotate(45deg) scale(0) translate(-50%,-50%)",
+          opacity: 0,
+          content: '""',
+          transition: `all ${token2.motionDurationFast} ${token2.motionEaseInBack}, opacity ${token2.motionDurationFast}`,
+          ...genNoMotionRawStyle()
+        },
+        // Wrapper > Checkbox > input
+        [`${checkboxCls}-input`]: {
+          position: "absolute",
+          // Since baseline align will get additional space offset,
+          // we need to move input to top to make it align with text.
+          // Ref: https://github.com/ant-design/ant-design/issues/38926#issuecomment-1486137799
+          inset: `calc(-1 * (${lineWidth}))`,
+          zIndex: 1,
+          cursor: "pointer",
+          opacity: 0,
+          margin: 0
+        },
+        // Focus outline on checkbox when input is focus-visible
+        [`&:has(${checkboxCls}-input:focus-visible)`]: genFocusOutline(token2),
+        // Wrapper > Checkbox + Text
+        "& + span": {
+          paddingInlineStart: token2.paddingXS,
+          paddingInlineEnd: token2.paddingXS
+        }
+      }
+    },
+    // ===================== Hover =====================
+    {
+      [hoverMediaQuery]: {
+        // Wrapper & Wrapper > Checkbox
+        [`
+          ${wrapperCls}:not(${wrapperCls}-disabled),
+          ${checkboxCls}:not(${checkboxCls}-disabled)
+        `]: {
+          [`&:hover ${checkboxCls}`]: {
+            borderColor: token2.colorPrimary
+          }
+        },
+        [`${wrapperCls}:not(${wrapperCls}-disabled)`]: {
+          [`&:hover ${checkboxCls}-checked:not(${checkboxCls}-disabled)`]: {
+            backgroundColor: token2.colorPrimaryHover,
+            borderColor: "transparent"
+          }
+        }
+      }
+    },
+    // ==================== Checked ====================
+    {
+      // Wrapper > Checkbox
+      [`${checkboxCls}-checked`]: {
+        backgroundColor: token2.colorPrimary,
+        borderColor: token2.colorPrimary,
+        "&:after": {
+          opacity: 1,
+          transform: "rotate(45deg) scale(1) translate(-50%,-50%)",
+          transition: `all ${token2.motionDurationMid} ${token2.motionEaseOutBack} ${token2.motionDurationFast}`,
+          ...genNoMotionRawStyle()
+        },
+        [hoverMediaQuery]: {
+          // Hover on checked checkbox directly
+          [`&:not(${checkboxCls}-disabled):hover`]: {
+            backgroundColor: token2.colorPrimaryHover,
+            borderColor: "transparent"
+          }
+        }
+      }
+    },
+    // ================= Indeterminate =================
+    {
+      [checkboxCls]: {
+        "&-indeterminate": {
+          backgroundColor: token2.colorBgContainer,
+          borderColor: token2.colorBorder,
+          "&:after": {
+            top: "50%",
+            insetInlineStart: "50%",
+            width: token2.calc(token2.fontSizeLG).div(2).equal(),
+            height: token2.calc(token2.fontSizeLG).div(2).equal(),
+            backgroundColor: token2.colorPrimary,
+            border: 0,
+            transform: "translate(-50%, -50%) scale(1)",
+            opacity: 1,
+            content: '""'
+          },
+          [hoverMediaQuery]: {
+            // https://github.com/ant-design/ant-design/issues/50074
+            [`&:not(${checkboxCls}-disabled):hover`]: {
+              backgroundColor: token2.colorBgContainer,
+              borderColor: token2.colorPrimary
+            }
+          }
+        }
+      }
+    },
+    // ==================== Disable ====================
+    {
+      // Wrapper
+      [`${wrapperCls}-disabled`]: {
+        cursor: "not-allowed"
+      },
+      // Wrapper > Checkbox
+      [`${checkboxCls}-disabled`]: {
+        // Wrapper > Checkbox > input
+        [`&, ${checkboxCls}-input`]: {
+          cursor: "not-allowed",
+          // Disabled for native input to enable Tooltip event handler
+          // ref: https://github.com/ant-design/ant-design/issues/39822#issuecomment-1365075901
+          pointerEvents: "none"
+        },
+        // Disabled checkbox styles
+        background: token2.colorBgContainerDisabled,
+        borderColor: token2.colorBorder,
+        "&:after": {
+          borderColor: token2.colorTextDisabled
+        },
+        "& + span": {
+          color: token2.colorTextDisabled
+        },
+        [`&${checkboxCls}-indeterminate::after`]: {
+          background: token2.colorTextDisabled
+        }
+      }
+    }
+  ];
+};
+function getStyle(prefixCls, token2) {
+  const checkboxToken = merge$1(token2, {
+    checkboxCls: `.${prefixCls}`,
+    checkboxSize: token2.controlInteractiveSize
+  });
+  return genCheckboxStyle(checkboxToken);
+}
+const useStyle$l = genStyleHooks("Checkbox", (token2, {
+  prefixCls
+}) => [getStyle(prefixCls, token2)]);
+const GroupContext = /* @__PURE__ */ React.createContext(null);
+const InternalCheckbox = (props, ref) => {
+  const {
+    prefixCls: customizePrefixCls,
+    children,
+    indeterminate = false,
+    onMouseEnter,
+    onMouseLeave,
+    skipGroup = false,
+    disabled,
+    // Style
+    rootClassName,
+    className,
+    style: style2,
+    classNames,
+    styles,
+    // Name
+    name,
+    // Value
+    value,
+    // Checked
+    checked,
+    defaultChecked,
+    onChange,
+    ...restProps
+  } = props;
+  const {
+    getPrefixCls,
+    direction,
+    className: contextClassName,
+    style: contextStyle,
+    classNames: contextClassNames,
+    styles: contextStyles
+  } = useComponentConfig("checkbox");
+  const checkboxGroup = reactExports.useContext(GroupContext);
+  const {
+    isFormItemInput
+  } = reactExports.useContext(FormItemInputContext);
+  const contextDisabled = reactExports.useContext(DisabledContext);
+  const mergedDisabled = (checkboxGroup?.disabled || disabled) ?? contextDisabled;
+  const [innerChecked, setInnerChecked] = useControlledState(defaultChecked, checked);
+  let mergedChecked = innerChecked;
+  const onInternalChange = useEvent((event) => {
+    setInnerChecked(event.target.checked);
+    onChange?.(event);
+    if (!skipGroup && checkboxGroup?.toggleOption) {
+      checkboxGroup.toggleOption({
+        label: children,
+        value
+      });
+    }
+  });
+  if (checkboxGroup && !skipGroup) {
+    mergedChecked = checkboxGroup.value.includes(value);
+  }
+  const checkboxRef = reactExports.useRef(null);
+  const mergedRef = useComposeRef(ref, checkboxRef);
+  reactExports.useEffect(() => {
+    if (skipGroup || !checkboxGroup) {
+      return;
+    }
+    checkboxGroup.registerValue(value);
+    return () => {
+      checkboxGroup.cancelValue(value);
+    };
+  }, [value, skipGroup]);
+  reactExports.useEffect(() => {
+    if (checkboxRef.current?.input) {
+      checkboxRef.current.input.indeterminate = indeterminate;
+    }
+  }, [indeterminate]);
+  const prefixCls = getPrefixCls("checkbox", customizePrefixCls);
+  const rootCls = useCSSVarCls(prefixCls);
+  const [hashId, cssVarCls] = useStyle$l(prefixCls, rootCls);
+  const checkboxProps = {
+    ...restProps
+  };
+  const mergedProps = {
+    ...props,
+    indeterminate,
+    disabled: mergedDisabled,
+    checked: mergedChecked
+  };
+  const contextStyleRoot = useSemanticRootStyle(contextStyle);
+  const styleRoot = useSemanticRootStyle(style2);
+  const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, classNames], [contextStyles, contextStyleRoot, styles, styleRoot], {
+    props: mergedProps
+  });
+  const classString = clsx(`${prefixCls}-wrapper`, {
+    [`${prefixCls}-rtl`]: direction === "rtl",
+    [`${prefixCls}-wrapper-checked`]: mergedChecked,
+    [`${prefixCls}-wrapper-disabled`]: mergedDisabled,
+    [`${prefixCls}-wrapper-in-form-item`]: isFormItemInput
+  }, contextClassName, className, mergedClassNames.root, rootClassName, cssVarCls, rootCls, hashId);
+  const checkboxClass = clsx(mergedClassNames.icon, {
+    [`${prefixCls}-indeterminate`]: indeterminate
+  }, TARGET_CLS, hashId);
+  const [onLabelClick, onInputClick] = useBubbleLock(checkboxProps.onClick);
+  return /* @__PURE__ */ reactExports.createElement(Wave, {
+    component: "Checkbox",
+    disabled: mergedDisabled
+  }, /* @__PURE__ */ reactExports.createElement("label", {
+    className: classString,
+    style: mergedStyles.root,
+    onMouseEnter,
+    onMouseLeave,
+    onClick: onLabelClick
+  }, /* @__PURE__ */ reactExports.createElement(Checkbox$2, {
+    ...checkboxProps,
+    name: !skipGroup && checkboxGroup ? checkboxGroup.name : name,
+    checked: mergedChecked,
+    onClick: onInputClick,
+    onChange: onInternalChange,
+    prefixCls,
+    className: checkboxClass,
+    style: mergedStyles.icon,
+    disabled: mergedDisabled,
+    ref: mergedRef,
+    value
+  }), isReactRenderable(children) && /* @__PURE__ */ reactExports.createElement("span", {
+    className: clsx(`${prefixCls}-label`, mergedClassNames.label),
+    style: mergedStyles.label
+  }, children)));
+};
+const Checkbox$1 = /* @__PURE__ */ reactExports.forwardRef(InternalCheckbox);
+const CheckboxGroup = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+  const {
+    defaultValue,
+    children,
+    options = [],
+    prefixCls: customizePrefixCls,
+    className,
+    rootClassName,
+    style: style2,
+    onChange,
+    role = "group",
+    ...restProps
+  } = props;
+  const {
+    getPrefixCls,
+    direction
+  } = reactExports.useContext(ConfigContext);
+  const [value, setValue] = reactExports.useState(restProps.value || defaultValue || []);
+  const [registeredValues, setRegisteredValues] = reactExports.useState([]);
+  reactExports.useEffect(() => {
+    if ("value" in restProps) {
+      setValue(restProps.value || []);
+    }
+  }, [restProps.value]);
+  const memoizedOptions = reactExports.useMemo(() => {
+    return options.map((option) => {
+      if (isString$3(option) || isNumber$1(option)) {
+        return {
+          label: option,
+          value: option
+        };
+      }
+      return option;
+    }).filter((item) => isNonNullable(item) && isNonNullable(item.value));
+  }, [options]);
+  const cancelValue = (val) => {
+    setRegisteredValues((prevValues) => prevValues.filter((v) => v !== val));
+  };
+  const registerValue = (val) => {
+    setRegisteredValues((prevValues) => [].concat(_toConsumableArray(prevValues), [val]));
+  };
+  const toggleOption = (option) => {
+    const optionIndex = value.indexOf(option.value);
+    const newValue = _toConsumableArray(value);
+    if (optionIndex === -1) {
+      newValue.push(option.value);
+    } else {
+      newValue.splice(optionIndex, 1);
+    }
+    if (!("value" in restProps)) {
+      setValue(newValue);
+    }
+    onChange?.(newValue.filter((val) => registeredValues.includes(val)).sort((a, b) => {
+      const indexA = memoizedOptions.findIndex((opt) => opt.value === a);
+      const indexB = memoizedOptions.findIndex((opt) => opt.value === b);
+      return indexA - indexB;
+    }));
+  };
+  const prefixCls = getPrefixCls("checkbox", customizePrefixCls);
+  const groupPrefixCls = `${prefixCls}-group`;
+  const rootCls = useCSSVarCls(prefixCls);
+  const [hashId, cssVarCls] = useStyle$l(prefixCls, rootCls);
+  const domProps = omit(restProps, ["value", "disabled"]);
+  const childrenNode = Array.isArray(memoizedOptions) && memoizedOptions.length > 0 ? memoizedOptions.map((option) => /* @__PURE__ */ reactExports.createElement(Checkbox$1, {
+    prefixCls,
+    key: option.value.toString(),
+    disabled: "disabled" in option ? option.disabled : restProps.disabled,
+    value: option.value,
+    checked: value.includes(option.value),
+    onChange: option.onChange,
+    className: clsx(`${groupPrefixCls}-item`, option.className),
+    style: option.style,
+    title: option.title,
+    id: option.id,
+    required: option.required
+  }, option.label)) : children;
+  const memoizedContext = reactExports.useMemo(() => ({
+    toggleOption,
+    value,
+    disabled: restProps.disabled,
+    name: restProps.name,
+    // https://github.com/ant-design/ant-design/issues/16376
+    registerValue,
+    cancelValue
+  }), [toggleOption, value, restProps.disabled, restProps.name, registerValue, cancelValue]);
+  const classString = clsx(groupPrefixCls, {
+    [`${groupPrefixCls}-rtl`]: direction === "rtl"
+  }, className, rootClassName, cssVarCls, rootCls, hashId);
+  return /* @__PURE__ */ reactExports.createElement("div", {
+    className: classString,
+    style: style2,
+    role,
+    ...domProps,
+    ref
+  }, /* @__PURE__ */ reactExports.createElement(GroupContext.Provider, {
+    value: memoizedContext
+  }, childrenNode));
+});
+const Checkbox = Checkbox$1;
+Checkbox.Group = CheckboxGroup;
+Checkbox.__ANT_CHECKBOX = true;
 const RowContext = /* @__PURE__ */ reactExports.createContext({});
 function parseFlex(flex) {
   if (flex === "auto") {
@@ -53528,18 +53965,18 @@ const genSharedDividerStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$d = (token2) => ({
+const prepareComponentToken$e = (token2) => ({
   textPaddingInline: "1em",
   orientationMargin: 0.05,
   verticalMarginInline: token2.marginXS
 });
-const useStyle$j = genStyleHooks("Divider", (token2) => {
+const useStyle$k = genStyleHooks("Divider", (token2) => {
   const dividerToken = merge$1(token2, {
     dividerHorizontalWithTextGutterMargin: token2.margin,
     sizePaddingEdgeHorizontal: 0
   });
   return [genSharedDividerStyle(dividerToken), genSizeDividerStyle(dividerToken)];
-}, prepareComponentToken$d, {
+}, prepareComponentToken$e, {
   unitless: {
     orientationMargin: true
   }
@@ -53575,7 +54012,7 @@ const Divider = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   } = props;
   const prefixCls = getPrefixCls("divider", customizePrefixCls);
   const railCls = `${prefixCls}-rail`;
-  const [hashId, cssVarCls] = useStyle$j(prefixCls);
+  const [hashId, cssVarCls] = useStyle$k(prefixCls);
   const sizeFullName = useSize(customSize);
   const hasChildren = !!children;
   const validTitlePlacement = titlePlacementList.includes(orientation || "");
@@ -53955,7 +54392,7 @@ const Segmented$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       value: optionValue,
       disabled: optionDisabled
     } = segmentedOption;
-    return /* @__PURE__ */ reactExports.createElement(InternalSegmentedOption, _extends$12({}, segmentedOption, {
+    return /* @__PURE__ */ reactExports.createElement(InternalSegmentedOption, _extends$14({}, segmentedOption, {
       name,
       data: segmentedOption,
       itemRender,
@@ -53978,7 +54415,7 @@ const Segmented$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       disabled: !!disabled || !!optionDisabled
     }));
   };
-  return /* @__PURE__ */ reactExports.createElement("div", _extends$12({
+  return /* @__PURE__ */ reactExports.createElement("div", _extends$14({
     role: "radiogroup",
     "aria-label": "segmented control",
     tabIndex: disabled ? void 0 : 0,
@@ -54212,7 +54649,7 @@ const genSegmentedStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$c = (token2) => {
+const prepareComponentToken$d = (token2) => {
   const {
     colorTextLabel,
     colorText,
@@ -54233,7 +54670,7 @@ const prepareComponentToken$c = (token2) => {
     itemSelectedColor: colorText
   };
 };
-const useStyle$i = genStyleHooks("Segmented", (token2) => {
+const useStyle$j = genStyleHooks("Segmented", (token2) => {
   const {
     lineWidth,
     calc
@@ -54243,7 +54680,7 @@ const useStyle$i = genStyleHooks("Segmented", (token2) => {
     segmentedPaddingHorizontalSM: calc(token2.controlPaddingHorizontalSM).sub(lineWidth).equal()
   });
   return genSegmentedStyle(segmentedToken);
-}, prepareComponentToken$c);
+}, prepareComponentToken$d);
 function isSegmentedLabeledOptionWithIcon(option) {
   return isPlainObject(option) && !!option?.icon;
 }
@@ -54285,7 +54722,7 @@ const InternalSegmented = /* @__PURE__ */ reactExports.forwardRef((props, ref) =
     props: mergedProps
   });
   const prefixCls = getPrefixCls("segmented", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$i(prefixCls);
+  const [hashId, cssVarCls] = useStyle$j(prefixCls);
   const mergedSize = useSize(customSize);
   const extendedOptions = reactExports.useMemo(() => options.map((option) => {
     if (isSegmentedLabeledOptionWithIcon(option)) {
@@ -54390,8 +54827,8 @@ function requireMinusOutlined() {
 }
 var MinusOutlinedExports = /* @__PURE__ */ requireMinusOutlined();
 const MinusOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(MinusOutlinedExports);
-function _extends$s() {
-  _extends$s = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$u() {
+  _extends$u = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -54402,13 +54839,13 @@ function _extends$s() {
     }
     return target;
   };
-  return _extends$s.apply(this, arguments);
+  return _extends$u.apply(this, arguments);
 }
-const MinusOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$s({}, props, {
+const MinusOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$u({}, props, {
   ref,
   icon: MinusOutlinedSvg
 }));
-const RefIcon$j = /* @__PURE__ */ reactExports.forwardRef(MinusOutlined);
+const RefIcon$k = /* @__PURE__ */ reactExports.forwardRef(MinusOutlined);
 var UpOutlined$1 = {};
 var hasRequiredUpOutlined;
 function requireUpOutlined() {
@@ -54421,8 +54858,8 @@ function requireUpOutlined() {
 }
 var UpOutlinedExports = /* @__PURE__ */ requireUpOutlined();
 const UpOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(UpOutlinedExports);
-function _extends$r() {
-  _extends$r = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$t() {
+  _extends$t = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -54433,13 +54870,13 @@ function _extends$r() {
     }
     return target;
   };
-  return _extends$r.apply(this, arguments);
+  return _extends$t.apply(this, arguments);
 }
-const UpOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$r({}, props, {
+const UpOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$t({}, props, {
   ref,
   icon: UpOutlinedSvg
 }));
-const RefIcon$i = /* @__PURE__ */ reactExports.forwardRef(UpOutlined);
+const RefIcon$j = /* @__PURE__ */ reactExports.forwardRef(UpOutlined);
 function supportBigInt() {
   return typeof BigInt === "function";
 }
@@ -54973,8 +55410,8 @@ const useFrame = (() => {
     });
   };
 });
-function _extends$q() {
-  _extends$q = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$s() {
+  _extends$s = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -54985,7 +55422,7 @@ function _extends$q() {
     }
     return target;
   };
-  return _extends$q.apply(this, arguments);
+  return _extends$s.apply(this, arguments);
 }
 const getDecimalValue = (stringMode, decimalValue) => {
   if (stringMode || decimalValue.isEmpty()) {
@@ -55314,11 +55751,11 @@ const InputNumber$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     className: classNames?.action,
     style: styles?.action
   };
-  const upNode = /* @__PURE__ */ reactExports.createElement(StepHandler, _extends$q({}, sharedHandlerProps, {
+  const upNode = /* @__PURE__ */ reactExports.createElement(StepHandler, _extends$s({}, sharedHandlerProps, {
     action: "up",
     disabled: upDisabled
   }), upHandler);
-  const downNode = /* @__PURE__ */ reactExports.createElement(StepHandler, _extends$q({}, sharedHandlerProps, {
+  const downNode = /* @__PURE__ */ reactExports.createElement(StepHandler, _extends$s({}, sharedHandlerProps, {
     action: "down",
     disabled: downDisabled
   }), downHandler);
@@ -55354,7 +55791,7 @@ const InputNumber$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }, mode === "spinner" && controls && downNode, prefix2 !== void 0 && /* @__PURE__ */ reactExports.createElement("div", {
     className: clsx(`${prefixCls}-prefix`, classNames?.prefix),
     style: styles?.prefix
-  }, prefix2), /* @__PURE__ */ reactExports.createElement("input", _extends$q({
+  }, prefix2), /* @__PURE__ */ reactExports.createElement("input", _extends$s({
     autoComplete: "off",
     role: "spinbutton",
     "aria-valuemin": min3,
@@ -55496,7 +55933,7 @@ const genSpaceAddonStyle = (token2) => {
     ]
   };
 };
-const useStyle$h = genStyleHooks("Addon", (token2) => [genSpaceAddonStyle(token2), genCompactItemStyle(token2, {
+const useStyle$i = genStyleHooks("Addon", (token2) => [genSpaceAddonStyle(token2), genCompactItemStyle(token2, {
   focus: false
 })]);
 const SpaceAddon = /* @__PURE__ */ React.forwardRef((props, ref) => {
@@ -55515,7 +55952,7 @@ const SpaceAddon = /* @__PURE__ */ React.forwardRef((props, ref) => {
     direction: directionConfig
   } = React.useContext(ConfigContext);
   const prefixCls = getPrefixCls("space-addon", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$h(prefixCls);
+  const [hashId, cssVarCls] = useStyle$i(prefixCls);
   const {
     compactItemClassnames,
     compactSize
@@ -55532,7 +55969,7 @@ const SpaceAddon = /* @__PURE__ */ React.forwardRef((props, ref) => {
     ...restProps
   }, children);
 });
-const prepareComponentToken$b = (token2) => {
+const prepareComponentToken$c = (token2) => {
   const handleVisible = token2.handleVisible ?? "auto";
   const handleWidth = token2.controlHeightSM - token2.lineWidth * 2;
   return {
@@ -55846,7 +56283,7 @@ const genCompatibleStyles = (token2) => {
     }
   };
 };
-const useStyle$g = genStyleHooks("InputNumber", (token2) => {
+const useStyle$h = genStyleHooks("InputNumber", (token2) => {
   const inputNumberToken = merge$1(token2, initInputToken(token2));
   return [
     genInputNumberStyles(inputNumberToken),
@@ -55856,7 +56293,7 @@ const useStyle$g = genStyleHooks("InputNumber", (token2) => {
     // =====================================================
     genCompactItemStyle(inputNumberToken)
   ];
-}, prepareComponentToken$b, {
+}, prepareComponentToken$c, {
   unitless: {
     handleOpacity: true
   },
@@ -55905,8 +56342,8 @@ const InternalInputNumber = /* @__PURE__ */ reactExports.forwardRef((props, ref)
     compactSize,
     compactItemClassnames
   } = useCompactItemContext(prefixCls, direction);
-  let upIcon = mode === "spinner" ? /* @__PURE__ */ reactExports.createElement(RefIcon$k, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$i, null);
-  let downIcon = mode === "spinner" ? /* @__PURE__ */ reactExports.createElement(RefIcon$j, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$p, null);
+  let upIcon = mode === "spinner" ? /* @__PURE__ */ reactExports.createElement(RefIcon$l, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$j, null);
+  let downIcon = mode === "spinner" ? /* @__PURE__ */ reactExports.createElement(RefIcon$k, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$q, null);
   const controlsTemp = typeof mergedControls === "boolean" ? mergedControls : void 0;
   if (isPlainObject(mergedControls)) {
     upIcon = mergedControls.upIcon || upIcon;
@@ -55975,7 +56412,7 @@ const InputNumber = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   } = reactExports.useContext(FormItemInputContext);
   const mergedStatus = getMergedStatus(contextStatus, customStatus);
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$g(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$h(prefixCls, rootCls);
   const hasLegacyAddon = addonBefore || addonAfter;
   const inputNumberNode = /* @__PURE__ */ reactExports.createElement(InternalInputNumber, {
     ref,
@@ -56111,8 +56548,8 @@ function resolveOnChange(target, e2, onChange, targetValue) {
   }
   onChange(event);
 }
-function _extends$p() {
-  _extends$p = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$r() {
+  _extends$r = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -56123,7 +56560,7 @@ function _extends$p() {
     }
     return target;
   };
-  return _extends$p.apply(this, arguments);
+  return _extends$r.apply(this, arguments);
 }
 const BaseInput = /* @__PURE__ */ React.forwardRef((props, ref) => {
   const {
@@ -56205,7 +56642,7 @@ const BaseInput = /* @__PURE__ */ React.forwardRef((props, ref) => {
       className: clsx(`${prefixCls}-suffix`, classNames?.suffix),
       style: styles?.suffix
     }, clearIcon, suffix);
-    element = /* @__PURE__ */ React.createElement(AffixWrapperComponent, _extends$p({
+    element = /* @__PURE__ */ React.createElement(AffixWrapperComponent, _extends$r({
       className: affixWrapperCls,
       style: styles?.affixWrapper,
       onClick: onInputClick
@@ -56326,8 +56763,8 @@ function useMergedValue(defaultValue, controlledValue) {
     formatValue
   };
 }
-function _extends$o() {
-  _extends$o = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$q() {
+  _extends$q = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -56338,7 +56775,7 @@ function _extends$o() {
     }
     return target;
   };
-  return _extends$o.apply(this, arguments);
+  return _extends$q.apply(this, arguments);
 }
 const Input$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -56486,7 +56923,7 @@ const Input$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       "classNames",
       "onClear"
     ]);
-    return /* @__PURE__ */ React.createElement("input", _extends$o({
+    return /* @__PURE__ */ React.createElement("input", _extends$q({
       autoComplete
     }, otherProps, {
       onChange: onInternalChange,
@@ -56521,7 +56958,7 @@ const Input$2 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     }
     return null;
   };
-  return /* @__PURE__ */ React.createElement(BaseInput, _extends$o({}, rest, {
+  return /* @__PURE__ */ React.createElement(BaseInput, _extends$q({}, rest, {
     prefixCls,
     className: clsx(className, outOfRangeCls),
     handleReset,
@@ -56634,8 +57071,8 @@ function calculateAutoSizeStyle(uiTextNode, useCache2 = false, minRows = null, m
   }
   return style2;
 }
-function _extends$n() {
-  _extends$n = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$p() {
+  _extends$p = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -56646,7 +57083,7 @@ function _extends$n() {
     }
     return target;
   };
-  return _extends$n.apply(this, arguments);
+  return _extends$p.apply(this, arguments);
 }
 const RESIZE_START = 0;
 const RESIZE_MEASURING = 1;
@@ -56732,7 +57169,7 @@ const ResizableTextArea = /* @__PURE__ */ reactExports.forwardRef((props, ref) =
   return /* @__PURE__ */ reactExports.createElement(RefResizeObserver, {
     onResize: onInternalResize,
     disabled: !(autoSize || onResize2)
-  }, /* @__PURE__ */ reactExports.createElement("textarea", _extends$n({}, restProps, {
+  }, /* @__PURE__ */ reactExports.createElement("textarea", _extends$p({}, restProps, {
     ref: textareaRef,
     style: mergedStyle,
     className: clsx(prefixCls, className, {
@@ -56743,8 +57180,8 @@ const ResizableTextArea = /* @__PURE__ */ reactExports.forwardRef((props, ref) =
     onChange: onInternalChange
   })));
 });
-function _extends$m() {
-  _extends$m = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$o() {
+  _extends$o = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -56755,7 +57192,7 @@ function _extends$m() {
     }
     return target;
   };
-  return _extends$m.apply(this, arguments);
+  return _extends$o.apply(this, arguments);
 }
 const TextArea$1 = /* @__PURE__ */ React.forwardRef(({
   defaultValue,
@@ -56907,7 +57344,7 @@ const TextArea$1 = /* @__PURE__ */ React.forwardRef(({
     hidden,
     readOnly,
     onClear
-  }, /* @__PURE__ */ React.createElement(ResizableTextArea, _extends$m({}, rest, {
+  }, /* @__PURE__ */ React.createElement(ResizableTextArea, _extends$o({}, rest, {
     autoSize,
     maxLength,
     onKeyDown: handleKeyDown,
@@ -56988,7 +57425,7 @@ const Input$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const inputRef = reactExports.useRef(null);
   const rootCls = useCSSVarCls(prefixCls);
   const [hashId, cssVarCls] = useSharedStyle(prefixCls, rootClassName);
-  useStyle$m(prefixCls, rootCls);
+  useStyle$o(prefixCls, rootCls);
   const {
     compactSize,
     compactItemClassnames
@@ -57300,8 +57737,8 @@ const SliderContext = /* @__PURE__ */ reactExports.createContext({
   isHandleDisabled: () => false
 });
 const UnstableContext = /* @__PURE__ */ reactExports.createContext({});
-function _extends$l() {
-  _extends$l = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$n() {
+  _extends$n = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -57312,7 +57749,7 @@ function _extends$l() {
     }
     return target;
   };
-  return _extends$l.apply(this, arguments);
+  return _extends$n.apply(this, arguments);
 }
 const Handle = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -57439,7 +57876,7 @@ const Handle = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       onKeyUp: handleKeyUp
     };
   }
-  let handleNode = /* @__PURE__ */ reactExports.createElement("div", _extends$l({
+  let handleNode = /* @__PURE__ */ reactExports.createElement("div", _extends$n({
     ref,
     className: clsx(handlePrefixCls, {
       [`${handlePrefixCls}-${valueIndex + 1}`]: valueIndex !== null && range2,
@@ -57464,8 +57901,8 @@ const Handle = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   }
   return handleNode;
 });
-function _extends$k() {
-  _extends$k = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$m() {
+  _extends$m = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -57476,7 +57913,7 @@ function _extends$k() {
     }
     return target;
   };
-  return _extends$k.apply(this, arguments);
+  return _extends$m.apply(this, arguments);
 }
 const Handles = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
@@ -57527,7 +57964,7 @@ const Handles = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   };
   return /* @__PURE__ */ reactExports.createElement(reactExports.Fragment, null, values.map((value, index) => {
     const dragging = draggingIndex === index;
-    return /* @__PURE__ */ reactExports.createElement(Handle, _extends$k({
+    return /* @__PURE__ */ reactExports.createElement(Handle, _extends$m({
       ref: (node2) => {
         if (!node2) {
           delete handlesRef.current[index];
@@ -57542,7 +57979,7 @@ const Handles = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       value,
       valueIndex: index
     }, handleProps));
-  }), activeHandleRender && activeVisible && /* @__PURE__ */ reactExports.createElement(Handle, _extends$k({
+  }), activeHandleRender && activeVisible && /* @__PURE__ */ reactExports.createElement(Handle, _extends$m({
     key: "a11y"
   }, handleProps, {
     value: values[activeIndex],
@@ -57649,7 +58086,7 @@ const Dot = (props) => {
     style: mergedStyle
   });
 };
-const Steps = (props) => {
+const Steps$1 = (props) => {
   const {
     prefixCls,
     marks,
@@ -58564,7 +59001,7 @@ const Slider$1 = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     values: rawValues,
     startPoint,
     onStartMove: mergedDraggableTrack ? onStartMove : void 0
-  }), /* @__PURE__ */ reactExports.createElement(Steps, {
+  }), /* @__PURE__ */ reactExports.createElement(Steps$1, {
     prefixCls,
     marks: markList,
     dots,
@@ -58625,7 +59062,7 @@ const SliderTooltip = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     open: mergedOpen
   });
 });
-const genBaseStyle$4 = (token2) => {
+const genBaseStyle$5 = (token2) => {
   const {
     componentCls,
     antCls,
@@ -58916,7 +59353,7 @@ const genVerticalStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$a = (token2) => {
+const prepareComponentToken$b = (token2) => {
   const increaseHandleWidth = 1;
   const controlSize = token2.controlHeightLG / 4;
   const controlSizeHover = token2.controlHeightSM / 2;
@@ -58945,14 +59382,14 @@ const prepareComponentToken$a = (token2) => {
     trackBgDisabled: token2.colorBgContainerDisabled
   };
 };
-const useStyle$f = genStyleHooks("Slider", (token2) => {
+const useStyle$g = genStyleHooks("Slider", (token2) => {
   const sliderToken = merge$1(token2, {
     marginPart: token2.calc(token2.controlHeight).sub(token2.controlSize).div(2).equal(),
     marginFull: token2.calc(token2.controlSize).div(2).equal(),
     marginPartWithMark: token2.calc(token2.controlHeightLG).sub(token2.controlSize).equal()
   });
-  return [genBaseStyle$4(sliderToken), genHorizontalStyle(sliderToken), genVerticalStyle(sliderToken)];
-}, prepareComponentToken$a);
+  return [genBaseStyle$5(sliderToken), genHorizontalStyle(sliderToken), genVerticalStyle(sliderToken)];
+}, prepareComponentToken$b);
 function getTipFormatter(tipFormatter) {
   if (tipFormatter || tipFormatter === null) {
     return tipFormatter;
@@ -59034,7 +59471,7 @@ const Slider = /* @__PURE__ */ React.forwardRef((props, ref) => {
     return isRTL ? "left" : "right";
   };
   const prefixCls = getPrefixCls("slider", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$f(prefixCls);
+  const [hashId, cssVarCls] = useStyle$g(prefixCls);
   const rootClassNames = clsx(className, contextClassName, mergedClassNames.root, rootClassName, {
     [`${prefixCls}-rtl`]: isRTL,
     [`${prefixCls}-lock`]: dragging
@@ -60300,7 +60737,7 @@ const genColorPickerStyle = (token2) => {
     focusElCls: `${componentCls}-trigger-active`
   })];
 };
-const useStyle$e = genStyleHooks("ColorPicker", (token2) => {
+const useStyle$f = genStyleHooks("ColorPicker", (token2) => {
   const {
     colorTextQuaternary,
     marginSM
@@ -60458,7 +60895,7 @@ const ColorPicker = (props) => {
     status: contextStatus
   } = React.useContext(FormItemInputContext);
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$e(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$f(prefixCls, rootCls);
   const rtlCls = {
     [`${prefixCls}-rtl`]: direction
   };
@@ -60549,7 +60986,7 @@ const DEFAULT_COLUMN_MAP = {
   xs: 1
 };
 const DescriptionsContext = /* @__PURE__ */ React.createContext(null);
-const transChildren2Items = (childNodes) => toArray$4(childNodes).map((node2) => ({
+const transChildren2Items = (childNodes) => toArray$5(childNodes).map((node2) => ({
   ...node2?.props,
   key: node2.key
 }));
@@ -61026,7 +61463,7 @@ const genDescriptionStyles = (token2) => {
     }
   };
 };
-const prepareComponentToken$9 = (token2) => ({
+const prepareComponentToken$a = (token2) => ({
   labelBg: token2.colorFillAlter,
   labelColor: token2.colorTextTertiary,
   titleColor: token2.colorText,
@@ -61038,10 +61475,10 @@ const prepareComponentToken$9 = (token2) => ({
   contentColor: token2.colorText,
   extraColor: token2.colorText
 });
-const useStyle$d = genStyleHooks("Descriptions", (token2) => {
+const useStyle$e = genStyleHooks("Descriptions", (token2) => {
   const descriptionToken = merge$1(token2, {});
   return genDescriptionStyles(descriptionToken);
-}, prepareComponentToken$9);
+}, prepareComponentToken$a);
 const Descriptions = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const {
     prefixCls: customizePrefixCls,
@@ -61082,7 +61519,7 @@ const Descriptions = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const mergedItems = useItems(screens, items, children);
   const mergedSize = useSize(customizeSize);
   const rows = useRow(mergedColumn, mergedItems);
-  const [hashId, cssVarCls] = useStyle$d(prefixCls);
+  const [hashId, cssVarCls] = useStyle$e(prefixCls);
   const mergedProps = {
     ...props,
     column: mergedColumn,
@@ -61248,7 +61685,7 @@ const genSpaceGapStyle = (token2) => {
     }
   };
 };
-const useStyle$c = genStyleHooks("Space", (token2) => {
+const useStyle$d = genStyleHooks("Space", (token2) => {
   const spaceToken = merge$1(token2, {
     spaceGapSmallSize: token2.paddingXS,
     spaceGapMiddleSize: token2.padding,
@@ -61293,14 +61730,14 @@ const InternalSpace = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const isPresetHorizontalSize = isPresetSize(horizontalSize);
   const isValidVerticalSize = isValidGapNumber(verticalSize);
   const isValidHorizontalSize = isValidGapNumber(horizontalSize);
-  const childNodes = toArray$4(children, {
+  const childNodes = toArray$5(children, {
     keepEmpty: true
   });
   const [mergedOrientation, mergedVertical] = useOrientation(orientation, vertical, direction);
   const mergedAlign = align === void 0 && !mergedVertical ? "center" : align;
   const mergedSeparator = separator ?? split2;
   const prefixCls = getPrefixCls("space", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$c(prefixCls);
+  const [hashId, cssVarCls] = useStyle$d(prefixCls);
   const mergedProps = {
     ...props,
     size,
@@ -61472,8 +61909,8 @@ const genJustifyContentStyle = (token2) => {
   });
   return justifyStyle;
 };
-const prepareComponentToken$8 = () => ({});
-const useStyle$b = genStyleHooks("Flex", (token2) => {
+const prepareComponentToken$9 = () => ({});
+const useStyle$c = genStyleHooks("Flex", (token2) => {
   const {
     paddingXS,
     padding,
@@ -61485,7 +61922,7 @@ const useStyle$b = genStyleHooks("Flex", (token2) => {
     flexGapLG: paddingLG
   });
   return [genFlexStyle(flexToken), genFlexGapStyle(flexToken), genFlexWrapStyle(flexToken), genAlignItemsStyle(flexToken), genJustifyContentStyle(flexToken)];
-}, prepareComponentToken$8, {
+}, prepareComponentToken$9, {
   // Flex component don't apply extra font style
   // https://github.com/ant-design/ant-design/issues/46403
   resetStyle: false
@@ -61510,7 +61947,7 @@ const Flex = /* @__PURE__ */ React.forwardRef((props, ref) => {
     getPrefixCls
   } = React.useContext(ConfigContext);
   const prefixCls = getPrefixCls("flex", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$b(prefixCls);
+  const [hashId, cssVarCls] = useStyle$c(prefixCls);
   const [, mergedVertical] = useOrientation(orientation, vertical ?? ctxFlex?.vertical);
   const mergedCls = clsx(className, rootClassName, ctxFlex?.className, prefixCls, hashId, cssVarCls, createFlexClassNames(prefixCls, {
     ...props,
@@ -61548,7 +61985,7 @@ const Group$4 = (props) => {
   } = props;
   const prefixCls = getPrefixCls("input-group", customizePrefixCls);
   const inputPrefixCls = getPrefixCls("input");
-  const [hashId, cssVarCls] = useStyle$m(inputPrefixCls);
+  const [hashId, cssVarCls] = useStyle$o(inputPrefixCls);
   const cls = clsx(prefixCls, cssVarCls, {
     [`${prefixCls}-lg`]: props.size === "large",
     [`${prefixCls}-sm`]: props.size === "small",
@@ -61624,7 +62061,7 @@ const genOTPStyle = (token2) => {
     }
   };
 };
-const useStyle$a = genStyleHooks(["Input", "OTP"], (token2) => {
+const useStyle$b = genStyleHooks(["Input", "OTP"], (token2) => {
   const inputToken = merge$1(token2, initInputToken(token2));
   return genOTPStyle(inputToken);
 }, initComponentToken);
@@ -61773,7 +62210,7 @@ const OTP = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     data: true,
     attr: true
   });
-  const [hashId, cssVarCls] = useStyle$a(prefixCls);
+  const [hashId, cssVarCls] = useStyle$b(prefixCls);
   const mergedSize = useSize((ctx) => customSize ?? ctx);
   const formContext = reactExports.useContext(FormItemInputContext);
   const mergedStatus = getMergedStatus(formContext.status, customStatus);
@@ -61924,8 +62361,8 @@ function requireEyeInvisibleOutlined() {
 }
 var EyeInvisibleOutlinedExports = /* @__PURE__ */ requireEyeInvisibleOutlined();
 const EyeInvisibleOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(EyeInvisibleOutlinedExports);
-function _extends$j() {
-  _extends$j = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$l() {
+  _extends$l = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -61936,13 +62373,13 @@ function _extends$j() {
     }
     return target;
   };
-  return _extends$j.apply(this, arguments);
+  return _extends$l.apply(this, arguments);
 }
-const EyeInvisibleOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$j({}, props, {
+const EyeInvisibleOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$l({}, props, {
   ref,
   icon: EyeInvisibleOutlinedSvg
 }));
-const RefIcon$h = /* @__PURE__ */ reactExports.forwardRef(EyeInvisibleOutlined);
+const RefIcon$i = /* @__PURE__ */ reactExports.forwardRef(EyeInvisibleOutlined);
 var EyeOutlined$1 = {};
 var hasRequiredEyeOutlined;
 function requireEyeOutlined() {
@@ -61955,8 +62392,8 @@ function requireEyeOutlined() {
 }
 var EyeOutlinedExports = /* @__PURE__ */ requireEyeOutlined();
 const EyeOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(EyeOutlinedExports);
-function _extends$i() {
-  _extends$i = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$k() {
+  _extends$k = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -61967,14 +62404,14 @@ function _extends$i() {
     }
     return target;
   };
-  return _extends$i.apply(this, arguments);
+  return _extends$k.apply(this, arguments);
 }
-const EyeOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$i({}, props, {
+const EyeOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$k({}, props, {
   ref,
   icon: EyeOutlinedSvg
 }));
-const RefIcon$g = /* @__PURE__ */ reactExports.forwardRef(EyeOutlined);
-const defaultIconRender = (visible) => visible ? /* @__PURE__ */ reactExports.createElement(RefIcon$g, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$h, null);
+const RefIcon$h = /* @__PURE__ */ reactExports.forwardRef(EyeOutlined);
+const defaultIconRender = (visible) => visible ? /* @__PURE__ */ reactExports.createElement(RefIcon$h, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$i, null);
 const actionMap = {
   click: "onClick",
   hover: "onMouseOver"
@@ -62140,7 +62577,7 @@ const genSearchStyle = (token2) => {
     }
   };
 };
-const useStyle$9 = genStyleHooks(["Input", "Search"], (token2) => {
+const useStyle$a = genStyleHooks(["Input", "Search"], (token2) => {
   const inputToken = merge$1(token2, initInputToken(token2));
   return genSearchStyle(inputToken);
 }, initComponentToken);
@@ -62198,7 +62635,7 @@ const Search = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const composedRef = reactExports.useRef(false);
   const prefixCls = getPrefixCls("input-search", customizePrefixCls);
   const inputPrefixCls = getPrefixCls("input", customizeInputPrefixCls);
-  const [hashId, cssVarCls] = useStyle$9(prefixCls);
+  const [hashId, cssVarCls] = useStyle$a(prefixCls);
   const {
     compactSize
   } = useCompactItemContext(prefixCls, direction);
@@ -62231,7 +62668,7 @@ const Search = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     customOnPressEnter?.(e2);
     onSearch(e2);
   };
-  const searchIcon = typeof enterButton === "boolean" ? fallbackProp(customizeSearchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$o, null)) : null;
+  const searchIcon = typeof enterButton === "boolean" ? fallbackProp(customizeSearchIcon, contextSearchIcon, /* @__PURE__ */ reactExports.createElement(RefIcon$p, null)) : null;
   const btnPrefixCls = `${prefixCls}-btn`;
   const btnClassName = clsx(btnPrefixCls, {
     [`${btnPrefixCls}-${variant}`]: variant
@@ -62417,7 +62854,7 @@ const genTextAreaStyle = (token2) => {
     }
   };
 };
-const useStyle$8 = genStyleHooks(["Input", "TextArea"], (token2) => {
+const useStyle$9 = genStyleHooks(["Input", "TextArea"], (token2) => {
   const inputToken = merge$1(token2, initInputToken(token2));
   return genTextAreaStyle(inputToken);
 }, initComponentToken, {
@@ -62477,7 +62914,7 @@ const TextArea = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const prefixCls = getPrefixCls("input", customizePrefixCls);
   const rootCls = useCSSVarCls(prefixCls);
   const [hashId, cssVarCls] = useSharedStyle(prefixCls, rootClassName);
-  useStyle$8(prefixCls, rootCls);
+  useStyle$9(prefixCls, rootCls);
   const {
     compactSize,
     compactItemClassnames
@@ -62568,7 +63005,7 @@ function useHasSider(siders, children, hasSider) {
   if (siders.length) {
     return true;
   }
-  const childNodes = toArray$4(children);
+  const childNodes = toArray$5(children);
   return childNodes.some((node2) => node2.type === Sider$1);
 }
 const generator = ({
@@ -62598,7 +63035,7 @@ const Basic = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("layout", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$q(prefixCls);
+  const [hashId, cssVarCls] = useStyle$s(prefixCls);
   const prefixWithSuffixCls = suffixCls ? `${prefixCls}-${suffixCls}` : prefixCls;
   return /* @__PURE__ */ reactExports.createElement(TagName, {
     className: clsx(customizePrefixCls || prefixWithSuffixCls, className, hashId, cssVarCls),
@@ -62629,7 +63066,7 @@ const BasicLayout = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   } = useComponentConfig("layout");
   const prefixCls = getPrefixCls("layout", customizePrefixCls);
   const mergedHasSider = useHasSider(siders, children, hasSider);
-  const [hashId, cssVarCls] = useStyle$q(prefixCls);
+  const [hashId, cssVarCls] = useStyle$s(prefixCls);
   const classString = clsx(prefixCls, {
     [`${prefixCls}-has-sider`]: mergedHasSider,
     [`${prefixCls}-rtl`]: direction === "rtl"
@@ -62693,8 +63130,8 @@ function requireDoubleLeftOutlined() {
 }
 var DoubleLeftOutlinedExports = /* @__PURE__ */ requireDoubleLeftOutlined();
 const DoubleLeftOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(DoubleLeftOutlinedExports);
-function _extends$h() {
-  _extends$h = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$j() {
+  _extends$j = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -62705,13 +63142,13 @@ function _extends$h() {
     }
     return target;
   };
-  return _extends$h.apply(this, arguments);
+  return _extends$j.apply(this, arguments);
 }
-const DoubleLeftOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$h({}, props, {
+const DoubleLeftOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$j({}, props, {
   ref,
   icon: DoubleLeftOutlinedSvg
 }));
-const RefIcon$f = /* @__PURE__ */ reactExports.forwardRef(DoubleLeftOutlined);
+const RefIcon$g = /* @__PURE__ */ reactExports.forwardRef(DoubleLeftOutlined);
 var DoubleRightOutlined$1 = {};
 var hasRequiredDoubleRightOutlined;
 function requireDoubleRightOutlined() {
@@ -62724,8 +63161,8 @@ function requireDoubleRightOutlined() {
 }
 var DoubleRightOutlinedExports = /* @__PURE__ */ requireDoubleRightOutlined();
 const DoubleRightOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(DoubleRightOutlinedExports);
-function _extends$g() {
-  _extends$g = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$i() {
+  _extends$i = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -62736,13 +63173,13 @@ function _extends$g() {
     }
     return target;
   };
-  return _extends$g.apply(this, arguments);
+  return _extends$i.apply(this, arguments);
 }
-const DoubleRightOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$g({}, props, {
+const DoubleRightOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$i({}, props, {
   ref,
   icon: DoubleRightOutlinedSvg
 }));
-const RefIcon$e = /* @__PURE__ */ reactExports.forwardRef(DoubleRightOutlined);
+const RefIcon$f = /* @__PURE__ */ reactExports.forwardRef(DoubleRightOutlined);
 const locale = {
   // Options
   items_per_page: "条/页",
@@ -62899,8 +63336,8 @@ const Pager = (props) => {
     tabIndex: 0
   }, pager) : null;
 };
-function _extends$f() {
-  _extends$f = Object.assign ? Object.assign.bind() : function(target) {
+function _extends$h() {
+  _extends$h = Object.assign ? Object.assign.bind() : function(target) {
     for (var i2 = 1; i2 < arguments.length; i2++) {
       var source = arguments[i2];
       for (var key2 in source) {
@@ -62911,7 +63348,7 @@ function _extends$f() {
     }
     return target;
   };
-  return _extends$f.apply(this, arguments);
+  return _extends$h.apply(this, arguments);
 }
 const defaultItemRender = (_, __, element) => element;
 function noop$2() {
@@ -63173,14 +63610,14 @@ const Pagination$1 = (props) => {
   const pageBufferSize = showLessItems ? 1 : 2;
   if (allPages <= 3 + pageBufferSize * 2) {
     if (!allPages) {
-      pagerList.push(/* @__PURE__ */ React.createElement(Pager, _extends$f({}, pagerProps, {
+      pagerList.push(/* @__PURE__ */ React.createElement(Pager, _extends$h({}, pagerProps, {
         key: "noPager",
         page: 1,
         className: `${prefixCls}-item-disabled`
       })));
     }
     for (let i2 = 1; i2 <= allPages; i2 += 1) {
-      pagerList.push(/* @__PURE__ */ React.createElement(Pager, _extends$f({}, pagerProps, {
+      pagerList.push(/* @__PURE__ */ React.createElement(Pager, _extends$h({}, pagerProps, {
         key: i2,
         page: i2,
         active: current === i2
@@ -63230,7 +63667,7 @@ const Pagination$1 = (props) => {
       right -= 1;
     }
     for (let i2 = left; i2 <= right; i2 += 1) {
-      pagerList.push(/* @__PURE__ */ React.createElement(Pager, _extends$f({}, pagerProps, {
+      pagerList.push(/* @__PURE__ */ React.createElement(Pager, _extends$h({}, pagerProps, {
         key: i2,
         page: i2,
         active: current === i2
@@ -63250,13 +63687,13 @@ const Pagination$1 = (props) => {
       pagerList.push(jumpNext);
     }
     if (left !== 1) {
-      pagerList.unshift(/* @__PURE__ */ React.createElement(Pager, _extends$f({}, pagerProps, {
+      pagerList.unshift(/* @__PURE__ */ React.createElement(Pager, _extends$h({}, pagerProps, {
         key: 1,
         page: 1
       })));
     }
     if (right !== allPages) {
-      pagerList.push(/* @__PURE__ */ React.createElement(Pager, _extends$f({}, pagerProps, {
+      pagerList.push(/* @__PURE__ */ React.createElement(Pager, _extends$h({}, pagerProps, {
         key: allPages,
         page: allPages
       })));
@@ -63306,7 +63743,7 @@ const Pagination$1 = (props) => {
     [`${prefixCls}-simple`]: simple,
     [`${prefixCls}-disabled`]: disabled
   });
-  return /* @__PURE__ */ React.createElement("ul", _extends$f({
+  return /* @__PURE__ */ React.createElement("ul", _extends$h({
     className: cls,
     style: style2,
     ref: paginationRef
@@ -63883,7 +64320,7 @@ const genPaginationFocusStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$7 = (token2) => ({
+const prepareComponentToken$8 = (token2) => ({
   itemBg: token2.colorBgContainer,
   itemSize: token2.controlHeight,
   itemSizeSM: token2.controlHeightSM,
@@ -63910,10 +64347,10 @@ const prepareToken$1 = (token2) => merge$1(token2, {
   paginationEllipsisTextIndent: "0.13em"
   // magic for ui experience
 }, initInputToken(token2));
-const useStyle$7 = genStyleHooks("Pagination", (token2) => {
+const useStyle$8 = genStyleHooks("Pagination", (token2) => {
   const paginationToken = prepareToken$1(token2);
   return [genPaginationStyle(paginationToken), genPaginationFocusStyle(paginationToken)];
-}, prepareComponentToken$7);
+}, prepareComponentToken$8);
 const genBorderedStyle$1 = (token2) => {
   const {
     componentCls
@@ -63998,7 +64435,7 @@ const genBorderedStyle$1 = (token2) => {
 const BorderedStyle = genSubStyleComponent(["Pagination", "bordered"], (token2) => {
   const paginationToken = prepareToken$1(token2);
   return genBorderedStyle$1(paginationToken);
-}, prepareComponentToken$7);
+}, prepareComponentToken$8);
 function useShowSizeChanger(showSizeChanger) {
   return reactExports.useMemo(() => {
     if (typeof showSizeChanger === "boolean") {
@@ -64044,7 +64481,7 @@ const Pagination = (props) => {
     totalBoundaryShowSizeChanger: contextTotalBoundaryShowSizeChanger
   } = useComponentConfig("pagination");
   const prefixCls = getPrefixCls("pagination", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$7(prefixCls);
+  const [hashId, cssVarCls] = useStyle$8(prefixCls);
   const mergedSize = useSize(customizeSize);
   const isSmall = mergedSize === "small" || !!(xs && !mergedSize && responsive);
   const [inputVariant, enableInputVariantCls] = useVariant("input");
@@ -64113,33 +64550,33 @@ const Pagination = (props) => {
   const iconsProps = reactExports.useMemo(() => {
     const ellipsis = /* @__PURE__ */ reactExports.createElement("span", {
       className: `${prefixCls}-item-ellipsis`
-    }, /* @__PURE__ */ reactExports.createElement(RefIcon$l, null));
+    }, /* @__PURE__ */ reactExports.createElement(RefIcon$m, null));
     const prevIcon = /* @__PURE__ */ reactExports.createElement("button", {
       className: `${prefixCls}-item-link`,
       type: "button",
       tabIndex: -1
-    }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$r, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$n, null));
+    }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$s, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$o, null));
     const nextIcon = /* @__PURE__ */ reactExports.createElement("button", {
       className: `${prefixCls}-item-link`,
       type: "button",
       tabIndex: -1
-    }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$n, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$r, null));
+    }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$o, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$s, null));
     const jumpPrevIcon = /* @__PURE__ */ reactExports.createElement("a", {
       className: `${prefixCls}-item-link`
     }, /* @__PURE__ */ reactExports.createElement("div", {
       className: `${prefixCls}-item-container`
-    }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$e, {
+    }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$f, {
       className: `${prefixCls}-item-link-icon`
-    }) : /* @__PURE__ */ reactExports.createElement(RefIcon$f, {
+    }) : /* @__PURE__ */ reactExports.createElement(RefIcon$g, {
       className: `${prefixCls}-item-link-icon`
     }), ellipsis));
     const jumpNextIcon = /* @__PURE__ */ reactExports.createElement("a", {
       className: `${prefixCls}-item-link`
     }, /* @__PURE__ */ reactExports.createElement("div", {
       className: `${prefixCls}-item-container`
-    }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$f, {
+    }, direction === "rtl" ? /* @__PURE__ */ reactExports.createElement(RefIcon$g, {
       className: `${prefixCls}-item-link-icon`
-    }) : /* @__PURE__ */ reactExports.createElement(RefIcon$e, {
+    }) : /* @__PURE__ */ reactExports.createElement(RefIcon$f, {
       className: `${prefixCls}-item-link-icon`
     }), ellipsis));
     return {
@@ -64202,7 +64639,7 @@ const CustomCircle = (props) => {
     style: style2
   });
 };
-const Progress = ({
+const Progress$1 = ({
   percent,
   prefixCls
 }) => {
@@ -64259,7 +64696,7 @@ function Looper(props) {
   }, [1, 2, 3, 4].map((i2) => /* @__PURE__ */ reactExports.createElement("i", {
     className: `${prefixCls}-dot-item`,
     key: i2
-  })))), /* @__PURE__ */ reactExports.createElement(Progress, {
+  })))), /* @__PURE__ */ reactExports.createElement(Progress$1, {
     prefixCls,
     percent
   }));
@@ -64508,7 +64945,7 @@ const genSizeStyle = (token2) => {
     }
   };
 };
-const prepareComponentToken$6 = (token2) => {
+const prepareComponentToken$7 = (token2) => {
   const {
     controlHeightLG,
     controlHeight
@@ -64520,12 +64957,12 @@ const prepareComponentToken$6 = (token2) => {
     dotSizeLG: controlHeight
   };
 };
-const useStyle$6 = genStyleHooks("Spin", (token2) => {
+const useStyle$7 = genStyleHooks("Spin", (token2) => {
   const spinToken = merge$1(token2, {
     spinDotDefault: token2.colorTextDescription
   });
   return [genSpinStyle(spinToken), genIndicatorStyle(spinToken), genSizeStyle(spinToken)];
-}, prepareComponentToken$6);
+}, prepareComponentToken$7);
 const AUTO_INTERVAL = 200;
 const STEP_BUCKETS = [[30, 0.05], [70, 0.03], [96, 0.01]];
 function usePercent(spinning, percent) {
@@ -64591,7 +65028,7 @@ const Spin = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
     styles: contextStyles
   } = useComponentConfig("spin");
   const prefixCls = getPrefixCls("spin", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$6(prefixCls);
+  const [hashId, cssVarCls] = useStyle$7(prefixCls);
   const [spinning, setSpinning] = reactExports.useState(() => customSpinning && !shouldDelay(customSpinning, delay));
   const mergedPercent = usePercent(spinning, percent);
   reactExports.useEffect(() => {
@@ -64732,7 +65169,7 @@ const InternalItem = /* @__PURE__ */ React.forwardRef((props, ref) => {
     ...styles?.[moduleName]
   });
   const isItemContainsTextNodeAndNotSingular = () => {
-    const childNodes = toArray$4(children);
+    const childNodes = toArray$5(children);
     const hasTextNode = childNodes.some(isString$3);
     return hasTextNode && childNodes.length > 1;
   };
@@ -64869,7 +65306,7 @@ const genResponsiveStyle = (token2) => {
     }
   };
 };
-const genBaseStyle$3 = (token2) => {
+const genBaseStyle$4 = (token2) => {
   const {
     componentCls,
     antCls,
@@ -65085,7 +65522,7 @@ const genBaseStyle$3 = (token2) => {
     }
   };
 };
-const prepareComponentToken$5 = (token2) => ({
+const prepareComponentToken$6 = (token2) => ({
   contentWidth: 220,
   itemPadding: `${unit$1(token2.paddingContentVertical)} 0`,
   itemPaddingSM: `${unit$1(token2.paddingContentVerticalSM)} ${unit$1(token2.paddingContentHorizontal)}`,
@@ -65098,13 +65535,13 @@ const prepareComponentToken$5 = (token2) => ({
   titleMarginBottom: token2.paddingSM,
   descriptionFontSize: token2.fontSize
 });
-const useStyle$5 = genStyleHooks("List", (token2) => {
+const useStyle$6 = genStyleHooks("List", (token2) => {
   const listToken = merge$1(token2, {
     listBorderedCls: `${token2.componentCls}-bordered`,
     minHeight: token2.controlHeightLG
   });
-  return [genBaseStyle$3(listToken), genBorderedStyle(listToken), genResponsiveStyle(listToken)];
-}, prepareComponentToken$5, {
+  return [genBaseStyle$4(listToken), genBorderedStyle(listToken), genResponsiveStyle(listToken)];
+}, prepareComponentToken$6, {
   extraCssVarPrefixCls: ({
     prefixCls
   }) => [`${prefixCls}-container`]
@@ -65179,7 +65616,7 @@ const InternalList = (props, ref) => {
   };
   const isSomethingAfterLastItem = !!(loadMore || pagination || footer);
   const prefixCls = getPrefixCls("list", customizePrefixCls);
-  const [hashId, cssVarCls] = useStyle$5(prefixCls);
+  const [hashId, cssVarCls] = useStyle$6(prefixCls);
   let loadingProp = loading;
   if (typeof loadingProp === "boolean") {
     loadingProp = {
@@ -65318,7 +65755,7 @@ const PureList = (props) => {
   } = useComponentConfig("message");
   const prefixCls = getPrefixCls("message");
   const rootCls = useCSSVarCls(prefixCls);
-  const [hashId, cssVarCls] = useStyle$A(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$C(prefixCls, rootCls);
   const noticePrefixCls = `${prefixCls}-notice`;
   const configList = items.map((item) => {
     const {
@@ -65602,7 +66039,7 @@ const PurePanel$1 = (props) => {
   const rootPrefixCls = getPrefixCls();
   const prefixCls = customizePrefixCls || getPrefixCls("modal");
   const rootCls = useCSSVarCls(rootPrefixCls);
-  const [hashId, cssVarCls] = useStyle$u(prefixCls, rootCls);
+  const [hashId, cssVarCls] = useStyle$w(prefixCls, rootCls);
   const contextStyleRoot = useSemanticRootStyle(contextStyle);
   const styleRoot = useSemanticRootStyle(style2);
   const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, classNames], [contextStyles, contextStyleRoot, styles, styleRoot], {
@@ -65675,7 +66112,7 @@ Modal.destroyAll = function destroyAllFn() {
 };
 Modal.config = modalGlobalConfig;
 Modal._InternalPanelDoNotUseOrYouWillBeFired = PurePanel$2;
-const genBaseStyle$2 = (token2) => {
+const genBaseStyle$3 = (token2) => {
   const {
     componentCls,
     iconCls,
@@ -65730,7 +66167,7 @@ const genBaseStyle$2 = (token2) => {
     }
   };
 };
-const prepareComponentToken$4 = (token2) => {
+const prepareComponentToken$5 = (token2) => {
   const {
     zIndexPopupBase
   } = token2;
@@ -65738,7 +66175,7 @@ const prepareComponentToken$4 = (token2) => {
     zIndexPopup: zIndexPopupBase + 60
   };
 };
-const useStyle$4 = genStyleHooks("Popconfirm", genBaseStyle$2, prepareComponentToken$4, {
+const useStyle$5 = genStyleHooks("Popconfirm", genBaseStyle$3, prepareComponentToken$5, {
   resetStyle: false
 });
 const Overlay = (props) => {
@@ -65751,7 +66188,7 @@ const Overlay = (props) => {
     cancelText,
     okText,
     okType = "primary",
-    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$u, null),
+    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$v, null),
     showCancel = true,
     close,
     onConfirm,
@@ -65813,7 +66250,7 @@ const PurePanel = (props) => {
     getPrefixCls
   } = reactExports.useContext(ConfigContext);
   const prefixCls = getPrefixCls("popconfirm", customizePrefixCls);
-  useStyle$4(prefixCls);
+  useStyle$5(prefixCls);
   return /* @__PURE__ */ reactExports.createElement(PurePanel$4, {
     placement,
     className: clsx(prefixCls, className),
@@ -65830,7 +66267,7 @@ const InternalPopconfirm = /* @__PURE__ */ reactExports.forwardRef((props, ref) 
     placement = "top",
     trigger: trigger2,
     okType = "primary",
-    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$u, null),
+    icon = /* @__PURE__ */ reactExports.createElement(RefIcon$v, null),
     children,
     overlayClassName,
     onOpenChange,
@@ -65895,7 +66332,7 @@ const InternalPopconfirm = /* @__PURE__ */ reactExports.forwardRef((props, ref) 
     props: mergedProps
   });
   const rootClassNames = clsx(prefixCls, contextClassName, overlayClassName, mergedClassNames.root);
-  useStyle$4(prefixCls);
+  useStyle$5(prefixCls);
   return /* @__PURE__ */ reactExports.createElement(Popover, {
     arrow: mergedArrow,
     ...omit(restProps, ["title"]),
@@ -65932,6 +66369,1081 @@ const InternalPopconfirm = /* @__PURE__ */ reactExports.forwardRef((props, ref) 
 });
 const Popconfirm = InternalPopconfirm;
 Popconfirm._InternalPanelDoNotUseOrYouWillBeFired = PurePanel;
+const defaultProps = {
+  percent: 0,
+  prefixCls: "rc-progress",
+  strokeColor: "#2db7f5",
+  strokeLinecap: "round",
+  strokeWidth: 1,
+  railColor: "#D9D9D9",
+  railWidth: 1,
+  gapPosition: "bottom",
+  loading: false
+};
+const useTransitionDuration = () => {
+  const pathsRef = reactExports.useRef([]);
+  const prevTimeStamp = reactExports.useRef(null);
+  reactExports.useEffect(() => {
+    const now = Date.now();
+    let updated = false;
+    pathsRef.current.forEach((path) => {
+      if (!path) {
+        return;
+      }
+      updated = true;
+      const pathStyle = path.style;
+      pathStyle.transitionDuration = ".3s, .3s, .3s, .06s";
+      if (prevTimeStamp.current && now - prevTimeStamp.current < 100) {
+        pathStyle.transitionDuration = "0s, 0s";
+      }
+    });
+    if (updated) {
+      prevTimeStamp.current = Date.now();
+    }
+  });
+  return pathsRef.current;
+};
+const Block = ({
+  bg,
+  children
+}) => /* @__PURE__ */ reactExports.createElement("div", {
+  style: {
+    width: "100%",
+    height: "100%",
+    background: bg
+  }
+}, children);
+function getPtgColors(color2, scale2) {
+  return Object.keys(color2).map((key2) => {
+    const parsedKey = parseFloat(key2);
+    const ptgKey = `${Math.floor(parsedKey * scale2)}%`;
+    return `${color2[key2]} ${ptgKey}`;
+  });
+}
+const PtgCircle = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+  const {
+    prefixCls,
+    color: color2,
+    gradientId,
+    radius: radius2,
+    className,
+    style: circleStyleForStack,
+    ptg,
+    strokeLinecap,
+    strokeWidth,
+    size,
+    gapDegree
+  } = props;
+  const isGradient2 = color2 && typeof color2 === "object";
+  const stroke = isGradient2 ? `#FFF` : void 0;
+  const halfSize = size / 2;
+  const circleNode = /* @__PURE__ */ reactExports.createElement("circle", {
+    className: clsx(`${prefixCls}-circle-path`, className),
+    r: radius2,
+    cx: halfSize,
+    cy: halfSize,
+    stroke,
+    strokeLinecap,
+    strokeWidth,
+    opacity: ptg === 0 ? 0 : 1,
+    style: circleStyleForStack,
+    ref
+  });
+  if (!isGradient2) {
+    return circleNode;
+  }
+  const maskId = `${gradientId}-conic`;
+  const fromDeg = gapDegree ? `${180 + gapDegree / 2}deg` : "0deg";
+  const conicColors = getPtgColors(color2, (360 - gapDegree) / 360);
+  const linearColors = getPtgColors(color2, 1);
+  const conicColorBg = `conic-gradient(from ${fromDeg}, ${conicColors.join(", ")})`;
+  const linearColorBg = `linear-gradient(to ${gapDegree ? "bottom" : "top"}, ${linearColors.join(", ")})`;
+  return /* @__PURE__ */ reactExports.createElement(reactExports.Fragment, null, /* @__PURE__ */ reactExports.createElement("mask", {
+    id: maskId
+  }, circleNode), /* @__PURE__ */ reactExports.createElement("foreignObject", {
+    x: 0,
+    y: 0,
+    width: size,
+    height: size,
+    mask: `url(#${maskId})`
+  }, /* @__PURE__ */ reactExports.createElement(Block, {
+    bg: linearColorBg
+  }, /* @__PURE__ */ reactExports.createElement(Block, {
+    bg: conicColorBg
+  }))));
+});
+const VIEW_BOX_SIZE = 100;
+const getCircleStyle = (perimeter, perimeterWithoutGap, offset2, percent, rotateDeg, gapDegree, gapPosition, strokeColor, strokeLinecap, strokeWidth, stepSpace = 0) => {
+  const offsetDeg = offset2 / 100 * 360 * ((360 - gapDegree) / 360);
+  const positionDeg = gapDegree === 0 ? 0 : {
+    bottom: 0,
+    top: 180,
+    left: 90,
+    right: -90
+  }[gapPosition];
+  let strokeDashoffset = (100 - percent) / 100 * perimeterWithoutGap;
+  if (strokeLinecap === "round" && percent !== 100) {
+    strokeDashoffset += strokeWidth / 2;
+    if (strokeDashoffset >= perimeterWithoutGap) {
+      strokeDashoffset = perimeterWithoutGap - 0.01;
+    }
+  }
+  const halfSize = VIEW_BOX_SIZE / 2;
+  return {
+    stroke: typeof strokeColor === "string" ? strokeColor : void 0,
+    strokeDasharray: `${perimeterWithoutGap}px ${perimeter}`,
+    strokeDashoffset: strokeDashoffset + stepSpace,
+    transform: `rotate(${rotateDeg + offsetDeg + positionDeg}deg)`,
+    transformOrigin: `${halfSize}px ${halfSize}px`,
+    transition: "stroke-dashoffset .3s ease 0s, stroke-dasharray .3s ease 0s, stroke .3s, stroke-width .06s ease .3s, opacity .3s ease 0s",
+    fillOpacity: 0
+  };
+};
+const getIndeterminateCircle = (({
+  id,
+  loading
+}) => {
+  if (!loading) {
+    return {
+      indeterminateStyleProps: {},
+      indeterminateStyleAnimation: null
+    };
+  }
+  const animationName = `${id}-indeterminate-animate`;
+  return {
+    indeterminateStyleProps: {
+      transform: "rotate(0deg)",
+      animation: `${animationName} 1s linear infinite`
+    },
+    indeterminateStyleAnimation: /* @__PURE__ */ React.createElement("style", null, `@keyframes ${animationName} {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }`)
+  };
+});
+function _extends$g() {
+  _extends$g = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i2 = 1; i2 < arguments.length; i2++) {
+      var source = arguments[i2];
+      for (var key2 in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key2)) {
+          target[key2] = source[key2];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$g.apply(this, arguments);
+}
+function toArray(value) {
+  const mergedValue = value ?? [];
+  return Array.isArray(mergedValue) ? mergedValue : [mergedValue];
+}
+const Circle$2 = (props) => {
+  const {
+    id,
+    prefixCls,
+    classNames = {},
+    styles = {},
+    steps,
+    strokeWidth,
+    railWidth,
+    gapDegree = 0,
+    gapPosition,
+    railColor,
+    strokeLinecap,
+    style: style2,
+    className,
+    strokeColor,
+    percent,
+    loading,
+    ...restProps
+  } = {
+    ...defaultProps,
+    ...props
+  };
+  const halfSize = VIEW_BOX_SIZE / 2;
+  const mergedId = useId(id);
+  const gradientId = `${mergedId}-gradient`;
+  const radius2 = halfSize - strokeWidth / 2;
+  const perimeter = Math.PI * 2 * radius2;
+  const rotateDeg = gapDegree > 0 ? 90 + gapDegree / 2 : -90;
+  const perimeterWithoutGap = perimeter * ((360 - gapDegree) / 360);
+  const {
+    count: stepCount,
+    gap: stepGap
+  } = typeof steps === "object" ? steps : {
+    count: steps,
+    gap: 2
+  };
+  const percentList = toArray(percent);
+  const strokeColorList = toArray(strokeColor);
+  const gradient = strokeColorList.find((color2) => color2 && typeof color2 === "object");
+  const isConicGradient = gradient && typeof gradient === "object";
+  const mergedStrokeLinecap = isConicGradient ? "butt" : strokeLinecap;
+  const {
+    indeterminateStyleProps,
+    indeterminateStyleAnimation
+  } = getIndeterminateCircle({
+    id: mergedId,
+    loading
+  });
+  const circleStyle = getCircleStyle(perimeter, perimeterWithoutGap, 0, 100, rotateDeg, gapDegree, gapPosition, railColor, mergedStrokeLinecap, strokeWidth);
+  const paths = useTransitionDuration();
+  const getStokeList = () => {
+    let stackPtg = 0;
+    return percentList.map((ptg, index) => {
+      const color2 = strokeColorList[index] || strokeColorList[strokeColorList.length - 1];
+      const circleStyleForStack = getCircleStyle(perimeter, perimeterWithoutGap, stackPtg, ptg, rotateDeg, gapDegree, gapPosition, color2, mergedStrokeLinecap, strokeWidth);
+      stackPtg += ptg;
+      return /* @__PURE__ */ reactExports.createElement(PtgCircle, {
+        key: index,
+        color: color2,
+        ptg,
+        radius: radius2,
+        prefixCls,
+        gradientId,
+        className: classNames.track,
+        style: {
+          ...circleStyleForStack,
+          ...indeterminateStyleProps,
+          ...styles.track
+        },
+        strokeLinecap: mergedStrokeLinecap,
+        strokeWidth,
+        gapDegree,
+        ref: (elem) => {
+          paths[index] = elem;
+        },
+        size: VIEW_BOX_SIZE
+      });
+    }).reverse();
+  };
+  const getStepStokeList = () => {
+    const current = Math.round(stepCount * (percentList[0] / 100));
+    const stepPtg = 100 / stepCount;
+    let stackPtg = 0;
+    return new Array(stepCount).fill(null).map((_, index) => {
+      const color2 = index <= current - 1 ? strokeColorList[0] : railColor;
+      const stroke = color2 && typeof color2 === "object" ? `url(#${gradientId})` : void 0;
+      const circleStyleForStack = getCircleStyle(perimeter, perimeterWithoutGap, stackPtg, stepPtg, rotateDeg, gapDegree, gapPosition, color2, "butt", strokeWidth, stepGap);
+      stackPtg += (perimeterWithoutGap - circleStyleForStack.strokeDashoffset + stepGap) * 100 / perimeterWithoutGap;
+      return /* @__PURE__ */ reactExports.createElement("circle", {
+        key: index,
+        className: clsx(`${prefixCls}-circle-path`, classNames.track),
+        r: radius2,
+        cx: halfSize,
+        cy: halfSize,
+        stroke,
+        strokeWidth,
+        opacity: 1,
+        style: {
+          ...circleStyleForStack,
+          ...styles.track
+        },
+        ref: (elem) => {
+          paths[index] = elem;
+        }
+      });
+    });
+  };
+  return /* @__PURE__ */ reactExports.createElement("svg", _extends$g({
+    className: clsx(`${prefixCls}-circle`, classNames.root, className),
+    viewBox: `0 0 ${VIEW_BOX_SIZE} ${VIEW_BOX_SIZE}`,
+    style: {
+      ...styles.root,
+      ...style2
+    },
+    id,
+    role: "presentation"
+  }, restProps), !stepCount && /* @__PURE__ */ reactExports.createElement("circle", {
+    className: clsx(`${prefixCls}-circle-rail`, classNames.rail),
+    r: radius2,
+    cx: halfSize,
+    cy: halfSize,
+    stroke: railColor,
+    strokeLinecap: mergedStrokeLinecap,
+    strokeWidth: railWidth || strokeWidth,
+    style: {
+      ...circleStyle,
+      ...styles.rail
+    }
+  }), stepCount ? getStepStokeList() : getStokeList(), indeterminateStyleAnimation);
+};
+function validProgress(progress) {
+  if (!progress || progress < 0) {
+    return 0;
+  }
+  if (progress > 100) {
+    return 100;
+  }
+  return progress;
+}
+function getSuccessPercent({
+  success
+}) {
+  let percent;
+  if (success && "percent" in success) {
+    percent = success.percent;
+  }
+  return percent;
+}
+const getPercentage = ({
+  percent,
+  success
+}) => {
+  const realSuccessPercent = validProgress(getSuccessPercent({
+    success
+  }));
+  return [realSuccessPercent, validProgress(validProgress(percent) - realSuccessPercent)];
+};
+const getStrokeColor = ({
+  success = {},
+  strokeColor
+}) => {
+  const {
+    strokeColor: successColor
+  } = success;
+  return [successColor || presetPrimaryColors.green, strokeColor || null];
+};
+const getSize$2 = (size, type2, extra) => {
+  let width = -1;
+  let height = -1;
+  if (type2 === "step") {
+    const steps = extra.steps;
+    const strokeWidth = extra.strokeWidth;
+    if (typeof size === "string" || typeof size === "undefined") {
+      width = size === "small" ? 2 : 14;
+      height = strokeWidth ?? 8;
+    } else if (isNumber$1(size)) {
+      [width, height] = [size, size];
+    } else {
+      [width = 14, height = 8] = Array.isArray(size) ? size : [size.width, size.height];
+    }
+    width *= steps;
+  } else if (type2 === "line") {
+    const strokeWidth = extra?.strokeWidth;
+    if (typeof size === "string" || typeof size === "undefined") {
+      height = strokeWidth || (size === "small" ? 6 : 8);
+    } else if (isNumber$1(size)) {
+      [width, height] = [size, size];
+    } else {
+      [width = -1, height = 8] = Array.isArray(size) ? size : [size.width, size.height];
+    }
+  } else if (type2 === "circle" || type2 === "dashboard") {
+    if (typeof size === "string" || typeof size === "undefined") {
+      [width, height] = size === "small" ? [60, 60] : [120, 120];
+    } else if (isNumber$1(size)) {
+      [width, height] = [size, size];
+    } else if (Array.isArray(size)) {
+      width = size[0] ?? size[1] ?? 120;
+      height = size[0] ?? size[1] ?? 120;
+    }
+  }
+  return [width, height];
+};
+const CIRCLE_MIN_STROKE_WIDTH = 3;
+const getMinPercent = (width) => CIRCLE_MIN_STROKE_WIDTH / width * 100;
+const OMIT_SEMANTIC_NAMES = ["root", "body", "indicator"];
+const Circle$1 = (props) => {
+  const {
+    prefixCls,
+    classNames,
+    styles,
+    railColor,
+    trailColor,
+    strokeLinecap = "round",
+    gapPosition,
+    gapPlacement,
+    gapDegree,
+    width: originWidth = 120,
+    type: type2,
+    children,
+    success,
+    size = originWidth,
+    steps
+  } = props;
+  const {
+    direction
+  } = useComponentConfig("progress");
+  const mergedRailColor = railColor ?? trailColor;
+  const [width, height] = getSize$2(size, "circle");
+  let {
+    strokeWidth
+  } = props;
+  if (strokeWidth === void 0) {
+    strokeWidth = Math.max(getMinPercent(width), 6);
+  }
+  const circleStyle = {
+    width,
+    height,
+    fontSize: width * 0.15 + 6
+  };
+  const realGapDegree = reactExports.useMemo(() => {
+    if (gapDegree || gapDegree === 0) {
+      return gapDegree;
+    }
+    if (type2 === "dashboard") {
+      return 75;
+    }
+    return void 0;
+  }, [gapDegree, type2]);
+  const percentArray = getPercentage(props);
+  const gapPos = reactExports.useMemo(() => {
+    const mergedPlacement = (gapPlacement ?? gapPosition) || type2 === "dashboard" && "bottom" || void 0;
+    const isRTL = direction === "rtl";
+    switch (mergedPlacement) {
+      case "start":
+        return isRTL ? "right" : "left";
+      case "end":
+        return isRTL ? "left" : "right";
+      default:
+        return mergedPlacement;
+    }
+  }, [direction, gapPlacement, gapPosition, type2]);
+  const isGradient2 = isPlainObject(props.strokeColor);
+  const strokeColor = getStrokeColor({
+    success,
+    strokeColor: props.strokeColor
+  });
+  const wrapperClassName = clsx(`${prefixCls}-body`, {
+    [`${prefixCls}-circle-gradient`]: isGradient2
+  }, classNames.body);
+  const circleContent = /* @__PURE__ */ reactExports.createElement(Circle$2, {
+    steps,
+    percent: steps ? percentArray[1] : percentArray,
+    strokeWidth,
+    railWidth: strokeWidth,
+    strokeColor: steps ? strokeColor[1] : strokeColor,
+    strokeLinecap,
+    railColor: mergedRailColor,
+    prefixCls,
+    gapDegree: realGapDegree,
+    gapPosition: gapPos,
+    classNames: omit(classNames, OMIT_SEMANTIC_NAMES),
+    styles: omit(styles, OMIT_SEMANTIC_NAMES)
+  });
+  const smallCircle = width <= 20;
+  const node2 = /* @__PURE__ */ reactExports.createElement("div", {
+    className: wrapperClassName,
+    style: {
+      ...circleStyle,
+      ...styles.body
+    }
+  }, circleContent, !smallCircle && children);
+  if (smallCircle) {
+    return /* @__PURE__ */ reactExports.createElement(Tooltip, {
+      title: children
+    }, node2);
+  }
+  return node2;
+};
+const LineStrokeColorVar = "--progress-line-stroke-color";
+const genAntProgressActive = (isRtl) => {
+  const direction = "-100%";
+  return new Keyframe(`antProgress${"LTR"}Active`, {
+    "0%": {
+      transform: `translateX(${direction}) scaleX(0)`,
+      opacity: 0.1
+    },
+    "20%": {
+      transform: `translateX(${direction}) scaleX(0)`,
+      opacity: 0.5
+    },
+    to: {
+      transform: "translateX(0) scaleX(1)",
+      opacity: 0
+    }
+  });
+};
+const genBaseStyle$2 = (token2) => {
+  const {
+    componentCls: progressCls,
+    iconCls: iconPrefixCls
+  } = token2;
+  return {
+    [progressCls]: {
+      ...resetComponent(token2),
+      display: "inline-flex",
+      "&-rtl": {
+        direction: "rtl"
+      },
+      [`${progressCls}-indicator`]: {
+        color: token2.colorText,
+        lineHeight: 1,
+        whiteSpace: "nowrap",
+        verticalAlign: "middle",
+        wordBreak: "normal",
+        [iconPrefixCls]: {
+          fontSize: token2.fontSize
+        }
+      },
+      [`&${progressCls}-status-exception`]: {
+        [`${progressCls}-indicator`]: {
+          color: token2.colorError
+        }
+      },
+      [`&${progressCls}-status-success`]: {
+        [`${progressCls}-indicator`]: {
+          color: token2.colorSuccess
+        }
+      }
+    }
+  };
+};
+const genLineStyle = (token2) => {
+  const {
+    componentCls
+  } = token2;
+  return {
+    [`${componentCls}-line`]: {
+      position: "relative",
+      width: "100%",
+      fontSize: token2.fontSize,
+      [`${componentCls}-body`]: {
+        display: "inline-flex",
+        alignItems: "center",
+        width: "100%",
+        gap: token2.marginXS
+      },
+      [`${componentCls}-rail`]: {
+        flex: "auto",
+        background: token2.remainingColor,
+        borderRadius: token2.lineBorderRadius,
+        position: "relative",
+        width: "100%",
+        overflow: "hidden"
+      },
+      [`&${componentCls}-status-active`]: {
+        [`${componentCls}-track:after`]: {
+          content: '""',
+          position: "absolute",
+          inset: 0,
+          backgroundColor: token2.colorBgContainer,
+          borderRadius: "inherit",
+          opacity: 0,
+          animationName: genAntProgressActive(),
+          animationDuration: token2.progressActiveMotionDuration,
+          animationTimingFunction: token2.motionEaseOutQuint,
+          animationIterationCount: "infinite"
+        }
+      },
+      [`${componentCls}-track`]: {
+        position: "absolute",
+        insetInlineStart: 0,
+        insetBlock: 0,
+        borderRadius: "inherit",
+        background: token2.defaultColor,
+        transition: `all ${token2.motionDurationSlow} ${token2.motionEaseInOutCirc}`,
+        minWidth: "max-content",
+        display: "flex",
+        alignItems: "center",
+        "&-success": {
+          background: token2.colorSuccess
+        }
+      },
+      [`&${componentCls}-status-exception`]: {
+        [`${componentCls}-track`]: {
+          background: token2.colorError
+        }
+      },
+      [`&${componentCls}-status-success`]: {
+        [`${componentCls}-track`]: {
+          background: token2.colorSuccess
+        }
+      },
+      // >>>>> indicator
+      // >>> Outer
+      [`${componentCls}-indicator-outer`]: {
+        [`&${componentCls}-indicator-start`]: {
+          order: -1
+        }
+      },
+      [`${componentCls}-body-layout-bottom`]: {
+        flexDirection: "column",
+        alignItems: "center",
+        gap: token2.marginXXS
+      },
+      // >>> Inner
+      [`${componentCls}-indicator${componentCls}-indicator-inner`]: {
+        color: token2.colorWhite,
+        paddingInline: token2.paddingXXS,
+        width: "100%",
+        display: "flex",
+        justifyContent: "center",
+        [`&${componentCls}-indicator-end`]: {
+          justifyContent: "end"
+        },
+        [`&${componentCls}-indicator-start`]: {
+          justifyContent: "start"
+        },
+        [`&${componentCls}-indicator-bright`]: {
+          color: "rgba(0, 0, 0, 0.45)"
+        }
+      }
+    }
+  };
+};
+const genCircleStyle = (token2) => {
+  const {
+    componentCls: progressCls,
+    iconCls: iconPrefixCls
+  } = token2;
+  return {
+    [`${progressCls}-circle`]: {
+      [`${progressCls}-circle-rail`]: {
+        stroke: token2.remainingColor
+      },
+      [`${progressCls}-body:not(${progressCls}-circle-gradient)`]: {
+        [`${progressCls}-circle-path`]: {
+          stroke: token2.defaultColor
+        }
+      },
+      [`${progressCls}-body`]: {
+        position: "relative",
+        lineHeight: 1,
+        backgroundColor: "transparent"
+      },
+      [`${progressCls}-indicator`]: {
+        position: "absolute",
+        insetBlockStart: "50%",
+        insetInlineStart: 0,
+        width: "100%",
+        margin: 0,
+        padding: 0,
+        color: token2.circleTextColor,
+        fontSize: token2.circleTextFontSize,
+        lineHeight: 1,
+        whiteSpace: "normal",
+        textAlign: "center",
+        transform: "translateY(-50%)",
+        [iconPrefixCls]: {
+          fontSize: token2.circleIconFontSize
+        }
+      },
+      [`&${progressCls}-status-exception`]: {
+        [`${progressCls}-body:not(${progressCls}-circle-gradient)`]: {
+          [`${progressCls}-circle-path`]: {
+            stroke: token2.colorError
+          }
+        }
+      },
+      [`&${progressCls}-status-success`]: {
+        [`${progressCls}-body:not(${progressCls}-circle-gradient)`]: {
+          [`${progressCls}-circle-path`]: {
+            stroke: token2.colorSuccess
+          }
+        }
+      }
+    },
+    [`${progressCls}-inline-circle`]: {
+      lineHeight: 1,
+      [`${progressCls}-inner`]: {
+        verticalAlign: "bottom"
+      }
+    }
+  };
+};
+const genStepStyle = (token2) => {
+  const {
+    componentCls: progressCls
+  } = token2;
+  return {
+    [progressCls]: {
+      [`${progressCls}-steps`]: {
+        display: "inline-block",
+        "&-body": {
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: token2.progressStepMarginInlineEnd,
+          [`${progressCls}-indicator`]: {
+            marginInlineStart: token2.marginXS
+          }
+        },
+        "&-item": {
+          flexShrink: 0,
+          minWidth: token2.progressStepMinWidth,
+          backgroundColor: token2.remainingColor,
+          transition: `all ${token2.motionDurationSlow}`,
+          "&-active": {
+            backgroundColor: token2.defaultColor
+          }
+        }
+      }
+    }
+  };
+};
+const genSmallLine = (token2) => {
+  const {
+    componentCls: progressCls,
+    iconCls: iconPrefixCls
+  } = token2;
+  return {
+    [progressCls]: {
+      [`${progressCls}-small&-line, ${progressCls}-small&-line ${progressCls}-indicator ${iconPrefixCls}`]: {
+        fontSize: token2.fontSizeSM
+      }
+    }
+  };
+};
+const prepareComponentToken$4 = (token2) => ({
+  circleTextColor: token2.colorText,
+  defaultColor: token2.colorInfo,
+  remainingColor: token2.colorFillSecondary,
+  lineBorderRadius: 100,
+  // magic for capsule shape, should be a very large number
+  circleTextFontSize: "1em",
+  circleIconFontSize: `${token2.fontSize / token2.fontSizeSM}em`
+});
+const useStyle$4 = genStyleHooks("Progress", (token2) => {
+  const progressStepMarginInlineEnd = token2.calc(token2.marginXXS).div(2).equal();
+  const progressToken = merge$1(token2, {
+    progressStepMarginInlineEnd,
+    progressStepMinWidth: progressStepMarginInlineEnd,
+    progressActiveMotionDuration: "2.4s"
+  });
+  return [genBaseStyle$2(progressToken), genLineStyle(progressToken), genCircleStyle(progressToken), genStepStyle(progressToken), genSmallLine(progressToken)];
+}, prepareComponentToken$4);
+const sortGradient = (gradients) => {
+  let tempArr = [];
+  Object.keys(gradients).forEach((key2) => {
+    const formattedKey = Number.parseFloat(key2.replace(/%/g, ""));
+    if (!Number.isNaN(formattedKey)) {
+      tempArr.push({
+        key: formattedKey,
+        value: gradients[key2]
+      });
+    }
+  });
+  tempArr = tempArr.sort((a, b) => a.key - b.key);
+  return tempArr.map(({
+    key: key2,
+    value
+  }) => `${value} ${key2}%`).join(", ");
+};
+const handleGradient = (strokeColor, directionConfig) => {
+  const {
+    from: from2 = presetPrimaryColors.blue,
+    to = presetPrimaryColors.blue,
+    direction = directionConfig === "rtl" ? "to left" : "to right",
+    ...rest
+  } = strokeColor;
+  if (Object.keys(rest).length !== 0) {
+    const sortedGradients = sortGradient(rest);
+    const background2 = `linear-gradient(${direction}, ${sortedGradients})`;
+    return {
+      background: background2,
+      [LineStrokeColorVar]: background2
+    };
+  }
+  const background = `linear-gradient(${direction}, ${from2}, ${to})`;
+  return {
+    background,
+    [LineStrokeColorVar]: background
+  };
+};
+const Line$2 = (props) => {
+  const {
+    prefixCls,
+    classNames,
+    styles,
+    direction: directionConfig,
+    percent,
+    size,
+    strokeWidth,
+    strokeColor,
+    strokeLinecap = "round",
+    children,
+    railColor,
+    trailColor,
+    percentPosition,
+    success
+  } = props;
+  const {
+    align: infoAlign,
+    type: infoPosition
+  } = percentPosition;
+  const mergedRailColor = railColor ?? trailColor;
+  const borderRadius = strokeLinecap === "square" || strokeLinecap === "butt" ? 0 : void 0;
+  const mergedSize = size ?? [-1, strokeWidth || (size === "small" ? 6 : 8)];
+  const [width, height] = getSize$2(mergedSize, "line", {
+    strokeWidth
+  });
+  const railStyle = {
+    backgroundColor: mergedRailColor || void 0,
+    borderRadius,
+    height
+  };
+  const trackCls = `${prefixCls}-track`;
+  const backgroundProps = strokeColor && typeof strokeColor !== "string" ? handleGradient(strokeColor, directionConfig) : {
+    [LineStrokeColorVar]: strokeColor,
+    background: strokeColor
+  };
+  const percentTrackStyle = {
+    width: `${validProgress(percent)}%`,
+    height,
+    borderRadius,
+    ...backgroundProps
+  };
+  const successPercent = getSuccessPercent(props);
+  const successTrackStyle = {
+    width: `${validProgress(successPercent)}%`,
+    height,
+    borderRadius,
+    backgroundColor: success?.strokeColor
+  };
+  return /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(`${prefixCls}-body`, classNames.body, {
+      [`${prefixCls}-body-layout-bottom`]: infoAlign === "center" && infoPosition === "outer"
+    }),
+    style: {
+      width: width > 0 ? width : "100%",
+      ...styles.body
+    }
+  }, /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(`${prefixCls}-rail`, classNames.rail),
+    style: {
+      ...railStyle,
+      ...styles.rail
+    }
+  }, /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(trackCls, classNames.track),
+    style: {
+      ...percentTrackStyle,
+      ...styles.track
+    }
+  }, infoPosition === "inner" && children), successPercent !== void 0 && /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(trackCls, `${trackCls}-success`, classNames.track),
+    style: {
+      ...successTrackStyle,
+      ...styles.track
+    }
+  })), infoPosition === "outer" && children);
+};
+const Steps = (props) => {
+  const {
+    classNames,
+    styles,
+    size,
+    steps,
+    rounding: customRounding = Math.round,
+    percent = 0,
+    strokeWidth = 8,
+    strokeColor,
+    railColor,
+    trailColor,
+    prefixCls,
+    children
+  } = props;
+  const current = customRounding(steps * (percent / 100));
+  const stepWidth = size === "small" ? 2 : 14;
+  const mergedSize = size ?? [stepWidth, strokeWidth];
+  const [width, height] = getSize$2(mergedSize, "step", {
+    steps,
+    strokeWidth
+  });
+  const unitWidth = width / steps;
+  const styledSteps = Array.from({
+    length: steps
+  });
+  const mergedRailColor = railColor ?? trailColor;
+  for (let i2 = 0; i2 < steps; i2++) {
+    const color2 = Array.isArray(strokeColor) ? strokeColor[i2] : strokeColor;
+    styledSteps[i2] = /* @__PURE__ */ reactExports.createElement("div", {
+      key: i2,
+      className: clsx(`${prefixCls}-steps-item`, {
+        [`${prefixCls}-steps-item-active`]: i2 <= current - 1
+      }, classNames.track),
+      style: {
+        backgroundColor: i2 <= current - 1 ? color2 : mergedRailColor,
+        width: unitWidth,
+        height,
+        ...styles.track
+      }
+    });
+  }
+  return /* @__PURE__ */ reactExports.createElement("div", {
+    className: clsx(`${prefixCls}-steps-body`, classNames.body),
+    style: styles.body
+  }, styledSteps, children);
+};
+const ProgressStatuses = ["normal", "exception", "active", "success"];
+const Progress = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
+  const {
+    prefixCls: customizePrefixCls,
+    className,
+    rootClassName,
+    classNames,
+    styles,
+    steps,
+    strokeColor,
+    percent = 0,
+    size = "medium",
+    showInfo = true,
+    type: type2 = "line",
+    status,
+    format: format2,
+    style: style2,
+    percentPosition = {},
+    ...restProps
+  } = props;
+  const {
+    align: infoAlign = "end",
+    type: infoPosition = "outer"
+  } = percentPosition;
+  const strokeColorNotArray = Array.isArray(strokeColor) ? strokeColor[0] : strokeColor;
+  const strokeColorNotGradient = typeof strokeColor === "string" || Array.isArray(strokeColor) ? strokeColor : void 0;
+  const strokeColorIsBright = reactExports.useMemo(() => {
+    if (strokeColorNotArray) {
+      const color2 = typeof strokeColorNotArray === "string" ? strokeColorNotArray : Object.values(strokeColorNotArray)[0];
+      return new FastColor(color2).isLight();
+    }
+    return false;
+  }, [strokeColor]);
+  const percentNumber = reactExports.useMemo(() => {
+    const successPercent = getSuccessPercent(props);
+    return Number.parseInt(successPercent !== void 0 ? (successPercent ?? 0)?.toString() : (percent ?? 0)?.toString(), 10);
+  }, [percent, props.success]);
+  const progressStatus = reactExports.useMemo(() => {
+    if (!ProgressStatuses.includes(status) && percentNumber >= 100) {
+      return "success";
+    }
+    return status || "normal";
+  }, [status, percentNumber]);
+  const {
+    getPrefixCls,
+    direction,
+    className: contextClassName,
+    style: contextStyle,
+    classNames: contextClassNames,
+    styles: contextStyles
+  } = useComponentConfig("progress");
+  const prefixCls = getPrefixCls("progress", customizePrefixCls);
+  const [hashId, cssVarCls] = useStyle$4(prefixCls);
+  const mergedProps = {
+    ...props,
+    percent,
+    type: type2,
+    size,
+    showInfo,
+    percentPosition
+  };
+  const contextStyleRoot = useSemanticRootStyle(contextStyle);
+  const styleRoot = useSemanticRootStyle(style2);
+  const [mergedClassNames, mergedStyles] = useMergeSemantic([contextClassNames, classNames], [contextStyles, contextStyleRoot, styles, styleRoot], {
+    props: mergedProps
+  });
+  const isLineType = type2 === "line";
+  const isPureLineType = isLineType && !steps;
+  const progressInfo = reactExports.useMemo(() => {
+    if (!showInfo) {
+      return null;
+    }
+    const successPercent = getSuccessPercent(props);
+    let text;
+    const textFormatter = format2 || ((number2) => `${number2}%`);
+    const isBrightInnerColor = isLineType && strokeColorIsBright && infoPosition === "inner";
+    if (infoPosition === "inner" || format2 || progressStatus !== "exception" && progressStatus !== "success") {
+      text = textFormatter(validProgress(percent), validProgress(successPercent));
+    } else if (progressStatus === "exception") {
+      text = isLineType ? /* @__PURE__ */ reactExports.createElement(RefIcon$x, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$w, null);
+    } else if (progressStatus === "success") {
+      text = isLineType ? /* @__PURE__ */ reactExports.createElement(RefIcon$y, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$r, null);
+    }
+    return /* @__PURE__ */ reactExports.createElement("span", {
+      className: clsx(`${prefixCls}-indicator`, {
+        [`${prefixCls}-indicator-bright`]: isBrightInnerColor,
+        [`${prefixCls}-indicator-${infoAlign}`]: isPureLineType,
+        [`${prefixCls}-indicator-${infoPosition}`]: isPureLineType
+      }, mergedClassNames.indicator),
+      style: mergedStyles.indicator,
+      title: typeof text === "string" ? text : void 0
+    }, text);
+  }, [showInfo, percent, percentNumber, progressStatus, type2, prefixCls, format2, isLineType, strokeColorIsBright, infoPosition, infoAlign, isPureLineType, mergedClassNames.indicator, mergedStyles.indicator]);
+  const sharedProps = {
+    ...props,
+    classNames: mergedClassNames,
+    styles: mergedStyles
+  };
+  let progress;
+  if (type2 === "line") {
+    progress = steps ? /* @__PURE__ */ reactExports.createElement(Steps, {
+      ...sharedProps,
+      strokeColor: strokeColorNotGradient,
+      prefixCls,
+      steps: isPlainObject(steps) ? steps.count : steps
+    }, progressInfo) : /* @__PURE__ */ reactExports.createElement(Line$2, {
+      ...sharedProps,
+      strokeColor: strokeColorNotArray,
+      prefixCls,
+      direction,
+      percentPosition: {
+        align: infoAlign,
+        type: infoPosition
+      }
+    }, progressInfo);
+  } else if (type2 === "circle" || type2 === "dashboard") {
+    progress = /* @__PURE__ */ reactExports.createElement(Circle$1, {
+      ...sharedProps,
+      strokeColor: strokeColorNotArray,
+      prefixCls,
+      progressStatus
+    }, progressInfo);
+  }
+  const classString = clsx(prefixCls, `${prefixCls}-status-${progressStatus}`, {
+    [`${prefixCls}-${type2 === "dashboard" && "circle" || type2}`]: type2 !== "line",
+    [`${prefixCls}-inline-circle`]: type2 === "circle" && getSize$2(size, "circle")[0] <= 20,
+    [`${prefixCls}-line`]: isPureLineType,
+    [`${prefixCls}-line-align-${infoAlign}`]: isPureLineType,
+    [`${prefixCls}-line-position-${infoPosition}`]: isPureLineType,
+    [`${prefixCls}-steps`]: steps,
+    [`${prefixCls}-show-info`]: showInfo,
+    [`${prefixCls}-small`]: size === "small",
+    [`${prefixCls}-rtl`]: direction === "rtl"
+  }, contextClassName, className, rootClassName, mergedClassNames.root, hashId, cssVarCls);
+  return /* @__PURE__ */ reactExports.createElement("div", {
+    ref,
+    style: mergedStyles.root,
+    className: classString,
+    role: "progressbar",
+    "aria-valuenow": percentNumber,
+    "aria-valuemin": 0,
+    "aria-valuemax": 100,
+    ...omit(restProps, ["railColor", "trailColor", "strokeWidth", "width", "gapDegree", "gapPosition", "gapPlacement", "strokeLinecap", "success"])
+  }, progress);
+});
+var ReloadOutlined$1 = {};
+var hasRequiredReloadOutlined;
+function requireReloadOutlined() {
+  if (hasRequiredReloadOutlined) return ReloadOutlined$1;
+  hasRequiredReloadOutlined = 1;
+  Object.defineProperty(ReloadOutlined$1, "__esModule", { value: true });
+  var ReloadOutlined2 = { "icon": { "tag": "svg", "attrs": { "viewBox": "64 64 896 896", "focusable": "false" }, "children": [{ "tag": "path", "attrs": { "d": "M909.1 209.3l-56.4 44.1C775.8 155.1 656.2 92 521.9 92 290 92 102.3 279.5 102 511.5 101.7 743.7 289.8 932 521.9 932c181.3 0 335.8-115 394.6-276.1 1.5-4.2-.7-8.9-4.9-10.3l-56.7-19.5a8 8 0 00-10.1 4.8c-1.8 5-3.8 10-5.9 14.9-17.3 41-42.1 77.8-73.7 109.4A344.77 344.77 0 01655.9 829c-42.3 17.9-87.4 27-133.8 27-46.5 0-91.5-9.1-133.8-27A341.5 341.5 0 01279 755.2a342.16 342.16 0 01-73.7-109.4c-17.9-42.4-27-87.4-27-133.9s9.1-91.5 27-133.9c17.3-41 42.1-77.8 73.7-109.4 31.6-31.6 68.4-56.4 109.3-73.8 42.3-17.9 87.4-27 133.8-27 46.5 0 91.5 9.1 133.8 27a341.5 341.5 0 01109.3 73.8c9.9 9.9 19.2 20.4 27.8 31.4l-60.2 47a8 8 0 003 14.1l175.6 43c5 1.2 9.9-2.6 9.9-7.7l.8-180.9c-.1-6.6-7.8-10.3-13-6.2z" } }] }, "name": "reload", "theme": "outlined" };
+  ReloadOutlined$1.default = ReloadOutlined2;
+  return ReloadOutlined$1;
+}
+var ReloadOutlinedExports = /* @__PURE__ */ requireReloadOutlined();
+const ReloadOutlinedSvg = /* @__PURE__ */ getDefaultExportFromCjs(ReloadOutlinedExports);
+function _extends$f() {
+  _extends$f = Object.assign ? Object.assign.bind() : function(target) {
+    for (var i2 = 1; i2 < arguments.length; i2++) {
+      var source = arguments[i2];
+      for (var key2 in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key2)) {
+          target[key2] = source[key2];
+        }
+      }
+    }
+    return target;
+  };
+  return _extends$f.apply(this, arguments);
+}
+const ReloadOutlined = (props, ref) => /* @__PURE__ */ reactExports.createElement(Icon$2, _extends$f({}, props, {
+  ref,
+  icon: ReloadOutlinedSvg
+}));
+const RefIcon$e = /* @__PURE__ */ reactExports.forwardRef(ReloadOutlined);
 var WarningFilled$1 = {};
 var hasRequiredWarningFilled;
 function requireWarningFilled() {
@@ -66748,9 +68260,9 @@ const Unauthorized = () => /* @__PURE__ */ reactExports.createElement("svg", {
   strokeWidth: "1.1"
 })));
 const IconMap = {
-  success: RefIcon$x,
-  error: RefIcon$w,
-  info: RefIcon$u,
+  success: RefIcon$y,
+  error: RefIcon$x,
+  info: RefIcon$v,
   warning: RefIcon$d
 };
 const ExceptionMap = {
@@ -67321,7 +68833,7 @@ const InternalSwitch = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
   const loadingIcon = /* @__PURE__ */ reactExports.createElement("div", {
     className: clsx(`${prefixCls}-handle`, mergedClassNames.indicator),
     style: mergedStyles.indicator
-  }, loading && /* @__PURE__ */ reactExports.createElement(RefIcon$s, {
+  }, loading && /* @__PURE__ */ reactExports.createElement(RefIcon$t, {
     className: `${prefixCls}-loading-icon`
   }));
   const classes = clsx(contextClassName, {
@@ -68877,7 +70389,7 @@ const CopyBtn = (props) => {
     onClick: onCopy,
     "aria-label": ariaLabel,
     tabIndex
-  }, copied ? getNode(iconNodes[1], /* @__PURE__ */ reactExports.createElement(RefIcon$q, null), true) : getNode(iconNodes[0], btnLoading ? /* @__PURE__ */ reactExports.createElement(RefIcon$s, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$a, null), true)));
+  }, copied ? getNode(iconNodes[1], /* @__PURE__ */ reactExports.createElement(RefIcon$r, null), true) : getNode(iconNodes[0], btnLoading ? /* @__PURE__ */ reactExports.createElement(RefIcon$t, null) : /* @__PURE__ */ reactExports.createElement(RefIcon$a, null), true)));
 };
 const MeasureText = /* @__PURE__ */ reactExports.forwardRef(({
   style: style2,
@@ -68949,7 +70461,7 @@ function EllipsisMeasure(props) {
     miscDeps,
     onEllipsis
   } = props;
-  const nodeList = reactExports.useMemo(() => toArray$4(text), [text]);
+  const nodeList = reactExports.useMemo(() => toArray$5(text), [text]);
   const nodeLen = reactExports.useMemo(() => getNodesLen(nodeList), [text]);
   const fullContent = reactExports.useMemo(() => children(nodeList, false), [text].concat(_toConsumableArray(measureDeps)));
   const [ellipsisCutIndex, setEllipsisCutIndex] = reactExports.useState(null);
@@ -69307,7 +70819,7 @@ const Base = /* @__PURE__ */ reactExports.forwardRef((props, ref) => {
       tooltip,
       tabIndex
     } = editConfig;
-    const editTitle = toArray$4(tooltip)[0] || textLocale?.edit;
+    const editTitle = toArray$5(tooltip)[0] || textLocale?.edit;
     const ariaLabel = typeof editTitle === "string" ? editTitle : "";
     return triggerType.includes("icon") ? /* @__PURE__ */ reactExports.createElement(Tooltip, {
       key: "edit",
@@ -72933,6 +74445,67 @@ const enUS = {
         cli: "CLI"
       }
     },
+    keyboard: {
+      title: "Keyboard Backlight",
+      unsupported: "Keyboard backlight is not supported on this device",
+      rgb: {
+        preset: "Preset",
+        settings: "Backlight Settings",
+        effect: "Effect",
+        speed: "Speed",
+        brightness: "Brightness",
+        zones: "Zone Colors",
+        presets: {
+          off: "Off",
+          one: "Preset 1",
+          two: "Preset 2",
+          three: "Preset 3",
+          four: "Preset 4"
+        },
+        effectOptions: {
+          static: "Static",
+          breath: "Breath",
+          smooth: "Smooth",
+          waveRtl: "Wave (RTL)",
+          waveLtr: "Wave (LTR)"
+        },
+        speedOptions: {
+          slowest: "Slowest",
+          slow: "Slow",
+          fast: "Fast",
+          fastest: "Fastest"
+        },
+        brightnessOptions: {
+          low: "Low",
+          high: "High"
+        }
+      },
+      spectrum: {
+        brightness: "Brightness",
+        profile: "Profile",
+        logo: "Logo Light",
+        effects: "Effects",
+        colors: "Colors",
+        addEffect: "Add Effect",
+        deleteEffect: "Delete",
+        noEffects: "No effects",
+        effectTypes: {
+          always: "Always",
+          rainbowScrew: "Rainbow Screw",
+          rainbowWave: "Rainbow Wave",
+          colorChange: "Color Change",
+          colorWave: "Color Wave",
+          colorPulse: "Color Pulse",
+          smooth: "Smooth",
+          rain: "Rain",
+          ripple: "Ripple",
+          type: "Type",
+          audioBounce: "Audio Bounce",
+          audioRipple: "Audio Ripple",
+          auroraSync: "Aurora Sync"
+        }
+      }
+    },
     automation: {
       title: "Automation",
       enable: "Enable automation",
@@ -72961,6 +74534,87 @@ const enUS = {
       clear: "Clear",
       play: "Play",
       empty: "No macro sequence for this key yet"
+    },
+    plugins: {
+      title: "Plugins & Extensions",
+      search: "Search plugins",
+      filterAll: "All",
+      filterInstalled: "Installed",
+      filterNotInstalled: "Not Installed",
+      refresh: "Refresh",
+      total: "{{count}} total",
+      summary: "{{count}} installed",
+      updatable: "{{count}} update(s) available",
+      install: "Install",
+      update: "Update",
+      updateAvailable: "Update Available",
+      uninstall: "Uninstall",
+      uninstallConfirm: "Uninstall this plugin?",
+      uninstallFailed: "Failed to uninstall",
+      installed: "Installed",
+      online: "Online",
+      installing: "Installing…",
+      offline: "Online store is unavailable; showing locally installed plugins only",
+      empty: "No plugins found",
+      dependencies: "Dependencies",
+      dependenciesBlocked: "This plugin has unsatisfied dependencies and cannot be uninstalled",
+      details: "Details",
+      usageGuide: "Usage Guide",
+      changelog: "Changelog"
+    },
+    optimization: {
+      title: "Windows Optimization",
+      tabs: {
+        optimization: "Optimization",
+        cleanup: "Cleanup",
+        driverDownload: "Driver Download",
+        networkAcceleration: "Network Acceleration"
+      },
+      recommended: "Recommended",
+      selected: "Selected",
+      selectedActions: "Selected Actions",
+      noSelection: "No actions selected",
+      selectRecommended: "Select Recommended",
+      applyRecommended: "Apply All Recommended",
+      apply: "Apply",
+      clear: "Clear (Revert)",
+      applied: "Applied",
+      applyFailed: "Failed to apply (administrator rights may be required)",
+      reverted: "Reverted",
+      revertFailed: "Failed to revert (administrator rights may be required)",
+      estimate: "Estimate Size",
+      estimateResult: "Reclaimable space",
+      runCleanup: "Run Cleanup",
+      cleanupHint: "Cleanup runs your custom cleanup rules.",
+      cleanupConfirm: "Run cleanup now?",
+      cleanupDone: "Cleanup finished",
+      cleanupFailed: "Cleanup failed",
+      network: {
+        status: "Status",
+        running: "Running",
+        stopped: "Stopped",
+        backendReady: "Backend ready",
+        backendNotReady: "Backend not ready",
+        config: "Basic Config",
+        accelerationEnabled: "Enable acceleration",
+        mode: "Mode",
+        modes: {
+          off: "Off",
+          systemProxy: "System Proxy",
+          hosts: "Hosts",
+          diagnosticsOnly: "Diagnostics Only"
+        },
+        save: "Save Config",
+        saved: "Config saved",
+        saveFailed: "Failed to save config",
+        start: "Start",
+        stop: "Stop",
+        startFailed: "Failed to start",
+        stopFailed: "Failed to stop"
+      },
+      driverDownload: {
+        comingSoon: "Driver download will be available in a future version"
+      }
     },
     about: {
       title: "About",
@@ -73186,6 +74840,67 @@ const zhCN = {
         cli: "CLI"
       }
     },
+    keyboard: {
+      title: "键盘背光",
+      unsupported: "此设备不支持键盘背光控制",
+      rgb: {
+        preset: "预设",
+        settings: "背光设置",
+        effect: "效果",
+        speed: "速度",
+        brightness: "亮度",
+        zones: "分区颜色",
+        presets: {
+          off: "关闭",
+          one: "预设 1",
+          two: "预设 2",
+          three: "预设 3",
+          four: "预设 4"
+        },
+        effectOptions: {
+          static: "静态",
+          breath: "呼吸",
+          smooth: "流光",
+          waveRtl: "波浪（右→左）",
+          waveLtr: "波浪（左→右）"
+        },
+        speedOptions: {
+          slowest: "最慢",
+          slow: "慢",
+          fast: "快",
+          fastest: "最快"
+        },
+        brightnessOptions: {
+          low: "低",
+          high: "高"
+        }
+      },
+      spectrum: {
+        brightness: "亮度",
+        profile: "配置文件",
+        logo: "Logo 灯",
+        effects: "效果列表",
+        colors: "颜色数量",
+        addEffect: "添加效果",
+        deleteEffect: "删除效果",
+        noEffects: "暂无效果",
+        effectTypes: {
+          always: "常亮",
+          rainbowScrew: "彩虹旋转",
+          rainbowWave: "彩虹波浪",
+          colorChange: "变色",
+          colorWave: "彩色波浪",
+          colorPulse: "彩色脉冲",
+          smooth: "流光",
+          rain: "雨滴",
+          ripple: "涟漪",
+          type: "打字",
+          audioBounce: "音频跳动",
+          audioRipple: "音频涟漪",
+          auroraSync: "Aurora 同步"
+        }
+      }
+    },
     automation: {
       title: "自动化",
       enable: "启用自动化",
@@ -73214,6 +74929,87 @@ const zhCN = {
       clear: "清空",
       play: "播放",
       empty: "此键尚无宏序列"
+    },
+    plugins: {
+      title: "插件扩展",
+      search: "搜索插件",
+      filterAll: "全部",
+      filterInstalled: "已安装",
+      filterNotInstalled: "未安装",
+      refresh: "刷新",
+      total: "共 {{count}} 个",
+      summary: "已安装 {{count}} 个",
+      updatable: "{{count}} 个可更新",
+      install: "安装",
+      update: "更新",
+      updateAvailable: "可更新",
+      uninstall: "卸载",
+      uninstallConfirm: "确定要卸载此插件吗？",
+      uninstallFailed: "卸载失败",
+      installed: "已安装",
+      online: "在线",
+      installing: "安装中…",
+      offline: "在线商店不可用，当前仅显示本地已安装插件",
+      empty: "暂无插件",
+      dependencies: "依赖",
+      dependenciesBlocked: "该插件存在未满足的依赖，无法卸载",
+      details: "详情",
+      usageGuide: "使用指南",
+      changelog: "更新日志"
+    },
+    optimization: {
+      title: "Windows 优化",
+      tabs: {
+        optimization: "系统优化",
+        cleanup: "空间清理",
+        driverDownload: "驱动下载",
+        networkAcceleration: "网络加速"
+      },
+      recommended: "推荐",
+      selected: "已选",
+      selectedActions: "选中的动作",
+      noSelection: "未选择任何动作",
+      selectRecommended: "选择推荐",
+      applyRecommended: "应用全部推荐",
+      apply: "应用",
+      clear: "清除（还原）",
+      applied: "已应用",
+      applyFailed: "应用失败（可能需要管理员权限）",
+      reverted: "已还原",
+      revertFailed: "还原失败（可能需要管理员权限）",
+      estimate: "估算大小",
+      estimateResult: "可释放空间",
+      runCleanup: "运行清理",
+      cleanupHint: "运行清理将按自定义清理规则执行。",
+      cleanupConfirm: "确定要运行清理吗？",
+      cleanupDone: "清理完成",
+      cleanupFailed: "清理失败",
+      network: {
+        status: "运行状态",
+        running: "运行中",
+        stopped: "未运行",
+        backendReady: "后端就绪",
+        backendNotReady: "后端未就绪",
+        config: "基本配置",
+        accelerationEnabled: "启用加速",
+        mode: "加速模式",
+        modes: {
+          off: "关闭",
+          systemProxy: "系统代理",
+          hosts: "Hosts 加速",
+          diagnosticsOnly: "诊断模式"
+        },
+        save: "保存配置",
+        saved: "配置已保存",
+        saveFailed: "保存配置失败",
+        start: "启动",
+        stop: "停止",
+        startFailed: "启动失败",
+        stopFailed: "停止失败"
+      },
+      driverDownload: {
+        comingSoon: "驱动下载将在后续版本中提供"
+      }
     },
     about: {
       title: "关于",
@@ -73632,7 +75428,7 @@ const THEME_STORAGE_KEY = "udt.theme";
 function systemPrefersDark() {
   return window.matchMedia("(prefers-color-scheme: dark)").matches;
 }
-function rgbToHex(color2) {
+function rgbToHex$1(color2) {
   const toHex = (value) => value.toString(16).padStart(2, "0");
   return `#${toHex(color2.R)}${toHex(color2.G)}${toHex(color2.B)}`;
 }
@@ -73673,7 +75469,7 @@ function useTheme() {
           setThemeMode(preference === "Dark" ? "dark" : "light");
         }
       }
-      setAccent(settings?.AccentColor ? rgbToHex(settings.AccentColor) : void 0);
+      setAccent(settings?.AccentColor ? rgbToHex$1(settings.AccentColor) : void 0);
     };
     apply();
     settingsApi.get("application").then((res) => {
@@ -84997,25 +86793,25 @@ var Path = (function(_super) {
   Path2.prototype.isZeroArea = function() {
     return false;
   };
-  Path2.extend = function(defaultProps) {
+  Path2.extend = function(defaultProps2) {
     var Sub = (function(_super2) {
       __extends(Sub2, _super2);
       function Sub2(opts) {
         var _this = _super2.call(this, opts) || this;
-        defaultProps.init && defaultProps.init.call(_this, opts);
+        defaultProps2.init && defaultProps2.init.call(_this, opts);
         return _this;
       }
       Sub2.prototype.getDefaultStyle = function() {
-        return clone$4(defaultProps.style);
+        return clone$4(defaultProps2.style);
       };
       Sub2.prototype.getDefaultShape = function() {
-        return clone$4(defaultProps.shape);
+        return clone$4(defaultProps2.shape);
       };
       return Sub2;
     })(Path2);
-    for (var key2 in defaultProps) {
-      if (typeof defaultProps[key2] === "function") {
-        Sub.prototype[key2] = defaultProps[key2];
+    for (var key2 in defaultProps2) {
+      if (typeof defaultProps2[key2] === "function") {
+        Sub.prototype[key2] = defaultProps2[key2];
       }
     }
     return Sub;
@@ -95008,8 +96804,8 @@ var seriesStyleTask = {
     var data = seriesModel.getData();
     var stylePath = seriesModel.visualStyleAccessPath || "itemStyle";
     var styleModel = seriesModel.getModel(stylePath);
-    var getStyle = getStyleMapper(seriesModel, stylePath);
-    var globalStyle = getStyle(styleModel);
+    var getStyle2 = getStyleMapper(seriesModel, stylePath);
+    var globalStyle = getStyle2(styleModel);
     var decalOption = styleModel.getShallow("decal");
     if (decalOption) {
       data.setVisual("decal", decalOption);
@@ -95057,14 +96853,14 @@ var dataStyleTask = {
     }
     var data = seriesModel.getData();
     var stylePath = seriesModel.visualStyleAccessPath || "itemStyle";
-    var getStyle = getStyleMapper(seriesModel, stylePath);
+    var getStyle2 = getStyleMapper(seriesModel, stylePath);
     var colorKey = data.getVisual("drawType");
     return {
       dataEach: data.hasItemOption ? function(data2, idx) {
         var rawItem = data2.getRawDataItem(idx);
         if (rawItem && rawItem[stylePath]) {
           sharedModel.option = rawItem[stylePath];
-          var style2 = getStyle(sharedModel);
+          var style2 = getStyle2(sharedModel);
           var existsStyle = data2.ensureUniqueItemVisual(idx, "style");
           extend(existsStyle, style2);
           if (sharedModel.option.decal) {
@@ -154125,11 +155921,483 @@ function HomePage() {
     result && /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { code: true, children: result })
   ] }) });
 }
+const keyboardApi = {
+  async detect() {
+    return invoke("keyboard.detect", {});
+  },
+  async getRgbState() {
+    return invoke("rgb.getState", {});
+  },
+  async setRgbState(state) {
+    return invoke("rgb.setState", { state });
+  },
+  async setPreset(preset) {
+    return invoke("rgb.setPreset", { preset });
+  },
+  async nextPreset() {
+    return invoke("rgb.nextPreset", {});
+  },
+  async takeOwnership(enable, restorePreset) {
+    return invoke(
+      "rgb.takeOwnership",
+      restorePreset === void 0 ? { enable } : { enable, restorePreset }
+    );
+  },
+  async spectrumGetLayout() {
+    return invoke("spectrum.getLayout", {});
+  },
+  async spectrumGetBrightness() {
+    return invoke("spectrum.getBrightness", {});
+  },
+  async spectrumSetBrightness(brightness) {
+    return invoke("spectrum.setBrightness", { brightness });
+  },
+  async spectrumGetLogo() {
+    return invoke("spectrum.getLogoStatus", {});
+  },
+  async spectrumSetLogo(isOn) {
+    return invoke("spectrum.setLogoStatus", { isOn });
+  },
+  async spectrumGetProfile() {
+    return invoke("spectrum.getProfile", {});
+  },
+  async spectrumSetProfile(profile) {
+    return invoke("spectrum.setProfile", { profile });
+  },
+  async spectrumGetProfileDesc(profile) {
+    return invoke("spectrum.getProfileDescription", { profile });
+  },
+  async spectrumSetProfileDesc(profile, effects) {
+    return invoke("spectrum.setProfileDescription", { profile, effects });
+  }
+};
+const EMPTY_SPECTRUM = {
+  layout: null,
+  brightness: 0,
+  logo: false,
+  profile: 1,
+  effects: []
+};
+const useKeyboardStore = create$3()((set2, get2) => ({
+  mode: null,
+  rgbState: null,
+  spectrum: EMPTY_SPECTRUM,
+  loading: false,
+  error: null,
+  async load() {
+    if (get2().loading) return;
+    set2({ loading: true, error: null });
+    try {
+      const { mode } = await keyboardApi.detect();
+      if (mode === "rgb") {
+        const { state } = await keyboardApi.getRgbState();
+        set2({ mode, rgbState: state });
+      } else if (mode === "spectrum") {
+        const [layout2, brightness, logo, profile] = await Promise.all([
+          keyboardApi.spectrumGetLayout(),
+          keyboardApi.spectrumGetBrightness(),
+          keyboardApi.spectrumGetLogo(),
+          keyboardApi.spectrumGetProfile()
+        ]);
+        let effects = [];
+        try {
+          const desc = await keyboardApi.spectrumGetProfileDesc(profile.profile);
+          effects = desc.effects;
+        } catch {
+        }
+        set2({
+          mode,
+          spectrum: {
+            layout: layout2,
+            brightness: brightness.brightness,
+            logo: logo.isOn,
+            profile: profile.profile,
+            effects
+          }
+        });
+      } else {
+        set2({ mode: "none" });
+      }
+    } catch (error2) {
+      set2({ error: error2.message });
+    } finally {
+      set2({ loading: false });
+    }
+  },
+  async setRgb(state) {
+    try {
+      await keyboardApi.setRgbState(state);
+      set2({ rgbState: state });
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async setPreset(preset) {
+    try {
+      const { state } = await keyboardApi.setPreset(preset);
+      set2({ rgbState: state });
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async nextPreset() {
+    try {
+      const { state } = await keyboardApi.nextPreset();
+      set2({ rgbState: state });
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async setBrightness(value) {
+    try {
+      await keyboardApi.spectrumSetBrightness(value);
+      set2({ spectrum: { ...get2().spectrum, brightness: value } });
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async setLogo(value) {
+    try {
+      await keyboardApi.spectrumSetLogo(value);
+      set2({ spectrum: { ...get2().spectrum, logo: value } });
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async setProfile(profile) {
+    try {
+      await keyboardApi.spectrumSetProfile(profile);
+      set2({ spectrum: { ...get2().spectrum, profile } });
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async loadProfileDesc(profile) {
+    try {
+      const desc = await keyboardApi.spectrumGetProfileDesc(profile);
+      set2({ spectrum: { ...get2().spectrum, profile: desc.profile, effects: desc.effects } });
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async saveProfileDesc(profile, effects) {
+    try {
+      await keyboardApi.spectrumSetProfileDesc(profile, effects);
+      set2({ spectrum: { ...get2().spectrum, profile, effects } });
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  }
+}));
+const RGB_PRESETS = ["Off", "One", "Two", "Three", "Four"];
+const RGB_EFFECTS = ["Static", "Breath", "Smooth", "WaveRTL", "WaveLTR"];
+const RGB_SPEEDS = ["Slowest", "Slow", "Fast", "Fastest"];
+const RGB_BRIGHTNESS = ["Low", "High"];
+const ZONES = ["Zone1", "Zone2", "Zone3", "Zone4"];
+const SPECTRUM_PROFILES = [1, 2, 3, 4, 5, 6];
+const DEFAULT_DESC = {
+  Effect: "Static",
+  Speed: "Slowest",
+  Brightness: "High",
+  Zone1: { R: 255, G: 255, B: 255 },
+  Zone2: { R: 255, G: 255, B: 255 },
+  Zone3: { R: 255, G: 255, B: 255 },
+  Zone4: { R: 255, G: 255, B: 255 }
+};
+const EMPTY_EFFECT = {
+  Type: "Always",
+  Speed: "Speed1",
+  Direction: "None",
+  ClockwiseDirection: "None",
+  Colors: [],
+  Keys: []
+};
+const PRESET_LABEL_KEYS = {
+  Off: "off",
+  One: "one",
+  Two: "two",
+  Three: "three",
+  Four: "four"
+};
+const EFFECT_LABEL_KEYS = {
+  Static: "static",
+  Breath: "breath",
+  Smooth: "smooth",
+  WaveRTL: "waveRtl",
+  WaveLTR: "waveLtr"
+};
+const SPEED_LABEL_KEYS = {
+  Slowest: "slowest",
+  Slow: "slow",
+  Fast: "fast",
+  Fastest: "fastest"
+};
+const BRIGHTNESS_LABEL_KEYS = {
+  Low: "low",
+  High: "high"
+};
+const EFFECT_TYPE_LABEL_KEYS = {
+  Always: "always",
+  RainbowScrew: "rainbowScrew",
+  RainbowWave: "rainbowWave",
+  ColorChange: "colorChange",
+  ColorWave: "colorWave",
+  ColorPulse: "colorPulse",
+  Smooth: "smooth",
+  Rain: "rain",
+  Ripple: "ripple",
+  Type: "type",
+  AudioBounce: "audioBounce",
+  AudioRipple: "audioRipple",
+  AuroraSync: "auroraSync"
+};
+function rgbToHex(color2) {
+  const toHex = (value) => value.toString(16).padStart(2, "0");
+  return `#${toHex(color2.R)}${toHex(color2.G)}${toHex(color2.B)}`;
+}
+function RgbSection() {
+  const { t } = useTranslation();
+  const { rgbState, setRgb, setPreset } = useKeyboardStore();
+  const selectedPreset = rgbState?.SelectedPreset ?? "Off";
+  const desc = rgbState?.Presets[selectedPreset] ?? DEFAULT_DESC;
+  const fail = () => {
+    staticMethods.error(t("common.error"));
+  };
+  const handlePreset = (preset) => {
+    void setPreset(preset).then((ok) => {
+      if (!ok) fail();
+    });
+  };
+  const updateDesc = async (patch2) => {
+    if (!rgbState) return;
+    const nextDesc = { ...desc, ...patch2 };
+    const next2 = {
+      ...rgbState,
+      Presets: { ...rgbState.Presets, [selectedPreset]: nextDesc }
+    };
+    const ok = await setRgb(next2);
+    if (!ok) fail();
+  };
+  const handleZoneChange = (zone) => (value) => {
+    const rgb = value.toRgb();
+    void updateDesc({ [zone]: { R: rgb.r, G: rgb.g, B: rgb.b } });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 16, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { title: t("keyboard.rgb.preset"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Space, { wrap: true, children: RGB_PRESETS.map((preset) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Button$1,
+      {
+        type: selectedPreset === preset ? "primary" : "default",
+        onClick: () => handlePreset(preset),
+        children: t(`keyboard.rgb.presets.${PRESET_LABEL_KEYS[preset]}`)
+      },
+      preset
+    )) }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { title: t("keyboard.rgb.settings"), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 16, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { wrap: true, size: 24, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { children: t("keyboard.rgb.effect") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Select,
+            {
+              value: desc.Effect,
+              options: RGB_EFFECTS.map((effect) => ({
+                value: effect,
+                label: t(`keyboard.rgb.effectOptions.${EFFECT_LABEL_KEYS[effect]}`)
+              })),
+              onChange: (effect) => void updateDesc({ Effect: effect }),
+              style: { width: 160 }
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { children: t("keyboard.rgb.speed") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Select,
+            {
+              value: desc.Speed,
+              options: RGB_SPEEDS.map((speed) => ({
+                value: speed,
+                label: t(`keyboard.rgb.speedOptions.${SPEED_LABEL_KEYS[speed]}`)
+              })),
+              onChange: (speed) => void updateDesc({ Speed: speed }),
+              style: { width: 120 }
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { children: t("keyboard.rgb.brightness") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Select,
+            {
+              value: desc.Brightness,
+              options: RGB_BRIGHTNESS.map((brightness) => ({
+                value: brightness,
+                label: t(`keyboard.rgb.brightnessOptions.${BRIGHTNESS_LABEL_KEYS[brightness]}`)
+              })),
+              onChange: (brightness) => void updateDesc({ Brightness: brightness }),
+              style: { width: 100 }
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { size: 24, wrap: true, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { children: t("keyboard.rgb.zones") }),
+        ZONES.map((zone) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+          ColorPicker,
+          {
+            value: rgbToHex(desc[zone]),
+            onChange: handleZoneChange(zone),
+            showText: true
+          },
+          zone
+        ))
+      ] })
+    ] }) })
+  ] });
+}
+function SpectrumSection() {
+  const { t } = useTranslation();
+  const { spectrum, setBrightness, setLogo, setProfile, loadProfileDesc, saveProfileDesc } = useKeyboardStore();
+  const [brightnessDraft, setBrightnessDraft] = reactExports.useState(spectrum.brightness);
+  reactExports.useEffect(() => {
+    setBrightnessDraft(spectrum.brightness);
+  }, [spectrum.brightness]);
+  const fail = () => {
+    staticMethods.error(t("common.error"));
+  };
+  const handleProfile = (profile) => {
+    void setProfile(profile).then((ok) => {
+      if (ok) void loadProfileDesc(profile);
+      else fail();
+    });
+  };
+  const handleAddEffect = () => {
+    void saveProfileDesc(spectrum.profile, [...spectrum.effects, EMPTY_EFFECT]).then((ok) => {
+      if (!ok) fail();
+    });
+  };
+  const handleRemoveEffect = (index) => {
+    const effects = spectrum.effects.filter((_, i2) => i2 !== index);
+    void saveProfileDesc(spectrum.profile, effects).then((ok) => {
+      if (!ok) fail();
+    });
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 16, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { title: t("keyboard.spectrum.brightness"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Slider,
+      {
+        min: 0,
+        max: 9,
+        value: brightnessDraft,
+        onChange: setBrightnessDraft,
+        onChangeComplete: (value) => {
+          void setBrightness(value).then((ok) => {
+            if (!ok) fail();
+          });
+        },
+        style: { width: 320 }
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { title: t("keyboard.spectrum.profile"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Radio.Group,
+      {
+        value: spectrum.profile,
+        onChange: (e2) => handleProfile(e2.target.value),
+        options: SPECTRUM_PROFILES.map((profile) => ({ value: profile, label: `${profile}` }))
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { title: t("keyboard.spectrum.logo"), children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Switch,
+      {
+        checked: spectrum.logo,
+        onChange: (checked) => {
+          void setLogo(checked).then((ok) => {
+            if (!ok) fail();
+          });
+        }
+      }
+    ) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Card,
+      {
+        title: t("keyboard.spectrum.effects"),
+        extra: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { type: "primary", onClick: handleAddEffect, children: t("keyboard.spectrum.addEffect") }),
+        children: spectrum.effects.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, { description: t("keyboard.spectrum.noEffects") }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+          List,
+          {
+            dataSource: spectrum.effects,
+            renderItem: (effect, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              List.Item,
+              {
+                actions: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Popconfirm,
+                    {
+                      title: t("keyboard.spectrum.deleteEffect"),
+                      onConfirm: () => handleRemoveEffect(index),
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { danger: true, size: "small", children: t("keyboard.spectrum.deleteEffect") })
+                    },
+                    "delete"
+                  )
+                ],
+                children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { children: t(`keyboard.spectrum.effectTypes.${EFFECT_TYPE_LABEL_KEYS[effect.Type]}`) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography.Text, { type: "secondary", children: [
+                    t("keyboard.spectrum.colors"),
+                    ": ",
+                    effect.Colors.length
+                  ] })
+                ] })
+              }
+            )
+          }
+        )
+      }
+    )
+  ] });
+}
 function KeyboardBacklightPage() {
   const { t } = useTranslation();
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Title, { level: 3, children: t("nav.keyboardBacklight") }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { type: "secondary", children: t("pages.placeholder") })
+  const { mode, loading, error: error2, load } = useKeyboardStore();
+  reactExports.useEffect(() => {
+    void load();
+  }, [load]);
+  if (loading || mode === null) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        style: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: 320
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, { size: "large" })
+      }
+    );
+  }
+  if (error2) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Result, { status: "error", title: t("common.error"), subTitle: error2 });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { style: { padding: 24 }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Title, { level: 3, style: { marginTop: 0 }, children: t("keyboard.title") }),
+    mode === "rgb" ? /* @__PURE__ */ jsxRuntimeExports.jsx(RgbSection, {}) : mode === "spectrum" ? /* @__PURE__ */ jsxRuntimeExports.jsx(SpectrumSection, {}) : /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, { description: t("keyboard.unsupported") })
   ] });
 }
 const macroApi = {
@@ -154347,11 +156615,291 @@ function MacroPage() {
     ] })
   ] });
 }
+const pluginsApi = {
+  async list(forceRefresh) {
+    return invoke(
+      "plugins.list",
+      forceRefresh ? { forceRefresh } : {}
+    );
+  },
+  async checkUpdates() {
+    return invoke("plugins.checkUpdates", {});
+  },
+  async install(pluginId) {
+    return invoke("plugins.install", { pluginId });
+  },
+  async uninstall(pluginId) {
+    return invoke("plugins.uninstall", { pluginId });
+  },
+  async importFile(filePath) {
+    return invoke("plugins.import", { filePath });
+  },
+  async refresh() {
+    return invoke("plugins.refresh", {});
+  },
+  onInstallProgress(cb) {
+    return on("plugins.installProgress", cb);
+  },
+  onInstalled(cb) {
+    return on("plugins.installed", cb);
+  },
+  onUninstalled(cb) {
+    return on("plugins.uninstalled", cb);
+  }
+};
+const usePluginsStore = create$3()((set2, get2) => ({
+  plugins: [],
+  updates: {},
+  installingIds: {},
+  loading: false,
+  offline: false,
+  error: null,
+  async load(force = false) {
+    if (get2().loading) return;
+    set2({ loading: true, error: null });
+    try {
+      const [listResult, updatesResult] = await Promise.all([
+        pluginsApi.list(force),
+        pluginsApi.checkUpdates()
+      ]);
+      const updates = {};
+      for (const update of updatesResult.updates) updates[update.id] = update.availableVersion;
+      set2({
+        plugins: listResult.plugins,
+        updates,
+        offline: !listResult.online,
+        loading: false
+      });
+    } catch (error2) {
+      set2({ error: error2.message, loading: false });
+    }
+  },
+  async install(pluginId) {
+    try {
+      set2({ installingIds: { ...get2().installingIds, [pluginId]: 0 } });
+      const result = await pluginsApi.install(pluginId);
+      if (result.ok) await get2().load();
+      return result.ok;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    } finally {
+      const { [pluginId]: _removed, ...rest } = get2().installingIds;
+      set2({ installingIds: rest });
+    }
+  },
+  async uninstall(pluginId) {
+    try {
+      const result = await pluginsApi.uninstall(pluginId);
+      if (result.ok) await get2().load();
+      return { ok: result.ok, dependencyBlocked: result.dependencyBlocked ?? false };
+    } catch (error2) {
+      set2({ error: error2.message });
+      return { ok: false, dependencyBlocked: false };
+    }
+  },
+  async refresh() {
+    try {
+      await pluginsApi.refresh();
+      await get2().load(true);
+    } catch (error2) {
+      set2({ error: error2.message });
+    }
+  },
+  async importFile(path) {
+    try {
+      const result = await pluginsApi.importFile(path);
+      if (result.ok) await get2().load();
+      return result.ok;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  }
+}));
+pluginsApi.onInstallProgress((progress) => {
+  usePluginsStore.setState((state) => {
+    if (!(progress.pluginId in state.installingIds)) return state;
+    if (progress.phase === "completed" || progress.phase === "failed") {
+      const { [progress.pluginId]: _removed, ...rest } = state.installingIds;
+      return { installingIds: rest };
+    }
+    return { installingIds: { ...state.installingIds, [progress.pluginId]: progress.progressPercentage } };
+  });
+});
+pluginsApi.onInstalled(() => {
+  void usePluginsStore.getState().load();
+});
+pluginsApi.onUninstalled(() => {
+  void usePluginsStore.getState().load();
+});
+function PluginStatusTag({ plugin }) {
+  const { t } = useTranslation();
+  if (plugin.installedVersion) {
+    return plugin.updateAvailable ? /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "warning", children: t("plugins.updateAvailable") }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "success", children: t("plugins.installed") });
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "blue", children: t("plugins.online") });
+}
+function PluginCard({ plugin }) {
+  const { t } = useTranslation();
+  const install2 = usePluginsStore((state) => state.install);
+  const uninstall = usePluginsStore((state) => state.uninstall);
+  const installingIds = usePluginsStore((state) => state.installingIds);
+  const installing = plugin.id in installingIds;
+  const progress = installingIds[plugin.id] ?? 0;
+  const collapseItems = reactExports.useMemo(() => {
+    const items = [];
+    if (plugin.details) {
+      items.push({
+        key: "details",
+        label: t("plugins.details"),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Paragraph, { style: { marginBottom: 0 }, children: plugin.details })
+      });
+    }
+    if (plugin.usageGuide) {
+      items.push({
+        key: "usageGuide",
+        label: t("plugins.usageGuide"),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Paragraph, { style: { marginBottom: 0 }, children: plugin.usageGuide })
+      });
+    }
+    if (plugin.changelog) {
+      items.push({
+        key: "changelog",
+        label: t("plugins.changelog"),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Paragraph, { style: { marginBottom: 0 }, children: plugin.changelog })
+      });
+    }
+    return items;
+  }, [plugin, t]);
+  const handleUninstall = async () => {
+    const result = await uninstall(plugin.id);
+    if (result.dependencyBlocked) {
+      staticMethods.warning(t("plugins.dependenciesBlocked"));
+    } else if (!result.ok) {
+      staticMethods.error(t("plugins.uninstallFailed"));
+    }
+  };
+  const actions2 = /* @__PURE__ */ jsxRuntimeExports.jsx(Space, { children: installing ? /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { type: "secondary", children: t("plugins.installing") }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+    plugin.installedVersion ? plugin.updateAvailable && /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { type: "primary", size: "small", onClick: () => void install2(plugin.id), children: t("plugins.update") }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { type: "primary", size: "small", onClick: () => void install2(plugin.id), children: t("plugins.install") }),
+    plugin.installedVersion && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Popconfirm,
+      {
+        title: t("plugins.uninstallConfirm"),
+        onConfirm: () => void handleUninstall(),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { size: "small", danger: true, children: t("plugins.uninstall") })
+      }
+    )
+  ] }) });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    Card,
+    {
+      size: "small",
+      title: /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { size: 8, wrap: true, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { strong: true, children: plugin.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography.Text, { type: "secondary", children: [
+          "v",
+          plugin.version
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(PluginStatusTag, { plugin }),
+        plugin.isSystemPlugin && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "gold", children: "System" })
+      ] }),
+      extra: actions2,
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Paragraph, { type: "secondary", style: { marginBottom: 8 }, children: plugin.description }),
+        (plugin.tags.length > 0 || plugin.dependencies.length > 0) && /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { size: [4, 4], wrap: true, style: { marginBottom: 8 }, children: [
+          plugin.tags.map((tag) => /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { children: tag }, tag)),
+          plugin.dependencies.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(Tag, { color: "geekblue", children: [
+            t("plugins.dependencies"),
+            ": ",
+            plugin.dependencies.join(", ")
+          ] })
+        ] }),
+        installing && /* @__PURE__ */ jsxRuntimeExports.jsx(Progress, { percent: progress, size: "small" }),
+        collapseItems.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(Collapse$1, { ghost: true, size: "small", items: collapseItems })
+      ]
+    }
+  );
+}
 function PluginExtensionsPage() {
   const { t } = useTranslation();
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Title, { level: 3, children: t("nav.pluginExtensions") }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { type: "secondary", children: t("pages.placeholder") })
+  const { plugins, loading, offline, error: error2, load, refresh } = usePluginsStore();
+  const [search, setSearch] = reactExports.useState("");
+  const [filter2, setFilter] = reactExports.useState("all");
+  reactExports.useEffect(() => {
+    void load();
+  }, [load]);
+  const filtered = reactExports.useMemo(() => {
+    const query = search.trim().toLowerCase();
+    return plugins.filter((plugin) => {
+      if (filter2 === "installed" && !plugin.installedVersion) return false;
+      if (filter2 === "notInstalled" && plugin.installedVersion) return false;
+      if (!query) return true;
+      return plugin.name.toLowerCase().includes(query) || plugin.description.toLowerCase().includes(query) || plugin.tags.some((tag) => tag.toLowerCase().includes(query));
+    });
+  }, [plugins, search, filter2]);
+  const installedCount = plugins.filter((plugin) => plugin.installedVersion).length;
+  const updateCount = plugins.filter((plugin) => plugin.updateAvailable).length;
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 16, style: { padding: 24 }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { align: "center", justify: "space-between", wrap: true, gap: 8, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Title, { level: 3, style: { margin: 0 }, children: t("plugins.title") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { wrap: true, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography.Text, { type: "secondary", children: [
+          t("plugins.total", { count: plugins.length }),
+          " ·",
+          " ",
+          t("plugins.summary", { count: installedCount }),
+          " ·",
+          " ",
+          t("plugins.updatable", { count: updateCount })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button$1,
+          {
+            icon: /* @__PURE__ */ jsxRuntimeExports.jsx(RefIcon$e, {}),
+            loading,
+            onClick: () => void refresh(),
+            children: t("plugins.refresh")
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { gap: 8, wrap: true, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Input,
+        {
+          allowClear: true,
+          prefix: /* @__PURE__ */ jsxRuntimeExports.jsx(RefIcon$p, {}),
+          placeholder: t("plugins.search"),
+          value: search,
+          onChange: (event) => setSearch(event.target.value),
+          style: { maxWidth: 320 }
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Select,
+        {
+          value: filter2,
+          onChange: setFilter,
+          style: { width: 160 },
+          options: [
+            { value: "all", label: t("plugins.filterAll") },
+            { value: "installed", label: t("plugins.filterInstalled") },
+            { value: "notInstalled", label: t("plugins.filterNotInstalled") }
+          ]
+        }
+      )
+    ] }),
+    offline && /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { type: "warning", showIcon: true, message: t("plugins.offline") }),
+    error2 && /* @__PURE__ */ jsxRuntimeExports.jsx(Alert, { type: "error", showIcon: true, message: error2 }),
+    filtered.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, { description: t("plugins.empty") }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+      List,
+      {
+        loading,
+        dataSource: filtered,
+        renderItem: (plugin) => /* @__PURE__ */ jsxRuntimeExports.jsx(PluginCard, { plugin }, plugin.id)
+      }
+    )
   ] });
 }
 const useSettingsStore = create$3((set2, get2) => ({
@@ -154692,11 +157240,481 @@ function SettingsPage() {
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { style: { flex: 1, paddingLeft: 24, minWidth: 0 }, children: renderSection(active) })
   ] }) });
 }
+const optimizationApi = {
+  async getCategories() {
+    return invoke("optimization.getCategories", {});
+  },
+  async apply(actionKeys) {
+    return invoke("optimization.apply", { actionKeys });
+  },
+  async revert(actionKeys) {
+    return invoke("optimization.revert", { actionKeys });
+  },
+  async applyRecommended() {
+    return invoke("optimization.applyRecommended", {});
+  },
+  async getActionStatus(actionKey) {
+    return invoke("optimization.getActionStatus", { actionKey });
+  },
+  async estimateCleanup(actionKeys) {
+    return invoke("cleanup.estimate", { actionKeys });
+  },
+  async runCleanup(actionKeys) {
+    return invoke("cleanup.run", { actionKeys });
+  },
+  async networkGetStatus() {
+    return invoke("network.getStatus", {});
+  },
+  async networkSaveConfig(config) {
+    return invoke("network.saveConfig", { config });
+  },
+  async networkStart() {
+    return invoke("network.start", {});
+  },
+  async networkStop() {
+    return invoke("network.stop", {});
+  }
+};
+const useOptimizationStore = create$3((set2, get2) => ({
+  categories: [],
+  networkStatus: null,
+  loading: false,
+  error: null,
+  async load() {
+    if (get2().loading) return;
+    set2({ loading: true, error: null });
+    try {
+      const { categories } = await optimizationApi.getCategories();
+      set2({ categories });
+    } catch (error2) {
+      set2({ error: error2.message });
+    } finally {
+      set2({ loading: false });
+    }
+  },
+  async apply(keys2) {
+    if (keys2.length === 0) return true;
+    try {
+      const res = await optimizationApi.apply(keys2);
+      if (!res.applied) return false;
+      await get2().load();
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async revert(keys2) {
+    if (keys2.length === 0) return true;
+    try {
+      const res = await optimizationApi.revert(keys2);
+      if (!res.reverted) return false;
+      await get2().load();
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async applyRecommended() {
+    try {
+      const res = await optimizationApi.applyRecommended();
+      if (!res.applied) return false;
+      await get2().load();
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async estimate(keys2) {
+    if (keys2.length === 0) return 0;
+    try {
+      const res = await optimizationApi.estimateCleanup(keys2);
+      return res.bytes;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return 0;
+    }
+  },
+  async runCleanup(keys2) {
+    if (keys2.length === 0) return true;
+    try {
+      const res = await optimizationApi.runCleanup(keys2);
+      if (!res.done) return false;
+      await get2().load();
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async loadNetwork() {
+    try {
+      const status = await optimizationApi.networkGetStatus();
+      set2({ networkStatus: status });
+    } catch (error2) {
+      set2({ error: error2.message });
+    }
+  },
+  async saveNetworkConfig(config) {
+    try {
+      const res = await optimizationApi.networkSaveConfig(config);
+      if (!res.saved) return false;
+      await get2().loadNetwork();
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async startNetwork() {
+    try {
+      const res = await optimizationApi.networkStart();
+      if (!res.ok) return false;
+      await get2().loadNetwork();
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  },
+  async stopNetwork() {
+    try {
+      const res = await optimizationApi.networkStop();
+      if (!res.ok) return false;
+      await get2().loadNetwork();
+      return true;
+    } catch (error2) {
+      set2({ error: error2.message });
+      return false;
+    }
+  }
+}));
+function formatBytes(bytes) {
+  if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
+  const gb = bytes / 1024 ** 3;
+  if (gb >= 1) return `${gb.toFixed(2)} GB`;
+  const mb = bytes / 1024 ** 2;
+  if (mb >= 1) return `${mb.toFixed(1)} MB`;
+  return `${bytes.toFixed(0)} B`;
+}
+function findAction(categories, key2) {
+  for (const category of categories) {
+    const action = category.actions.find((a) => a.key === key2);
+    if (action) return action;
+  }
+  return null;
+}
+function OptimizationTab() {
+  const { t } = useTranslation();
+  const categories = useOptimizationStore((s) => s.categories);
+  const loading = useOptimizationStore((s) => s.loading);
+  const apply = useOptimizationStore((s) => s.apply);
+  const revert = useOptimizationStore((s) => s.revert);
+  const applyRecommended = useOptimizationStore((s) => s.applyRecommended);
+  const [selectedKeys, setSelectedKeys] = reactExports.useState([]);
+  const [busy, setBusy] = reactExports.useState(false);
+  const optimizationCategories = categories.filter((c) => !c.key.startsWith("cleanup."));
+  const selectedActions = selectedKeys.map((key2) => findAction(categories, key2)).filter((action) => action !== null);
+  const toggleSelection = (key2) => {
+    setSelectedKeys((prev2) => prev2.includes(key2) ? prev2.filter((k2) => k2 !== key2) : [...prev2, key2]);
+  };
+  const handleSelectRecommended = () => {
+    const keys2 = optimizationCategories.flatMap(
+      (category) => category.actions.filter((action) => action.recommended).map((action) => action.key)
+    );
+    setSelectedKeys(keys2);
+  };
+  const handleApply = async () => {
+    if (selectedKeys.length === 0) return;
+    setBusy(true);
+    const ok = await apply(selectedKeys);
+    setBusy(false);
+    if (ok) {
+      setSelectedKeys([]);
+      staticMethods.success(t("optimization.applied"));
+    } else {
+      staticMethods.error(t("optimization.applyFailed"));
+    }
+  };
+  const handleClear = async () => {
+    if (selectedKeys.length === 0) return;
+    setBusy(true);
+    const ok = await revert(selectedKeys);
+    setBusy(false);
+    if (ok) {
+      setSelectedKeys([]);
+      staticMethods.success(t("optimization.reverted"));
+    } else {
+      staticMethods.error(t("optimization.revertFailed"));
+    }
+  };
+  const handleApplyRecommended = async () => {
+    setBusy(true);
+    const ok = await applyRecommended();
+    setBusy(false);
+    if (ok) staticMethods.success(t("optimization.applied"));
+    else staticMethods.error(t("optimization.applyFailed"));
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Row$1, { gutter: 16, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Col, { xs: 24, lg: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 12, children: [
+      loading && /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, {}),
+      optimizationCategories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { size: "small", title: category.title, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Paragraph, { type: "secondary", style: { marginBottom: 8 }, children: category.description }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Flex, { vertical: true, gap: 4, children: category.actions.map((action) => {
+          const selected = selectedKeys.includes(action.key);
+          return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { align: "center", justify: "space-between", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Checkbox,
+              {
+                checked: action.applied === true,
+                indeterminate: action.applied === null,
+                onChange: () => toggleSelection(action.key),
+                children: action.title
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Space, { size: 4, children: [
+              action.recommended && /* @__PURE__ */ jsxRuntimeExports.jsxs(Tag, { color: "gold", children: [
+                "★ ",
+                t("optimization.recommended")
+              ] }),
+              selected && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "blue", children: t("optimization.selected") })
+            ] })
+          ] }, action.key);
+        }) })
+      ] }, category.key))
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Col, { xs: 24, lg: 12, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Card,
+      {
+        size: "small",
+        title: t("optimization.selectedActions"),
+        extra: /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { type: "secondary", children: selectedActions.length }),
+        children: selectedActions.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, { description: t("optimization.noSelection") }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 8, children: [
+          selectedActions.map((action) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { align: "center", justify: "space-between", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { children: action.title }),
+            action.recommended && /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: "gold", children: "★" })
+          ] }, action.key)),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Divider, { style: { margin: "8px 0" } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { gap: 8, wrap: true, children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { onClick: handleSelectRecommended, children: t("optimization.selectRecommended") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button$1,
+              {
+                type: "primary",
+                loading: busy,
+                disabled: selectedActions.length === 0,
+                onClick: () => void handleApply(),
+                children: t("optimization.apply")
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button$1,
+              {
+                danger: true,
+                loading: busy,
+                disabled: selectedActions.length === 0,
+                onClick: () => void handleClear(),
+                children: t("optimization.clear")
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { onClick: () => void handleApplyRecommended(), children: t("optimization.applyRecommended") })
+          ] })
+        ] })
+      }
+    ) })
+  ] });
+}
+function CleanupTab() {
+  const { t } = useTranslation();
+  const categories = useOptimizationStore((s) => s.categories);
+  const estimate = useOptimizationStore((s) => s.estimate);
+  const runCleanup = useOptimizationStore((s) => s.runCleanup);
+  const [selectedKeys, setSelectedKeys] = reactExports.useState([]);
+  const [estimateBytes, setEstimateBytes] = reactExports.useState(null);
+  const [estimating, setEstimating] = reactExports.useState(false);
+  const [cleaning, setCleaning] = reactExports.useState(false);
+  const cleanupCategories = categories.filter((c) => c.key.startsWith("cleanup."));
+  const toggleSelection = (key2) => {
+    setSelectedKeys((prev2) => prev2.includes(key2) ? prev2.filter((k2) => k2 !== key2) : [...prev2, key2]);
+  };
+  const handleEstimate = async () => {
+    if (selectedKeys.length === 0) return;
+    setEstimating(true);
+    const bytes = await estimate(selectedKeys);
+    setEstimating(false);
+    setEstimateBytes(bytes);
+  };
+  const handleRun = async () => {
+    setCleaning(true);
+    const ok = await runCleanup(selectedKeys);
+    setCleaning(false);
+    if (ok) {
+      staticMethods.success(t("optimization.cleanupDone"));
+      setSelectedKeys([]);
+      setEstimateBytes(null);
+    } else {
+      staticMethods.error(t("optimization.cleanupFailed"));
+    }
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 16, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Paragraph, { type: "secondary", children: t("optimization.cleanupHint") }),
+    cleanupCategories.map((category) => /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { size: "small", title: category.title, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Paragraph, { type: "secondary", style: { marginBottom: 8 }, children: category.description }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Flex, { vertical: true, gap: 4, children: category.actions.map((action) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Checkbox,
+        {
+          checked: selectedKeys.includes(action.key),
+          onChange: () => toggleSelection(action.key),
+          children: action.title
+        },
+        action.key
+      )) })
+    ] }, category.key)),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { align: "center", gap: 12, wrap: true, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { loading: estimating, disabled: selectedKeys.length === 0, onClick: () => void handleEstimate(), children: t("optimization.estimate") }),
+      estimateBytes !== null && /* @__PURE__ */ jsxRuntimeExports.jsxs(Typography.Text, { strong: true, children: [
+        t("optimization.estimateResult"),
+        ": ",
+        formatBytes(estimateBytes)
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Popconfirm, { title: t("optimization.cleanupConfirm"), onConfirm: () => void handleRun(), children: /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { type: "primary", danger: true, loading: cleaning, disabled: selectedKeys.length === 0, children: t("optimization.runCleanup") }) })
+    ] })
+  ] });
+}
+function DriverDownloadTab() {
+  const { t } = useTranslation();
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Empty, { description: t("optimization.driverDownload.comingSoon") }) });
+}
+const NETWORK_MODES = ["Off", "SystemProxy", "Hosts", "DiagnosticsOnly"];
+const NETWORK_MODE_I18N_KEYS = {
+  Off: "optimization.network.modes.off",
+  SystemProxy: "optimization.network.modes.systemProxy",
+  Hosts: "optimization.network.modes.hosts",
+  DiagnosticsOnly: "optimization.network.modes.diagnosticsOnly"
+};
+function NetworkTab() {
+  const { t } = useTranslation();
+  const networkStatus = useOptimizationStore((s) => s.networkStatus);
+  const saveNetworkConfig = useOptimizationStore((s) => s.saveNetworkConfig);
+  const startNetwork = useOptimizationStore((s) => s.startNetwork);
+  const stopNetwork = useOptimizationStore((s) => s.stopNetwork);
+  const [config, setConfig] = reactExports.useState(null);
+  const [saving, setSaving] = reactExports.useState(false);
+  const [starting, setStarting] = reactExports.useState(false);
+  const [stopping, setStopping] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    if (networkStatus) {
+      setConfig({ ...networkStatus.config, domainGroups: [...networkStatus.config.domainGroups] });
+    }
+  }, [networkStatus]);
+  const handleSave = async () => {
+    if (!config) return;
+    setSaving(true);
+    const ok = await saveNetworkConfig(config);
+    setSaving(false);
+    if (ok) staticMethods.success(t("optimization.network.saved"));
+    else staticMethods.error(t("optimization.network.saveFailed"));
+  };
+  const handleStart = async () => {
+    setStarting(true);
+    const ok = await startNetwork();
+    setStarting(false);
+    if (!ok) staticMethods.error(t("optimization.network.startFailed"));
+  };
+  const handleStop = async () => {
+    setStopping(true);
+    const ok = await stopNetwork();
+    setStopping(false);
+    if (!ok) staticMethods.error(t("optimization.network.stopFailed"));
+  };
+  if (!networkStatus || !config) return /* @__PURE__ */ jsxRuntimeExports.jsx(Spin, {});
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 16, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { size: "small", title: t("optimization.network.status"), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { gap: 16, align: "center", wrap: true, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: networkStatus.isRunning ? "green" : "default", children: networkStatus.isRunning ? t("optimization.network.running") : t("optimization.network.stopped") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { type: "secondary", children: networkStatus.statusText }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Tag, { color: networkStatus.isBackendReady ? "blue" : "red", children: networkStatus.isBackendReady ? t("optimization.network.backendReady") : t("optimization.network.backendNotReady") })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { size: "small", title: t("optimization.network.config"), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 12, children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { align: "center", gap: 8, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { children: t("optimization.network.accelerationEnabled") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Switch,
+          {
+            checked: config.accelerationEnabled,
+            onChange: (checked) => setConfig({ ...config, accelerationEnabled: checked })
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { align: "center", gap: 8, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { children: t("optimization.network.mode") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Select,
+          {
+            style: { width: 220 },
+            value: config.mode,
+            options: NETWORK_MODES.map((mode) => ({
+              value: mode,
+              label: t(NETWORK_MODE_I18N_KEYS[mode])
+            })),
+            onChange: (mode) => setConfig({ ...config, mode })
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { gap: 8, wrap: true, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { type: "primary", loading: saving, onClick: () => void handleSave(), children: t("optimization.network.save") }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button$1,
+          {
+            loading: starting,
+            disabled: !networkStatus.isBackendReady,
+            onClick: () => void handleStart(),
+            children: t("optimization.network.start")
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button$1, { danger: true, loading: stopping, onClick: () => void handleStop(), children: t("optimization.network.stop") })
+      ] })
+    ] }) })
+  ] });
+}
 function WindowsOptimizationPage() {
   const { t } = useTranslation();
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Title, { level: 3, children: t("nav.windowsOptimization") }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Text, { type: "secondary", children: t("pages.placeholder") })
+  const load = useOptimizationStore((s) => s.load);
+  const loadNetwork = useOptimizationStore((s) => s.loadNetwork);
+  reactExports.useEffect(() => {
+    void load();
+    void loadNetwork();
+  }, [load, loadNetwork]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Flex, { vertical: true, gap: 16, style: { padding: 24 }, children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Typography.Title, { level: 3, style: { margin: 0 }, children: t("optimization.title") }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Tabs,
+      {
+        items: [
+          {
+            key: "optimization",
+            label: t("optimization.tabs.optimization"),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(OptimizationTab, {})
+          },
+          {
+            key: "cleanup",
+            label: t("optimization.tabs.cleanup"),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(CleanupTab, {})
+          },
+          {
+            key: "driverDownload",
+            label: t("optimization.tabs.driverDownload"),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(DriverDownloadTab, {})
+          },
+          {
+            key: "networkAcceleration",
+            label: t("optimization.tabs.networkAcceleration"),
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(NetworkTab, {})
+          }
+        ]
+      }
+    )
   ] });
 }
 function App() {
