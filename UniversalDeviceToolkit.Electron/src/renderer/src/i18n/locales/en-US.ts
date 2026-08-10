@@ -17,6 +17,57 @@ export default {
       title: 'UDT Electron',
       subtitle: 'Universal Device Toolkit · Electron client'
     },
+    dashboard: {
+      title: 'Dashboard',
+      cpu: 'CPU',
+      gpu: 'GPU',
+      memory: 'Memory',
+      temperature: 'Temperature',
+      usage: 'Usage',
+      power: 'Power',
+      fanSpeed: 'Fan Speed',
+      vram: 'VRAM',
+      memoryUsed: 'Memory Used',
+      memoryTotal: 'Memory Total',
+      storageTemp: 'Storage Temp',
+      notAvailable: '--',
+      group: {
+        power: 'Power',
+        graphics: 'Graphics',
+        display: 'Display',
+        other: 'Other',
+        custom: 'Custom'
+      },
+      card: {
+        error: 'Failed to apply setting'
+      }
+    },
+    feature: {
+      powerMode: 'Power Mode',
+      battery: 'Battery Mode',
+      batteryNightCharge: 'Battery Night Charging',
+      alwaysOnUsb: 'Always-On USB',
+      instantBoot: 'Instant Boot',
+      flipToStart: 'Flip to Start',
+      fnLock: 'Fn Lock',
+      gSync: 'GSync',
+      hdr: 'HDR',
+      hybridMode: 'Hybrid Mode',
+      igpuMode: 'Discrete GPU Mode',
+      itsMode: 'ITS Mode',
+      microphone: 'Microphone',
+      overDrive: 'Overclock',
+      panelLogo: 'Panel Logo',
+      portsBacklight: 'Ports Backlight',
+      refreshRate: 'Refresh Rate',
+      resolution: 'Resolution',
+      dpiScale: 'DPI Scale',
+      speaker: 'Speaker',
+      touchpadLock: 'Touchpad Lock',
+      whiteKeyboard: 'White Keyboard Backlight',
+      winKey: 'Windows Key Lock',
+      oneLevelWhiteKeyboard: 'One-Level White Backlight'
+    },
     common: {
       loading: 'Loading…',
       error: 'Something went wrong',
@@ -24,6 +75,179 @@ export default {
     },
     pages: {
       placeholder: 'Coming soon'
+    },
+    settings: {
+      title: 'Settings',
+      nav: {
+        appearance: 'Appearance',
+        application: 'Application',
+        power: 'Power',
+        display: 'Display',
+        smartKeys: 'Smart Keys',
+        update: 'Update',
+        integrations: 'Integrations'
+      },
+      appearance: {
+        language: 'Language',
+        temperatureUnit: 'Temperature Unit',
+        theme: 'Theme',
+        accentColor: 'Accent Color',
+        appScale: 'UI Scale',
+        themeOptions: {
+          system: 'System',
+          light: 'Light',
+          dark: 'Dark'
+        }
+      },
+      application: {
+        minimizeToTray: 'Minimize to Tray',
+        minimizeToTrayDesc: 'Hide to the system tray instead of the taskbar when minimized',
+        minimizeOnClose: 'Minimize on Close',
+        minimizeOnCloseDesc: 'Minimize to the system tray instead of quitting when the window is closed',
+        disableUnsupportedWarning: 'Disable Unsupported Hardware Warning',
+        disableUnsupportedWarningDesc: 'Hide warnings about unsupported hardware',
+        enableHardwareSensors: 'Enable Hardware Sensors',
+        enableHardwareSensorsDesc: 'Collect hardware sensor data such as temperature and power',
+        dontShowNotifications: "Don't Show Notifications",
+        dontShowNotificationsDesc: 'Disable in-app and system notifications',
+        extensionsEnabled: 'Enable Extensions',
+        extensionsEnabledDesc: 'Enable loading of plugins and extensions',
+        valueOn: 'On',
+        valueOff: 'Off'
+      },
+      saved: 'Settings saved',
+      saveFailed: 'Failed to save settings',
+      power: {
+        powerModeMapping: 'Power Mode Mapping',
+        mappingModes: {
+          disabled: 'Disabled',
+          windowsPowerMode: 'Windows Power Mode',
+          windowsPowerPlan: 'Windows Power Plan'
+        },
+        powerModes: 'Windows Power Mode Mapping',
+        powerModesHint: 'Maps device power modes to Windows power modes. Current mapping is shown below (read-only).',
+        powerModesEmpty: 'No power mode mapping',
+        powerModeStates: {
+          quiet: 'Quiet',
+          balance: 'Balance',
+          performance: 'Performance',
+          extreme: 'Extreme',
+          godMode: 'Custom'
+        },
+        windowsPowerModes: {
+          bestPowerEfficiency: 'Best power efficiency',
+          balanced: 'Balanced',
+          bestPerformance: 'Best performance'
+        },
+        synchronizeBrightness: 'Synchronize brightness to all power plans',
+        smartFnLock: 'Smart Fn Lock Modifier Keys',
+        modifierKeys: {
+          shift: 'Shift',
+          ctrl: 'Ctrl',
+          alt: 'Alt'
+        }
+      },
+      display: {
+        navigationItems: 'Navigation Items Visibility',
+        navigationKeys: {
+          keyboard: 'Keyboard Backlight',
+          battery: 'Battery',
+          automation: 'Automation',
+          macro: 'Macro',
+          windowsOptimization: 'Windows Optimization',
+          pluginExtensions: 'Plugins & Extensions',
+          about: 'About'
+        },
+        notificationPosition: 'Notification Position',
+        notificationPositions: {
+          bottomRight: 'Bottom Right',
+          bottomCenter: 'Bottom Center',
+          bottomLeft: 'Bottom Left',
+          centerLeft: 'Center Left',
+          topLeft: 'Top Left',
+          topCenter: 'Top Center',
+          topRight: 'Top Right',
+          centerRight: 'Center Right',
+          center: 'Center'
+        },
+        notificationDuration: 'Notification Duration',
+        notificationDurations: {
+          short: 'Short',
+          normal: 'Normal',
+          long: 'Long'
+        },
+        excludedRefreshRates: 'Excluded Refresh Rates',
+        excludedRefreshRatesHint: 'Advanced editing will be available in a future version',
+        excludedRefreshRatesEmpty: 'No excluded refresh rates'
+      },
+      smartKeys: {
+        title: 'Smart Keys',
+        description: 'Configure Smart Keys behavior, including the Smart Fn Lock modifier keys.',
+        smartFnLock: 'Current Smart Fn Lock Modifier Keys',
+        off: 'Off',
+        hint: 'Smart Fn Lock modifier keys can be changed in the Power settings.'
+      },
+      update: {
+        frequency: 'Update Check Frequency',
+        frequencies: {
+          perHour: 'Every hour',
+          perThreeHours: 'Every 3 hours',
+          perTwelveHours: 'Every 12 hours',
+          perDay: 'Every day',
+          perWeek: 'Every week',
+          perMonth: 'Every month'
+        },
+        includePrerelease: 'Include prerelease updates',
+        check: 'Check for Updates',
+        comingSoon: 'Update check will be available in a future version'
+      },
+      integrations: {
+        hwinfo: 'HWiNFO',
+        cli: 'CLI'
+      }
+    },
+    automation: {
+      title: 'Automation',
+      enable: 'Enable automation',
+      empty: 'No pipelines yet',
+      runNow: 'Run Now',
+      delete: 'Delete',
+      deleteStep: 'Delete step',
+      addPipeline: 'Add Pipeline',
+      addStep: 'Add Step',
+      stepType: 'Step type',
+      steps: 'Steps',
+      save: 'Save',
+      revert: 'Revert',
+      pipelineName: 'Pipeline name',
+      pipelineNamePlaceholder: 'Enter pipeline name',
+      quickAction: 'Quick action'
+    },
+    macro: {
+      title: 'Macro',
+      enable: 'Enable macros',
+      numpad: 'Numpad',
+      sequence: 'Sequence',
+      repeat: 'Repeat count',
+      events: 'Events',
+      save: 'Save',
+      clear: 'Clear',
+      play: 'Play',
+      empty: 'No macro sequence for this key yet'
+    },
+    about: {
+      title: 'About',
+      appName: 'Application',
+      version: 'Version',
+      pid: 'Process ID',
+      machine: 'Device model',
+      bios: 'BIOS version',
+      compatible: 'Compatibility',
+      yes: 'Compatible',
+      no: 'Not compatible',
+      dataFolder: 'Data folder',
+      thirdParty: 'Third-party libraries',
+      copyright: 'Copyright'
     }
   }
 }
