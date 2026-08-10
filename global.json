@@ -1,0 +1,5 @@
+{
+  "msbuild-sdks": {
+    "Xpf.Sdk": "1.6.0"
+  }
+}
