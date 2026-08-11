@@ -7,11 +7,10 @@ files:
   - out/**
   - package.json
 extraResources:
-  - from: ../UniversalDeviceToolkit.Host/bin/x64/Release/net10.0-windows10.0.26100.0/win-x64
+  - from: ../UniversalDeviceToolkit.Host/publish/win-x64
     to: host
     filter:
       - "**/*"
-    when: win32
 win:
   target:
     - target: nsis

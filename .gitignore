@@ -687,3 +687,6 @@ _size_bench_publish/
 !Tools/LanguagePackMockBackend/**/*.zip
 !resources/**/*.zip
 build_debug_log.txt
+
+# Electron build output
+/UniversalDeviceToolkit.Electron/dist/
