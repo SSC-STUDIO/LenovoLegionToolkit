@@ -68,8 +68,8 @@ export default function DashboardPage(): React.JSX.Element {
   }
 
   return (
-    <div>
-      <Typography.Title level={3} style={{ marginTop: 0 }}>
+    <div className="udt-dashboard-page">
+      <Typography.Title level={3} className="udt-dashboard-page__title">
         {t('dashboard.title')}
       </Typography.Title>
       {config?.showSensors && <SensorSection />}

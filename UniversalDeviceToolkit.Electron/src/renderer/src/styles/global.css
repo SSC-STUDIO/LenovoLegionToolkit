@@ -61,6 +61,197 @@ body {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
+/* Dashboard: mirrors the original application's continuous sensor surface. */
+.udt-dashboard-page {
+  max-width: 1520px;
+  margin: 0 auto;
+  padding-bottom: 28px;
+}
+
+.udt-dashboard-page__title {
+  margin: 0 0 14px !important;
+  font-size: 28px !important;
+  font-weight: 600 !important;
+}
+
+.udt-sensors {
+  margin-bottom: 28px;
+}
+
+.udt-sensors__source-tag {
+  margin: 0 0 8px;
+}
+
+.udt-sensor-board {
+  border: 1px solid var(--udt-border-strong);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-sensor-board-bg, var(--udt-bg-card));
+  box-shadow: var(--udt-sensor-board-shadow, 0 10px 28px rgba(0, 0, 0, 0.18));
+  padding: 22px 26px 20px;
+  overflow: hidden;
+}
+
+.udt-sensor-board__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.udt-sensor-panel {
+  min-width: 0;
+}
+
+.udt-sensor-panel + .udt-sensor-panel {
+  border-left: 1px solid var(--udt-border);
+  padding-left: 18px;
+}
+
+.udt-sensor-panel__heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  min-height: 28px;
+}
+
+.udt-sensor-panel__heading h2 {
+  margin: 0;
+  color: var(--udt-text-primary);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.udt-sensor-panel__model {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--udt-text-secondary);
+  font-size: 12px;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-sensor-panel__summary {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  min-height: 126px;
+  margin-top: 8px;
+}
+
+.udt-sensor-panel__metrics {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  min-width: 0;
+}
+
+.udt-sensor-panel__metric {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+  min-height: 23px;
+}
+
+.udt-sensor-panel__metric dt,
+.udt-sensor-panel__metric dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.udt-sensor-panel__metric dt {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-sensor-panel__metric dd {
+  max-width: 150px;
+  overflow: hidden;
+  font-weight: 500;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-sensor-panel__chart {
+  height: 168px;
+  margin-top: 12px;
+  border-radius: 10px;
+  background: var(--udt-sensor-chart-bg, rgba(255, 255, 255, 0.045));
+  overflow: hidden;
+}
+
+.udt-sensor-panel__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 16px;
+  min-height: 20px;
+  margin-top: 10px;
+  color: var(--udt-text-secondary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.udt-sensor-panel__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.udt-sensor-panel__legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+:root[data-theme='dark'] {
+  --udt-sensor-board-bg: #242a35;
+  --udt-sensor-chart-bg: rgba(255, 255, 255, 0.055);
+  --udt-sensor-board-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+@media (max-width: 1100px) {
+  .udt-sensor-board {
+    padding: 18px;
+  }
+
+  .udt-sensor-board__grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .udt-sensor-panel + .udt-sensor-panel {
+    border-top: 1px solid var(--udt-border);
+    border-left: none;
+    padding-top: 18px;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 560px) {
+  .udt-dashboard-page__title {
+    font-size: 24px !important;
+  }
+
+  .udt-sensor-board {
+    padding: 14px;
+  }
+
+  .udt-sensor-panel__summary {
+    grid-template-columns: 102px minmax(0, 1fr);
+    gap: 8px;
+  }
+}
+
 /* ── Navigation ──────────────────────────────────────────────── */
 
 .udt-nav {

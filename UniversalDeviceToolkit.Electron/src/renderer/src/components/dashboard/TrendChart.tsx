@@ -54,37 +54,28 @@ export default function TrendChart({
     chart.setOption({
       animation: false,
       tooltip: { trigger: 'axis' },
-      legend: {
-        show: series.length > 1,
-        top: 0,
-        right: 0,
-        itemWidth: 8,
-        itemHeight: 8,
-        icon: 'circle',
-        textStyle: { fontSize: 10, color: labelColor }
-      },
       grid: {
-        top: series.length > 1 ? 26 : 6,
-        left: 4,
-        right: 4,
-        bottom: 4,
+        top: 10,
+        left: 12,
+        right: 12,
+        bottom: 24,
         containLabel: true
       },
       xAxis: {
         type: 'category',
         boundaryGap: false,
         data: labels,
-        axisLine: { lineStyle: { color: axisColor } },
+        axisLine: { lineStyle: { color: axisColor, width: 1 } },
         axisTick: { show: false },
-        axisLabel: { fontSize: 10, color: labelColor, hideOverlap: true }
+        axisLabel: { fontSize: 10, color: labelColor, hideOverlap: true, margin: 8 }
       },
       yAxis: {
         type: 'value',
         scale: true,
         axisLine: { show: false },
         axisTick: { show: false },
-        axisLabel: { fontSize: 10, color: labelColor },
-        splitLine: { lineStyle: { color: axisColor, opacity: 0.5 } }
+        axisLabel: { fontSize: 10, color: labelColor, margin: 8 },
+        splitLine: { lineStyle: { color: axisColor, opacity: 0.48 } }
       },
       series: series.map((s) => ({
         name: s.name,
