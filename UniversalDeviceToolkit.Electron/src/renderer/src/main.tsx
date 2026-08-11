@@ -18,6 +18,10 @@ function Root(): React.JSX.Element {
   const [locale, setLocale] = useState(i18n.language.startsWith('zh') ? zhCN : enUS)
 
   useEffect(() => {
+    document.documentElement.setAttribute('data-theme', themeMode)
+  }, [themeMode])
+
+  useEffect(() => {
     const handleLanguageChanged = (lng: string): void => {
       setLocale(lng.startsWith('zh') ? zhCN : enUS)
     }
@@ -33,7 +37,19 @@ function Root(): React.JSX.Element {
       theme={{
         algorithm: themeMode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
         cssVar: { key: 'udt' },
-        token: colorPrimary ? { colorPrimary } : undefined
+        token: {
+          borderRadius: 8,
+          borderRadiusLG: 18,
+          fontSize: 13,
+          ...(themeMode === 'dark'
+            ? {
+                colorBgLayout: '#202020',
+                colorBgContainer: '#303030',
+                colorBorderSecondary: 'rgba(255,255,255,0.08)'
+              }
+            : {}),
+          ...(colorPrimary ? { colorPrimary } : {})
+        }
       }}
     >
       <HashRouter>

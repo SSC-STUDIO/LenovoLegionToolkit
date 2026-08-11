@@ -14,8 +14,16 @@ export default {
       about: '关于'
     },
     home: {
-      title: 'UDT Electron',
-      subtitle: '通用设备工具箱 · Electron 客户端'
+      title: '通用设备工具箱',
+      subtitle: '欢迎使用通用设备工具箱，选择下方功能开始使用',
+      hostReady: '后端已连接',
+      hostState: '后端状态',
+      hostVersion: '后端版本',
+      initComplete: '初始化完成',
+      safeStart: '安全模式，已跳过',
+      machine: '设备',
+      compatible: '兼容性',
+      status: '状态'
     },
     dashboard: {
       title: '仪表盘',
@@ -31,6 +39,17 @@ export default {
       memoryTotal: '内存总量',
       storageTemp: '存储温度',
       notAvailable: '--',
+      sensor: {
+        cpu: 'CPU',
+        gpu: 'GPU',
+        memory: '内存',
+        temperature: '温度',
+        usage: '使用率',
+        power: '功耗',
+        fanSpeed: '风扇转速',
+        vram: '显存',
+        frequency: '频率'
+      },
       group: {
         power: '电源',
         graphics: '显卡',
@@ -39,27 +58,37 @@ export default {
         custom: '自定义'
       },
       card: {
-        error: '设置失败'
+        error: '设置失败',
+        config: '高级配置',
+        configComingSoon: '高级配置将在后续版本中提供'
       }
     },
     feature: {
       powerMode: '电源模式',
+      'powerMode.desc': '切换整机性能与散热策略',
       battery: '电池模式',
+      'battery.desc': '选择电池充电模式以延长电池寿命',
       batteryNightCharge: '电池夜间充电',
       alwaysOnUsb: '常开USB',
       instantBoot: '即时启动',
       flipToStart: '翻转到启动',
       fnLock: '功能键锁',
+      'fnLock.desc': '锁定功能键为媒体键或标准功能键',
       gSync: 'GSync',
+      'gSync.desc': '启用或禁用 G-Sync 可变刷新率',
       hdr: 'HDR',
+      'hdr.desc': '开启或关闭高动态范围显示',
       hybridMode: '混合模式',
+      'hybridMode.desc': '在独显与核显之间切换显示输出',
       igpuMode: '独显直连模式',
+      'igpuMode.desc': '强制仅使用核显输出以节能降噪',
+      refreshRate: '刷新率',
+      'refreshRate.desc': '调整屏幕刷新率',
       itsMode: 'ITS模式',
       microphone: '麦克风',
       overDrive: '超频',
       panelLogo: '面板Logo',
       portsBacklight: '接口背光',
-      refreshRate: '刷新率',
       resolution: '分辨率',
       dpiScale: 'DPI缩放',
       speaker: '扬声器',

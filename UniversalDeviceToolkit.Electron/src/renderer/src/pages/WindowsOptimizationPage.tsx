@@ -394,7 +394,7 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
   }, [load, loadNetwork])
 
   return (
-    <Flex vertical gap={16} style={{ padding: 24 }}>
+    <Flex vertical gap={16}>
       <Typography.Title level={3} style={{ margin: 0 }}>
         {t('optimization.title')}
       </Typography.Title>

@@ -1,6 +1,11 @@
 export interface Bridge {
   invoke: (method: string, params?: unknown) => Promise<unknown>
   on: (event: string, callback: (data: unknown) => void) => () => void
+  minimize: () => void
+  maximizeToggle: () => void
+  closeWindow: () => void
+  isMaximized: () => Promise<boolean>
+  onMaximizedChanged: (callback: (maximized: boolean) => void) => () => void
 }
 
 declare global {

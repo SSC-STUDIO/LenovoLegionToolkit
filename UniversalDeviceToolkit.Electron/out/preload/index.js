@@ -8,6 +8,17 @@ const bridge = {
     };
     electron.ipcRenderer.on("bridge:event", listener);
     return () => electron.ipcRenderer.removeListener("bridge:event", listener);
+  },
+  minimize: () => electron.ipcRenderer.send("window:minimize"),
+  maximizeToggle: () => electron.ipcRenderer.send("window:maximize-toggle"),
+  closeWindow: () => electron.ipcRenderer.send("window:close"),
+  isMaximized: () => electron.ipcRenderer.invoke("window:is-maximized"),
+  onMaximizedChanged: (callback) => {
+    const listener = (_event, maximized) => {
+      callback(maximized);
+    };
+    electron.ipcRenderer.on("window:maximized-changed", listener);
+    return () => electron.ipcRenderer.removeListener("window:maximized-changed", listener);
   }
 };
 electron.contextBridge.exposeInMainWorld("bridge", bridge);

@@ -74,7 +74,7 @@ export default function MacroPage(): React.JSX.Element {
   }
 
   return (
-    <Flex vertical gap={16} style={{ padding: 24 }}>
+    <Flex vertical gap={16}>
       <Flex align="center" justify="space-between">
         <Typography.Title level={3} style={{ margin: 0 }}>
           {t('macro.title')}

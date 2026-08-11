@@ -51,7 +51,7 @@ export default function AboutPage(): React.JSX.Element {
   }, [appStatus])
 
   return (
-    <Flex vertical gap={16} style={{ padding: 24, maxWidth: 720 }}>
+    <Flex vertical gap={16} style={{ maxWidth: 720 }}>
       <Typography.Title level={3}>{t('about.title')}</Typography.Title>
 
       <Card>

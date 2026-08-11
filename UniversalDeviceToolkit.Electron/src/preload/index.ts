@@ -9,6 +9,17 @@ const bridge = {
     }
     ipcRenderer.on('bridge:event', listener)
     return () => ipcRenderer.removeListener('bridge:event', listener)
+  },
+  minimize: (): void => ipcRenderer.send('window:minimize'),
+  maximizeToggle: (): void => ipcRenderer.send('window:maximize-toggle'),
+  closeWindow: (): void => ipcRenderer.send('window:close'),
+  isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window:is-maximized'),
+  onMaximizedChanged: (callback: (maximized: boolean) => void): (() => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, maximized: boolean): void => {
+      callback(maximized)
+    }
+    ipcRenderer.on('window:maximized-changed', listener)
+    return () => ipcRenderer.removeListener('window:maximized-changed', listener)
   }
 }
 

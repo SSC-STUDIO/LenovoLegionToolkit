@@ -313,6 +313,7 @@ function createWindow() {
     height: 800,
     show: false,
     autoHideMenuBar: true,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, "../preload/index.js"),
       contextIsolation: true,
@@ -337,6 +338,18 @@ function createWindow() {
       mainWindow.hide();
     });
   });
+  mainWindow.on("maximize", () => {
+    const win = mainWindow;
+    if (win && !win.isDestroyed()) {
+      win.webContents.send("window:maximized-changed", true);
+    }
+  });
+  mainWindow.on("unmaximize", () => {
+    const win = mainWindow;
+    if (win && !win.isDestroyed()) {
+      win.webContents.send("window:maximized-changed", false);
+    }
+  });
   mainWindow.on("closed", () => {
     mainWindow = null;
     destroyTray();
@@ -359,6 +372,30 @@ electron.app.whenReady().then(() => {
     "bridge:invoke",
     (_event, method, params) => hostClient.invoke(method, params)
   );
+  electron.ipcMain.on("window:minimize", () => mainWindow?.minimize());
+  electron.ipcMain.on("window:maximize-toggle", () => {
+    if (!mainWindow) return;
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize();
+    } else {
+      mainWindow.maximize();
+    }
+  });
+  electron.ipcMain.on("window:close", () => {
+    if (isQuitting || !mainWindow) {
+      mainWindow?.close();
+      return;
+    }
+    void shouldMinimizeToTray(["MinimizeOnClose", "MinimizeToTray"]).then((toTray) => {
+      if (!mainWindow || mainWindow.isDestroyed()) return;
+      if (toTray) {
+        mainWindow.hide();
+      } else {
+        mainWindow.close();
+      }
+    });
+  });
+  electron.ipcMain.handle("window:is-maximized", () => mainWindow?.isMaximized() ?? false);
   startHost();
   createWindow();
   setMainWindowRef(() => mainWindow);

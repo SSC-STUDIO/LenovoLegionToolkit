@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
+import { useThemeStore } from '../../stores/themeStore'
 
 export interface TrendSeries {
   name: string
@@ -13,13 +14,21 @@ export interface TrendChartProps {
   height?: number
 }
 
+function withAlpha(hex: string, alpha: number): string {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
 export default function TrendChart({
   series,
   labels,
-  height = 200
+  height = 120
 }: TrendChartProps): React.JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<echarts.ECharts | null>(null)
+  const isDark = useThemeStore((s) => s.themeMode === 'dark')
 
   useEffect(() => {
     const el = containerRef.current
@@ -40,28 +49,68 @@ export default function TrendChart({
   useEffect(() => {
     const chart = chartRef.current
     if (!chart) return
+    const axisColor = isDark ? 'rgba(255, 255, 255, 0.22)' : 'rgba(0, 0, 0, 0.15)'
+    const labelColor = isDark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 0.45)'
     chart.setOption({
       animation: false,
       tooltip: { trigger: 'axis' },
-      legend: { top: 0 },
-      grid: { top: 36, left: 8, right: 16, bottom: 8, containLabel: true },
+      legend: {
+        show: series.length > 1,
+        top: 0,
+        right: 0,
+        itemWidth: 8,
+        itemHeight: 8,
+        icon: 'circle',
+        textStyle: { fontSize: 10, color: labelColor }
+      },
+      grid: {
+        top: series.length > 1 ? 26 : 6,
+        left: 4,
+        right: 4,
+        bottom: 4,
+        containLabel: true
+      },
       xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: labels
+        data: labels,
+        axisLine: { lineStyle: { color: axisColor } },
+        axisTick: { show: false },
+        axisLabel: { fontSize: 10, color: labelColor, hideOverlap: true }
       },
-      yAxis: { type: 'value', scale: true },
+      yAxis: {
+        type: 'value',
+        scale: true,
+        axisLine: { show: false },
+        axisTick: { show: false },
+        axisLabel: { fontSize: 10, color: labelColor },
+        splitLine: { lineStyle: { color: axisColor, opacity: 0.5 } }
+      },
       series: series.map((s) => ({
         name: s.name,
-        type: 'line',
+        type: 'line' as const,
         showSymbol: false,
         smooth: true,
         lineStyle: { width: 2, color: s.color },
         itemStyle: { color: s.color },
+        areaStyle: {
+          color: {
+            type: 'linear' as const,
+            x: 0,
+            y: 0,
+            x2: 0,
+            y2: 1,
+            colorStops: [
+              { offset: 0, color: withAlpha(s.color, 0.3) },
+              { offset: 0.48, color: withAlpha(s.color, 0.16) },
+              { offset: 1, color: withAlpha(s.color, 0.04) }
+            ]
+          }
+        },
         data: s.data
       }))
     })
-  }, [series, labels])
+  }, [series, labels, isDark])
 
   return <div ref={containerRef} style={{ width: '100%', height }} />
 }

@@ -14,8 +14,16 @@ export default {
       about: 'About'
     },
     home: {
-      title: 'UDT Electron',
-      subtitle: 'Universal Device Toolkit · Electron client'
+      title: 'Universal Device Toolkit',
+      subtitle: 'Welcome! Pick a section below to get started',
+      hostReady: 'Backend connected',
+      hostState: 'Backend state',
+      hostVersion: 'Backend version',
+      initComplete: 'Initialization complete',
+      safeStart: 'Safe start, skipped',
+      machine: 'Device',
+      compatible: 'Compatibility',
+      status: 'Status'
     },
     dashboard: {
       title: 'Dashboard',
@@ -31,6 +39,17 @@ export default {
       memoryTotal: 'Memory Total',
       storageTemp: 'Storage Temp',
       notAvailable: '--',
+      sensor: {
+        cpu: 'CPU',
+        gpu: 'GPU',
+        memory: 'Memory',
+        temperature: 'Temperature',
+        usage: 'Usage',
+        power: 'Power',
+        fanSpeed: 'Fan Speed',
+        vram: 'VRAM',
+        frequency: 'Frequency'
+      },
       group: {
         power: 'Power',
         graphics: 'Graphics',
@@ -39,27 +58,37 @@ export default {
         custom: 'Custom'
       },
       card: {
-        error: 'Failed to apply setting'
+        error: 'Failed to apply setting',
+        config: 'Advanced settings',
+        configComingSoon: 'Advanced settings will be available in a future version'
       }
     },
     feature: {
       powerMode: 'Power Mode',
+      'powerMode.desc': 'Switch overall performance and thermal strategy',
       battery: 'Battery Mode',
+      'battery.desc': 'Choose a battery charging mode to extend battery life',
       batteryNightCharge: 'Battery Night Charging',
       alwaysOnUsb: 'Always-On USB',
       instantBoot: 'Instant Boot',
       flipToStart: 'Flip to Start',
       fnLock: 'Fn Lock',
+      'fnLock.desc': 'Lock F-keys as media keys or standard function keys',
       gSync: 'GSync',
+      'gSync.desc': 'Enable or disable G-Sync variable refresh rate',
       hdr: 'HDR',
+      'hdr.desc': 'Turn high dynamic range display on or off',
       hybridMode: 'Hybrid Mode',
+      'hybridMode.desc': 'Switch display output between discrete and integrated GPU',
       igpuMode: 'Discrete GPU Mode',
+      'igpuMode.desc': 'Force integrated graphics output to save power',
+      refreshRate: 'Refresh Rate',
+      'refreshRate.desc': 'Adjust the display refresh rate',
       itsMode: 'ITS Mode',
       microphone: 'Microphone',
       overDrive: 'Overclock',
       panelLogo: 'Panel Logo',
       portsBacklight: 'Ports Backlight',
-      refreshRate: 'Refresh Rate',
       resolution: 'Resolution',
       dpiScale: 'DPI Scale',
       speaker: 'Speaker',

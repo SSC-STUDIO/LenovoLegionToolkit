@@ -173,7 +173,7 @@ export default function PluginExtensionsPage(): React.JSX.Element {
   const updateCount = plugins.filter((plugin) => plugin.updateAvailable).length
 
   return (
-    <Flex vertical gap={16} style={{ padding: 24 }}>
+    <Flex vertical gap={16}>
       <Flex align="center" justify="space-between" wrap gap={8}>
         <Typography.Title level={3} style={{ margin: 0 }}>
           {t('plugins.title')}

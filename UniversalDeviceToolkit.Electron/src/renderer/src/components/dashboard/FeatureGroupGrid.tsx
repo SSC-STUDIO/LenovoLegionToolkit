@@ -1,4 +1,3 @@
-import { Card, Flex } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
 import type { FeatureKey } from '../../api/features'
@@ -57,19 +56,24 @@ export default function FeatureGroupGrid({
   const infos = useFeaturesStore((s) => s.infos)
 
   return (
-    <div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
       {groups.map((group, index) => {
         const items = group.items.filter(
           (item) => isFeatureKey(item) && !(infos[item] != null && !infos[item].supported)
         )
         if (items.length === 0) return null
         return (
-          <Card
-            key={`${group.type}-${index}`}
-            title={groupTitle(group, t)}
-            style={{ marginBottom: 16 }}
-          >
-            <Flex wrap gap={16}>
+          <section key={`${group.type}-${index}`}>
+            <h3 style={{ fontSize: 19, fontWeight: 500, margin: '0 0 12px' }}>
+              {groupTitle(group, t)}
+            </h3>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                gap: 12
+              }}
+            >
               {items.map((item) => (
                 <FeatureCard
                   key={item}
@@ -77,8 +81,8 @@ export default function FeatureGroupGrid({
                   title={t(`feature.${item}`, { defaultValue: '' }) || item}
                 />
               ))}
-            </Flex>
-          </Card>
+            </div>
+          </section>
         )
       })}
     </div>
