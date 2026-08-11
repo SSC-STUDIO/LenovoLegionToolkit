@@ -435,6 +435,77 @@ body {
   padding: 14px 16px;
 }
 
+.udt-settings-page {
+  width: min(100%, 1160px);
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+.udt-settings-page__header {
+  margin-bottom: 18px;
+}
+
+.udt-settings-page__title.ant-typography {
+  margin: 0;
+  color: var(--udt-text-primary);
+  font-size: 26px;
+}
+
+.udt-settings-page__description {
+  display: block;
+  margin-top: 4px;
+  color: var(--udt-text-secondary);
+}
+
+.udt-settings-page__surface {
+  display: grid;
+  min-height: 520px;
+  grid-template-columns: minmax(160px, 200px) minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--udt-border-strong);
+  border-radius: 14px;
+  background: var(--udt-bg-card);
+}
+
+.udt-settings-page__nav.ant-menu {
+  padding: 10px 8px;
+  border-inline-end: 1px solid var(--udt-border);
+  background: transparent;
+}
+
+.udt-settings-page__nav .ant-menu-item {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  margin-inline: 0;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.udt-settings-page__nav .ant-menu-title-content {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-settings-page__content {
+  min-width: 0;
+  padding: 22px 24px;
+}
+
+@media (max-width: 760px) {
+  .udt-settings-page__surface { grid-template-columns: 1fr; }
+  .udt-settings-page__nav.ant-menu {
+    display: flex;
+    overflow-x: auto;
+    padding: 8px;
+    border-right: none;
+    border-bottom: 1px solid var(--udt-border);
+  }
+  .udt-settings-page__nav .ant-menu-item { width: auto; flex: 0 0 auto; }
+  .udt-settings-page__content { padding: 18px; }
+}
+
 @media (max-width: 680px) {
   .udt-plugins-page__toolbar-spacer {
     display: none;
