@@ -2,11 +2,6 @@ import { useCallback, useEffect, useRef } from 'react'
 import * as echarts from 'echarts'
 import { useThemeStore } from '../../stores/themeStore'
 
-export function formatSensorValue(value: number | null | undefined, digits = 0): string {
-  if (value == null || !Number.isFinite(value)) return '--'
-  return value.toFixed(digits)
-}
-
 export interface SensorGaugeProps {
   value?: number | null
   min?: number

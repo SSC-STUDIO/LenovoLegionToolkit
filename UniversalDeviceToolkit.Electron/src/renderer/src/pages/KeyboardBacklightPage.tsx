@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import {
   Button,
   Card,
@@ -219,11 +219,6 @@ function SpectrumSection(): React.JSX.Element {
   const { t } = useTranslation()
   const { spectrum, setBrightness, setLogo, setProfile, loadProfileDesc, saveProfileDesc } =
     useKeyboardStore()
-  const [brightnessDraft, setBrightnessDraft] = useState(spectrum.brightness)
-
-  useEffect(() => {
-    setBrightnessDraft(spectrum.brightness)
-  }, [spectrum.brightness])
 
   const fail = (): void => {
     message.error(t('common.error'))
@@ -253,10 +248,10 @@ function SpectrumSection(): React.JSX.Element {
     <Flex vertical gap={16}>
       <Card title={t('keyboard.spectrum.brightness')}>
         <Slider
+          key={spectrum.brightness}
           min={0}
           max={9}
-          value={brightnessDraft}
-          onChange={setBrightnessDraft}
+          defaultValue={spectrum.brightness}
           onChangeComplete={(value) => {
             void setBrightness(value).then((ok) => {
               if (!ok) fail()

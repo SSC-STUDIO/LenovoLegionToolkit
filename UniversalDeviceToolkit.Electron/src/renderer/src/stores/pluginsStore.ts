@@ -58,8 +58,9 @@ export const usePluginsStore = create<PluginsStore>()((set, get) => ({
       set({ error: (error as Error).message })
       return false
     } finally {
-      const { [pluginId]: _removed, ...rest } = get().installingIds
-      set({ installingIds: rest })
+      const next = { ...get().installingIds }
+      delete next[pluginId]
+      set({ installingIds: next })
     }
   },
 
@@ -99,7 +100,8 @@ pluginsApi.onInstallProgress((progress) => {
   usePluginsStore.setState((state) => {
     if (!(progress.pluginId in state.installingIds)) return state
     if (progress.phase === 'completed' || progress.phase === 'failed') {
-      const { [progress.pluginId]: _removed, ...rest } = state.installingIds
+      const rest = { ...state.installingIds }
+      delete rest[progress.pluginId]
       return { installingIds: rest }
     }
     return { installingIds: { ...state.installingIds, [progress.pluginId]: progress.progressPercentage } }

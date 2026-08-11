@@ -35,7 +35,6 @@ export default function AboutPage(): React.JSX.Element {
   const { t } = useTranslation()
   const [appStatus, setAppStatus] = useState<AppStatus | null>(null)
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null)
-  const [dataFolder, setDataFolder] = useState<string>('')
 
   useEffect(() => {
     void invoke<AppStatus>('app.getStatus').then(setAppStatus).catch(() => undefined)
@@ -43,12 +42,7 @@ export default function AboutPage(): React.JSX.Element {
     void settingsApi.get('application').catch(() => undefined)
   }, [])
 
-  useEffect(() => {
-    const maybeFolder = (appStatus as { logPath?: string } | null)?.logPath
-    if (maybeFolder) {
-      setDataFolder(maybeFolder.replace(/[\\/][^\\/]*$/, ''))
-    }
-  }, [appStatus])
+  const dataFolder = appStatus?.logPath?.replace(/[\\/][^\\/]*$/, '') ?? ''
 
   return (
     <Flex vertical gap={16} style={{ maxWidth: 720 }}>

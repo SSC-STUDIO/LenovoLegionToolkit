@@ -25,7 +25,6 @@ export function useFeature(feature: FeatureKey): UseFeatureResult {
 
   useEffect(() => {
     let cancelled = false
-    setStates([])
     if (!supported) return
     featuresApi
       .getStates(feature)

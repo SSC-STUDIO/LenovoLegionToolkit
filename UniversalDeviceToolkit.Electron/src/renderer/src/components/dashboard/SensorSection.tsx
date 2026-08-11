@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Tag, theme } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useSensorsStore } from '../../stores/sensorsStore'
 import { useThemeStore } from '../../stores/themeStore'
-import SensorGauge, { formatSensorValue } from './SensorGauge'
+import SensorGauge from './SensorGauge'
+import { formatSensorValue } from '../../utils/format'
 import TrendChart, { type TrendSeries } from './TrendChart'
 
 const TEMP_WARNING = 60
@@ -17,19 +18,7 @@ const GPU_UTILIZATION = '#5B9EF5'
 const GPU_CLOCK = '#76C985'
 const GPU_TEMPERATURE = '#E4933D'
 const MEMORY_UTILIZATION = '#8ACA86'
-const TREND_POINTS = 60
 const TREND_HEIGHT = 168
-
-interface TrendHistory {
-  labels: string[]
-  cpuUsage: (number | null)[]
-  cpuClock: (number | null)[]
-  cpuTemperature: (number | null)[]
-  gpuUsage: (number | null)[]
-  gpuClock: (number | null)[]
-  gpuTemperature: (number | null)[]
-  memoryUsage: (number | null)[]
-}
 
 interface SensorMetric {
   label: string
@@ -127,6 +116,7 @@ export default function SensorSection(): React.JSX.Element {
   const { token } = theme.useToken()
   const isDark = useThemeStore((state) => state.themeMode === 'dark')
   const snapshot = useSensorsStore((state) => state.snapshot)
+  const trend = useSensorsStore((state) => state.trend)
 
   useEffect(() => {
     const store = useSensorsStore.getState()
@@ -138,60 +128,31 @@ export default function SensorSection(): React.JSX.Element {
     }
   }, [])
 
-  const historyRef = useRef<TrendHistory>({
-    labels: [],
-    cpuUsage: [],
-    cpuClock: [],
-    cpuTemperature: [],
-    gpuUsage: [],
-    gpuClock: [],
-    gpuTemperature: [],
-    memoryUsage: []
-  })
-  const lastTsRef = useRef<string | null>(null)
-
-  if (snapshot?.ts != null && lastTsRef.current !== snapshot.ts) {
-    lastTsRef.current = snapshot.ts
-    const history = historyRef.current
-    history.labels.push(new Date(snapshot.ts).toLocaleTimeString([], { hour12: false }))
-    history.cpuUsage.push(snapshot.cpu?.usage ?? null)
-    history.cpuClock.push(snapshot.cpu?.coreClockAvg ?? snapshot.cpu?.coreClockMax ?? null)
-    history.cpuTemperature.push(snapshot.cpu?.temperature ?? null)
-    history.gpuUsage.push(snapshot.gpu?.usage ?? null)
-    history.gpuClock.push(snapshot.gpu?.coreClock ?? null)
-    history.gpuTemperature.push(snapshot.gpu?.temperature ?? null)
-    history.memoryUsage.push(snapshot.memory?.usage ?? null)
-
-    if (history.labels.length > TREND_POINTS) {
-      Object.values(history).forEach((values) => values.shift())
-    }
-  }
-
-  const trendSeries = useMemo(() => {
-    const history = historyRef.current
-    return {
+  const trendSeries = useMemo(
+    () => ({
       cpu: [
-        { name: t('dashboard.sensor.usage'), color: CPU_UTILIZATION, data: [...history.cpuUsage] },
-        { name: t('dashboard.sensor.frequency'), color: CPU_CLOCK, data: [...history.cpuClock] },
-        { name: t('dashboard.sensor.temperature'), color: CPU_TEMPERATURE, data: [...history.cpuTemperature] }
+        { name: t('dashboard.sensor.usage'), color: CPU_UTILIZATION, data: [...trend.cpuUsage] },
+        { name: t('dashboard.sensor.frequency'), color: CPU_CLOCK, data: [...trend.cpuClock] },
+        { name: t('dashboard.sensor.temperature'), color: CPU_TEMPERATURE, data: [...trend.cpuTemperature] }
       ] satisfies TrendSeries[],
       gpu: [
-        { name: t('dashboard.sensor.usage'), color: GPU_UTILIZATION, data: [...history.gpuUsage] },
-        { name: t('dashboard.sensor.frequency'), color: GPU_CLOCK, data: [...history.gpuClock] },
-        { name: t('dashboard.sensor.temperature'), color: GPU_TEMPERATURE, data: [...history.gpuTemperature] }
+        { name: t('dashboard.sensor.usage'), color: GPU_UTILIZATION, data: [...trend.gpuUsage] },
+        { name: t('dashboard.sensor.frequency'), color: GPU_CLOCK, data: [...trend.gpuClock] },
+        { name: t('dashboard.sensor.temperature'), color: GPU_TEMPERATURE, data: [...trend.gpuTemperature] }
       ] satisfies TrendSeries[],
       memory: [
-        { name: t('dashboard.sensor.usage'), color: MEMORY_UTILIZATION, data: [...history.memoryUsage] }
+        { name: t('dashboard.sensor.usage'), color: MEMORY_UTILIZATION, data: [...trend.memoryUsage] }
       ] satisfies TrendSeries[]
-    }
-  }, [snapshot, t])
+    }),
+    [trend, t]
+  )
 
   const cpu = snapshot?.cpu
   const gpu = snapshot?.gpu
   const memory = snapshot?.memory
   const storageTemperatures = snapshot?.storage?.temperatures
   const notAvailable = t('dashboard.notAvailable')
-  const labels = [...historyRef.current.labels]
+  const labels = trend.labels
   const labelColor = isDark ? 'rgba(255, 255, 255, 0.78)' : token.colorTextSecondary
   const valueColor = isDark ? 'rgba(255, 255, 255, 0.94)' : token.colorText
   const vramUsed = toGigabytes(gpu?.vramUsedMb)

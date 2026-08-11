@@ -692,3 +692,5 @@ build_debug_log.txt
 /UniversalDeviceToolkit.Electron/dist/
 
 /UniversalDeviceToolkit.Electron/out/
+
+/UniversalDeviceToolkit.Electron/*.tsbuildinfo

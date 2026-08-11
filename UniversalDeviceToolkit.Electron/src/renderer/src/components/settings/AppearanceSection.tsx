@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { ColorPicker, Radio, Select, Typography, message } from 'antd'
 import type { Color } from 'antd/es/color-picker'
 import { useTranslation } from 'react-i18next'
@@ -114,10 +114,6 @@ export default function AppearanceSection(): React.JSX.Element {
 
   const accentColor = readAccentColor(app)
   const accentHex = accentColor ? accentColorToHex(accentColor) : undefined
-  const [accentValue, setAccentValue] = useState<string | undefined>(accentHex)
-  useEffect(() => {
-    setAccentValue(accentHex)
-  }, [accentHex])
 
   const storedScale = readNumber(app, 'AppScale')
   const appScale =
@@ -155,7 +151,6 @@ export default function AppearanceSection(): React.JSX.Element {
   }
 
   const handleAccentChange = (value: Color, css: string): void => {
-    setAccentValue(css)
     setAccent(css)
     const rgb = value.toRgb()
     const next: AppSettings = { ...app, AccentColor: { R: rgb.r, G: rgb.g, B: rgb.b } }
@@ -212,7 +207,7 @@ export default function AppearanceSection(): React.JSX.Element {
       />
       <SettingRow
         label={t('settings.appearance.accentColor')}
-        control={<ColorPicker value={accentValue} onChange={handleAccentChange} />}
+        control={<ColorPicker key={accentHex ?? 'none'} defaultValue={accentHex} onChange={handleAccentChange} />}
       />
       <SettingRow
         label={t('settings.appearance.appScale')}

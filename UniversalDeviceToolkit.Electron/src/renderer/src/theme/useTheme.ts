@@ -43,7 +43,6 @@ export function useTheme(): ThemeController {
     let disposed = false
     let preference: ThemePreference = 'System'
     let media: MediaQueryList | null = null
-    let offChanged: (() => void) | undefined
 
     const onSystemChange = (): void => {
       if (disposed || preference !== 'System') return
@@ -80,7 +79,7 @@ export function useTheme(): ThemeController {
       })
       .catch(() => undefined)
 
-    offChanged = settingsApi.onChanged((data) => {
+    const offChanged = settingsApi.onChanged((data) => {
       if (data.scope !== 'application') return
       settingsApi
         .get('application')
@@ -93,7 +92,7 @@ export function useTheme(): ThemeController {
     return () => {
       disposed = true
       media?.removeEventListener('change', onSystemChange)
-      offChanged?.()
+      offChanged()
     }
   }, [setAccent, setThemeMode])
 

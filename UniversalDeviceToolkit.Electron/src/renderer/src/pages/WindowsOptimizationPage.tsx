@@ -294,16 +294,24 @@ function NetworkTab(): React.JSX.Element {
   const [starting, setStarting] = useState(false)
   const [stopping, setStopping] = useState(false)
 
-  useEffect(() => {
-    if (networkStatus) {
-      setConfig({ ...networkStatus.config, domainGroups: [...networkStatus.config.domainGroups] })
+  const editableConfig = config ?? networkStatus?.config ?? null
+
+  const ensureConfig = (): NetworkAccelerationConfig | null => {
+    if (config) return config
+    if (!networkStatus) return null
+    const next: NetworkAccelerationConfig = {
+      ...networkStatus.config,
+      domainGroups: [...networkStatus.config.domainGroups]
     }
-  }, [networkStatus])
+    setConfig(next)
+    return next
+  }
 
   const handleSave = async (): Promise<void> => {
-    if (!config) return
+    const current = ensureConfig()
+    if (!current) return
     setSaving(true)
-    const ok = await saveNetworkConfig(config)
+    const ok = await saveNetworkConfig(current)
     setSaving(false)
     if (ok) message.success(t('optimization.network.saved'))
     else message.error(t('optimization.network.saveFailed'))
@@ -323,7 +331,13 @@ function NetworkTab(): React.JSX.Element {
     if (!ok) message.error(t('optimization.network.stopFailed'))
   }
 
-  if (!networkStatus || !config) return <Spin />
+  if (!networkStatus || !editableConfig) return <Spin />
+
+  const updateConfig = (patch: Partial<NetworkAccelerationConfig>): void => {
+    const current = ensureConfig()
+    if (!current) return
+    setConfig({ ...current, ...patch })
+  }
 
   return (
     <Flex vertical gap={16}>
@@ -346,20 +360,20 @@ function NetworkTab(): React.JSX.Element {
           <Flex align="center" gap={8}>
             <Typography.Text>{t('optimization.network.accelerationEnabled')}</Typography.Text>
             <Switch
-              checked={config.accelerationEnabled}
-              onChange={(checked) => setConfig({ ...config, accelerationEnabled: checked })}
+              checked={editableConfig.accelerationEnabled}
+              onChange={(checked) => updateConfig({ accelerationEnabled: checked })}
             />
           </Flex>
           <Flex align="center" gap={8}>
             <Typography.Text>{t('optimization.network.mode')}</Typography.Text>
             <Select<NetworkAccelerationMode>
               style={{ width: 220 }}
-              value={config.mode}
+              value={editableConfig.mode}
               options={NETWORK_MODES.map((mode) => ({
                 value: mode,
                 label: t(NETWORK_MODE_I18N_KEYS[mode])
               }))}
-              onChange={(mode) => setConfig({ ...config, mode })}
+              onChange={(mode) => updateConfig({ mode })}
             />
           </Flex>
           <Flex gap={8} wrap>

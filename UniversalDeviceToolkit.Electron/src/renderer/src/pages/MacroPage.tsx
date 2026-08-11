@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   Button,
   Card,
@@ -35,15 +35,10 @@ export default function MacroPage(): React.JSX.Element {
   const [selectedKey, setSelectedKey] = useState<number>(0x61)
   const [repeatCount, setRepeatCount] = useState(1)
   const [events, setEvents] = useState<MacroEvent[]>([])
-  const [savedEvents, setSavedEvents] = useState<MacroEvent[]>([])
 
-  useEffect(() => {
-    void load()
-  }, [load])
-
-  useEffect(() => {
+  const savedEvents = useMemo(() => {
     const slot = state?.slots?.find((s: { key?: number }) => s.key === selectedKey)
-    setSavedEvents((slot?.events as MacroEvent[]) ?? [])
+    return (slot?.events as MacroEvent[]) ?? []
   }, [state, selectedKey])
 
   const handleSave = async (): Promise<void> => {
@@ -55,7 +50,8 @@ export default function MacroPage(): React.JSX.Element {
         interruptOnOtherKey: false,
         events
       })
-      setSavedEvents(events)
+      setEvents([])
+      void load()
       message.success(t('settings.saved'))
     } catch (error) {
       message.error((error as Error).message)
@@ -66,7 +62,6 @@ export default function MacroPage(): React.JSX.Element {
     try {
       await clearSequence(selectedKey)
       setEvents([])
-      setSavedEvents([])
       void load()
     } catch (error) {
       message.error((error as Error).message)

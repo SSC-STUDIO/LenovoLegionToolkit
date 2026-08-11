@@ -47,14 +47,15 @@ const NAV_ENTRIES = [
 export default function HomePage(): React.JSX.Element {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [hostStatus, setHostStatus] = useState<string>(t('common.loading'))
+  const [hostStatus, setHostStatus] = useState<string>(() =>
+    window.bridge ? t('common.loading') : t('common.error')
+  )
   const [hostReady, setHostReady] = useState<HostReady | null>(null)
   const [hostInitialized, setHostInitialized] = useState<HostInitialized | null>(null)
   const [systemInfo, setSystemInfo] = useState<SystemInfo | null>(null)
 
   useEffect(() => {
     if (!window.bridge) {
-      setHostStatus(t('common.error'))
       return
     }
     const offReady = window.bridge.on('host.ready', (data) => {

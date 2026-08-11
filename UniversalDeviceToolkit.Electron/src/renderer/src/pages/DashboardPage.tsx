@@ -24,8 +24,6 @@ export default function DashboardPage(): React.JSX.Element {
 
   useEffect(() => {
     let cancelled = false
-    setLoading(true)
-    setError(null)
     Promise.all([
       useSensorsStore.getState().start(),
       featuresApi.list(),

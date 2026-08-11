@@ -44,12 +44,12 @@ export default function AutomationPage(): React.JSX.Element {
   const [selectedStepType, setSelectedStepType] = useState<string>('')
 
   useEffect(() => {
-    void load().then(() => setPipelines([]))
+    void load().then(() => {
+      const latest = useAutomationStore.getState().state
+      setPipelines(latest?.pipelines ?? [])
+      setDirty(false)
+    })
   }, [load])
-
-  useEffect(() => {
-    setPipelines(state?.pipelines ?? [])
-  }, [state])
 
   const markDirty = (next: AutomationPipeline[]): void => {
     setPipelines(next)
