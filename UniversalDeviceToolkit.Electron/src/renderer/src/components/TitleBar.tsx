@@ -1,26 +1,36 @@
 import { useEffect, useState } from 'react'
-import {
-  BorderOutlined,
-  CloseOutlined,
-  MinusOutlined,
-  SwitcherOutlined,
-  ToolOutlined
-} from '@ant-design/icons'
-import { Button, theme } from 'antd'
 import { useTranslation } from 'react-i18next'
-
-const TITLEBAR_HEIGHT = 44
+import { useLocation } from 'react-router-dom'
+import { invoke, on } from '../api/bridge'
+import './TitleBar.css'
 
 const DRAG_STYLE = { WebkitAppRegion: 'drag' } as React.CSSProperties
 const NO_DRAG_STYLE = { WebkitAppRegion: 'no-drag' } as React.CSSProperties
+const APP_DISPLAY_NAME = 'Universal Device Toolkit'
+
+const PAGE_LABELS: Record<string, string> = {
+  '/dashboard': 'nav.dashboard',
+  '/keyboard': 'nav.keyboard',
+  '/automation': 'nav.automation',
+  '/macro': 'nav.macro',
+  '/optimization': 'nav.windowsOptimization',
+  '/plugins': 'nav.pluginExtensions',
+  '/settings': 'nav.settings',
+  '/about': 'nav.about'
+}
 
 type WindowButtonKind = 'minimize' | 'maximize' | 'close'
 
+interface SystemInfo {
+  model?: string | null
+}
+
 export default function TitleBar(): React.JSX.Element {
   const { t } = useTranslation()
-  const { token } = theme.useToken()
+  const location = useLocation()
   const [isMaximized, setIsMaximized] = useState(false)
   const [hover, setHover] = useState<WindowButtonKind | null>(null)
+  const [deviceModel, setDeviceModel] = useState<string | null>(null)
 
   useEffect(() => {
     let disposed = false
@@ -36,85 +46,109 @@ export default function TitleBar(): React.JSX.Element {
     }
   }, [])
 
+  useEffect(() => {
+    let disposed = false
+
+    const loadDeviceModel = async (): Promise<void> => {
+      try {
+        const systemInfo = await invoke<SystemInfo>('system.info')
+        const model = systemInfo.model?.trim()
+        if (!disposed && model) setDeviceModel(model)
+      } catch {
+        // The initial request can race the host startup; host.ready retries it.
+      }
+    }
+
+    void loadDeviceModel()
+    const offHostReady = on('host.ready', () => {
+      void loadDeviceModel()
+    })
+
+    return () => {
+      disposed = true
+      offHostReady()
+    }
+  }, [])
+
   const toggleMaximize = (): void => {
     window.bridge?.maximizeToggle()
   }
 
-  const buttonStyle = (kind: WindowButtonKind): React.CSSProperties => {
-    const isHover = hover === kind
-    const isClose = kind === 'close'
-    return {
-      width: 46,
-      height: '100%',
-      border: 'none',
-      padding: 0,
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      cursor: 'default',
-      fontSize: 13,
-      color: isClose && isHover ? '#fff' : token.colorText,
-      background: isHover ? (isClose ? '#E81123' : token.colorFillTertiary) : 'transparent',
-      ...NO_DRAG_STYLE
-    }
-  }
+  const buttonClassName = (kind: WindowButtonKind): string =>
+    kind === 'close' && hover === 'close' ? 'udt-titlebar__close' : ''
 
-  const windowTitle = `${t('app.name')} - 主页`
+  const pageKey = PAGE_LABELS[location.pathname] ?? 'nav.dashboard'
+  const windowTitle = `${APP_DISPLAY_NAME} - ${t(pageKey)}`
+
+  useEffect(() => {
+    document.title = windowTitle
+  }, [windowTitle])
 
   return (
-    <div className="udt-titlebar" style={{ height: TITLEBAR_HEIGHT }}>
-      <div
-        className="udt-titlebar__drag-region"
-        style={DRAG_STYLE}
-        onDoubleClick={toggleMaximize}
-      >
-        <ToolOutlined className="udt-titlebar__app-icon" />
-        <span className="udt-titlebar__title" title={windowTitle}>
-          {windowTitle}
-        </span>
-      </div>
-      <div className="udt-titlebar__drag-spacer" style={DRAG_STYLE} />
-      <div className="udt-titlebar__device" style={NO_DRAG_STYLE}>
-        <Button
-          type="primary"
-          size="small"
+    <div className="udt-titlebar udt-titlebar--original">
+      <span className="udt-titlebar__title" style={DRAG_STYLE} onDoubleClick={toggleMaximize}>
+        <span className="udt-titlebar__title-text">{windowTitle}</span>
+      </span>
+      <div className="udt-titlebar__trailing" style={NO_DRAG_STYLE}>
+        <button
+          type="button"
           className="udt-titlebar__log-button"
-          style={NO_DRAG_STYLE}
+          title={t('titlebar.openLogs')}
+          onClick={() => void window.bridge?.openLogFolder()}
         >
-          日志
-        </Button>
-        <span className="udt-titlebar__device-name">Legion Y9000P IRX9</span>
+          {t('titlebar.log')}
+        </button>
+        <button
+          type="button"
+          className="udt-titlebar__device-button"
+          title={t('titlebar.deviceInfo')}
+        >
+          {deviceModel ?? t('titlebar.deviceName')}
+        </button>
       </div>
       <div className="udt-titlebar__window-controls" style={NO_DRAG_STYLE}>
         <button
           type="button"
           aria-label="minimize"
-          style={buttonStyle('minimize')}
+          className={buttonClassName('minimize')}
           onMouseEnter={() => setHover('minimize')}
           onMouseLeave={() => setHover(null)}
           onClick={() => window.bridge?.minimize()}
         >
-          <MinusOutlined />
+          <svg width="11" height="11" viewBox="0 0 11 11">
+            <rect x="1" y="5" width="9" height="1" fill="currentColor" />
+          </svg>
         </button>
         <button
           type="button"
           aria-label={isMaximized ? 'restore' : 'maximize'}
-          style={buttonStyle('maximize')}
+          className={buttonClassName('maximize')}
           onMouseEnter={() => setHover('maximize')}
           onMouseLeave={() => setHover(null)}
           onClick={toggleMaximize}
         >
-          {isMaximized ? <SwitcherOutlined /> : <BorderOutlined />}
+          {isMaximized ? (
+            <svg width="11" height="11" viewBox="0 0 11 11">
+              <rect x="1" y="3" width="7" height="7" fill="none" stroke="currentColor" />
+              <path d="M 3 3 L 3 1 L 10 1 L 10 8 L 8 8" fill="none" stroke="currentColor" />
+            </svg>
+          ) : (
+            <svg width="11" height="11" viewBox="0 0 11 11">
+              <rect x="1" y="1" width="9" height="9" fill="none" stroke="currentColor" />
+            </svg>
+          )}
         </button>
         <button
           type="button"
           aria-label="close"
-          style={buttonStyle('close')}
+          className={buttonClassName('close')}
           onMouseEnter={() => setHover('close')}
           onMouseLeave={() => setHover(null)}
           onClick={() => window.bridge?.closeWindow()}
         >
-          <CloseOutlined />
+          <svg width="11" height="11" viewBox="0 0 11 11">
+            <path d="M 1 1 L 10 10 M 10 1 L 1 10" stroke="currentColor" />
+          </svg>
         </button>
       </div>
     </div>

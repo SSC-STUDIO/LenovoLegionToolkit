@@ -1,0 +1,26 @@
+.udt-titlebar.udt-titlebar--original {
+  display: flex;
+  align-items: stretch;
+}
+
+.udt-titlebar--original .udt-titlebar__title {
+  position: relative;
+  inset: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  padding-left: 32px;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.udt-titlebar--original .udt-titlebar__title-text {
+  max-width: 100%;
+  text-align: left;
+}
+
+.udt-titlebar--original .udt-titlebar__trailing {
+  margin-left: auto;
+}
