@@ -3,14 +3,14 @@ import {
   BorderOutlined,
   CloseOutlined,
   MinusOutlined,
-  SwitcherOutlined,
-  ToolOutlined
+  SwitcherOutlined
 } from '@ant-design/icons'
 import { theme } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
+import { invoke } from '../api/bridge'
 
-const TITLEBAR_HEIGHT = 38
+const TITLEBAR_HEIGHT = 60
 
 const DRAG_STYLE = { WebkitAppRegion: 'drag' } as React.CSSProperties
 const NO_DRAG_STYLE = { WebkitAppRegion: 'no-drag' } as React.CSSProperties
@@ -28,12 +28,18 @@ const PAGE_LABELS: Record<string, string> = {
 
 type WindowButtonKind = 'minimize' | 'maximize' | 'close'
 
+interface SystemInfo {
+  vendor?: string
+  model?: string
+}
+
 export default function TitleBar(): React.JSX.Element {
   const { t } = useTranslation()
   const { token } = theme.useToken()
   const location = useLocation()
   const [isMaximized, setIsMaximized] = useState(false)
   const [hover, setHover] = useState<WindowButtonKind | null>(null)
+  const [deviceName, setDeviceName] = useState('')
 
   useEffect(() => {
     let disposed = false
@@ -46,6 +52,19 @@ export default function TitleBar(): React.JSX.Element {
     return () => {
       disposed = true
       offChanged?.()
+    }
+  }, [])
+
+  useEffect(() => {
+    let disposed = false
+    void invoke<SystemInfo>('system.info')
+      .then((info) => {
+        const name = (info.model ?? info.vendor ?? '').trim()
+        if (!disposed) setDeviceName(name)
+      })
+      .catch(() => undefined)
+    return () => {
+      disposed = true
     }
   }, [])
 
@@ -82,10 +101,22 @@ export default function TitleBar(): React.JSX.Element {
         style={DRAG_STYLE}
         onDoubleClick={toggleMaximize}
       >
-        <ToolOutlined className="udt-titlebar__app-icon" />
         <span className="udt-titlebar__title" title={windowTitle}>
           {windowTitle}
         </span>
+        <button
+          type="button"
+          className="udt-titlebar__log-button"
+          style={NO_DRAG_STYLE}
+          onClick={() => void window.bridge?.openLogFolder()}
+        >
+          {t('common.logs', { defaultValue: '日志' })}
+        </button>
+        {deviceName && (
+          <span className="udt-titlebar__device" title={deviceName}>
+            {deviceName}
+          </span>
+        )}
       </div>
       <div className="udt-titlebar__window-controls" style={NO_DRAG_STYLE}>
         <button

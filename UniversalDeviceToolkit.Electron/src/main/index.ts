@@ -1,4 +1,4 @@
-import { app, BrowserWindow, dialog, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { hostClient } from './host-client'
@@ -165,6 +165,14 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('window:is-maximized', () => mainWindow?.isMaximized() ?? false)
+
+  ipcMain.handle('shell:open-log-folder', async () => {
+    const result = await hostClient.invoke('app.getLogPath', {}) as { path?: unknown }
+    if (typeof result.path !== 'string' || result.path.length === 0) {
+      throw new Error('The host did not provide a log file path.')
+    }
+    shell.showItemInFolder(result.path)
+  })
 
   ipcMain.handle('dialog:select-plugin-files', async () => {
     const options = {

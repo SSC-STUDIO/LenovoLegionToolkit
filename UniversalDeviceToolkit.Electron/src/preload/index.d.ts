@@ -4,6 +4,7 @@ export interface Bridge {
   minimize: () => void
   maximizeToggle: () => void
   closeWindow: () => void
+  openLogFolder: () => Promise<void>
   selectPluginFiles: () => Promise<string[]>
   isMaximized: () => Promise<boolean>
   onMaximizedChanged: (callback: (maximized: boolean) => void) => () => void
