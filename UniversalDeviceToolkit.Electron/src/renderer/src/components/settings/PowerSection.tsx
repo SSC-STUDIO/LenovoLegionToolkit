@@ -36,6 +36,7 @@ export function PowerSection(): React.JSX.Element {
     (app['PowerModeMappingMode'] as PowerModeMappingMode | undefined) ?? 'WindowsPowerMode'
   const synchronizeBrightness = (app['SynchronizeBrightnessToAllPowerPlans'] as boolean | undefined) ?? false
   const smartFnLockFlags = (app['SmartFnLockFlags'] as number | undefined) ?? 0
+  const resetBatteryOnSince = (app['ResetBatteryOnSinceTimerOnReboot'] as boolean | undefined) ?? false
 
   const persistApplication = async (patch: Record<string, unknown>): Promise<void> => {
     const current = (scopes.application ?? {}) as Record<string, unknown>
@@ -109,6 +110,17 @@ export function PowerSection(): React.JSX.Element {
               value: modifier.flag,
               label: t(modifier.i18nKey)
             }))}
+          />
+        }
+      />
+      <SettingsCard
+        title={t('settings.power.resetBatteryOnSince')}
+        description={t('settings.power.resetBatteryOnSinceDesc')}
+        action={
+          <Switch
+            className="udt-settings-switch"
+            checked={resetBatteryOnSince}
+            onChange={(checked) => void persistApplication({ ResetBatteryOnSinceTimerOnReboot: checked })}
           />
         }
       />

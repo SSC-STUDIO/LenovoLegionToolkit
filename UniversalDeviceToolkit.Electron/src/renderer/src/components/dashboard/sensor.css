@@ -206,3 +206,84 @@
     border-top: none;
   }
 }
+
+/* ── Refresh interval toolbar (WPF SensorsControl refresh context menu) ── */
+
+.udt-sensor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--udt-spacing-xs);
+  margin: 0 0 var(--udt-spacing-sm);
+}
+
+.udt-sensor-toolbar__label {
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-small-body);
+  line-height: 1.4;
+}
+
+/* ── Advanced details (SensorsControl detail window parity) ────────────── */
+
+.udt-sensor-panel__details-toggle {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 2px 8px;
+  border: 1px solid var(--udt-control-stroke-secondary);
+  border-radius: var(--udt-radius-control);
+  background: var(--udt-control-fill-secondary);
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-dense-caption);
+  font-weight: 500;
+  line-height: 1.5;
+  cursor: pointer;
+  transition:
+    background-color var(--udt-anim-medium) ease-out,
+    color var(--udt-anim-medium) ease-out;
+}
+
+.udt-sensor-panel__details-toggle:hover {
+  background: var(--udt-subtle-fill-secondary);
+  color: var(--udt-text-primary);
+}
+
+.udt-sensor-panel__details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 16px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-control);
+  background: var(--udt-control-fill-tertiary);
+}
+
+.udt-sensor-panel__detail {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.udt-sensor-panel__detail dt {
+  flex: 0 0 auto;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-small-caption);
+  line-height: 1.5;
+}
+
+.udt-sensor-panel__detail dd {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-small-caption);
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .udt-sensor-panel__details {
+    grid-template-columns: 1fr;
+  }
+}

@@ -17,23 +17,22 @@ export default function WindowBackdropSetting({
   application,
   persist
 }: WindowBackdropSettingProps): React.JSX.Element {
-  const { i18n } = useTranslation()
-  const isChinese = i18n.language.startsWith('zh')
-  const labels: Record<WindowBackdropStyle, string> = isChinese
-    ? { Windows: '云母', macOS: '亚克力', Off: '关闭' }
-    : { Windows: 'Mica', macOS: 'Acrylic', Off: 'Off' }
+  const { t } = useTranslation()
+  const labels: Record<WindowBackdropStyle, string> = {
+    Windows: t('wpf.settingsPagewindowBackdropmica'),
+    macOS: t('wpf.settingsPagewindowBackdropacrylic'),
+    Off: t('wpf.settingsPagewindowBackdropoff')
+  }
   const style = normalizeWindowBackdropStyle(application['WindowBackdropStyle'])
 
   return (
     <div className="udt-backdrop-setting">
       <div className="udt-backdrop-setting__copy">
         <span className="udt-backdrop-setting__title">
-          {isChinese ? '窗口背景效果' : 'Window background effect'}
+          {t('wpf.settingsPagewindowBackdroptitle')}
         </span>
         <span className="udt-backdrop-setting__description">
-          {isChinese
-            ? '选择应用窗口使用的 Windows 背景效果。'
-            : 'Choose the Windows background effect used by the application window.'}
+          {t('wpf.settingsPagewindowBackdropmessage')}
         </span>
       </div>
       <Select<WindowBackdropStyle>

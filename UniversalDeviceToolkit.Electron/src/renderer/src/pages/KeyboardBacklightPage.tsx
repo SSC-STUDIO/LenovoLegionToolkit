@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import {
   BgColorsOutlined,
   BulbOutlined,
@@ -40,6 +40,8 @@ import type {
 } from '../api/keyboard'
 import { useKeyboardStore } from '../stores/keyboardStore'
 import { settingsApi } from '../api/settings'
+import { softwareApi } from '../api/software'
+import InfoBar from '../components/InfoBar'
 import { normalizeKeyboardLayout } from '../components/keyboard/spectrum/keyboardLayouts'
 import SpectrumKeyboard from '../components/keyboard/spectrum/SpectrumKeyboard'
 import SpectrumEffectModal from '../components/keyboard/spectrum/SpectrumEffectModal'
@@ -136,6 +138,24 @@ function rgbToHex(color: RgbColor): string {
 function RgbSection(): React.JSX.Element {
   const { t } = useTranslation()
   const { rgbState, setRgb, setPreset } = useKeyboardStore()
+  // WPF RGBKeyboardBacklightControl: while Lenovo Vantage is running the whole
+  // section is disabled and a warning InfoBar is shown.
+  const [vantageBlocked, setVantageBlocked] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    softwareApi
+      .getStatus('vantage')
+      .then((result) => {
+        if (!cancelled) setVantageBlocked(result.status === 'Enabled')
+      })
+      .catch(() => {
+        if (!cancelled) setVantageBlocked(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const selectedPreset = rgbState?.SelectedPreset ?? 'Off'
   const desc = rgbState?.Presets[selectedPreset] ?? DEFAULT_DESC
@@ -145,12 +165,14 @@ function RgbSection(): React.JSX.Element {
   }
 
   const handlePreset = (preset: RgbPreset): void => {
+    if (vantageBlocked) return
     void setPreset(preset).then((ok) => {
       if (!ok) fail()
     })
   }
 
   const updateDesc = async (patch: Partial<RgbPresetDescription>): Promise<void> => {
+    if (vantageBlocked) return
     if (!rgbState) return
     const nextDesc: RgbPresetDescription = { ...desc, ...patch }
     const next: RgbState = {
@@ -166,7 +188,7 @@ function RgbSection(): React.JSX.Element {
     void updateDesc({ [zone]: { R: rgb.r, G: rgb.g, B: rgb.b } })
   }
 
-  // WPF SynchroniseZonesMenuItem_Click: right-click a zone → all zones take its color.
+  // WPF SynchroniseZonesMenuItem_Click: right-click a zone 鈫?all zones take its color.
   const handleSynchroniseZones = (zone: 'Zone1' | 'Zone2' | 'Zone3' | 'Zone4'): void => {
     const color = desc[zone]
     void updateDesc({ Zone1: color, Zone2: color, Zone3: color, Zone4: color })
@@ -183,6 +205,14 @@ function RgbSection(): React.JSX.Element {
 
   return (
     <div className="udt-kb-rgb">
+      {vantageBlocked && (
+        <InfoBar
+          severity="warning"
+          title={t('keyboardvantageEnabledWarningtitle')}
+          message={t('keyboardvantageEnabledWarningmessage')}
+          className="udt-kb-vantage-warning"
+        />
+      )}
       <div className="udt-kb-presets">
         {RGB_PRESETS.map((preset) => (
           <Button
@@ -190,6 +220,7 @@ function RgbSection(): React.JSX.Element {
             className={
               selectedPreset === preset ? 'udt-kb-preset udt-kb-preset--active' : 'udt-kb-preset'
             }
+            disabled={vantageBlocked}
             onClick={() => handlePreset(preset)}
           >
             {t(`keyboard.rgb.presets.${PRESET_LABEL_KEYS[preset]}`)}
@@ -208,7 +239,7 @@ function RgbSection(): React.JSX.Element {
         <Select<RgbBrightness>
           className="udt-kb-combo-card__select"
           value={desc.Brightness}
-          disabled={presetOff}
+          disabled={presetOff || vantageBlocked}
           options={RGB_BRIGHTNESS.map((brightness) => ({
             value: brightness,
             label: t(`keyboard.rgb.brightnessOptions.${BRIGHTNESS_LABEL_KEYS[brightness]}`)
@@ -228,7 +259,7 @@ function RgbSection(): React.JSX.Element {
         <Select<RgbEffect>
           className="udt-kb-combo-card__select"
           value={desc.Effect}
-          disabled={presetOff}
+          disabled={presetOff || vantageBlocked}
           options={RGB_EFFECTS.map((effect) => ({
             value: effect,
             label: t(`keyboard.rgb.effectOptions.${EFFECT_LABEL_KEYS[effect]}`)
@@ -248,7 +279,7 @@ function RgbSection(): React.JSX.Element {
         <Select<RgbSpeed>
           className="udt-kb-combo-card__select"
           value={desc.Speed}
-          disabled={!speedEnabled}
+          disabled={!speedEnabled || vantageBlocked}
           options={RGB_SPEEDS.map((speed) => ({
             value: speed,
             label: t(`keyboard.rgb.speedOptions.${SPEED_LABEL_KEYS[speed]}`)
@@ -272,7 +303,7 @@ function RgbSection(): React.JSX.Element {
             <div className="udt-kb-card__body">
               <Dropdown
                 trigger={['contextMenu']}
-                disabled={!zonesEnabled}
+                disabled={!zonesEnabled || vantageBlocked}
                 menu={{
                   items: [
                     {
@@ -287,10 +318,11 @@ function RgbSection(): React.JSX.Element {
                   <ColorPicker
                     value={rgbToHex(desc[zone])}
                     onChange={handleZoneChange(zone)}
-                    disabled={!zonesEnabled}
+                    disabled={!zonesEnabled || vantageBlocked}
                   />
                 </span>
               </Dropdown>
+              <span className="udt-kb-zone-card__hex">{rgbToHex(desc[zone])}</span>
             </div>
           </div>
         ))}
@@ -382,7 +414,10 @@ function SpectrumSection(): React.JSX.Element {
   }
 
   const handleToggleKey = (code: number): void => {
-    if (spectrum.effects.length === 0) return
+    if (spectrum.effects.length === 0) {
+      message.info(t('keyboard.spectrum.selectEffectHint'))
+      return
+    }
     const index = selectedEffect >= 0 && selectedEffect < spectrum.effects.length ? selectedEffect : 0
     const effect = spectrum.effects[index]
     const next = new Set(effect.Keys)
@@ -412,12 +447,12 @@ function SpectrumSection(): React.JSX.Element {
 
   const keyColors = new Map<number, string>()
   spectrum.effects.forEach((effect, index) => {
-    if (index === selectedEffect || selectedEffect < 0) {
-      const color = effect.Colors[0]
-      if (color) {
-        for (const code of effect.Keys) keyColors.set(code, rgbToHex(color))
-      }
-    }
+    if (index !== selectedEffect && selectedEffect >= 0) return
+    // Multi-color effects preview their palette cyclically over their keys.
+    effect.Keys.forEach((code, keyIndex) => {
+      const color = effect.Colors[keyIndex % Math.max(1, effect.Colors.length)]
+      if (color) keyColors.set(code, rgbToHex(color))
+    })
   })
 
   const handleReset = (): void => {
@@ -534,13 +569,24 @@ function SpectrumSection(): React.JSX.Element {
             {t('keyboard.spectrum.switchLayout')} ({layoutName})
           </Button>
         </div>
-        <SpectrumKeyboard
-          layout={layoutName}
-          deviceKeys={deviceKeys}
-          selected={selectedKeys}
-          onToggleKey={handleToggleKey}
-          keyColors={keyColors}
-        />
+        {deviceKeys.length === 0 ? (
+          <div className="udt-kb-spectrum-device__empty">
+            {t('keyboard.spectrum.noLayoutHint')}
+          </div>
+        ) : (
+          <SpectrumKeyboard
+            layout={layoutName}
+            deviceKeys={deviceKeys}
+            selected={selectedKeys}
+            onToggleKey={handleToggleKey}
+            keyColors={keyColors}
+          />
+        )}
+        {spectrum.effects.length > 0 && selectedEffect < 0 && (
+          <div className="udt-kb-spectrum-device__hint">
+            {t('keyboard.spectrum.selectEffectHint')}
+          </div>
+        )}
       </div>
 
       <div className="udt-kb-card udt-kb-card--stack udt-kb-effects-card">
@@ -584,7 +630,6 @@ function SpectrumSection(): React.JSX.Element {
                 const subtitle = allKeys
                   ? t('keyboard.spectrum.allKeys')
                   : t('keyboard.spectrum.zonesCount', { count: effect.Keys.length })
-                const color = effect.Colors[0]
                 return (
                   <List.Item
                     className={`udt-kb-effect-row${index === selectedEffect ? ' udt-kb-effect-row--active' : ''}`}
@@ -612,12 +657,12 @@ function SpectrumSection(): React.JSX.Element {
                     ]}
                   >
                     <Space>
-                      {color != null && (
-                        <span
-                          className="udt-kb-effect-row__swatch"
-                          style={{ backgroundColor: rgbToHex(color) }}
-                          aria-hidden="true"
-                        />
+                      {effect.Colors.length > 0 && (
+                        <span className="udt-kb-effect-row__swatch" aria-hidden="true">
+                          {effect.Colors.slice(0, 3).map((color, colorIndex) => (
+                            <i key={colorIndex} style={{ backgroundColor: rgbToHex(color) }} />
+                          ))}
+                        </span>
                       )}
                       <div className="udt-kb-effect-row__copy">
                         <div>

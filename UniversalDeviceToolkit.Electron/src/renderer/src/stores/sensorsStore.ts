@@ -66,6 +66,8 @@ interface SensorsStoreActions {
   loadSnapshot: () => Promise<void>
   start: (intervalSec?: number) => Promise<void>
   stop: () => Promise<void>
+  /** Restart polling with a new interval (WPF SensorsControl refresh menu parity). */
+  setInterval: (intervalSec: number) => Promise<void>
   loadSettings: () => Promise<void>
   saveSettings: (partial: SensorsSettings) => Promise<void>
 }
@@ -127,6 +129,11 @@ export const useSensorsStore = create<SensorsStoreState & SensorsStoreActions>((
       offUpdated.pop()?.()
     }
     set({ subscribed: false })
+  },
+
+  setInterval: async (intervalSec) => {
+    await get().stop()
+    await get().start(intervalSec)
   },
 
   loadSettings: async () => {

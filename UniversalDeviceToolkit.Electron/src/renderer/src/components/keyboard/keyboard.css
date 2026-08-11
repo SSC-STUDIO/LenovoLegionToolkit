@@ -362,7 +362,11 @@
   flex-direction: column;
   gap: 4px;
   width: 660px;
-  height: 244px;
+  padding: 6px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: var(--udt-keyboard-deck, rgba(0, 0, 0, 0.35));
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.18);
 }
 
 .udt-spectrum-keyboard__row {
@@ -372,35 +376,51 @@
 }
 
 .udt-spectrum-keyboard__zone {
-  border: 1px solid rgba(128, 128, 128, 0.35);
-  border-radius: 4px;
-  background: rgba(128, 128, 128, 0.08);
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  border-radius: 3px;
   padding: 0;
   cursor: pointer;
-  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.28);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    filter 120ms ease;
 }
 
 .udt-spectrum-keyboard__zone--spacer {
   background: transparent;
   border-color: transparent;
+  box-shadow: none;
 }
 
 .udt-spectrum-keyboard__zone--unavailable {
-  opacity: 0.35;
+  opacity: 0.3;
   cursor: default;
+  box-shadow: none;
 }
 
 .udt-spectrum-keyboard__zone--selected {
   border-color: var(--udt-accent, #4f9df7);
-  box-shadow: 0 0 0 1px var(--udt-accent, #4f9df7) inset;
+  box-shadow:
+    inset 0 0 0 1px var(--udt-accent, #4f9df7),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.28);
 }
 
 .udt-spectrum-keyboard__zone--colored {
-  border-color: transparent;
+  border-color: rgba(0, 0, 0, 0.35);
+  background-image: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
 }
 
 .udt-spectrum-keyboard__zone:not(:disabled):hover {
   border-color: var(--udt-accent, #4f9df7);
+  filter: brightness(1.2);
 }
 
 /* --- Effect rows --- */
@@ -417,11 +437,18 @@
 }
 
 .udt-kb-effect-row__swatch {
-  width: 18px;
+  display: flex;
+  width: 22px;
   height: 18px;
   border-radius: 4px;
   border: 1px solid rgba(128, 128, 128, 0.4);
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.udt-kb-effect-row__swatch i {
+  flex: 1;
+  min-width: 0;
 }
 
 .udt-kb-effect-row__copy {
@@ -488,4 +515,35 @@
 
 .udt-kb-zone-color-host {
   display: inline-block;
+}
+
+.udt-kb-zone-card__hex {
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--udt-text-secondary, rgba(128, 128, 128, 0.9));
+  user-select: text;
+}
+
+.udt-kb-spectrum-device__empty,
+.udt-kb-spectrum-device__hint {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--udt-text-secondary, rgba(128, 128, 128, 0.9));
+  text-align: center;
+  background: rgba(128, 128, 128, 0.06);
+  border: 1px dashed rgba(128, 128, 128, 0.3);
+}
+
+/* Vantage conflict warning (RGBKeyboardBacklightControl parity) */
+.udt-kb-vantage-warning {
+  margin: 0 0 12px;
+}
+
+
+.udt-kb-zone-card .udt-kb-card__body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
 }

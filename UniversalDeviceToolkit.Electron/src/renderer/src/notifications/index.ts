@@ -96,12 +96,3 @@ export function initNotifications(): () => void {
   initPluginInstallToast()
   return unsubscribe
 }
-
-export function notifyTest(): void {
-  showNotification({
-    title: 'UDT Test Notification',
-    message: 'notifications.changed 链路工作正常',
-    severity: 'Info',
-    isPersistent: false
-  })
-}

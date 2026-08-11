@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
@@ -18,59 +18,31 @@ import { useMacroRecorder } from '../hooks/useMacroRecorder'
 import MacroRecordingModal from '../components/macro/MacroRecordingModal'
 import '../components/macro/macro.css'
 
-const TEXTS = {
-  zh: {
-    subtitle: '你可以录制一系列按键，并使用键盘上的数字小键盘调用它们。',
-    enableSubtitle: 'Universal Device Toolkit 必须处于运行状态，宏才能生效。',
-    ignoreDelays: '忽略延时',
-    interruptOnOtherKey: '若按下其他按键则中断',
-    recordingOptions: '录制选项',
-    dontRepeat: '不重复',
-    keyboardOnly: '仅键盘',
-    keyboardMouse: '键盘和鼠标按键',
-    allInputs: '所有输入',
-    record: '记录',
-    recording: '正在录制...',
-    recordingInterrupted: '录制已中断',
-    keyboard: '键盘',
-    mouse: '鼠标',
-    move: '移动鼠标',
-    wheelUp: '鼠标滚轮向上',
-    wheelDown: '鼠标滚轮向下',
-    wheelLeft: '鼠标滚轮向左',
-    wheelRight: '鼠标滚轮向右',
-    leftButton: '鼠标左键',
-    rightButton: '鼠标右键',
-    middleButton: '鼠标中键',
-    xButton: '侧键',
-    button: '鼠标按钮'
-  },
-  en: {
-    subtitle: 'You can record series of key presses and invoke them using the number pad on your keyboard.',
-    enableSubtitle: 'Universal Device Toolkit must be running for macros to work.',
-    ignoreDelays: 'Ignore delays',
-    interruptOnOtherKey: 'Interrupt if another key was pressed',
-    recordingOptions: 'Recording options',
-    dontRepeat: "Don't repeat",
-    keyboardOnly: 'Keyboard only',
-    keyboardMouse: 'Keyboard keys and mouse buttons',
-    allInputs: 'All inputs',
-    record: 'Record',
-    recording: 'Recording...',
-    recordingInterrupted: 'Recording interrupted',
-    keyboard: 'Keyboard',
-    mouse: 'Mouse',
-    move: 'Mouse move',
-    wheelUp: 'Mouse wheel up',
-    wheelDown: 'Mouse wheel down',
-    wheelLeft: 'Mouse wheel left',
-    wheelRight: 'Mouse wheel right',
-    leftButton: 'Left button',
-    rightButton: 'Right button',
-    middleButton: 'Middle button',
-    xButton: 'X button',
-    button: 'Mouse button'
-  }
+interface MacroTexts {
+  subtitle: string
+  enableSubtitle: string
+  ignoreDelays: string
+  interruptOnOtherKey: string
+  recordingOptions: string
+  dontRepeat: string
+  keyboardOnly: string
+  keyboardMouse: string
+  allInputs: string
+  record: string
+  recording: string
+  recordingInterrupted: string
+  keyboard: string
+  mouse: string
+  move: string
+  wheelUp: string
+  wheelDown: string
+  wheelLeft: string
+  wheelRight: string
+  leftButton: string
+  rightButton: string
+  middleButton: string
+  xButton: string
+  button: string
 }
 
 const NUMPAD_LAYOUT: (number | null)[][] = [
@@ -145,7 +117,7 @@ function formatDelay(delayMs: number): string {
   return `${(delayMs / 1000).toFixed(1)} s`
 }
 
-function eventTitle(ev: MacroEvent, tx: typeof TEXTS.zh): string {
+function eventTitle(ev: MacroEvent, tx: MacroTexts): string {
   if (ev.source === 'Keyboard') return vkKeyName(ev.key)
   if (ev.direction === 'Move') return tx.move
   if (ev.direction === 'Wheel') return ev.key < 0 ? tx.wheelDown : tx.wheelUp
@@ -157,7 +129,7 @@ function eventTitle(ev: MacroEvent, tx: typeof TEXTS.zh): string {
   return `${tx.button} ${ev.key}`
 }
 
-function eventSubtitle(ev: MacroEvent, tx: typeof TEXTS.zh): string {
+function eventSubtitle(ev: MacroEvent, tx: MacroTexts): string {
   const source = ev.source === 'Keyboard' ? tx.keyboard : tx.mouse
   return `${source} → ${formatDelay(ev.delayMs)}`
 }
@@ -179,9 +151,37 @@ function eventIcon(ev: MacroEvent): React.JSX.Element | null {
 }
 
 export default function MacroPage(): React.JSX.Element {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { state, load, setEnabled, play, saveSequence, clearSequence } = useMacroStore()
-  const tx = i18n.language.startsWith('zh') ? TEXTS.zh : TEXTS.en
+  const tx = useMemo<MacroTexts>(
+    () => ({
+      subtitle: t('macro.subtitle'),
+      enableSubtitle: t('macro.enableDesc'),
+      ignoreDelays: t('macro.ignoreDelays'),
+      interruptOnOtherKey: t('macro.interruptOnOtherKey'),
+      recordingOptions: t('macro.recordingOptions'),
+      dontRepeat: t('macro.dontRepeat'),
+      keyboardOnly: t('macro.keyboardOnly'),
+      keyboardMouse: t('macro.keyboardMouse'),
+      allInputs: t('macro.allInputs'),
+      record: t('macro.record'),
+      recording: t('macro.recording.title'),
+      recordingInterrupted: t('macro.recordingInterrupted'),
+      keyboard: t('macro.keyboard'),
+      mouse: t('macro.mouse'),
+      move: t('macro.move'),
+      wheelUp: t('macro.wheelUp'),
+      wheelDown: t('macro.wheelDown'),
+      wheelLeft: t('macro.wheelLeft'),
+      wheelRight: t('macro.wheelRight'),
+      leftButton: t('macro.leftButton'),
+      rightButton: t('macro.rightButton'),
+      middleButton: t('macro.middleButton'),
+      xButton: t('macro.xButton'),
+      button: t('macro.button')
+    }),
+    [t]
+  )
 
   const [selectedKey, setSelectedKey] = useState<number>(0x60)
   const [repeatCount, setRepeatCount] = useState(1)

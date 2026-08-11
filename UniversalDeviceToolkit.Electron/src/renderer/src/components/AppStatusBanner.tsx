@@ -1,10 +1,10 @@
-import { CheckCircleFilled, CloseOutlined, WarningFilled } from '@ant-design/icons'
+import { CloseOutlined, SyncOutlined, WarningFilled } from '@ant-design/icons'
 import './AppStatusBanner.css'
 
 /**
  * Persistent status banner — port of WPF Controls/Shell/AppStatusBanner.xaml(.cs).
  * Severity: Warning → warning icon, no action area; Success → sync icon + action
- * area. Closed is raised only from the close button.
+ * area (WPF ArrowSync24 / StatusSuccessBrush). Closed is raised only from the close button.
  */
 
 export type AppStatusBannerSeverity = 'Warning' | 'Success'
@@ -33,7 +33,7 @@ export default function AppStatusBanner({
       onClick={onClick}
     >
       <span className="udt-status-banner__icon" aria-hidden="true">
-        {isSuccess ? <CheckCircleFilled /> : <WarningFilled />}
+        {isSuccess ? <SyncOutlined /> : <WarningFilled />}
       </span>
       <span className="udt-status-banner__message">{message}</span>
       {closable && (

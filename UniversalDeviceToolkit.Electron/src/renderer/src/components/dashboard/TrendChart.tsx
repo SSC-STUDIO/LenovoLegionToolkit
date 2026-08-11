@@ -30,6 +30,9 @@ export default function TrendChart({
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<echarts.ECharts | null>(null)
   const isDark = useThemeStore((s) => s.themeMode === 'dark')
+  // WPF _smoothedAutoMax: auto-scaled series converge toward the observed max
+  // instead of jumping (rise fast, fall slow).
+  const smoothedMaxRef = useRef<Record<string, number>>({})
 
   useEffect(() => {
     const el = containerRef.current
@@ -54,8 +57,10 @@ export default function TrendChart({
     const labelColor = isDark ? 'rgba(255, 255, 255, 0.53)' : 'rgba(0, 0, 0, 0.45)'
     const baselineColor = isDark ? '#d2a05a' : 'rgba(210, 160, 90, 0.85)'
 
-    // WPF normalizes each series against its own Maximum (fixed or auto observed*1.08),
-    // so all series share a 0..1 plot space where "100%" is each series' own max.
+    // WPF normalizes each series against its own Maximum (fixed or smoothed
+    // auto observed*1.08), so all series share a 0..1 plot space where "100%"
+    // is each series' own max.
+    const smoothed = { ...smoothedMaxRef.current }
     const normalized = series.map((s) => {
       const fixedMax = s.max != null && s.max > 0 ? s.max : null
       let effectiveMax = fixedMax
@@ -64,13 +69,17 @@ export default function TrendChart({
           1,
           ...s.data.filter((v): v is number => v != null && Number.isFinite(v) && v >= 0)
         )
-        effectiveMax = observed * 1.08
+        const target = observed * 1.08
+        const previous = smoothed[s.name]
+        effectiveMax = previous === undefined ? target : previous + (target - previous) * 0.35
+        smoothed[s.name] = effectiveMax
       }
       const data = s.data.map((v) =>
         v == null || !Number.isFinite(v) ? null : Math.min(1, Math.max(0, v / effectiveMax))
       )
       return { name: s.name, color: s.color, data }
     })
+    smoothedMaxRef.current = smoothed
 
     // Gridlines at 75%/50%/25% only (0.5px), warm baseline at the bottom edge.
     // Drawn via markLine on the first series since ECharts cannot hide the

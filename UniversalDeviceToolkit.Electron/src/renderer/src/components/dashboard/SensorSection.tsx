@@ -1,8 +1,9 @@
 import './sensor.css'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { SensorsBattery } from '../../api/sensors'
+import type { SensorsBattery, SensorsCpu } from '../../api/sensors'
 import { useSensorsStore } from '../../stores/sensorsStore'
+import { useSettingsStore } from '../../stores/settingsStore'
 import { useThemeStore } from '../../stores/themeStore'
 import SensorGauge from './SensorGauge'
 import TrendChart, { type TrendSeries } from './TrendChart'
@@ -20,6 +21,9 @@ const BATTERY_CAUTION = '#e0a92e'
 const BATTERY_CRITICAL = '#e05656'
 const BATTERY_LOW_THRESHOLD = 20
 const CHART_HEIGHT = 116
+const REFRESH_INTERVALS = [1, 2, 3, 5]
+
+type TemperatureUnit = 'C' | 'F'
 
 interface SensorMetric {
   label: string
@@ -27,6 +31,11 @@ interface SensorMetric {
   valueColor?: string
   barValue: number
   barMax: number
+}
+
+interface SensorDetail {
+  label: string
+  value: string
 }
 
 interface SensorPanelProps {
@@ -37,6 +46,7 @@ interface SensorPanelProps {
   series: TrendSeries[]
   labels: string[]
   warnings?: React.JSX.Element
+  details?: SensorDetail[]
 }
 
 // Formatting mirrors SensorsControl.Formatting.cs / UpdateValue():
@@ -47,8 +57,12 @@ function formatFrequency(mhz: number | null | undefined): string {
   return `${(mhz / 1000).toFixed(1)} GHz`
 }
 
-function formatTemperature(c: number | null | undefined): string {
+// FormatTemperature: °F conversion when the appearance setting is F.
+function formatTemperature(c: number | null | undefined, unit: TemperatureUnit = 'C'): string {
   if (c == null || !Number.isFinite(c) || c < 0) return '-'
+  if (unit === 'F') {
+    return `${(c * (9 / 5) + 32).toFixed(0)} °F`
+  }
   return `${c.toFixed(0)} °C`
 }
 
@@ -69,6 +83,80 @@ function formatRate(mw: number | null | undefined): string {
   return `${sign}${w.toFixed(2)} W`
 }
 
+// FormatPower: wattage 0.# decimals.
+function formatPower(w: number | null | undefined): string {
+  if (w == null || !Number.isFinite(w) || w < 0) return '-'
+  return `${w.toFixed(1)} W`
+}
+
+// FormatVoltage: 0.000 V.
+function formatVoltage(v: number | null | undefined): string {
+  if (v == null || !Number.isFinite(v) || v <= 0) return '-'
+  return `${v.toFixed(3)} V`
+}
+
+// FormatUsageInGigabytes: "x.x / y.y GB (z%)", "x.x GB (z%)" or "x.x GB".
+function formatUsageInGigabytes(
+  usedMb: number | null | undefined,
+  totalMb: number | null | undefined,
+  percentage: number | null | undefined = -1
+): string {
+  if (usedMb == null || !Number.isFinite(usedMb) || usedMb < 0) {
+    return percentage != null && Number.isFinite(percentage) && percentage >= 0
+      ? `${percentage.toFixed(0)}%`
+      : '-'
+  }
+  const usedGb = usedMb / 1024
+  const totalGb = totalMb != null && Number.isFinite(totalMb) && totalMb > 0 ? totalMb / 1024 : 0
+  const percent =
+    percentage != null && Number.isFinite(percentage) && percentage >= 0
+      ? percentage
+      : totalGb > 0
+        ? (usedGb / totalGb) * 100
+        : -1
+  const base = totalGb > 0 ? `${usedGb.toFixed(1)} / ${totalGb.toFixed(1)} GB` : `${usedGb.toFixed(1)} GB`
+  return percent >= 0 ? `${base} (${percent.toFixed(0)}%)` : base
+}
+
+// FormatThroughput: B/s → KB/s → MB/s → GB/s (0.00 decimals).
+function formatThroughput(bytesPerSecond: number | null | undefined): string {
+  if (bytesPerSecond == null || !Number.isFinite(bytesPerSecond) || bytesPerSecond < 0) return '-'
+  const kb = 1024
+  const mb = kb * 1024
+  const gb = mb * 1024
+  if (bytesPerSecond >= gb) return `${(bytesPerSecond / gb).toFixed(2)} GB/s`
+  if (bytesPerSecond >= mb) return `${(bytesPerSecond / mb).toFixed(2)} MB/s`
+  if (bytesPerSecond >= kb) return `${(bytesPerSecond / kb).toFixed(2)} KB/s`
+  return `${bytesPerSecond.toFixed(0)} B/s`
+}
+
+// FormatThroughputPair: "Rx x\nTx y".
+function formatThroughputPair(rx: number | null | undefined, tx: number | null | undefined): string {
+  const rxText = formatThroughput(rx)
+  const txText = formatThroughput(tx)
+  if (rxText === '-' && txText === '-') return '-'
+  if (rxText === '-') return `Tx ${txText}`
+  if (txText === '-') return `Rx ${rxText}`
+  return `Rx ${rxText} / Tx ${txText}`
+}
+
+// FormatCpuPowerBreakdown: "12 W | Cores 8.5 W | Memory 3.2 W | Platform 1.1 W".
+function formatCpuPowerBreakdown(cpu: SensorsCpu, labels: { cores: string; memory: string; platform: string }): string {
+  const parts: string[] = []
+  const total = cpu.power
+  if (total != null && Number.isFinite(total) && total >= 0) parts.push(formatPower(total))
+  if (cpu.powerCores != null && Number.isFinite(cpu.powerCores) && cpu.powerCores > 0) {
+    parts.push(`${labels.cores} ${cpu.powerCores.toFixed(1)} W`)
+  }
+  if (cpu.powerMemory != null && Number.isFinite(cpu.powerMemory) && cpu.powerMemory > 0) {
+    parts.push(`${labels.memory} ${cpu.powerMemory.toFixed(1)} W`)
+  }
+  if (cpu.powerPlatform != null && Number.isFinite(cpu.powerPlatform) && cpu.powerPlatform > 0) {
+    parts.push(`${labels.platform} ${cpu.powerPlatform.toFixed(1)} W`)
+  }
+  return parts.length > 0 ? parts.join(' | ') : '-'
+}
+
 // WPF UpdateValue: value < 0 → bar zeroed; max < 0 → max = max(value, 1).
 function metricBar(
   value: number | null | undefined,
@@ -86,6 +174,7 @@ function barPercent(metric: SensorMetric): number {
 }
 
 // WPF temperature thresholds: < 50 °C → green, 50–79 °C → caution, ≥ 80 °C → critical.
+// Thresholds are always evaluated on the °C value, before unit conversion.
 function temperatureColor(temp: number | null | undefined): string | undefined {
   if (temp == null || !Number.isFinite(temp) || temp < 0) return undefined
   if (temp >= 80) return '#eb6b6b'
@@ -120,7 +209,10 @@ function BatteryIcon(): React.JSX.Element {
   )
 }
 
-function SensorPanel({ title, model, gauge, metrics, series, labels, warnings }: SensorPanelProps): React.JSX.Element {
+function SensorPanel({ title, model, gauge, metrics, series, labels, warnings, details }: SensorPanelProps): React.JSX.Element {
+  const { t } = useTranslation()
+  const [detailsExpanded, setDetailsExpanded] = useState(false)
+  const hasDetails = details != null && details.length > 0
   return (
     <section className="udt-sensor-panel">
       <div className="udt-sensor-panel__heading">
@@ -129,6 +221,16 @@ function SensorPanel({ title, model, gauge, metrics, series, labels, warnings }:
           <span className="udt-sensor-panel__model" title={model}>
             {model}
           </span>
+        )}
+        {hasDetails && (
+          <button
+            type="button"
+            className={`udt-sensor-panel__details-toggle${detailsExpanded ? ' udt-sensor-panel__details-toggle--expanded' : ''}`}
+            onClick={() => setDetailsExpanded((value) => !value)}
+            aria-expanded={detailsExpanded}
+          >
+            {t('dashboard.sensor.details')}
+          </button>
         )}
       </div>
       <div className="udt-sensor-panel__summary">
@@ -148,6 +250,16 @@ function SensorPanel({ title, model, gauge, metrics, series, labels, warnings }:
         </dl>
       </div>
       {warnings}
+      {detailsExpanded && hasDetails && (
+        <dl className="udt-sensor-panel__details">
+          {details.map((detail) => (
+            <div key={detail.label} className="udt-sensor-panel__detail">
+              <dt>{detail.label}</dt>
+              <dd title={detail.value}>{detail.value}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
       <div className="udt-sensor-panel__chart">
         <TrendChart series={series} labels={labels} height={CHART_HEIGHT} />
       </div>
@@ -168,12 +280,22 @@ export default function SensorSection(): React.JSX.Element {
   const isDark = useThemeStore((state) => state.themeMode === 'dark')
   const snapshot = useSensorsStore((state) => state.snapshot)
   const trend = useSensorsStore((state) => state.trend)
+  const scopes = useSettingsStore((state) => state.scopes)
+
+  const temperatureUnit: TemperatureUnit = (() => {
+    const appearance =
+      typeof scopes.appearance === 'object' && scopes.appearance !== null
+        ? (scopes.appearance as Record<string, unknown>)
+        : {}
+    return appearance['TemperatureUnit'] === 'F' ? 'F' : 'C'
+  })()
 
   useEffect(() => {
     const store = useSensorsStore.getState()
     void store.loadStatus()
     void store.loadSnapshot()
     void store.start(1)
+    void useSettingsStore.getState().load()
     return () => {
       void useSensorsStore.getState().stop()
     }
@@ -201,6 +323,7 @@ export default function SensorSection(): React.JSX.Element {
 
   const cpu = snapshot?.cpu
   const gpu = snapshot?.gpu
+  const memory = snapshot?.memory
   const battery = snapshot?.battery
   const labels = trend.labels
   const valueColor = isDark ? 'rgba(255, 255, 255, 0.77)' : 'rgba(0, 0, 0, 0.62)'
@@ -230,8 +353,93 @@ export default function SensorSection(): React.JSX.Element {
       </div>
     ) : undefined
 
+  // Advanced details (SensorsControl detail window parity).
+  const cpuDetails: SensorDetail[] = [
+    {
+      label: t('dashboard.sensor.detail.power'),
+      value: formatCpuPowerBreakdown(cpu ?? {}, {
+        cores: t('dashboard.sensor.detail.powerCores'),
+        memory: t('dashboard.sensor.detail.powerMemory'),
+        platform: t('dashboard.sensor.detail.powerPlatform')
+      })
+    },
+    { label: t('dashboard.sensor.detail.voltage'), value: formatVoltage(cpu?.voltage) },
+    { label: t('dashboard.sensor.detail.pCoreClock'), value: formatFrequency(cpu?.pCoreClock) },
+    { label: t('dashboard.sensor.detail.eCoreClock'), value: formatFrequency(cpu?.eCoreClock) },
+    {
+      label: t('dashboard.sensor.detail.memoryUsage'),
+      value: formatUsageInGigabytes(memory?.usedMb, memory?.totalMb, memory?.usage)
+    },
+    { label: t('dashboard.sensor.detail.memoryTemperature'), value: formatTemperature(memory?.highestTemperature, temperatureUnit) },
+    {
+      label: t('dashboard.sensor.detail.ssdTemperature'),
+      value: (() => {
+        const temps = snapshot?.storage?.temperatures
+        const valid = (temps ?? []).filter((value) => value != null && Number.isFinite(value) && value >= 0)
+        return valid.length > 0
+          ? valid.map((value) => formatTemperature(value, temperatureUnit)).join(' / ')
+          : '-'
+      })()
+    }
+  ]
+
+  const gpuDetails: SensorDetail[] = [
+    { label: t('dashboard.sensor.detail.power'), value: formatPower(gpu?.power) },
+    { label: t('dashboard.sensor.detail.voltage'), value: formatVoltage(gpu?.voltage) },
+    {
+      label: snapshot?.info?.gpuIsIntegrated
+        ? t('dashboard.sensor.detail.sharedMemoryUsage')
+        : t('dashboard.sensor.detail.vramUsage'),
+      value: formatUsageInGigabytes(gpu?.vramUsedMb, gpu?.vramTotalMb, gpu?.vramUtilization)
+    },
+    { label: t('dashboard.sensor.detail.vramTemperature'), value: formatTemperature(gpu?.vramTemperature, temperatureUnit) },
+    { label: t('dashboard.sensor.detail.hotSpot'), value: formatTemperature(gpu?.hotSpotTemperature, temperatureUnit) },
+    {
+      label: t('dashboard.sensor.detail.pcieThroughput'),
+      value: formatThroughputPair(gpu?.pcieRxThroughput, gpu?.pcieTxThroughput)
+    }
+  ]
+
+  const batteryDetails: SensorDetail[] = [
+    {
+      label: t('dashboard.sensor.detail.designCapacity'),
+      value:
+        battery?.designCapacity != null && Number.isFinite(battery.designCapacity) && battery.designCapacity > 0
+          ? `${(battery.designCapacity / 1000).toFixed(2)} Wh`
+          : '-'
+    },
+    {
+      label: t('dashboard.sensor.detail.fullChargeCapacity'),
+      value:
+        battery?.fullChargeCapacity != null && Number.isFinite(battery.fullChargeCapacity) && battery.fullChargeCapacity > 0
+          ? `${(battery.fullChargeCapacity / 1000).toFixed(2)} Wh`
+          : '-'
+    }
+  ]
+
+  const handleIntervalChange = (seconds: number): void => {
+    void useSensorsStore.getState().setInterval(seconds)
+  }
+
   return (
     <div className="udt-sensors">
+      <div className="udt-sensor-toolbar">
+        <label className="udt-sensor-toolbar__label" htmlFor="udt-sensor-refresh-interval">
+          {t('dashboard.sensor.refreshInterval')}
+        </label>
+        <select
+          id="udt-sensor-refresh-interval"
+          className="udt-select"
+          defaultValue={1}
+          onChange={(e) => handleIntervalChange(Number(e.target.value))}
+        >
+          {REFRESH_INTERVALS.map((seconds) => (
+            <option key={seconds} value={seconds}>
+              {seconds} s
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="udt-sensor-board">
         <div className="udt-sensor-board__grid">
           <SensorPanel
@@ -254,7 +462,7 @@ export default function SensorSection(): React.JSX.Element {
               },
               {
                 label: t('dashboard.sensor.temperature'),
-                value: formatTemperature(cpu?.temperature),
+                value: formatTemperature(cpu?.temperature, temperatureUnit),
                 valueColor: cpuTemperature ?? valueColor,
                 ...metricBar(cpu?.temperature, null, 100)
               },
@@ -266,6 +474,7 @@ export default function SensorSection(): React.JSX.Element {
             ]}
             series={trendSeries.cpu}
             labels={labels}
+            details={cpuDetails}
           />
           <SensorPanel
             title={t('dashboard.sensor.battery')}
@@ -286,7 +495,7 @@ export default function SensorSection(): React.JSX.Element {
               },
               {
                 label: t('dashboard.sensor.temperature'),
-                value: formatTemperature(battery?.temperature),
+                value: formatTemperature(battery?.temperature, temperatureUnit),
                 valueColor: batteryTemperature ?? valueColor,
                 ...metricBar(battery?.temperature, 60, 60)
               },
@@ -300,6 +509,7 @@ export default function SensorSection(): React.JSX.Element {
             series={trendSeries.battery}
             labels={labels}
             warnings={batteryWarnings}
+            details={batteryDetails}
           />
           <SensorPanel
             title={t('dashboard.sensor.gpu')}
@@ -321,7 +531,7 @@ export default function SensorSection(): React.JSX.Element {
               },
               {
                 label: t('dashboard.sensor.temperature'),
-                value: formatTemperature(gpu?.temperature),
+                value: formatTemperature(gpu?.temperature, temperatureUnit),
                 valueColor: gpuTemperature ?? valueColor,
                 ...metricBar(gpu?.temperature, null, 100)
               },
@@ -333,6 +543,7 @@ export default function SensorSection(): React.JSX.Element {
             ]}
             series={trendSeries.gpu}
             labels={labels}
+            details={gpuDetails}
           />
         </div>
       </div>

@@ -1,12 +1,12 @@
 /**
- * Trigger picker for new automatic pipelines â€?port of WPF
+ * Trigger picker for new automatic pipelines â€” port of WPF
  * Windows/Automation/CreateAutomationPipelineWindow.xaml.cs.
  */
 import { useMemo, useState } from 'react'
 import { CheckSquareOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import type { AutomationTrigger } from './triggers'
-import { TRIGGER_DEFINITIONS, isTriggerValid } from './triggers'
+import { TRIGGER_DEFINITIONS } from './triggers'
 import { triggerIcon } from './triggerMeta'
 
 export interface TriggerPickerModalProps {
@@ -21,7 +21,7 @@ export default function TriggerPickerModal(props: TriggerPickerModalProps): Reac
   const [multiSelect, setMultiSelect] = useState(false)
   const [checked, setChecked] = useState<Set<number>>(new Set())
 
-  const definitions = useMemo(() => TRIGGER_DEFINITIONS.filter((d) => isTriggerValid(d.createDefault())), [])
+  const definitions = useMemo(() => TRIGGER_DEFINITIONS, [])
 
   const toggleChecked = (index: number): void => {
     setChecked((prev) => {

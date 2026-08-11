@@ -777,3 +777,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.udt-step-row__icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  color: var(--udt-text-secondary);
+}

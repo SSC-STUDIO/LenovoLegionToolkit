@@ -10,6 +10,16 @@ import { attachResizeStability } from './window-helpers'
 
 app.setAppUserModelId('com.universaldevicetoolkit.app')
 
+// Force the app name to use the product name everywhere (taskbar window preview,
+// notifications, dev tools, etc.) instead of falling back to package.json name which
+// still ends in '-electron' and would surface as a separate 'Electron' window in the
+// Windows 11 taskbar window preview alongside the main app.
+app.setName('Universal Device Toolkit')
+// Disable the noisy Chromium DevTools shortcut defaults; the app never opens DevTools
+// in production, and an unsuppressed F12 would spawn a hidden 'Electron' frame that the
+// taskbar window preview surfaces as a third entry next to the main window.
+app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+
 // WPF renders in DIPs while Chromium applies the Windows display scale to CSS.
 // This keeps the Electron renderer at the original client's physical density.
 const RENDERER_ZOOM_FACTOR = 5 / 6
@@ -348,3 +358,4 @@ app.on('before-quit', (event) => {
 process.on('uncaughtException', (error) => {
   console.error('[main] uncaughtException:', error)
 })
+

@@ -17,6 +17,7 @@ import { useAutomationStore } from '../stores/automationStore'
 import { StepEditorModal, createDefaultStep, stepSummaryText } from '../components/automation/StepEditor'
 import { formatStepSummary } from '../components/automation/steps'
 import { triggerIcon } from '../components/automation/triggerMeta'
+import { stepIcon } from '../components/automation/stepIcons'
 import TriggerPickerModal from '../components/automation/TriggerPickerModal'
 import TriggerConfigModal from '../components/automation/TriggerConfigModal'
 import type { AutomationTrigger } from '../components/automation/triggers'
@@ -84,6 +85,8 @@ export default function AutomationPage(): React.JSX.Element {
   const handleSave = async (): Promise<void> => {
     try {
       await save(pipelines, state?.isEnabled)
+      const latest = useAutomationStore.getState().state
+      setPipelines(latest?.pipelines ?? [])
       setDirty(false)
     } catch {
       // ignored
@@ -91,8 +94,11 @@ export default function AutomationPage(): React.JSX.Element {
   }
 
   const handleRevert = (): void => {
-    void load()
-    setDirty(false)
+    void load().then(() => {
+      const latest = useAutomationStore.getState().state
+      setPipelines(latest?.pipelines ?? [])
+      setDirty(false)
+    })
   }
 
   const handleCreate = (): void => {
@@ -256,6 +262,7 @@ export default function AutomationPage(): React.JSX.Element {
         <div className="udt-pipeline__steps">
           {(pipeline.steps ?? []).map((step, stepIndex) => {
             const summary = stepSummaryText(step, t) || formatStepSummary(step, t, pipelines)
+            const icon = stepIcon(String(step.$type))
             return (
               <div key={stepIndex} className="udt-step-row">
                 <button
@@ -263,6 +270,7 @@ export default function AutomationPage(): React.JSX.Element {
                   className="udt-step-row__name-button"
                   onClick={() => setEditingStep({ pipelineId: pipeline.id!, index: stepIndex })}
                 >
+                  {icon != null && <span className="udt-step-row__icon" aria-hidden="true">{icon}</span>}
                   <span>
                     {t(`automation.stepEditors.${step.$type}.title`, {
                       defaultValue: shortTypeName(step.$type)
@@ -392,12 +400,14 @@ export default function AutomationPage(): React.JSX.Element {
   return (
     <div className="udt-page udt-automation-page">
       <h1 className="udt-page__title">{t('automation.title')}</h1>
-      <p className="udt-page__subtitle">启用自动化后，当设备状态改变时，本应用将按顺序检查并执行符合条件的操作。</p>
+      <p className="udt-page__subtitle">
+        {t('automation.subtitle', { defaultValue: 'When enabled, this app will check and run matching actions in order when device state changes.' })}
+      </p>
 
       <div className="udt-card udt-card--row udt-automation-enable">
         <div className="udt-card__copy">
           <div className="udt-card__title">{t('automation.enable')}</div>
-          <div className="udt-card__desc">Universal Device Toolkit 必须处于运行状态，自动操作才能生效。</div>
+          <div className="udt-card__desc">{t('automation.enableDesc')}</div>
         </div>
         <label className="udt-switch">
           <input
