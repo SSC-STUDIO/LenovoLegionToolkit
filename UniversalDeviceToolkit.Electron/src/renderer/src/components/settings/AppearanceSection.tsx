@@ -82,17 +82,9 @@ function SettingRow({
   control: React.JSX.Element
 }): React.JSX.Element {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '14px 0',
-        borderBottom: '1px solid rgba(128, 128, 128, 0.15)'
-      }}
-    >
-      <Typography.Text>{label}</Typography.Text>
-      {control}
+    <div className="udt-settings-card-row">
+      <Typography.Text className="udt-settings-card-row__label">{label}</Typography.Text>
+      <div className="udt-settings-card-row__control">{control}</div>
     </div>
   )
 }
@@ -168,8 +160,7 @@ export default function AppearanceSection(): React.JSX.Element {
   }
 
   return (
-    <div>
-      <Typography.Title level={4}>{t('settings.nav.appearance')}</Typography.Title>
+    <div className="udt-settings-section udt-settings-section--appearance">
       <SettingRow
         label={t('settings.appearance.language')}
         control={

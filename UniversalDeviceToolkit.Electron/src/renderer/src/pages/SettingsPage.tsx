@@ -17,6 +17,7 @@ import { DisplaySection } from '../components/settings/DisplaySection'
 import { SmartKeysSection } from '../components/settings/SmartKeysSection'
 import { UpdateSection } from '../components/settings/UpdateSection'
 import { IntegrationsSection } from '../components/settings/IntegrationsSection'
+import './SettingsPage.css'
 
 type SectionKey =
   | 'appearance'
