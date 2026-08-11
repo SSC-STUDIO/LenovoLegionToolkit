@@ -690,3 +690,5 @@ build_debug_log.txt
 
 # Electron build output
 /UniversalDeviceToolkit.Electron/dist/
+
+/UniversalDeviceToolkit.Electron/out/
