@@ -167,9 +167,6 @@ jobs:
       run: |
         Remove-Item -Recurse -Force $env:BUILD_OUTPUT, $env:ONLINE_BUILD_OUTPUT, $env:INSTALLER_OUTPUT, $env:RELEASE_OUTPUT, $env:PAGES_OUTPUT -ErrorAction SilentlyContinue
 
-        dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:BUILD_VERSION
-        if ($LASTEXITCODE -ne 0) { throw "WPF publish failed." }
-
         dotnet publish UniversalDeviceToolkit.CLI/UniversalDeviceToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:BUILD_VERSION
         if ($LASTEXITCODE -ne 0) { throw "CLI publish failed." }
 

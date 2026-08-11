@@ -34,14 +34,8 @@ IF %ERROR_COUNT% NEQ 0 GOTO END
 CALL :CLEAN_WORKSPACE
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
-CALL :VALIDATE_MAIN_WINDOW_XAML
-IF %ERROR_COUNT% NEQ 0 GOTO END
-
 echo --- Building main solution ---
 dotnet build UniversalDeviceToolkit.sln --configuration Release --disable-build-servers -m:1
-IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
-
-dotnet publish UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 dotnet publish UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj -c release -o "%BUILD_DIR%" /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
@@ -131,9 +125,6 @@ IF "%VERSION%"=="" (
 )
 
 echo.
-echo Building WPF Application (Debug)...
-dotnet publish UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj -c Debug -o Build\Debug /p:FileVersion=%VERSION% /p:Version=%VERSION%
-IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 echo.
 echo Test and validation tools are separate from the main debug payload.
@@ -183,7 +174,6 @@ for %%p in (
     UniversalDeviceToolkit.Lib.Automation
     UniversalDeviceToolkit.Lib.Macro
     UniversalDeviceToolkit.Lib.Plugins
-    UniversalDeviceToolkit.WPF
     UniversalDeviceToolkit.SpectrumTester
     UniversalDeviceToolkit.PerformanceTest
     UniversalDeviceToolkit.Tests
@@ -203,25 +193,6 @@ if exist "UniversalDeviceToolkit.sln" (
     IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 )
 
-exit /b 0
-
-:VALIDATE_MAIN_WINDOW_XAML
-powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-  "$xamlPath = 'UniversalDeviceToolkit.WPF\Windows\MainWindow.xaml';" ^
-  "$csPath = 'UniversalDeviceToolkit.WPF\Windows\MainWindow.xaml.cs';" ^
-  "if (-not (Test-Path $xamlPath)) { Write-Error 'Missing MainWindow.xaml'; exit 1 };" ^
-  "if (-not (Test-Path $csPath)) { Write-Error 'Missing MainWindow.xaml.cs'; exit 1 };" ^
-  "$xaml = Get-Content -Raw $xamlPath;" ^
-  "$cs = Get-Content -Raw $csPath;" ^
-  "if ($xaml -match 'MouseLeftButtonDown\s*=\s*\"UpdateIndicator_Click\"' -or $xaml -match 'MouseRightButtonDown\s*=\s*\"UpdateIndicator_Click\"') {" ^
-  "  Write-Error 'MainWindow.xaml still binds UpdateIndicator_Click to mouse events. Remove those XAML bindings and wire mouse handlers in MainWindow.xaml.cs.'; exit 1 };" ^
-  "if ($cs -match 'UpdateIndicator_Click\(object sender,\s*RoutedEventArgs') {" ^
-  "  Write-Error 'UpdateIndicator_Click must use MouseButtonEventArgs when handling mouse input.'; exit 1 };" ^
-  "exit 0"
-IF %ERRORLEVEL% NEQ 0 (
-    echo MainWindow update-banner validation failed.
-    set ERROR_COUNT=1
-)
 exit /b 0
 
 :PRUNE_RELEASE_OUTPUT

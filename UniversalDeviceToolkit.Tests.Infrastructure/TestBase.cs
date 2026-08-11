@@ -56,7 +56,6 @@ public abstract class UnitTestBase : IDisposable
     {
         string[] resourceTypeNames =
         [
-            "UniversalDeviceToolkit.WPF.Resources.Resource",
             "UniversalDeviceToolkit.Lib.Resources.Resource",
             "UniversalDeviceToolkit.Lib.Automation.Resources.Resource",
             "UniversalDeviceToolkit.Lib.Macro.Resources.Resource",

@@ -49,10 +49,6 @@ jobs:
 
       # Run security/guard once, then the parallel fast layer and the remaining
       # Windows stateful suite once. Dedicated UI runs on a desktop runner.
-      - name: Assert WPF l10n coverage (fail fast)
-        shell: pwsh
-        run: ./Scripts/Assert-WpfL10nCoverage.ps1
-
       - name: Assert culture naming convention (fail fast)
         shell: pwsh
         run: ./Scripts/Assert-CultureNaming.ps1
