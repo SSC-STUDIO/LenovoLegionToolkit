@@ -1112,10 +1112,10 @@ export default {
       title: '系統最佳化',
       info: '這些操作將修改系統服務和檔案，可能需要管理員權限。',
       tabs: {
-        optimization: '系統最佳化',
-        cleanup: '空間清理',
+        optimization: '系統優美化',
+        cleanup: '垃圾清理',
         driverDownload: '驅動下載',
-        networkAcceleration: '網路加速'
+        networkAcceleration: '網路與加速'
       },
       recommended: '推薦',
       selected: '已選',

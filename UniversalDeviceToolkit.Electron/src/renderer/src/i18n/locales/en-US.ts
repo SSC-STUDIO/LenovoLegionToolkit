@@ -1130,10 +1130,10 @@
       title: 'System Optimization',
       info: 'These actions modify system services and files and may require administrator rights.',
       tabs: {
-        optimization: 'Optimization',
+        optimization: 'Windows optimization',
         cleanup: 'Cleanup',
         driverDownload: 'Driver Download',
-        networkAcceleration: 'Network Acceleration'
+        networkAcceleration: 'Network & Acceleration'
       },
       recommended: 'Recommended',
       selected: 'Selected',

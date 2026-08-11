@@ -53,9 +53,16 @@ export const useStatusBannerStore = create<StatusBannerStore>((set) => ({
   },
 
   remove: (id) => {
-    set((state) => ({
-      banners: state.banners.filter((b) => b.id !== id)
-    }))
+    set((state) => {
+      // Condition cleared — allow the banner to reappear if it becomes true again
+      // (WPF software indicators re-show on the next OnRefreshed after a dismiss + restart).
+      const dismissed = new Set(state.dismissed)
+      dismissed.delete(id)
+      return {
+        banners: state.banners.filter((b) => b.id !== id),
+        dismissed
+      }
+    })
   }
 }))
 

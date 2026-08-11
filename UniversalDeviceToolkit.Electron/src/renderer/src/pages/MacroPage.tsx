@@ -16,6 +16,7 @@ import type { MacroEvent, MacroRecordingMode, MacroSlot } from '../api/macro'
 import { useMacroStore } from '../stores/macroStore'
 import { useMacroRecorder } from '../hooks/useMacroRecorder'
 import MacroRecordingModal from '../components/macro/MacroRecordingModal'
+import { SkeletonList } from '../components/Skeleton'
 import '../components/macro/macro.css'
 
 interface MacroTexts {
@@ -152,7 +153,7 @@ function eventIcon(ev: MacroEvent): React.JSX.Element | null {
 
 export default function MacroPage(): React.JSX.Element {
   const { t } = useTranslation()
-  const { state, load, setEnabled, play, saveSequence, clearSequence } = useMacroStore()
+  const { state, loading: macroLoading, load, setEnabled, play, saveSequence, clearSequence } = useMacroStore()
   const tx = useMemo<MacroTexts>(
     () => ({
       subtitle: t('macro.subtitle'),
@@ -256,11 +257,17 @@ export default function MacroPage(): React.JSX.Element {
     recorder.start(recordingMode)
   }
 
+  const showSkeleton = macroLoading && state?.slots == null
+
   return (
     <div className="udt-macro-page">
       <h1 className="udt-macro-page__title">{t('macro.title')}</h1>
       <p className="udt-macro-page__subtitle">{tx.subtitle}</p>
 
+      {showSkeleton ? (
+        <SkeletonList rows={3} />
+      ) : (
+        <>
       <div className="udt-macro-card udt-macro-card--enable">
         <div className="udt-macro-card__body udt-macro-card__body--row">
           <div className="udt-macro-card__copy">
@@ -421,6 +428,8 @@ export default function MacroPage(): React.JSX.Element {
 
       {recorder.state !== 'idle' && (
         <MacroRecordingModal preparing={recorder.state === 'preparing'} />
+      )}
+        </>
       )}
     </div>
   )

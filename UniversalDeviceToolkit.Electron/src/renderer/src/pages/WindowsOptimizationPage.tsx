@@ -3,10 +3,9 @@ import {
   CheckOutlined,
   InfoCircleOutlined,
   PlayCircleOutlined,
-  SearchOutlined,
   StarFilled,
-  StopOutlined,
-  ThunderboltOutlined
+  StarOutlined,
+  StopOutlined
 } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import type {
@@ -15,6 +14,7 @@ import type {
   OptimizationActionDefinition,
   OptimizationCategoryDefinition
 } from '../api/optimization'
+import { useDriverStore } from '../stores/driverStore'
 import { useOptimizationStore } from '../stores/optimizationStore'
 import CleanupRulesPanel from '../components/optimization/CleanupRulesPanel'
 import DriverDownloadPanel from '../components/optimization/DriverDownloadPanel'
@@ -22,6 +22,37 @@ import { NetworkPanels } from '../components/optimization/NetworkPanels'
 import { presentCategoryActions } from '../utils/optimizationToggle'
 import { openActionDetails } from '../components/utils/ActionDetailsModal'
 import '../components/optimization/optimization.css'
+
+const NETWORK_RECOMMENDED_GROUP_IDS = new Set(['steam', 'github', 'public-cdn', 'twitch', 'roblox'])
+
+function PlayOutlineIcon(): React.JSX.Element {
+  return (
+    <svg
+      className="udt-opt-chrome__play-icon"
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M8 6.5v11l10-5.5-10-5.5z" />
+    </svg>
+  )
+}
+
+function collectRecommendedKeys(
+  categories: OptimizationCategoryDefinition[],
+  predicate: (categoryKey: string) => boolean
+): string[] {
+  return categories
+    .filter((category) => predicate(category.key))
+    .flatMap((category) => category.actions)
+    .filter((action) => action.recommended && action.applied !== true)
+    .map((action) => action.key)
+}
 
 function formatBytes(bytes: number): string {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B'
@@ -150,7 +181,15 @@ function CategoryCard({
   )
 }
 
-function OptimizationTab(): React.JSX.Element {
+function OptimizationTab({
+  selectedKeys,
+  busy,
+  onToggle
+}: {
+  selectedKeys: string[]
+  busy: boolean
+  onToggle: (key: string) => void
+}): React.JSX.Element {
   const categories = useOptimizationStore((s) => s.categories)
   const loading = useOptimizationStore((s) => s.loading)
 
@@ -161,15 +200,15 @@ function OptimizationTab(): React.JSX.Element {
       <div className="udt-optimization-layout__main">
         {loading && <div className="udt-skeleton-list"><div className="udt-skeleton-card" /></div>}
         {optimizationCategories.map((category) => {
-          const visible = presentCategoryActions(category.actions).visible
+          const visible = presentCategoryActions(category.actions, busy).visible
           const appliedCount = visible.filter(({ action }) => action.applied === true).length
           return (
             <CategoryCard
               key={category.key}
               category={category}
-              selectedKeys={[]}
-              busy
-              onToggle={() => {}}
+              selectedKeys={selectedKeys}
+              busy={busy}
+              onToggle={onToggle}
               summary={`${appliedCount} / ${visible.length}`}
             />
           )
@@ -179,12 +218,17 @@ function OptimizationTab(): React.JSX.Element {
   )
 }
 
-function CleanupTab(): React.JSX.Element {
+function CleanupTab({
+  selectedKeys,
+  onSelectedKeysChange
+}: {
+  selectedKeys: string[]
+  onSelectedKeysChange: (keys: string[]) => void
+}): React.JSX.Element {
   const { t } = useTranslation()
   const categories = useOptimizationStore((s) => s.categories)
   const estimate = useOptimizationStore((s) => s.estimate)
   const runCleanup = useOptimizationStore((s) => s.runCleanup)
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
   const [estimateBytes, setEstimateBytes] = useState<number | null>(null)
   const [estimating, setEstimating] = useState(false)
   const [cleaning, setCleaning] = useState(false)
@@ -192,7 +236,9 @@ function CleanupTab(): React.JSX.Element {
   const cleanupCategories = categories.filter((c) => c.key.startsWith('cleanup.'))
 
   const toggleSelection = (key: string): void => {
-    setSelectedKeys((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]))
+    onSelectedKeysChange(
+      selectedKeys.includes(key) ? selectedKeys.filter((k) => k !== key) : [...selectedKeys, key]
+    )
   }
 
   const handleEstimate = async (): Promise<void> => {
@@ -208,7 +254,7 @@ function CleanupTab(): React.JSX.Element {
     const ok = await runCleanup(selectedKeys)
     setCleaning(false)
     if (ok) {
-      setSelectedKeys([])
+      onSelectedKeysChange([])
       setEstimateBytes(null)
     }
   }
@@ -257,10 +303,6 @@ function CleanupTab(): React.JSX.Element {
       </div>
     </div>
   )
-}
-
-function DriverDownloadTab(): React.JSX.Element {
-  return <DriverDownloadPanel />
 }
 
 const NETWORK_MODES: NetworkAccelerationMode[] = ['Off', 'SystemProxy', 'Hosts', 'DiagnosticsOnly']
@@ -432,48 +474,191 @@ function NetworkTab(): React.JSX.Element {
   )
 }
 
-const TABS: { key: TabKey; icon: React.ReactNode }[] = [
-  { key: 'optimization', icon: <ThunderboltOutlined /> },
-  { key: 'cleanup', icon: <SearchOutlined /> },
-  { key: 'driverDownload', icon: <SearchOutlined /> },
-  { key: 'networkAcceleration', icon: <ThunderboltOutlined /> }
-]
+const TAB_I18N_KEYS: Record<TabKey, string> = {
+  optimization: 'wpf.windowsOptimizationPagetaboptimization',
+  cleanup: 'wpf.windowsOptimizationPagetabcleanup',
+  driverDownload: 'wpf.windowsOptimizationPagetabdriverDownload',
+  networkAcceleration: 'wpf.windowsOptimizationPagetabnetworkAcceleration'
+}
+
+const TAB_FALLBACK_KEYS: Record<TabKey, string> = {
+  optimization: 'optimization.tabs.optimization',
+  cleanup: 'optimization.tabs.cleanup',
+  driverDownload: 'optimization.tabs.driverDownload',
+  networkAcceleration: 'optimization.tabs.networkAcceleration'
+}
+
+const TABS: TabKey[] = ['optimization', 'cleanup', 'driverDownload', 'networkAcceleration']
 
 export default function WindowsOptimizationPage(): React.JSX.Element {
   const { t } = useTranslation()
   const load = useOptimizationStore((s) => s.load)
   const loadNetwork = useOptimizationStore((s) => s.loadNetwork)
+  const categories = useOptimizationStore((s) => s.categories)
+  const applyRecommended = useOptimizationStore((s) => s.applyRecommended)
+  const apply = useOptimizationStore((s) => s.apply)
+  const runCleanup = useOptimizationStore((s) => s.runCleanup)
+  const startNetwork = useOptimizationStore((s) => s.startNetwork)
+  const setNetworkGroupEnabled = useOptimizationStore((s) => s.setNetworkGroupEnabled)
+  const networkStatus = useOptimizationStore((s) => s.networkStatus)
+  const driverSelectedCount = useDriverStore((s) => s.selectedIds.length)
   const [tab, setTab] = useState<TabKey>('optimization')
+  const [optSelectedKeys, setOptSelectedKeys] = useState<string[]>([])
+  const [cleanupSelectedKeys, setCleanupSelectedKeys] = useState<string[]>([])
+  const [chromeBusy, setChromeBusy] = useState(false)
 
   useEffect(() => {
     void load()
     void loadNetwork()
   }, [load, loadNetwork])
 
+  const toggleOptSelection = (key: string): void => {
+    setOptSelectedKeys((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]))
+  }
+
+  const starTitle = useMemo(() => {
+    if (tab === 'networkAcceleration') {
+      return t('wpf.networkAccelerationPageselectionFavoriteTooltip', {
+        defaultValue: t('optimization.selectRecommended')
+      })
+    }
+    if (tab === 'driverDownload') {
+      return t('optimization.driver.selectRecommended', { defaultValue: t('optimization.selectRecommended') })
+    }
+    return t('wpf.windowsOptimizationPageselectRecommendedbutton', {
+      defaultValue: t('optimization.selectRecommended')
+    })
+  }, [t, tab])
+
+  const playTitle = useMemo(() => {
+    if (tab === 'networkAcceleration') {
+      return t('optimization.network.start', { defaultValue: 'Start' })
+    }
+    if (tab === 'driverDownload') {
+      return t('optimization.driver.startAll', { defaultValue: t('optimization.applyRecommended') })
+    }
+    if (tab === 'cleanup') {
+      return t('optimization.runCleanup')
+    }
+    return t('optimization.applyRecommended')
+  }, [t, tab])
+
+  const handleStar = (): void => {
+    if (tab === 'driverDownload') {
+      useDriverStore.getState().selectRecommended()
+      return
+    }
+    if (tab === 'networkAcceleration') {
+      const groups = networkStatus?.config.domainGroups ?? []
+      const recommended = groups.filter(
+        (group) => group.isFavorite || NETWORK_RECOMMENDED_GROUP_IDS.has(group.id)
+      )
+      for (const group of recommended) {
+        void setNetworkGroupEnabled(group.id, true)
+      }
+      return
+    }
+    if (tab === 'cleanup') {
+      setCleanupSelectedKeys(collectRecommendedKeys(categories, (key) => key.startsWith('cleanup.')))
+      return
+    }
+    setOptSelectedKeys(collectRecommendedKeys(categories, (key) => !key.startsWith('cleanup.')))
+  }
+
+  const handlePlay = async (): Promise<void> => {
+    if (chromeBusy) return
+    setChromeBusy(true)
+    try {
+      if (tab === 'networkAcceleration') {
+        await startNetwork()
+        return
+      }
+      if (tab === 'driverDownload') {
+        await useDriverStore.getState().startSelected()
+        return
+      }
+      if (tab === 'cleanup') {
+        if (cleanupSelectedKeys.length === 0) return
+        const ok = await runCleanup(cleanupSelectedKeys)
+        if (ok) setCleanupSelectedKeys([])
+        return
+      }
+      if (optSelectedKeys.length > 0) {
+        const ok = await apply(optSelectedKeys)
+        if (ok) setOptSelectedKeys([])
+        return
+      }
+      await applyRecommended()
+    } finally {
+      setChromeBusy(false)
+    }
+  }
+
+  const playDisabled =
+    chromeBusy ||
+    (tab === 'cleanup' && cleanupSelectedKeys.length === 0) ||
+    (tab === 'driverDownload' && driverSelectedCount === 0)
+
   return (
     <div className="udt-page">
       <h1 className="udt-page__title">{t('optimization.title')}</h1>
       <p className="udt-page__subtitle">{t('optimization.info')}</p>
 
-      <div className="udt-segmented-nav">
-        {TABS.map(({ key, icon }) => (
+      <div className="udt-opt-chrome">
+        <div className="udt-segmented-nav" role="tablist" aria-label={t('optimization.title')}>
+          {TABS.map((key) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={tab === key}
+              className={`udt-segmented-nav__item${tab === key ? ' udt-segmented-nav__item--active' : ''}`}
+              onClick={() => setTab(key)}
+            >
+              {t(TAB_I18N_KEYS[key], { defaultValue: t(TAB_FALLBACK_KEYS[key]) })}
+              <span className="udt-segmented-nav__indicator" />
+            </button>
+          ))}
+        </div>
+        <div className="udt-opt-chrome__actions">
           <button
-            key={key}
             type="button"
-            className={`udt-segmented-nav__item${tab === key ? ' udt-segmented-nav__item--active' : ''}`}
-            onClick={() => setTab(key)}
+            className="udt-opt-chrome__icon-btn"
+            title={starTitle}
+            aria-label={starTitle}
+            disabled={chromeBusy}
+            onClick={handleStar}
           >
-            {icon}
-            {t(`optimization.tabs.${key}`)}
-            <span className="udt-segmented-nav__indicator" />
+            <StarOutlined />
           </button>
-        ))}
+          <button
+            type="button"
+            className="udt-opt-chrome__icon-btn"
+            title={playTitle}
+            aria-label={playTitle}
+            disabled={playDisabled}
+            onClick={() => void handlePlay()}
+          >
+            <PlayOutlineIcon />
+          </button>
+        </div>
       </div>
 
       <div className="udt-tab-content" key={tab}>
-        {tab === 'optimization' && <OptimizationTab />}
-        {tab === 'cleanup' && <CleanupTab />}
-        {tab === 'driverDownload' && <DriverDownloadTab />}
+        {tab === 'optimization' && (
+          <OptimizationTab
+            selectedKeys={optSelectedKeys}
+            busy={chromeBusy}
+            onToggle={toggleOptSelection}
+          />
+        )}
+        {tab === 'cleanup' && (
+          <CleanupTab
+            selectedKeys={cleanupSelectedKeys}
+            onSelectedKeysChange={setCleanupSelectedKeys}
+          />
+        )}
+        {tab === 'driverDownload' && <DriverDownloadPanel />}
         {tab === 'networkAcceleration' && <NetworkTab />}
       </div>
     </div>

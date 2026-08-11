@@ -16,6 +16,7 @@ import type { AutomationPipeline, AutomationStepType } from '../api/automation'
 import { useAutomationStore } from '../stores/automationStore'
 import { useLoadingStore } from '../stores/loadingStore'
 import CardExpander from '../components/CardExpander'
+import { SkeletonList } from '../components/Skeleton'
 import { StepEditorModal, createDefaultStep, stepSummaryText } from '../components/automation/StepEditor'
 import { formatStepSummary } from '../components/automation/steps'
 import { triggerIcon } from '../components/automation/triggerMeta'
@@ -55,7 +56,7 @@ function clampToViewport(x: number, y: number, width = 200, height = 180): { x: 
 
 export default function AutomationPage(): React.JSX.Element {
   const { t } = useTranslation()
-  const { state, steps, load, setEnabled, save, runNow } = useAutomationStore()
+  const { state, steps, loading: automationLoading, load, setEnabled, save, runNow } = useAutomationStore()
   const [pipelines, setPipelines] = useState<AutomationPipeline[]>([])
   const [dirty, setDirty] = useState(false)
   const [createOpen, setCreateOpen] = useState(false)
@@ -487,6 +488,8 @@ export default function AutomationPage(): React.JSX.Element {
     )
   }
 
+  const showSkeleton = automationLoading && pipelines.length === 0
+
   return (
     <div className="udt-page udt-automation-page">
       <h1 className="udt-page__title">{t('automation.title')}</h1>
@@ -494,22 +497,26 @@ export default function AutomationPage(): React.JSX.Element {
         {t('automation.subtitle', { defaultValue: 'When enabled, this app will check and run matching actions in order when device state changes.' })}
       </p>
 
-      <div className="udt-card udt-card--row udt-automation-enable">
-        <div className="udt-card__copy">
-          <div className="udt-card__title">{t('automation.enable')}</div>
-          <div className="udt-card__desc">{t('automation.enableDesc')}</div>
-        </div>
-        <label className="udt-switch">
-          <input
-            type="checkbox"
-            checked={state?.isEnabled ?? false}
-            onChange={(e) => void setEnabled(e.target.checked)}
-          />
-          <span className="udt-switch__track" />
-        </label>
-      </div>
+      {showSkeleton ? (
+        <SkeletonList rows={3} className="udt-automation-skeleton" />
+      ) : (
+        <>
+          <div className="udt-card udt-card--row udt-automation-enable">
+            <div className="udt-card__copy">
+              <div className="udt-card__title">{t('automation.enable')}</div>
+              <div className="udt-card__desc">{t('automation.enableDesc')}</div>
+            </div>
+            <label className="udt-switch">
+              <input
+                type="checkbox"
+                checked={state?.isEnabled ?? false}
+                onChange={(e) => void setEnabled(e.target.checked)}
+              />
+              <span className="udt-switch__track" />
+            </label>
+          </div>
 
-      <h2 className="udt-section-title">{t('automation.actionsTitle')}</h2>
+          <h2 className="udt-section-title">{t('automation.actionsTitle')}</h2>
 
       {automatic.length === 0 ? (
         <div className="udt-empty">
@@ -554,6 +561,8 @@ export default function AutomationPage(): React.JSX.Element {
           <PlusOutlined /> {t('automation.addQuickAction')}
         </button>
       </div>
+        </>
+      )}
 
       {dirty && (
         <div className="udt-automation-savebar">

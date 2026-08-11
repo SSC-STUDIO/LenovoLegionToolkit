@@ -1130,10 +1130,10 @@
       title: '系统优化',
       info: '这些操作将修改系统服务和文件，可能需要管理员权限。',
       tabs: {
-        optimization: '系统优化',
-        cleanup: '空间清理',
+        optimization: '系统优美化',
+        cleanup: '垃圾清理',
         driverDownload: '驱动下载',
-        networkAcceleration: '网络加速'
+        networkAcceleration: '网络与加速'
       },
       recommended: '推荐',
       selected: '已选',

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Edit24Regular } from '@fluentui/react-icons'
-import { Spin } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { dashboardApi, type DashboardConfig, type DashboardGroup } from '../api/dashboard'
 import EditDashboardModal from '../components/dashboard-parity/EditDashboardModal'
 import DashboardFeatureGroups from '../components/dashboard-parity/DashboardFeatureGroupsHardware'
 import { DEFAULT_DASHBOARD_GROUPS } from '../components/dashboard-parity/dashboardItems'
 import SensorSection from '../components/dashboard/SensorSection'
+import { SkeletonList } from '../components/Skeleton'
 import { useFeaturesStore } from '../stores/featuresStore'
 import { useLoadingStore } from '../stores/loadingStore'
 import { useSensorsStore } from '../stores/sensorsStore'
@@ -58,7 +58,11 @@ export default function DashboardParityPage(): React.JSX.Element {
   }, [])
 
   if (loading) {
-    return <div className="udt-parity-dashboard__loading"><Spin size="large" /></div>
+    return (
+      <div className="udt-parity-dashboard__loading">
+        <SkeletonList rows={3} />
+      </div>
+    )
   }
 
   if (error != null || config == null) {

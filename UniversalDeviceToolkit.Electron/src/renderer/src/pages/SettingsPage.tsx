@@ -21,6 +21,7 @@ import { SmartKeysSection } from '../components/settings/SmartKeysSection'
 import { UpdateSection } from '../components/settings/UpdateSection'
 import { IntegrationsSection } from '../components/settings/IntegrationsSection'
 import { OsdSection } from '../components/settings/OsdSection'
+import { SkeletonList } from '../components/Skeleton'
 import '../components/settings/settings.css'
 
 type SectionKey =
@@ -94,6 +95,7 @@ export default function SettingsPage(): React.JSX.Element {
   const [active, setActive] = useState<SectionKey>('appearance')
   const [navWidth, setNavWidth] = useState(NAV_DEFAULT_WIDTH)
   const [supportsLenovoHardware, setSupportsLenovoHardware] = useState(true)
+  const [pageLoading, setPageLoading] = useState(true)
 
   useEffect(() => {
     let cancelled = false
@@ -112,6 +114,9 @@ export default function SettingsPage(): React.JSX.Element {
       .catch(() => {
         // Keep the default (all sections visible) when the probe fails.
         useLoadingStore.getState().finish(loadingId)
+      })
+      .finally(() => {
+        if (!cancelled) setPageLoading(false)
       })
     return () => {
       cancelled = true
@@ -193,7 +198,7 @@ export default function SettingsPage(): React.JSX.Element {
           <header className="udt-settings-page__section-header">
             <h2 className="udt-settings-page__section-title">{t(`settings.nav.${active}`)}</h2>
           </header>
-          {renderSection(active)}
+          {pageLoading ? <SkeletonList rows={4} /> : renderSection(active)}
         </section>
       </div>
     </div>
