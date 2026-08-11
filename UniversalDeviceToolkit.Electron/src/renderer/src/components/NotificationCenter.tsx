@@ -125,6 +125,7 @@ export function readNotificationPreferences(): {
   suppressSuccess: boolean
   playSound: boolean
   duration: 'Short' | 'Normal' | 'Long'
+  position: string
 } {
   const app = readApplicationScope()
   const notifications =
@@ -132,12 +133,14 @@ export function readNotificationPreferences(): {
       ? (app['Notifications'] as Record<string, unknown>)
       : {}
   const duration = app['NotificationDuration']
+  const position = app['NotificationPosition']
   return {
     suppressed: app['DontShowNotifications'] === true,
     suppressSuccess: notifications['SuccessNotifications'] === false,
     playSound: notifications['NotificationSound'] === true,
     duration:
-      duration === 'Short' || duration === 'Long' ? duration : ('Normal' as const)
+      duration === 'Short' || duration === 'Long' ? duration : ('Normal' as const),
+    position: typeof position === 'string' ? position : 'BottomRight'
   }
 }
 
@@ -145,9 +148,32 @@ export function maybePlayNotificationSound(): void {
   if (readNotificationPreferences().playSound) playNotificationSound()
 }
 
+/** WPF NotificationPosition → placement CSS class. */
+function positionClass(position: string): string {
+  switch (position) {
+    case 'BottomCenter':
+      return 'udt-notification-center--bottom-center'
+    case 'BottomLeft':
+      return 'udt-notification-center--bottom-left'
+    case 'CenterLeft':
+      return 'udt-notification-center--center-left'
+    case 'TopLeft':
+      return 'udt-notification-center--top-left'
+    case 'TopCenter':
+      return 'udt-notification-center--top-center'
+    case 'TopRight':
+      return 'udt-notification-center--top-right'
+    case 'CenterRight':
+      return 'udt-notification-center--center-right'
+    default:
+      return 'udt-notification-center--bottom-right'
+  }
+}
+
 export default function NotificationCenter(): React.JSX.Element {
   const items = useNotificationCenter((s) => s.items)
   const settingsReady = useSettingsStore((s) => s.loading === false)
+  const position = readNotificationPreferences().position
 
   useEffect(() => {
     void useSettingsStore.getState().load(['application'])
@@ -155,8 +181,10 @@ export default function NotificationCenter(): React.JSX.Element {
 
   if (items.length === 0 || !settingsReady) return <></>
 
+  const classes = ['udt-notification-center', positionClass(position)]
+
   return (
-    <div className="udt-notification-center" aria-label="Notifications">
+    <div className={classes.join(' ')} aria-label="Notifications">
       {items.map((item) => (
         <NotificationToast key={item.id} item={item} />
       ))}

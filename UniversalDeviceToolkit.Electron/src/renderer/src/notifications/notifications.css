@@ -19,6 +19,57 @@
   pointer-events: none;
 }
 
+/* WPF NotificationPosition placements */
+.udt-notification-center--bottom-right {
+  top: auto;
+  right: 16px;
+  bottom: 16px;
+}
+
+.udt-notification-center--bottom-center {
+  top: auto;
+  right: 50%;
+  bottom: 16px;
+  transform: translateX(50%);
+}
+
+.udt-notification-center--bottom-left {
+  top: auto;
+  right: auto;
+  bottom: 16px;
+  left: 16px;
+}
+
+.udt-notification-center--center-left {
+  top: 50%;
+  right: auto;
+  left: 16px;
+  transform: translateY(-50%);
+}
+
+.udt-notification-center--top-left {
+  top: 56px;
+  right: auto;
+  left: 16px;
+}
+
+.udt-notification-center--top-center {
+  top: 56px;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+.udt-notification-center--top-right {
+  top: 56px;
+  right: 16px;
+}
+
+.udt-notification-center--center-right {
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+}
+
 .udt-notification-item {
   display: flex;
   align-items: flex-start;

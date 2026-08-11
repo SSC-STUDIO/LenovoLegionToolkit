@@ -319,7 +319,13 @@ export default function AppearanceSection(): React.JSX.Element {
   }
 
   const handleThemeChange = (value: ThemePreference): void => {
-    localStorage.removeItem('udt.theme')
+    // Persist the renderer-side choice (useTheme.storedThemePreference() reads
+    // it and wins over the async host value — same protection as the accent).
+    try {
+      localStorage.setItem('udt.theme', value === 'System' ? 'system' : value === 'Dark' ? 'dark' : 'light')
+    } catch {
+      // ignore
+    }
     if (value === 'System') {
       setThemeMode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     } else {

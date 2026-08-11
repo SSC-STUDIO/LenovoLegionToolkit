@@ -11,6 +11,7 @@ import { flags, describeFlags, toHostArgs } from './flags'
 import { attachResizeStability, attachMaximizeWorkAreaClamp } from './window-helpers'
 import { listPowerPlans, setActivePowerPlan } from './power-plans'
 import { restartSystem, shutdownSystem, sleepSystem } from './system-power'
+import { downloadLatestUpdate, getLatestRelease, launchInstaller, type DownloadProgress } from './update-downloader'
 
 app.setAppUserModelId('com.universaldevicetoolkit.app')
 
@@ -287,6 +288,32 @@ app.whenReady().then(() => {
     if (method === 'power.restart') return restartSystem()
     if (method === 'power.shutdown') return shutdownSystem()
     if (method === 'power.sleep') return sleepSystem()
+    // Update download/install (WPF UpdateWindow flow): resolve the GitHub
+    // release asset, download it with progress events, launch the installer.
+    if (method === 'update.getRelease') {
+      return getLatestRelease().then((release) => ({ release }))
+    }
+    if (method === 'update.download') {
+      const started = Date.now()
+      return downloadLatestUpdate((progress: DownloadProgress) => {
+        if (mainWindow && !mainWindow.isDestroyed()) {
+          mainWindow.webContents.send('bridge:event', 'update.download-progress', {
+            ...progress,
+            elapsedMs: Date.now() - started
+          })
+        }
+      }).then(
+        (path) => ({ ok: true, path }),
+        (error: Error) => ({ ok: false, error: error.message })
+      )
+    }
+    if (method === 'update.launchInstaller') {
+      const path = (params as { path?: unknown } | null)?.path
+      if (typeof path !== 'string' || path.length === 0) {
+        throw new Error('An installer path is required.')
+      }
+      return launchInstaller(path)
+    }
     return hostClient.invoke(method, params)
   })
 

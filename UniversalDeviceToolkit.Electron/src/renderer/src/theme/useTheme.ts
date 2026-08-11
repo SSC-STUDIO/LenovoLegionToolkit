@@ -70,6 +70,13 @@ function storedThemeMode(): ThemeMode | null {
   return stored === 'light' || stored === 'dark' ? stored : null
 }
 
+function storedThemePreference(): ThemePreference | null {
+  const stored = localStorage.getItem(THEME_STORAGE_KEY)
+  if (stored === 'light' || stored === 'dark') return stored
+  if (stored === 'system') return 'System'
+  return null
+}
+
 export interface ThemeController {
   themeMode: ThemeMode
   colorPrimary?: string
@@ -119,15 +126,20 @@ export function useTheme(): ThemeController {
     }
 
     const apply = (settings?: ApplicationSettings): void => {
-      const stored = storedThemeMode()
-      if (stored) {
+      const stored = storedThemePreference()
+      media?.removeEventListener('change', onSystemChange)
+      if (stored === 'System') {
+        // Renderer-authoritative "follow system" (host value may be stale).
         preference = 'System'
-        media?.removeEventListener('change', onSystemChange)
+        media = window.matchMedia('(prefers-color-scheme: dark)')
+        media.addEventListener('change', onSystemChange)
+        onSystemChange()
+      } else if (stored) {
+        preference = 'System'
         media = null
         setThemeMode(stored)
       } else {
         preference = settings?.Theme ?? 'System'
-        media?.removeEventListener('change', onSystemChange)
         if (preference === 'System') {
           media = window.matchMedia('(prefers-color-scheme: dark)')
           media.addEventListener('change', onSystemChange)

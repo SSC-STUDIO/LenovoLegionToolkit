@@ -1,19 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
 import { DownloadOutlined, UpCircleFilled } from '@ant-design/icons'
-import { updateApi } from '../../api/update'
+import { updateApi, type DownloadProgress } from '../../api/update'
 import './utils.css'
 
 /**
  * Port of WPF UpdateWindow: shows the newest version and its release notes
  * and offers to download/install it.
  *
- * The WPF window downloads the installer through UpdateChecker and launches it
- * with `/SILENT /RESTARTAPPLICATIONS`. The host does not expose a download
- * bridge yet, so the primary action opens the GitHub "latest release" page —
- * the same fallback the WPF window uses when the downloaded path is not an
- * allowed installer.
+ * The main process downloads the Electron installer from the GitHub latest
+ * release (mirrors WPF UpdateChecker) and launches it with
+ * `/SILENT /RESTARTAPPLICATIONS`, quitting the app.
  */
 
 export interface UpdateModalOptions {
@@ -53,18 +51,28 @@ export function openUpdateModal(options: UpdateModalOptions): Promise<boolean> {
   })
 }
 
-const LATEST_RELEASE_URL = 'https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest'
+type DownloadState = 'idle' | 'checking' | 'downloading' | 'downloaded' | 'launching' | 'failed'
+
+function formatBytes(bytes: number): string {
+  if (!Number.isFinite(bytes) || bytes <= 0) return ''
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
 
 export default function UpdateModalHost(): React.JSX.Element {
   const { t } = useTranslation()
   const request = useUpdateStore((s) => s.request)
   const settle = useUpdateStore((s) => s.settle)
   const [checking, setChecking] = useState(false)
+  const [downloadState, setDownloadState] = useState<DownloadState>('idle')
+  const [progress, setProgress] = useState<DownloadProgress | null>(null)
+  const [installerPath, setInstallerPath] = useState<string | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const unsubscribeProgressRef = useRef<(() => void) | null>(null)
 
   useEffect(() => {
     if (!request) return
     if (request.options.version) return
-    // No version was provided by the caller: resolve it from the host check.
     setChecking(true)
     void updateApi
       .check(true)
@@ -81,16 +89,78 @@ export default function UpdateModalHost(): React.JSX.Element {
       .finally(() => setChecking(false))
   }, [request, settle])
 
+  useEffect(() => {
+    if (!request) return
+    void updateApi.getRelease().then((result) => {
+      if (result.release == null) return
+      useUpdateStore.setState({
+        request: {
+          ...request,
+          options: {
+            version: request.options.version ?? result.release.version,
+            releaseNotes: request.options.releaseNotes ?? result.release.releaseNotes,
+            releaseDate: request.options.releaseDate ?? result.release.releaseDate
+          }
+        }
+      })
+    })
+  }, [request])
+
+  useEffect(() => {
+    return () => {
+      unsubscribeProgressRef.current?.()
+    }
+  }, [])
+
   const notes = useMemo(() => request?.options.releaseNotes ?? null, [request])
 
   if (!request) return <></>
 
   const { version, releaseDate } = request.options
 
-  const openReleases = (): void => {
-    void window.bridge?.openExternal?.(LATEST_RELEASE_URL).catch(() => undefined)
-    settle(false)
+  const startDownload = async (): Promise<void> => {
+    setDownloadState('downloading')
+    setErrorMessage(null)
+    setProgress({ percent: 0, receivedBytes: 0, totalBytes: 0, done: false })
+    unsubscribeProgressRef.current?.()
+    unsubscribeProgressRef.current = updateApi.onDownloadProgress((next) => {
+      setProgress(next)
+      if (next.error) {
+        setErrorMessage(next.error)
+        setDownloadState('failed')
+      }
+    })
+    try {
+      const result = await updateApi.download()
+      if (result.ok && result.path) {
+        setInstallerPath(result.path)
+        setDownloadState('downloaded')
+        setProgress({ percent: 100, receivedBytes: 0, totalBytes: 0, done: true })
+      } else {
+        setErrorMessage(result.error ?? 'Download failed')
+        setDownloadState('failed')
+      }
+    } catch (error) {
+      setErrorMessage((error as Error).message)
+      setDownloadState('failed')
+    } finally {
+      unsubscribeProgressRef.current?.()
+      unsubscribeProgressRef.current = null
+    }
   }
+
+  const launch = async (): Promise<void> => {
+    if (!installerPath) return
+    setDownloadState('launching')
+    try {
+      await updateApi.launchInstaller(installerPath)
+      settle(true)
+    } catch {
+      setDownloadState('failed')
+    }
+  }
+
+  const showProgress = downloadState === 'downloading' || downloadState === 'downloaded' || downloadState === 'launching'
 
   return (
     <div className="udt-utils-backdrop" onClick={() => settle(false)}>
@@ -148,17 +218,47 @@ export default function UpdateModalHost(): React.JSX.Element {
             )}
           </div>
 
-          <div className="udt-utils-progress-track" style={{ visibility: 'hidden', height: 4 }}>
-            <div className="udt-utils-progress-fill" style={{ width: '100%' }} />
+          <div className="udt-utils-progress-track" style={{ visibility: showProgress ? 'visible' : 'hidden', height: 4, marginTop: 12 }}>
+            <div
+              className="udt-utils-progress-fill"
+              style={{ width: `${Math.min(100, progress?.percent ?? 0)}%` }}
+            />
           </div>
+          {(downloadState === 'downloading' || downloadState === 'downloaded') && (
+            <div className="udt-utils-text" style={{ fontSize: 12, marginTop: 6 }}>
+              {downloadState === 'downloading'
+                ? `${Math.round(progress?.percent ?? 0)}%${progress?.receivedBytes ? ` · ${formatBytes(progress.receivedBytes)} / ${formatBytes(progress.totalBytes)}` : ''}`
+                : t('wpf.updateWindowdownloadComplete', { defaultValue: 'Download complete.' })}
+            </div>
+          )}
+          {errorMessage && (
+            <div className="udt-utils-text" style={{ fontSize: 12, marginTop: 6, color: 'var(--udt-status-critical-text)' }}>
+              {errorMessage}
+            </div>
+          )}
         </div>
         <div className="udt-utils-modal__actions">
-          <button type="button" className="udt-utils-button" onClick={() => settle(false)}>
+          <button
+            type="button"
+            className="udt-utils-button"
+            disabled={downloadState === 'downloading' || downloadState === 'launching'}
+            onClick={() => settle(false)}
+          >
             {t('wpf.cancel')}
           </button>
-          <button type="button" className="udt-utils-button udt-utils-button--primary" onClick={openReleases}>
-            <DownloadOutlined /> {t('wpf.update')}
-          </button>
+          {downloadState === 'idle' || downloadState === 'failed' ? (
+            <button
+              type="button"
+              className="udt-utils-button udt-utils-button--primary"
+              onClick={() => void startDownload()}
+            >
+              <DownloadOutlined /> {t('wpf.update')}
+            </button>
+          ) : downloadState === 'downloaded' ? (
+            <button type="button" className="udt-utils-button udt-utils-button--primary" onClick={() => void launch()}>
+              <DownloadOutlined /> {t('wpf.updateWindowrestartToInstall', { defaultValue: 'Install & Restart' })}
+            </button>
+          ) : null}
         </div>
       </div>
     </div>
