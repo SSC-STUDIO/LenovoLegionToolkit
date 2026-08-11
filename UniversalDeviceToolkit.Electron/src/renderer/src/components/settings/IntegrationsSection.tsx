@@ -1,8 +1,9 @@
 import { useEffect } from 'react'
-import { Form, Switch, message } from 'antd'
+import { Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { SettingsCard } from './SettingsCard'
 
 export function IntegrationsSection(): React.JSX.Element {
   const { t } = useTranslation()
@@ -30,20 +31,29 @@ export function IntegrationsSection(): React.JSX.Element {
   }
 
   return (
-    <Form layout="vertical">
-      <Form.Item label={t('settings.integrations.hwinfo')}>
-        <Switch
-          checked={hwinfoEnabled}
-          onChange={(checked: boolean) => void persistIntegrations({ HWiNFO: checked })}
-        />
-      </Form.Item>
-
-      <Form.Item label={t('settings.integrations.cli')}>
-        <Switch
-          checked={cliEnabled}
-          onChange={(checked: boolean) => void persistIntegrations({ CLI: checked })}
-        />
-      </Form.Item>
-    </Form>
+    <div className="udt-settings-section udt-settings-section--integrations">
+      <SettingsCard
+        title={t('settings.integrations.hwinfo')}
+        description={t('settings.integrations.hwinfoDesc')}
+        action={
+          <Switch
+            className="udt-settings-switch"
+            checked={hwinfoEnabled}
+            onChange={(checked) => void persistIntegrations({ HWiNFO: checked })}
+          />
+        }
+      />
+      <SettingsCard
+        title={t('settings.integrations.cli')}
+        description={t('settings.integrations.cliDesc')}
+        action={
+          <Switch
+            className="udt-settings-switch"
+            checked={cliEnabled}
+            onChange={(checked) => void persistIntegrations({ CLI: checked })}
+          />
+        }
+      />
+    </div>
   )
 }

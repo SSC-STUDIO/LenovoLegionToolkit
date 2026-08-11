@@ -45,6 +45,16 @@ export interface SensorsMemory {
   highestTemperature?: number | null
 }
 
+export interface SensorsBattery {
+  chargeLevel?: number | null
+  health?: number | null
+  temperature?: number | null
+  chargeRate?: number | null
+  voltage?: number | null
+  designCapacity?: number | null
+  fullChargeCapacity?: number | null
+}
+
 export interface SensorSnapshot {
   ts: string
   source: 'LibreHardwareMonitor' | 'vendor' | 'mixed'
@@ -54,6 +64,7 @@ export interface SensorSnapshot {
   cpu?: SensorsCpu
   gpu?: SensorsGpu
   memory?: SensorsMemory
+  battery?: SensorsBattery
   motherboard?: { highestTemperature?: number | null }
   storage?: { temperatures?: (number | null)[] }
 }

@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Alert, Button, Form, Select, Switch, message } from 'antd'
+import { Alert, Button, Select, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { updateApi } from '../../api/update'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { openUpdateModal } from '../utils/UpdateModal'
+import { SettingsCard } from './SettingsCard'
 
 const UPDATE_CHECK_FREQUENCIES: Array<{ value: string; i18nKey: string }> = [
   { value: 'PerHour', i18nKey: 'settings.update.frequencies.perHour' },
@@ -64,41 +66,55 @@ export function UpdateSection(): React.JSX.Element {
   }
 
   return (
-    <Form layout="vertical">
-      <Form.Item label={t('settings.update.frequency')}>
-        <Select
-          style={{ maxWidth: 320 }}
-          value={updateCheckFrequency}
-          onChange={(value: string) => void persistUpdateCheck({ UpdateCheckFrequency: value })}
-          options={UPDATE_CHECK_FREQUENCIES.map((option) => ({
-            value: option.value,
-            label: t(option.i18nKey)
-          }))}
-        />
-      </Form.Item>
-
-      <Form.Item label={t('settings.update.includePrerelease')}>
-        <Switch
-          checked={includePrereleaseUpdates}
-          onChange={(checked: boolean) => void persistUpdateCheck({ IncludePrereleaseUpdates: checked })}
-        />
-      </Form.Item>
-
-      <Form.Item>
-        <Button onClick={() => void handleCheckForUpdates()} loading={checking}>
+    <div className="udt-settings-section udt-settings-section--update">
+      <SettingsCard
+        title={t('settings.update.frequency')}
+        action={
+          <Select<string>
+            className="udt-settings-select"
+            value={updateCheckFrequency}
+            onChange={(value) => void persistUpdateCheck({ UpdateCheckFrequency: value })}
+            options={UPDATE_CHECK_FREQUENCIES.map((option) => ({
+              value: option.value,
+              label: t(option.i18nKey)
+            }))}
+          />
+        }
+      />
+      <SettingsCard
+        title={t('settings.update.includePrerelease')}
+        description={t('settings.update.includePrereleaseDesc')}
+        action={
+          <Switch
+            className="udt-settings-switch"
+            checked={includePrereleaseUpdates}
+            onChange={(checked) => void persistUpdateCheck({ IncludePrereleaseUpdates: checked })}
+          />
+        }
+      />
+      <SettingsCard title={t('settings.update.check')}>
+        <Button
+          type="primary"
+          className="udt-settings-check-button"
+          onClick={() => void handleCheckForUpdates()}
+          loading={checking}
+        >
           {t('settings.update.check')}
         </Button>
-      </Form.Item>
-
-      {checkResult?.available && (
-        <Form.Item>
+        {checkResult?.available && (
           <Alert
+            className="udt-settings-card__alert"
             type="success"
             showIcon
             message={t('update.checkResult.available', { version: checkResult.version ?? '' })}
+            action={
+              <Button size="small" type="primary" onClick={() => void openUpdateModal({ version: checkResult.version ?? null })}>
+                {t('wpf.update')}
+              </Button>
+            }
           />
-        </Form.Item>
-      )}
-    </Form>
+        )}
+      </SettingsCard>
+    </div>
   )
 }

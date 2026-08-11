@@ -1,0 +1,155 @@
+/* FanCurveEditor (WPF FanCurveControl): y-axis labels + rounded chart surface
+ * with draggable fan speed thumbs, temperature labels and sensor tooltip. */
+
+.udt-fan-curve {
+  margin: 8px 0;
+}
+
+.udt-fan-curve__body {
+  display: grid;
+  grid-template-columns: 58px minmax(320px, 1fr);
+  grid-template-rows: 1fr auto;
+  column-gap: 12px;
+  row-gap: 8px;
+  min-width: 0;
+}
+
+.udt-fan-curve__y-labels {
+  grid-row: 1;
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  min-width: 58px;
+  text-align: right;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  user-select: none;
+}
+
+.udt-fan-curve__y-label {
+  align-self: center;
+}
+
+.udt-fan-curve__y-label--top {
+  align-self: start;
+}
+
+.udt-fan-curve__y-label--bottom {
+  align-self: end;
+}
+
+.udt-fan-curve__plot-wrap {
+  position: relative;
+  grid-row: 1;
+  min-width: 0;
+}
+
+.udt-fan-curve__plot {
+  position: relative;
+  height: 230px;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-surface-chart);
+  overflow: hidden;
+}
+
+.udt-fan-curve__graph {
+  display: block;
+}
+
+.udt-fan-curve__sliders {
+  position: absolute;
+  inset: 12px 14px 14px;
+}
+
+.udt-fan-curve__column {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  cursor: pointer;
+  touch-action: none;
+}
+
+.udt-fan-curve__thumb {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--udt-surface-card);
+  background: var(--udt-chart-utilization);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+  pointer-events: none;
+}
+
+.udt-fan-curve__column:hover .udt-fan-curve__thumb {
+  border-color: var(--udt-accent);
+}
+
+.udt-fan-curve__thumb--dragging {
+  border-width: 2.5px;
+  border-color: var(--udt-accent);
+}
+
+.udt-fan-curve__tooltip {
+  position: absolute;
+  z-index: 20;
+  transform: translate(-50%, calc(-100% - 14px));
+  padding: 6px 8px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-surface-card);
+  box-shadow: var(--udt-shadow-medium);
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-dense-caption);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.udt-fan-curve__tooltip-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.udt-fan-curve__tooltip-row dt {
+  margin: 0;
+  font-weight: 500;
+}
+
+.udt-fan-curve__tooltip-row dd {
+  margin: 0 0 0 auto;
+  color: var(--udt-text-secondary);
+}
+
+.udt-fan-curve__x-labels {
+  grid-row: 2;
+  grid-column: 2;
+  display: flex;
+  height: 28px;
+  padding: 0 14px;
+  min-width: 0;
+}
+
+.udt-fan-curve__x-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: center;
+  color: var(--udt-text-tertiary);
+  font-size: var(--udt-font-dense-caption);
+  line-height: 28px;
+}
+
+.udt-fan-curve--disabled .udt-fan-curve__plot {
+  opacity: 0.55;
+}
+
+.udt-fan-curve--disabled .udt-fan-curve__sliders {
+  pointer-events: none;
+}
+
+.udt-fan-curve--disabled .udt-fan-curve__column {
+  cursor: default;
+}

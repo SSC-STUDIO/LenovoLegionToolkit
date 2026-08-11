@@ -26,6 +26,12 @@ export interface AutomationApi {
   savePipelines(pipelines: AutomationPipeline[], isEnabled?: boolean): Promise<{ saved: boolean }>
   runNow(pipelineId: string): Promise<{ ok: boolean }>
   getSupportedSteps(): Promise<{ steps: string[] }>
+  /** Open a native file picker for a backlight profile (.json); null when cancelled. */
+  selectProfileJson(): Promise<string | null>
+  /** Feature state list, e.g. feature.getStates("dpiScale") → [{ Scale: 100 }]. */
+  getFeatureStates(feature: string): Promise<{ states: unknown[] }>
+  /** God Mode preset store (settings.get "godMode" scope) for preset step options. */
+  getGodModePresets(): Promise<{ scope: string; value: unknown }>
 }
 
 export const automationApi: AutomationApi = {
@@ -49,5 +55,17 @@ export const automationApi: AutomationApi = {
 
   async getSupportedSteps() {
     return invoke<{ steps: string[] }>('automation.getSupportedSteps', {})
+  },
+
+  async selectProfileJson() {
+    return invoke<string | null>('dialog:select-json-file', {})
+  },
+
+  async getFeatureStates(feature) {
+    return invoke<{ states: unknown[] }>('feature.getStates', { feature })
+  },
+
+  async getGodModePresets() {
+    return invoke<{ scope: string; value: unknown }>('settings.get', { scope: 'godMode' })
   },
 }

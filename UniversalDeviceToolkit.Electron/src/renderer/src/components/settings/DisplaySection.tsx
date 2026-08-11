@@ -1,19 +1,15 @@
-import { useEffect } from 'react'
-import { Form, Select, Space, Switch, Typography, message } from 'antd'
+import { useEffect, useState } from 'react'
+import { Select, message } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { bootLogoApi } from '../../api/bootLogo'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { SettingsCard } from './SettingsCard'
 import WindowBackdropSetting from './WindowBackdropSetting'
-
-const NAVIGATION_ITEMS: Array<{ key: string; i18nKey: string }> = [
-  { key: 'keyboard', i18nKey: 'settings.display.navigationKeys.keyboard' },
-  { key: 'battery', i18nKey: 'settings.display.navigationKeys.battery' },
-  { key: 'automation', i18nKey: 'settings.display.navigationKeys.automation' },
-  { key: 'macro', i18nKey: 'settings.display.navigationKeys.macro' },
-  { key: 'windowsOptimization', i18nKey: 'settings.display.navigationKeys.windowsOptimization' },
-  { key: 'pluginExtensions', i18nKey: 'settings.display.navigationKeys.pluginExtensions' },
-  { key: 'about', i18nKey: 'settings.display.navigationKeys.about' }
-]
+import BootLogoModal from './BootLogoModal'
+import ExcludeRefreshRatesModal from './ExcludeRefreshRatesModal'
+import NavigationItemsModal from './NavigationItemsModal'
+import NotificationsModal from './NotificationsModal'
 
 const NOTIFICATION_POSITIONS: Array<{ value: string; i18nKey: string }> = [
   { value: 'BottomRight', i18nKey: 'settings.display.notificationPositions.bottomRight' },
@@ -36,13 +32,33 @@ const NOTIFICATION_DURATIONS: Array<{ value: string; i18nKey: string }> = [
 export function DisplaySection(): React.JSX.Element {
   const { t } = useTranslation()
   const { scopes, load, setScope } = useSettingsStore()
+  const [navigationItemsOpen, setNavigationItemsOpen] = useState(false)
+  const [notificationsOpen, setNotificationsOpen] = useState(false)
+  const [excludeRefreshRatesOpen, setExcludeRefreshRatesOpen] = useState(false)
+  const [bootLogoOpen, setBootLogoOpen] = useState(false)
+  const [bootLogoSupported, setBootLogoSupported] = useState(false)
 
   useEffect(() => {
     void load()
   }, [load])
 
+  useEffect(() => {
+    let cancelled = false
+    bootLogoApi
+      .getStatus()
+      .then(() => {
+        if (!cancelled) setBootLogoSupported(true)
+      })
+      .catch(() => {
+        // The boot logo feature is hidden when it is unsupported or the host
+        // does not expose it, mirroring the WPF BootLogo.IsSupportedAsync gate.
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   const app = (scopes.application ?? {}) as Record<string, unknown>
-  const navigationItemsVisibility = (app['NavigationItemsVisibility'] ?? {}) as Record<string, boolean>
   const notificationPosition = (app['NotificationPosition'] as string | undefined) ?? 'BottomRight'
   const notificationDuration = (app['NotificationDuration'] as string | undefined) ?? 'Normal'
   const excludedRefreshRates = (app['ExcludedRefreshRates'] ?? []) as Array<{ Frequency: number }>
@@ -60,67 +76,88 @@ export function DisplaySection(): React.JSX.Element {
     }
   }
 
-  const toggleNavigationItem = (key: string, checked: boolean): void => {
-    const next = { ...navigationItemsVisibility, [key]: checked }
-    void persistApplication({ NavigationItemsVisibility: next })
-  }
-
   return (
-    <Form layout="vertical">
-      <Form.Item label={t('settings.display.navigationItems')}>
-        <Space direction="vertical">
-          {NAVIGATION_ITEMS.map((item) => (
-            <Switch
-              key={item.key}
-              checked={navigationItemsVisibility[item.key] ?? true}
-              onChange={(checked: boolean) => toggleNavigationItem(item.key, checked)}
-              checkedChildren={t(item.i18nKey)}
-              unCheckedChildren={t(item.i18nKey)}
-            />
-          ))}
-        </Space>
-      </Form.Item>
-
+    <div className="udt-settings-section udt-settings-section--display">
+      <SettingsCard
+        title={t('settings.display.navigationItems')}
+        description={t('navigationItemsSettingsWindowdescription')}
+        onClick={() => setNavigationItemsOpen(true)}
+      />
+      {bootLogoSupported && (
+        <SettingsCard
+          title={t('settings.display.bootLogo')}
+          description={t('settings.display.bootLogoDesc')}
+          onClick={() => setBootLogoOpen(true)}
+        />
+      )}
+      <SettingsCard
+        title={t('settings.display.notifications')}
+        description={t('settings.display.notificationsDesc')}
+        onClick={() => setNotificationsOpen(true)}
+      />
       <WindowBackdropSetting application={app} persist={(patch) => void persistApplication(patch)} />
-
-      <Form.Item label={t('settings.display.notificationPosition')}>
-        <Select
-          style={{ maxWidth: 320 }}
-          value={notificationPosition}
-          onChange={(value: string) => void persistApplication({ NotificationPosition: value })}
-          options={NOTIFICATION_POSITIONS.map((option) => ({
-            value: option.value,
-            label: t(option.i18nKey)
-          }))}
-        />
-      </Form.Item>
-
-      <Form.Item label={t('settings.display.notificationDuration')}>
-        <Select
-          style={{ maxWidth: 320 }}
-          value={notificationDuration}
-          onChange={(value: string) => void persistApplication({ NotificationDuration: value })}
-          options={NOTIFICATION_DURATIONS.map((option) => ({
-            value: option.value,
-            label: t(option.i18nKey)
-          }))}
-        />
-      </Form.Item>
-
-      <Form.Item label={t('settings.display.excludedRefreshRates')}>
+      <SettingsCard
+        title={t('settings.display.notificationPosition')}
+        action={
+          <Select<string>
+            className="udt-settings-select"
+            value={notificationPosition}
+            onChange={(value) => void persistApplication({ NotificationPosition: value })}
+            options={NOTIFICATION_POSITIONS.map((option) => ({
+              value: option.value,
+              label: t(option.i18nKey)
+            }))}
+          />
+        }
+      />
+      <SettingsCard
+        title={t('settings.display.notificationDuration')}
+        action={
+          <Select<string>
+            className="udt-settings-select"
+            value={notificationDuration}
+            onChange={(value) => void persistApplication({ NotificationDuration: value })}
+            options={NOTIFICATION_DURATIONS.map((option) => ({
+              value: option.value,
+              label: t(option.i18nKey)
+            }))}
+          />
+        }
+      />
+      <SettingsCard
+        title={t('settings.display.excludedRefreshRates')}
+        description={t('settings.display.excludedRefreshRatesDesc')}
+        onClick={() => setExcludeRefreshRatesOpen(true)}
+      >
         {excludedRefreshRates.length === 0 ? (
-          <Typography.Text type="secondary">{t('settings.display.excludedRefreshRatesEmpty')}</Typography.Text>
+          <div className="udt-settings-card__empty">
+            {t('settings.display.excludedRefreshRatesEmpty')}
+          </div>
         ) : (
-          <Space direction="vertical" size={4}>
+          <div className="udt-settings-switch-list">
             {excludedRefreshRates.map((rate) => (
-              <Typography.Text key={rate.Frequency}>{rate.Frequency}Hz</Typography.Text>
+              <div key={rate.Frequency} className="udt-settings-switch-list__row">
+                <span className="udt-settings-switch-list__label">{rate.Frequency}Hz</span>
+              </div>
             ))}
-          </Space>
+          </div>
         )}
-        <Typography.Paragraph type="secondary" style={{ marginTop: 8, marginBottom: 0 }}>
-          {t('settings.display.excludedRefreshRatesHint')}
-        </Typography.Paragraph>
-      </Form.Item>
-    </Form>
+        <div className="udt-settings-card__hint">
+          {t('settings.display.excludedRefreshRatesManageHint')}
+        </div>
+      </SettingsCard>
+
+      <NavigationItemsModal
+        open={navigationItemsOpen}
+        onClose={() => setNavigationItemsOpen(false)}
+      />
+      <NotificationsModal open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
+      <ExcludeRefreshRatesModal
+        open={excludeRefreshRatesOpen}
+        onClose={() => setExcludeRefreshRatesOpen(false)}
+        onSaved={() => void load()}
+      />
+      <BootLogoModal open={bootLogoOpen} onClose={() => setBootLogoOpen(false)} />
+    </div>
   )
 }

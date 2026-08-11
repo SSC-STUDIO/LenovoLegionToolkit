@@ -34,19 +34,43 @@ function toggleWindow(window: BrowserWindow | null): void {
   }
 }
 
-export function initTray(getWindow: () => BrowserWindow | null): void {
+export interface TrayOptions {
+  /** Mirrors the WPF --disable-tray-tooltip flag. */
+  disableTooltip?: boolean
+}
+
+export function initTray(getWindow: () => BrowserWindow | null, options?: TrayOptions): void {
   if (tray) return
 
   const image = nativeImage.createFromPath(trayIconPath())
   tray = new Tray(image.isEmpty() ? nativeImage.createEmpty() : image)
-  tray.setToolTip('Universal Device Toolkit')
+  if (!options?.disableTooltip) {
+    tray.setToolTip('Universal Device Toolkit')
+  }
   tray.setContextMenu(
     Menu.buildFromTemplate([
       { label: '显示 / 隐藏', click: () => toggleWindow(getWindow()) },
       { type: 'separator' },
+      // Mirrors the WPF tray StatusWindow: opens the renderer status popup
+      // (power mode, sensors, battery, update availability).
+      {
+        label: 'Status / 状态',
+        click: () => {
+          const win = getWindow()
+          if (!win || win.isDestroyed()) return
+          if (win.isMinimized()) win.restore()
+          win.show()
+          win.focus()
+          win.webContents.send('bridge:event', 'tray:status', null)
+        }
+      },
+      { type: 'separator' },
       { label: '退出', click: () => app.quit() }
     ])
   )
+  // Mirrors NotifyIcon: WM_LBUTTONUP raises OnClick (bring to foreground) and
+  // WM_RBUTTONUP opens the context menu (Electron shows it automatically).
+  tray.on('click', () => showWindow(getWindow()))
   tray.on('double-click', () => showWindow(getWindow()))
 
   nativeTheme.on('updated', updateTrayIcon)

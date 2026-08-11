@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import {
   Apps24Filled,
   Apps24Regular,
@@ -22,13 +22,37 @@ import {
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import TitleBar from '../components/TitleBar'
+import AppStatusBanners from '../components/AppStatusBanners'
+import LoadingOverlay from '../components/LoadingOverlay'
+import UtilsModalHost from '../components/utils/UtilsModalHost'
+import StartupGates from '../components/utils/StartupGates'
+import { openStatusModal } from '../components/utils/StatusModal'
+import { on } from '../api/bridge'
 import WindowBackdropController from '../theme/WindowBackdropController'
-import { useTheme } from '../theme/useTheme'
-import './AppLayout.css'
 import './NavigationParity.css'
 
-const NAV_WIDTH_COLLAPSED = 64
-const NAV_WIDTH_EXPANDED = 280
+const NAV_WIDTH_COLLAPSED_FALLBACK = 70
+const NAV_WIDTH_COLLAPSED_CSS = '--udt-nav-width-collapsed'
+const NAV_WIDTH_EXPANDED_CSS = '--udt-nav-width-expanded'
+const DESIGN_WINDOW_WIDTH = 1300
+const ABSOLUTE_MAX_EXPANDED = 420
+const MIN_CONTENT_WIDTH = 700
+
+function readCssNumber(name: string, fallback: number): number {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  const value = Number.parseFloat(raw)
+  return Number.isFinite(value) && value > 0 ? value : fallback
+}
+
+function getExpandedWidth(windowWidth: number): number {
+  const preferred = readCssNumber(NAV_WIDTH_EXPANDED_CSS, 220)
+  if (!windowWidth || windowWidth <= 0 || Number.isNaN(windowWidth)) return preferred
+  const scaled = preferred * (windowWidth / DESIGN_WINDOW_WIDTH)
+  const contentBudget = Math.max(preferred, windowWidth - MIN_CONTENT_WIDTH)
+  const ratioCap = windowWidth * 0.28
+  const upper = Math.min(ABSOLUTE_MAX_EXPANDED, Math.min(contentBudget, Math.max(preferred, ratioCap)))
+  return Math.min(Math.max(scaled, preferred), upper)
+}
 
 interface NavItemDef {
   key: string
@@ -83,22 +107,31 @@ function NavItem({ item, label, collapsed, active, onClick }: NavItemProps): Rea
 
 export default function AppLayout(): React.JSX.Element {
   const { t } = useTranslation()
-  const { themeMode } = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
+  const [windowWidth, setWindowWidth] = useState(() => window.innerWidth)
 
-  const isDark = themeMode === 'dark'
-  const navVars = {
-    '--udt-nav-bg': isDark ? '#202020' : '#edf7fb',
-    '--udt-nav-border': isDark ? 'rgba(255,255,255,0.08)' : '#d8e6ed',
-    '--udt-nav-accent': '#416aa1',
-    '--udt-nav-text': isDark ? 'rgba(255,255,255,0.65)' : '#4e5965',
-    '--udt-nav-text-hover': isDark ? 'rgba(255,255,255,0.9)' : '#28323c',
-    '--udt-nav-text-active': isDark ? 'rgba(255,255,255,0.92)' : '#2e3741',
-    '--udt-nav-active-bg': isDark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.86)',
-    '--udt-nav-hover-bg': isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.52)'
-  } as React.CSSProperties
+  const navWidth = collapsed
+    ? readCssNumber(NAV_WIDTH_COLLAPSED_CSS, NAV_WIDTH_COLLAPSED_FALLBACK)
+    : getExpandedWidth(windowWidth)
+
+  const handleResize = useCallback((): void => {
+    setWindowWidth(window.innerWidth)
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [handleResize])
+
+  // Tray "Status / 状态" menu item → renderer status popup (WPF StatusWindow).
+  useEffect(() => {
+    const off = on('tray:status', () => {
+      void openStatusModal()
+    })
+    return off
+  }, [])
 
   const renderItem = (item: NavItemDef): React.JSX.Element => (
     <NavItem
@@ -114,16 +147,20 @@ export default function AppLayout(): React.JSX.Element {
   return (
     <div className="udt-app-shell">
       <WindowBackdropController />
+      <StartupGates />
+      <UtilsModalHost />
+      <LoadingOverlay />
       <TitleBar />
       <div className="udt-app-shell__body">
         <nav
           aria-label="navigation"
           className="udt-nav udt-nav--wpf-parity"
-          style={{ width: collapsed ? NAV_WIDTH_COLLAPSED : NAV_WIDTH_EXPANDED, ...navVars }}
+          style={{ width: navWidth }}
         >
-          <div className="udt-nav-group">{MAIN_ITEMS.map(renderItem)}</div>
-          <div className="udt-nav-spacer" />
-          <div className="udt-nav-group">{FOOTER_ITEMS.map(renderItem)}</div>
+          <div className="udt-nav__scroll">
+            <div className="udt-nav-group">{MAIN_ITEMS.map(renderItem)}</div>
+          </div>
+          <div className="udt-nav-group udt-nav-group--footer">{FOOTER_ITEMS.map(renderItem)}</div>
           <button
             type="button"
             aria-label={collapsed ? 'expand-navigation' : 'collapse-navigation'}
@@ -134,8 +171,11 @@ export default function AppLayout(): React.JSX.Element {
           </button>
         </nav>
         <div className="udt-app-shell__content">
+          <AppStatusBanners />
           <main className="udt-app-shell__main">
-            <Outlet />
+            <div key={location.pathname} className="udt-page-enter">
+              <Outlet />
+            </div>
           </main>
         </div>
       </div>

@@ -1,4 +1,5 @@
-import { Select, Switch } from 'antd'
+import { Select, Switch, Tooltip } from 'antd'
+import { SettingOutlined } from '@ant-design/icons'
 import type { TFunction } from 'i18next'
 import {
   BatteryCharge24Regular,
@@ -21,7 +22,13 @@ import {
 } from '@fluentui/react-icons'
 import { useTranslation } from 'react-i18next'
 import type { FeatureKey } from '../../api/features'
+import { featuresApi } from '../../api/features'
+import { systemApi } from '../../api/system'
 import { useFeature } from '../../hooks/useFeature'
+import { powerModeColor } from '../../utils/powerMode'
+import BalanceModeSettingsModal from './BalanceModeSettingsModal'
+import GodModeSettingsModal from './GodModeSettingsModal'
+import { useEffect, useState } from 'react'
 
 const TOGGLE_FEATURES = new Set<FeatureKey>([
   'batteryNightCharge',
@@ -40,7 +47,7 @@ const TOGGLE_FEATURES = new Set<FeatureKey>([
 
 const HIDE_SINGLE_OPTION_FEATURES = new Set<FeatureKey>(['resolution', 'refreshRate', 'dpiScale'])
 
-function FeatureIcon({ feature }: { feature: FeatureKey }): React.JSX.Element {
+function FeatureIcon({ feature, color }: { feature: FeatureKey; color?: string }): React.JSX.Element {
   const icon = (() => {
     switch (feature) {
       case 'powerMode':
@@ -87,7 +94,15 @@ function FeatureIcon({ feature }: { feature: FeatureKey }): React.JSX.Element {
     }
   })()
 
-  return <span className="udt-parity-feature-card__icon" aria-hidden="true">{icon}</span>
+  return (
+    <span
+      className="udt-parity-feature-card__icon"
+      aria-hidden="true"
+      style={color !== undefined ? { color } : undefined}
+    >
+      {icon}
+    </span>
+  )
 }
 
 function stateKey(value: string): string {
@@ -127,7 +142,50 @@ function isOnState(value: unknown): boolean {
 
 export default function DashboardFeatureCard({ feature }: { feature: FeatureKey }): React.JSX.Element | null {
   const { t } = useTranslation()
-  const { supported, state, states, loading, error, setState } = useFeature(feature)
+  const { supported, state, states, loading, error, setState, refresh } = useFeature(feature)
+  const [settingsModal, setSettingsModal] = useState<'balance' | 'godMode' | null>(null)
+  const [hdrBlocked, setHdrBlocked] = useState(false)
+  const [powerAdapterDisconnected, setPowerAdapterDisconnected] = useState(false)
+
+  // HDRControl.OnRefreshAsync: while Windows settings block HDR the toggle is
+  // disabled and the card shows the HDRControl_Warning.
+  useEffect(() => {
+    if (!supported || feature !== 'hdr') return
+    let cancelled = false
+    featuresApi
+      .isHdrBlocked()
+      .then((result) => {
+        if (!cancelled) setHdrBlocked(result.blocked === true)
+      })
+      .catch(() => {
+        if (!cancelled) setHdrBlocked(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [supported, feature])
+
+  // PowerModeControl.OnRefreshAsync: warn when the selected Performance/GodMode
+  // state cannot work without a connected AC adapter.
+  useEffect(() => {
+    if (!supported || feature !== 'powerMode') return
+    if (state !== 'Performance' && state !== 'GodMode') {
+      setPowerAdapterDisconnected(false)
+      return
+    }
+    let cancelled = false
+    systemApi
+      .powerAdapterStatus()
+      .then((result) => {
+        if (!cancelled) setPowerAdapterDisconnected(result.status === 'Disconnected')
+      })
+      .catch(() => {
+        if (!cancelled) setPowerAdapterDisconnected(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [supported, feature, state])
 
   if (!supported) return null
   if (HIDE_SINGLE_OPTION_FEATURES.has(feature) && states.length < 2) return null
@@ -136,47 +194,101 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
   const description = t(`feature.${feature}.desc`, { defaultValue: '' })
   const isToggle = TOGGLE_FEATURES.has(feature)
 
+  // WPF HDRControl_Warning / PowerModeControl_Warning.
+  const warning =
+    feature === 'hdr' && hdrBlocked
+      ? t('feature.hdr.warning', { defaultValue: 'HDR usage is blocked by Windows settings.' })
+      : feature === 'powerMode' && powerAdapterDisconnected
+        ? t('feature.powerMode.warning')
+        : ''
+
+  // WPF PowerModeControl.ConfigButton: Balance → AI engine settings;
+  // Performance/GodMode → Custom Mode settings (when the machine supports God Mode).
+  const powerState = feature === 'powerMode' && typeof state === 'string' ? state : undefined
+  const showConfigButton =
+    feature === 'powerMode' &&
+    (powerState === 'Balance' ||
+      ((powerState === 'Performance' || powerState === 'GodMode') && states.includes('GodMode')))
+
+  const refreshPowerMode = (): void => {
+    void refresh()
+  }
+
   return (
-    <article className="udt-parity-feature-card">
-      <div className="udt-parity-feature-card__body">
-        <FeatureIcon feature={feature} />
-        <div className="udt-parity-feature-card__copy">
-          <div className="udt-parity-feature-card__title" title={title}>{title}</div>
-          {description !== '' && (
-            <div className="udt-parity-feature-card__description" title={description}>{description}</div>
-          )}
-          {error != null && <div className="udt-parity-feature-card__warning" title={error}>{error}</div>}
+    <>
+      <article className="udt-parity-feature-card">
+        <div className="udt-parity-feature-card__body">
+          <FeatureIcon
+            feature={feature}
+            color={feature === 'powerMode' && typeof state === 'string' ? powerModeColor(state) : undefined}
+          />
+          <div className="udt-parity-feature-card__copy">
+            <div className="udt-parity-feature-card__title" title={title}>{title}</div>
+            {description !== '' && (
+              <div className="udt-parity-feature-card__description" title={description}>{description}</div>
+            )}
+            {error != null && <div className="udt-parity-feature-card__warning" title={error}>{error}</div>}
+            {warning !== '' && <div className="udt-parity-feature-card__warning" title={warning}>{warning}</div>}
+          </div>
+          <div className="udt-parity-feature-card__accessory">
+            {isToggle ? (
+              <Switch
+                aria-label={title}
+                checked={isOnState(state)}
+                disabled={loading || error != null || (feature === 'hdr' && hdrBlocked)}
+                loading={loading}
+                onChange={(checked) => void setState(checked ? 'On' : 'Off')}
+              />
+            ) : (
+              <Select
+                aria-label={title}
+                className="udt-parity-feature-card__select"
+                disabled={loading || error != null || states.length === 0}
+                loading={loading}
+                value={state == null ? undefined : wireKey(state)}
+                options={states.map((value) => ({
+                  value: wireKey(value),
+                  label: labelForState(feature, value, t),
+                  wireValue: value
+                }))}
+                optionRender={(option) => option.label}
+                onChange={(key) => {
+                  const next = states.find((candidate) => wireKey(candidate) === key)
+                  if (next !== undefined) void setState(next)
+                }}
+              />
+            )}
+            {showConfigButton && (
+              <Tooltip title={t('dashboard.card.config')}>
+                <button
+                  type="button"
+                  className="udt-parity-feature-card__config-btn"
+                  aria-label={t('dashboard.card.config')}
+                  onClick={() =>
+                    setSettingsModal(powerState === 'Balance' ? 'balance' : 'godMode')
+                  }
+                >
+                  <SettingOutlined />
+                </button>
+              </Tooltip>
+            )}
+          </div>
         </div>
-        <div className="udt-parity-feature-card__accessory">
-          {isToggle ? (
-            <Switch
-              aria-label={title}
-              checked={isOnState(state)}
-              disabled={loading || error != null}
-              loading={loading}
-              onChange={(checked) => void setState(checked ? 'On' : 'Off')}
-            />
-          ) : (
-            <Select
-              aria-label={title}
-              className="udt-parity-feature-card__select"
-              disabled={loading || error != null || states.length === 0}
-              loading={loading}
-              value={state == null ? undefined : wireKey(state)}
-              options={states.map((value) => ({
-                value: wireKey(value),
-                label: labelForState(feature, value, t),
-                wireValue: value
-              }))}
-              optionRender={(option) => option.label}
-              onChange={(key) => {
-                const next = states.find((candidate) => wireKey(candidate) === key)
-                if (next !== undefined) void setState(next)
-              }}
-            />
-          )}
-        </div>
-      </div>
-    </article>
+      </article>
+      {settingsModal === 'balance' && (
+        <BalanceModeSettingsModal
+          open
+          onClose={() => setSettingsModal(null)}
+          onSaved={refreshPowerMode}
+        />
+      )}
+      {settingsModal === 'godMode' && (
+        <GodModeSettingsModal
+          open
+          onClose={() => setSettingsModal(null)}
+          onSaved={refreshPowerMode}
+        />
+      )}
+    </>
   )
 }

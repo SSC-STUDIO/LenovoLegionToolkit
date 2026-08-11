@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Dropdown, InputNumber, Modal, Slider, Switch, Tooltip, message } from 'antd'
+import { Button, Dropdown, Switch, Tooltip, message } from 'antd'
 import {
   ChevronDown16Regular,
   Desktop24Regular,
@@ -17,6 +17,7 @@ import {
 } from '../../api/dashboardHardware'
 import type { DashboardItem } from '../../api/dashboard'
 import { isSpecialItemSupported } from './dashboardHardwareSupport'
+import OverclockProfilesModal from './OverclockProfilesModal'
 
 export type SpecialDashboardItem = Extract<
   DashboardItem,
@@ -167,27 +168,12 @@ function OverclockGpuCard({
   const overclock = hardware.overclockDiscreteGpu
   const [busy, setBusy] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
-  const [coreDeltaMhz, setCoreDeltaMhz] = useState(overclock.coreDeltaMhz)
-  const [memoryDeltaMhz, setMemoryDeltaMhz] = useState(overclock.memoryDeltaMhz)
 
   async function setEnabled(enabled: boolean): Promise<void> {
     setBusy(true)
     try {
       await dashboardHardwareApi.setOverclockEnabled(enabled)
       await onChanged()
-    } catch (reason) {
-      void message.error((reason as Error).message)
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  async function applyOffsets(): Promise<void> {
-    setBusy(true)
-    try {
-      await dashboardHardwareApi.setOverclock(coreDeltaMhz, memoryDeltaMhz)
-      await onChanged()
-      setModalOpen(false)
     } catch (reason) {
       void message.error((reason as Error).message)
     } finally {
@@ -217,63 +203,17 @@ function OverclockGpuCard({
               aria-label={t('dashboardHardware.overclock.settings')}
               className="udt-parity-icon-button"
               icon={<Settings24Regular />}
-              onClick={() => {
-                setCoreDeltaMhz(overclock.coreDeltaMhz)
-                setMemoryDeltaMhz(overclock.memoryDeltaMhz)
-                setModalOpen(true)
-              }}
+              onClick={() => setModalOpen(true)}
             />
           </Tooltip>
         </div>
       </CardShell>
-      <Modal
+      <OverclockProfilesModal
         open={modalOpen}
-        title={t('dashboardHardware.overclock.settings')}
-        okText={t('dashboardHardware.apply')}
-        cancelText={t('dashboardHardware.cancel')}
-        confirmLoading={busy}
-        onCancel={() => setModalOpen(false)}
-        onOk={() => void applyOffsets()}
-      >
-        <div className="udt-parity-overclock-setting">
-          <label htmlFor="gpu-core-offset">{t('dashboardHardware.overclock.coreOffset')}</label>
-          <div>
-            <Slider
-              id="gpu-core-offset"
-              min={0}
-              max={overclock.maxCoreDeltaMhz}
-              value={coreDeltaMhz}
-              onChange={setCoreDeltaMhz}
-            />
-            <InputNumber
-              min={0}
-              max={overclock.maxCoreDeltaMhz}
-              addonAfter="MHz"
-              value={coreDeltaMhz}
-              onChange={(value) => setCoreDeltaMhz(value ?? 0)}
-            />
-          </div>
-        </div>
-        <div className="udt-parity-overclock-setting">
-          <label htmlFor="gpu-memory-offset">{t('dashboardHardware.overclock.memoryOffset')}</label>
-          <div>
-            <Slider
-              id="gpu-memory-offset"
-              min={0}
-              max={overclock.maxMemoryDeltaMhz}
-              value={memoryDeltaMhz}
-              onChange={setMemoryDeltaMhz}
-            />
-            <InputNumber
-              min={0}
-              max={overclock.maxMemoryDeltaMhz}
-              addonAfter="MHz"
-              value={memoryDeltaMhz}
-              onChange={(value) => setMemoryDeltaMhz(value ?? 0)}
-            />
-          </div>
-        </div>
-      </Modal>
+        hardware={overclock}
+        onClose={() => setModalOpen(false)}
+        onApplied={() => void onChanged()}
+      />
     </>
   )
 }

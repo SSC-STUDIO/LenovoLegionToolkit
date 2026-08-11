@@ -1,23 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Divider,
-  Empty,
-  Flex,
-  Popconfirm,
-  Row,
-  Select,
-  Space,
-  Spin,
-  Switch,
-  Tabs,
-  Tag,
-  Typography,
-  message
-} from 'antd'
+  CheckOutlined,
+  InfoCircleOutlined,
+  PlayCircleOutlined,
+  SearchOutlined,
+  StarFilled,
+  StopOutlined,
+  ThunderboltOutlined
+} from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import type {
   NetworkAccelerationConfig,
@@ -26,6 +16,12 @@ import type {
   OptimizationCategoryDefinition
 } from '../api/optimization'
 import { useOptimizationStore } from '../stores/optimizationStore'
+import CleanupRulesPanel from '../components/optimization/CleanupRulesPanel'
+import DriverDownloadPanel from '../components/optimization/DriverDownloadPanel'
+import { NetworkPanels } from '../components/optimization/NetworkPanels'
+import { presentCategoryActions } from '../utils/optimizationToggle'
+import { openActionDetails } from '../components/utils/ActionDetailsModal'
+import '../components/optimization/optimization.css'
 
 function formatBytes(bytes: number): string {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B'
@@ -45,6 +41,124 @@ function findAction(
     if (action) return action
   }
   return null
+}
+
+type TabKey = 'optimization' | 'cleanup' | 'driverDownload' | 'networkAcceleration'
+
+function ActionRow({
+  action,
+  selected,
+  disabled,
+  onToggle
+}: {
+  action: OptimizationActionDefinition
+  selected: boolean
+  disabled: boolean
+  onToggle: (key: string) => void
+}): React.JSX.Element {
+  const { t } = useTranslation()
+  const showDetails = (): void => {
+    void openActionDetails({
+      actionKey: action.key,
+      title: action.title,
+      description: action.description
+    })
+  }
+  return (
+    <div className="udt-action-row" onClick={() => !disabled && onToggle(action.key)}>
+      <label className="udt-checkbox">
+        <input
+          type="checkbox"
+          checked={action.applied === true || selected}
+          disabled={disabled}
+          ref={(el) => {
+            if (el) el.indeterminate = action.applied === null
+          }}
+          onChange={() => onToggle(action.key)}
+        />
+        <span className="udt-checkbox__box">
+          <CheckOutlined />
+        </span>
+      </label>
+      <span className={`udt-action-row__title${disabled ? ' udt-action-row__title--muted' : ''}`}>
+        {action.title}
+      </span>
+      {action.recommended && (
+        <span className="udt-badge">
+          <StarFilled /> {t('optimization.recommended')}
+        </span>
+      )}
+      <button
+        type="button"
+        style={{
+          marginLeft: 8,
+          border: 'none',
+          background: 'transparent',
+          color: 'var(--udt-text-secondary, rgba(255,255,255,0.6))',
+          cursor: 'pointer',
+          fontSize: 14,
+          padding: '4px 6px',
+          borderRadius: 6
+        }}
+        title={t('wpf.actionDetailsWindowtitle')}
+        onClick={(event) => {
+          event.stopPropagation()
+          showDetails()
+        }}
+      >
+        <InfoCircleOutlined />
+      </button>
+    </div>
+  )
+}
+
+function CategoryCard({
+  category,
+  selectedKeys,
+  busy,
+  onToggle,
+  summary
+}: {
+  category: OptimizationCategoryDefinition
+  selectedKeys: string[]
+  busy: boolean
+  onToggle: (key: string) => void
+  summary?: string
+}): React.JSX.Element {
+  const [expanded, setExpanded] = useState(true)
+  const presentation = useMemo(
+    () => presentCategoryActions(category.actions, busy),
+    [category.actions, busy]
+  )
+  return (
+    <div className="udt-card udt-category">
+      <button type="button" className="udt-category__header" onClick={() => setExpanded(!expanded)}>
+        <div className="udt-card__copy">
+          <div className="udt-card__title">{category.title}</div>
+          <div className="udt-card__desc">{category.description}</div>
+        </div>
+        {summary && <span className="udt-category__summary">{summary}</span>}
+        <span className={`udt-category__chevron${expanded ? ' udt-category__chevron--open' : ''}`}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </button>
+      {expanded && (
+        <div className="udt-category__body">
+          {presentation.visible.map(({ action, editable }) => (
+            <ActionRow
+              key={action.key}
+              action={action}
+              selected={selectedKeys.includes(action.key)}
+              disabled={!editable}
+              onToggle={onToggle}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }
 
 function OptimizationTab(): React.JSX.Element {
@@ -67,8 +181,8 @@ function OptimizationTab(): React.JSX.Element {
   }
 
   const handleSelectRecommended = (): void => {
-    const keys = optimizationCategories.flatMap((category) =>
-      category.actions.filter((action) => action.recommended).map((action) => action.key)
+    const keys = optimizationCategories.flatMap(
+      (category) => presentCategoryActions(category.actions).recommendedKeys
     )
     setSelectedKeys(keys)
   }
@@ -78,12 +192,7 @@ function OptimizationTab(): React.JSX.Element {
     setBusy(true)
     const ok = await apply(selectedKeys)
     setBusy(false)
-    if (ok) {
-      setSelectedKeys([])
-      message.success(t('optimization.applied'))
-    } else {
-      message.error(t('optimization.applyFailed'))
-    }
+    if (ok) setSelectedKeys([])
   }
 
   const handleClear = async (): Promise<void> => {
@@ -91,100 +200,86 @@ function OptimizationTab(): React.JSX.Element {
     setBusy(true)
     const ok = await revert(selectedKeys)
     setBusy(false)
-    if (ok) {
-      setSelectedKeys([])
-      message.success(t('optimization.reverted'))
-    } else {
-      message.error(t('optimization.revertFailed'))
-    }
+    if (ok) setSelectedKeys([])
   }
 
   const handleApplyRecommended = async (): Promise<void> => {
     setBusy(true)
-    const ok = await applyRecommended()
+    await applyRecommended()
     setBusy(false)
-    if (ok) message.success(t('optimization.applied'))
-    else message.error(t('optimization.applyFailed'))
   }
 
   return (
-    <Row gutter={16}>
-      <Col xs={24} lg={12}>
-        <Flex vertical gap={12}>
-          {loading && <Spin />}
-          {optimizationCategories.map((category) => (
-            <Card key={category.key} size="small" title={category.title}>
-              <Typography.Paragraph type="secondary" style={{ marginBottom: 8 }}>
-                {category.description}
-              </Typography.Paragraph>
-              <Flex vertical gap={4}>
-                {category.actions.map((action) => {
-                  const selected = selectedKeys.includes(action.key)
-                  return (
-                    <Flex key={action.key} align="center" justify="space-between">
-                      <Checkbox
-                        checked={action.applied === true}
-                        indeterminate={action.applied === null}
-                        onChange={() => toggleSelection(action.key)}
-                      >
-                        {action.title}
-                      </Checkbox>
-                      <Space size={4}>
-                        {action.recommended && <Tag color="gold">★ {t('optimization.recommended')}</Tag>}
-                        {selected && <Tag color="blue">{t('optimization.selected')}</Tag>}
-                      </Space>
-                    </Flex>
-                  )
-                })}
-              </Flex>
-            </Card>
-          ))}
-        </Flex>
-      </Col>
-      <Col xs={24} lg={12}>
-        <Card
-          size="small"
-          title={t('optimization.selectedActions')}
-          extra={<Typography.Text type="secondary">{selectedActions.length}</Typography.Text>}
-        >
+    <div className="udt-optimization-layout">
+      <div className="udt-optimization-layout__main">
+        {loading && <div className="udt-skeleton-list"><div className="udt-skeleton-card" /></div>}
+        {optimizationCategories.map((category) => {
+          const visible = presentCategoryActions(category.actions).visible
+          const count = visible.filter(({ action }) => selectedKeys.includes(action.key)).length
+          return (
+            <CategoryCard
+              key={category.key}
+              category={category}
+              selectedKeys={selectedKeys}
+              busy={busy}
+              onToggle={toggleSelection}
+              summary={`${count} / ${visible.length}`}
+            />
+          )
+        })}
+      </div>
+      <div className="udt-optimization-layout__side">
+        <div className="udt-card udt-side-card">
+          <div className="udt-card__title">{t('optimization.selectedActions')}</div>
+          <div className="udt-card__desc">
+            {t('optimization.selectedActions')} · {selectedActions.length}
+          </div>
           {selectedActions.length === 0 ? (
-            <Empty description={t('optimization.noSelection')} />
+            <div className="udt-empty">
+              <div className="udt-empty__title">{t('optimization.noSelection')}</div>
+            </div>
           ) : (
-            <Flex vertical gap={8}>
+            <div className="udt-side-card__list">
               {selectedActions.map((action) => (
-                <Flex key={action.key} align="center" justify="space-between">
-                  <Typography.Text>{action.title}</Typography.Text>
-                  {action.recommended && <Tag color="gold">★</Tag>}
-                </Flex>
+                <div key={action.key} className="udt-side-card__item">
+                  <div className="udt-side-card__item-title">{action.title}</div>
+                  {action.recommended && <StarFilled className="udt-side-card__star" />}
+                </div>
               ))}
-              <Divider style={{ margin: '8px 0' }} />
-              <Flex gap={8} wrap>
-                <Button onClick={handleSelectRecommended}>{t('optimization.selectRecommended')}</Button>
-                <Button
-                  type="primary"
-                  loading={busy}
-                  disabled={selectedActions.length === 0}
-                  onClick={() => void handleApply()}
-                >
-                  {t('optimization.apply')}
-                </Button>
-                <Button
-                  danger
-                  loading={busy}
-                  disabled={selectedActions.length === 0}
-                  onClick={() => void handleClear()}
-                >
-                  {t('optimization.clear')}
-                </Button>
-                <Button onClick={() => void handleApplyRecommended()}>
-                  {t('optimization.applyRecommended')}
-                </Button>
-              </Flex>
-            </Flex>
+            </div>
           )}
-        </Card>
-      </Col>
-    </Row>
+          <div className="udt-side-card__actions">
+            <button type="button" className="udt-btn udt-btn--secondary" onClick={handleSelectRecommended}>
+              {t('optimization.selectRecommended')}
+            </button>
+            <button
+              type="button"
+              className="udt-btn udt-btn--primary"
+              disabled={selectedActions.length === 0 || busy}
+              onClick={() => void handleApply()}
+            >
+              {t('optimization.apply')}
+            </button>
+            <button
+              type="button"
+              className="udt-btn udt-btn--danger"
+              disabled={selectedActions.length === 0 || busy}
+              onClick={() => void handleClear()}
+            >
+              {t('optimization.clear')}
+            </button>
+            <button
+              type="button"
+              className="udt-btn udt-btn--secondary"
+              disabled={busy}
+              onClick={() => void handleApplyRecommended()}
+            >
+              {t('optimization.applyRecommended')}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
@@ -217,61 +312,59 @@ function CleanupTab(): React.JSX.Element {
     const ok = await runCleanup(selectedKeys)
     setCleaning(false)
     if (ok) {
-      message.success(t('optimization.cleanupDone'))
       setSelectedKeys([])
       setEstimateBytes(null)
-    } else {
-      message.error(t('optimization.cleanupFailed'))
     }
   }
 
   return (
-    <Flex vertical gap={16}>
-      <Typography.Paragraph type="secondary">{t('optimization.cleanupHint')}</Typography.Paragraph>
-      {cleanupCategories.map((category) => (
-        <Card key={category.key} size="small" title={category.title}>
-          <Typography.Paragraph type="secondary" style={{ marginBottom: 8 }}>
-            {category.description}
-          </Typography.Paragraph>
-          <Flex vertical gap={4}>
-            {category.actions.map((action) => (
-              <Checkbox
-                key={action.key}
-                checked={selectedKeys.includes(action.key)}
-                onChange={() => toggleSelection(action.key)}
-              >
-                {action.title}
-              </Checkbox>
-            ))}
-          </Flex>
-        </Card>
-      ))}
-      <Flex align="center" gap={12} wrap>
-        <Button loading={estimating} disabled={selectedKeys.length === 0} onClick={() => void handleEstimate()}>
-          {t('optimization.estimate')}
-        </Button>
-        {estimateBytes !== null && (
-          <Typography.Text strong>
-            {t('optimization.estimateResult')}: {formatBytes(estimateBytes)}
-          </Typography.Text>
-        )}
-        <Popconfirm title={t('optimization.cleanupConfirm')} onConfirm={() => void handleRun()}>
-          <Button type="primary" danger loading={cleaning} disabled={selectedKeys.length === 0}>
-            {t('optimization.runCleanup')}
-          </Button>
-        </Popconfirm>
-      </Flex>
-    </Flex>
+    <div className="udt-optimization-layout">
+      <div className="udt-optimization-layout__main">
+        {cleanupCategories.map((category) => (
+          <CategoryCard
+            key={category.key}
+            category={category}
+            selectedKeys={selectedKeys}
+            busy={cleaning || estimating}
+            onToggle={toggleSelection}
+          />
+        ))}
+      </div>
+      <div className="udt-optimization-layout__side">
+        <div className="udt-card udt-side-card">
+          <div className="udt-card__title">{t('optimization.estimate')}</div>
+          <div className="udt-card__desc">
+            {estimateBytes !== null
+              ? `${t('optimization.estimateResult')}: ${formatBytes(estimateBytes)}`
+              : t('optimization.cleanupHint')}
+          </div>
+          <div className="udt-side-card__actions">
+            <button
+              type="button"
+              className="udt-btn udt-btn--secondary"
+              disabled={selectedKeys.length === 0 || estimating}
+              onClick={() => void handleEstimate()}
+            >
+              {t('optimization.estimate')}
+            </button>
+            <button
+              type="button"
+              className="udt-btn udt-btn--danger"
+              disabled={selectedKeys.length === 0 || cleaning}
+              onClick={() => void handleRun()}
+            >
+              <PlayCircleOutlined /> {t('optimization.runCleanup')}
+            </button>
+          </div>
+        </div>
+        <CleanupRulesPanel />
+      </div>
+    </div>
   )
 }
 
 function DriverDownloadTab(): React.JSX.Element {
-  const { t } = useTranslation()
-  return (
-    <Card>
-      <Empty description={t('optimization.driverDownload.comingSoon')} />
-    </Card>
-  )
+  return <DriverDownloadPanel />
 }
 
 const NETWORK_MODES: NetworkAccelerationMode[] = ['Off', 'SystemProxy', 'Hosts', 'DiagnosticsOnly']
@@ -283,16 +376,40 @@ const NETWORK_MODE_I18N_KEYS: Record<NetworkAccelerationMode, string> = {
   DiagnosticsOnly: 'optimization.network.modes.diagnosticsOnly'
 }
 
+function getNetworkSelectedTargetCount(config: NetworkAccelerationConfig | null): number {
+  if (!config) return 0
+  return config.domainGroups.reduce((sum, group) => {
+    if (!group.enabled) return sum
+    const direct = (group.domains ?? []).filter((domain) => domain.trim().length > 0).length
+    const subItems = (group.subItems ?? []).filter((sub) => sub.enabled).length
+    return sum + direct + subItems
+  }, 0)
+}
+
 function NetworkTab(): React.JSX.Element {
   const { t } = useTranslation()
   const networkStatus = useOptimizationStore((s) => s.networkStatus)
   const saveNetworkConfig = useOptimizationStore((s) => s.saveNetworkConfig)
   const startNetwork = useOptimizationStore((s) => s.startNetwork)
   const stopNetwork = useOptimizationStore((s) => s.stopNetwork)
+  const loadTraffic = useOptimizationStore((s) => s.loadTraffic)
+  const loadRuntime = useOptimizationStore((s) => s.loadRuntime)
   const [config, setConfig] = useState<NetworkAccelerationConfig | null>(null)
   const [saving, setSaving] = useState(false)
   const [starting, setStarting] = useState(false)
   const [stopping, setStopping] = useState(false)
+
+  const isRunning = networkStatus?.isRunning === true
+
+  useEffect(() => {
+    if (!isRunning) return
+    const trafficTimer = setInterval(() => void loadTraffic(), 1000)
+    const runtimeTimer = setInterval(() => void loadRuntime(), 2000)
+    return () => {
+      clearInterval(trafficTimer)
+      clearInterval(runtimeTimer)
+    }
+  }, [isRunning, loadTraffic, loadRuntime])
 
   const editableConfig = config ?? networkStatus?.config ?? null
 
@@ -311,27 +428,25 @@ function NetworkTab(): React.JSX.Element {
     const current = ensureConfig()
     if (!current) return
     setSaving(true)
-    const ok = await saveNetworkConfig(current)
+    await saveNetworkConfig(current)
     setSaving(false)
-    if (ok) message.success(t('optimization.network.saved'))
-    else message.error(t('optimization.network.saveFailed'))
   }
 
   const handleStart = async (): Promise<void> => {
     setStarting(true)
-    const ok = await startNetwork()
+    await startNetwork()
     setStarting(false)
-    if (!ok) message.error(t('optimization.network.startFailed'))
   }
 
   const handleStop = async (): Promise<void> => {
     setStopping(true)
-    const ok = await stopNetwork()
+    await stopNetwork()
     setStopping(false)
-    if (!ok) message.error(t('optimization.network.stopFailed'))
   }
 
-  if (!networkStatus || !editableConfig) return <Spin />
+  if (!networkStatus || !editableConfig) {
+    return <div className="udt-skeleton-card" style={{ minHeight: 120 }} />
+  }
 
   const updateConfig = (patch: Partial<NetworkAccelerationConfig>): void => {
     const current = ensureConfig()
@@ -339,68 +454,100 @@ function NetworkTab(): React.JSX.Element {
     setConfig({ ...current, ...patch })
   }
 
-  return (
-    <Flex vertical gap={16}>
-      <Card size="small" title={t('optimization.network.status')}>
-        <Flex gap={16} align="center" wrap>
-          <Tag color={networkStatus.isRunning ? 'green' : 'default'}>
-            {networkStatus.isRunning ? t('optimization.network.running') : t('optimization.network.stopped')}
-          </Tag>
-          <Typography.Text type="secondary">{networkStatus.statusText}</Typography.Text>
-          <Tag color={networkStatus.isBackendReady ? 'blue' : 'red'}>
-            {networkStatus.isBackendReady
-              ? t('optimization.network.backendReady')
-              : t('optimization.network.backendNotReady')}
-          </Tag>
-        </Flex>
-      </Card>
+  const selectedTargets = getNetworkSelectedTargetCount(editableConfig)
 
-      <Card size="small" title={t('optimization.network.config')}>
-        <Flex vertical gap={12}>
-          <Flex align="center" gap={8}>
-            <Typography.Text>{t('optimization.network.accelerationEnabled')}</Typography.Text>
-            <Switch
+  return (
+    <div className="udt-network-layout">
+      <div className="udt-card udt-card--row">
+        <span
+          className={`udt-status-dot${networkStatus.isRunning ? ' udt-status-dot--on' : ''}`}
+        />
+        <div className="udt-card__copy">
+          <div className="udt-card__title">
+            {networkStatus.isRunning ? t('optimization.network.running') : t('optimization.network.stopped')}
+          </div>
+          <div className="udt-card__desc">{networkStatus.statusText}</div>
+        </div>
+        <div className="udt-card__desc">
+          {networkStatus.isBackendReady
+            ? t('optimization.network.backendReady')
+            : t('optimization.network.backendNotReady')}
+        </div>
+        <div className="udt-card__desc">
+          {t('optimization.network.targetsLabel')}: {selectedTargets}
+        </div>
+        <div className="udt-card__desc">
+          {t('optimization.network.portLabel')}: {editableConfig.listenPort}
+        </div>
+      </div>
+
+      <div className="udt-card">
+        <div className="udt-card__title">{t('optimization.network.config')}</div>
+        <div className="udt-network-row">
+          <span>{t('optimization.network.accelerationEnabled')}</span>
+          <label className="udt-switch">
+            <input
+              type="checkbox"
               checked={editableConfig.accelerationEnabled}
-              onChange={(checked) => updateConfig({ accelerationEnabled: checked })}
+              onChange={(e) => updateConfig({ accelerationEnabled: e.target.checked })}
             />
-          </Flex>
-          <Flex align="center" gap={8}>
-            <Typography.Text>{t('optimization.network.mode')}</Typography.Text>
-            <Select<NetworkAccelerationMode>
-              style={{ width: 220 }}
-              value={editableConfig.mode}
-              options={NETWORK_MODES.map((mode) => ({
-                value: mode,
-                label: t(NETWORK_MODE_I18N_KEYS[mode])
-              }))}
-              onChange={(mode) => updateConfig({ mode })}
-            />
-          </Flex>
-          <Flex gap={8} wrap>
-            <Button type="primary" loading={saving} onClick={() => void handleSave()}>
-              {t('optimization.network.save')}
-            </Button>
-            <Button
-              loading={starting}
-              disabled={!networkStatus.isBackendReady}
-              onClick={() => void handleStart()}
-            >
-              {t('optimization.network.start')}
-            </Button>
-            <Button danger loading={stopping} onClick={() => void handleStop()}>
-              {t('optimization.network.stop')}
-            </Button>
-          </Flex>
-        </Flex>
-      </Card>
-    </Flex>
+            <span className="udt-switch__track" />
+          </label>
+        </div>
+        <div className="udt-network-row">
+          <span>{t('optimization.network.mode')}</span>
+          <select
+            className="udt-select"
+            value={editableConfig.mode}
+            onChange={(e) => updateConfig({ mode: e.target.value as NetworkAccelerationMode })}
+          >
+            {NETWORK_MODES.map((mode) => (
+              <option key={mode} value={mode}>
+                {t(NETWORK_MODE_I18N_KEYS[mode])}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="udt-side-card__actions">
+          <button type="button" className="udt-btn udt-btn--primary" disabled={saving} onClick={() => void handleSave()}>
+            {t('optimization.network.save')}
+          </button>
+          <button
+            type="button"
+            className="udt-btn udt-btn--secondary"
+            disabled={!networkStatus.isBackendReady || starting}
+            onClick={() => void handleStart()}
+          >
+            <PlayCircleOutlined /> {t('optimization.network.start')}
+          </button>
+          <button
+            type="button"
+            className="udt-btn udt-btn--danger"
+            disabled={stopping}
+            onClick={() => void handleStop()}
+          >
+            <StopOutlined /> {t('optimization.network.stop')}
+          </button>
+        </div>
+      </div>
+
+      <NetworkPanels />
+    </div>
   )
 }
+
+const TABS: { key: TabKey; icon: React.ReactNode }[] = [
+  { key: 'optimization', icon: <ThunderboltOutlined /> },
+  { key: 'cleanup', icon: <SearchOutlined /> },
+  { key: 'driverDownload', icon: <SearchOutlined /> },
+  { key: 'networkAcceleration', icon: <ThunderboltOutlined /> }
+]
 
 export default function WindowsOptimizationPage(): React.JSX.Element {
   const { t } = useTranslation()
   const load = useOptimizationStore((s) => s.load)
   const loadNetwork = useOptimizationStore((s) => s.loadNetwork)
+  const [tab, setTab] = useState<TabKey>('optimization')
 
   useEffect(() => {
     void load()
@@ -408,34 +555,31 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
   }, [load, loadNetwork])
 
   return (
-    <Flex vertical gap={16}>
-      <Typography.Title level={3} style={{ margin: 0 }}>
-        {t('optimization.title')}
-      </Typography.Title>
-      <Tabs
-        items={[
-          {
-            key: 'optimization',
-            label: t('optimization.tabs.optimization'),
-            children: <OptimizationTab />
-          },
-          {
-            key: 'cleanup',
-            label: t('optimization.tabs.cleanup'),
-            children: <CleanupTab />
-          },
-          {
-            key: 'driverDownload',
-            label: t('optimization.tabs.driverDownload'),
-            children: <DriverDownloadTab />
-          },
-          {
-            key: 'networkAcceleration',
-            label: t('optimization.tabs.networkAcceleration'),
-            children: <NetworkTab />
-          }
-        ]}
-      />
-    </Flex>
+    <div className="udt-page">
+      <h1 className="udt-page__title">{t('optimization.title')}</h1>
+      <p className="udt-page__subtitle">{t('optimization.info')}</p>
+
+      <div className="udt-segmented-nav">
+        {TABS.map(({ key, icon }) => (
+          <button
+            key={key}
+            type="button"
+            className={`udt-segmented-nav__item${tab === key ? ' udt-segmented-nav__item--active' : ''}`}
+            onClick={() => setTab(key)}
+          >
+            {icon}
+            {t(`optimization.tabs.${key}`)}
+            <span className="udt-segmented-nav__indicator" />
+          </button>
+        ))}
+      </div>
+
+      <div className="udt-tab-content" key={tab}>
+        {tab === 'optimization' && <OptimizationTab />}
+        {tab === 'cleanup' && <CleanupTab />}
+        {tab === 'driverDownload' && <DriverDownloadTab />}
+        {tab === 'networkAcceleration' && <NetworkTab />}
+      </div>
+    </div>
   )
 }

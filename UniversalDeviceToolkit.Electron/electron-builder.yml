@@ -1,5 +1,6 @@
-appId: com.universaldevicetoolkit.app
+﻿appId: com.universaldevicetoolkit.app
 productName: Universal Device Toolkit
+copyright: Universal Device Toolkit Contributors
 directories:
   output: dist
   buildResources: build
@@ -18,12 +19,44 @@ win:
     - target: nsis
       arch:
         - x64
-  artifactName: Universal-Device-Toolkit-${version}-setup.${ext}
+  artifactName: UniversalDeviceToolkitSetup-${version}.${ext}
 nsis:
   oneClick: false
+  perMachine: true
   allowToChangeInstallationDirectory: true
   createDesktopShortcut: true
+  createStartMenuShortcut: true
   shortcutName: Universal Device Toolkit
+  uninstallDisplayName: Universal Device Toolkit
+  deleteAppDataOnUninstall: false
+  include: build/installer.nsh
+  # Multilingual installer (matches the retired Inno Setup installer's 23 languages).
+  multiLanguageInstaller: true
+  installerLanguages:
+    - en_US
+    - zh_CN
+    - zh_TW
+    - ar
+    - bg
+    - cs
+    - de
+    - el_GR
+    - es
+    - fr
+    - hu
+    - it
+    - ja
+    - lv
+    - pl
+    - pt_BR
+    - ro
+    - ru
+    - sk
+    - tr
+    - uk
+    - vi
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
 mac:
   target:
     - target: dmg
@@ -40,3 +73,9 @@ linux:
 npmRebuild: false
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
+
+
+
+
+
+

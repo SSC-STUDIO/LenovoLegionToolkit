@@ -1,7 +1,8 @@
-import { useEffect } from 'react'
-import { Form, Typography } from 'antd'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { SettingsCard } from './SettingsCard'
+import SmartKeyPipelinesModal from './SmartKeyPipelinesModal'
 
 const SMART_FN_LOCK_MODIFIERS: Array<{ flag: number; i18nKey: string }> = [
   { flag: 1, i18nKey: 'settings.power.modifierKeys.shift' },
@@ -12,6 +13,8 @@ const SMART_FN_LOCK_MODIFIERS: Array<{ flag: number; i18nKey: string }> = [
 export function SmartKeysSection(): React.JSX.Element {
   const { t } = useTranslation()
   const { scopes, load } = useSettingsStore()
+  const [singlePressOpen, setSinglePressOpen] = useState(false)
+  const [doublePressOpen, setDoublePressOpen] = useState(false)
 
   useEffect(() => {
     void load()
@@ -19,22 +22,46 @@ export function SmartKeysSection(): React.JSX.Element {
 
   const app = (scopes.application ?? {}) as Record<string, unknown>
   const smartFnLockFlags = (app['SmartFnLockFlags'] as number | undefined) ?? 0
-  const enabledModifiers = SMART_FN_LOCK_MODIFIERS.filter((modifier) => (smartFnLockFlags & modifier.flag) !== 0)
+  const enabledModifiers = SMART_FN_LOCK_MODIFIERS.filter(
+    (modifier) => (smartFnLockFlags & modifier.flag) !== 0
+  )
 
   return (
-    <div>
-      <Typography.Title level={4}>{t('settings.smartKeys.title')}</Typography.Title>
-      <Typography.Paragraph type="secondary">{t('settings.smartKeys.description')}</Typography.Paragraph>
-      <Form layout="vertical">
-        <Form.Item label={t('settings.smartKeys.smartFnLock')}>
-          <Typography.Text>
+    <div className="udt-settings-section udt-settings-section--smart-keys">
+      <SettingsCard
+        title={t('settings.smartKeys.smartFnLock')}
+        description={t('settings.smartKeys.smartFnLockDesc')}
+      >
+        <div className="udt-settings-smart-fn">
+          <span className="udt-settings-smart-fn__value">
             {enabledModifiers.length > 0
               ? enabledModifiers.map((modifier) => t(modifier.i18nKey)).join(' + ')
               : t('settings.smartKeys.off')}
-          </Typography.Text>
-        </Form.Item>
-        <Typography.Text type="secondary">{t('settings.smartKeys.hint')}</Typography.Text>
-      </Form>
+          </span>
+          <span className="udt-settings-smart-fn__hint">{t('settings.smartKeys.hint')}</span>
+        </div>
+      </SettingsCard>
+      <SettingsCard
+        title={t('settingsPagesmartKeySinglePressActiontitle')}
+        description={t('settings.smartKeys.singlePressActionDesc')}
+        onClick={() => setSinglePressOpen(true)}
+      />
+      <SettingsCard
+        title={t('settingsPagesmartKeyDoublePressActiontitle')}
+        description={t('settings.smartKeys.doublePressActionDesc')}
+        onClick={() => setDoublePressOpen(true)}
+      />
+      <SmartKeyPipelinesModal
+        open={singlePressOpen}
+        onClose={() => setSinglePressOpen(false)}
+        onSaved={() => void load()}
+      />
+      <SmartKeyPipelinesModal
+        open={doublePressOpen}
+        isDoublePress
+        onClose={() => setDoublePressOpen(false)}
+        onSaved={() => void load()}
+      />
     </div>
   )
 }

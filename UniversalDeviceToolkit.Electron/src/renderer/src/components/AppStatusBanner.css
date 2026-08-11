@@ -1,0 +1,65 @@
+.udt-status-banner-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 16px 0;
+}
+
+.udt-status-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--udt-radius-md, 8px);
+  border: 1px solid transparent;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.udt-status-banner--warning {
+  background: rgba(224, 169, 46, 0.12);
+  border-color: rgba(224, 169, 46, 0.45);
+  color: #b8860b;
+}
+
+.udt-status-banner--success {
+  background: rgba(82, 196, 26, 0.1);
+  border-color: rgba(82, 196, 26, 0.4);
+  color: #52c41a;
+}
+
+.udt-status-banner--clickable {
+  cursor: pointer;
+}
+
+.udt-status-banner__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: 15px;
+}
+
+.udt-status-banner__message {
+  flex: 1;
+  min-width: 0;
+}
+
+.udt-status-banner__close {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.udt-status-banner__close:hover {
+  opacity: 1;
+  background: rgba(128, 128, 128, 0.15);
+}

@@ -1,0 +1,142 @@
+/* ColorPicker (WPF ColorPickerControl) + MultiColorPicker (MultiColorPickerControl) */
+
+.udt-color-picker__button.ant-btn {
+  padding: 0;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: 50%;
+  transition: opacity var(--udt-anim-fast) ease-out;
+}
+
+.udt-color-picker__button.ant-btn:hover {
+  opacity: 0.92;
+}
+
+.udt-color-picker__button.ant-btn:active {
+  opacity: 0.78;
+}
+
+.udt-color-picker__button.ant-btn:disabled {
+  opacity: 0.55;
+}
+
+.udt-color-picker__popover .ant-popover-inner {
+  padding: 12px;
+  border-radius: var(--udt-radius-control);
+}
+
+.udt-color-picker__panel {
+  display: flex;
+  width: 250px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.udt-color-picker__sv {
+  position: relative;
+}
+
+.udt-color-picker__ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  touch-action: none;
+  -webkit-mask: radial-gradient(farthest-side, transparent 55%, #000 57%);
+  mask: radial-gradient(farthest-side, transparent 55%, #000 57%);
+}
+
+.udt-color-picker__ring-handle,
+.udt-color-picker__square-handle {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+.udt-color-picker__square {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: var(--udt-radius-progress);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.udt-color-picker__fields {
+  display: grid;
+  grid-template-columns: auto minmax(120px, 1fr);
+  gap: 8px 16px;
+  align-items: center;
+  width: 100%;
+  margin: 16px 0;
+}
+
+.udt-color-picker__field {
+  display: contents;
+}
+
+.udt-color-picker__field > span {
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+}
+
+.udt-color-picker__hex,
+.udt-color-picker__channel {
+  width: 100%;
+}
+
+.udt-color-picker__ok.ant-btn {
+  min-width: 100px;
+}
+
+/* MultiColorPicker: row of swatches with a dismiss chip on each item + add button */
+
+.udt-multi-color-picker {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.udt-multi-color-picker__item {
+  position: relative;
+  display: inline-flex;
+}
+
+.udt-multi-color-picker__delete {
+  position: absolute;
+  left: 14px;
+  top: -14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  border-radius: var(--udt-radius-control);
+  background: var(--udt-surface-card);
+  color: var(--udt-text-primary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
+}
+
+.udt-multi-color-picker__delete:hover {
+  background: var(--udt-status-critical-bg);
+  color: var(--udt-status-critical-text);
+}
+
+.udt-multi-color-picker__delete:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.udt-multi-color-picker__add.ant-btn {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+}

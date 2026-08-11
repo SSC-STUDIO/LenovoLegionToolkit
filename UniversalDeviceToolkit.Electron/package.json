@@ -6,6 +6,9 @@
   "private": true,
   "scripts": {
     "dev": "electron-vite dev",
+    "dev:trace": "electron-vite dev -- --trace",
+    "dev:minimized": "electron-vite dev -- --minimized",
+    "dev:trace-minimized": "electron-vite dev -- --trace --minimized",
     "build": "electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "lint": "eslint .",

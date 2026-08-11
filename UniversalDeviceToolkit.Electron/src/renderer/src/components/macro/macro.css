@@ -1,0 +1,357 @@
+/*
+ * Macro page (MacroPage.tsx) — 1:1 with WPF MacroPage.xaml + MacroSequenceControl.xaml.
+ */
+
+.udt-macro-page {
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 0 0 28px;
+}
+
+.udt-macro-page__title {
+  margin: 16px 0 8px;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-page-title);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.udt-macro-page__subtitle {
+  margin: 0 0 24px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-page-desc);
+  line-height: 1.4;
+}
+
+/* ── Card chrome (Styles/CardControl.xaml: radius 18, #303030, 1px stroke) ── */
+
+.udt-macro-card {
+  min-width: 0;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+  padding: 12px 14px;
+}
+
+.udt-macro-card--enable {
+  margin-bottom: 32px;
+}
+
+.udt-macro-card--gap {
+  margin-bottom: 8px;
+}
+
+.udt-macro-card--gap-lg {
+  margin-bottom: 16px;
+}
+
+.udt-macro-card--disabled {
+  opacity: 0.5;
+}
+
+/* ── Card header (CardHeaderControl.cs) ── */
+
+.udt-macro-card__header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.udt-macro-card__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--udt-text-primary);
+  line-height: 1;
+}
+
+.udt-macro-card__copy {
+  min-width: 0;
+}
+
+.udt-macro-card__title {
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-page-desc);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.udt-macro-card__subtitle {
+  margin-top: 4px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.4;
+}
+
+/* Card body: 12px top margin when a header is present (CardControl.xaml) */
+.udt-macro-card__body {
+  margin-top: 12px;
+}
+
+/* Headerless/icon-only cards: control row directly under the icon */
+.udt-macro-card__body--row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  min-height: 44px;
+  margin-top: 0;
+}
+
+/* ── Number pad (MacroPage.xaml: 3×4 grid, 56px cells, 48px buttons) ── */
+
+.udt-macro-numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 56px);
+  align-content: start;
+}
+
+.udt-macro-numpad__key {
+  width: 48px;
+  height: 48px;
+  margin: 0 8px 8px 0;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-primary);
+  font: inherit;
+  font-size: var(--udt-font-gauge-value);
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color var(--udt-anim-fast) ease-out,
+    color var(--udt-anim-fast) ease-out;
+}
+
+.udt-macro-numpad__key:hover {
+  background: var(--udt-control-fill-secondary);
+}
+
+.udt-macro-numpad__key:focus-visible {
+  outline: 2px solid var(--udt-accent);
+  outline-offset: -2px;
+}
+
+.udt-macro-numpad__key--selected,
+.udt-macro-numpad__key--selected:hover {
+  background: var(--udt-accent);
+  border-color: var(--udt-accent);
+  color: var(--udt-accent-text);
+}
+
+/* ── Sequence panel (MacroSequenceControl.xaml, left offset 32) ── */
+
+.udt-macro-main {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+}
+
+.udt-macro-sequence {
+  flex: 1;
+  min-width: 0;
+}
+
+.udt-macro-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.udt-macro-row .udt-macro-card {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.udt-macro-select {
+  width: 150px;
+}
+
+/* Action row: right aligned */
+.udt-macro-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.udt-macro-actions__record.ant-btn-primary,
+.udt-macro-actions__record.ant-btn-variant-solid {
+  min-width: 150px;
+  background: var(--udt-accent);
+  color: var(--udt-accent-text);
+}
+
+.udt-macro-actions__record.ant-btn-primary:not(:disabled):hover,
+.udt-macro-actions__record.ant-btn-variant-solid:not(:disabled):hover {
+  background: var(--udt-accent-secondary);
+  color: var(--udt-accent-text);
+}
+
+/* ── Event cards (AbstractMacroEventControl.xaml) ── */
+
+.udt-macro-events {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.udt-macro-event {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+}
+
+.udt-macro-event__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--udt-text-primary);
+  line-height: 1;
+}
+
+.udt-macro-event__title {
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-page-desc);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.udt-macro-event__subtitle {
+  margin-top: 4px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.4;
+}
+
+.udt-macro-events__empty {
+  padding: 4px 2px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+}
+
+/* Toggle switch sized 40×20 (WPF ToggleSwitch) */
+.udt-macro-switch {
+  display: inline-flex;
+  width: 40px;
+  height: 20px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+.udt-macro-switch .ant-switch {
+  transform: scale(0.90909);
+}
+
+/* ── Recording status window (MacroRecordingWindow.cs) ────────────────────── */
+
+.udt-macro-recording {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding-top: 12vh;
+  pointer-events: none;
+}
+
+.udt-macro-recording__window {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 300px;
+  max-width: 480px;
+  padding: 16px 24px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  pointer-events: auto;
+}
+
+.udt-macro-recording__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  font-size: 32px;
+  color: var(--udt-text-primary);
+  line-height: 1;
+}
+
+.udt-macro-recording__dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e81123;
+  animation: udt-macro-recording-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes udt-macro-recording-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.udt-macro-recording__copy {
+  min-width: 0;
+}
+
+.udt-macro-recording__title {
+  color: var(--udt-text-primary);
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.udt-macro-recording__subtitle {
+  margin-top: 4px;
+  color: var(--udt-text-secondary);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.udt-macro-recording__hint {
+  margin-top: 4px;
+  color: var(--udt-text-tertiary, var(--udt-text-secondary));
+  font-size: var(--udt-font-caption);
+  line-height: 1.4;
+}
+
+@media (max-width: 960px) {
+  .udt-macro-main {
+    flex-direction: column;
+  }
+
+  .udt-macro-numpad {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 720px) {
+  .udt-macro-row {
+    flex-direction: column;
+  }
+}

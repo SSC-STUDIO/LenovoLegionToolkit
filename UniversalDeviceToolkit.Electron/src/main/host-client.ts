@@ -31,10 +31,10 @@ export class HostClient {
     return () => this.listeners.get(event)?.delete(callback)
   }
 
-  start(hostPath: string): void {
+  start(hostPath: string, args: string[] = []): void {
     if (this.child) throw new Error('Host already started')
 
-    this.child = spawn(hostPath, [], {
+    this.child = spawn(hostPath, args, {
       stdio: ['pipe', 'pipe', 'pipe'],
       windowsHide: true
     })

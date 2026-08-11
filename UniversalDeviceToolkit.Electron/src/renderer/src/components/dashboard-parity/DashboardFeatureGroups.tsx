@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import type { DashboardGroup, DashboardItem } from '../../api/dashboard'
 import { useFeaturesStore } from '../../stores/featuresStore'
 import DashboardFeatureCard from './DashboardFeatureCard'
+import HybridModeCard from './HybridModeCard'
 import { resolveDashboardFeature } from './dashboardItems'
 
 function groupTitle(group: DashboardGroup, t: TFunction): string {
@@ -13,7 +14,9 @@ function groupTitle(group: DashboardGroup, t: TFunction): string {
 function RegularDashboardItem({ item }: { item: DashboardItem }): React.JSX.Element | null {
   const infos = useFeaturesStore((state) => state.infos)
   const feature = resolveDashboardFeature(item, infos)
-  return feature == null ? null : <DashboardFeatureCard feature={feature} />
+  if (feature == null) return null
+  if (feature === 'hybridMode') return <HybridModeCard />
+  return <DashboardFeatureCard feature={feature} />
 }
 
 export default function DashboardFeatureGroups({ groups }: { groups: DashboardGroup[] }): React.JSX.Element {

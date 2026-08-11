@@ -1,3 +1,4 @@
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
 import type { FeatureKey } from '../../api/features'
@@ -68,12 +69,14 @@ export default function FeatureGroupGrid({
               {groupTitle(group, t)}
             </h3>
             <div className="udt-feature-group__items">
-              {items.map((item) => (
-                <FeatureCard
-                  key={item}
-                  feature={item as FeatureKey}
-                  title={t(`feature.${item}`, { defaultValue: '' }) || item}
-                />
+              {items.map((item, i) => (
+                <React.Fragment key={item}>
+                  {i > 0 && <div className="udt-feature-card__divider" />}
+                  <FeatureCard
+                    feature={item as FeatureKey}
+                    title={t(`feature.${item}`, { defaultValue: '' }) || item}
+                  />
+                </React.Fragment>
               ))}
             </div>
           </section>

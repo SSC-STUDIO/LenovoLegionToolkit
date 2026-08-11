@@ -1,5 +1,32 @@
+import type { TFunction } from 'i18next'
 import type { FeatureInfo, FeatureKey } from '../../api/features'
 import type { DashboardGroup, DashboardItem } from '../../api/dashboard'
+
+export const ALL_DASHBOARD_ITEMS: DashboardItem[] = [
+  'PowerMode',
+  'BatteryMode',
+  'BatteryNightChargeMode',
+  'AlwaysOnUsb',
+  'InstantBoot',
+  'HybridMode',
+  'DiscreteGpu',
+  'OverclockDiscreteGpu',
+  'PanelLogoBacklight',
+  'PortsBacklight',
+  'Resolution',
+  'RefreshRate',
+  'DpiScale',
+  'Hdr',
+  'OverDrive',
+  'TurnOffMonitors',
+  'Microphone',
+  'FlipToStart',
+  'TouchpadLock',
+  'FnLock',
+  'WinKeyLock',
+  'WhiteKeyboardBacklight',
+  'ItsMode'
+]
 
 export const DEFAULT_DASHBOARD_GROUPS: DashboardGroup[] = [
   {
@@ -73,4 +100,20 @@ export function resolveDashboardFeature(
 
 export function isSpecialDashboardItem(item: DashboardItem): boolean {
   return item === 'DiscreteGpu' || item === 'OverclockDiscreteGpu' || item === 'TurnOffMonitors'
+}
+
+/** Localized label for a dashboard item (shared by edit modal and add-item modal). */
+export function dashboardItemLabel(item: DashboardItem, t: TFunction): string {
+  switch (item) {
+    case 'DiscreteGpu':
+      return t('dashboard.edit.items.discreteGpu')
+    case 'OverclockDiscreteGpu':
+      return t('dashboard.edit.items.overclockGpu')
+    case 'TurnOffMonitors':
+      return t('dashboard.edit.items.turnOffMonitors')
+    default: {
+      const feature = resolveDashboardFeature(item, {})
+      return feature != null ? t(`feature.${feature}`, { defaultValue: item }) : item
+    }
+  }
 }

@@ -57,6 +57,8 @@ export interface FeaturesApi {
   getStates(feature: FeatureKey): Promise<FeatureStatesResult>
   getState(feature: FeatureKey): Promise<FeatureStateResult>
   setState(feature: FeatureKey, state: unknown): Promise<SetFeatureStateResult>
+  /** HDR blocked probe (HDRControl.OnRefreshAsync parity). */
+  isHdrBlocked(): Promise<{ blocked: boolean }>
 }
 
 export const featuresApi: FeaturesApi = {
@@ -79,5 +81,9 @@ export const featuresApi: FeaturesApi = {
 
   async setState(feature, state) {
     return invoke<SetFeatureStateResult>('feature.setState', { feature, state })
+  },
+
+  async isHdrBlocked() {
+    return invoke<{ blocked: boolean }>('feature.isHdrBlocked', {})
   },
 }

@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { invoke, on } from '../api/bridge'
+import { openDeviceInformation } from './utils/DeviceInformationModal'
+import { showCompatibilityCheckError, toCompatibilityErrorInfo } from './utils/CompatibilityCheckErrorModal'
 import './TitleBar.css'
 
 const DRAG_STYLE = { WebkitAppRegion: 'drag' } as React.CSSProperties
@@ -54,8 +56,12 @@ export default function TitleBar(): React.JSX.Element {
         const systemInfo = await invoke<SystemInfo>('system.info')
         const model = systemInfo.model?.trim()
         if (!disposed && model) setDeviceModel(model)
-      } catch {
+      } catch (error) {
         // The initial request can race the host startup; host.ready retries it.
+        // A persistent failure mirrors the WPF CompatibilityCheckErrorWindow.
+        if (!disposed) {
+          void showCompatibilityCheckError(toCompatibilityErrorInfo(error))
+        }
       }
     }
 
@@ -102,6 +108,7 @@ export default function TitleBar(): React.JSX.Element {
           type="button"
           className="udt-titlebar__device-button"
           title={t('titlebar.deviceInfo')}
+          onClick={() => void openDeviceInformation()}
         >
           {deviceModel ?? t('titlebar.deviceName')}
         </button>

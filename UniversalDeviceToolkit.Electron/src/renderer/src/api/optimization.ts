@@ -67,6 +67,120 @@ export interface NetworkAccelerationStatus {
   statusText: string
 }
 
+/** Custom cleanup rule (WindowsOptimizationPage.Cleanup.cs → CustomCleanupRule). */
+export interface CustomCleanupRule {
+  directoryPath: string
+  recursive: boolean
+  extensions: string[]
+}
+
+/** Driver package source (PackageDownloaderFactory.Type). */
+export type DriverSourceType = 'Vantage' | 'PCSupport'
+
+/** Package lifecycle mirroring PackageControl.PackageStatus. */
+export type DriverPackageStatus =
+  | 'NotStarted'
+  | 'Queued'
+  | 'Downloading'
+  | 'Installing'
+  | 'Completed'
+  | 'Error'
+
+export type DriverSortMode = 'name' | 'category' | 'date'
+
+/** Reboot requirement of an update package (RebootType). */
+export type DriverRebootType = 'None' | 'Delayed' | 'Requested' | 'Forced' | 'ForcedPowerOff'
+
+/** Driver package list item (Package). */
+export interface DriverPackageDefinition {
+  id: string
+  title: string
+  description: string
+  category: string
+  /** Searchable index text (title + category + keywords). */
+  index: string
+  isRecommended: boolean
+  isUpdate: boolean
+  /** ISO date string, null when unknown. */
+  releaseDate: string | null
+  version: string | null
+  fileSize: string | null
+  fileName: string | null
+  readmeUrl: string | null
+  reboot: DriverRebootType
+  status: DriverPackageStatus
+  /** 0..1 progress of the current download/install. */
+  progress: number
+  error: string | null
+}
+
+/** Persisted driver download settings (PackageDownloaderSettings.Store). */
+export interface DriverDownloadSettings {
+  machineType: string
+  os: string
+  osOptions: string[]
+  downloadPath: string
+  onlyShowUpdates: boolean
+  hiddenPackageIds: string[]
+}
+
+/** Traffic snapshot (NetworkProxyTrafficSnapshot). */
+export interface NetworkTrafficSnapshot {
+  bytesUploaded: number
+  bytesDownloaded: number
+  activeConnections: number
+  totalConnections: number
+}
+
+/** A single proxied connection (NetworkProxyConnectionSnapshot). */
+export interface NetworkConnectionSnapshot {
+  host: string
+  port: number
+  state: string
+  connectLatencyMs: number | null
+}
+
+/** Per-destination statistics (NetworkProxyDestinationSnapshot). */
+export interface NetworkDestinationSnapshot {
+  host: string
+  port: number
+  totalConnections: number
+  activeConnections: number
+  lastConnectLatencyMs: number | null
+}
+
+/** Runtime snapshot (NetworkProxyRuntimeSnapshot). */
+export interface NetworkRuntimeSnapshot {
+  healthStatus: string
+  traffic: NetworkTrafficSnapshot
+  connections: NetworkConnectionSnapshot[]
+  destinations: NetworkDestinationSnapshot[]
+}
+
+/** NAT detection result (NatTypeDetector). */
+export interface NetworkNatDetectionResult {
+  natType: 'OpenInternet' | 'Nat' | 'UdpBlocked' | 'Unknown'
+  localIp: string | null
+  publicIp: string | null
+  internetAvailable: boolean
+  error: string | null
+}
+
+/** DNS probe result (DnsProbeResult). */
+export interface NetworkDnsDetectionResult {
+  success: boolean
+  elapsedMs: number
+  addresses: string[]
+  error: string | null
+}
+
+/** IPv6 detection result (Ipv6Detector). */
+export interface NetworkIpv6DetectionResult {
+  supported: boolean
+  address: string | null
+  error: string | null
+}
+
 export interface OptimizationApi {
   getCategories(): Promise<{ categories: OptimizationCategoryDefinition[] }>
   apply(actionKeys: string[]): Promise<{ applied: boolean }>
@@ -79,6 +193,45 @@ export interface OptimizationApi {
   networkSaveConfig(config: NetworkAccelerationConfig): Promise<{ saved: boolean }>
   networkStart(): Promise<{ ok: boolean }>
   networkStop(): Promise<{ ok: boolean }>
+  networkGetTrafficSnapshot(): Promise<NetworkTrafficSnapshot | null>
+  networkGetRuntimeSnapshot(): Promise<NetworkRuntimeSnapshot | null>
+  networkRestore(): Promise<{ ok: boolean }>
+  networkDetectNat(stunServer: string): Promise<NetworkNatDetectionResult>
+  networkDetectDns(params: {
+    domain: string
+    dnsServer?: string
+    dohEnabled: boolean
+    dohUrl?: string
+  }): Promise<NetworkDnsDetectionResult>
+  networkDetectIpv6(): Promise<NetworkIpv6DetectionResult>
+
+  // Custom cleanup rules
+  getCustomCleanupRules(): Promise<{ rules: CustomCleanupRule[] }>
+  saveCustomCleanupRules(rules: CustomCleanupRule[]): Promise<{ saved: boolean }>
+  /** Native folder picker; null when cancelled. */
+  selectFolder(): Promise<string | null>
+  /** Open a path in the system explorer. */
+  openPath(path: string): Promise<{ ok: boolean }>
+  /** Open an http(s) URL in the default browser. */
+  openUrl(url: string): Promise<{ ok: boolean }>
+
+  // Driver download
+  driverGetSettings(): Promise<DriverDownloadSettings>
+  driverGetPackages(params: {
+    machineType: string
+    os: string
+    source: DriverSourceType
+  }): Promise<{ packages: DriverPackageDefinition[] }>
+  driverGetPackageStatuses(packageIds: string[]): Promise<{
+    packages: DriverPackageDefinition[]
+  }>
+  driverStartPackage(packageId: string): Promise<{ ok: boolean }>
+  driverPausePackage(packageId: string): Promise<{ ok: boolean }>
+  driverInstallPackage(packageId: string): Promise<{ ok: boolean }>
+  driverUninstallPackage(packageId: string): Promise<{ ok: boolean }>
+  driverSetDownloadPath(path: string): Promise<{ saved: boolean }>
+  driverSetOnlyShowUpdates(enabled: boolean): Promise<{ saved: boolean }>
+  driverSetHiddenPackageIds(packageIds: string[]): Promise<{ saved: boolean }>
 }
 
 export const optimizationApi: OptimizationApi = {
@@ -124,5 +277,91 @@ export const optimizationApi: OptimizationApi = {
 
   async networkStop() {
     return invoke<{ ok: boolean }>('network.stop', {})
+  },
+
+  async networkGetTrafficSnapshot() {
+    return invoke<NetworkTrafficSnapshot | null>('network.getTrafficSnapshot', {})
+  },
+
+  async networkGetRuntimeSnapshot() {
+    return invoke<NetworkRuntimeSnapshot | null>('network.getRuntimeSnapshot', {})
+  },
+
+  async networkRestore() {
+    return invoke<{ ok: boolean }>('network.restore', {})
+  },
+
+  async networkDetectNat(stunServer) {
+    return invoke<NetworkNatDetectionResult>('network.detectNat', { stunServer })
+  },
+
+  async networkDetectDns(params) {
+    return invoke<NetworkDnsDetectionResult>('network.detectDns', params)
+  },
+
+  async networkDetectIpv6() {
+    return invoke<NetworkIpv6DetectionResult>('network.detectIpv6', {})
+  },
+
+  async getCustomCleanupRules() {
+    return invoke<{ rules: CustomCleanupRule[] }>('cleanup.getCustomRules', {})
+  },
+
+  async saveCustomCleanupRules(rules) {
+    return invoke<{ saved: boolean }>('cleanup.saveCustomRules', { rules })
+  },
+
+  async selectFolder() {
+    return invoke<string | null>('dialog:select-folder', {})
+  },
+
+  async openPath(path) {
+    return invoke<{ ok: boolean }>('dialog:open-path', { path })
+  },
+
+  async openUrl(url) {
+    return invoke<{ ok: boolean }>('dialog:open-url', { url })
+  },
+
+  async driverGetSettings() {
+    return invoke<DriverDownloadSettings>('driver.getSettings', {})
+  },
+
+  async driverGetPackages(params) {
+    return invoke<{ packages: DriverPackageDefinition[] }>('driver.getPackages', params)
+  },
+
+  async driverGetPackageStatuses(packageIds) {
+    return invoke<{ packages: DriverPackageDefinition[] }>('driver.getPackageStatuses', {
+      packageIds
+    })
+  },
+
+  async driverStartPackage(packageId) {
+    return invoke<{ ok: boolean }>('driver.start', { packageId })
+  },
+
+  async driverPausePackage(packageId) {
+    return invoke<{ ok: boolean }>('driver.pause', { packageId })
+  },
+
+  async driverInstallPackage(packageId) {
+    return invoke<{ ok: boolean }>('driver.install', { packageId })
+  },
+
+  async driverUninstallPackage(packageId) {
+    return invoke<{ ok: boolean }>('driver.uninstall', { packageId })
+  },
+
+  async driverSetDownloadPath(path) {
+    return invoke<{ saved: boolean }>('driver.setDownloadPath', { path })
+  },
+
+  async driverSetOnlyShowUpdates(enabled) {
+    return invoke<{ saved: boolean }>('driver.setOnlyShowUpdates', { enabled })
+  },
+
+  async driverSetHiddenPackageIds(packageIds) {
+    return invoke<{ saved: boolean }>('driver.setHiddenPackageIds', { packageIds })
   }
 }

@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
-import { ColorPicker, Radio, Select, Typography, message } from 'antd'
+import { ColorPicker, Select, message } from 'antd'
 import type { Color } from 'antd/es/color-picker'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
 import { changeLanguage, supportedLanguages } from '../../i18n'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { useTheme } from '../../theme/useTheme'
+import { SettingsCard } from './SettingsCard'
 
 type AppSettings = Record<string, unknown>
 
@@ -18,15 +19,17 @@ interface AccentColorRGB {
   B: number
 }
 
+const DEFAULT_ACCENT_HEX = '#ff2121'
+
 const LANGUAGE_OPTIONS: { value: (typeof supportedLanguages)[number]; label: string }[] = [
   { value: 'zh-CN', label: '简体中文' },
   { value: 'en-US', label: 'English' }
 ]
 
-const THEME_OPTIONS: { value: ThemePreference; labelKey: string }[] = [
-  { value: 'System', labelKey: 'settings.appearance.themeOptions.system' },
-  { value: 'Light', labelKey: 'settings.appearance.themeOptions.light' },
-  { value: 'Dark', labelKey: 'settings.appearance.themeOptions.dark' }
+const THEME_OPTIONS: { value: ThemePreference; labelKey: string; previewClass: string }[] = [
+  { value: 'Light', labelKey: 'settings.appearance.themeOptions.light', previewClass: 'udt-theme-option--light' },
+  { value: 'Dark', labelKey: 'settings.appearance.themeOptions.dark', previewClass: 'udt-theme-option--dark' },
+  { value: 'System', labelKey: 'settings.appearance.themeOptions.system', previewClass: 'udt-theme-option--system' }
 ]
 
 const TEMPERATURE_UNIT_OPTIONS: { value: TemperatureUnit; label: string }[] = [
@@ -35,6 +38,17 @@ const TEMPERATURE_UNIT_OPTIONS: { value: TemperatureUnit; label: string }[] = [
 ]
 
 const APP_SCALE_OPTIONS = [80, 90, 100, 110, 125] as const
+
+const ACCENT_PRESETS = [
+  '#ff2121',
+  '#ff7a00',
+  '#ffc53d',
+  '#52c41a',
+  '#13c2c2',
+  '#1677ff',
+  '#722ed1',
+  '#eb2f96'
+]
 
 function readString(app: AppSettings, key: string): string | undefined {
   const value = app[key]
@@ -74,18 +88,55 @@ function accentColorToHex(color: AccentColorRGB): string {
   return `#${toHex(color.R)}${toHex(color.G)}${toHex(color.B)}`
 }
 
-function SettingRow({
+function hexToAccentColor(hex: string): AccentColorRGB {
+  const normalized = hex.replace('#', '')
+  const value = Number.parseInt(normalized, 16)
+  return { R: (value >> 16) & 0xff, G: (value >> 8) & 0xff, B: value & 0xff }
+}
+
+function ThemePreviewCard({
+  option,
+  selected,
   label,
-  control
+  onClick
 }: {
+  option: (typeof THEME_OPTIONS)[number]
+  selected: boolean
   label: string
-  control: React.JSX.Element
+  onClick: () => void
 }): React.JSX.Element {
   return (
-    <div className="udt-settings-card-row">
-      <Typography.Text className="udt-settings-card-row__label">{label}</Typography.Text>
-      <div className="udt-settings-card-row__control">{control}</div>
-    </div>
+    <button
+      type="button"
+      className={`udt-theme-option${selected ? ' udt-theme-option--selected' : ''}`}
+      onClick={onClick}
+    >
+      <span className={`udt-theme-option__preview ${option.previewClass}`}>
+        <span className="udt-theme-option__bar">
+          <span className="udt-theme-option__dot udt-theme-option__dot--red" />
+          <span className="udt-theme-option__dot udt-theme-option__dot--yellow" />
+          <span className="udt-theme-option__dot udt-theme-option__dot--green" />
+        </span>
+        <span className="udt-theme-option__body">
+          <span className="udt-theme-option__sidebar">
+            <span className="udt-theme-option__sline" />
+            <span className="udt-theme-option__sline" />
+            <span className="udt-theme-option__sline" />
+          </span>
+          <span className="udt-theme-option__content">
+            <span className="udt-theme-option__cline udt-theme-option__cline--search" />
+            <span className="udt-theme-option__cline" />
+            <span className="udt-theme-option__cline" />
+          </span>
+        </span>
+        <span className="udt-theme-option__dock">
+          <span className="udt-theme-option__swatch" />
+          <span className="udt-theme-option__swatch" />
+          <span className="udt-theme-option__swatch" />
+        </span>
+      </span>
+      <span className="udt-theme-option__label">{label}</span>
+    </button>
   )
 }
 
@@ -142,12 +193,23 @@ export default function AppearanceSection(): React.JSX.Element {
       .catch(() => message.error(t('settings.saveFailed')))
   }
 
-  const handleAccentChange = (value: Color, css: string): void => {
-    setAccent(css)
-    const rgb = value.toRgb()
-    const next: AppSettings = { ...app, AccentColor: { R: rgb.r, G: rgb.g, B: rgb.b } }
+  const persistAccent = (hex: string, rgb: AccentColorRGB): void => {
+    setAccent(hex)
+    const next: AppSettings = { ...app, AccentColor: rgb }
     setScope('application', next)
-    settingsApi.set('application', next).catch(() => message.error(t('settings.saveFailed')))
+    settingsApi
+      .set('application', next)
+      .then(() => settingsApi.save(['application']))
+      .catch(() => message.error(t('settings.saveFailed')))
+  }
+
+  const handleAccentPreset = (hex: string): void => {
+    persistAccent(hex, hexToAccentColor(hex))
+  }
+
+  const handleAccentChange = (value: Color, css: string): void => {
+    const rgb = value.toRgb()
+    persistAccent(css, { R: rgb.r, G: rgb.g, B: rgb.b })
   }
 
   const handleAppScaleChange = (value: number): void => {
@@ -159,55 +221,83 @@ export default function AppearanceSection(): React.JSX.Element {
       .catch(() => message.error(t('settings.saveFailed')))
   }
 
+  const selectedTheme = readThemePreference(app)
+
   return (
     <div className="udt-settings-section udt-settings-section--appearance">
-      <SettingRow
-        label={t('settings.appearance.language')}
-        control={
+      <SettingsCard
+        title={t('settings.appearance.language')}
+        description={t('settings.appearance.languageDesc')}
+        action={
           <Select<string>
+            className="udt-settings-select"
             value={i18n.language.startsWith('zh') ? 'zh-CN' : 'en-US'}
             options={LANGUAGE_OPTIONS}
             onChange={handleLanguageChange}
-            style={{ width: 160 }}
           />
         }
       />
-      <SettingRow
-        label={t('settings.appearance.temperatureUnit')}
-        control={
+      <SettingsCard
+        title={t('settings.appearance.temperature')}
+        description={t('settings.appearance.temperatureDesc')}
+        action={
           <Select<TemperatureUnit>
+            className="udt-settings-select"
             value={readTemperatureUnit(app)}
             options={TEMPERATURE_UNIT_OPTIONS}
             onChange={handleTemperatureUnitChange}
-            style={{ width: 160 }}
           />
         }
       />
-      <SettingRow
-        label={t('settings.appearance.theme')}
-        control={
-          <Radio.Group
-            value={readThemePreference(app)}
-            options={THEME_OPTIONS.map((option) => ({
-              value: option.value,
-              label: t(option.labelKey)
-            }))}
-            onChange={(e) => handleThemeChange(e.target.value as ThemePreference)}
-          />
-        }
-      />
-      <SettingRow
-        label={t('settings.appearance.accentColor')}
-        control={<ColorPicker key={accentHex ?? 'none'} defaultValue={accentHex} onChange={handleAccentChange} />}
-      />
-      <SettingRow
-        label={t('settings.appearance.appScale')}
-        control={
+      <SettingsCard title={t('settings.appearance.theme')}>
+        <div className="udt-theme-options">
+          {THEME_OPTIONS.map((option) => (
+            <ThemePreviewCard
+              key={option.value}
+              option={option}
+              selected={selectedTheme === option.value}
+              label={t(option.labelKey)}
+              onClick={() => handleThemeChange(option.value)}
+            />
+          ))}
+        </div>
+      </SettingsCard>
+      <SettingsCard
+        title={t('settings.appearance.accentColor')}
+        description={t('settings.appearance.accentColorDesc')}
+      >
+        <div className="udt-settings-swatches">
+          {ACCENT_PRESETS.map((preset) => (
+            <button
+              key={preset}
+              type="button"
+              className={`udt-settings-swatch${accentHex?.toLowerCase() === preset ? ' udt-settings-swatch--selected' : ''}`}
+              style={{ background: preset }}
+              aria-label={preset}
+              title={preset}
+              onClick={() => handleAccentPreset(preset)}
+            />
+          ))}
+          <ColorPicker
+            key={accentHex ?? 'none'}
+            value={accentHex ?? DEFAULT_ACCENT_HEX}
+            onChange={handleAccentChange}
+            disabledAlpha
+            showText={false}
+          >
+            <button type="button" className="udt-settings-swatch udt-settings-swatch--custom" title={t('settings.appearance.accentColor')} />
+          </ColorPicker>
+        </div>
+      </SettingsCard>
+      <SettingsCard
+        title={t('settings.appearance.appScale')}
+        description={t('settings.appearance.appScaleDesc')}
+        action={
           <Select<number>
+            className="udt-settings-select"
             value={appScale}
             options={APP_SCALE_OPTIONS.map((value) => ({ value, label: `${value}%` }))}
             onChange={handleAppScaleChange}
-            style={{ width: 160 }}
           />
         }
       />

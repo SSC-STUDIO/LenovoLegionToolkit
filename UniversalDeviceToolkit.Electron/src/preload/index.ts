@@ -16,8 +16,23 @@ const bridge = {
   setBackgroundMaterial: (material: 'none' | 'mica' | 'acrylic'): Promise<void> =>
     ipcRenderer.invoke('window:set-background-material', material),
   openLogFolder: (): Promise<void> => ipcRenderer.invoke('shell:open-log-folder'),
+  openExternal: (url: string): Promise<{ opened: boolean }> =>
+    ipcRenderer.invoke('shell:open-external', url),
+  openPath: (path: string): Promise<{ opened: boolean }> =>
+    ipcRenderer.invoke('shell:open-path', path),
+  quitApp: (): void => ipcRenderer.send('app:quit'),
   selectPluginFiles: (): Promise<string[]> => ipcRenderer.invoke('dialog:select-plugin-files'),
+  selectJsonFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-json-file'),
+  selectExeFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-exe-file'),
   isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window:is-maximized'),
+  isFullscreen: (): Promise<boolean> => ipcRenderer.invoke('window:is-fullscreen'),
+  onFullscreenChanged: (callback: (fullscreen: boolean) => void): (() => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, fullscreen: boolean): void => {
+      callback(fullscreen)
+    }
+    ipcRenderer.on('window:fullscreen-changed', listener)
+    return () => ipcRenderer.removeListener('window:fullscreen-changed', listener)
+  },
   onMaximizedChanged: (callback: (maximized: boolean) => void): (() => void) => {
     const listener = (_event: Electron.IpcRendererEvent, maximized: boolean): void => {
       callback(maximized)

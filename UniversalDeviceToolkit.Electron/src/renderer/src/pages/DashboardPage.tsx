@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { Result, Select, Spin, Typography } from 'antd'
+import { Select, Spin } from 'antd'
+import { DashboardOutlined, SettingOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { dashboardApi, type DashboardConfig, type DashboardGroup } from '../api/dashboard'
 import { featuresApi } from '../api/features'
@@ -23,6 +24,12 @@ const POWER_MODE_OPTIONS = [
   { value: 'godMode', label: '自定义' }
 ]
 
+const BATTERY_MODE_OPTIONS = [
+  { value: 'conservation', label: '养护模式' },
+  { value: 'normal', label: '普通模式' },
+  { value: 'rapidCharge', label: '快充模式' }
+]
+
 export default function DashboardPage(): React.JSX.Element {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
@@ -30,6 +37,7 @@ export default function DashboardPage(): React.JSX.Element {
   const [config, setConfig] = useState<DashboardConfig | null>(null)
   const [groups, setGroups] = useState<DashboardGroupConfig[]>([])
   const [powerMode, setPowerMode] = useState<string>('performance')
+  const [batteryMode, setBatteryMode] = useState<string>('normal')
 
   useEffect(() => {
     let cancelled = false
@@ -71,59 +79,80 @@ export default function DashboardPage(): React.JSX.Element {
   }
 
   if (error) {
-    return <Result status="error" title={t('common.error')} subTitle={error} />
+    return (
+      <div className="udt-page-error">
+        <h2>{t('common.error')}</h2>
+        <p>{error}</p>
+      </div>
+    )
   }
 
   return (
     <div className="udt-dashboard-page">
-      {config?.showSensors && <SensorSection />}
-      <div className="udt-power-section">
-        <h3 className="udt-power-section__title">{t('dashboard.group.power')}</h3>
-        <div className="udt-power-card">
-          <div className="udt-power-card__item">
-            <div className="udt-power-card__info">
-              <span className="udt-power-card__icon">⚡</span>
-              <div>
-                <div className="udt-power-card__label">{t('feature.powerMode')}</div>
-                <div className="udt-power-card__desc">{t('feature.powerMode.desc')}</div>
-                <div className="udt-power-card__hint">{t('feature.powerMode.hint')}</div>
+      <h1 className="udt-dashboard-page__title">{t('dashboard.title')}</h1>
+      {config?.showSensors !== false && <SensorSection />}
+      <div className="udt-feature-groups">
+        <section className="udt-feature-group">
+          <h3>{t('dashboard.group.power')}</h3>
+          <div className="udt-feature-group__items">
+            <div className="udt-feature-card">
+              <div className="udt-feature-card__content">
+                <span className="udt-feature-card__icon"><DashboardOutlined /></span>
+                <div className="udt-feature-card__copy">
+                  <div className="udt-feature-card__title">{t('feature.powerMode')}</div>
+                  <div className="udt-feature-card__description">{t('feature.powerMode.desc')}</div>
+                  <div className="udt-feature-card__hint">{t('feature.powerMode.hint')}</div>
+                </div>
+                <div className="udt-feature-card__accessory">
+                  <Select
+                    size="small"
+                    className="udt-feature-card__select"
+                    value={powerMode}
+                    options={POWER_MODE_OPTIONS}
+                    onChange={(value) => setPowerMode(value)}
+                  />
+                  <ButtonText icon={<SettingOutlined />} />
+                </div>
               </div>
             </div>
-            <div className="udt-power-card__action">
-              <Select
-                value={powerMode}
-                onChange={setPowerMode}
-                options={POWER_MODE_OPTIONS}
-                style={{ width: 120 }}
-                popupMatchSelectWidth={false}
-              />
-            </div>
-          </div>
-          <div className="udt-power-card__divider" />
-          <div className="udt-power-card__item">
-            <div className="udt-power-card__info">
-              <span className="udt-power-card__icon">🔋</span>
-              <div>
-                <div className="udt-power-card__label">{t('feature.battery')}</div>
-                <div className="udt-power-card__desc">{t('feature.battery.desc')}</div>
+            <div className="udt-feature-card">
+              <div className="udt-feature-card__content">
+                <span className="udt-feature-card__icon"><ThunderboltIcon /></span>
+                <div className="udt-feature-card__copy">
+                  <div className="udt-feature-card__title">{t('feature.battery')}</div>
+                  <div className="udt-feature-card__description">{t('feature.battery.desc')}</div>
+                </div>
+                <div className="udt-feature-card__accessory">
+                  <Select
+                    size="small"
+                    className="udt-feature-card__select"
+                    value={batteryMode}
+                    options={BATTERY_MODE_OPTIONS}
+                    onChange={(value) => setBatteryMode(value)}
+                  />
+                </div>
               </div>
             </div>
-            <div className="udt-power-card__action">
-              <Select
-                defaultValue="standard"
-                options={[
-                  { value: 'standard', label: '养护模式' },
-                  { value: 'max', label: '充满模式' },
-                  { value: 'custom', label: '自定义' }
-                ]}
-                style={{ width: 120 }}
-                popupMatchSelectWidth={false}
-              />
-            </div>
           </div>
-        </div>
+        </section>
       </div>
       <FeatureGroupGrid groups={groups} />
     </div>
+  )
+}
+
+function ButtonText({ icon }: { icon: React.ReactNode }): React.JSX.Element {
+  return (
+    <button type="button" className="udt-feature-card__config-btn" aria-label="settings">
+      {icon}
+    </button>
+  )
+}
+
+function ThunderboltIcon(): React.JSX.Element {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z" strokeLinejoin="round" />
+    </svg>
   )
 }

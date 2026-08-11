@@ -1,29 +1,226 @@
+/*
+ * Design tokens mirroring the original WPF client (DesignTokens.xaml +
+ * ElevationTokens.xaml + AnimationTokens.xaml + WPF-UI Dark theme values).
+ */
 :root {
-  color-scheme: light;
-  --udt-bg-window: #f4f6fa;
-  --udt-bg-card: #ffffff;
-  --udt-bg-card-hover: #f7f9fc;
-  --udt-border: rgba(16, 24, 40, 0.10);
-  --udt-border-strong: rgba(16, 24, 40, 0.16);
-  --udt-text-primary: rgba(16, 24, 40, 0.92);
-  --udt-text-secondary: rgba(52, 64, 84, 0.72);
-  --udt-text-tertiary: rgba(52, 64, 84, 0.48);
-  --udt-titlebar-button-hover: rgba(16, 24, 40, 0.08);
+  color-scheme: dark;
+
+  /* Surfaces (App.xaml hardcoded) */
+  --udt-surface-window: #202020;
+  --udt-surface-card: #303030;
+  --udt-surface-navigation: #202020;
+  --udt-surface-chart: rgba(255, 255, 255, 0.045);
+
+  /* WPF-UI Dark theme brushes */
+  --udt-text-primary: #ffffff;
+  --udt-text-secondary: rgba(255, 255, 255, 0.77);
+  --udt-text-tertiary: rgba(255, 255, 255, 0.53);
+  --udt-text-disabled: rgba(255, 255, 255, 0.36);
+  --udt-control-fill-default: rgba(255, 255, 255, 0.055);
+  --udt-control-fill-secondary: rgba(255, 255, 255, 0.082);
+  --udt-control-fill-tertiary: rgba(255, 255, 255, 0.031);
+  --udt-control-stroke-default: rgba(255, 255, 255, 0.07);
+  --udt-control-stroke-secondary: rgba(255, 255, 255, 0.094);
+  --udt-subtle-fill-secondary: rgba(255, 255, 255, 0.059);
+  --udt-subtle-fill-tertiary: rgba(255, 255, 255, 0.039);
+
+  /* Chart palette (DesignTokens.xaml) */
+  --udt-chart-utilization: #4f9df7;
+  --udt-chart-clock: #6fbf73;
+  --udt-chart-temperature: #d9883b;
+  --udt-chart-battery: #6fbf73;
+  --udt-chart-caution: #e0a92e;
+  --udt-chart-critical: #e05656;
+  --udt-chart-track: rgba(255, 255, 255, 0.18);
+  --udt-chart-gridline: rgba(255, 255, 255, 0.10);
+  --udt-chart-baseline: #d2a05a;
+
+  /* Status */
+  --udt-status-success: #6fbf73;
+  --udt-status-warning: #e0a92e;
+  --udt-status-critical: #e05656;
+  --udt-status-critical-text: #eb6b6b;
+  --udt-status-warning-bg: rgba(224, 169, 46, 0.20);
+  --udt-status-critical-bg: rgba(224, 86, 86, 0.20);
+
+  /* Accent (ThemeManager default RGB(255,33,33)) */
+  --udt-accent: #ff2121;
+  --udt-accent-secondary: rgba(255, 33, 33, 0.9);
+  --udt-accent-text: #000000;
+
+  /* Corner radius tokens */
+  --udt-radius-progress: 2px;
+  --udt-radius-micro: 3px;
+  --udt-radius-small: 8px;
+  --udt-radius-control: 12px;
+  --udt-radius-card: 18px;
+  --udt-radius-surface: 20px;
+  --udt-radius-round: 999px;
+
+  /* Font sizes */
+  --udt-font-micro: 10px;
+  --udt-font-dense-caption: 11px;
+  --udt-font-small-caption: 12px;
+  --udt-font-small-body: 13px;
+  --udt-font-caption: 14px;
+  --udt-font-body: 15px;
+  --udt-font-titlebar: 16px;
+  --udt-font-page-desc: 16px;
+  --udt-font-subsection: 17px;
+  --udt-font-gauge-value: 18px;
+  --udt-font-section: 19px;
+  --udt-font-mid-header: 20px;
+  --udt-font-display-section: 25px;
+  --udt-font-page-title: 29px;
+
+  /* Spacing */
+  --udt-spacing-xxs: 4px;
+  --udt-spacing-xs: 8px;
+  --udt-spacing-sm: 12px;
+  --udt-spacing-md: 16px;
+  --udt-spacing-lg: 24px;
+  --udt-spacing-xl: 32px;
+
+  /* Navigation */
+  --udt-nav-width-collapsed: 70px;
+  --udt-nav-width-expanded: 220px;
+
+  /* Animation durations */
+  --udt-anim-fast: 100ms;
+  --udt-anim-medium: 200ms;
+  --udt-anim-slow: 300ms;
+  --udt-anim-shimmer: 1.65s;
+  --udt-anim-crossfade: 200ms;
+  --udt-ease-cubic-out: cubic-bezier(0.33, 1, 0.68, 1);
+  --udt-ease-expo-out: cubic-bezier(0.02, 1, 0.35, 1);
+
+  /* Shadows */
+  --udt-shadow-low: 0 2px 8px rgba(0, 0, 0, 0.10);
+  --udt-shadow-medium: 0 3px 12px rgba(0, 0, 0, 0.15);
+  --udt-shadow-glass: 0 3px 14px rgba(0, 0, 0, 0.18);
+
+  /* Typography (Typography.xaml: AppFontFamily) */
+  --udt-font-family: 'Segoe UI', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans CJK SC', 'SimSun';
+
+  /* Icon sizes (DesignTokens.xaml) */
+  --udt-icon-overlay: 9px;
+  --udt-icon-chip: 11px;
+  --udt-icon-sm: 14px;
+  --udt-icon-badge: 15px;
+  --udt-icon-compact: 16px;
+  --udt-icon-md: 18px;
+  --udt-icon-card-glyph: 20px;
+  --udt-icon-lg: 24px;
+  --udt-icon-dialog: 28px;
+  --udt-icon-xl: 32px;
+  --udt-icon-hero-sm: 42px;
+  --udt-icon-hero: 48px;
+  --udt-icon-hero-xl: 56px;
+  --udt-icon-hero-xxl: 64px;
+
+  /* Button sizes (DesignTokens.xaml) */
+  --udt-button-min-width-compact: 80px;
+  --udt-button-min-width-standard: 120px;
+  --udt-button-min-width-large: 160px;
+  --udt-button-height-compact: 32px;
+  --udt-button-height-standard: 36px;
+  --udt-button-height-large: 40px;
+
+  /* Corner radius aliases (DesignTokens.xaml) */
+  --udt-radius-none: 0px;
+  --udt-radius-swatch: 2.5px;
+  --udt-radius-compact-top: 8px 8px 0 0;
+  --udt-radius-compact-bottom: 0 0 8px 8px;
+  --udt-radius-card-top: 18px 18px 0 0;
+  --udt-radius-card-bottom: 0 0 18px 18px;
+  --udt-radius-surface-top: 20px 0 0 0;
+  --udt-radius-surface-bottom: 0 0 20px 20px;
+  --udt-radius-content-surface-top: 20px 20px 0 0;
+
+  /* Chart surfaces (DesignTokens.xaml) */
+  --udt-chart-surface: rgba(255, 255, 255, 0.047);
+  --udt-chart-surface-border: rgba(255, 255, 255, 0.19);
+
+  /* Status surfaces (DesignTokens.xaml, ~20% alpha over the chart palette) */
+  --udt-status-info: #4f9df7;
+  --udt-status-success-bg: rgba(111, 191, 115, 0.20);
+  --udt-status-info-bg: rgba(79, 157, 247, 0.20);
+  --udt-status-neutral-bg: rgba(255, 255, 255, 0.08);
+
+  /* Notification glass (DesignTokens.xaml, theme-stable) */
+  --udt-notification-surface: #202020;
+  --udt-notification-border: rgba(255, 255, 255, 0.28);
+
+  /* Gauge sizes (DesignTokens.xaml) */
+  --udt-gauge-sm: 88px;
+  --udt-gauge-md: 110px;
+  --udt-gauge-lg: 132px;
+
+  /* Focus / accessibility (DesignTokens.xaml) */
+  --udt-focus-stroke-thickness: 2px;
+  --udt-focus-corner-radius: 12px;
+  --udt-focus-margin: -2px;
+
+  /* Animation parameters (AnimationTokens.xaml) */
+  --udt-anim-opacity-start: 0;
+  --udt-anim-opacity-end: 1;
+  --udt-anim-translate-offset: 10px;
+  --udt-anim-translate-subtle: 6px;
+
+  /* Layout (DesignTokens.xaml: ContentPaddingPage) */
+  --udt-content-padding-page: 24px;
+
+  /* Navigation items (NavigationStore.xaml: NavigationStoreItem) */
+  --udt-nav-item-min-width: 64px;
+  --udt-nav-item-max-width: 84px;
+  --udt-nav-item-min-height: 60px;
+  --udt-nav-item-gap: 4px;
+
+  /* InfoBar (InfoBar.xaml) */
+  --udt-infobar-padding: 14px 8px;
+  --udt-infobar-content-padding: 16px 14px 10px;
+  --udt-infobar-close-size: 28px;
+
+  /* Notification toast (NotificationToast.xaml) */
+  --udt-toast-width: 400px;
+  --udt-toast-padding: 12px 10px;
+  --udt-toast-min-height: 56px;
+  --udt-toast-close-size: 28px;
+
+  /* Dynamic scrollbar (DynamicScrollBar.xaml) */
+  --udt-scrollbar-width: 6px;
+  --udt-scrollbar-width-hover: 10px;
+  --udt-scrollbar-button-height: 14px;
 }
 
-:root[data-theme='dark'] {
-  color-scheme: dark;
-  --udt-bg-window: #171c25;
-  --udt-bg-card: #232a36;
-  --udt-bg-card-hover: #2a3341;
-  --udt-border: rgba(255, 255, 255, 0.09);
-  --udt-border-strong: rgba(255, 255, 255, 0.13);
-  --udt-text-primary: rgba(255, 255, 255, 0.93);
-  --udt-text-secondary: rgba(220, 228, 243, 0.68);
-  --udt-text-tertiary: rgba(220, 228, 243, 0.42);
-  --udt-titlebar-button-hover: rgba(255, 255, 255, 0.10);
-  --udt-radius-card: 18px;
-  --udt-radius-control: 8px;
+:root[data-theme='light'] {
+  color-scheme: light;
+  --udt-surface-window: #f6f6f6;
+  --udt-surface-card: #ffffff;
+  --udt-surface-navigation: #f6f6f6;
+  --udt-surface-chart: rgba(0, 0, 0, 0.035);
+
+  --udt-text-primary: rgba(0, 0, 0, 0.89);
+  --udt-text-secondary: rgba(0, 0, 0, 0.62);
+  --udt-text-tertiary: rgba(0, 0, 0, 0.45);
+  --udt-text-disabled: rgba(0, 0, 0, 0.36);
+  --udt-control-fill-default: rgba(0, 0, 0, 0.055);
+  --udt-control-fill-secondary: rgba(0, 0, 0, 0.082);
+  --udt-control-fill-tertiary: rgba(0, 0, 0, 0.031);
+  --udt-control-stroke-default: rgba(0, 0, 0, 0.07);
+  --udt-subtle-fill-secondary: rgba(0, 0, 0, 0.059);
+
+  --udt-chart-track: rgba(0, 0, 0, 0.14);
+  --udt-chart-gridline: rgba(0, 0, 0, 0.10);
+  --udt-chart-baseline: rgba(210, 160, 90, 0.85);
+
+  --udt-status-critical-text: #c62828;
+
+  --udt-accent-text: #ffffff;
+
+  --udt-chart-surface: rgba(0, 0, 0, 0.05);
+  --udt-chart-surface-border: rgba(0, 0, 0, 0.12);
+  --udt-status-neutral-bg: rgba(0, 0, 0, 0.05);
 }
 
 *,
@@ -41,12 +238,13 @@ body,
 }
 
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
-    'Microsoft YaHei', sans-serif;
+  font-family: var(--udt-font-family);
+  font-size: var(--udt-font-body);
   -webkit-font-smoothing: antialiased;
   user-select: none;
-  background: var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5));
+  background: var(--udt-surface-window);
+  color: var(--udt-text-primary);
+  overflow: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -58,616 +256,217 @@ body {
   background: transparent;
 }
 
-:root[data-theme='dark'] ::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.15);
-  border-radius: 999px;
+  border-radius: var(--udt-radius-round);
 }
 
-:root[data-theme='dark'] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+:root[data-theme='light'] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.20);
 }
 
-.udt-card-elevated {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
+/* ── Application shell (MainWindow layout) ───────────────────── */
 
 .udt-app-shell {
   display: flex;
-  height: 100dvh;
+  height: 100vh;
   flex-direction: column;
   overflow: hidden;
-  background: var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5));
+  background: var(--udt-surface-navigation);
 }
 
 .udt-app-shell__body {
   display: flex;
-  min-height: 0;
   flex: 1;
+  min-height: 0;
+  margin-left: 12px;
+  gap: 8px;
 }
 
 .udt-app-shell__content {
   display: flex;
-  min-width: 0;
   flex: 1;
+  min-width: 0;
   flex-direction: column;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-right: 0;
+  border-bottom: 0;
+  border-top-left-radius: var(--udt-radius-surface);
+  background: var(--udt-surface-window);
+  overflow: hidden;
 }
 
 .udt-app-shell__main {
   flex: 1;
-  overflow: auto;
-  padding: 22px 28px 28px 30px;
-  background: var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5));
+  overflow-y: auto;
+  padding-left: 24px;
+  background: var(--udt-surface-window);
 }
 
+/* Page switch animation (PageEntranceAnimator: 200ms opacity + 6px rise, CubicOut) */
+.udt-page-enter {
+  animation: udt-page-enter var(--udt-anim-medium) var(--udt-ease-cubic-out) both;
+}
+
+@keyframes udt-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Title bar (38px, WPF-UI TitleBar) ───────────────────────── */
+
 .udt-titlebar {
+  position: relative;
   display: flex;
   flex-shrink: 0;
   align-items: stretch;
-  color: var(--udt-text-primary);
-  background: #edf3f8;
-  border-bottom: 1px solid var(--udt-border);
+  height: 38px;
+  background: transparent;
   user-select: none;
 }
 
-.udt-titlebar__drag-region {
+/* Drag layer spanning the full bar; title text centered over the whole bar (WPF CenterContent) */
+.udt-titlebar__title {
+  position: absolute;
+  inset: 0;
   display: flex;
-  flex: 1;
-  min-width: 0;
   align-items: center;
-  gap: 28px;
-  padding-left: 48px;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.udt-titlebar__title {
-  flex: 0 1 auto;
-  min-width: 0;
+.udt-titlebar__title-text {
+  max-width: 760px;
   overflow: hidden;
-  color: var(--udt-text-primary);
-  font-size: 23px;
-  font-weight: 600;
+  text-align: center;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-titlebar);
+  font-weight: 500;
+}
+
+.udt-titlebar__trailing {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 4px;
+  flex-shrink: 0;
 }
 
 .udt-titlebar__log-button {
-  height: 40px;
-  flex: 0 0 auto;
-  padding: 0 17px;
+  height: 24px;
+  min-width: 48px;
+  padding: 2px 8px;
   border: none;
-  border-radius: 20px;
-  color: #201b15;
-  background: #ff9800;
-  box-shadow: inset 0 -1px 0 rgba(126, 72, 0, 0.18);
+  border-radius: var(--udt-radius-control);
+  color: #241b0c;
+  background: #ff9d00;
   font: inherit;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1;
+  font-size: var(--udt-font-titlebar);
   cursor: pointer;
-  transition: background-color 120ms ease-out, transform 120ms ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out;
 }
 
 .udt-titlebar__log-button:hover {
-  background: #ffa51c;
+  background: #f2a31e;
 }
 
-.udt-titlebar__log-button:active {
-  transform: translateY(1px);
-}
-
-.udt-titlebar__device {
-  min-width: 0;
-  max-width: min(34vw, 350px);
-  overflow: hidden;
+.udt-titlebar__device-button {
+  height: 28px;
+  max-width: 260px;
+  padding: 2px 8px;
+  border: none;
+  border-radius: var(--udt-radius-small);
+  background: transparent;
   color: var(--udt-text-primary);
-  font-size: 23px;
-  font-weight: 600;
-  line-height: 1.2;
+  font: inherit;
+  font-size: var(--udt-font-titlebar);
+  cursor: pointer;
   text-overflow: ellipsis;
   white-space: nowrap;
+  overflow: hidden;
+  transition: background-color var(--udt-anim-fast) ease-out;
+}
+
+.udt-titlebar__device-button:hover {
+  background: var(--udt-control-fill-secondary);
 }
 
 .udt-titlebar__window-controls {
+  position: relative;
+  z-index: 1;
   display: flex;
+  flex-shrink: 0;
 }
 
-:root[data-theme='dark'] .udt-titlebar {
-  background: #252c36;
-}
-
-@media (max-width: 760px) {
-  .udt-titlebar__drag-region {
-    gap: 14px;
-    padding-left: 18px;
-  }
-
-  .udt-titlebar__title,
-  .udt-titlebar__device {
-    font-size: 16px;
-  }
-
-  .udt-titlebar__log-button {
-    height: 34px;
-    padding-inline: 12px;
-    font-size: 15px;
-  }
-}
-
-/* Dashboard: mirrors the original application's continuous sensor surface. */
-.udt-dashboard-page {
-  max-width: 1520px;
-  margin: 0 auto;
-  padding-bottom: 28px;
-}
-
-.udt-dashboard-page__title {
-  margin: 0 0 14px !important;
-  font-size: 28px !important;
-  font-weight: 600 !important;
-}
-
-.udt-sensors {
-  margin-bottom: 0;
-}
-
-.udt-sensors__source-tag {
-  margin: 0 0 8px;
-}
-
-.udt-sensor-board {
-  border-radius: var(--udt-radius-card);
-  background: var(--udt-sensor-board-bg, var(--udt-bg-card));
-  box-shadow: var(--udt-sensor-board-shadow, 0 4px 16px rgba(0, 0, 0, 0.08));
-  padding: 22px 26px 20px;
-  overflow: hidden;
-}
-
-.udt-sensor-board__warning {
-  margin-top: 16px;
-  text-align: center;
-  color: #e8a838;
-  font-size: 14px;
-  line-height: 1.4;
-}
-
-.udt-sensor-board__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.udt-sensor-panel {
-  min-width: 0;
-}
-
-.udt-sensor-panel + .udt-sensor-panel {
-  border-left: 1px solid var(--udt-border);
-  padding-left: 18px;
-}
-
-.udt-sensor-panel__heading {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  min-width: 0;
-  min-height: 28px;
-}
-
-.udt-sensor-panel__heading h2 {
-  margin: 0;
-  color: var(--udt-text-primary);
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.udt-sensor-panel__model {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--udt-text-secondary);
-  font-size: 12px;
-  line-height: 1.3;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.udt-sensor-panel__summary {
-  display: grid;
-  grid-template-columns: 112px minmax(0, 1fr);
-  align-items: center;
-  gap: 14px;
-  min-height: 120px;
-  margin-top: 8px;
-}
-
-.udt-sensor-panel__metrics {
-  display: grid;
-  gap: 4px;
-  margin: 0;
-  min-width: 0;
-}
-
-.udt-sensor-panel__metric {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: baseline;
-  gap: 10px;
-  min-width: 0;
-  min-height: 23px;
-}
-
-.udt-sensor-panel__metric dt,
-.udt-sensor-panel__metric dd {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.udt-sensor-panel__metric dt {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.udt-sensor-panel__metric dd {
-  max-width: 150px;
-  overflow: hidden;
-  font-weight: 500;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.udt-sensor-panel__chart {
-  height: 140px;
-  margin-top: 12px;
-  border-radius: 10px;
-  background: var(--udt-sensor-chart-bg, rgba(255, 255, 255, 0.045));
-  overflow: hidden;
-}
-
-.udt-sensor-panel__legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px 16px;
-  min-height: 20px;
-  margin-top: 10px;
-  color: var(--udt-text-secondary);
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.udt-sensor-panel__legend span {
+.udt-titlebar__window-controls button {
+  width: 44px;
+  height: 30px;
+  align-self: center;
+  border: none;
+  padding: 0;
   display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-}
-
-.udt-sensor-panel__legend i {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  flex: 0 0 auto;
-}
-
-.udt-feature-groups {
-  display: flex;
-  flex-direction: column;
-  gap: 26px;
-}
-
-.udt-feature-group h3 {
-  margin: 0 0 12px;
-  color: var(--udt-text-primary);
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.udt-feature-group__items {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
-  gap: 10px;
-}
-
-.udt-feature-card.ant-card {
-  min-width: 0;
-  overflow: hidden;
-  border: 1px solid var(--udt-border-strong);
-  border-radius: 14px;
-  background: var(--udt-bg-card);
-  box-shadow: none;
-  transition: border-color 150ms ease-out, background-color 150ms ease-out;
-}
-
-.udt-feature-card.ant-card:hover {
-  border-color: rgba(91, 158, 245, 0.52);
-  background: var(--udt-bg-card-hover);
-}
-
-.udt-feature-card__content {
-  display: flex;
-  min-height: 78px;
-  align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
-}
-
-.udt-feature-card__icon {
-  display: inline-flex;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(91, 158, 245, 0.28);
-  border-radius: 10px;
-  color: #78aef8;
-  background: rgba(91, 158, 245, 0.12);
-  font-size: 19px;
-}
-
-.udt-feature-card__copy {
-  min-width: 0;
-}
-
-.udt-feature-card__title,
-.udt-feature-card__description {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.udt-feature-card__title {
+  cursor: default;
+  font-size: 12px;
   color: var(--udt-text-primary);
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 1.45;
-}
-
-.udt-feature-card__description {
-  margin-top: 2px;
-  color: var(--udt-text-secondary);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.udt-feature-card__accessory {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  margin-left: 8px;
-}
-
-.udt-feature-card__select {
-  width: 164px;
-}
-
-.udt-feature-card__error.ant-alert {
-  margin: 0 14px 14px;
-}
-
-.udt-plugins-page {
-  width: min(100%, 1180px);
-  margin: 0 auto;
-  padding-bottom: 24px;
-}
-
-.udt-plugins-page__header {
-  min-height: 56px;
-}
-
-.udt-plugins-page__title.ant-typography {
-  margin: 0;
-  color: var(--udt-text-primary);
-  font-size: 26px;
-}
-
-.udt-plugins-page__description {
-  display: block;
-  margin-top: 3px;
-  color: var(--udt-text-secondary);
-}
-
-.udt-plugins-page__toolbar {
-  align-items: center;
-  padding: 10px;
-  border: 1px solid var(--udt-border);
-  border-radius: 10px;
-  background: var(--udt-bg-card);
-}
-
-.udt-plugins-page__toolbar-spacer {
-  flex: 1 1 24px;
-}
-
-.udt-plugins-page__list .ant-list-item {
-  padding: 0 0 8px;
-  border-block-end: none;
-}
-
-.udt-plugins-page__list .ant-card {
-  overflow: hidden;
-  border-color: var(--udt-border-strong);
-  border-radius: 12px;
-  background: var(--udt-bg-card);
-}
-
-.udt-plugins-page__list .ant-card-head {
-  min-height: 46px;
-  padding-inline: 16px;
-  border-block-end-color: var(--udt-border);
-}
-
-.udt-plugins-page__list .ant-card-body {
-  padding: 14px 16px;
-}
-
-.udt-settings-page {
-  width: min(100%, 1160px);
-  margin: 0 auto;
-  padding-bottom: 24px;
-}
-
-.udt-settings-page__header {
-  margin-bottom: 18px;
-}
-
-.udt-settings-page__title.ant-typography {
-  margin: 0;
-  color: var(--udt-text-primary);
-  font-size: 26px;
-}
-
-.udt-settings-page__description {
-  display: block;
-  margin-top: 4px;
-  color: var(--udt-text-secondary);
-}
-
-.udt-settings-page__surface {
-  display: grid;
-  min-height: 520px;
-  grid-template-columns: minmax(160px, 200px) minmax(0, 1fr);
-  overflow: hidden;
-  border: 1px solid var(--udt-border-strong);
-  border-radius: 14px;
-  background: var(--udt-bg-card);
-}
-
-.udt-settings-page__nav.ant-menu {
-  padding: 10px 8px;
-  border-inline-end: 1px solid var(--udt-border);
   background: transparent;
+  transition: background-color var(--udt-anim-fast) ease-out;
 }
 
-.udt-settings-page__nav .ant-menu-item {
-  display: flex;
-  align-items: center;
-  min-width: 0;
-  margin-inline: 0;
-  width: 100%;
-  border-radius: 8px;
+.udt-titlebar__window-controls button:hover {
+  background: rgba(255, 255, 255, 0.09);
 }
 
-.udt-settings-page__nav .ant-menu-title-content {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.udt-titlebar__window-controls button.udt-titlebar__close:hover {
+  background: #f44336;
+  color: #fff;
 }
 
-.udt-settings-page__content {
-  min-width: 0;
-  padding: 22px 24px;
+:root[data-theme='light'] .udt-titlebar__window-controls button:hover {
+  background: rgba(0, 0, 0, 0.10);
 }
 
-@media (max-width: 760px) {
-  .udt-settings-page__surface { grid-template-columns: 1fr; }
-  .udt-settings-page__nav.ant-menu {
-    display: flex;
-    overflow-x: auto;
-    padding: 8px;
-    border-right: none;
-    border-bottom: 1px solid var(--udt-border);
-  }
-  .udt-settings-page__nav .ant-menu-item { width: auto; flex: 0 0 auto; }
-  .udt-settings-page__content { padding: 18px; }
-}
-
-@media (max-width: 680px) {
-  .udt-plugins-page__toolbar-spacer {
-    display: none;
-  }
-}
-
-:root[data-theme='dark'] {
-  --udt-sensor-board-bg: #242a35;
-  --udt-sensor-chart-bg: rgba(255, 255, 255, 0.055);
-  --udt-sensor-board-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
-}
-
-@media (max-width: 1100px) {
-  .udt-sensor-board {
-    padding: 18px;
-  }
-
-  .udt-sensor-board__grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .udt-sensor-panel + .udt-sensor-panel {
-    border-top: 1px solid var(--udt-border);
-    border-left: none;
-    padding-top: 18px;
-    padding-left: 0;
-  }
-}
-
-@media (max-width: 560px) {
-  .udt-dashboard-page__title {
-    font-size: 24px !important;
-  }
-
-  .udt-sensor-board {
-    padding: 14px;
-  }
-
-  .udt-sensor-panel__summary {
-    grid-template-columns: 102px minmax(0, 1fr);
-    gap: 8px;
-  }
-
-  .udt-feature-card__content {
-    gap: 10px;
-    padding: 12px;
-  }
-
-  .udt-feature-card__icon {
-    width: 32px;
-    height: 32px;
-    font-size: 17px;
-  }
-
-  .udt-feature-card__select {
-    width: 124px;
-  }
-}
-
-@media (max-width: 420px) {
-  .udt-feature-card__content {
-    align-items: flex-start;
-  }
-
-  .udt-feature-card__accessory {
-    margin-top: 2px;
-    margin-left: 0;
-  }
-}
-
-/* ── Navigation ──────────────────────────────────────────────── */
+/* ── Navigation rail (NavigationStore) ────────────────────────── */
 
 .udt-nav {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 8px 12px;
-  background: var(--udt-nav-bg);
-  border-right: 1px solid var(--udt-nav-border);
-  transition: width 200ms ease-out;
-  overflow: hidden;
+  padding: 0;
+  background: transparent;
+  border-right: 0;
+  transition: width var(--udt-anim-medium) var(--udt-ease-cubic-out);
   flex-shrink: 0;
+}
+
+.udt-nav__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0;
 }
 
 .udt-nav-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
+  padding: 0;
 }
 
-.udt-nav-spacer {
-  flex: 1;
+.udt-nav-group--footer {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .udt-nav-item {
@@ -676,75 +475,79 @@ body {
   align-items: center;
   gap: 0;
   width: 100%;
-  min-height: 60px;
-  padding: 0 12px;
-  margin: 0;
-  border: none;
-  border-radius: 12px;
+  min-height: 40px;
+  padding: 0 10px 0 8px;
+  margin: 0 0 4px 0;
+  border: 1px solid transparent;
+  border-radius: var(--udt-radius-small);
   background: transparent;
-  color: var(--udt-nav-text);
+  color: var(--udt-text-secondary);
   font: inherit;
-  font-size: 16px;
+  font-size: var(--udt-font-small-body);
   cursor: pointer;
   text-align: left;
-  transition: background-color 120ms ease-out, color 120ms ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
 }
 
 .udt-nav-item:hover {
-  background: var(--udt-nav-hover-bg);
-  color: var(--udt-nav-text-hover);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-primary);
 }
 
 .udt-nav-item--active {
-  background: var(--udt-nav-active-bg);
-  color: var(--udt-nav-text-active);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-primary);
   font-weight: 500;
 }
 
 .udt-nav-accent {
   position: absolute;
-  left: -12px;
+  left: -6px;
   top: 50%;
   transform: translateY(-50%);
-  width: 5px;
-  height: 34px;
-  border-radius: 3px;
+  width: 4px;
+  height: 24px;
+  border-radius: 2px;
   background: transparent;
-  transition: background-color 120ms ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out;
 }
 
 .udt-nav-item--active .udt-nav-accent {
-  background: var(--udt-nav-accent);
+  background: var(--udt-accent);
 }
 
 .udt-nav-icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
+  width: 32px;
   flex-shrink: 0;
   font-size: 24px;
+  color: var(--udt-text-secondary);
+  transition: color var(--udt-anim-fast) ease-out;
 }
 
 .udt-nav-item--active .udt-nav-icon {
-  color: var(--udt-nav-accent);
+  color: var(--udt-accent);
 }
 
 .udt-nav-label {
   flex: 1;
   min-width: 0;
+  margin-left: 8px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  transition: color var(--udt-anim-fast) ease-out;
 }
 
-/* collapsed layout: icon above, tiny label below */
+/* Collapsed: icon above, tiny label below (WPF CompactLayout, MinHeight 60) */
 .udt-nav-item--collapsed {
   flex-direction: column;
   justify-content: center;
   min-height: 60px;
-  padding: 4px 2px;
-  gap: 2px;
+  padding: 6px;
+  border-radius: var(--udt-radius-small);
 }
 
 .udt-nav-item--collapsed .udt-nav-icon {
@@ -754,111 +557,496 @@ body {
 
 .udt-nav-item--collapsed .udt-nav-label {
   width: 100%;
-  font-size: 10px;
+  margin: 4px 0 0 0;
+  font-size: var(--udt-font-micro);
   line-height: 1.2;
-  white-space: normal;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
   text-align: center;
-  color: inherit;
 }
 
+/* Bottom pane toggle (PART_TogglePaneButton: 16px chevron, left when expanded, centered when collapsed) */
 .udt-nav-toggle {
   display: flex;
+  align-self: flex-start;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
   min-height: 32px;
-  margin: 4px 0 0;
-  padding: 0 12px;
+  margin: 4px 0 8px 8px;
+  padding: 6px;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--udt-radius-small);
   background: transparent;
-  color: var(--udt-nav-text);
-  font-size: 14px;
+  color: var(--udt-text-secondary);
+  font-size: 16px;
   cursor: pointer;
-  transition: background-color 120ms ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
 }
 
 .udt-nav-toggle:hover {
-  background: var(--udt-nav-hover-bg);
-  color: var(--udt-nav-text-hover);
+  background: var(--udt-control-fill-secondary);
+  color: var(--udt-text-primary);
 }
 
 .udt-nav-toggle--collapsed {
+  align-self: center;
   justify-content: center;
-  padding: 0;
+  margin: 4px 0 8px 0;
 }
 
-/* ── Power Section ───────────────────────────────────────────── */
+/* ── Skeleton blocks (Loading.xaml) ───────────────────────────── */
 
-.udt-power-section {
-  margin-top: 28px;
-}
-
-.udt-power-section__title {
-  margin: 0 0 14px;
-  color: var(--udt-text-primary);
-  font-size: 22px;
-  font-weight: 600;
-  line-height: 1.3;
-}
-
-.udt-power-card {
-  border: 1px solid var(--udt-border-strong);
-  border-radius: 14px;
-  background: var(--udt-bg-card);
+.udt-skeleton {
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-fill-secondary);
+  opacity: 0.85;
+  position: relative;
   overflow: hidden;
 }
 
-.udt-power-card__item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 20px;
+.udt-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.11) 30%,
+    rgba(255, 255, 255, 0.27) 48%,
+    rgba(255, 255, 255, 0.11) 66%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  animation: udt-shimmer var(--udt-anim-shimmer) infinite;
 }
 
-.udt-power-card__info {
+@keyframes udt-shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.udt-skeleton-card {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  min-height: 72px;
+  padding: 16px 14px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+}
+
+.udt-skeleton-card__copy {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.udt-skeleton-icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+  border-radius: var(--udt-radius-small);
+}
+
+.udt-skeleton-line {
+  height: 16px;
+  min-width: 120px;
+  border-radius: var(--udt-radius-small);
+}
+
+.udt-skeleton-line--secondary {
+  height: 12px;
+  min-width: 96px;
+  margin: 6px 0 0;
+  border-radius: var(--udt-radius-small);
+}
+
+.udt-skeleton-switch {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 24px;
+  margin-left: 16px;
+  border-radius: var(--udt-radius-round);
+}
+
+.udt-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ── Dashboard page ──────────────────────────────────────────── */
+
+.udt-dashboard-page {
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 16px 0 28px;
+}
+
+.udt-dashboard-page__title {
+  margin: 0 0 24px;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-page-title);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.udt-page-error {
+  padding: 48px 24px;
+  text-align: center;
+  color: var(--udt-text-primary);
+}
+
+.udt-page-error h2 {
+  margin: 0 0 8px;
+  font-size: var(--udt-font-mid-header);
+}
+
+.udt-page-error p {
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-body);
+}
+
+/* ── Sensors board (SensorsControl) ──────────────────────────── */
+
+.udt-sensors {
+  margin-bottom: 0;
+}
+
+.udt-sensor-board {
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+  padding: 12px 14px;
+  overflow: hidden;
+}
+
+.udt-sensor-board__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  margin: 8px 10px;
+}
+
+.udt-sensor-panel {
+  min-width: 0;
+  padding: 0 6px;
+}
+
+.udt-sensor-panel__heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 14px;
+}
+
+.udt-sensor-panel__heading h2 {
+  margin: 0;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-section);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.udt-sensor-panel__model {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  font-weight: 500;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-sensor-panel__summary {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  align-items: center;
   gap: 12px;
+  min-height: 116px;
+}
+
+.udt-sensor-panel__metrics {
+  display: grid;
+  margin: 0;
   min-width: 0;
 }
 
-.udt-power-card__icon {
+.udt-sensor-panel__metric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  height: 24px;
+}
+
+.udt-sensor-panel__metric dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
   flex: 0 0 auto;
-  font-size: 20px;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-body);
+  padding: 2px 0;
+  white-space: nowrap;
+}
+
+.udt-sensor-panel__metric-bar {
+  display: inline-block;
+  width: 100%;
+  max-width: 120px;
+  min-width: 40px;
+  height: 6px;
+  border-radius: var(--udt-radius-progress);
+  background: var(--udt-control-fill-tertiary);
+  border: 1px solid var(--udt-control-stroke-default);
+  position: relative;
+  overflow: hidden;
+}
+
+.udt-sensor-panel__metric-bar::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 1px;
+  background: var(--udt-accent);
+}
+
+.udt-sensor-panel__metric dd {
+  margin: 0;
+  margin-left: auto;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-body);
+  padding: 2px 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.udt-sensor-panel__chart {
+  height: 120px;
+  margin-top: 14px;
+  border-radius: var(--udt-radius-control);
+  background: var(--udt-surface-chart);
+  padding: 2px;
+  overflow: hidden;
+}
+
+.udt-sensor-panel__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 8px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-small-body);
+  line-height: 1.4;
+}
+
+.udt-sensor-panel__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 14px 4px 0;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-sensor-panel__legend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.udt-sensor-board__status {
+  margin: 0;
+  padding-bottom: 8px;
+  text-align: center;
+}
+
+.udt-sensor-board__warning {
+  color: var(--udt-status-warning);
+  font-size: var(--udt-font-caption);
+  font-weight: 500;
+}
+
+/* ── Feature groups (DashboardGroupControl) ──────────────────── */
+
+.udt-feature-groups {
+  display: flex;
+  flex-direction: column;
+}
+
+.udt-feature-group + .udt-feature-group {
+  margin-top: 24px;
+}
+
+.udt-feature-group h3 {
+  margin: 16px 0 24px;
+  color: var(--udt-text-primary);
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.udt-feature-group__items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
+  gap: 0 16px;
+  align-items: start;
+}
+
+.udt-feature-card {
+  min-width: 0;
+  margin: 0 0 8px 0;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+  overflow: hidden;
+}
+
+.udt-feature-card__content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+}
+
+.udt-feature-card__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--udt-text-primary);
   line-height: 1;
 }
 
-.udt-power-card__label {
+.udt-feature-card__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.udt-feature-card__title {
   color: var(--udt-text-primary);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: var(--udt-font-page-desc);
+  font-weight: 500;
   line-height: 1.4;
 }
 
-.udt-power-card__desc {
-  margin-top: 2px;
+.udt-feature-card__description {
+  margin-top: 4px;
   color: var(--udt-text-secondary);
-  font-size: 13px;
+  font-size: var(--udt-font-caption);
+  line-height: 1.4;
+  white-space: pre-line;
+}
+
+.udt-feature-card__hint {
+  margin-top: 4px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
   line-height: 1.4;
 }
 
-.udt-power-card__hint {
-  margin-top: 2px;
-  color: var(--udt-text-tertiary);
-  font-size: 12px;
-  line-height: 1.4;
+.udt-feature-card__accessory {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
 }
 
-.udt-power-card__action {
+.udt-feature-card__toggle {
   flex: 0 0 auto;
 }
 
-.udt-power-card__divider {
-  height: 1px;
-  background: var(--udt-border);
-  margin: 0 20px;
+.udt-feature-card__select {
+  min-width: 165px;
+  margin-left: 8px;
+}
+
+.udt-feature-card__config-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--udt-radius-small);
+  background: transparent;
+  color: var(--udt-text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
+}
+
+.udt-feature-card__config-btn:hover {
+  background: var(--udt-control-fill-secondary);
+  color: var(--udt-text-primary);
+}
+
+.udt-feature-card__error.ant-alert {
+  margin: 0 14px 14px;
+}
+
+/* Responsive: match DashboardPage 1/2/3 columns */
+@media (max-width: 1500px) {
+  .udt-feature-group__items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .udt-feature-group__items {
+    grid-template-columns: 1fr;
+  }
+
+  .udt-sensor-board__grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .udt-sensor-panel {
+    padding: 18px 6px 0;
+    border-top: 1px solid var(--udt-control-stroke-default);
+  }
+
+  .udt-sensor-panel:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .udt-sensor-panel__summary {
+    grid-template-columns: 88px minmax(0, 1fr);
+  }
+}
+
+/* Ant Design overrides to match WPF-UI dark chrome */
+.ant-select-selector {
+  border-radius: var(--udt-radius-control) !important;
+  min-height: 32px !important;
+}
+
+.ant-select-selection-item {
+  font-size: var(--udt-font-caption) !important;
+}
+
+.ant-switch {
+  background: var(--udt-control-fill-secondary) !important;
+}
+
+.ant-switch-checked {
+  background: var(--udt-accent-secondary) !important;
+}
+
+:root[data-theme='light'] .udt-sensor-board,
+:root[data-theme='light'] .udt-feature-card {
+  border-color: var(--udt-control-stroke-default);
 }

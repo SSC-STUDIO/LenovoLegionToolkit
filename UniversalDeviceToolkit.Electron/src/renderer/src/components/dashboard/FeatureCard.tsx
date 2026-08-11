@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Flex, Select, Switch, message } from 'antd'
+import { Alert, Button, Select, Switch, message } from 'antd'
 import {
   AppstoreOutlined,
   BulbOutlined,
@@ -72,16 +72,18 @@ export default function FeatureCard({
   const showsConfig = CONFIG_KEYS.includes(feature)
 
   const accessory = isToggle ? (
-    <Switch
-      checked={Boolean(state)}
-      disabled={error != null}
-      loading={loading}
-      onChange={(checked) => {
-        void setState(checked)
-      }}
-    />
+    <div className="udt-feature-card__toggle">
+      <Switch
+        checked={Boolean(state)}
+        disabled={error != null}
+        loading={loading}
+        onChange={(checked) => {
+          void setState(checked)
+        }}
+      />
+    </div>
   ) : (
-    <Flex gap={4} align="center">
+    <div className="udt-feature-card__accessory">
       <Select
         size="small"
         className="udt-feature-card__select"
@@ -104,22 +106,18 @@ export default function FeatureCard({
           }}
         />
       )}
-    </Flex>
+    </div>
   )
 
   return (
-    <Card
-      size="small"
-      className="udt-feature-card"
-      styles={{ body: { padding: 0 } }}
-    >
+    <div className="udt-feature-card">
       <div className="udt-feature-card__content">
         <FeatureIcon feature={feature} />
-        <Flex vertical flex="1" className="udt-feature-card__copy">
+        <div className="udt-feature-card__copy">
           <div className="udt-feature-card__title" title={title}>{title}</div>
           {desc !== '' && <div className="udt-feature-card__description" title={desc}>{desc}</div>}
-        </Flex>
-        <div className="udt-feature-card__accessory">{accessory}</div>
+        </div>
+        {accessory}
       </div>
       {error != null && (
         <Alert
@@ -130,6 +128,6 @@ export default function FeatureCard({
           className="udt-feature-card__error"
         />
       )}
-    </Card>
+    </div>
   )
 }
