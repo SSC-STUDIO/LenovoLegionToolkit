@@ -379,6 +379,68 @@ body {
   margin: 0 14px 14px;
 }
 
+.udt-plugins-page {
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding-bottom: 24px;
+}
+
+.udt-plugins-page__header {
+  min-height: 56px;
+}
+
+.udt-plugins-page__title.ant-typography {
+  margin: 0;
+  color: var(--udt-text-primary);
+  font-size: 26px;
+}
+
+.udt-plugins-page__description {
+  display: block;
+  margin-top: 3px;
+  color: var(--udt-text-secondary);
+}
+
+.udt-plugins-page__toolbar {
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--udt-border);
+  border-radius: 10px;
+  background: var(--udt-bg-card);
+}
+
+.udt-plugins-page__toolbar-spacer {
+  flex: 1 1 24px;
+}
+
+.udt-plugins-page__list .ant-list-item {
+  padding: 0 0 8px;
+  border-block-end: none;
+}
+
+.udt-plugins-page__list .ant-card {
+  overflow: hidden;
+  border-color: var(--udt-border-strong);
+  border-radius: 12px;
+  background: var(--udt-bg-card);
+}
+
+.udt-plugins-page__list .ant-card-head {
+  min-height: 46px;
+  padding-inline: 16px;
+  border-block-end-color: var(--udt-border);
+}
+
+.udt-plugins-page__list .ant-card-body {
+  padding: 14px 16px;
+}
+
+@media (max-width: 680px) {
+  .udt-plugins-page__toolbar-spacer {
+    display: none;
+  }
+}
+
 :root[data-theme='dark'] {
   --udt-sensor-board-bg: #242a35;
   --udt-sensor-chart-bg: rgba(255, 255, 255, 0.055);

@@ -16,7 +16,7 @@ import {
   Typography,
   message
 } from 'antd'
-import { ReloadOutlined, SearchOutlined } from '@ant-design/icons'
+import { DownloadOutlined, ReloadOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import type { PluginView } from '../api/plugins'
 import { usePluginsStore } from '../stores/pluginsStore'
@@ -147,9 +147,10 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
 
 export default function PluginExtensionsPage(): React.JSX.Element {
   const { t } = useTranslation()
-  const { plugins, loading, offline, error, load, refresh } = usePluginsStore()
+  const { plugins, loading, offline, error, load, refresh, install, importFile } = usePluginsStore()
   const [search, setSearch] = useState('')
   const [filter, setFilter] = useState<FilterValue>('all')
+  const [bulkAction, setBulkAction] = useState<'import' | 'install' | 'update' | null>(null)
 
   useEffect(() => {
     void load()
@@ -172,12 +173,52 @@ export default function PluginExtensionsPage(): React.JSX.Element {
   const installedCount = plugins.filter((plugin) => plugin.installedVersion).length
   const updateCount = plugins.filter((plugin) => plugin.updateAvailable).length
 
+  const runBulkAction = async (
+    action: 'import' | 'install' | 'update',
+    pluginIds: string[] = []
+  ): Promise<void> => {
+    setBulkAction(action)
+    try {
+      if (action === 'import') {
+        const files = await window.bridge?.selectPluginFiles() ?? []
+        if (files.length === 0) return
+        const results = await Promise.all(files.map((file) => importFile(file)))
+        if (results.every(Boolean)) {
+          message.success(`Imported ${files.length} plugin package${files.length === 1 ? '' : 's'}`)
+        } else {
+          message.warning('Some plugin packages could not be imported')
+        }
+        return
+      }
+
+      let succeeded = 0
+      for (const pluginId of pluginIds) {
+        if (await install(pluginId)) succeeded += 1
+      }
+      if (succeeded === pluginIds.length) {
+        message.success(`${action === 'update' ? 'Updated' : 'Installed'} ${succeeded} plugin${succeeded === 1 ? '' : 's'}`)
+      } else {
+        message.warning(`${succeeded} of ${pluginIds.length} plugin operations completed`)
+      }
+    } finally {
+      setBulkAction(null)
+    }
+  }
+
+  const installableIds = plugins.filter((plugin) => !plugin.installedVersion).map((plugin) => plugin.id)
+  const updatableIds = plugins.filter((plugin) => plugin.updateAvailable).map((plugin) => plugin.id)
+
   return (
-    <Flex vertical gap={16}>
-      <Flex align="center" justify="space-between" wrap gap={8}>
-        <Typography.Title level={3} style={{ margin: 0 }}>
+    <Flex vertical gap={16} className="udt-plugins-page">
+      <Flex align="center" justify="space-between" wrap gap={8} className="udt-plugins-page__header">
+        <div>
+          <Typography.Title level={3} className="udt-plugins-page__title">
           {t('plugins.title')}
-        </Typography.Title>
+          </Typography.Title>
+          <Typography.Text className="udt-plugins-page__description">
+            Browse, manage, and update installed extensions.
+          </Typography.Text>
+        </div>
         <Space wrap>
           <Typography.Text type="secondary">
             {t('plugins.total', { count: plugins.length })} ·{' '}
@@ -194,7 +235,7 @@ export default function PluginExtensionsPage(): React.JSX.Element {
         </Space>
       </Flex>
 
-      <Flex gap={8} wrap>
+      <Flex gap={8} wrap className="udt-plugins-page__toolbar">
         <Input
           allowClear
           prefix={<SearchOutlined />}
@@ -213,6 +254,31 @@ export default function PluginExtensionsPage(): React.JSX.Element {
             { value: 'notInstalled', label: t('plugins.filterNotInstalled') }
           ]}
         />
+        <div className="udt-plugins-page__toolbar-spacer" />
+        <Button
+          icon={<UploadOutlined />}
+          loading={bulkAction === 'import'}
+          onClick={() => void runBulkAction('import')}
+        >
+          Import files
+        </Button>
+        <Button
+          icon={<DownloadOutlined />}
+          disabled={installableIds.length === 0 || bulkAction != null}
+          loading={bulkAction === 'install'}
+          onClick={() => void runBulkAction('install', installableIds)}
+        >
+          Install all
+        </Button>
+        <Button
+          type="primary"
+          icon={<ReloadOutlined />}
+          disabled={updatableIds.length === 0 || bulkAction != null}
+          loading={bulkAction === 'update'}
+          onClick={() => void runBulkAction('update', updatableIds)}
+        >
+          Update all
+        </Button>
       </Flex>
 
       {offline && <Alert type="warning" showIcon message={t('plugins.offline')} />}
@@ -222,6 +288,7 @@ export default function PluginExtensionsPage(): React.JSX.Element {
         <Empty description={t('plugins.empty')} />
       ) : (
         <List
+          className="udt-plugins-page__list"
           loading={loading}
           dataSource={filtered}
           renderItem={(plugin) => <PluginCard key={plugin.id} plugin={plugin} />}

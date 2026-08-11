@@ -13,6 +13,7 @@ const bridge = {
   minimize: (): void => ipcRenderer.send('window:minimize'),
   maximizeToggle: (): void => ipcRenderer.send('window:maximize-toggle'),
   closeWindow: (): void => ipcRenderer.send('window:close'),
+  selectPluginFiles: (): Promise<string[]> => ipcRenderer.invoke('dialog:select-plugin-files'),
   isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window:is-maximized'),
   onMaximizedChanged: (callback: (maximized: boolean) => void): (() => void) => {
     const listener = (_event: Electron.IpcRendererEvent, maximized: boolean): void => {

@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, dialog, ipcMain } from 'electron'
 import { join } from 'path'
 import { existsSync } from 'fs'
 import { hostClient } from './host-client'
@@ -70,6 +70,7 @@ function createWindow(): void {
     show: false,
     autoHideMenuBar: true,
     frame: false,
+    icon: join(__dirname, '..', '..', 'resources', 'icon.png'),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
@@ -164,6 +165,19 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('window:is-maximized', () => mainWindow?.isMaximized() ?? false)
+
+  ipcMain.handle('dialog:select-plugin-files', async () => {
+    const options = {
+      title: 'Import plugin packages',
+      properties: ['openFile', 'multiSelections'] as ('openFile' | 'multiSelections')[],
+      filters: [{ name: 'Plugin packages', extensions: ['zip'] }]
+    }
+    const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
+    const result = owner == null
+      ? await dialog.showOpenDialog(options)
+      : await dialog.showOpenDialog(owner, options)
+    return result.canceled ? [] : result.filePaths
+  })
 
   startHost()
   createWindow()
