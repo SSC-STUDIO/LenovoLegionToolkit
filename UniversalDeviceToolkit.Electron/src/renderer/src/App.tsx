@@ -3,7 +3,7 @@ import { Spin } from 'antd'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import AppLayout from './layout/AppLayout'
 
-const DashboardPage = lazy(() => import('./pages/DashboardPage'))
+const DashboardPage = lazy(() => import('./pages/DashboardParityPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const AutomationPage = lazy(() => import('./pages/AutomationPage'))
 const KeyboardBacklightPage = lazy(() => import('./pages/KeyboardBacklightPage'))

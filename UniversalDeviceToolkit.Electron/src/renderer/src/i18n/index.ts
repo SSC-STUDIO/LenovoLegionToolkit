@@ -2,6 +2,7 @@ import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import enUS from './locales/en-US'
 import zhCN from './locales/zh-CN'
+import { dashboardParityEnUS, dashboardParityZhCN } from './locales/dashboard-parity'
 
 export const supportedLanguages = ['zh-CN', 'en-US'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -17,8 +18,18 @@ function resolveInitialLanguage(): SupportedLanguage {
 
 void i18n.use(initReactI18next).init({
   resources: {
-    'zh-CN': zhCN,
-    'en-US': enUS
+    'zh-CN': {
+      translation: {
+        ...zhCN.translation,
+        ...dashboardParityZhCN
+      }
+    },
+    'en-US': {
+      translation: {
+        ...enUS.translation,
+        ...dashboardParityEnUS
+      }
+    }
   },
   lng: resolveInitialLanguage(),
   fallbackLng: 'en-US',
