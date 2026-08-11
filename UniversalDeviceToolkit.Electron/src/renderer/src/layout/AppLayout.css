@@ -11,7 +11,7 @@
   background: #edf7fb;
 }
 
-.udt-app-shell__content {
+.udt-app-shell .udt-app-shell__content {
   margin: 10px 0 0 12px;
   border: 1px solid #e3edf3;
   border-right: 0;
@@ -21,20 +21,31 @@
   overflow: hidden;
 }
 
-.udt-app-shell__main {
+.udt-app-shell .udt-app-shell__main {
   padding: 24px 28px 28px 30px;
   background: #fff;
 }
 
 .udt-titlebar {
+  display: flex;
+  align-items: stretch;
   color: #26313a;
   background: #eaf4f7;
   border-bottom: 1px solid #d8e6ec;
 }
 
 .udt-titlebar__drag-region {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
   gap: 18px;
   padding-left: 32px;
+}
+
+.udt-titlebar__drag-spacer {
+  flex: 1;
+  min-width: 0;
 }
 
 .udt-titlebar__title,
@@ -45,7 +56,19 @@
 }
 
 .udt-titlebar__device {
-  max-width: min(34vw, 300px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: min(34vw, 320px);
+  padding-right: 12px;
+  flex-shrink: 0;
+}
+
+.udt-titlebar__device-name {
+  color: #29333c;
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
 .udt-titlebar__log-button {
@@ -62,6 +85,11 @@
 
 .udt-titlebar__log-button:hover {
   background: #f2a31e;
+}
+
+.udt-titlebar__window-controls {
+  display: flex;
+  flex-shrink: 0;
 }
 
 .udt-titlebar__window-controls button {

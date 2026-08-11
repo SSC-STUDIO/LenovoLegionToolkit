@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
   AppstoreOutlined,
   DashboardOutlined,
-  HomeOutlined,
+  HomeFilled,
   InfoCircleOutlined,
   LeftOutlined,
   MacCommandOutlined,
@@ -17,7 +17,7 @@ import { useTheme } from '../theme/useTheme'
 import './AppLayout.css'
 
 const NAV_WIDTH_COLLAPSED = 64
-const NAV_WIDTH_EXPANDED = 240
+const NAV_WIDTH_EXPANDED = 280
 
 interface NavItemDef {
   key: string
@@ -26,7 +26,7 @@ interface NavItemDef {
 }
 
 const MAIN_ITEMS: NavItemDef[] = [
-  { key: '/dashboard', icon: <HomeOutlined />, labelKey: 'nav.dashboard' },
+  { key: '/dashboard', icon: <HomeFilled />, labelKey: 'nav.dashboard' },
   { key: '/automation', icon: <RocketOutlined />, labelKey: 'nav.automation' },
   { key: '/macro', icon: <MacCommandOutlined />, labelKey: 'nav.macro' },
   { key: '/optimization', icon: <DashboardOutlined />, labelKey: 'nav.windowsOptimization' }

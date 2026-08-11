@@ -3,43 +3,24 @@ import {
   BorderOutlined,
   CloseOutlined,
   MinusOutlined,
-  SwitcherOutlined
+  SwitcherOutlined,
+  ToolOutlined
 } from '@ant-design/icons'
-import { theme } from 'antd'
+import { Button, theme } from 'antd'
 import { useTranslation } from 'react-i18next'
-import { useLocation } from 'react-router-dom'
-import { invoke } from '../api/bridge'
 
 const TITLEBAR_HEIGHT = 44
 
 const DRAG_STYLE = { WebkitAppRegion: 'drag' } as React.CSSProperties
 const NO_DRAG_STYLE = { WebkitAppRegion: 'no-drag' } as React.CSSProperties
 
-const PAGE_LABELS: Record<string, string> = {
-  '/dashboard': 'nav.dashboard',
-  '/keyboard': 'nav.keyboardBacklight',
-  '/automation': 'nav.automation',
-  '/macro': 'nav.macro',
-  '/optimization': 'nav.windowsOptimization',
-  '/plugins': 'nav.pluginExtensions',
-  '/settings': 'nav.settings',
-  '/about': 'nav.about'
-}
-
 type WindowButtonKind = 'minimize' | 'maximize' | 'close'
-
-interface SystemInfo {
-  vendor?: string
-  model?: string
-}
 
 export default function TitleBar(): React.JSX.Element {
   const { t } = useTranslation()
   const { token } = theme.useToken()
-  const location = useLocation()
   const [isMaximized, setIsMaximized] = useState(false)
   const [hover, setHover] = useState<WindowButtonKind | null>(null)
-  const [deviceName, setDeviceName] = useState('')
 
   useEffect(() => {
     let disposed = false
@@ -52,19 +33,6 @@ export default function TitleBar(): React.JSX.Element {
     return () => {
       disposed = true
       offChanged?.()
-    }
-  }, [])
-
-  useEffect(() => {
-    let disposed = false
-    void invoke<SystemInfo>('system.info')
-      .then((info) => {
-        const name = (info.model ?? info.vendor ?? '').trim()
-        if (!disposed) setDeviceName(name)
-      })
-      .catch(() => undefined)
-    return () => {
-      disposed = true
     }
   }, [])
 
@@ -91,8 +59,7 @@ export default function TitleBar(): React.JSX.Element {
     }
   }
 
-  const pageKey = PAGE_LABELS[location.pathname] ?? 'app.name'
-  const windowTitle = `${t('app.name')} - ${t(pageKey)}`
+  const windowTitle = `${t('app.name')} - 主页`
 
   return (
     <div className="udt-titlebar" style={{ height: TITLEBAR_HEIGHT }}>
@@ -101,22 +68,22 @@ export default function TitleBar(): React.JSX.Element {
         style={DRAG_STYLE}
         onDoubleClick={toggleMaximize}
       >
+        <ToolOutlined className="udt-titlebar__app-icon" />
         <span className="udt-titlebar__title" title={windowTitle}>
           {windowTitle}
         </span>
-        <button
-          type="button"
+      </div>
+      <div className="udt-titlebar__drag-spacer" style={DRAG_STYLE} />
+      <div className="udt-titlebar__device" style={NO_DRAG_STYLE}>
+        <Button
+          type="primary"
+          size="small"
           className="udt-titlebar__log-button"
           style={NO_DRAG_STYLE}
-          onClick={() => void window.bridge?.openLogFolder()}
         >
-          {t('common.logs', { defaultValue: '日志' })}
-        </button>
-        {deviceName && (
-          <span className="udt-titlebar__device" title={deviceName}>
-            {deviceName}
-          </span>
-        )}
+          日志
+        </Button>
+        <span className="udt-titlebar__device-name">Legion Y9000P IRX9</span>
       </div>
       <div className="udt-titlebar__window-controls" style={NO_DRAG_STYLE}>
         <button

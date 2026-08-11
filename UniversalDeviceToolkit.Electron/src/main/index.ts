@@ -8,6 +8,10 @@ import { initOsdWindow, destroyOsdWindow } from './osd-window'
 
 app.setAppUserModelId('com.universaldevicetoolkit.app')
 
+// WPF renders in DIPs while Chromium applies the Windows display scale to CSS.
+// This keeps the Electron renderer at the original client's physical density.
+const RENDERER_ZOOM_FACTOR = 5 / 6
+
 if (!initSingleInstance()) {
   app.exit(0)
 }
@@ -67,8 +71,8 @@ async function shouldMinimizeToTray(keys: MinimizeSetting[]): Promise<boolean> {
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 800,
+    width: 1000,
+    height: 640,
     show: false,
     autoHideMenuBar: true,
     frame: false,
@@ -80,6 +84,8 @@ function createWindow(): void {
       sandbox: false
     }
   })
+
+  mainWindow.webContents.setZoomFactor(RENDERER_ZOOM_FACTOR)
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show()
