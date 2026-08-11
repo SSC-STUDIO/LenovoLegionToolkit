@@ -6,8 +6,7 @@ public sealed class PluginPackager
 {
     private static readonly HashSet<string> HostRuntimeFileStems = new(StringComparer.OrdinalIgnoreCase)
     {
-        "Universal Device Toolkit",
-        "UniversalDeviceToolkit.WPF",
+        "UniversalDeviceToolkit.Host",
         "UniversalDeviceToolkit.Lib",
         "UniversalDeviceToolkit.Lib.Plugins",
         "UniversalDeviceToolkit.Lib.Abstractions",

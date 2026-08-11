@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
   Alert,
+  Avatar,
   Button,
   Card,
   Collapse,
@@ -20,6 +21,7 @@ import { DownloadOutlined, ReloadOutlined, SearchOutlined, UploadOutlined } from
 import { useTranslation } from 'react-i18next'
 import type { PluginView } from '../api/plugins'
 import { usePluginsStore } from '../stores/pluginsStore'
+import './PluginExtensionsPage.css'
 
 type FilterValue = 'all' | 'installed' | 'notInstalled'
 
@@ -113,32 +115,36 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
 
   return (
     <Card
+      className="udt-plugin-row"
       size="small"
       title={
-        <Space size={8} wrap>
-          <Typography.Text strong>{plugin.name}</Typography.Text>
-          <Typography.Text type="secondary">v{plugin.version}</Typography.Text>
-          <PluginStatusTag plugin={plugin} />
-          {plugin.isSystemPlugin && <Tag color="gold">System</Tag>}
-        </Space>
+        <div className="udt-plugin-row__heading">
+          <Avatar shape="square" size={66} style={{ background: plugin.iconBackground ?? '#416aa1' }}>
+            {plugin.name.split(/\s+/).map((word) => word[0]).join('').slice(0, 2).toUpperCase()}
+          </Avatar>
+          <div className="udt-plugin-row__heading-copy">
+            <Space size={8} wrap>
+              <Typography.Text strong>{plugin.name}</Typography.Text>
+              <Typography.Text type="secondary">v{plugin.version}</Typography.Text>
+              <PluginStatusTag plugin={plugin} />
+              {plugin.isSystemPlugin && <Tag color="gold">System</Tag>}
+            </Space>
+            {(plugin.tags.length > 0 || plugin.dependencies.length > 0) && (
+              <Space size={[6, 6]} wrap className="udt-plugin-row__tags">
+                {plugin.tags.map((tag) => <Tag key={tag}>{tag}</Tag>)}
+                {plugin.dependencies.length > 0 && (
+                  <Tag color="geekblue">{t('plugins.dependencies')}: {plugin.dependencies.join(', ')}</Tag>
+                )}
+              </Space>
+            )}
+          </div>
+        </div>
       }
       extra={actions}
     >
-      <Typography.Paragraph type="secondary" style={{ marginBottom: 8 }}>
+      <Typography.Paragraph className="udt-plugin-row__description" type="secondary">
         {plugin.description}
       </Typography.Paragraph>
-      {(plugin.tags.length > 0 || plugin.dependencies.length > 0) && (
-        <Space size={[4, 4]} wrap style={{ marginBottom: 8 }}>
-          {plugin.tags.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
-          ))}
-          {plugin.dependencies.length > 0 && (
-            <Tag color="geekblue">
-              {t('plugins.dependencies')}: {plugin.dependencies.join(', ')}
-            </Tag>
-          )}
-        </Space>
-      )}
       {installing && <Progress percent={progress} size="small" />}
       {collapseItems.length > 0 && <Collapse ghost size="small" items={collapseItems} />}
     </Card>

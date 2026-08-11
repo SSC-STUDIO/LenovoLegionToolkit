@@ -23,7 +23,11 @@ public sealed class SolutionProjectInventoryGuardTests
     ];
 
     private static readonly IReadOnlyDictionary<string, string> ExternalProjects =
-        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj"] =
+                "Headless backend process spawned by the Electron client; built and packaged separately.",
+        };
 
     [Fact]
     public void EveryRepositoryProject_ShouldBeInSolutionOrExplicitlyExternal()

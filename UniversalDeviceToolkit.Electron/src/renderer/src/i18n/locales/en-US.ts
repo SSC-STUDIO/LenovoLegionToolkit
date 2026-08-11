@@ -4,12 +4,12 @@ export default {
       name: 'Universal Device Toolkit'
     },
     nav: {
-      dashboard: 'Dashboard',
+      dashboard: 'Console',
       settings: 'Settings',
       automation: 'Automation',
       keyboardBacklight: 'Keyboard Backlight',
-      macro: 'Macro',
-      windowsOptimization: 'Windows Optimization',
+      macro: 'Custom Macro',
+      windowsOptimization: 'System Optimization',
       pluginExtensions: 'Plugins & Extensions',
       about: 'About'
     },
@@ -26,29 +26,33 @@ export default {
       status: 'Status'
     },
     dashboard: {
-      title: 'Dashboard',
+      title: 'Console',
       cpu: 'CPU',
       gpu: 'GPU',
       memory: 'Memory',
       temperature: 'Temperature',
-      usage: 'Usage',
+      usage: 'Utilization',
       power: 'Power',
-      fanSpeed: 'Fan Speed',
+      fanSpeed: 'Fan',
       vram: 'VRAM',
       memoryUsed: 'Memory Used',
       memoryTotal: 'Memory Total',
       storageTemp: 'Storage Temp',
       notAvailable: '--',
       sensor: {
-        cpu: 'CPU',
-        gpu: 'GPU',
+        cpu: 'Processor',
+        gpu: 'Graphics Card',
         memory: 'Memory',
         temperature: 'Temperature',
-        usage: 'Usage',
+        usage: 'Utilization',
         power: 'Power',
-        fanSpeed: 'Fan Speed',
+        fanSpeed: 'Fan',
         vram: 'VRAM',
-        frequency: 'Frequency'
+        frequency: 'Core Clock',
+        battery: 'Battery',
+        health: 'Health',
+        rate: 'Rate',
+        lowPowerAdapter: 'Low power adapter inserted'
       },
       group: {
         power: 'Power',
@@ -65,7 +69,8 @@ export default {
     },
     feature: {
       powerMode: 'Power Mode',
-      'powerMode.desc': 'Switch overall performance and thermal strategy',
+      'powerMode.desc': 'Select performance mode',
+      'powerMode.hint': 'You can quickly change it with the Fn+Q shortcut.',
       battery: 'Battery Mode',
       'battery.desc': 'Choose a battery charging mode to extend battery life',
       batteryNightCharge: 'Battery Night Charging',

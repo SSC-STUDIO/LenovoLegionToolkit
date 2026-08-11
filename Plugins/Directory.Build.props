@@ -1,4 +1,4 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='utf-8'?>
 <Project>
 
 
@@ -32,15 +32,13 @@
     <HostLibPluginsPath Condition="'$(HostLibPluginsPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Lib.Plugins.dll</HostLibPluginsPath>
     <HostAbstractionsPath Condition="'$(HostAbstractionsPath)' == '' and Exists('$(HostSourceDir)UniversalDeviceToolkit.Plugins.Abstractions.dll')">$(HostSourceDir)UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
     <HostAbstractionsPath Condition="'$(HostAbstractionsPath)' == ''">$(HostDependenciesDir)UniversalDeviceToolkit.Plugins.Abstractions.dll</HostAbstractionsPath>
-    <HostWpfPath Condition="'$(HostWpfPath)' == '' and Exists('$(HostSourceDir)Universal Device Toolkit.dll')">$(HostSourceDir)Universal Device Toolkit.dll</HostWpfPath>
-    <HostWpfPath Condition="'$(HostWpfPath)' == ''">$(HostDependenciesDir)Universal Device Toolkit.dll</HostWpfPath>
     <EnsureHostDependenciesScript>$(MSBuildThisFileDirectory)Scripts\ensure-host-dependencies.ps1</EnsureHostDependenciesScript>
     <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' == 'Windows_NT'">powershell</PowerShellExecutable>
     <PowerShellExecutable Condition="'$(PowerShellExecutable)' == '' AND '$(OS)' != 'Windows_NT'">pwsh</PowerShellExecutable>
   </PropertyGroup>
 
 
-  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsPluginTestProject)' != 'True'">
+  <PropertyGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND '$(IsPluginTestProject)' != 'True'">
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Nullable>enable</Nullable>
@@ -69,11 +67,6 @@
   </PropertyGroup>
 
 
-  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
-    <UseCommonControls>true</UseCommonControls>
-  </PropertyGroup>
-
-
   <PropertyGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
     <!-- Plugin ZIPs must carry non-host NuGet sidecars such as Logging.Abstractions and AsyncLock. -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -88,7 +81,7 @@
   </PropertyGroup>
 
 
-  <PropertyGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginToolProject)' != 'True'">
+  <PropertyGroup Condition="'$(IsPluginToolProject)' != 'True'">
     <SatelliteResourceLanguages>$(PluginSatelliteResourceLanguages)</SatelliteResourceLanguages>
   </PropertyGroup>
 
@@ -111,11 +104,7 @@
  </ItemGroup>
 
 
-  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True'">
-    <PackageReference Include="WPF-UI" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(UseWPF)' == 'true' AND '$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND Exists('plugin.manifest.json')">
+  <ItemGroup Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsPluginTestProject)' != 'True' AND '$(IsPluginToolProject)' != 'True' AND Exists('plugin.manifest.json')">
     <None Include="plugin.manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -123,7 +112,7 @@
 
   <Target Name="EnsureHostDependencies"
           BeforeTargets="ResolveReferences"
-          Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostLibPath)') OR !Exists('$(HostLibPluginsPath)') OR !Exists('$(HostWpfPath)') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
+          Condition="'$(IsPluginSdkProject)' != 'True' AND '$(IsTemplatePluginProject)' != 'True' AND Exists('$(EnsureHostDependenciesScript)') AND (!Exists('$(HostLibPath)') OR !Exists('$(HostLibPluginsPath)') OR !Exists('$(HostDependenciesDir)Serilog.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.Async.dll') OR !Exists('$(HostDependenciesDir)Serilog.Sinks.File.dll'))">
     <Message Importance="high" Text="Host dependencies are missing from the main build or Plugins\.host cache. Bootstrapping required host binaries..." />
     <Exec Command="&quot;$(PowerShellExecutable)&quot; -NoProfile -ExecutionPolicy Bypass -File &quot;$(EnsureHostDependenciesScript)&quot;"
           WorkingDirectory="$(MSBuildThisFileDirectory)" />
@@ -134,8 +123,6 @@
     <ItemGroup>
       <FilesToDelete Include="$(OutputPath)*.deps.json" />
       <FilesToDelete Include="$(OutputPath)*.runtimeconfig.json" />
-      <FilesToDelete Include="$(OutputPath)Universal Device Toolkit.*" />
-      <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.WPF.*" />
       <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Lib.*" />
       <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Lib.Macro.*" />
       <FilesToDelete Include="$(OutputPath)UniversalDeviceToolkit.Plugins.Abstractions.*" />

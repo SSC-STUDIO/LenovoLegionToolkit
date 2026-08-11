@@ -17,8 +17,9 @@ const CPU_TEMPERATURE = '#E4933D'
 const GPU_UTILIZATION = '#5B9EF5'
 const GPU_CLOCK = '#76C985'
 const GPU_TEMPERATURE = '#E4933D'
-const MEMORY_UTILIZATION = '#8ACA86'
-const TREND_HEIGHT = 168
+const BATTERY_RATE = '#76C985'
+const BATTERY_TEMPERATURE = '#E4933D'
+const TREND_HEIGHT = 140
 
 interface SensorMetric {
   label: string
@@ -37,10 +38,6 @@ interface SensorPanelProps {
   valueColor: string
 }
 
-function toGigabytes(mb: number | null | undefined): number | null {
-  return mb == null ? null : mb / 1024
-}
-
 function metricText(
   value: number | null | undefined,
   unit: string,
@@ -53,7 +50,7 @@ function metricText(
 
 function formatFrequency(mhz: number | null | undefined): string {
   if (mhz == null || !Number.isFinite(mhz)) return '--'
-  return mhz >= 1000 ? `${(mhz / 1000).toFixed(2)} GHz` : `${mhz.toFixed(0)} MHz`
+  return mhz >= 1000 ? `${(mhz / 1000).toFixed(1)} GHz` : `${mhz.toFixed(0)} MHz`
 }
 
 function temperatureColor(temp: number | null | undefined, fallback: string): string {
@@ -135,13 +132,14 @@ export default function SensorSection(): React.JSX.Element {
         { name: t('dashboard.sensor.frequency'), color: CPU_CLOCK, data: [...trend.cpuClock] },
         { name: t('dashboard.sensor.temperature'), color: CPU_TEMPERATURE, data: [...trend.cpuTemperature] }
       ] satisfies TrendSeries[],
+      battery: [
+        { name: t('dashboard.sensor.usage'), color: BATTERY_RATE, data: [...trend.cpuUsage] },
+        { name: t('dashboard.sensor.temperature'), color: BATTERY_TEMPERATURE, data: [...trend.cpuTemperature] }
+      ] satisfies TrendSeries[],
       gpu: [
         { name: t('dashboard.sensor.usage'), color: GPU_UTILIZATION, data: [...trend.gpuUsage] },
         { name: t('dashboard.sensor.frequency'), color: GPU_CLOCK, data: [...trend.gpuClock] },
         { name: t('dashboard.sensor.temperature'), color: GPU_TEMPERATURE, data: [...trend.gpuTemperature] }
-      ] satisfies TrendSeries[],
-      memory: [
-        { name: t('dashboard.sensor.usage'), color: MEMORY_UTILIZATION, data: [...trend.memoryUsage] }
       ] satisfies TrendSeries[]
     }),
     [trend, t]
@@ -149,26 +147,15 @@ export default function SensorSection(): React.JSX.Element {
 
   const cpu = snapshot?.cpu
   const gpu = snapshot?.gpu
-  const memory = snapshot?.memory
-  const storageTemperatures = snapshot?.storage?.temperatures
+  const battery = snapshot?.battery
   const notAvailable = t('dashboard.notAvailable')
   const labels = trend.labels
   const labelColor = isDark ? 'rgba(255, 255, 255, 0.78)' : token.colorTextSecondary
   const valueColor = isDark ? 'rgba(255, 255, 255, 0.94)' : token.colorText
-  const vramUsed = toGigabytes(gpu?.vramUsedMb)
-  const vramTotal = toGigabytes(gpu?.vramTotalMb)
-  const vramText =
-    vramUsed == null
-      ? notAvailable
-      : `${vramUsed.toFixed(1)} GB${vramTotal != null ? ` / ${vramTotal.toFixed(1)} GB` : ''}`
-  const storageTemperatureText =
-    storageTemperatures != null && storageTemperatures.length > 0
-      ? `${storageTemperatures.map((value) => formatSensorValue(value, 0)).join(' / ')} °C`
-      : null
-  const storageTemperatureMax = Math.max(
-    ...(storageTemperatures ?? []).filter((value): value is number => value != null && Number.isFinite(value)),
-    Number.NEGATIVE_INFINITY
-  )
+
+  const batteryHealth = battery?.health != null ? `${(battery.health * 100).toFixed(2)}%` : notAvailable
+  const batteryTemperature = battery?.temperature != null ? `${battery.temperature.toFixed(0)} °C` : notAvailable
+  const batteryRate = battery?.chargeRate != null ? `${battery.chargeRate.toFixed(2)} W` : notAvailable
 
   return (
     <div className="udt-sensors">
@@ -194,54 +181,40 @@ export default function SensorSection(): React.JSX.Element {
               />
             }
             metrics={[
-              { label: t('dashboard.sensor.usage'), value: metricText(cpu?.usage, '%', 0, notAvailable) },
               { label: t('dashboard.sensor.frequency'), value: formatFrequency(cpu?.coreClockAvg ?? cpu?.coreClockMax) },
               {
                 label: t('dashboard.sensor.temperature'),
                 value: metricText(cpu?.temperature, '°C', 0, notAvailable),
                 color: temperatureColor(cpu?.temperature, valueColor)
-              }
+              },
+              { label: t('dashboard.sensor.fanSpeed'), value: metricText(cpu?.fanSpeed, '', 0, notAvailable) }
             ]}
             series={trendSeries.cpu}
             labels={labels}
           />
           <SensorPanel
-            title={t('dashboard.sensor.memory')}
+            title={t('dashboard.sensor.battery')}
             labelColor={labelColor}
             valueColor={valueColor}
             gauge={
               <SensorGauge
-                value={memory?.usage}
+                value={battery?.chargeLevel}
                 max={100}
                 unit="%"
                 label={t('dashboard.sensor.usage')}
-                color={MEMORY_UTILIZATION}
+                color="#76C985"
               />
             }
             metrics={[
-              { label: t('dashboard.sensor.usage'), value: metricText(memory?.usage, '%', 0, notAvailable) },
+              { label: t('dashboard.sensor.health'), value: batteryHealth },
               {
-                label: t('dashboard.memoryUsed'),
-                value: memory?.usedMb == null ? notAvailable : `${toGigabytes(memory.usedMb)?.toFixed(1)} GB`
+                label: t('dashboard.sensor.temperature'),
+                value: batteryTemperature,
+                color: temperatureColor(battery?.temperature, valueColor)
               },
-              {
-                label: t('dashboard.memoryTotal'),
-                value: memory?.totalMb == null ? notAvailable : `${toGigabytes(memory.totalMb)?.toFixed(1)} GB`
-              },
-              ...(storageTemperatureText == null
-                ? []
-                : [
-                    {
-                      label: t('dashboard.storageTemp'),
-                      value: storageTemperatureText,
-                      color: temperatureColor(
-                        Number.isFinite(storageTemperatureMax) ? storageTemperatureMax : null,
-                        valueColor
-                      )
-                    }
-                  ])
+              { label: t('dashboard.sensor.rate'), value: batteryRate }
             ]}
-            series={trendSeries.memory}
+            series={trendSeries.battery}
             labels={labels}
           />
           <SensorPanel
@@ -259,18 +232,20 @@ export default function SensorSection(): React.JSX.Element {
               />
             }
             metrics={[
-              { label: t('dashboard.sensor.usage'), value: metricText(gpu?.usage, '%', 0, notAvailable) },
               { label: t('dashboard.sensor.frequency'), value: formatFrequency(gpu?.coreClock) },
               {
                 label: t('dashboard.sensor.temperature'),
                 value: metricText(gpu?.temperature, '°C', 0, notAvailable),
                 color: temperatureColor(gpu?.temperature, valueColor)
               },
-              { label: t('dashboard.sensor.vram'), value: vramText }
+              { label: t('dashboard.sensor.fanSpeed'), value: metricText(gpu?.fanSpeed, '', 0, notAvailable) }
             ]}
             series={trendSeries.gpu}
             labels={labels}
           />
+        </div>
+        <div className="udt-sensor-board__warning">
+          {t('dashboard.sensor.lowPowerAdapter')}
         </div>
       </div>
     </div>

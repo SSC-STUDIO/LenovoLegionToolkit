@@ -30,33 +30,11 @@ public class ViveToolPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
 
     public override object? GetFeatureExtension()
     {
-        return new ViveToolPluginPage();
+        return null;
     }
 
     public override object? GetSettingsPage()
     {
-        return new ViveToolSettingsPluginPage();
-    }
-}
-
-public class ViveToolPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
-{
-    public string PageTitle => Resource.ViveTool_PageTitle;
-    public string? PageIcon => "Code24";
-
-    public object CreatePage()
-    {
-        return new ViveToolPage();
-    }
-}
-
-public class ViveToolSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
-{
-    public string PageTitle => Resource.ViveTool_BinaryPathTitle;
-    public string? PageIcon => "Settings24";
-
-    public object CreatePage()
-    {
-        return new ViveToolSettingsPage();
+        return null;
     }
 }

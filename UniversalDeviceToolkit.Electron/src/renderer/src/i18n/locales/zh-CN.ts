@@ -4,12 +4,12 @@ export default {
       name: '通用设备工具箱'
     },
     nav: {
-      dashboard: '仪表盘',
+      dashboard: '控制台',
       settings: '设置',
       automation: '自动化',
       keyboardBacklight: '键盘背光',
-      macro: '宏',
-      windowsOptimization: 'Windows 优化',
+      macro: '自定义宏',
+      windowsOptimization: '系统优化',
       pluginExtensions: '插件扩展',
       about: '关于'
     },
@@ -26,29 +26,33 @@ export default {
       status: '状态'
     },
     dashboard: {
-      title: '仪表盘',
-      cpu: 'CPU',
-      gpu: 'GPU',
+      title: '控制台',
+      cpu: '处理器',
+      gpu: '显卡',
       memory: '内存',
       temperature: '温度',
-      usage: '使用率',
+      usage: '利用率',
       power: '功耗',
-      fanSpeed: '风扇转速',
+      fanSpeed: '风扇',
       vram: '显存',
       memoryUsed: '内存已用',
       memoryTotal: '内存总量',
       storageTemp: '存储温度',
       notAvailable: '--',
       sensor: {
-        cpu: 'CPU',
-        gpu: 'GPU',
+        cpu: '处理器',
+        gpu: '显卡',
         memory: '内存',
         temperature: '温度',
-        usage: '使用率',
+        usage: '利用率',
         power: '功耗',
-        fanSpeed: '风扇转速',
+        fanSpeed: '风扇',
         vram: '显存',
-        frequency: '频率'
+        frequency: '核心频率',
+        battery: '电池',
+        health: '健康度',
+        rate: '速率',
+        lowPowerAdapter: '已插入较低功率电源适配器'
       },
       group: {
         power: '电源',
@@ -64,8 +68,9 @@ export default {
       }
     },
     feature: {
-      powerMode: '电源模式',
-      'powerMode.desc': '切换整机性能与散热策略',
+      powerMode: '功耗模式',
+      'powerMode.desc': '选择性能模式',
+      'powerMode.hint': '你可以通过快捷键 Fn+Q 快速更改。',
       battery: '电池模式',
       'battery.desc': '选择电池充电模式以延长电池寿命',
       batteryNightCharge: '电池夜间充电',

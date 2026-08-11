@@ -55,7 +55,10 @@ public sealed class AndroidSupportGuardTests
         var parts = path.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         if (parts.Any(part => part.Equals("bin", StringComparison.OrdinalIgnoreCase)
                               || part.Equals("obj", StringComparison.OrdinalIgnoreCase)
-                              || part.Equals("artifacts", StringComparison.OrdinalIgnoreCase)))
+                              || part.Equals("artifacts", StringComparison.OrdinalIgnoreCase)
+                              || part.Equals("node_modules", StringComparison.OrdinalIgnoreCase)
+                              || part.Equals("out", StringComparison.OrdinalIgnoreCase)
+                              || part.Equals("dist", StringComparison.OrdinalIgnoreCase)))
         {
             return false;
         }

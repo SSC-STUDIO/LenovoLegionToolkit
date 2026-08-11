@@ -23,12 +23,12 @@ public class PluginScaffolderChineseLocalizationTests
     }
 
     /// <summary>
-    /// The default scaffold must keep the full WPF surface: IPluginPage base,
-    /// CreatePage factories and the Windows optimization category when the
-    /// archetype declares one.
+    /// The default scaffold must produce a UI-less service plugin: page
+    /// factories return null and the Windows optimization category is kept
+    /// when the archetype declares one.
     /// </summary>
     [Fact]
-    public void BuildPluginClass_DefaultKeepsWpfPageSurfaceAndOptimization()
+    public void BuildPluginClass_DefaultIsUiLessServicePluginAndOptimization()
     {
         var request = new ScaffoldRequest
         {
@@ -49,9 +49,9 @@ public class PluginScaffolderChineseLocalizationTests
 
         var source = InvokeBuildPluginClass(request, archetype);
 
-        Assert.Contains(": IPluginPage", source, StringComparison.Ordinal);
-        Assert.Contains("public object CreatePage() => new SamplePluginControl();", source, StringComparison.Ordinal);
-        Assert.Contains("public object CreatePage() => new SamplePluginSettingsControl();", source, StringComparison.Ordinal);
+        Assert.Contains("GetFeatureExtension() => null;", source, StringComparison.Ordinal);
+        Assert.Contains("GetSettingsPage() => null;", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IPluginPage", source, StringComparison.Ordinal);
         Assert.Contains("WindowsOptimizationCategoryDefinition", source, StringComparison.Ordinal);
     }
 

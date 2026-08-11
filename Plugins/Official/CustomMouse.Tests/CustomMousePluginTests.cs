@@ -1,6 +1,5 @@
 using UniversalDeviceToolkit.Plugins.CustomMouse;
 using UniversalDeviceToolkit.Plugins.SDK;
-using UniversalDeviceToolkit.Plugins.TestCommon;
 using Microsoft.Win32;
 using System;
 using System.IO;
@@ -37,10 +36,9 @@ public class CustomMousePluginTests
         var plugin = new CustomMousePlugin();
 
         plugin.OnInstalled();
-        var settingsPage = PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), CustomMouseText.SettingsPageTitle);
+        Assert.Null(plugin.GetSettingsPage());
         var category = plugin.GetOptimizationCategory();
 
-        Assert.NotNull(settingsPage);
         Assert.NotNull(category);
         Assert.Equal("custom.mouse", category!.Key);
         Assert.Equal(plugin.Id, category.PluginId);

@@ -113,10 +113,7 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 
     public override object? GetFeatureExtension() => null;
 
-    public override object? GetSettingsPage()
-    {
-        return new CustomMouseSettingsPluginPage(this);
-    }
+    public override object? GetSettingsPage() => null;
 
     public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     {
@@ -971,25 +968,6 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
-}
-
-public class CustomMouseSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
-{
-    private readonly CustomMousePlugin _plugin;
-
-    public CustomMouseSettingsPluginPage(CustomMousePlugin plugin)
-    {
-        _plugin = plugin;
-    }
-
-    public string PageTitle => CustomMouseText.SettingsPageTitle;
-    public string? PageIcon => "Settings24";
-
-    public object CreatePage()
-    {
-        return new CustomMouseSettingsControl(_plugin);
-    }
-
 }
 
 public enum CursorThemeMode

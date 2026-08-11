@@ -14,9 +14,10 @@ import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import TitleBar from '../components/TitleBar'
 import { useTheme } from '../theme/useTheme'
+import './AppLayout.css'
 
-const NAV_WIDTH_COLLAPSED = 70
-const NAV_WIDTH_EXPANDED = 360
+const NAV_WIDTH_COLLAPSED = 64
+const NAV_WIDTH_EXPANDED = 240
 
 interface NavItemDef {
   key: string

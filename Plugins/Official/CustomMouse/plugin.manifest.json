@@ -10,10 +10,7 @@
   "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues",
   "contributes": {
     "featurePage": null,
-    "settingsPage": {
-      "class": "UniversalDeviceToolkit.Plugins.CustomMouse.CustomMouseSettingsControl",
-      "title": "Cursor \u0026 Pointer"
-    },
+    "settingsPage": null,
     "runtime": {
       "class": "UniversalDeviceToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
     },

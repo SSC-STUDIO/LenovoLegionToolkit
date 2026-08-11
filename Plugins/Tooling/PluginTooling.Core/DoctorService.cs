@@ -34,10 +34,6 @@ public sealed class DoctorService
         var libPath = Path.Combine(hostRoot, libName);
         Add(result, File.Exists(libPath), $"Host library found: {libPath}");
 
-        var wpfName = hostRelease?.Artifacts.Wpf ?? "Universal Device Toolkit.dll";
-        var wpfPath = Path.Combine(hostRoot, wpfName);
-        Add(result, File.Exists(wpfPath), $"Host WPF assembly found: {wpfPath}");
-
         Add(result, repository.Plugins.Count > 0, $"Discovered {repository.Plugins.Count} plugin project(s).");
 
         return result;

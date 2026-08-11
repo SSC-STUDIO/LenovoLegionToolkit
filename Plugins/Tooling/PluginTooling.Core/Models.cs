@@ -404,9 +404,6 @@ public sealed class HostReleaseArtifacts
     [JsonPropertyName("libPlugins")]
     public string LibPlugins { get; set; } = string.Empty;
 
-    [JsonPropertyName("wpf")]
-    public string Wpf { get; set; } = "Universal Device Toolkit.dll";
-
     [JsonPropertyName("package")]
     public string Package { get; set; } = string.Empty;
 

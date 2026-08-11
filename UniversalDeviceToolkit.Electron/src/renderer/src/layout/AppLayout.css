@@ -1,0 +1,180 @@
+/*
+ * The application shell intentionally follows the original desktop client:
+ * a compact 44px title bar, 240px navigation rail, and one continuous content
+ * surface. Page-specific styles must not change these structural dimensions.
+ */
+.udt-app-shell {
+  background: #edf7fb;
+}
+
+.udt-app-shell__body {
+  background: #edf7fb;
+}
+
+.udt-app-shell__content {
+  margin: 10px 0 0 12px;
+  border: 1px solid #e3edf3;
+  border-right: 0;
+  border-bottom: 0;
+  border-top-left-radius: 18px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.udt-app-shell__main {
+  padding: 24px 28px 28px 30px;
+  background: #fff;
+}
+
+.udt-titlebar {
+  color: #26313a;
+  background: #eaf4f7;
+  border-bottom: 1px solid #d8e6ec;
+}
+
+.udt-titlebar__drag-region {
+  gap: 18px;
+  padding-left: 32px;
+}
+
+.udt-titlebar__title,
+.udt-titlebar__device {
+  color: #29333c;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.udt-titlebar__device {
+  max-width: min(34vw, 300px);
+}
+
+.udt-titlebar__log-button {
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid #d88600;
+  border-radius: 14px;
+  color: #241b0c;
+  background: #ff9d00;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: inset 0 -1px 0 rgba(130, 79, 0, 0.18);
+}
+
+.udt-titlebar__log-button:hover {
+  background: #f2a31e;
+}
+
+.udt-titlebar__window-controls button {
+  width: 44px !important;
+  font-size: 13px !important;
+}
+
+.udt-nav {
+  padding: 8px 12px 16px;
+  background: #edf7fb;
+  border-right: 1px solid #d8e6ec;
+  transition: width 160ms ease-out;
+}
+
+.udt-nav-group {
+  gap: 2px;
+}
+
+.udt-nav-item {
+  min-height: 46px;
+  padding: 0 10px;
+  border-radius: 8px;
+  color: #68727b;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.udt-nav-item:hover {
+  background: rgba(255, 255, 255, 0.64);
+  color: #37424b;
+}
+
+.udt-nav-item--active {
+  color: #3a4650;
+  background: rgba(255, 255, 255, 0.92);
+  font-weight: 500;
+}
+
+.udt-nav-accent {
+  left: 0;
+  width: 4px;
+  height: 26px;
+  border-radius: 3px;
+}
+
+.udt-nav-item--active .udt-nav-accent {
+  background: #416aa1;
+}
+
+.udt-nav-item--active .udt-nav-icon {
+  color: #416aa1;
+}
+
+.udt-nav-icon {
+  width: 36px;
+  color: #818a91;
+  font-size: 21px;
+}
+
+.udt-nav-label {
+  color: inherit;
+}
+
+.udt-nav-toggle {
+  min-height: 32px;
+  margin-top: 6px;
+  padding: 0 14px;
+  border-radius: 8px;
+  color: #536575;
+}
+
+.udt-nav-item--collapsed {
+  min-height: 52px;
+}
+
+.udt-nav-item--collapsed .udt-nav-label {
+  font-size: 9px;
+}
+
+:root[data-theme='dark'] .udt-app-shell,
+:root[data-theme='dark'] .udt-app-shell__body,
+:root[data-theme='dark'] .udt-nav {
+  background: #202a31;
+}
+
+:root[data-theme='dark'] .udt-app-shell__content,
+:root[data-theme='dark'] .udt-app-shell__main {
+  background: #1d242a;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme='dark'] .udt-titlebar {
+  background: #27323a;
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme='dark'] .udt-titlebar__title,
+:root[data-theme='dark'] .udt-titlebar__device {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+:root[data-theme='dark'] .udt-nav-item--active {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.09);
+}
+
+@media (max-width: 760px) {
+  .udt-app-shell__content {
+    margin-left: 6px;
+    border-top-left-radius: 12px;
+  }
+
+  .udt-app-shell__main {
+    padding: 18px;
+  }
+}

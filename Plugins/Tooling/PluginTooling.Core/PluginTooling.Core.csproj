@@ -3,6 +3,7 @@
   <PropertyGroup>
     <IsPluginToolProject>true</IsPluginToolProject>
     <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 

@@ -7,11 +7,10 @@
     <AssemblyName>UniversalDeviceToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
-  <!-- Windows WPF flavor (default): net10.0-windows + UseWPF + win-x64. -->
+  <!-- Windows flavor (default): net10.0-windows + win-x64. -->
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
   </PropertyGroup>
 
@@ -50,8 +49,8 @@
     <_ShellCachedExists Condition="Exists('$(ShellCachedBinPath)\shell.exe')">true</_ShellCachedExists>
   </PropertyGroup>
 
-  <!-- shell.exe/dll are Windows-only runtime artifacts; bundle them only in
-       the Windows WPF flavor. -->
+  <!-- shell.exe/dll are Windows-only runtime artifacts; bundle them only in the
+       Windows flavor. -->
   <!-- Priority 1: Local Shell repo (for developers who have it cloned) -->
   <ItemGroup Condition="'$(_ShellLocalExists)' == 'true'">
     <None Include="$(ShellLocalBinPath)\shell.exe">

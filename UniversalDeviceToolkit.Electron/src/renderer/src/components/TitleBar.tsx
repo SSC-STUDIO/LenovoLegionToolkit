@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { invoke } from '../api/bridge'
 
-const TITLEBAR_HEIGHT = 60
+const TITLEBAR_HEIGHT = 44
 
 const DRAG_STYLE = { WebkitAppRegion: 'drag' } as React.CSSProperties
 const NO_DRAG_STYLE = { WebkitAppRegion: 'no-drag' } as React.CSSProperties

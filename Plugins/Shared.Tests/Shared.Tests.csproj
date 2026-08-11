@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
-    <UseWPF>true</UseWPF>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <Platforms>x64</Platforms>
     <RootNamespace>UniversalDeviceToolkit.Plugins.Shared.Tests</RootNamespace>
@@ -37,10 +36,6 @@
     <ProjectReference Include="..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <ProjectReference Include="..\Shared.Core\UniversalDeviceToolkit.Plugins.Shared.Core.csproj" />
     <ProjectReference Include="..\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj" />
-    <Reference Include="Universal Device Toolkit">
-      <HintPath>$(HostWpfPath)</HintPath>
-      <Private>true</Private>
-    </Reference>
     <Reference Include="UniversalDeviceToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
       <Private>true</Private>

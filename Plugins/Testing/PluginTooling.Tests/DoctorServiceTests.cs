@@ -40,24 +40,22 @@ public class DoctorServiceTests
     }
 
     [Fact]
-    public void Run_UsesWpfNameFromHostReleaseJson_NotLegacyLltName()
+    public void Run_NoWpfHostAssemblyCheck()
     {
         var repoDir = CreateMinimalRepo();
         var hostDir = Path.Combine(repoDir, ".host");
 
         try
         {
-            WriteHostRelease(hostDir, "Universal Device Toolkit.dll");
+            WriteHostRelease(hostDir, "UniversalDeviceToolkit.Host.dll");
             CreateDummyDll(hostDir, "UniversalDeviceToolkit.Lib.dll");
-            CreateDummyDll(hostDir, "Universal Device Toolkit.dll");
+            CreateDummyDll(hostDir, "UniversalDeviceToolkit.Host.dll");
 
             var service = new DoctorService();
             var result = service.Run(repoDir);
 
-            var wpfCheck = result.Checks.First(c => c.Message.Contains("Host WPF assembly", StringComparison.OrdinalIgnoreCase));
-            Assert.Equal("PASS", wpfCheck.Status);
-            Assert.Contains("Universal Device Toolkit.dll", wpfCheck.Message);
-            Assert.DoesNotContain("Lenovo Legion Toolkit.dll", wpfCheck.Message);
+            Assert.DoesNotContain(result.Checks, c => c.Message.Contains("Host WPF assembly", StringComparison.OrdinalIgnoreCase));
+            Assert.Contains(result.Checks, c => c.Message.Contains("Host library found", StringComparison.OrdinalIgnoreCase) && c.Status == "PASS");
         }
         finally
         {
@@ -69,24 +67,21 @@ public class DoctorServiceTests
     }
 
     [Fact]
-    public void Run_StaleLegacyNameNeverUsed_EvenWhenWpfDllMissing()
+    public void Run_HostLibraryCheckStillWorks()
     {
         var repoDir = CreateMinimalRepo();
         var hostDir = Path.Combine(repoDir, ".host");
 
         try
         {
-            WriteHostRelease(hostDir, "Universal Device Toolkit.dll");
+            WriteHostRelease(hostDir, "UniversalDeviceToolkit.Host.dll");
             CreateDummyDll(hostDir, "UniversalDeviceToolkit.Lib.dll");
-            // Deliberately do NOT create the WPF DLL
 
             var service = new DoctorService();
             var result = service.Run(repoDir);
 
-            var wpfCheck = result.Checks.First(c => c.Message.Contains("Host WPF assembly", StringComparison.OrdinalIgnoreCase));
-            Assert.Equal("FAIL", wpfCheck.Status);
-            Assert.Contains("Universal Device Toolkit.dll", wpfCheck.Message);
-            Assert.DoesNotContain("Lenovo Legion Toolkit.dll", wpfCheck.Message);
+            var libCheck = result.Checks.First(c => c.Message.Contains("Host library found", StringComparison.OrdinalIgnoreCase));
+            Assert.Equal("PASS", libCheck.Status);
         }
         finally
         {
@@ -98,24 +93,21 @@ public class DoctorServiceTests
     }
 
     [Fact]
-    public void Run_FallsBackToCorrectDefault_WhenHostReleaseJsonMissing()
+    public void Run_LibMissingFails()
     {
         var repoDir = CreateMinimalRepo();
         var hostDir = Path.Combine(repoDir, ".host");
 
         try
         {
-            CreateDummyDll(hostDir, "UniversalDeviceToolkit.Lib.dll");
-            CreateDummyDll(hostDir, "Universal Device Toolkit.dll");
-
-            // No host-release.json created
+            WriteHostRelease(hostDir, "UniversalDeviceToolkit.Host.dll");
+            // Deliberately do NOT create the Lib DLL
 
             var service = new DoctorService();
             var result = service.Run(repoDir);
 
-            var wpfCheck = result.Checks.First(c => c.Message.Contains("Host WPF assembly", StringComparison.OrdinalIgnoreCase));
-            Assert.Contains("Universal Device Toolkit.dll", wpfCheck.Message);
-            Assert.DoesNotContain("Lenovo Legion Toolkit.dll", wpfCheck.Message);
+            var libCheck = result.Checks.First(c => c.Message.Contains("Host library found", StringComparison.OrdinalIgnoreCase));
+            Assert.Equal("FAIL", libCheck.Status);
         }
         finally
         {

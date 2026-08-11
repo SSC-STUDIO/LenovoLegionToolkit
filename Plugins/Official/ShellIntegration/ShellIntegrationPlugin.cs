@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Reflection;
-using System.Windows;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Plugins.Core;
 using UniversalDeviceToolkit.Plugins.ShellIntegration.Resources;
@@ -74,7 +73,7 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
 
     public override object? GetSettingsPage()
     {
-        return new ShellIntegrationSettingsPluginPage(this);
+        return null;
     }
 
     public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
@@ -265,13 +264,6 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
             PluginLog.Trace($"ShellIntegration: Disable failed: {ex.Message}", ex);
             return false;
         }
-    }
-
-    public void OpenStyleSettingsWindow()
-    {
-        SDK.PluginHostContextRuntime.Current.ShowDialog(
-            new ShellIntegrationStyleSettingsWindow(this),
-            ShellIntegrationText.SettingsPageTitle);
     }
 
     public bool OpenShellFolder()
@@ -721,23 +713,4 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
             return null;
         }
     }
-}
-
-public class ShellIntegrationSettingsPluginPage : UniversalDeviceToolkit.Lib.Plugins.IPluginPage
-{
-    private readonly ShellIntegrationPlugin _plugin;
-
-    public ShellIntegrationSettingsPluginPage(ShellIntegrationPlugin plugin)
-    {
-        _plugin = plugin;
-    }
-
-    public string PageTitle => ShellIntegrationText.SettingsPageTitle;
-    public string? PageIcon => "Settings24";
-
-    public object CreatePage()
-    {
-        return new ShellIntegrationSettingsControl(_plugin);
-    }
-
 }

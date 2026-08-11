@@ -1,12 +1,6 @@
-using System;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.ExceptionServices;
-using System.Threading;
-using UniversalDeviceToolkit.Plugins.SDK;
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Plugins.ShellIntegration;
-using UniversalDeviceToolkit.Plugins.TestCommon;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Plugins.ShellIntegration.Tests;
@@ -34,11 +28,11 @@ public class ShellIntegrationPluginTests
     }
 
     [Fact]
-    public void GetSettingsPage_ReturnsPluginPage()
+    public void GetSettingsPage_ReturnsNull_WhenNoUiIsAvailable()
     {
         var plugin = new ShellIntegrationPlugin();
 
-        PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), ShellIntegrationText.SettingsPageTitle, "Settings24");
+        Assert.Null(plugin.GetSettingsPage());
         Assert.Null(plugin.GetFeatureExtension());
     }
 
@@ -70,43 +64,6 @@ public class ShellIntegrationPluginTests
         var path = plugin.GetShellInstallPath();
 
         Assert.Equal(path is not null, plugin.IsShellInstalled());
-    }
-
-    [Fact]
-    public void OpenStyleSettingsWindow_WithoutApplication_DoesNotThrow()
-    {
-        var plugin = new ShellIntegrationPlugin();
-        var hostContext = new RecordingPluginHostContext();
-
-        try
-        {
-            PluginHostContextRuntime.Current = hostContext;
-            RunSta(plugin.OpenStyleSettingsWindow);
-        }
-        finally
-        {
-            PluginHostContextRuntime.Reset();
-        }
-    }
-
-    [Fact]
-    public void OpenStyleSettingsWindow_UsesPluginHostContextWhenWindowIsAvailable()
-    {
-        var plugin = new ShellIntegrationPlugin();
-        var hostContext = new RecordingPluginHostContext();
-
-        try
-        {
-            PluginHostContextRuntime.Current = hostContext;
-
-            RunSta(plugin.OpenStyleSettingsWindow);
-
-            Assert.True(hostContext.ShowDialogCalled);
-        }
-        finally
-        {
-            PluginHostContextRuntime.Reset();
-        }
     }
 
     [Fact]
@@ -170,47 +127,5 @@ public class ShellIntegrationPluginTests
     public void ParseShellRegistrationStatus_WithUnrelatedOutput_ReturnsNull()
     {
         Assert.Null(ParseShellRegistrationStatus("Shell command completed successfully."));
-    }
-
-    private sealed class RecordingPluginHostContext : IPluginHostContext
-    {
-        public PluginHostMode Mode => PluginHostMode.RealRuntime;
-        public bool AllowSystemActions => true;
-        public object? OwnerWindow => null;
-        public bool ShowDialogCalled { get; private set; }
-
-        public bool OpenPluginSettings(string pluginId) => false;
-
-        public bool? ShowDialog(object dialogOrContent, string? title = null, string? icon = null)
-        {
-            ShowDialogCalled = dialogOrContent is not null;
-            return ShowDialogCalled;
-        }
-    }
-
-    private static void RunSta(Action action)
-    {
-        Exception? failure = null;
-
-        var thread = new Thread(() =>
-        {
-            try
-            {
-                action();
-            }
-            catch (Exception ex)
-            {
-                failure = ex;
-            }
-        });
-
-        thread.SetApartmentState(ApartmentState.STA);
-        thread.Start();
-        thread.Join();
-
-        if (failure is not null)
-        {
-            ExceptionDispatchInfo.Capture(failure).Throw();
-        }
     }
 }

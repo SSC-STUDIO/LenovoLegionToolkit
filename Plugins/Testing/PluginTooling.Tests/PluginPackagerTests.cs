@@ -90,8 +90,7 @@ public sealed class PluginPackagerTests : IDisposable
         File.WriteAllText(Path.Combine(_outputDirectory, "UniversalDeviceToolkit.Lib.Abstractions.dll"), "host abstractions");
         File.WriteAllText(Path.Combine(_outputDirectory, "UniversalDeviceToolkit.Lib.Shared.dll"), "host shared");
         File.WriteAllText(Path.Combine(_outputDirectory, "UniversalDeviceToolkit.Lib.pdb"), "host symbols");
-        File.WriteAllText(Path.Combine(_outputDirectory, "Universal Device Toolkit.dll"), "host wpf");
-
+        
         var packageDirectory = Path.Combine(_root, "release-assets");
         var result = await new PluginPackager().PackAsync(new PackRequest
         {
@@ -110,6 +109,6 @@ public sealed class PluginPackagerTests : IDisposable
         Assert.DoesNotContain("UniversalDeviceToolkit.Lib.Abstractions.dll", entryNames);
         Assert.DoesNotContain("UniversalDeviceToolkit.Lib.Shared.dll", entryNames);
         Assert.DoesNotContain("UniversalDeviceToolkit.Lib.pdb", entryNames);
-        Assert.DoesNotContain("Universal Device Toolkit.dll", entryNames);
+        Assert.DoesNotContain("UniversalDeviceToolkit.Host.dll", entryNames);
     }
 }

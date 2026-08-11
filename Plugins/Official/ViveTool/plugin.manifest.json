@@ -9,14 +9,8 @@
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
   "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues",
   "contributes": {
-    "featurePage": {
-      "class": "UniversalDeviceToolkit.Plugins.ViveTool.ViveToolPage",
-      "title": "ViVeTool"
-    },
-    "settingsPage": {
-      "class": "UniversalDeviceToolkit.Plugins.ViveTool.ViveToolSettingsPage",
-      "title": "ViVeTool Settings"
-    },
+    "featurePage": null,
+    "settingsPage": null,
     "runtime": null,
     "optimizationActions": []
   },

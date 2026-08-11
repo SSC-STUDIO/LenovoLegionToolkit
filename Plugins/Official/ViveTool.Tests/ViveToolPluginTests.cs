@@ -1,6 +1,5 @@
 using System.Reflection;
 using UniversalDeviceToolkit.Plugins.SDK;
-using UniversalDeviceToolkit.Plugins.TestCommon;
 using UniversalDeviceToolkit.Plugins.ViveTool;
 using UniversalDeviceToolkit.Plugins.ViveTool.Resources;
 using Xunit;
@@ -34,24 +33,18 @@ public class ViveToolPluginTests
     }
 
     [Fact]
-    public void GetFeatureExtension_ReturnsPluginPage()
+    public void GetFeatureExtension_ReturnsNull()
     {
         var plugin = new ViveToolPlugin();
 
-        PluginPageAssertions.AssertPluginPage<ViveToolPluginPage>(
-            plugin.GetFeatureExtension(),
-            Resource.ViveTool_PageTitle,
-            "Code24");
+        Assert.Null(plugin.GetFeatureExtension());
     }
 
     [Fact]
-    public void GetSettingsPage_ReturnsPluginSettingsPage()
+    public void GetSettingsPage_ReturnsNull()
     {
         var plugin = new ViveToolPlugin();
 
-        PluginPageAssertions.AssertPluginPage<ViveToolSettingsPluginPage>(
-            plugin.GetSettingsPage(),
-            Resource.ViveTool_BinaryPathTitle,
-            "Settings24");
+        Assert.Null(plugin.GetSettingsPage());
     }
 }

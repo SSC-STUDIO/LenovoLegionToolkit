@@ -83,12 +83,11 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
-    public void CiTestsWorkflow_ShouldGateWpfL10nCoverageScript()
+    public void CiTestsWorkflow_ShouldNotRunWpfL10nCoverageScript()
     {
-        var step = ReadWorkflow("Ci-tests.yml").Job("build-test-and-smoke")
-            .Step("Assert WPF l10n coverage (fail fast)");
+        var job = ReadWorkflow("Ci-tests.yml").Job("build-test-and-smoke");
 
-        step.Run.Should().Contain("Assert-WpfL10nCoverage.ps1");
+        job.Steps.Should().NotContain(s => s.Name.Contains("WPF l10n", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

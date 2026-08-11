@@ -33,7 +33,6 @@
     <ProjectReference Include="..\CustomMouse\UniversalDeviceToolkit.Plugins.CustomMouse.csproj" />
     <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <Compile Include="..\..\Testing\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
-    <Compile Include="..\..\Testing\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
     <Reference Include="UniversalDeviceToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
       <Private>true</Private>

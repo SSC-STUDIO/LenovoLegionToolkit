@@ -142,7 +142,6 @@ public sealed class LocalizationRuntimeTests : IDisposable
 
     [Theory]
     [InlineData("UniversalDeviceToolkit.CrossPlatform/Resources/Resource.resx", "UniversalDeviceToolkit.CrossPlatform/Resources/Resource.zh-Hans.resx")]
-    [InlineData("Tools/Installer/Resources/Resource.resx", "Tools/Installer/Resources/Resource.zh-Hans.resx")]
     public void HostResourceFiles_HaveMatchingKeysAndPlaceholders(string neutralRelativePath, string chineseRelativePath)
     {
         var root = RepositoryPaths.FindRoot();

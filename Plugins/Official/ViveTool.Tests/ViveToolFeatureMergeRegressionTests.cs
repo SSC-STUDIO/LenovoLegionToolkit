@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
-public class ViveToolPageRegressionTests
+public class ViveToolFeatureMergeRegressionTests
 {
     [Fact]
     public void MergeImportedFeatures_KeepsImportedFeatureSearchableAfterMerge()

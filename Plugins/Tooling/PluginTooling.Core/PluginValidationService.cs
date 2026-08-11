@@ -479,14 +479,6 @@ public sealed class PluginValidationService
                 state.Pass($"Package required file found: {requiredFile}");
             }
         }
-
-        foreach (var sidecar in Directory.EnumerateFiles(plugin.OutputDirectory, "Wpf.Ui*.dll", SearchOption.TopDirectoryOnly)
-                     .Select(Path.GetFileName)
-                     .Where(fileName => !string.IsNullOrWhiteSpace(fileName))
-                     .Select(fileName => fileName!))
-        {
-            state.Pass($"WPF UI sidecar available: {sidecar}");
-        }
     }
 
     private static void ValidateStoreJsonAlignment(RepositoryContext repository, PluginContext plugin, ValidationState state)

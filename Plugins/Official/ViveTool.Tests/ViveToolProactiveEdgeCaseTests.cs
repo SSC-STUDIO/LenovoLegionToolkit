@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 using UniversalDeviceToolkit.Plugins.ViveTool.Services.Settings;
 using UniversalDeviceToolkit.Plugins.ViveTool.Utils;
@@ -15,61 +11,13 @@ namespace UniversalDeviceToolkit.Plugins.ViveTool.Tests;
 
 /// <summary>
 /// Proactive edge-case coverage for ViveTool util/service surfaces that were
-/// previously uncovered or only partially covered: the inverse-visibility
-/// converter, byte formatter boundaries, feature merge/filter edge cases and
-/// thread-safety, and corrupted-JSON settings recovery under a redirected
-/// AppData (UDT_APPDATA_OVERRIDE) so the machine never gets polluted.
+/// previously uncovered or only partially covered: byte formatter boundaries,
+/// feature merge/filter edge cases and thread-safety, and corrupted-JSON
+/// settings recovery under a redirected AppData (UDT_APPDATA_OVERRIDE) so the
+/// machine never gets polluted.
 /// </summary>
 public class ViveToolProactiveEdgeCaseTests
 {
-    // ── InverseBooleanToVisibilityConverter (previously untested) ──
-
-    [Fact]
-    public void InverseBoolean_Convert_True_ReturnsCollapsed()
-    {
-        var converter = new InverseBooleanToVisibilityConverter();
-        var result = converter.Convert(true, typeof(object), string.Empty, CultureInfo.InvariantCulture);
-        Assert.Equal(System.Windows.Visibility.Collapsed, result);
-    }
-
-    [Fact]
-    public void InverseBoolean_Convert_False_ReturnsVisible()
-    {
-        var converter = new InverseBooleanToVisibilityConverter();
-        var result = converter.Convert(false, typeof(object), string.Empty, CultureInfo.InvariantCulture);
-        Assert.Equal(System.Windows.Visibility.Visible, result);
-    }
-
-    [Theory]
-    [InlineData(null)]
-    [InlineData(0)]
-    [InlineData("not-a-bool")]
-    public void InverseBoolean_Convert_NonBoolean_FallsBackToVisible(object? value)
-    {
-        var converter = new InverseBooleanToVisibilityConverter();
-        var result = converter.Convert(value!, typeof(object), string.Empty, CultureInfo.InvariantCulture);
-        Assert.Equal(System.Windows.Visibility.Visible, result);
-    }
-
-    [Theory]
-    [InlineData(System.Windows.Visibility.Visible, false)]
-    [InlineData(System.Windows.Visibility.Collapsed, true)]
-    [InlineData(System.Windows.Visibility.Hidden, true)]
-    public void InverseBoolean_ConvertBack_ReturnsInvertedVisibility(System.Windows.Visibility visibility, bool expected)
-    {
-        var converter = new InverseBooleanToVisibilityConverter();
-        var result = converter.ConvertBack(visibility, typeof(bool), string.Empty, CultureInfo.InvariantCulture);
-        Assert.Equal(expected, result);
-    }
-
-    [Fact]
-    public void InverseBoolean_ConvertBack_NonVisibility_ReturnsTrue()
-    {
-        var converter = new InverseBooleanToVisibilityConverter();
-        var result = converter.ConvertBack("not-a-visibility", typeof(bool), string.Empty, CultureInfo.InvariantCulture);
-        Assert.True((bool)result);
-
-    }
     // ByteFormatter boundary coverage
 
     [Theory]

@@ -206,7 +206,7 @@ body {
 }
 
 .udt-sensors {
-  margin-bottom: 28px;
+  margin-bottom: 0;
 }
 
 .udt-sensors__source-tag {
@@ -214,12 +214,19 @@ body {
 }
 
 .udt-sensor-board {
-  border: 1px solid var(--udt-border-strong);
   border-radius: var(--udt-radius-card);
   background: var(--udt-sensor-board-bg, var(--udt-bg-card));
-  box-shadow: var(--udt-sensor-board-shadow, 0 10px 28px rgba(0, 0, 0, 0.18));
+  box-shadow: var(--udt-sensor-board-shadow, 0 4px 16px rgba(0, 0, 0, 0.08));
   padding: 22px 26px 20px;
   overflow: hidden;
+}
+
+.udt-sensor-board__warning {
+  margin-top: 16px;
+  text-align: center;
+  color: #e8a838;
+  font-size: 14px;
+  line-height: 1.4;
 }
 
 .udt-sensor-board__grid {
@@ -248,7 +255,7 @@ body {
 .udt-sensor-panel__heading h2 {
   margin: 0;
   color: var(--udt-text-primary);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   line-height: 1.3;
 }
@@ -265,10 +272,10 @@ body {
 
 .udt-sensor-panel__summary {
   display: grid;
-  grid-template-columns: 118px minmax(0, 1fr);
+  grid-template-columns: 112px minmax(0, 1fr);
   align-items: center;
   gap: 14px;
-  min-height: 126px;
+  min-height: 120px;
   margin-top: 8px;
 }
 
@@ -312,7 +319,7 @@ body {
 }
 
 .udt-sensor-panel__chart {
-  height: 168px;
+  height: 140px;
   margin-top: 12px;
   border-radius: 10px;
   background: var(--udt-sensor-chart-bg, rgba(255, 255, 255, 0.045));
@@ -577,7 +584,7 @@ body {
 :root[data-theme='dark'] {
   --udt-sensor-board-bg: #242a35;
   --udt-sensor-chart-bg: rgba(255, 255, 255, 0.055);
-  --udt-sensor-board-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+  --udt-sensor-board-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
 }
 
 @media (max-width: 1100px) {
@@ -782,4 +789,76 @@ body {
 .udt-nav-toggle--collapsed {
   justify-content: center;
   padding: 0;
+}
+
+/* ── Power Section ───────────────────────────────────────────── */
+
+.udt-power-section {
+  margin-top: 28px;
+}
+
+.udt-power-section__title {
+  margin: 0 0 14px;
+  color: var(--udt-text-primary);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.udt-power-card {
+  border: 1px solid var(--udt-border-strong);
+  border-radius: 14px;
+  background: var(--udt-bg-card);
+  overflow: hidden;
+}
+
+.udt-power-card__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.udt-power-card__info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.udt-power-card__icon {
+  flex: 0 0 auto;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.udt-power-card__label {
+  color: var(--udt-text-primary);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.udt-power-card__desc {
+  margin-top: 2px;
+  color: var(--udt-text-secondary);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.udt-power-card__hint {
+  margin-top: 2px;
+  color: var(--udt-text-tertiary);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.udt-power-card__action {
+  flex: 0 0 auto;
+}
+
+.udt-power-card__divider {
+  height: 1px;
+  background: var(--udt-border);
+  margin: 0 20px;
 }

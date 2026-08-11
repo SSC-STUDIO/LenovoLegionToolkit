@@ -61,14 +61,6 @@ public sealed class PluginScaffolder
         File.WriteAllText(Path.Combine(pluginDirectory, "CHANGELOG.md"), PluginRepository.NormalizeLineEndings(BuildPluginChangelog(request.DisplayName)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Text.cs"), PluginRepository.NormalizeLineEndings(BuildTextClass(namespaceSegment, classPrefix, request)));
         File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Plugin.cs"), PluginRepository.NormalizeLineEndings(BuildPluginClass(namespaceSegment, classPrefix, request, description, archetype)));
-        File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}Control", request.DisplayName, "Feature preview")));
-        File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}Control.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "Control")));
-
-        if (archetype.HasSettingsPage)
-        {
-            File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml"), PluginRepository.NormalizeLineEndings(BuildContentControlXaml(namespaceSegment, $"{classPrefix}SettingsControl", $"{request.DisplayName} Settings", "Settings preview")));
-            File.WriteAllText(Path.Combine(pluginDirectory, $"{classPrefix}SettingsControl.xaml.cs"), PluginRepository.NormalizeLineEndings(BuildControlCodeBehind(namespaceSegment, classPrefix, "SettingsControl")));
-        }
 
         if (archetype.HasRuntime)
         {
@@ -149,18 +141,12 @@ public sealed class PluginScaffolder
 
     private static string BuildProjectFile(ScaffoldRequest request)
     {
-        return BuildWpfProjectFile(request);
-    }
-
-    private static string BuildWpfProjectFile(ScaffoldRequest request)
-    {
         return $$"""
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0-windows</TargetFramework>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-    <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
     <Nullable>enable</Nullable>
     <Version>1.0.0</Version>
@@ -247,7 +233,6 @@ public sealed class PluginScaffolder
     <ProjectReference Include="..\{{request.FolderName}}\UniversalDeviceToolkit.Plugins.{{request.FolderName}}.csproj" />
     <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
     <Compile Include="..\..\Testing\TestCommon\LocalizedTextTestsBase.cs" Link="TestCommon\LocalizedTextTestsBase.cs" />
-    <Compile Include="..\..\Testing\TestCommon\PluginPageAssertions.cs" Link="TestCommon\PluginPageAssertions.cs" />
     <Reference Include="UniversalDeviceToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
       <Private>true</Private>
@@ -311,17 +296,14 @@ public static class {{classPrefix}}Text
     private static string BuildPluginClass(string namespaceSegment, string classPrefix, ScaffoldRequest request, string description, ArchetypeDefinition archetype)
     {
         var featureExtension = archetype.HasFeaturePage
-            ? $"    public override object? GetFeatureExtension() => new {classPrefix}FeaturePage();{Environment.NewLine}"
+            ? $"    public override object? GetFeatureExtension() => null;{Environment.NewLine}"
             : string.Empty;
         var settingsExtension = archetype.HasSettingsPage
-            ? $"    public override object? GetSettingsPage() => new {classPrefix}SettingsPage();{Environment.NewLine}"
+            ? $"    public override object? GetSettingsPage() => null;{Environment.NewLine}"
             : string.Empty;
         var runtimeField = archetype.HasRuntime
             ? $"    private readonly {classPrefix}Runtime _runtime = new();{Environment.NewLine}{Environment.NewLine}"
             : string.Empty;
-
-        var featureCreatePage = $"    public object CreatePage() => new {classPrefix}Control();{Environment.NewLine}";
-        var settingsCreatePage = $"    public object CreatePage() => new {classPrefix}SettingsControl();{Environment.NewLine}";
 
         var optimization = string.Empty;
         if (archetype.HasOptimizationCategory)
@@ -372,64 +354,6 @@ public sealed class {{classPrefix}}Plugin : PluginBase
 
 {{featureExtension}}{{settingsExtension}}{{optimization}}
 }
-
-public sealed class {{classPrefix}}FeaturePage : IPluginPage
-{
-    public string PageTitle => {{classPrefix}}Text.FeaturePageTitle;
-    public string? PageIcon => "{{DefaultIcon}}";
-
-{{featureCreatePage}}
-}
-
-public sealed class {{classPrefix}}SettingsPage : IPluginPage
-{
-    public string PageTitle => {{classPrefix}}Text.SettingsPageTitle;
-    public string? PageIcon => "Settings24";
-
-{{settingsCreatePage}}
-}
-""";
-    }
-
-    private static string BuildContentControlXaml(string namespaceSegment, string className, string title, string description)
-    {
-        return $$"""
-<UserControl x:Class="UniversalDeviceToolkit.Plugins.{{namespaceSegment}}.{{className}}"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Border Padding="24"
-            CornerRadius="20"
-            Background="{DynamicResource ControlFillColorDefaultBrush}"
-            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
-            BorderThickness="1">
-        <StackPanel>
-            <TextBlock FontSize="24"
-                       FontWeight="SemiBold"
-                       Text="{{title}}" />
-            <TextBlock Margin="0,12,0,0"
-                       TextWrapping="Wrap"
-                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"
-                       Text="{{description}}" />
-        </StackPanel>
-    </Border>
-</UserControl>
-""";
-    }
-
-    private static string BuildControlCodeBehind(string namespaceSegment, string classPrefix, string suffix)
-    {
-        return $$"""
-using System.Windows.Controls;
-
-namespace UniversalDeviceToolkit.Plugins.{{namespaceSegment}};
-
-public partial class {{classPrefix}}{{suffix}} : UserControl
-{
-    public {{classPrefix}}{{suffix}}()
-    {
-        InitializeComponent();
-    }
-}
 """;
     }
 
@@ -470,12 +394,12 @@ public class {{classPrefix}}PluginTests
     }
 
     [Fact]
-    public void Plugin_Pages_AreAvailable()
+    public void Plugin_Pages_AreNull()
     {
         var plugin = new {{classPrefix}}Plugin();
 
-        {{(archetype.HasFeaturePage ? $"PluginPageAssertions.AssertPluginPage(plugin.GetFeatureExtension(), {classPrefix}Text.FeaturePageTitle, \"{DefaultIcon}\");" : "// No feature page for this archetype.")}}
-        {{(archetype.HasSettingsPage ? $"PluginPageAssertions.AssertPluginPage(plugin.GetSettingsPage(), {classPrefix}Text.SettingsPageTitle, \"Settings24\");" : "// No settings page for this archetype.")}}
+        {{(archetype.HasFeaturePage ? "Assert.Null(plugin.GetFeatureExtension());" : "// No feature page for this archetype.")}}
+        {{(archetype.HasSettingsPage ? "Assert.Null(plugin.GetSettingsPage());" : "// No settings page for this archetype.")}}
     }
 }
 """;
