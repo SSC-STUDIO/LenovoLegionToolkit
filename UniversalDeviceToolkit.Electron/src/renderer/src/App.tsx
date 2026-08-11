@@ -1,8 +1,7 @@
 import { Suspense, lazy } from 'react'
 import { Spin } from 'antd'
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import AppLayout from './layout/AppLayout'
-import HomePage from './pages/HomePage'
 
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
@@ -26,7 +25,7 @@ export default function App(): React.JSX.Element {
     <Suspense fallback={<PageFallback />}>
       <Routes>
         <Route element={<AppLayout />}>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/automation" element={<AutomationPage />} />
