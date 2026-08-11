@@ -48,7 +48,7 @@ public sealed class TestLayoutGuardTests
                 "TestAssertionsTests", "MockFactoryTests"],
             ["Settings/SettingsTestCollection.cs"] = [
                 "LocalizationTestCollectionDefinition", "SettingsTestCollectionDefinition",
-                "FlaUITestCollectionDefinition", "ProcessStateTestCollectionDefinition"],
+                "ProcessStateTestCollectionDefinition"],
             ["Utils/ThrottleDispatcherEdgeCaseTests.cs"] = [
                 "ThrottleFirstDispatcherEdgeCaseTests", "ThrottleLastDispatcherEdgeCaseTests"]
         };

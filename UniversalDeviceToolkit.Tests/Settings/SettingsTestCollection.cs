@@ -8,8 +8,5 @@ public sealed class LocalizationTestCollectionDefinition;
 [CollectionDefinition(TestCollections.Settings, DisableParallelization = true)]
 public sealed class SettingsTestCollectionDefinition;
 
-[CollectionDefinition(TestCollections.FlaUI, DisableParallelization = true)]
-public sealed class FlaUITestCollectionDefinition;
-
 [CollectionDefinition(TestCollections.ProcessState, DisableParallelization = true)]
 public sealed class ProcessStateTestCollectionDefinition;

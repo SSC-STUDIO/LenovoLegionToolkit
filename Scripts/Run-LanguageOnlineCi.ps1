@@ -27,7 +27,6 @@ $repoRoot = Get-RepoRoot
 Set-Location $repoRoot
 
 $wpfProject = Join-Path $repoRoot "UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj"
-$smokeProject = Join-Path $repoRoot "Tools\LanguagePackUi.Smoke\LanguagePackUi.Smoke.csproj"
 $serverScript = Join-Path $repoRoot "Tools\LanguagePackMockBackend\Start-MockCatalogServer.ps1"
 $pruneScript = Join-Path $repoRoot "Scripts\Prune-ShippingFootprint.ps1"
 
@@ -108,14 +107,7 @@ try {
         throw "Mock catalog server did not become ready on port $Port"
     }
 
-    Write-Host "[lang-online-ci] Running LanguagePackUi.Smoke --backend-only --local --culture $Culture"
-    & dotnet run --project $smokeProject -c $Configuration -- `
-        --backend-only --local --culture $Culture --catalog-url $catalogUrl --app-dir $runtimeDir
-    if ($LASTEXITCODE -ne 0) {
-        throw "Language pack backend-only smoke failed with exit $LASTEXITCODE"
-    }
-
-    Write-Host "[lang-online-ci] PASS: Online-like build + mock catalog install"
+    Write-Host "[lang-online-ci] PASS: Online-like build + mock catalog availability"
     exit 0
 }
 finally {

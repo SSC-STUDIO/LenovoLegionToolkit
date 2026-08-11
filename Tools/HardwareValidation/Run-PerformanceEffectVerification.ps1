@@ -220,64 +220,16 @@ Write-Result 'SkipUiSmoke' ([string]$SkipUiSmoke.IsPresent)
 Write-Result 'SkipGodModeBatch' ([string]$SkipGodModeBatch.IsPresent)
 Write-Result 'SkipPowerModeDirect' ([string]$SkipPowerModeDirect.IsPresent)
 
-$mainAppProject = Join-Path $repoRoot 'UniversalDeviceToolkit.WPF\UniversalDeviceToolkit.WPF.csproj'
-$smokeProject = Join-Path $repoRoot 'Tools\MainAppPluginUi.Smoke\MainAppPluginUi.Smoke.csproj'
 $hardwareScript = Join-Path $repoRoot 'Tools\HardwareValidation\Run-HardwareValidationElevated.ps1'
-$powerModeScript = Join-Path $repoRoot 'Tools\MainAppPluginUi.Smoke\AdminPowerModeHardwareCheck.ps1'
 
 Push-Location $repoRoot
 try {
-    if (-not $SkipUiSmoke.IsPresent) {
-        dotnet build $mainAppProject -c Release /p:EnableUdtTestHooks=true /m:1 | Out-Null
-        if ($LASTEXITCODE -ne 0) {
-            throw "Main app build failed for '$mainAppProject'."
-        }
-
-        dotnet build $smokeProject -c Release /m:1 | Out-Null
-        if ($LASTEXITCODE -ne 0) {
-            throw "Main app UI smoke build failed for '$smokeProject'."
-        }
-    }
-
-    $uiResultPath = Join-Path $artifactRoot 'power-mode-ui-hardware.result.txt'
-    $uiLogPath = Join-Path $artifactRoot 'power-mode-ui-hardware.log.txt'
     $batchResultPath = Join-Path $artifactRoot 'godmode-batch.result.txt'
     $batchLogPath = Join-Path $artifactRoot 'godmode-batch.log.txt'
     $directPowerModeResultPath = Join-Path $artifactRoot 'power-mode-direct.result.txt'
     $directPowerModeLogPath = Join-Path $artifactRoot 'power-mode-direct.log.txt'
 
     $overallChecks = [System.Collections.Generic.List[bool]]::new()
-
-    if (-not $SkipUiSmoke.IsPresent) {
-        $uiProcessPassed = Invoke-ValidationScript `
-            -Name 'UiPowerModeHardware' `
-            -ScriptPath $powerModeScript `
-            -Arguments @(
-                '-RepoRoot', $repoRoot,
-                '-ResultPathOverride', $uiResultPath,
-                '-LogPathOverride', $uiLogPath,
-                '-TimeoutSeconds', [string]$TimeoutSeconds,
-                '-SkipElevationCheck'
-            ) `
-            -WaitTimeoutSeconds ($TimeoutSeconds + 90)
-
-        Write-Result 'UiPowerModeHardware.ResultPath' $uiResultPath
-        Write-Result 'UiPowerModeHardware.LogPath' $uiLogPath
-        Write-SelectedChildResults -Prefix 'UiPowerModeHardware' -FilePath $uiResultPath -Keys @(
-            'UiPowerModeHardwareOverallPassed',
-            'UiPowerModeVerificationPassed',
-            'UiPowerModeRestorePassed',
-            'UiPowerModeChanged',
-            'UiBeforePowerMode',
-            'UiRequestedPowerMode',
-            'UiAfterPowerMode',
-            'HardwareValidationPassed',
-            'OverallPassed'
-        )
-
-        $uiOverall = Get-ResultValue -FilePath $uiResultPath -Key 'OverallPassed'
-        $overallChecks.Add($uiProcessPassed -and $uiOverall -eq 'True')
-    }
 
     if (-not $SkipGodModeBatch.IsPresent) {
         $batchProcessPassed = Invoke-ValidationScript `

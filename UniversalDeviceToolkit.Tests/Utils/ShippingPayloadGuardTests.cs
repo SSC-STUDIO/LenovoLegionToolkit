@@ -19,7 +19,6 @@ public sealed class ShippingPayloadGuardTests
         script.Should().Contain("Shipping payload is missing required plugin runtime files");
         script.Should().Contain("'UniversalDeviceToolkit.Tests'");
         script.Should().Contain("'UniversalDeviceToolkit.CrossPlatform.Tests'");
-        script.Should().Contain("'MainAppPluginUi.Smoke'");
         script.Should().Contain("'HardwareValidation'");
         script.Should().Contain("'PresetUiValidation'");
         script.Should().Contain("'SensorInventoryDump'");
@@ -102,7 +101,6 @@ public sealed class ShippingPayloadGuardTests
         var crossPlatformScript = ReadRepositoryFile("Scripts", "Build-CrossPlatformCliAsset.ps1");
         var makeScript = ReadRepositoryFile("Make.bat");
         var installerAssetsScript = ReadRepositoryFile("Scripts", "Build-InstallerAssets.ps1");
-        var mainAppSmokeWorkflow = ReadRepositoryFile(".github", "workflows", "MainAppPluginUi.Smoke.yml");
 
         var releaseJob = workflow.Job("build");
         var versionStep = releaseJob.Step("Resolve release version");
@@ -179,9 +177,6 @@ public sealed class ShippingPayloadGuardTests
             .Should()
             .BeLessThan(makeScript.IndexOf("Scripts\\Build-LanguageAssets.ps1\" -FinalizeOnly", StringComparison.Ordinal));
 
-        mainAppSmokeWorkflow.Should().Contain("/p:EnableUdtTestHooks=true");
-        mainAppSmokeWorkflow.Should().Contain("dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj");
-        mainAppSmokeWorkflow.Should().NotContain("dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj");
     }
 
     [Fact]

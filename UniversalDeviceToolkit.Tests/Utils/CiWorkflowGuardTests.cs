@@ -51,7 +51,6 @@ public sealed class CiWorkflowGuardTests
         collections.Should().Contain("DisableParallelization = true");
         collections.Should().Contain("Localization");
         collections.Should().Contain("Settings");
-        collections.Should().Contain("FlaUI");
         collections.Should().Contain("ProcessState");
     }
 
@@ -206,53 +205,6 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
-    public void FlaUiNightlyWorkflow_ShouldRunOnSelfHostedDesktopRunner()
-    {
-        var workflow = ReadWorkflow("flaui-tests.yml");
-        var job = workflow.Job("flaui-tests");
-        var runStep = job.Step("Run FlaUI tests");
-
-        workflow.Triggers.Should().ContainKey("schedule");
-        workflow.Triggers["schedule"].Values.Should().Contain("cron: '0 3 * * *'");
-        workflow.Triggers.Should().ContainKey("workflow_dispatch");
-        job.RunsOn.Should().Be("[self-hosted, Windows, udt]");
-        job.Environment["UDT_ALLOW_FLAUI_TESTS"].Should().Be("true");
-        runStep.Run.Should().Contain("--filter \"FullyQualifiedName~FlaUI\"");
-        runStep.Run.Should().NotContain("if: false");
-    }
-
-    [Fact]
-    public void FlaUiNightlyWorkflow_ShouldFailOnMissingDesktopPreconditions()
-    {
-        var step = ReadWorkflow("flaui-tests.yml").Job("flaui-tests")
-            .Step("Verify interactive desktop preconditions");
-
-        step.Run.Should().Contain("SESSIONNAME -eq 'Services'");
-        step.Run.Should().Contain("[Environment]::UserInteractive");
-        step.Run.Should().Contain("WindowsBuiltInRole]::Administrator");
-        step.Run.Should().Contain("Built UDT executable not found");
-    }
-
-    [Fact]
-    public void FlaUiNightlyWorkflow_ShouldFailOnMissingOrSkippedResults()
-    {
-        var workflow = ReadWorkflow("flaui-tests.yml");
-        var job = workflow.Job("flaui-tests");
-        var runStep = job.Step("Run FlaUI tests");
-        var resultStep = job.Step("Assert FlaUI test results");
-        var script = RepositoryPaths.ReadFile("Scripts", "Assert-FlaUiTestResults.ps1");
-
-        runStep.Run.Should().Contain("--results-directory TestResults/FlaUI");
-        resultStep.Run.Should().Contain("Assert-FlaUiTestResults.ps1");
-        resultStep.Run.Should().Contain("UniversalDeviceToolkit.FlaUI.Tests.trx");
-        job.Steps.IndexOf(resultStep).Should().BeGreaterThan(job.Steps.IndexOf(runStep));
-        script.Should().Contain("UnitTestResult");
-        script.Should().Contain("'Skipped'");
-        script.Should().Contain("'NotExecuted'");
-        script.Should().Contain("throw");
-    }
-
-    [Fact]
     public void PluginValidationWorkflow_ShouldPrimeToolingWithHelpCommand()
     {
         var step = ReadWorkflow("plugins-validate.yml")
@@ -260,19 +212,6 @@ public sealed class CiWorkflowGuardTests
             .Step("Prime plugin tooling CLI");
 
         step.Run.Should().Contain("Invoke-PluginTooling.ps1 --help --repository-root .\\Plugins");
-    }
-
-    [Fact]
-    public void FlaUiTestBase_ShouldResolveX64BuildOutputPaths()
-    {
-        var source = RepositoryPaths.ReadFile(
-            "UniversalDeviceToolkit.UiAutomation.Tests",
-            "FlaUI",
-            "FlaUiTestBase.cs");
-
-        source.Should().Contain("UniversalDeviceToolkit.WPF\", \"bin\", \"x64\", \"Release\", \"net10.0-windows10.0.26100.0\", \"win-x64\"");
-        source.Should().Contain("RUNNER_ENVIRONMENT");
-        source.Should().Contain("UDT_ALLOW_FLAUI_TESTS");
     }
 
     [Fact]

@@ -8,6 +8,5 @@ public static class TestCollections
 {
     public const string Localization = "Localization Tests";
     public const string Settings = "Settings Tests";
-    public const string FlaUI = "FlaUI Tests";
     public const string ProcessState = "Process State Tests";
 }
