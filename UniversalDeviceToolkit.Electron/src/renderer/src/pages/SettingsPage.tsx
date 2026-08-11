@@ -62,12 +62,12 @@ const LENOVO_FEATURE_KEYS: readonly FeatureKey[] = [
 const NAV_ITEMS: { key: SectionKey; labelKey: string; icon: React.JSX.Element }[] = [
   { key: 'appearance', labelKey: 'settings.nav.appearance', icon: <BgColorsOutlined /> },
   { key: 'application', labelKey: 'settings.nav.application', icon: <AppstoreOutlined /> },
-  { key: 'smartKeys', labelKey: 'settings.nav.smartKeys', icon: <KeyOutlined /> },
-  { key: 'display', labelKey: 'settings.nav.display', icon: <DesktopOutlined /> },
-  { key: 'osd', labelKey: 'settings.nav.osd', icon: <EyeOutlined /> },
-  { key: 'update', labelKey: 'settings.nav.update', icon: <SyncOutlined /> },
   { key: 'power', labelKey: 'settings.nav.power', icon: <PoweroffOutlined /> },
-  { key: 'integrations', labelKey: 'settings.nav.integrations', icon: <ApiOutlined /> }
+  { key: 'display', labelKey: 'settings.nav.display', icon: <DesktopOutlined /> },
+  { key: 'smartKeys', labelKey: 'settings.nav.smartKeys', icon: <KeyOutlined /> },
+  { key: 'update', labelKey: 'settings.nav.update', icon: <SyncOutlined /> },
+  { key: 'integrations', labelKey: 'settings.nav.integrations', icon: <ApiOutlined /> },
+  { key: 'osd', labelKey: 'settings.nav.osd', icon: <EyeOutlined /> }
 ]
 
 const HARDWARE_GATED_KEYS: readonly SectionKey[] = ['smartKeys', 'display', 'power']
@@ -190,6 +190,9 @@ export default function SettingsPage(): React.JSX.Element {
           className="udt-settings-page__content udt-settings-page__content-anim"
           aria-label={t(`settings.nav.${active}`)}
         >
+          <header className="udt-settings-page__section-header">
+            <h2 className="udt-settings-page__section-title">{t(`settings.nav.${active}`)}</h2>
+          </header>
           {renderSection(active)}
         </section>
       </div>

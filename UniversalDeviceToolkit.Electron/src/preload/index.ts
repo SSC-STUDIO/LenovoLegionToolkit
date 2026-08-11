@@ -55,7 +55,11 @@ const bridge = {
   writeClipboardLines: (lines: string[]): Promise<{ ok: boolean }> =>
     ipcRenderer.invoke('clipboard:write-lines', { lines }),
   readClipboardExistingPaths: (): Promise<string[]> =>
-    ipcRenderer.invoke('clipboard:read-existing-paths')
+    ipcRenderer.invoke('clipboard:read-existing-paths'),
+  /** Windows login item (WPF Autorun). */
+  setAutorun: (enabled: boolean): Promise<{ ok: boolean; enabled: boolean }> =>
+    ipcRenderer.invoke('app:set-autorun', enabled),
+  getAutorun: (): Promise<{ enabled: boolean }> => ipcRenderer.invoke('app:get-autorun')
 }
 
 contextBridge.exposeInMainWorld('bridge', bridge)

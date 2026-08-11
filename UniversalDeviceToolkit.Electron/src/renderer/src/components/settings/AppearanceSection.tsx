@@ -1,17 +1,19 @@
-import { useEffect } from 'react'
-import { ColorPicker, Select, message } from 'antd'
-import type { Color } from 'antd/es/color-picker'
+import { useEffect, useState } from 'react'
+import { Checkbox, Select, message } from 'antd'
 import { useTranslation } from 'react-i18next'
+import ColorPicker from '../ColorPicker'
 import { settingsApi } from '../../api/settings'
+import { systemApi } from '../../api/system'
 import { LANGUAGES, changeLanguage } from '../../i18n'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { UI_SCALE_OPTIONS } from '../../stores/themeStore'
-import { useTheme } from '../../theme/useTheme'
+import { useTheme, storeAccentPreference } from '../../theme/useTheme'
 import { SettingsCard } from './SettingsCard'
 
 type AppSettings = Record<string, unknown>
 
 type ThemePreference = 'System' | 'Light' | 'Dark'
+type AccentColorSource = 'System' | 'Custom'
 
 /**
  * Temperature unit preference for the sensor dashboard.
@@ -40,7 +42,8 @@ interface AccentColorRGB {
   B: number
 }
 
-const DEFAULT_ACCENT_HEX = '#ff2121'
+/** Fallback when Windows accent cannot be read (AccentColorPresets.Swatches[0]). */
+const DEFAULT_SYSTEM_ACCENT_HEX = '#0078d4'
 
 /** All selectable languages; the current one is sorted to the top. */
 const LANGUAGE_OPTIONS = LANGUAGES.map((language) => ({
@@ -68,25 +71,40 @@ const UI_SCALE_OPTIONS_LABELED = UI_SCALE_OPTIONS.map((value) => ({
   label: `${Math.round(value * 100)}%`
 }))
 
-const ACCENT_PRESETS = [
-  '#ff2121',
-  '#ff7a00',
-  '#ffc53d',
-  '#52c41a',
-  '#13c2c2',
-  '#1677ff',
-  '#722ed1',
-  '#eb2f96'
+/**
+ * Solid accent presets from Lib Theme/AccentColorPresets.cs (system rainbow is separate).
+ */
+const ACCENT_PRESETS: { hex: string; key: string }[] = [
+  { hex: '#0078d4', key: 'Blue' },
+  { hex: '#b146c2', key: 'Purple' },
+  { hex: '#e3008c', key: 'Pink' },
+  { hex: '#e81123', key: 'Red' },
+  { hex: '#f7630c', key: 'Orange' },
+  { hex: '#ffb900', key: 'Amber' },
+  { hex: '#107c10', key: 'Green' },
+  { hex: '#808080', key: 'Gray' }
 ]
+
+const SYSTEM_ACCENT_GRADIENT =
+  'linear-gradient(135deg, #f13b50 0%, #742ac4 28%, #1a98f2 52%, #06d3a5 76%, #ffd62e 100%)'
 
 function readString(app: AppSettings, key: string): string | undefined {
   const value = app[key]
   return typeof value === 'string' ? value : undefined
 }
 
+function readBool(app: AppSettings, key: string, fallback: boolean): boolean {
+  const value = app[key]
+  return typeof value === 'boolean' ? value : fallback
+}
+
 function readThemePreference(app: AppSettings): ThemePreference {
   const value = readString(app, 'Theme')
   return value === 'Light' || value === 'Dark' ? value : 'System'
+}
+
+function readAccentColorSource(app: AppSettings): AccentColorSource {
+  return readString(app, 'AccentColorSource') === 'Custom' ? 'Custom' : 'System'
 }
 
 function readAccentColor(app: AppSettings): AccentColorRGB | undefined {
@@ -114,6 +132,33 @@ function hexToAccentColor(hex: string): AccentColorRGB {
   return { R: (value >> 16) & 0xff, G: (value >> 8) & 0xff, B: value & 0xff }
 }
 
+function colorsEqual(a: AccentColorRGB | undefined, hex: string): boolean {
+  if (a == null) return false
+  return accentColorToHex(a).toLowerCase() === hex.toLowerCase()
+}
+
+function isPresetHex(hex: string): boolean {
+  return ACCENT_PRESETS.some((preset) => preset.hex.toLowerCase() === hex.toLowerCase())
+}
+
+function EyedropperIcon(): React.JSX.Element {
+  return (
+    <svg
+      className="udt-settings-swatch__eyedropper-icon"
+      viewBox="0 0 24 24"
+      width="18"
+      height="18"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path
+        fill="currentColor"
+        d="M11.1 16.2 7.8 19.5a2.1 2.1 0 0 1-3-3l3.3-3.3 3 3Zm8.2-12.5a2.2 2.2 0 0 0-3.1 0l-1.5 1.5 3.1 3.1 1.5-1.5a2.2 2.2 0 0 0 0-3.1Zm-4.6 2.5L6.2 16.7l1.1 1.1 8.5-8.5-1.1-1.1Z"
+      />
+    </svg>
+  )
+}
+
 function ThemePreviewCard({
   option,
   selected,
@@ -125,35 +170,54 @@ function ThemePreviewCard({
   label: string
   onClick: () => void
 }): React.JSX.Element {
+  // WPF theme preview: Light/Dark cards render two identical panes; the System
+  // card is split — one light half and one dark half.
+  const isSystem = option.value === 'System'
+  const singleMode: 'light' | 'dark' = option.value === 'Light' ? 'light' : 'dark'
+  const panes: ('light' | 'dark')[] = isSystem ? ['light', 'dark'] : [singleMode, singleMode]
+
+  const renderPane = (mode: 'light' | 'dark', index: number): React.JSX.Element => (
+    <span key={index} className={`udt-theme-option__pane udt-theme-option__pane--${mode}`}>
+      <span className="udt-theme-option__bar">
+        {index === 0 ? (
+          <>
+            <span className="udt-theme-option__dot udt-theme-option__dot--red" />
+            <span className="udt-theme-option__dot udt-theme-option__dot--yellow" />
+            <span className="udt-theme-option__dot udt-theme-option__dot--green" />
+          </>
+        ) : (
+          <span className="udt-theme-option__bar-blank" />
+        )}
+      </span>
+      <span className="udt-theme-option__body">
+        <span className="udt-theme-option__sidebar">
+          <span className="udt-theme-option__sline" />
+          <span className="udt-theme-option__sline" />
+          <span className="udt-theme-option__sline" />
+        </span>
+        <span className="udt-theme-option__content">
+          <span className="udt-theme-option__cline udt-theme-option__cline--search" />
+          <span className="udt-theme-option__cline" />
+          <span className="udt-theme-option__cline" />
+        </span>
+      </span>
+      <span className="udt-theme-option__dock">
+        <span className="udt-theme-option__swatch" />
+        <span className="udt-theme-option__swatch" />
+        <span className="udt-theme-option__swatch" />
+      </span>
+    </span>
+  )
+
   return (
     <button
       type="button"
       className={`udt-theme-option${selected ? ' udt-theme-option--selected' : ''}`}
       onClick={onClick}
+      aria-pressed={selected}
     >
-      <span className={`udt-theme-option__preview ${option.previewClass}`}>
-        <span className="udt-theme-option__bar">
-          <span className="udt-theme-option__dot udt-theme-option__dot--red" />
-          <span className="udt-theme-option__dot udt-theme-option__dot--yellow" />
-          <span className="udt-theme-option__dot udt-theme-option__dot--green" />
-        </span>
-        <span className="udt-theme-option__body">
-          <span className="udt-theme-option__sidebar">
-            <span className="udt-theme-option__sline" />
-            <span className="udt-theme-option__sline" />
-            <span className="udt-theme-option__sline" />
-          </span>
-          <span className="udt-theme-option__content">
-            <span className="udt-theme-option__cline udt-theme-option__cline--search" />
-            <span className="udt-theme-option__cline" />
-            <span className="udt-theme-option__cline" />
-          </span>
-        </span>
-        <span className="udt-theme-option__dock">
-          <span className="udt-theme-option__swatch" />
-          <span className="udt-theme-option__swatch" />
-          <span className="udt-theme-option__swatch" />
-        </span>
+      <span className="udt-theme-option__preview">
+        <span className="udt-theme-option__split">{panes.map(renderPane)}</span>
       </span>
       <span className="udt-theme-option__label">{label}</span>
     </button>
@@ -166,6 +230,7 @@ export default function AppearanceSection(): React.JSX.Element {
   const scopes = useSettingsStore((s) => s.scopes)
   const load = useSettingsStore((s) => s.load)
   const setScope = useSettingsStore((s) => s.setScope)
+  const [systemAccentHex, setSystemAccentHex] = useState(DEFAULT_SYSTEM_ACCENT_HEX)
 
   const rawApp = scopes.application
   const app: AppSettings =
@@ -174,6 +239,21 @@ export default function AppearanceSection(): React.JSX.Element {
   useEffect(() => {
     void load()
   }, [load])
+
+  useEffect(() => {
+    let cancelled = false
+    systemApi
+      .getAccentColor()
+      .then((color) => {
+        if (!cancelled) {
+          setSystemAccentHex(accentColorToHex({ R: color.r, G: color.g, B: color.b }))
+        }
+      })
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   // Keep localStorage 'udt-temperature-unit' in sync with the backend value so
   // getTemperatureUnit() reflects the persisted preference from the first run.
@@ -184,8 +264,13 @@ export default function AppearanceSection(): React.JSX.Element {
     }
   }, [app['TemperatureUnit']])
 
+  const accentSource = readAccentColorSource(app)
   const accentColor = readAccentColor(app)
   const accentHex = accentColor ? accentColorToHex(accentColor) : undefined
+  const applyAccentToSystem = readBool(app, 'ApplyAccentColorToSystem', true)
+  const applyAccentToTheme = readBool(app, 'ApplyAccentColorToTheme', true)
+  const customPickerSelected =
+    accentSource === 'Custom' && accentHex != null && !isPresetHex(accentHex)
 
   const currentLanguage = LANGUAGE_OPTIONS.some((option) => option.value === i18n.language)
     ? i18n.language
@@ -196,20 +281,41 @@ export default function AppearanceSection(): React.JSX.Element {
     return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })
   })
 
-  const handleLanguageChange = (value: string): void => {
-    void changeLanguage(value)
-  }
-
-  const handleTemperatureUnitChange = (value: TemperatureUnit): void => {
-    // Renderer-facing preference (read by sensor sections via getTemperatureUnit).
-    localStorage.setItem(TEMPERATURE_UNIT_STORAGE_KEY, value)
-    // Keep the backend 'application' scope in sync for host-side consumers.
-    const next: AppSettings = { ...app, TemperatureUnit: value }
+  const persistApplication = (next: AppSettings): void => {
     setScope('application', next)
     settingsApi
       .set('application', next)
       .then(() => settingsApi.save(['application']))
       .catch(() => message.error(t('settings.saveFailed')))
+  }
+
+  const applyAccentToUi = (next: AppSettings): void => {
+    const source = readAccentColorSource(next)
+    const applyTheme = readBool(next, 'ApplyAccentColorToTheme', true)
+    if (!applyTheme) {
+      setAccent(undefined)
+      return
+    }
+    if (source === 'System') {
+      setAccent(systemAccentHex)
+      return
+    }
+    const custom = readAccentColor(next)
+    setAccent(custom ? accentColorToHex(custom) : undefined)
+  }
+
+  const applyAccentToWindowsIfEnabled = (rgb: AccentColorRGB, enabled: boolean): void => {
+    if (!enabled) return
+    void systemApi.setAccentColor({ r: rgb.R, g: rgb.G, b: rgb.B }).catch(() => undefined)
+  }
+
+  const handleLanguageChange = (value: string): void => {
+    void changeLanguage(value)
+  }
+
+  const handleTemperatureUnitChange = (value: TemperatureUnit): void => {
+    localStorage.setItem(TEMPERATURE_UNIT_STORAGE_KEY, value)
+    persistApplication({ ...app, TemperatureUnit: value })
   }
 
   const handleThemeChange = (value: ThemePreference): void => {
@@ -219,31 +325,60 @@ export default function AppearanceSection(): React.JSX.Element {
     } else {
       setThemeMode(value === 'Dark' ? 'dark' : 'light')
     }
-    const next: AppSettings = { ...app, Theme: value }
-    setScope('application', next)
-    settingsApi
-      .set('application', next)
-      .then(() => settingsApi.save(['application']))
-      .catch(() => message.error(t('settings.saveFailed')))
+    persistApplication({ ...app, Theme: value })
   }
 
-  const persistAccent = (hex: string, rgb: AccentColorRGB): void => {
-    setAccent(hex)
-    const next: AppSettings = { ...app, AccentColor: rgb }
-    setScope('application', next)
-    settingsApi
-      .set('application', next)
-      .then(() => settingsApi.save(['application']))
-      .catch(() => message.error(t('settings.saveFailed')))
+  const handleApplyAccentToSystemChange = (checked: boolean): void => {
+    const next: AppSettings = { ...app, ApplyAccentColorToSystem: checked }
+    persistApplication(next)
+    if (checked && accentSource === 'Custom' && accentColor != null) {
+      applyAccentToWindowsIfEnabled(accentColor, true)
+    }
+  }
+
+  const handleApplyAccentToThemeChange = (checked: boolean): void => {
+    const next: AppSettings = { ...app, ApplyAccentColorToTheme: checked }
+    persistApplication(next)
+    applyAccentToUi(next)
+  }
+
+  const handleSystemAccent = (): void => {
+    const next: AppSettings = {
+      ...app,
+      AccentColorSource: 'System',
+      ThemeStylePreset: 'Default'
+    }
+    persistApplication(next)
+    storeAccentPreference('System')
+    applyAccentToUi(next)
   }
 
   const handleAccentPreset = (hex: string): void => {
-    persistAccent(hex, hexToAccentColor(hex))
+    const rgb = hexToAccentColor(hex)
+    const next: AppSettings = {
+      ...app,
+      AccentColorSource: 'Custom',
+      AccentColor: rgb,
+      ThemeStylePreset: 'Default'
+    }
+    persistApplication(next)
+    storeAccentPreference('Custom', hex)
+    applyAccentToUi(next)
+    applyAccentToWindowsIfEnabled(rgb, applyAccentToSystem)
   }
 
-  const handleAccentChange = (value: Color, css: string): void => {
-    const rgb = value.toRgb()
-    persistAccent(css, { R: rgb.r, G: rgb.g, B: rgb.b })
+  const handleCustomAccent = (hex: string): void => {
+    const rgb = hexToAccentColor(hex)
+    const next: AppSettings = {
+      ...app,
+      AccentColorSource: 'Custom',
+      AccentColor: rgb,
+      ThemeStylePreset: 'Default'
+    }
+    persistApplication(next)
+    storeAccentPreference('Custom', hex)
+    applyAccentToUi(next)
+    applyAccentToWindowsIfEnabled(rgb, applyAccentToSystem)
   }
 
   const handleUiScaleChange = (value: number): void => {
@@ -251,6 +386,7 @@ export default function AppearanceSection(): React.JSX.Element {
   }
 
   const selectedTheme = readThemePreference(app)
+  const customPickerValue = accentHex ?? systemAccentHex
 
   return (
     <div className="udt-settings-section udt-settings-section--appearance">
@@ -278,7 +414,7 @@ export default function AppearanceSection(): React.JSX.Element {
           />
         }
       />
-      <SettingsCard title={t('settings.appearance.theme')}>
+      <SettingsCard title={t('settingsPagethemeModetitle', { defaultValue: t('settings.appearance.theme') })}>
         <div className="udt-theme-options">
           {THEME_OPTIONS.map((option) => (
             <ThemePreviewCard
@@ -290,32 +426,69 @@ export default function AppearanceSection(): React.JSX.Element {
             />
           ))}
         </div>
-      </SettingsCard>
-      <SettingsCard
-        title={t('settings.appearance.accentColor')}
-        description={t('settings.appearance.accentColorDesc')}
-      >
-        <div className="udt-settings-swatches">
-          {ACCENT_PRESETS.map((preset) => (
-            <button
-              key={preset}
-              type="button"
-              className={`udt-settings-swatch${accentHex?.toLowerCase() === preset ? ' udt-settings-swatch--selected' : ''}`}
-              style={{ background: preset }}
-              aria-label={preset}
-              title={preset}
-              onClick={() => handleAccentPreset(preset)}
-            />
-          ))}
-          <ColorPicker
-            key={accentHex ?? 'none'}
-            value={accentHex ?? DEFAULT_ACCENT_HEX}
-            onChange={handleAccentChange}
-            disabledAlpha
-            showText={false}
+
+        <div className="udt-theme-accent-options">
+          <Checkbox
+            checked={applyAccentToSystem}
+            onChange={(event) => handleApplyAccentToSystemChange(event.target.checked)}
           >
-            <button type="button" className="udt-settings-swatch udt-settings-swatch--custom" title={t('settings.appearance.accentColor')} />
-          </ColorPicker>
+            {t('settingsPageapplyAccentColorToThemetitle')}
+          </Checkbox>
+          <Checkbox
+            checked={applyAccentToTheme}
+            onChange={(event) => handleApplyAccentToThemeChange(event.target.checked)}
+          >
+            {t('settingsPageapplyAccentColorToThemeStyletitle')}
+          </Checkbox>
+        </div>
+
+        <div className="udt-theme-accent-divider" role="separator" />
+
+        <div className="udt-theme-accent-title">
+          {t('settingsPageaccentColorPresetstitle')}
+        </div>
+        <div className="udt-settings-swatches">
+          <button
+            type="button"
+            className={`udt-settings-swatch${accentSource === 'System' ? ' udt-settings-swatch--selected' : ''}`}
+            style={{ background: SYSTEM_ACCENT_GRADIENT }}
+            aria-label={t('settings.appearance.accentColorSource.system', {
+              defaultValue: 'System'
+            })}
+            title={t('settings.appearance.accentColorSource.system', { defaultValue: 'System' })}
+            onClick={handleSystemAccent}
+          />
+          {ACCENT_PRESETS.map((preset) => {
+            const selected =
+              accentSource === 'Custom' && colorsEqual(accentColor, preset.hex)
+            return (
+              <button
+                key={preset.key}
+                type="button"
+                className={`udt-settings-swatch${selected ? ' udt-settings-swatch--selected' : ''}`}
+                style={{ background: preset.hex }}
+                aria-label={preset.key}
+                title={preset.key}
+                onClick={() => handleAccentPreset(preset.hex)}
+              />
+            )
+          })}
+          <div
+            className={`udt-settings-swatch-picker${
+              customPickerSelected ? ' udt-settings-swatch-picker--selected' : ''
+            }`}
+          >
+            <ColorPicker
+              value={customPickerValue}
+              size={40}
+              tooltip={t('settings.appearance.accentColorSource.custom', {
+                defaultValue: 'Custom'
+              })}
+              onChangeDelayed={handleCustomAccent}
+            >
+              <EyedropperIcon />
+            </ColorPicker>
+          </div>
         </div>
       </SettingsCard>
       <SettingsCard

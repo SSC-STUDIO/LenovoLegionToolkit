@@ -24,6 +24,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import TitleBar from '../components/TitleBar'
 import AppStatusBanners from '../components/AppStatusBanners'
 import LoadingOverlay from '../components/LoadingOverlay'
+import NotificationCenter from '../components/NotificationCenter'
 import UtilsModalHost from '../components/utils/UtilsModalHost'
 import StartupGates from '../components/utils/StartupGates'
 import { openStatusModal } from '../components/utils/StatusModal'
@@ -273,6 +274,7 @@ export default function AppLayout(): React.JSX.Element {
       <StartupGates />
       <UtilsModalHost />
       <LoadingOverlay />
+      <NotificationCenter />
       <TitleBar />
       <div className="udt-app-shell__body">
         <nav

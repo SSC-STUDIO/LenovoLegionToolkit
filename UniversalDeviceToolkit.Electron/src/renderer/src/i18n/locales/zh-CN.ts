@@ -355,9 +355,13 @@
         languageDesc: '选择语言',
         temperature: '温度',
         temperatureDesc: '选择温度传感器使用的单位。',
-        theme: '主题',
-        accentColor: '主题色',
+        theme: '全局界面颜色模式',
+        accentColor: '全局界面强调色',
         accentColorDesc: '更改应用的主题色。',
+        accentColorSource: {
+          system: '跟随系统',
+          custom: '自定义'
+        },
         appScale: '界面缩放',
         appScaleDesc: '统一放大或缩小应用内的文本与整个界面，独立于 Windows 显示缩放。',
         themeOptions: {
@@ -378,7 +382,18 @@
         dontShowNotifications: '不显示通知',
         dontShowNotificationsDesc: '关闭应用内与系统通知',
         autorun: '开机启动',
-        autorunDesc: '登录 Windows 后最小化到系统托盘。',
+        autorunDesc: '登录 Windows 后自动启动本应用。',
+        autorunOptions: {
+          enabled: '启用',
+          enabledDelayed: '启用（延迟启动）',
+          disabled: '禁用'
+        },
+        groupStartup: '启动与窗口',
+        groupSensors: '硬件传感器',
+        groupNotifications: '通知与警告',
+        groupSoftware: '软件冲突',
+        sensorRefreshInterval: '传感器刷新间隔',
+        sensorRefreshIntervalDesc: '传感器数值的刷新频率。也可以在仪表盘传感器卡片上右键临时更改。',
         extensionsEnabled: '启用扩展',
         extensionsEnabledDesc: '启用插件与扩展加载',
         sensorSections: '传感器分区',
@@ -1379,7 +1394,10 @@
     statusBanner: {
       updateAvailable: '新版本可用！',
       updateAvailableWithVersion: '发现新版本 {{version}}！',
-      pluginExtensionsDisabled: '插件扩展导航已隐藏，可在"设置 → 导航项"中启用。'
+      pluginExtensionsDisabled: '插件扩展导航已隐藏，可在"设置 → 导航项"中启用。',
+      vantageRunning: 'Lenovo Vantage 和/或 ImController 正在后台运行。',
+      legionZoneRunning: 'Legion Zone 正在后台运行。',
+      fnKeysRunning: 'Lenovo Hotkeys 正在后台运行。'
     },
     clipboard: {
       copyProcesses: '复制进程列表',

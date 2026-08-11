@@ -1,46 +1,122 @@
 /*
- * Host notification toasts (notifications/index.ts).
- * Styling is scoped under the custom semantic root class added to each
- * notice (classNames.root) instead of overriding antd's global classes.
- * Colors follow the app theme through the --udt-* design tokens declared
- * on :root in styles/global.css (data-theme switches included), the same
- * mechanism the rest of the app uses for static antd overlays.
+ * Notification center (components/NotificationCenter.tsx) — port of the WPF
+ * AppNotificationHost: right-corner stacked toasts, severity icon colors,
+ * ×N merge badge, optional progress bar, hover-pause, close button.
  */
-.udt-host-notice {
-  background: var(--udt-surface-card);
+
+.udt-notification-center {
+  position: fixed;
+  top: 56px;
+  right: 16px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  pointer-events: none;
+}
+
+.udt-notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 10px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
   box-shadow: var(--udt-shadow-glass);
   color: var(--udt-text-primary);
+  pointer-events: auto;
+  animation: udt-notification-in var(--udt-anim-medium) var(--udt-ease-cubic-out);
 }
 
-.udt-host-notice .ant-notification-notice-title {
+@keyframes udt-notification-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.udt-notification-item__icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.udt-notification-item__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.udt-notification-item__title {
   color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
   font-weight: 500;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.udt-host-notice .ant-notification-notice-description {
+.udt-notification-item__message {
+  margin-top: 2px;
   color: var(--udt-text-secondary);
-}
-
-.udt-host-notice .ant-notification-notice-close {
-  color: var(--udt-text-tertiary);
-}
-
-.udt-host-notice .ant-notification-notice-close:hover {
-  color: var(--udt-text-primary);
-}
-
-.udt-host-notice__text {
-  display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.udt-host-notice__merged {
-  flex-shrink: 0;
   font-size: var(--udt-font-small-caption);
-  font-weight: 600;
-  color: var(--udt-accent);
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-notification-item__progress {
+  height: 4px;
+  margin-top: 8px;
+  border-radius: var(--udt-radius-round);
+  background: var(--udt-control-fill-secondary);
+  overflow: hidden;
+}
+
+.udt-notification-item__progress-fill {
+  height: 100%;
+  border-radius: var(--udt-radius-round);
+  background: var(--udt-accent-secondary);
+  transition: width var(--udt-anim-medium) ease-out;
+}
+
+.udt-notification-item__close {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: -2px -4px 0 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--udt-radius-control);
+  background: transparent;
+  color: var(--udt-text-tertiary);
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    background-color var(--udt-anim-fast) ease-out,
+    color var(--udt-anim-fast) ease-out;
+}
+
+.udt-notification-item__close:hover {
+  background: var(--udt-control-fill-secondary);
+  color: var(--udt-text-primary);
 }

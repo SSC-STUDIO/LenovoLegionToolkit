@@ -1,11 +1,11 @@
-/* Windows optimization page — mirrors WindowsOptimizationPage.xaml */
+﻿/* Windows optimization page — mirrors WindowsOptimizationPage.xaml */
 
 .udt-optimization-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 16px;
   align-items: start;
-}
+  padding: 16px 16px 28px 0;
 
 .udt-optimization-layout__main {
   min-width: 0;

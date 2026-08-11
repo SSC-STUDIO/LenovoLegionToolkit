@@ -2,6 +2,7 @@ import './sensor.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SensorsBattery, SensorsCpu } from '../../api/sensors'
+import { settingsApi } from '../../api/settings'
 import { useSensorsStore } from '../../stores/sensorsStore'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { useThemeStore } from '../../stores/themeStore'
@@ -22,6 +23,16 @@ const BATTERY_CRITICAL = '#e05656'
 const BATTERY_LOW_THRESHOLD = 20
 const CHART_HEIGHT = 116
 const REFRESH_INTERVALS = [1, 2, 3, 5]
+
+/** Saved refresh interval from Settings → Application (default 1s). */
+function readSavedRefreshInterval(scopes: Record<string, unknown>): number {
+  const app =
+    typeof scopes.application === 'object' && scopes.application !== null
+      ? (scopes.application as Record<string, unknown>)
+      : {}
+  const raw = app['SensorRefreshIntervalSec']
+  return typeof raw === 'number' && Number.isFinite(raw) && raw >= 1 && raw <= 60 ? raw : 1
+}
 
 type TemperatureUnit = 'C' | 'F'
 
@@ -366,8 +377,13 @@ export default function SensorSection(): React.JSX.Element {
     const store = useSensorsStore.getState()
     void store.loadStatus()
     void store.loadSnapshot()
-    void store.start(1)
-    void useSettingsStore.getState().load()
+    // Start with the interval persisted in Settings → Application.
+    const startWithSavedInterval = async (): Promise<void> => {
+      await useSettingsStore.getState().load()
+      const saved = readSavedRefreshInterval(useSettingsStore.getState().scopes)
+      await store.start(saved)
+    }
+    void startWithSavedInterval()
     return () => {
       void useSensorsStore.getState().stop()
     }
@@ -610,27 +626,22 @@ export default function SensorSection(): React.JSX.Element {
     setRefreshMenu(null)
     // start() re-subscribes with the new interval when already polling.
     void useSensorsStore.getState().start(seconds)
+    // Persist to Settings → Application so the choice survives restarts.
+    const scopesState = useSettingsStore.getState().scopes
+    const currentApp =
+      typeof scopesState.application === 'object' && scopesState.application !== null
+        ? (scopesState.application as Record<string, unknown>)
+        : {}
+    const next = { ...currentApp, SensorRefreshIntervalSec: seconds }
+    useSettingsStore.getState().setScope('application', next)
+    settingsApi
+      .set('application', next)
+      .then(() => settingsApi.save(['application']))
+      .catch(() => undefined)
   }
 
   return (
     <div className="udt-sensors">
-      <div className="udt-sensor-toolbar">
-        <label className="udt-sensor-toolbar__label" htmlFor="udt-sensor-refresh-interval">
-          {t('dashboard.sensor.refreshInterval')}
-        </label>
-        <select
-          id="udt-sensor-refresh-interval"
-          className="udt-select"
-          value={intervalSec}
-          onChange={(e) => handleIntervalChange(Number(e.target.value))}
-        >
-          {REFRESH_INTERVALS.map((seconds) => (
-            <option key={seconds} value={seconds}>
-              {seconds} s
-            </option>
-          ))}
-        </select>
-      </div>
       <div ref={boardRef} className="udt-sensor-board" onContextMenu={openRefreshMenu}>
         <div className="udt-sensor-board__grid">
           <SensorPanel

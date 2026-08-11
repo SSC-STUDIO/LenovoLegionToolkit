@@ -6,11 +6,13 @@ import enUS from 'antd/locale/en_US'
 import zhCN from 'antd/locale/zh_CN'
 import i18n from './i18n'
 import { initNotifications } from './notifications'
+import { initCrashReportListener } from './notifications/crashListener'
 import { useThemeStore } from './stores/themeStore'
 import App from './App'
 import './styles/global.css'
 
 void initNotifications()
+void initCrashReportListener()
 
 function Root(): React.JSX.Element {
   const themeMode = useThemeStore((s) => s.themeMode)
@@ -20,6 +22,18 @@ function Root(): React.JSX.Element {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', themeMode)
   }, [themeMode])
+
+  useEffect(() => {
+    const root = document.documentElement
+    if (colorPrimary) {
+      root.style.setProperty('--udt-accent', colorPrimary)
+      // WPF --udt-accent-secondary is the accent at 90% opacity.
+      root.style.setProperty('--udt-accent-secondary', `color-mix(in srgb, ${colorPrimary} 90%, transparent)`)
+    } else {
+      root.style.removeProperty('--udt-accent')
+      root.style.removeProperty('--udt-accent-secondary')
+    }
+  }, [colorPrimary])
 
   useEffect(() => {
     const handleLanguageChanged = (lng: string): void => {

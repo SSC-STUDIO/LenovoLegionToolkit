@@ -1,4 +1,4 @@
-import { app, BrowserWindow, clipboard, dialog, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, clipboard, dialog, ipcMain, powerMonitor, shell } from 'electron'
 import { join } from 'path'
 import { existsSync, mkdirSync } from 'fs'
 import { tmpdir } from 'os'
@@ -9,6 +9,8 @@ import { initOsdWindow, destroyOsdWindow } from './osd-window'
 import { initStatusWindow, destroyStatusWindow, showStatusWindow } from './status-window'
 import { flags, describeFlags, toHostArgs } from './flags'
 import { attachResizeStability, attachMaximizeWorkAreaClamp } from './window-helpers'
+import { listPowerPlans, setActivePowerPlan } from './power-plans'
+import { restartSystem, shutdownSystem, sleepSystem } from './system-power'
 
 app.setAppUserModelId('com.universaldevicetoolkit.app')
 
@@ -266,6 +268,25 @@ app.whenReady().then(() => {
         return { status: 'Disabled', disable: true }
       }
     }
+    // Windows power-plan bridge (WPF WindowsPowerPlanController): the host has
+    // no powercfg/WMI channel, so the main process answers from `powercfg`.
+    if (method === 'powerPlans.getList') {
+      return listPowerPlans().then(
+        (plans) => ({ plans }),
+        () => ({ plans: [] })
+      )
+    }
+    if (method === 'powerPlans.setActive') {
+      const guid = (params as { guid?: unknown } | null)?.guid
+      if (typeof guid !== 'string' || guid.length === 0) {
+        throw new Error('A power plan GUID is required.')
+      }
+      return setActivePowerPlan(guid).then(() => ({ ok: true }))
+    }
+    // System power actions (WPF Lib PowerActions): restart/shutdown/sleep.
+    if (method === 'power.restart') return restartSystem()
+    if (method === 'power.shutdown') return shutdownSystem()
+    if (method === 'power.sleep') return sleepSystem()
     return hostClient.invoke(method, params)
   })
 
@@ -417,6 +438,18 @@ app.whenReady().then(() => {
     app.quit()
   })
 
+  // Mirrors WPF SettingsApplicationBehaviorControl Autorun (registry Run key):
+  // Electron persists the login item via setLoginItemSettings.
+  ipcMain.handle('app:set-autorun', (_event, enabled: unknown) => {
+    const openAtLogin = enabled === true
+    app.setLoginItemSettings({ openAtLogin })
+    return { ok: true, enabled: openAtLogin }
+  })
+
+  ipcMain.handle('app:get-autorun', () => {
+    return { enabled: app.getLoginItemSettings().openAtLogin }
+  })
+
   ipcMain.handle('dialog:select-plugin-files', async () => {
     const options = {
       title: 'Import plugin packages',
@@ -485,6 +518,21 @@ app.whenReady().then(() => {
   })
 
   startHost()
+  // Apply the persisted Autorun setting once the host is up (login item may
+  // have drifted out of sync; the renderer toggle keeps it current afterwards).
+  hostClient.on('host.ready', () => {
+    void (async () => {
+      try {
+        const result = (await hostClient.invoke('settings.get', { scope: 'application' })) as
+          | { value?: Record<string, unknown> }
+          | null
+          | undefined
+        app.setLoginItemSettings({ openAtLogin: result?.value?.Autorun === true })
+      } catch (error) {
+        console.error('[main] failed to apply persisted Autorun setting:', error)
+      }
+    })()
+  })
   createWindow()
   setMainWindowRef(() => mainWindow)
   const trayOpts = {
@@ -500,6 +548,23 @@ app.whenReady().then(() => {
   initOsdWindow()
   initStatusWindow()
   if (mainWindow) forwardHostEvents(mainWindow)
+
+  // Forward OS power/session events to the renderer (WPF MainWindow listened
+  // to the same transitions for OSD/status behavior).
+  const systemEvents: Array<[string, string]> = [
+    ['suspend', 'system.suspend'],
+    ['resume', 'system.resume'],
+    ['lock-screen', 'system.lock'],
+    ['unlock-screen', 'system.unlock'],
+    ['shutdown', 'system.shutdown']
+  ]
+  for (const [sourceEvent, bridgeEvent] of systemEvents) {
+    powerMonitor.on(sourceEvent as 'suspend', () => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('bridge:event', bridgeEvent, {})
+      }
+    })
+  }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -529,7 +594,51 @@ app.on('before-quit', (event) => {
   })
 })
 
+/**
+ * Mirrors WPF AppDomain_UnhandledException / CrashReportHelper: save a crash
+ * report file under userData/crash-reports and surface it to the renderer
+ * (CrashReportNotificationModal) via the bridge event bus.
+ */
+function writeCrashReport(error: Error, kind: 'uncaughtException' | 'unhandledRejection'): void {
+  try {
+    const fs = require('fs') as typeof import('fs')
+    const dir = join(app.getPath('userData'), 'crash-reports')
+    fs.mkdirSync(dir, { recursive: true })
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-')
+    const filePath = join(dir, `udt-crash-${stamp}.txt`)
+    const lines = [
+      `[${kind}]`,
+      `time: ${new Date().toLocaleString()}`,
+      `version: ${app.getVersion()}`,
+      `exception: ${error.name ?? 'Error'}`,
+      `message: ${error.message ?? ''}`,
+      `stack: ${error.stack ?? ''}`
+    ]
+    fs.writeFileSync(filePath, lines.join('\n') + '\n', 'utf8')
+    const report = {
+      path: filePath,
+      timestamp: new Date().toLocaleString(),
+      appVersion: app.getVersion(),
+      exceptionType: error.name ?? 'Error',
+      exceptionMessage: error.message ?? '',
+      stackTrace: (error.stack ?? '').slice(0, 1200)
+    }
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send('bridge:event', 'app.crash', report)
+    }
+  } catch {
+    // The crash reporter must never mask the original failure.
+  }
+}
+
 process.on('uncaughtException', (error) => {
   console.error('[main] uncaughtException:', error)
+  writeCrashReport(error, 'uncaughtException')
+})
+
+process.on('unhandledRejection', (reason) => {
+  const error = reason instanceof Error ? reason : new Error(String(reason))
+  console.error('[main] unhandledRejection:', error)
+  writeCrashReport(error, 'unhandledRejection')
 })
 

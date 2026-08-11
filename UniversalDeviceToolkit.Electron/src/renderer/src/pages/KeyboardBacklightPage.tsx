@@ -39,8 +39,8 @@ import type {
   SpectrumEffectType
 } from '../api/keyboard'
 import { useKeyboardStore } from '../stores/keyboardStore'
+import { useSoftwareStore } from '../stores/softwareStore'
 import { settingsApi } from '../api/settings'
-import { softwareApi } from '../api/software'
 import InfoBar from '../components/InfoBar'
 import { normalizeKeyboardLayout } from '../components/keyboard/spectrum/keyboardLayouts'
 import { normalizeSpectrumLayout } from '../components/keyboard/spectrum/deviceLayouts'
@@ -141,23 +141,9 @@ function RgbSection(): React.JSX.Element {
   const { t } = useTranslation()
   const { rgbState, setRgb, setPreset } = useKeyboardStore()
   // WPF RGBKeyboardBacklightControl: while Lenovo Vantage is running the whole
-  // section is disabled and a warning InfoBar is shown.
-  const [vantageBlocked, setVantageBlocked] = useState(false)
-
-  useEffect(() => {
-    let cancelled = false
-    softwareApi
-      .getStatus('vantage')
-      .then((result) => {
-        if (!cancelled) setVantageBlocked(result.status === 'Enabled')
-      })
-      .catch(() => {
-        if (!cancelled) setVantageBlocked(false)
-      })
-    return () => {
-      cancelled = true
-    }
-  }, [])
+  // section is disabled and a warning InfoBar is shown. Status is shared with
+  // the AppStatusBanners host (5s poll) so the block clears once Vantage exits.
+  const vantageBlocked = useSoftwareStore((s) => s.statuses.vantage === 'Enabled')
 
   const selectedPreset = rgbState?.SelectedPreset ?? 'Off'
   const desc = rgbState?.Presets[selectedPreset] ?? DEFAULT_DESC

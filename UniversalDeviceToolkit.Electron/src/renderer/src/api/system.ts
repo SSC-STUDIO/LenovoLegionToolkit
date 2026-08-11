@@ -18,9 +18,22 @@ export interface SystemInfo {
 /** Mirror of Lib PowerAdapterStatus (Power.IsPowerAdapterConnectedAsync). */
 export type PowerAdapterStatus = 'Connected' | 'ConnectedLowWattage' | 'Disconnected'
 
+/** RGB accent color from host SystemTheme helpers. */
+export interface SystemAccentColor {
+  r: number
+  g: number
+  b: number
+}
+
 export const systemApi = {
   info: (): Promise<SystemInfo> => invoke<SystemInfo>('system.info'),
   /** Power adapter connection state (PowerModeControl warning parity). */
   powerAdapterStatus: (): Promise<{ status: PowerAdapterStatus }> =>
-    invoke<{ status: PowerAdapterStatus }>('system.powerAdapterStatus')
+    invoke<{ status: PowerAdapterStatus }>('system.powerAdapterStatus'),
+  /** Current Windows accent (SystemTheme.GetAccentColor). */
+  getAccentColor: (): Promise<SystemAccentColor> =>
+    invoke<SystemAccentColor>('system.accentColor.get'),
+  /** Write Windows accent when ApplyAccentColorToSystem is enabled. */
+  setAccentColor: (color: SystemAccentColor): Promise<{ applied: boolean }> =>
+    invoke<{ applied: boolean }>('system.accentColor.set', color)
 }

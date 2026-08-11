@@ -100,6 +100,19 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
       useSettingsStore.getState().setScope('application', merged)
       await settingsApi.set('application', merged)
       await settingsApi.save(['application'])
+
+      // WPF WindowsPowerPlansWindow: activating the plan for the *current*
+      // power mode applies it right away (EnsureCorrectWindowsPowerSettings).
+      if (guid !== DEFAULT_POWER_PLAN_GUID) {
+        try {
+          const powerState = await featuresApi.getState('powerMode')
+          if (String(powerState.state) === state) {
+            await powerPlansApi.setActive(guid)
+          }
+        } catch {
+          // activation is best-effort; the mapping is already persisted
+        }
+      }
     } catch (reason) {
       void message.error((reason as Error).message)
       setPowerPlans(powerPlans)

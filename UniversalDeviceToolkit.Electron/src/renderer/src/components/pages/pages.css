@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Shared page chrome mirroring the WPF client (AppPageTitleTextBlockStyle,
  * AppSubsectionTitleTextBlockStyle, AppPageDescriptionTextBlockStyle,
  * CardControl, Badge, EmptyState, PluginExtensionsPage styles).
@@ -91,7 +91,7 @@
 /* ── About page ───────────────────────────────────────────────── */
 
 .udt-about-page {
-  padding: 0 0 12px;
+  padding: 16px 16px 12px;
 }
 
 .udt-about-page__app-name {
@@ -189,7 +189,7 @@
 /* ── Plugins & extensions page ────────────────────────────────── */
 
 .udt-plugins-page {
-  padding: 0 0 28px;
+  padding: 16px 16px 28px;
 }
 
 .udt-plugins-page__header {

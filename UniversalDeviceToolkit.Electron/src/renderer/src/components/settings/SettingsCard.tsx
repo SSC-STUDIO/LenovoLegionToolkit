@@ -1,5 +1,5 @@
 import type { KeyboardEvent, ReactNode } from 'react'
-import { RightOutlined } from '@ant-design/icons'
+import { ChevronRight16Regular } from '@fluentui/react-icons'
 
 interface SettingsCardProps {
   title?: string
@@ -46,7 +46,7 @@ export function SettingsCard({
           {action != null && <div className="udt-settings-card__action">{action}</div>}
           {clickable && action == null && (
             <span className="udt-settings-card__chevron">
-              <RightOutlined />
+              <ChevronRight16Regular />
             </span>
           )}
         </div>

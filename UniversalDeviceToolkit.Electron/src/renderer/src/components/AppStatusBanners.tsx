@@ -3,16 +3,25 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import AppStatusBanner from './AppStatusBanner'
 import { updateApi } from '../api/update'
+import type { SoftwareDisablerApp } from '../api/software'
 import { useSettingsStore } from '../stores/settingsStore'
+import { useSoftwareStore } from '../stores/softwareStore'
 import { useStatusBannerStore } from '../stores/statusBannerStore'
 
 const BANNER_UPDATE = 'updateAvailable'
 const BANNER_PLUGINS_DISABLED = 'pluginExtensionsDisabled'
 
+const SOFTWARE_BANNERS: { app: SoftwareDisablerApp; id: string; messageKey: string }[] = [
+  { app: 'vantage', id: 'vantageRunning', messageKey: 'statusBanner.vantageRunning' },
+  { app: 'legionZone', id: 'legionZoneRunning', messageKey: 'statusBanner.legionZoneRunning' },
+  { app: 'fnKeys', id: 'fnKeysRunning', messageKey: 'statusBanner.fnKeysRunning' }
+]
+
 /**
  * Host for persistent status banners — port of the WPF MainWindow status
- * notification stack (AppStatusBanner instances). Vantage / Legion Zone /
- * Fn Keys banners need host-side process detection and are not wired here.
+ * notification stack (AppStatusBanner instances): update available, plugin
+ * extensions disabled and the three software-conflict banners (Vantage /
+ * Legion Zone / Lenovo Hotkeys running).
  */
 export default function AppStatusBanners(): React.JSX.Element {
   const { t } = useTranslation()
@@ -23,6 +32,8 @@ export default function AppStatusBanners(): React.JSX.Element {
   const remove = useStatusBannerStore((s) => s.remove)
   const scopes = useSettingsStore((s) => s.scopes)
   const load = useSettingsStore((s) => s.load)
+  const softwareStatuses = useSoftwareStore((s) => s.statuses)
+  const softwareStart = useSoftwareStore((s) => s.start)
 
   useEffect(() => {
     let cancelled = false
@@ -70,6 +81,29 @@ export default function AppStatusBanners(): React.JSX.Element {
       remove(BANNER_PLUGINS_DISABLED)
     }
   }, [scopes.application, show, remove, t])
+
+  // WPF MainWindow software disabler indicators: banners follow the
+  // VantageDisabler / LegionZoneDisabler / FnKeysDisabler status (polled).
+  useEffect(() => {
+    const stop = softwareStart(5000)
+    return stop
+  }, [softwareStart])
+
+  useEffect(() => {
+    for (const banner of SOFTWARE_BANNERS) {
+      if (softwareStatuses[banner.app] === 'Enabled') {
+        show({
+          id: banner.id,
+          severity: 'Warning',
+          message: t(banner.messageKey),
+          persistent: true,
+          closable: false
+        })
+      } else {
+        remove(banner.id)
+      }
+    }
+  }, [softwareStatuses, show, remove, t])
 
   if (banners.length === 0) return <></>
   return (

@@ -1,9 +1,10 @@
 /**
- * Trigger picker for new automatic pipelines â€” port of WPF
+ * Trigger picker for new automatic pipelines â€?port of WPF
  * Windows/Automation/CreateAutomationPipelineWindow.xaml.cs.
  */
 import { useMemo, useState } from 'react'
-import { CheckSquareOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons'
+import { CheckSquareOutlined, PlusOutlined } from '@ant-design/icons'
+import { ChevronRight16Regular } from '@fluentui/react-icons'
 import { useTranslation } from 'react-i18next'
 import type { AutomationTrigger } from './triggers'
 import { TRIGGER_DEFINITIONS } from './triggers'
@@ -76,7 +77,7 @@ export default function TriggerPickerModal(props: TriggerPickerModalProps): Reac
                   {t('wpf.multipleTriggersAutomationPipelineTriggerdisplayName', { defaultValue: 'Multiple triggers' })}
                 </span>
               </span>
-              <RightOutlined className="udt-trigger-card__chevron" />
+              <ChevronRight16Regular className="udt-trigger-card__chevron" />
             </button>
           )}
           {definitions.map((definition, index) => {
@@ -109,7 +110,7 @@ export default function TriggerPickerModal(props: TriggerPickerModalProps): Reac
                     onClick={(e) => e.stopPropagation()}
                   />
                 ) : (
-                  <RightOutlined className="udt-trigger-card__chevron" />
+                  <ChevronRight16Regular className="udt-trigger-card__chevron" />
                 )}
               </button>
             )

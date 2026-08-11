@@ -355,9 +355,13 @@
         languageDesc: 'Choose the language',
         temperature: 'Temperature',
         temperatureDesc: 'Choose the unit used by temperature sensors.',
-        theme: 'Theme',
-        accentColor: 'Accent Color',
+        theme: 'Global interface color mode',
+        accentColor: 'Global interface accent color',
         accentColorDesc: 'Change the accent color of the application.',
+        accentColorSource: {
+          system: 'System',
+          custom: 'Custom'
+        },
         appScale: 'UI Scale',
         appScaleDesc: 'Uniformly scale text and the entire interface, independent of the Windows display scaling.',
         themeOptions: {
@@ -378,7 +382,18 @@
         dontShowNotifications: "Don't Show Notifications",
         dontShowNotificationsDesc: 'Disable in-app and system notifications',
         autorun: 'Start on Login',
-        autorunDesc: 'Start minimized to the system tray after signing in to Windows.',
+        autorunDesc: 'Start the application when you sign in to Windows.',
+        autorunOptions: {
+          enabled: 'Enabled',
+          enabledDelayed: 'Enabled (Delayed)',
+          disabled: 'Disabled'
+        },
+        groupStartup: 'Startup & Window',
+        groupSensors: 'Hardware Sensors',
+        groupNotifications: 'Notifications & Warnings',
+        groupSoftware: 'Software Conflicts',
+        sensorRefreshInterval: 'Sensor Refresh Interval',
+        sensorRefreshIntervalDesc: 'How often the sensor values are refreshed. You can also right-click the sensors card to change it temporarily.',
         extensionsEnabled: 'Enable Extensions',
         extensionsEnabledDesc: 'Enable loading of plugins and extensions',
         sensorSections: 'Sensor Sections',
@@ -1379,7 +1394,10 @@
     statusBanner: {
       updateAvailable: 'Update available!',
       updateAvailableWithVersion: 'Update {{version}} available!',
-      pluginExtensionsDisabled: 'Plugin Extensions navigation is hidden. Enable it under Settings → Navigation items.'
+      pluginExtensionsDisabled: 'Plugin Extensions navigation is hidden. Enable it under Settings → Navigation items.',
+      vantageRunning: 'Lenovo Vantage and/or ImController is running in the background.',
+      legionZoneRunning: 'Legion Zone is running in the background.',
+      fnKeysRunning: 'Lenovo Hotkeys is running in the background.'
     },
     clipboard: {
       copyProcesses: 'Copy process list',

@@ -331,24 +331,24 @@ body {
   user-select: none;
 }
 
-/* Drag layer spanning the full bar; title text centered over the whole bar (WPF CenterContent) */
+/* Drag layer spanning the full bar; title text sits at the far left (WPF Left-aligned) */
 .udt-titlebar__title {
   position: absolute;
   inset: 0;
   z-index: 0;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   overflow: hidden;
-  /* Symmetric inset so CenterContent stays optically centered while clear of right chrome */
-  padding-inline: 300px;
+  /* Keep the drag area clear of the right chrome cluster */
+  padding-inline: 12px 300px;
   box-sizing: border-box;
 }
 
 .udt-titlebar__title-text {
   max-width: 760px;
   overflow: hidden;
-  text-align: center;
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
   color: var(--udt-text-primary);

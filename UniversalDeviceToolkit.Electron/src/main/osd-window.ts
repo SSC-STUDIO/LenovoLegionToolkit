@@ -1,4 +1,4 @@
-import { BrowserWindow, screen } from 'electron'
+import { BrowserWindow, powerMonitor, screen } from 'electron'
 import { hostClient } from './host-client'
 
 /**
@@ -267,6 +267,7 @@ let unsubscribe: (() => void) | null = null
 let unsubscribeSettings: (() => void) | null = null
 let unsubscribeFps: (() => void) | null = null
 let unsubscribeDisplay: (() => void) | null = null
+let unsubscribePower: (() => void) | null = null
 
 let settings: OsdSettingsStore = { ...DEFAULT_OSD_SETTINGS }
 let showCpuAverageFrequency = false
@@ -1067,6 +1068,20 @@ export function initOsdWindow(): void {
     screen.on('display-metrics-changed', listener)
     unsubscribeDisplay = () => screen.removeListener('display-metrics-changed', listener)
   }
+  // WPF OsdWindowBase listened to SystemEvents.PowerModeChanged: hide the OSD
+  // while the machine suspends so it never stays pinned over the lock screen.
+  if (!unsubscribePower) {
+    const onSuspend = (): void => hideOsd()
+    const onResume = (): void => {
+      if (settings.showOsd) showOsd()
+    }
+    powerMonitor.on('suspend', onSuspend)
+    powerMonitor.on('resume', onResume)
+    unsubscribePower = () => {
+      powerMonitor.removeListener('suspend', onSuspend)
+      powerMonitor.removeListener('resume', onResume)
+    }
+  }
 
   void readSettingsWithRetry().then(() => {
     void readSiblingSettings().then(async () => {
@@ -1094,6 +1109,8 @@ export function destroyOsdWindow(): void {
   unsubscribeFps = null
   unsubscribeDisplay?.()
   unsubscribeDisplay = null
+  unsubscribePower?.()
+  unsubscribePower = null
   stopRefresh()
   if (osdWindow && !osdWindow.isDestroyed()) {
     osdWindow.destroy()

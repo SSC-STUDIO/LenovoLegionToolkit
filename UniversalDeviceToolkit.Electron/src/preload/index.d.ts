@@ -22,6 +22,8 @@ export interface Bridge {
   refreshTrayMenu: () => void
   writeClipboardLines: (lines: string[]) => Promise<{ ok: boolean }>
   readClipboardExistingPaths: () => Promise<string[]>
+  setAutorun: (enabled: boolean) => Promise<{ ok: boolean; enabled: boolean }>
+  getAutorun: () => Promise<{ enabled: boolean }>
 }
 
 declare global {
