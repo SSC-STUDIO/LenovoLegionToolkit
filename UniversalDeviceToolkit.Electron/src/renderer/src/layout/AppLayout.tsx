@@ -4,21 +4,19 @@ import {
   DashboardOutlined,
   HomeOutlined,
   InfoCircleOutlined,
-  KeyOutlined,
   LeftOutlined,
   MacCommandOutlined,
   RightOutlined,
   RocketOutlined,
   SettingOutlined
 } from '@ant-design/icons'
-import { theme } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import TitleBar from '../components/TitleBar'
 import { useTheme } from '../theme/useTheme'
 
 const NAV_WIDTH_COLLAPSED = 70
-const NAV_WIDTH_EXPANDED = 220
+const NAV_WIDTH_EXPANDED = 360
 
 interface NavItemDef {
   key: string
@@ -28,7 +26,6 @@ interface NavItemDef {
 
 const MAIN_ITEMS: NavItemDef[] = [
   { key: '/dashboard', icon: <HomeOutlined />, labelKey: 'nav.dashboard' },
-  { key: '/keyboard', icon: <KeyOutlined />, labelKey: 'nav.keyboardBacklight' },
   { key: '/automation', icon: <RocketOutlined />, labelKey: 'nav.automation' },
   { key: '/macro', icon: <MacCommandOutlined />, labelKey: 'nav.macro' },
   { key: '/optimization', icon: <DashboardOutlined />, labelKey: 'nav.windowsOptimization' }
@@ -74,21 +71,20 @@ function NavItem({ item, label, collapsed, active, onClick }: NavItemProps): Rea
 export default function AppLayout(): React.JSX.Element {
   const { t } = useTranslation()
   const { themeMode } = useTheme()
-  const { token } = theme.useToken()
   const location = useLocation()
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
 
   const isDark = themeMode === 'dark'
   const navVars = {
-    '--udt-nav-bg': 'var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5))',
-    '--udt-nav-border': token.colorSplit,
-    '--udt-nav-accent': token.colorPrimary,
-    '--udt-nav-text': token.colorTextSecondary,
-    '--udt-nav-text-hover': token.colorText,
-    '--udt-nav-text-active': token.colorText,
-    '--udt-nav-active-bg': isDark ? 'rgba(255,255,255,0.12)' : token.colorFillSecondary,
-    '--udt-nav-hover-bg': isDark ? 'rgba(255,255,255,0.08)' : token.colorFillTertiary
+    '--udt-nav-bg': isDark ? '#202020' : '#edf7fb',
+    '--udt-nav-border': isDark ? 'rgba(255,255,255,0.08)' : '#d8e6ed',
+    '--udt-nav-accent': '#416aa1',
+    '--udt-nav-text': isDark ? 'rgba(255,255,255,0.65)' : '#4e5965',
+    '--udt-nav-text-hover': isDark ? 'rgba(255,255,255,0.9)' : '#28323c',
+    '--udt-nav-text-active': isDark ? 'rgba(255,255,255,0.92)' : '#2e3741',
+    '--udt-nav-active-bg': isDark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.86)',
+    '--udt-nav-hover-bg': isDark ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.52)'
   } as React.CSSProperties
 
   const renderItem = (item: NavItemDef): React.JSX.Element => (
@@ -104,28 +100,30 @@ export default function AppLayout(): React.JSX.Element {
 
   return (
     <div className="udt-app-shell">
-      <nav
-        aria-label="navigation"
-        className="udt-nav"
-        style={{ width: collapsed ? NAV_WIDTH_COLLAPSED : NAV_WIDTH_EXPANDED, ...navVars }}
-      >
-        <div className="udt-nav-group">{MAIN_ITEMS.map(renderItem)}</div>
-        <div className="udt-nav-spacer" />
-        <div className="udt-nav-group">{FOOTER_ITEMS.map(renderItem)}</div>
-        <button
-          type="button"
-          aria-label={collapsed ? 'expand-navigation' : 'collapse-navigation'}
-          className={`udt-nav-toggle${collapsed ? ' udt-nav-toggle--collapsed' : ''}`}
-          onClick={() => setCollapsed((value) => !value)}
+      <TitleBar />
+      <div className="udt-app-shell__body">
+        <nav
+          aria-label="navigation"
+          className="udt-nav"
+          style={{ width: collapsed ? NAV_WIDTH_COLLAPSED : NAV_WIDTH_EXPANDED, ...navVars }}
         >
-          {collapsed ? <RightOutlined /> : <LeftOutlined />}
-        </button>
-      </nav>
-      <div className="udt-app-shell__content">
-        <TitleBar />
-        <main className="udt-app-shell__main">
-          <Outlet />
-        </main>
+          <div className="udt-nav-group">{MAIN_ITEMS.map(renderItem)}</div>
+          <div className="udt-nav-spacer" />
+          <div className="udt-nav-group">{FOOTER_ITEMS.map(renderItem)}</div>
+          <button
+            type="button"
+            aria-label={collapsed ? 'expand-navigation' : 'collapse-navigation'}
+            className={`udt-nav-toggle${collapsed ? ' udt-nav-toggle--collapsed' : ''}`}
+            onClick={() => setCollapsed((value) => !value)}
+          >
+            {collapsed ? <RightOutlined /> : <LeftOutlined />}
+          </button>
+        </nav>
+        <div className="udt-app-shell__content">
+          <main className="udt-app-shell__main">
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   )

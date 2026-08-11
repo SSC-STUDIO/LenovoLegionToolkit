@@ -73,9 +73,16 @@ body {
 
 .udt-app-shell {
   display: flex;
-  height: 100vh;
+  height: 100dvh;
+  flex-direction: column;
   overflow: hidden;
   background: var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5));
+}
+
+.udt-app-shell__body {
+  display: flex;
+  min-height: 0;
+  flex: 1;
 }
 
 .udt-app-shell__content {
@@ -638,7 +645,7 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 8px 6px 8px 8px;
+  padding: 8px 12px;
   background: var(--udt-nav-bg);
   border-right: 1px solid var(--udt-nav-border);
   transition: width 200ms ease-out;
@@ -649,7 +656,7 @@ body {
 .udt-nav-group {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 8px;
 }
 
 .udt-nav-spacer {
@@ -662,15 +669,15 @@ body {
   align-items: center;
   gap: 0;
   width: 100%;
-  min-height: 40px;
-  padding: 0 8px;
+  min-height: 60px;
+  padding: 0 12px;
   margin: 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   background: transparent;
   color: var(--udt-nav-text);
   font: inherit;
-  font-size: 13px;
+  font-size: 16px;
   cursor: pointer;
   text-align: left;
   transition: background-color 120ms ease-out, color 120ms ease-out;
@@ -689,12 +696,12 @@ body {
 
 .udt-nav-accent {
   position: absolute;
-  left: -6px;
+  left: -12px;
   top: 50%;
   transform: translateY(-50%);
-  width: 4px;
-  height: 24px;
-  border-radius: 2px;
+  width: 5px;
+  height: 34px;
+  border-radius: 3px;
   background: transparent;
   transition: background-color 120ms ease-out;
 }
@@ -707,9 +714,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
+  width: 40px;
   flex-shrink: 0;
-  font-size: 20px;
+  font-size: 24px;
 }
 
 .udt-nav-item--active .udt-nav-icon {
