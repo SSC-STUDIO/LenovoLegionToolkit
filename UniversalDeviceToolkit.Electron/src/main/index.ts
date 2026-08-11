@@ -6,6 +6,8 @@ import { initSingleInstance, setMainWindowRef } from './single-instance'
 import { initTray, destroyTray } from './tray'
 import { initOsdWindow, destroyOsdWindow } from './osd-window'
 
+app.setAppUserModelId('com.universaldevicetoolkit.app')
+
 if (!initSingleInstance()) {
   app.exit(0)
 }
