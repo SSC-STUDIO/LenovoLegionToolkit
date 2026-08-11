@@ -19,6 +19,41 @@ export const dashboardParityZhCN = {
     mmcGeek: '极客',
     low: '低',
     high: '高'
+  },
+  dashboardHardware: {
+    apply: '应用',
+    cancel: '取消',
+    discreteGpu: {
+      title: '独立显卡',
+      description: '不需要时强制休眠显卡，可能导致应用崩溃。建议手动关闭占用进程来解除显卡占用。',
+      information: '独立显卡信息',
+      performance: '性能状态',
+      processes: '占用进程',
+      noProcesses: '没有进程正在占用独立显卡',
+      deactivate: '强制休眠显卡',
+      killProcesses: '结束占用进程',
+      restart: '重启显卡',
+      status: {
+        Unknown: '-',
+        NvidiaGpuNotFound: '未检测到',
+        MonitorConnected: '活动中',
+        Active: '活动中',
+        Inactive: '空闲',
+        PoweredOff: '已休眠'
+      }
+    },
+    overclock: {
+      title: '超频独立显卡',
+      description: '超频独立显卡以提升性能。',
+      settings: '独立显卡超频设置',
+      coreOffset: '核心频率偏移',
+      memoryOffset: '显存频率偏移'
+    },
+    turnOffMonitors: {
+      title: '关闭显示器',
+      description: '立即关闭所有连接的显示器。移动鼠标或按下按键即可重新唤醒。',
+      action: '关闭显示器'
+    }
   }
 }
 
@@ -43,5 +78,40 @@ export const dashboardParityEnUS = {
     mmcGeek: 'Geek mode',
     low: 'Low',
     high: 'High'
+  },
+  dashboardHardware: {
+    apply: 'Apply',
+    cancel: 'Cancel',
+    discreteGpu: {
+      title: 'Discrete GPU',
+      description: 'Force the GPU to sleep when it is not needed. This may crash applications, so close GPU-using processes first.',
+      information: 'Discrete GPU information',
+      performance: 'Performance state',
+      processes: 'Processes',
+      noProcesses: 'No processes are using the discrete GPU',
+      deactivate: 'Force GPU Sleep',
+      killProcesses: 'Close GPU Processes',
+      restart: 'Restart GPU',
+      status: {
+        Unknown: '-',
+        NvidiaGpuNotFound: 'Not detected',
+        MonitorConnected: 'Active',
+        Active: 'Active',
+        Inactive: 'Inactive',
+        PoweredOff: 'Powered off'
+      }
+    },
+    overclock: {
+      title: 'Overclock Discrete GPU',
+      description: 'Overclock the discrete GPU to improve performance.',
+      settings: 'Discrete GPU Overclock Settings',
+      coreOffset: 'Core frequency offset',
+      memoryOffset: 'Memory frequency offset'
+    },
+    turnOffMonitors: {
+      title: 'Turn Off Monitors',
+      description: 'Immediately turn off all connected monitors. Move the mouse or press a key to wake them.',
+      action: 'Turn Off'
+    }
   }
 }

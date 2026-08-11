@@ -1,0 +1,92 @@
+.udt-parity-icon-button.ant-btn {
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: var(--udt-radius-control, 6px);
+}
+
+.udt-parity-gpu-accessory {
+  display: grid;
+  flex: 0 0 auto;
+  justify-items: end;
+  gap: 8px;
+  margin-left: 16px;
+}
+
+.udt-parity-gpu-accessory__status-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.udt-parity-gpu-accessory__status {
+  max-width: 120px;
+  overflow: hidden;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-body, 14px);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-parity-status-dot {
+  width: 10px;
+  height: 10px;
+  flex: 0 0 10px;
+  border-radius: 50%;
+  background: var(--udt-text-tertiary);
+}
+
+.udt-parity-status-dot--success {
+  background: var(--udt-status-success);
+}
+
+.udt-parity-status-dot--warning {
+  background: var(--udt-status-warning);
+}
+
+.udt-parity-gpu-tooltip {
+  min-width: 180px;
+  max-width: 320px;
+}
+
+.udt-parity-gpu-tooltip strong {
+  display: block;
+  margin-top: 8px;
+}
+
+.udt-parity-gpu-tooltip strong:first-child {
+  margin-top: 0;
+}
+
+.udt-parity-overclock-accessory {
+  gap: 8px;
+}
+
+.udt-parity-overclock-setting {
+  margin-top: 18px;
+}
+
+.udt-parity-overclock-setting > label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--udt-text-primary);
+  font-weight: 500;
+}
+
+.udt-parity-overclock-setting > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 132px;
+  align-items: center;
+  gap: 16px;
+}
+
+@media (max-width: 620px) {
+  .udt-parity-gpu-accessory {
+    width: 100%;
+    margin-left: 38px;
+  }
+}

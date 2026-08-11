@@ -127,6 +127,7 @@ public static class Program
         SensorsHandlers.Register(rpc);
         FeatureHandlers.Register(rpc);
         DashboardHandlers.Register(rpc);
+        DashboardHardwareHandlers.Register(rpc);
         AutomationHandlers.Register(rpc);
         MacroHandlers.Register(rpc);
         KeyboardBacklightHandlers.Register(rpc);
