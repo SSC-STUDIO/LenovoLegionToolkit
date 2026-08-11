@@ -80,7 +80,7 @@ jobs:
         run: dotnet publish UniversalDeviceToolkit.Avalonia/UniversalDeviceToolkit.Avalonia.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained false --output ./publish
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: ${{ matrix.artifact }}
           path: ./publish/

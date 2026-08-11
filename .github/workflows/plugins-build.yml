@@ -78,7 +78,7 @@ jobs:
           }
 
       - name: Upload plugin packages
-        uses: actions/upload-artifact@v7.0.0
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: plugin-zips
           path: Plugins/.build/artifacts/*.zip

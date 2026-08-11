@@ -67,7 +67,7 @@ jobs:
         run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category!=Security&Category!=Guard" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Stateful.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
       - name: Upload code coverage
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: code-coverage
@@ -77,7 +77,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload Windows test results and diagnostics
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: windows-test-results-${{ github.run_id }}
@@ -367,7 +367,7 @@ jobs:
           reporter: dotnet-trx
 
       - name: Upload cross-platform test results and diagnostics
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: cross-platform-test-results-${{ matrix.os }}-${{ github.run_id }}
@@ -378,7 +378,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload cross-platform coverage
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: code-coverage-${{ matrix.os }}

@@ -244,7 +244,7 @@ jobs:
           reporter: dotnet-trx
 
       - name: Upload test results and diagnostics
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: cross-platform-test-results-${{ matrix.os }}-${{ github.run_id }}
@@ -255,7 +255,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload coverage
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: cross-platform-coverage-${{ matrix.os }}

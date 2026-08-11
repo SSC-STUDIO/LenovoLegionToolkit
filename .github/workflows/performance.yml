@@ -44,7 +44,7 @@ jobs:
           dotnet run --project UniversalDeviceToolkit.PerformanceTest/UniversalDeviceToolkit.PerformanceTest.csproj --configuration Release --no-build -- --output (Join-Path $benchmarkRoot 'PerformanceBenchmark.txt')
 
       - name: Upload benchmark report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: performance-benchmark-${{ github.run_id }}

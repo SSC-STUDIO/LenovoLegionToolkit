@@ -76,7 +76,7 @@ jobs:
           dotnet build UniversalDeviceToolkit.Avalonia/UniversalDeviceToolkit.Avalonia.csproj --configuration Release
 
       - name: Upload test results
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: test-results-linux
@@ -84,7 +84,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Upload coverage
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v7.0.1
         if: always()
         with:
           name: coverage-linux
