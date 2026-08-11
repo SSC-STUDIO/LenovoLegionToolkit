@@ -1,9 +1,17 @@
-import { Alert, Button, Card, Flex, Select, Switch, message, theme } from 'antd'
-import { SettingOutlined } from '@ant-design/icons'
+import { Alert, Button, Card, Flex, Select, Switch, message } from 'antd'
+import {
+  AppstoreOutlined,
+  BulbOutlined,
+  DesktopOutlined,
+  PoweroffOutlined,
+  SettingOutlined,
+  SoundOutlined,
+  ThunderboltOutlined,
+  UsbOutlined
+} from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import type { FeatureKey } from '../../api/features'
 import { useFeature } from '../../hooks/useFeature'
-import { useThemeStore } from '../../stores/themeStore'
 
 export interface FeatureCardProps {
   feature: FeatureKey
@@ -12,13 +20,47 @@ export interface FeatureCardProps {
 
 const CONFIG_KEYS: readonly FeatureKey[] = ['powerMode', 'itsMode']
 
+function FeatureIcon({ feature }: { feature: FeatureKey }): React.JSX.Element {
+  const icon = (() => {
+    switch (feature) {
+      case 'powerMode':
+      case 'itsMode':
+        return <ThunderboltOutlined />
+      case 'battery':
+      case 'batteryNightCharge':
+        return <ThunderboltOutlined />
+      case 'alwaysOnUsb':
+      case 'portsBacklight':
+        return <UsbOutlined />
+      case 'speaker':
+      case 'microphone':
+        return <SoundOutlined />
+      case 'panelLogo':
+      case 'whiteKeyboard':
+      case 'oneLevelWhiteKeyboard':
+        return <BulbOutlined />
+      case 'refreshRate':
+      case 'resolution':
+      case 'dpiScale':
+      case 'gSync':
+      case 'hdr':
+        return <DesktopOutlined />
+      case 'instantBoot':
+      case 'flipToStart':
+        return <PoweroffOutlined />
+      default:
+        return <AppstoreOutlined />
+    }
+  })()
+
+  return <span className="udt-feature-card__icon" aria-hidden="true">{icon}</span>
+}
+
 export default function FeatureCard({
   feature,
   title
 }: FeatureCardProps): React.JSX.Element | null {
   const { t } = useTranslation()
-  const { token } = theme.useToken()
-  const isDark = useThemeStore((s) => s.themeMode === 'dark')
   const { supported, state, states, loading, error, setState } = useFeature(feature)
 
   if (!supported) return null
@@ -42,7 +84,7 @@ export default function FeatureCard({
     <Flex gap={4} align="center">
       <Select
         size="small"
-        style={{ width: 150 }}
+        className="udt-feature-card__select"
         value={currentValue}
         options={isStringStates ? (states as string[]).map((value) => ({ value })) : undefined}
         disabled={!isStringStates || error != null}
@@ -68,42 +110,24 @@ export default function FeatureCard({
   return (
     <Card
       size="small"
-      style={{
-        height: '100%',
-        borderRadius: 18,
-        background: isDark ? '#303030' : token.colorBgContainer,
-        border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.12)' : token.colorBorderSecondary}`,
-        overflow: 'hidden'
-      }}
-      styles={{ body: { padding: 12, borderRadius: 18 } }}
+      className="udt-feature-card"
+      styles={{ body: { padding: 0 } }}
     >
-      <Flex gap={10} align="center">
-        <Flex vertical flex="1" style={{ minWidth: 0 }}>
-          <div style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.4, color: token.colorText }}>
-            {title}
-          </div>
-          {desc !== '' && (
-            <div
-              style={{
-                fontSize: 13,
-                lineHeight: 1.4,
-                marginTop: 2,
-                color: token.colorTextSecondary
-              }}
-            >
-              {desc}
-            </div>
-          )}
+      <div className="udt-feature-card__content">
+        <FeatureIcon feature={feature} />
+        <Flex vertical flex="1" className="udt-feature-card__copy">
+          <div className="udt-feature-card__title" title={title}>{title}</div>
+          {desc !== '' && <div className="udt-feature-card__description" title={desc}>{desc}</div>}
         </Flex>
-        {accessory}
-      </Flex>
+        <div className="udt-feature-card__accessory">{accessory}</div>
+      </div>
       {error != null && (
         <Alert
           type="error"
           showIcon
           message={t('dashboard.card.error')}
           description={error}
-          style={{ marginTop: 8, paddingTop: 8, paddingBottom: 8 }}
+          className="udt-feature-card__error"
         />
       )}
     </Card>

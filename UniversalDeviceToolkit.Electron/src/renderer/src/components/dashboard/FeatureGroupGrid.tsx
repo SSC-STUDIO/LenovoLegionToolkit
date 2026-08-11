@@ -56,24 +56,18 @@ export default function FeatureGroupGrid({
   const infos = useFeaturesStore((s) => s.infos)
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div className="udt-feature-groups">
       {groups.map((group, index) => {
         const items = group.items.filter(
           (item) => isFeatureKey(item) && !(infos[item] != null && !infos[item].supported)
         )
         if (items.length === 0) return null
         return (
-          <section key={`${group.type}-${index}`}>
-            <h3 style={{ fontSize: 19, fontWeight: 500, margin: '0 0 12px' }}>
+          <section key={`${group.type}-${index}`} className="udt-feature-group">
+            <h3>
               {groupTitle(group, t)}
             </h3>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
-                gap: 12
-              }}
-            >
+            <div className="udt-feature-group__items">
               {items.map((item) => (
                 <FeatureCard
                   key={item}
