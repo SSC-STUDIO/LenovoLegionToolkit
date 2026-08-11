@@ -3,6 +3,7 @@ import { SettingOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import type { FeatureKey } from '../../api/features'
 import { useFeature } from '../../hooks/useFeature'
+import { useThemeStore } from '../../stores/themeStore'
 
 export interface FeatureCardProps {
   feature: FeatureKey
@@ -17,6 +18,7 @@ export default function FeatureCard({
 }: FeatureCardProps): React.JSX.Element | null {
   const { t } = useTranslation()
   const { token } = theme.useToken()
+  const isDark = useThemeStore((s) => s.themeMode === 'dark')
   const { supported, state, states, loading, error, setState } = useFeature(feature)
 
   if (!supported) return null
@@ -69,30 +71,13 @@ export default function FeatureCard({
       style={{
         height: '100%',
         borderRadius: 18,
-        background: '#303030',
-        border: '1px solid rgba(255, 255, 255, 0.12)',
+        background: isDark ? '#303030' : token.colorBgContainer,
+        border: `1px solid ${isDark ? 'rgba(255, 255, 255, 0.12)' : token.colorBorderSecondary}`,
         overflow: 'hidden'
       }}
       styles={{ body: { padding: 12, borderRadius: 18 } }}
     >
       <Flex gap={10} align="center">
-        <div
-          style={{
-            width: 32,
-            height: 32,
-            borderRadius: 8,
-            background: 'rgba(255, 255, 255, 0.08)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            flexShrink: 0,
-            fontSize: 14,
-            fontWeight: 600,
-            color: token.colorText
-          }}
-        >
-          {title.charAt(0)}
-        </div>
         <Flex vertical flex="1" style={{ minWidth: 0 }}>
           <div style={{ fontSize: 15, fontWeight: 600, lineHeight: 1.4, color: token.colorText }}>
             {title}

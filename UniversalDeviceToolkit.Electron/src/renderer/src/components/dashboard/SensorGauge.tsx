@@ -18,12 +18,11 @@ export interface SensorGaugeProps {
 }
 
 // Matches WPF RadialGaugeControl: open-bottom 270° ring (gap at bottom),
-// 6px round-cap arcs, gradient value arc + glow + leading-edge tip dot.
+// round-cap arcs, gradient value arc.
 const GAUGE_SIZE = 112
 const ARC_THICKNESS = 6
 const START_ANGLE = 225
 const END_ANGLE = -45
-const SWEEP_ANGLE = 270
 const ANIMATION_MS = 350
 
 function lighten(hex: string, amount: number): string {
@@ -32,22 +31,6 @@ function lighten(hex: string, amount: number): string {
   const b = parseInt(hex.slice(5, 7), 16)
   const channel = (c: number): number => Math.round(c + (255 - c) * amount)
   return `rgb(${channel(r)}, ${channel(g)}, ${channel(b)})`
-}
-
-function withAlpha(hex: string, alpha: number): string {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
-function tipPosition(el: HTMLDivElement, ratio: number): [number, number] {
-  const width = el.clientWidth || GAUGE_SIZE
-  const height = el.clientHeight || GAUGE_SIZE
-  const radius = (Math.min(width, height) * 0.92) / 2 - ARC_THICKNESS / 2
-  // echarts gauge math: start = -(startAngle) normalized to [135°, 405°], sweep 270° clockwise on screen.
-  const theta = (360 - START_ANGLE + SWEEP_ANGLE * Math.min(Math.max(ratio, 0), 1)) * (Math.PI / 180)
-  return [width / 2 + radius * Math.cos(theta), height / 2 + radius * Math.sin(theta)]
 }
 
 export default function SensorGauge({
@@ -64,9 +47,8 @@ export default function SensorGauge({
   const isDark = useThemeStore((s) => s.themeMode === 'dark')
 
   const buildOption = useCallback(
-    (el: HTMLDivElement): echarts.EChartsOption => {
+    (): echarts.EChartsOption => {
       const numeric = value != null && Number.isFinite(value) ? value : null
-      const ratio = numeric == null ? 0 : (numeric - min) / (max - min)
       const valueText = numeric == null ? '--' : numeric.toFixed(digits)
       const primary = isDark ? 'rgba(255, 255, 255, 0.92)' : 'rgba(0, 0, 0, 0.88)'
       const secondary = isDark ? 'rgba(255, 255, 255, 0.55)' : 'rgba(0, 0, 0, 0.45)'
@@ -82,34 +64,18 @@ export default function SensorGauge({
           { offset: 1, color }
         ]
       }
-      const gaugeBase = {
-        startAngle: START_ANGLE,
-        endAngle: END_ANGLE,
-        center: ['50%', '50%'] as [string, string],
-        radius: '92%',
-        min,
-        max
-      }
       return {
         animationDuration: ANIMATION_MS,
         animationDurationUpdate: ANIMATION_MS,
         series: [
           {
-            ...gaugeBase,
             type: 'gauge',
-            axisLine: { show: false },
-            progress: {
-              show: true,
-              width: ARC_THICKNESS + 5,
-              roundCap: true,
-              itemStyle: { color: withAlpha(color, 96 / 255) }
-            },
-            pointer: { show: false },
-            data: [{ value: numeric ?? min }]
-          },
-          {
-            ...gaugeBase,
-            type: 'gauge',
+            startAngle: START_ANGLE,
+            endAngle: END_ANGLE,
+            center: ['50%', '50%'] as [string, string],
+            radius: '92%',
+            min,
+            max,
             axisLine: {
               roundCap: true,
               lineStyle: { width: ARC_THICKNESS, color: [[1, track]] }
@@ -147,16 +113,6 @@ export default function SensorGauge({
               }
             },
             data: [{ value: numeric ?? min }]
-          },
-          {
-            type: 'scatter',
-            coordinateSystem: 'none',
-            symbol: 'circle',
-            symbolSize: Math.max(5, ARC_THICKNESS + 3),
-            itemStyle: { color: '#ffffff', borderColor: color, borderWidth: 2 },
-            silent: true,
-            z: 10,
-            data: numeric == null ? [] : [tipPosition(el, ratio)]
           }
         ]
       }
@@ -177,18 +133,16 @@ export default function SensorGauge({
 
   useEffect(() => {
     const chart = chartRef.current
-    const el = containerRef.current
-    if (!chart || !el) return
-    chart.setOption(buildOption(el))
+    if (!chart) return
+    chart.setOption(buildOption())
   }, [buildOption])
 
   useEffect(() => {
     const chart = chartRef.current
-    const el = containerRef.current
-    if (!chart || !el) return
+    if (!chart) return
     const handleResize = (): void => {
       chart.resize()
-      chart.setOption(buildOption(el))
+      chart.setOption(buildOption())
     }
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
