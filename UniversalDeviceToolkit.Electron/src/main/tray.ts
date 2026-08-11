@@ -1,9 +1,22 @@
-import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron'
+import { app, BrowserWindow, Menu, Tray, nativeImage, nativeTheme } from 'electron'
+import { join } from 'path'
 
 let tray: Tray | null = null
 
-const TRAY_ICON_DATA_URL =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADeSURBVDhPtZIrEsIwEIYrkUgkEomDJqI9AhKJRHKDNFvBETgCR0AiOQKyEtkZpruRZdJ2OnSTPhD8M5/a/feRbBD8U6F6r2RqYqGKNY/1KlLlTIA5C0AjgcoOGq+RKhbc08p2kkBPx/iFAHrZqbi36iwBM27wIYByZxIJdOGJQwhNt053784jbJRZVgWa3Z2EMULAXV1A45EHJ6ExqfdPTewEJyCgODRvkM95cAqdAxNAd54wDGat2cqe7U8/4TumEGg/qYjGE/e2qiehh2MaOmOfpMJt9b0aE9uxz/gBIPu9+GgGzAUAAAAASUVORK5CYII='
+function trayIconPath(): string {
+  const dark = nativeTheme.shouldUseDarkColors
+  const file = dark ? 'tray-light.png' : 'tray-dark.png'
+  // dev: __dirname = out/main; resources live next to the app root
+  return join(__dirname, '..', '..', 'resources', file)
+}
+
+function updateTrayIcon(): void {
+  if (!tray) return
+  const image = nativeImage.createFromPath(trayIconPath())
+  if (!image.isEmpty()) {
+    tray.setImage(image)
+  }
+}
 
 function showWindow(window: BrowserWindow | null): void {
   if (!window || window.isDestroyed()) return
@@ -24,8 +37,8 @@ function toggleWindow(window: BrowserWindow | null): void {
 export function initTray(getWindow: () => BrowserWindow | null): void {
   if (tray) return
 
-  const icon = nativeImage.createFromDataURL(TRAY_ICON_DATA_URL)
-  tray = new Tray(icon)
+  const image = nativeImage.createFromPath(trayIconPath())
+  tray = new Tray(image.isEmpty() ? nativeImage.createEmpty() : image)
   tray.setToolTip('Universal Device Toolkit')
   tray.setContextMenu(
     Menu.buildFromTemplate([
@@ -35,9 +48,12 @@ export function initTray(getWindow: () => BrowserWindow | null): void {
     ])
   )
   tray.on('double-click', () => showWindow(getWindow()))
+
+  nativeTheme.on('updated', updateTrayIcon)
 }
 
 export function destroyTray(): void {
+  nativeTheme.removeListener('updated', updateTrayIcon)
   if (!tray) return
   tray.destroy()
   tray = null

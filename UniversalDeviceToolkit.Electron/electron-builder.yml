@@ -5,6 +5,7 @@ directories:
   buildResources: build
 files:
   - out/**
+  - resources/**
   - package.json
 extraResources:
   - from: ../UniversalDeviceToolkit.Host/publish/win-x64
@@ -12,6 +13,7 @@ extraResources:
     filter:
       - "**/*"
 win:
+  icon: build/icon.ico
   target:
     - target: nsis
       arch:
