@@ -47,7 +47,7 @@ jobs:
         fetch-depth: 0
         ref: ${{ inputs.source_ref || inputs.release_tag || github.ref }}
     - name: Setup .NET
-      uses: actions/setup-dotnet@v6
+      uses: actions/setup-dotnet@v6.0.0
       with:
         dotnet-version: 10.0.x
     - name: Cache NuGet packages
