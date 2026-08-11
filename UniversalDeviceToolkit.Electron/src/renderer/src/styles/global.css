@@ -335,10 +335,14 @@ body {
 .udt-titlebar__title {
   position: absolute;
   inset: 0;
+  z-index: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  /* Symmetric inset so CenterContent stays optically centered while clear of right chrome */
+  padding-inline: 300px;
+  box-sizing: border-box;
 }
 
 .udt-titlebar__title-text {
@@ -352,9 +356,17 @@ body {
   font-weight: 500;
 }
 
-.udt-titlebar__trailing {
+/* Log + device + caption buttons as one far-right cluster (avoids left-packed / mid-split layout) */
+.udt-titlebar__chrome {
   position: relative;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.udt-titlebar__trailing {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -402,8 +414,6 @@ body {
 }
 
 .udt-titlebar__window-controls {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-shrink: 0;
 }

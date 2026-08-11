@@ -124,7 +124,9 @@
           hotSpot: 'GPU 热点温度',
           pcieThroughput: 'PCIe 吞吐',
           designCapacity: '设计容量',
-          fullChargeCapacity: '满充容量'
+          fullChargeCapacity: '满充容量',
+          vramClock: '显存频率',
+          currentPower: '当前功耗'
         }
       },
       group: {
@@ -624,6 +626,7 @@
         zonesCount: '{{count}} 个区域',
         noLayoutHint: '无法获取键盘布局。',
         selectEffectHint: '选择下方一个效果以预览和编辑其按键。',
+        frontPanelHint: '点击或拖拽选择键盘与前面板区域',
         effectEdit: {
           addTitle: '添加效果',
           editTitle: '编辑效果',
@@ -1377,6 +1380,14 @@
       updateAvailable: '新版本可用！',
       updateAvailableWithVersion: '发现新版本 {{version}}！',
       pluginExtensionsDisabled: '插件扩展导航已隐藏，可在"设置 → 导航项"中启用。'
+    },
+    clipboard: {
+      copyProcesses: '复制进程列表',
+      copySuccess: '进程列表已复制到剪贴板',
+      copyFailed: '复制进程列表失败'
+    },
+    notifications: {
+      mergedCount: '×{{count}}'
     },
   wpf: {
     aboutPageapplicationFolders: '应用文件夹',

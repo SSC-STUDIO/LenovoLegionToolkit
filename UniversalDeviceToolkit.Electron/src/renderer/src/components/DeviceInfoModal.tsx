@@ -4,7 +4,7 @@ import { message } from 'antd'
 import { invoke } from '../api/bridge'
 import { systemApi, type SystemInfo } from '../api/system'
 import { sensorsApi } from '../api/sensors'
-import './titlebar.css'
+import './TitleBar.css'
 
 /**
  * Device info modal — port of the WPF DeviceInformationWindow, opened from the

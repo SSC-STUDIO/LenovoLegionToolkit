@@ -124,7 +124,9 @@
           hotSpot: 'GPU Hot Spot',
           pcieThroughput: 'PCIe Throughput',
           designCapacity: 'Design Capacity',
-          fullChargeCapacity: 'Full Charge Capacity'
+          fullChargeCapacity: 'Full Charge Capacity',
+          vramClock: 'VRAM Clock',
+          currentPower: 'Current Power'
         }
       },
       group: {
@@ -624,6 +626,7 @@
         zonesCount: '{{count}} zones',
         noLayoutHint: 'Unable to load the keyboard layout.',
         selectEffectHint: 'Select an effect below to preview and edit its keys.',
+        frontPanelHint: 'Click or drag to select keyboard and front panel zones',
         effectEdit: {
           addTitle: 'Add effect',
           editTitle: 'Edit effect',
@@ -1377,6 +1380,14 @@
       updateAvailable: 'Update available!',
       updateAvailableWithVersion: 'Update {{version}} available!',
       pluginExtensionsDisabled: 'Plugin Extensions navigation is hidden. Enable it under Settings → Navigation items.'
+    },
+    clipboard: {
+      copyProcesses: 'Copy process list',
+      copySuccess: 'Process list copied to clipboard',
+      copyFailed: 'Failed to copy process list'
+    },
+    notifications: {
+      mergedCount: '×{{count}}'
     },
   wpf: {
     aboutPageapplicationFolders: 'Application Folders',

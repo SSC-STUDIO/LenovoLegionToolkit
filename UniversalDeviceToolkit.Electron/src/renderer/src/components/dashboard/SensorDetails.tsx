@@ -193,7 +193,7 @@ export function useSensorDetails(props: SensorDetailsProps): {
       value: formatUsageInGigabytes(props.gpu?.vramUsedMb, props.gpu?.vramTotalMb, props.gpu?.vramUtilization)
     },
     {
-      label: t('dashboard.sensor.details.vramClock', { defaultValue: 'VRAM Clock' }),
+      label: t('dashboard.sensor.detail.vramClock', { defaultValue: 'VRAM Clock' }),
       value: formatFrequency(props.gpu?.memoryClock)
     },
     { label: t('dashboard.sensor.vramTemperature'), value: formatTemperature(props.gpu?.vramTemperature, unit) },
@@ -213,7 +213,7 @@ export function useSensorDetails(props: SensorDetailsProps): {
     { label: t('dashboard.sensor.voltage'), value: formatVoltage(props.battery?.voltage) },
     { label: t('dashboard.sensor.powerRange'), value: '-' },
     {
-      label: t('dashboard.sensor.details.currentPower', { defaultValue: 'Current Power' }),
+      label: t('dashboard.sensor.detail.currentPower', { defaultValue: 'Current Power' }),
       value: batteryPowerText
     }
   ]

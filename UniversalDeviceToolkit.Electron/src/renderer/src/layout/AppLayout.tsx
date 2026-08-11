@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   Apps24Filled,
   Apps24Regular,
@@ -28,6 +28,7 @@ import UtilsModalHost from '../components/utils/UtilsModalHost'
 import StartupGates from '../components/utils/StartupGates'
 import { openStatusModal } from '../components/utils/StatusModal'
 import { on } from '../api/bridge'
+import { useSettingsStore } from '../stores/settingsStore'
 import WindowBackdropController from '../theme/WindowBackdropController'
 import './NavigationParity.css'
 
@@ -114,6 +115,8 @@ export default function AppLayout(): React.JSX.Element {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
+  const scopes = useSettingsStore((s) => s.scopes)
+  const loadSettings = useSettingsStore((s) => s.load)
   const [collapsed, setCollapsed] = useState(() => {
     try {
       return localStorage.getItem(NAV_COLLAPSED_STORAGE_KEY) === '1'
@@ -122,6 +125,47 @@ export default function AppLayout(): React.JSX.Element {
     }
   })
   const [windowWidth, setWindowWidth] = useState(() => window.innerWidth)
+
+  // Load the application scope once so navigation visibility settings apply.
+  useEffect(() => {
+    void loadSettings(['application'])
+  }, [loadSettings])
+
+  // WPF MainWindow.UpdateNavigationItemsVisibilityFromSettings: dashboard and
+  // settings are always visible; everything else defaults to visible unless
+  // NavigationItemsVisibility opts it out. Plugin Extensions is additionally
+  // hidden while ExtensionsEnabled is off.
+  const navVisibility = useMemo(() => {
+    const app = (scopes.application ?? {}) as Record<string, unknown>
+    return ((app.NavigationItemsVisibility as Record<string, boolean> | undefined) ?? {})
+  }, [scopes.application])
+
+  const isNavItemVisible = useCallback(
+    (item: NavItemDef): boolean => {
+      const pageTagMap: Record<string, string> = {
+        '/dashboard': 'dashboard',
+        '/settings': 'settings',
+        '/keyboard': 'keyboard',
+        '/automation': 'automation',
+        '/macro': 'macro',
+        '/optimization': 'windowsOptimization',
+        '/plugins': 'pluginExtensions',
+        '/about': 'about'
+      }
+      const pageTag: string = pageTagMap[item.key] ?? item.key.replace('/', '')
+      if (pageTag === 'dashboard' || pageTag === 'settings') return true
+      if (navVisibility[pageTag] === false) return false
+      if (pageTag === 'pluginExtensions') {
+        const app = (scopes.application ?? {}) as Record<string, unknown>
+        if (app.ExtensionsEnabled === false) return false
+      }
+      return true
+    },
+    [navVisibility, scopes.application]
+  )
+
+  const visibleMainItems = useMemo(() => MAIN_ITEMS.filter(isNavItemVisible), [isNavItemVisible])
+  const visibleFooterItems = useMemo(() => FOOTER_ITEMS.filter(isNavItemVisible), [isNavItemVisible])
 
   const navWidth = collapsed
     ? readCssNumber(NAV_WIDTH_COLLAPSED_CSS, NAV_WIDTH_COLLAPSED_FALLBACK)
@@ -237,9 +281,9 @@ export default function AppLayout(): React.JSX.Element {
           style={{ width: navWidth }}
         >
           <div className="udt-nav__scroll">
-            <div className="udt-nav-group">{MAIN_ITEMS.map(renderItem)}</div>
+            <div className="udt-nav-group">{visibleMainItems.map(renderItem)}</div>
           </div>
-          <div className="udt-nav-group udt-nav-group--footer">{FOOTER_ITEMS.map(renderItem)}</div>
+          <div className="udt-nav-group udt-nav-group--footer">{visibleFooterItems.map(renderItem)}</div>
           <button
             type="button"
             aria-label={collapsed ? 'expand-navigation' : 'collapse-navigation'}
