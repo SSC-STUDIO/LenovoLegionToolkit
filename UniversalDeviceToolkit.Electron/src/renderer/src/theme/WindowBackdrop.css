@@ -1,0 +1,44 @@
+:root[data-backdrop='mica'] body,
+:root[data-backdrop='mica'] #root,
+:root[data-backdrop='mica'] .udt-app-shell,
+:root[data-backdrop='acrylic'] body,
+:root[data-backdrop='acrylic'] #root,
+:root[data-backdrop='acrylic'] .udt-app-shell {
+  background: transparent;
+}
+
+.udt-backdrop-setting {
+  display: flex;
+  min-width: 0;
+  padding: 16px;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid var(--udt-control-stroke-default, var(--udt-border, rgba(0, 0, 0, 0.1)));
+  border-radius: var(--udt-radius-card, 18px);
+  background: var(--udt-surface-card, var(--udt-bg-card, #fff));
+}
+
+.udt-backdrop-setting__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.udt-backdrop-setting__title {
+  display: block;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-body, 15px);
+  font-weight: 500;
+}
+
+.udt-backdrop-setting__description {
+  display: block;
+  margin-top: 4px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-small-caption, 12px);
+}
+
+.udt-backdrop-setting__select {
+  width: 180px;
+  max-width: 40%;
+  flex: 0 1 180px;
+}

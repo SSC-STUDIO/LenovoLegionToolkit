@@ -13,6 +13,8 @@ const bridge = {
   minimize: (): void => ipcRenderer.send('window:minimize'),
   maximizeToggle: (): void => ipcRenderer.send('window:maximize-toggle'),
   closeWindow: (): void => ipcRenderer.send('window:close'),
+  setBackgroundMaterial: (material: 'none' | 'mica' | 'acrylic'): Promise<void> =>
+    ipcRenderer.invoke('window:set-background-material', material),
   openLogFolder: (): Promise<void> => ipcRenderer.invoke('shell:open-log-folder'),
   selectPluginFiles: (): Promise<string[]> => ipcRenderer.invoke('dialog:select-plugin-files'),
   isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window:is-maximized'),

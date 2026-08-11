@@ -3,6 +3,7 @@ import { Form, Select, Space, Switch, Typography, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import WindowBackdropSetting from './WindowBackdropSetting'
 
 const NAVIGATION_ITEMS: Array<{ key: string; i18nKey: string }> = [
   { key: 'keyboard', i18nKey: 'settings.display.navigationKeys.keyboard' },
@@ -79,6 +80,8 @@ export function DisplaySection(): React.JSX.Element {
           ))}
         </Space>
       </Form.Item>
+
+      <WindowBackdropSetting application={app} persist={(patch) => void persistApplication(patch)} />
 
       <Form.Item label={t('settings.display.notificationPosition')}>
         <Select

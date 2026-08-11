@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.3.2",
+    "@fluentui/react-icons": "^2.0.316",
     "antd": "^6.6.0",
     "echarts": "^6.1.0",
     "i18next": "^26.3.6",

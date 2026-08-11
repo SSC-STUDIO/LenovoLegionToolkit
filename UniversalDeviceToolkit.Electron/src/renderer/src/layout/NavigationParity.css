@@ -1,0 +1,9 @@
+.udt-nav--wpf-parity .udt-nav-accent {
+  left: 0;
+}
+
+.udt-nav--wpf-parity .udt-nav-icon svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}

@@ -76,6 +76,8 @@ function createWindow(): void {
     show: false,
     autoHideMenuBar: true,
     frame: false,
+    backgroundColor: '#00000000',
+    backgroundMaterial: 'mica',
     icon: join(__dirname, '..', '..', 'resources', 'icon.png'),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -173,6 +175,13 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('window:is-maximized', () => mainWindow?.isMaximized() ?? false)
+
+  ipcMain.handle('window:set-background-material', (_event, material: unknown) => {
+    if (material !== 'none' && material !== 'mica' && material !== 'acrylic') {
+      throw new Error(`Unsupported window background material: ${String(material)}`)
+    }
+    mainWindow?.setBackgroundMaterial(material)
+  })
 
   ipcMain.handle('shell:open-log-folder', async () => {
     const result = await hostClient.invoke('app.getLogPath', {}) as { path?: unknown }
