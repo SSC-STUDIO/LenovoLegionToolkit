@@ -3,15 +3,36 @@ import { ColorPicker, Select, message } from 'antd'
 import type { Color } from 'antd/es/color-picker'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
-import { changeLanguage, supportedLanguages } from '../../i18n'
+import { LANGUAGES, changeLanguage } from '../../i18n'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { UI_SCALE_OPTIONS } from '../../stores/themeStore'
 import { useTheme } from '../../theme/useTheme'
 import { SettingsCard } from './SettingsCard'
 
 type AppSettings = Record<string, unknown>
 
 type ThemePreference = 'System' | 'Light' | 'Dark'
-type TemperatureUnit = 'C' | 'F'
+
+/**
+ * Temperature unit preference for the sensor dashboard.
+ *
+ * The value is persisted both to the backend 'application' scope (kept for the
+ * host-side consumers such as the OSD / status tray) and to localStorage
+ * 'udt-temperature-unit' so the renderer can read it synchronously. Sensor
+ * sections should use getTemperatureUnit() below to format values.
+ */
+export type TemperatureUnit = 'C' | 'F'
+
+const TEMPERATURE_UNIT_STORAGE_KEY = 'udt-temperature-unit'
+
+/** Returns the current temperature unit ('C' or 'F'). */
+export function getTemperatureUnit(): TemperatureUnit {
+  try {
+    return localStorage.getItem(TEMPERATURE_UNIT_STORAGE_KEY) === 'F' ? 'F' : 'C'
+  } catch {
+    return 'C'
+  }
+}
 
 interface AccentColorRGB {
   R: number
@@ -21,10 +42,11 @@ interface AccentColorRGB {
 
 const DEFAULT_ACCENT_HEX = '#ff2121'
 
-const LANGUAGE_OPTIONS: { value: (typeof supportedLanguages)[number]; label: string }[] = [
-  { value: 'zh-CN', label: '简体中文' },
-  { value: 'en-US', label: 'English' }
-]
+/** All selectable languages; the current one is sorted to the top. */
+const LANGUAGE_OPTIONS = LANGUAGES.map((language) => ({
+  value: language.code,
+  label: language.name
+}))
 
 const THEME_OPTIONS: { value: ThemePreference; labelKey: string; previewClass: string }[] = [
   { value: 'Light', labelKey: 'settings.appearance.themeOptions.light', previewClass: 'udt-theme-option--light' },
@@ -37,7 +59,14 @@ const TEMPERATURE_UNIT_OPTIONS: { value: TemperatureUnit; label: string }[] = [
   { value: 'F', label: '°F' }
 ]
 
-const APP_SCALE_OPTIONS = [80, 90, 100, 110, 125] as const
+/**
+ * UI scale levels aligned with the WPF app
+ * (Compact 0.90 / Standard 1.0 / Large 1.10 / ExtraLarge 1.25).
+ */
+const UI_SCALE_OPTIONS_LABELED = UI_SCALE_OPTIONS.map((value) => ({
+  value,
+  label: `${Math.round(value * 100)}%`
+}))
 
 const ACCENT_PRESETS = [
   '#ff2121',
@@ -55,18 +84,9 @@ function readString(app: AppSettings, key: string): string | undefined {
   return typeof value === 'string' ? value : undefined
 }
 
-function readNumber(app: AppSettings, key: string): number | undefined {
-  const value = app[key]
-  return typeof value === 'number' && Number.isFinite(value) ? value : undefined
-}
-
 function readThemePreference(app: AppSettings): ThemePreference {
   const value = readString(app, 'Theme')
   return value === 'Light' || value === 'Dark' ? value : 'System'
-}
-
-function readTemperatureUnit(app: AppSettings): TemperatureUnit {
-  return readString(app, 'TemperatureUnit') === 'F' ? 'F' : 'C'
 }
 
 function readAccentColor(app: AppSettings): AccentColorRGB | undefined {
@@ -142,7 +162,7 @@ function ThemePreviewCard({
 
 export default function AppearanceSection(): React.JSX.Element {
   const { t, i18n } = useTranslation()
-  const { setThemeMode, setAccent } = useTheme()
+  const { setThemeMode, setAccent, uiScale, setUiScale } = useTheme()
   const scopes = useSettingsStore((s) => s.scopes)
   const load = useSettingsStore((s) => s.load)
   const setScope = useSettingsStore((s) => s.setScope)
@@ -155,21 +175,35 @@ export default function AppearanceSection(): React.JSX.Element {
     void load()
   }, [load])
 
+  // Keep localStorage 'udt-temperature-unit' in sync with the backend value so
+  // getTemperatureUnit() reflects the persisted preference from the first run.
+  useEffect(() => {
+    const backendUnit = app['TemperatureUnit']
+    if (backendUnit === 'C' || backendUnit === 'F') {
+      localStorage.setItem(TEMPERATURE_UNIT_STORAGE_KEY, backendUnit)
+    }
+  }, [app['TemperatureUnit']])
+
   const accentColor = readAccentColor(app)
   const accentHex = accentColor ? accentColorToHex(accentColor) : undefined
 
-  const storedScale = readNumber(app, 'AppScale')
-  const appScale =
-    storedScale != null && (APP_SCALE_OPTIONS as readonly number[]).includes(storedScale)
-      ? storedScale
-      : 100
+  const currentLanguage = LANGUAGE_OPTIONS.some((option) => option.value === i18n.language)
+    ? i18n.language
+    : 'en'
+  const languageOptions = [...LANGUAGE_OPTIONS].sort((a, b) => {
+    if (a.value === currentLanguage) return -1
+    if (b.value === currentLanguage) return 1
+    return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })
+  })
 
   const handleLanguageChange = (value: string): void => {
-    localStorage.setItem('udt.lang', value)
     void changeLanguage(value)
   }
 
   const handleTemperatureUnitChange = (value: TemperatureUnit): void => {
+    // Renderer-facing preference (read by sensor sections via getTemperatureUnit).
+    localStorage.setItem(TEMPERATURE_UNIT_STORAGE_KEY, value)
+    // Keep the backend 'application' scope in sync for host-side consumers.
     const next: AppSettings = { ...app, TemperatureUnit: value }
     setScope('application', next)
     settingsApi
@@ -212,13 +246,8 @@ export default function AppearanceSection(): React.JSX.Element {
     persistAccent(css, { R: rgb.r, G: rgb.g, B: rgb.b })
   }
 
-  const handleAppScaleChange = (value: number): void => {
-    const next: AppSettings = { ...app, AppScale: value }
-    setScope('application', next)
-    settingsApi
-      .set('application', next)
-      .then(() => settingsApi.save(['application']))
-      .catch(() => message.error(t('settings.saveFailed')))
+  const handleUiScaleChange = (value: number): void => {
+    setUiScale(value)
   }
 
   const selectedTheme = readThemePreference(app)
@@ -230,9 +259,9 @@ export default function AppearanceSection(): React.JSX.Element {
         description={t('settings.appearance.languageDesc')}
         action={
           <Select<string>
-            className="udt-settings-select"
-            value={i18n.language.startsWith('zh') ? 'zh-CN' : 'en-US'}
-            options={LANGUAGE_OPTIONS}
+            className="udt-settings-select udt-settings-select--language"
+            value={currentLanguage}
+            options={languageOptions}
             onChange={handleLanguageChange}
           />
         }
@@ -243,7 +272,7 @@ export default function AppearanceSection(): React.JSX.Element {
         action={
           <Select<TemperatureUnit>
             className="udt-settings-select"
-            value={readTemperatureUnit(app)}
+            value={getTemperatureUnit()}
             options={TEMPERATURE_UNIT_OPTIONS}
             onChange={handleTemperatureUnitChange}
           />
@@ -294,10 +323,10 @@ export default function AppearanceSection(): React.JSX.Element {
         description={t('settings.appearance.appScaleDesc')}
         action={
           <Select<number>
-            className="udt-settings-select"
-            value={appScale}
-            options={APP_SCALE_OPTIONS.map((value) => ({ value, label: `${value}%` }))}
-            onChange={handleAppScaleChange}
+            className="udt-settings-select udt-settings-select--scale"
+            value={uiScale}
+            options={UI_SCALE_OPTIONS_LABELED}
+            onChange={handleUiScaleChange}
           />
         }
       />

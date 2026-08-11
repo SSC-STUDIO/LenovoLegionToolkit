@@ -488,7 +488,9 @@
           alt: 'Alt'
         },
         resetBatteryOnSince: '启动时重置电池使用时间',
-        resetBatteryOnSinceDesc: '在系统开机或重新启动时重置【电池】下的电池使用时间计数器。'
+        resetBatteryOnSinceDesc: '在系统开机或重新启动时重置【电池】下的电池使用时间计数器。',
+        godModeFnQ: '使用 Fn+Q 切换至自定义模式',
+        godModeFnQDesc: '使用 Fn+Q 来快速切换至自定义模式。'
       },
       display: {
         navigationItems: '导航项可见性',
@@ -549,6 +551,12 @@
         },
         includePrerelease: '包括预览版本',
         includePrereleaseDesc: '关闭时仅推送正式版更新；开启后可同时接收预览版（测试版）更新。',
+        repository: '更新仓库',
+        repositoryDesc: '配置用于检查更新的 GitHub 仓库。留空则使用默认值。',
+        repositoryOwner: '仓库所有者',
+        repositoryOwnerPlaceholder: '例如：SSC-STUDIO',
+        repositoryName: '仓库名称',
+        repositoryNamePlaceholder: '例如：UniversalDeviceToolkit',
         check: '检查更新',
         comingSoon: '检查更新将在后续版本中接入'
       },
@@ -656,6 +664,7 @@
       quickActionsTitle: '快捷操作',
       quickActionsEmpty: '暂无快捷操作，请点击"新建"来新建一项。',
       renamePipeline: '重命名管线',
+      changeIcon: '更改图标',
       renamePipelineTitle: '重命名管线',
       renamePipelinePlaceholder: '输入管线名称',
       empty: '当前没有自动化脚本，请点击"新建"来新建一项。',

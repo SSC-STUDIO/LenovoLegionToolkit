@@ -1,12 +1,14 @@
-import { app, BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { app, BrowserWindow, clipboard, dialog, ipcMain, shell } from 'electron'
 import { join } from 'path'
-import { existsSync } from 'fs'
+import { existsSync, mkdirSync } from 'fs'
+import { tmpdir } from 'os'
 import { hostClient } from './host-client'
 import { initSingleInstance, setMainWindowRef } from './single-instance'
-import { initTray, destroyTray } from './tray'
+import { initTray, destroyTray, refreshTrayMenu, updateTrayLanguage } from './tray'
 import { initOsdWindow, destroyOsdWindow } from './osd-window'
+import { initStatusWindow, destroyStatusWindow, showStatusWindow } from './status-window'
 import { flags, describeFlags, toHostArgs } from './flags'
-import { attachResizeStability } from './window-helpers'
+import { attachResizeStability, attachMaximizeWorkAreaClamp } from './window-helpers'
 
 app.setAppUserModelId('com.universaldevicetoolkit.app')
 
@@ -57,13 +59,13 @@ function resolveHostPath(): string {
 }
 
 function forwardHostEvents(window: BrowserWindow): void {
-  for (const event of ['host.ready', 'host.initialized', 'host.log', 'notifications.changed']) {
-    hostClient.on(event, (data) => {
-      if (!window.isDestroyed()) {
-        window.webContents.send('bridge:event', event, data)
-      }
-    })
-  }
+  // Forward all host events (sensors.updated, settings.changed, osd.changed, …).
+  // A fixed whitelist previously dropped sensors.updated, so gauges stayed at "-".
+  hostClient.onAny((event, data) => {
+    if (!window.isDestroyed()) {
+      window.webContents.send('bridge:event', event, data)
+    }
+  })
 }
 
 type MinimizeSetting = 'MinimizeOnClose' | 'MinimizeToTray'
@@ -81,20 +83,86 @@ async function shouldMinimizeToTray(keys: MinimizeSetting[]): Promise<boolean> {
   }
 }
 
+function resolveWindowIcon(): string | undefined {
+  // Prefer the tracked multi-size ICO (resources/ + buildResources/). The old
+  // build/icon.ico path lived under a gitignored Build/ folder on Windows, so
+  // packaged CI builds fell back to the default Electron icon/name.
+  const candidates = [
+    join(PROJECT_ROOT, 'resources', 'icon.ico'),
+    join(PROJECT_ROOT, 'buildResources', 'icon.ico'),
+    join(PROJECT_ROOT, 'resources', 'icon.png')
+  ]
+  return candidates.find((candidate) => existsSync(candidate))
+}
+
+/** Device info shape — mirrors WPF MachineCompatibility.MachineInformation. */
+interface DeviceInfo {
+  vendor: string
+  model: string
+  machineType: string
+  serialNumber: string
+  biosVersion: string
+}
+
+const FALLBACK_DEVICE_INFO: DeviceInfo = {
+  vendor: '',
+  model: 'Universal Device Toolkit',
+  machineType: '',
+  serialNumber: '',
+  biosVersion: ''
+}
+
+/** Best-effort device info via the host's system.info; never throws. */
+async function getDeviceInfo(): Promise<DeviceInfo> {
+  try {
+    const result = (await hostClient.invoke('system.info', {})) as Partial<DeviceInfo> | null | undefined
+    if (!result || typeof result !== 'object') return { ...FALLBACK_DEVICE_INFO }
+    return {
+      vendor: typeof result.vendor === 'string' ? result.vendor : '',
+      model:
+        typeof result.model === 'string' && result.model.length > 0
+          ? result.model
+          : FALLBACK_DEVICE_INFO.model,
+      machineType: typeof result.machineType === 'string' ? result.machineType : '',
+      serialNumber: typeof result.serialNumber === 'string' ? result.serialNumber : '',
+      biosVersion: typeof result.biosVersion === 'string' ? result.biosVersion : ''
+    }
+  } catch (error) {
+    console.error('[main] failed to load device info:', error)
+    return { ...FALLBACK_DEVICE_INFO }
+  }
+}
+
+/**
+ * Mirrors WPF MainWindow.OpenLog: reveal the logs folder in Explorer. Electron's
+ * "logs" path is created on demand so the folder exists before the host has
+ * written anything.
+ */
+async function openLogFolder(): Promise<{ ok: boolean }> {
+  try {
+    const dir = app.getPath('logs')
+    if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
+    const error = await shell.openPath(dir)
+    return { ok: error.length === 0 }
+  } catch (error) {
+    console.error('[main] failed to open log folder:', error)
+    return { ok: false }
+  }
+}
+
 function createWindow(): void {
-  // Packaged Windows builds inherit the canonical ICO embedded by electron-builder.
-  // Development uses that same multi-size ICO instead of a rescaled single PNG.
-  const developmentIcon = app.isPackaged ? {} : { icon: join(PROJECT_ROOT, 'build', 'icon.ico') }
+  const icon = resolveWindowIcon()
 
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 640,
     show: false,
+    title: 'Universal Device Toolkit',
     autoHideMenuBar: true,
     frame: false,
     backgroundColor: '#00000000',
     backgroundMaterial: 'mica',
-    ...developmentIcon,
+    ...(icon ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
@@ -108,6 +176,9 @@ function createWindow(): void {
   // Port of WPF WindowResizeStabilityHelper: track live move/size loops so
   // heavy per-frame work can be skipped while the user drags a window edge.
   attachResizeStability(mainWindow)
+  // Port of WPF WindowMaximizeWorkAreaHelper: keep the maximized window inside
+  // the monitor work area (safety net for desktop-dock overlays).
+  attachMaximizeWorkAreaClamp(mainWindow)
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow || mainWindow.isDestroyed()) return
@@ -153,6 +224,7 @@ function createWindow(): void {
     mainWindow = null
     destroyTray()
     destroyOsdWindow()
+    destroyStatusWindow()
   })
 
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
@@ -176,6 +248,14 @@ app.whenReady().then(() => {
   }
 
   ipcMain.handle('bridge:invoke', (_event, method: string, params?: unknown) => {
+    // Main-side methods reachable through the generic renderer bridge without
+    // preload changes (WPF MainWindow.OpenLog / LoadDeviceInfo equivalents).
+    if (method === 'log.open-folder') return openLogFolder()
+    if (method === 'device.info') return getDeviceInfo()
+    if (method === 'status-window.show') {
+      void showStatusWindow()
+      return { shown: true }
+    }
     // Mirrors WPF --disable-update-checker (UpdateChecker.Disable): the host
     // does not know this switch, so short-circuit update requests here.
     if (flags.disableUpdateChecker) {
@@ -243,6 +323,41 @@ app.whenReady().then(() => {
     shell.showItemInFolder(result.path)
   })
 
+  // Mirrors WPF MainWindow.OpenLog: open the logs directory (created on demand).
+  ipcMain.handle('log.open-folder', () => openLogFolder())
+
+  // Mirrors WPF MainWindow.LoadDeviceInfo (MachineCompatibility.GetMachineInformationAsync).
+  ipcMain.handle('device.info', () => getDeviceInfo())
+
+  // Mirrors WPF AboutPage "Data" / "Temp" folder buttons (Folders.AppData / Path.GetTempPath).
+  ipcMain.handle('shell:open-app-folder', async (_event, kind: unknown) => {
+    let target: string
+    if (kind === 'data') {
+      // Host stores app data next to args.txt (Flags.cs mirrors Folders.AppData,
+      // honoring the UDT_APPDATA_OVERRIDE environment variable).
+      const override = process.env['UDT_APPDATA_OVERRIDE']
+      target = override ?? join(process.env['LOCALAPPDATA'] ?? app.getPath('userData'), 'UniversalDeviceToolkit')
+    } else if (kind === 'temp') {
+      target = tmpdir()
+    } else if (kind === 'log') {
+      const result = await hostClient.invoke('app.getLogPath', {}) as { path?: unknown }
+      if (typeof result.path !== 'string' || result.path.length === 0) {
+        throw new Error('The host did not provide a log file path.')
+      }
+      target = result.path
+    } else {
+      throw new Error(`Unsupported folder kind: ${String(kind)}`)
+    }
+    if (!existsSync(target)) {
+      throw new Error(`Folder does not exist: ${target}`)
+    }
+    const error = await shell.openPath(target)
+    if (error) {
+      throw new Error(error)
+    }
+    return { opened: true }
+  })
+
   // Mirrors WPF Process.Start(url) / explorer.exe for file paths (used by the
   // Utils windows: update window, device info warranty link, crash report).
   ipcMain.handle('shell:open-external', async (_event, url: unknown) => {
@@ -271,6 +386,28 @@ app.whenReady().then(() => {
       throw new Error(error)
     }
     return { opened: true }
+  })
+
+  // Port of WPF ClipboardExtensions.SetProcesses/GetProcesses: one line per
+  // executable path; reads are filtered to existing paths and deduplicated.
+  ipcMain.handle('clipboard:write-lines', (_event, payload: unknown) => {
+    const payloadLines = (payload as { lines?: unknown } | null)?.lines
+    if (!Array.isArray(payloadLines) || payloadLines.some((line) => typeof line !== 'string')) {
+      throw new Error('A lines array of strings is required.')
+    }
+    const lines = payloadLines as string[]
+    clipboard.writeText(lines.join('\n'))
+    return { ok: true }
+  })
+
+  ipcMain.handle('clipboard:read-existing-paths', () => {
+    const paths = Array.from(new Set(
+      clipboard.readText()
+        .split(/\r\n|\n/)
+        .map((line) => line.replace(/^"+|"+$/g, ''))
+        .filter((path) => path.length > 0 && existsSync(path))
+    ))
+    return { paths }
   })
 
   // Mirrors WPF UnsupportedWindow.Exit / LanguageSelectorWindow.Exit: terminate
@@ -321,18 +458,55 @@ app.whenReady().then(() => {
     return result.canceled ? null : (result.filePaths[0] ?? null)
   })
 
+  // Mirrors WPF PlaySoundAutomationStepControl file picker (audio files).
+  ipcMain.handle('dialog:select-audio-file', async () => {
+    const options = {
+      title: 'Import',
+      defaultPath: 'C:\\Windows\\Media',
+      properties: ['openFile'] as ('openFile')[],
+      filters: [
+        { name: 'Audio Files', extensions: ['wav', 'mp3', 'ogg', 'flac', 'aac', 'm4a', 'wma'] },
+        { name: 'All Files', extensions: ['*'] }
+      ]
+    }
+    const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
+    const result = owner == null
+      ? await dialog.showOpenDialog(options)
+      : await dialog.showOpenDialog(owner, options)
+    return result.canceled ? null : (result.filePaths[0] ?? null)
+  })
+
+  // Tray menu: language + quick-action refresh (WPF TrayHelper PipelinesChanged).
+  ipcMain.on('tray:set-language', (_event, lang: unknown) => {
+    if (typeof lang === 'string' && lang.length > 0) updateTrayLanguage(lang)
+  })
+  ipcMain.on('tray:refresh', () => {
+    refreshTrayMenu()
+  })
+
   startHost()
   createWindow()
   setMainWindowRef(() => mainWindow)
-  initTray(() => mainWindow, { disableTooltip: flags.disableTrayTooltip })
+  const trayOpts = {
+    disableTooltip: flags.disableTrayTooltip,
+    invokeHost: (method: string, params?: unknown) => hostClient.invoke(method, params)
+  }
+  initTray(() => mainWindow, trayOpts)
+  // Rebuild once host has loaded automation.json (default "停用 GPU" quick action).
+  hostClient.on('host.initialized', () => refreshTrayMenu())
+  hostClient.on('host.ready', () => refreshTrayMenu())
+  // Navigation item visibility lives in application settings.
+  hostClient.on('settings.changed', () => refreshTrayMenu())
   initOsdWindow()
+  initStatusWindow()
   if (mainWindow) forwardHostEvents(mainWindow)
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
-      initTray(() => mainWindow, { disableTooltip: flags.disableTrayTooltip })
+      initTray(() => mainWindow, trayOpts)
       initOsdWindow()
+      initStatusWindow()
     }
   })
 })

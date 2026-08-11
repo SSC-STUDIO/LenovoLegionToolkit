@@ -1,9 +1,12 @@
 ﻿appId: com.universaldevicetoolkit.app
 productName: Universal Device Toolkit
 copyright: Universal Device Toolkit Contributors
+executableName: UniversalDeviceToolkit
 directories:
   output: dist
-  buildResources: build
+  # Named buildResources (not build/) so Windows case-insensitive .gitignore
+  # Build/ does not exclude the committed icon.ico / installer.nsh.
+  buildResources: buildResources
 files:
   - out/**
   - resources/**
@@ -14,7 +17,7 @@ extraResources:
     filter:
       - "**/*"
 win:
-  icon: build/icon.ico
+  icon: buildResources/icon.ico
   target:
     - target: nsis
       arch:
@@ -29,7 +32,7 @@ nsis:
   shortcutName: Universal Device Toolkit
   uninstallDisplayName: Universal Device Toolkit
   deleteAppDataOnUninstall: false
-  include: build/installer.nsh
+  include: buildResources/installer.nsh
   # Multilingual installer (matches the retired Inno Setup installer's 23 languages).
   multiLanguageInstaller: true
   installerLanguages:
@@ -55,8 +58,8 @@ nsis:
     - tr
     - uk
     - vi
-  installerIcon: build/icon.ico
-  uninstallerIcon: build/icon.ico
+  installerIcon: buildResources/icon.ico
+  uninstallerIcon: buildResources/icon.ico
 mac:
   target:
     - target: dmg

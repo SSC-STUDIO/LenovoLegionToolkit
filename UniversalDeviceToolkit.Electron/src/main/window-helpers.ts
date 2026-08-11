@@ -48,3 +48,31 @@ export function attachResizeStability(window: BrowserWindow): void {
   window.on('moved', clear)
   window.on('closed', clear)
 }
+
+/**
+ * Safety net for WPF WindowMaximizeWorkAreaHelper: Electron maximizes within the
+ * monitor work area natively, but desktop-dock overlays (MyDockFinder etc.) can
+ * still report a full-monitor maximize area that covers the taskbar/dock. Only
+ * when the maximized bounds actually exceed the work area do we snap them back
+ * with setBounds — the normal case leaves the native maximize animation alone.
+ */
+export function attachMaximizeWorkAreaClamp(window: BrowserWindow): void {
+  const clamp = (): void => {
+    if (window.isDestroyed() || !window.isMaximized() || window.isFullScreen()) return
+    const bounds = window.getBounds()
+    const display = screen.getDisplayNearestPoint({
+      x: Math.round(bounds.x + bounds.width / 2),
+      y: Math.round(bounds.y + bounds.height / 2)
+    })
+    const area = display.workArea
+    const exceeds =
+      bounds.x < area.x ||
+      bounds.y < area.y ||
+      bounds.width > area.width ||
+      bounds.height > area.height
+    if (!exceeds) return
+    window.setBounds({ x: area.x, y: area.y, width: area.width, height: area.height })
+  }
+  // Measure after the native maximize has settled to avoid fighting the animation.
+  window.on('maximize', () => setTimeout(clamp, 60))
+}

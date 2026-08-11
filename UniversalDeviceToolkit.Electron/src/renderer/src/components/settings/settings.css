@@ -781,3 +781,15 @@
   font-size: var(--udt-font-caption);
   font-weight: 500;
 }
+
+/* ── Appearance: language / UI scale selects ─────────────────── */
+
+.udt-settings-select--language {
+  min-width: 200px;
+  max-width: 280px;
+}
+
+.udt-settings-select--scale {
+  min-width: 130px;
+  max-width: 200px;
+}

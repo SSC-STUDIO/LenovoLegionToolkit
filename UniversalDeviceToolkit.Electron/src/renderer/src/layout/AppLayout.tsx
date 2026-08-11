@@ -37,6 +37,7 @@ const NAV_WIDTH_EXPANDED_CSS = '--udt-nav-width-expanded'
 const DESIGN_WINDOW_WIDTH = 1300
 const ABSOLUTE_MAX_EXPANDED = 420
 const MIN_CONTENT_WIDTH = 700
+const NAV_COLLAPSED_STORAGE_KEY = 'udt.navCollapsed'
 
 function readCssNumber(name: string, fallback: number): number {
   const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
@@ -74,6 +75,10 @@ const FOOTER_ITEMS: NavItemDef[] = [
   { key: '/about', icon: (filled) => filled ? <Info24Filled /> : <Info24Regular />, labelKey: 'nav.about' }
 ]
 
+// Keyboard navigation order: main items first, then footer items (WPF
+// NavigationStoreExtensions.Items + Footer).
+const ALL_NAV_ITEMS: NavItemDef[] = [...MAIN_ITEMS, ...FOOTER_ITEMS]
+
 function isRouteActive(pathname: string, key: string): boolean {
   return pathname === key || pathname.startsWith(`${key}/`)
 }
@@ -109,7 +114,13 @@ export default function AppLayout(): React.JSX.Element {
   const { t } = useTranslation()
   const location = useLocation()
   const navigate = useNavigate()
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem(NAV_COLLAPSED_STORAGE_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
   const [windowWidth, setWindowWidth] = useState(() => window.innerWidth)
 
   const navWidth = collapsed
@@ -125,13 +136,81 @@ export default function AppLayout(): React.JSX.Element {
     return () => window.removeEventListener('resize', handleResize)
   }, [handleResize])
 
-  // Tray "Status / 状态" menu item → renderer status popup (WPF StatusWindow).
+  // Persist the navigation collapse state across sessions (WPF parity:
+  // NavigationStore saves NavigationPaneExpanded on exit and restores it).
   useEffect(() => {
-    const off = on('tray:status', () => {
+    try {
+      localStorage.setItem(NAV_COLLAPSED_STORAGE_KEY, collapsed ? '1' : '0')
+    } catch {
+      // localStorage unavailable — collapse state stays in-memory only
+    }
+  }, [collapsed])
+
+  // Tray navigation (WPF TrayHelper → NavigationStore.Navigate) and optional
+  // status popup (legacy Electron-only; not part of the original tray menu).
+  useEffect(() => {
+    const offNavigate = on('tray:navigate', (data) => {
+      const route = (data as { route?: string } | null)?.route
+      if (typeof route === 'string' && route.length > 0) navigate(route)
+    })
+    const offStatus = on('tray:status', () => {
       void openStatusModal()
     })
-    return off
-  }, [])
+    return () => {
+      offNavigate()
+      offStatus()
+    }
+  }, [navigate])
+
+  // Alt+ArrowLeft/ArrowRight page switching — port of WPF
+  // NavigationStoreExtensions.NavigateToPrevious/NavigateToNext: cycles through
+  // MAIN_ITEMS followed by FOOTER_ITEMS, wrapping around at both ends.
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (!event.altKey) return
+      if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
+      event.preventDefault()
+      const currentIndex = ALL_NAV_ITEMS.findIndex((item) => isRouteActive(location.pathname, item.key))
+      let nextIndex: number
+      if (event.key === 'ArrowRight') {
+        nextIndex = (currentIndex + 1 + ALL_NAV_ITEMS.length) % ALL_NAV_ITEMS.length
+      } else {
+        const index = currentIndex < 0 ? 0 : currentIndex - 1
+        nextIndex = index < 0 ? ALL_NAV_ITEMS.length - 1 : index
+      }
+      navigate(ALL_NAV_ITEMS[nextIndex].key)
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [location.pathname, navigate])
+
+  // Ctrl+Tab / Ctrl+Shift+Tab page switching + Ctrl+1..9 direct jump — port of
+  // WPF MainWindow key bindings (NavigationStore.NavigateToNext/Previous and
+  // the numbered nav-item shortcuts).
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (!event.ctrlKey || event.altKey || event.metaKey) return
+      if (event.key === 'Tab') {
+        event.preventDefault()
+        const currentIndex = ALL_NAV_ITEMS.findIndex((item) => isRouteActive(location.pathname, item.key))
+        const nextIndex = event.shiftKey
+          ? (currentIndex - 1 + ALL_NAV_ITEMS.length) % ALL_NAV_ITEMS.length
+          : (currentIndex + 1) % ALL_NAV_ITEMS.length
+        navigate(ALL_NAV_ITEMS[nextIndex].key)
+        return
+      }
+      const digit = Number(event.key)
+      if (Number.isInteger(digit) && digit >= 1 && digit <= ALL_NAV_ITEMS.length) {
+        const target = ALL_NAV_ITEMS[digit - 1]
+        if (target && !isRouteActive(location.pathname, target.key)) {
+          event.preventDefault()
+          navigate(target.key)
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [location.pathname, navigate])
 
   const renderItem = (item: NavItemDef): React.JSX.Element => (
     <NavItem

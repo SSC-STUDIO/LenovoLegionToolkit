@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { EditOutlined } from '@ant-design/icons'
+import { Edit24Regular } from '@fluentui/react-icons'
 import { Spin } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { dashboardApi, type DashboardConfig, type DashboardGroup } from '../api/dashboard'
@@ -8,6 +8,7 @@ import DashboardFeatureGroups from '../components/dashboard-parity/DashboardFeat
 import { DEFAULT_DASHBOARD_GROUPS } from '../components/dashboard-parity/dashboardItems'
 import SensorSection from '../components/dashboard/SensorSection'
 import { useFeaturesStore } from '../stores/featuresStore'
+import { useLoadingStore } from '../stores/loadingStore'
 import { useSensorsStore } from '../stores/sensorsStore'
 import '../components/dashboard-parity/dashboardParity.css'
 
@@ -24,6 +25,10 @@ export default function DashboardParityPage(): React.JSX.Element {
 
   useEffect(() => {
     let cancelled = false
+    const loadingId = useLoadingStore.getState().start(
+      t('loading.dashboard', { defaultValue: 'Loading dashboard…' }),
+      { canCancel: false }
+    )
 
     Promise.all([
       useSensorsStore.getState().start(),
@@ -33,10 +38,13 @@ export default function DashboardParityPage(): React.JSX.Element {
       .then(([, , dashboardConfig]) => {
         if (cancelled) return
         setConfig(dashboardConfig)
+        useLoadingStore.getState().finish(loadingId)
       })
       .catch((reason: unknown) => {
         if (cancelled) return
-        setError((reason as Error).message)
+        const message = (reason as Error).message
+        setError(message)
+        useLoadingStore.getState().fail(loadingId, message)
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -44,6 +52,7 @@ export default function DashboardParityPage(): React.JSX.Element {
 
     return () => {
       cancelled = true
+      useLoadingStore.getState().finish(loadingId)
       void useSensorsStore.getState().stop()
     }
   }, [])
@@ -71,7 +80,7 @@ export default function DashboardParityPage(): React.JSX.Element {
         className="udt-parity-dashboard__customize"
         onClick={() => setEditOpen(true)}
       >
-        <EditOutlined />
+        <Edit24Regular aria-hidden="true" />
         {t('dashboard.customize')}
       </button>
       {editOpen && (

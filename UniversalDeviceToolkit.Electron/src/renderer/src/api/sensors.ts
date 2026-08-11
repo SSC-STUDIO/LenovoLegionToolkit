@@ -53,6 +53,10 @@ export interface SensorsBattery {
   voltage?: number | null
   designCapacity?: number | null
   fullChargeCapacity?: number | null
+  isCharging?: boolean
+  isLowBattery?: boolean
+  isLowPowerAdapter?: boolean
+  modelName?: string | null
 }
 
 export interface SensorSnapshot {

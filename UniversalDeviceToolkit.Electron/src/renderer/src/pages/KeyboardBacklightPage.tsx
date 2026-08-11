@@ -43,7 +43,9 @@ import { settingsApi } from '../api/settings'
 import { softwareApi } from '../api/software'
 import InfoBar from '../components/InfoBar'
 import { normalizeKeyboardLayout } from '../components/keyboard/spectrum/keyboardLayouts'
+import { normalizeSpectrumLayout } from '../components/keyboard/spectrum/deviceLayouts'
 import SpectrumKeyboard from '../components/keyboard/spectrum/SpectrumKeyboard'
+import SpectrumDevicePanel from '../components/keyboard/spectrum/SpectrumDevicePanel'
 import SpectrumEffectModal from '../components/keyboard/spectrum/SpectrumEffectModal'
 import '../components/keyboard/keyboard.css'
 
@@ -347,6 +349,8 @@ function SpectrumSection(): React.JSX.Element {
   const deviceKeys = spectrum.layout?.keys ?? []
   const effectiveLayout = layoutOverride ?? spectrum.layout?.keyboardLayout ?? 'Ansi'
   const layoutName = normalizeKeyboardLayout(effectiveLayout)
+  // WPF SpectrumLayout enum values, normalized against backend casing variants.
+  const spectrumLayout = normalizeSpectrumLayout(spectrum.layout?.spectrumLayout ?? 'KeyboardOnly')
 
   useEffect(() => {
     let cancelled = false
@@ -423,6 +427,21 @@ function SpectrumSection(): React.JSX.Element {
     const next = new Set(effect.Keys)
     if (next.has(code)) next.delete(code)
     else next.add(code)
+    const effects = spectrum.effects.map((e, i) => (i === index ? { ...e, Keys: [...next] } : e))
+    persistEffects(effects)
+  }
+
+  // WPF SelectableControl_Selected: box-selected zones are added to the
+  // current effect without removing any already-selected ones (union).
+  const handleBoxSelect = (codes: number[]): void => {
+    if (spectrum.effects.length === 0) {
+      message.info(t('keyboard.spectrum.selectEffectHint'))
+      return
+    }
+    const index = selectedEffect >= 0 && selectedEffect < spectrum.effects.length ? selectedEffect : 0
+    const effect = spectrum.effects[index]
+    const next = new Set(effect.Keys)
+    codes.forEach((code) => next.add(code))
     const effects = spectrum.effects.map((e, i) => (i === index ? { ...e, Keys: [...next] } : e))
     persistEffects(effects)
   }
@@ -573,14 +592,32 @@ function SpectrumSection(): React.JSX.Element {
           <div className="udt-kb-spectrum-device__empty">
             {t('keyboard.spectrum.noLayoutHint')}
           </div>
-        ) : (
+        ) : spectrumLayout === 'KeyboardOnly' ? (
           <SpectrumKeyboard
             layout={layoutName}
             deviceKeys={deviceKeys}
             selected={selectedKeys}
             onToggleKey={handleToggleKey}
+            onBoxSelect={handleBoxSelect}
             keyColors={keyColors}
           />
+        ) : (
+          <SpectrumDevicePanel
+            layout={spectrumLayout}
+            keyboardLayout={layoutName}
+            deviceKeys={deviceKeys}
+            selected={selectedKeys}
+            onToggleKey={handleToggleKey}
+            onBoxSelect={handleBoxSelect}
+            keyColors={keyColors}
+          />
+        )}
+        {spectrumLayout !== 'KeyboardOnly' && (
+          <div className="udt-kb-spectrum-device__hint">
+            {t('keyboard.spectrum.frontPanelHint', {
+              defaultValue: 'Click or drag to select keyboard and front panel zones'
+            })}
+          </div>
         )}
         {spectrum.effects.length > 0 && selectedEffect < 0 && (
           <div className="udt-kb-spectrum-device__hint">
@@ -688,6 +725,7 @@ function SpectrumSection(): React.JSX.Element {
           }
           keyboardLayout={spectrum.layout?.keyboardLayout ?? 'Ansi'}
           deviceKeys={deviceKeys}
+          previewEnabled={editingEffect !== null}
           onApply={handleApplyEffect}
           onCancel={() => setEditingEffect(null)}
         />

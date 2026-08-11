@@ -1,5 +1,6 @@
 {
   "name": "universal-device-toolkit-electron",
+  "productName": "Universal Device Toolkit",
   "version": "0.1.0",
   "description": "Universal Device Toolkit - Electron desktop client",
   "main": "out/main/index.js",

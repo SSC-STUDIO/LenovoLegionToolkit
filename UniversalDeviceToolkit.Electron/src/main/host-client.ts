@@ -23,12 +23,19 @@ export class HostClient {
   private rl: ReturnType<typeof createInterface> | null = null
   private pending = new Map<number, PendingRequest>()
   private listeners = new Map<string, Set<(data: unknown) => void>>()
+  private anyListeners = new Set<(event: string, data: unknown) => void>()
   private nextId = 1
 
   on(event: string, callback: (data: unknown) => void): () => void {
     if (!this.listeners.has(event)) this.listeners.set(event, new Set())
     this.listeners.get(event)!.add(callback)
     return () => this.listeners.get(event)?.delete(callback)
+  }
+
+  /** Forward every host event (sensors.updated, settings.changed, etc.). */
+  onAny(callback: (event: string, data: unknown) => void): () => void {
+    this.anyListeners.add(callback)
+    return () => this.anyListeners.delete(callback)
   }
 
   start(hostPath: string, args: string[] = []): void {
@@ -111,6 +118,13 @@ export class HostClient {
           } catch (error) {
             console.error(`[host] event handler failed: ${error}`)
           }
+        }
+      }
+      for (const callback of this.anyListeners) {
+        try {
+          callback(message.event, message.data)
+        } catch (error) {
+          console.error(`[host] any-event handler failed: ${error}`)
         }
       }
       return

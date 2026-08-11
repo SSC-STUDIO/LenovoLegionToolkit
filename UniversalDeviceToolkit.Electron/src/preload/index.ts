@@ -16,6 +16,8 @@ const bridge = {
   setBackgroundMaterial: (material: 'none' | 'mica' | 'acrylic'): Promise<void> =>
     ipcRenderer.invoke('window:set-background-material', material),
   openLogFolder: (): Promise<void> => ipcRenderer.invoke('shell:open-log-folder'),
+  openAppFolder: (kind: 'data' | 'temp' | 'log'): Promise<{ opened: boolean }> =>
+    ipcRenderer.invoke('shell:open-app-folder', kind),
   openExternal: (url: string): Promise<{ opened: boolean }> =>
     ipcRenderer.invoke('shell:open-external', url),
   openPath: (path: string): Promise<{ opened: boolean }> =>
@@ -24,6 +26,7 @@ const bridge = {
   selectPluginFiles: (): Promise<string[]> => ipcRenderer.invoke('dialog:select-plugin-files'),
   selectJsonFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-json-file'),
   selectExeFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-exe-file'),
+  selectAudioFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-audio-file'),
   isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window:is-maximized'),
   isFullscreen: (): Promise<boolean> => ipcRenderer.invoke('window:is-fullscreen'),
   onFullscreenChanged: (callback: (fullscreen: boolean) => void): (() => void) => {
@@ -39,7 +42,20 @@ const bridge = {
     }
     ipcRenderer.on('window:maximized-changed', listener)
     return () => ipcRenderer.removeListener('window:maximized-changed', listener)
-  }
+  },
+  /** Sync UI language into the main-process tray menu labels. */
+  setTrayLanguage: (lang: string): void => {
+    ipcRenderer.send('tray:set-language', lang)
+  },
+  /** Rebuild tray quick actions after automation pipelines change. */
+  refreshTrayMenu: (): void => {
+    ipcRenderer.send('tray:refresh')
+  },
+  /** Clipboard process list (port of WPF ClipboardExtensions). */
+  writeClipboardLines: (lines: string[]): Promise<{ ok: boolean }> =>
+    ipcRenderer.invoke('clipboard:write-lines', { lines }),
+  readClipboardExistingPaths: (): Promise<string[]> =>
+    ipcRenderer.invoke('clipboard:read-existing-paths')
 }
 
 contextBridge.exposeInMainWorld('bridge', bridge)

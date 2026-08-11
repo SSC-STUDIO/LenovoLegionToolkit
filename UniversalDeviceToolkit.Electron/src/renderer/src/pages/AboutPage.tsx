@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { FolderOpenOutlined, LinkOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { invoke } from '../api/bridge'
+import { openExternalUrl } from '../utils/url'
 import '../components/pages/pages.css'
 
 interface AppStatus {
@@ -57,11 +58,18 @@ export default function AboutPage(): React.JSX.Element {
   const isEnglish = i18n.language.toLowerCase().startsWith('en')
 
   const openApplicationDataFolder = (): void => {
-    void window.bridge?.openLogFolder?.()
+    void window.bridge?.openAppFolder?.('data')
   }
 
   const openApplicationTempFolder = (): void => {
     void window.bridge?.openLogFolder?.()
+  }
+
+  // Opens external links via the main-process shell (http/https whitelist);
+  // href stays as a degradation for non-click navigation (middle-click, etc.).
+  const handleExternalLink = (url: string) => (event: React.MouseEvent<HTMLAnchorElement>): void => {
+    event.preventDefault()
+    void openExternalUrl(url)
   }
 
   return (
@@ -89,11 +97,11 @@ export default function AboutPage(): React.JSX.Element {
       <h2 className="udt-subsection-title udt-about-page__section">
         {t('about.links')}
       </h2>
-      <a className="udt-link-button" href={PROJECT_URL} target="_blank" rel="noreferrer">
+      <a className="udt-link-button" href={PROJECT_URL} target="_blank" rel="noreferrer" onClick={handleExternalLink(PROJECT_URL)}>
         <LinkOutlined />
         {t('about.projectWebsite')}
       </a>
-      <a className="udt-link-button" href={LATEST_RELEASE_URL} target="_blank" rel="noreferrer">
+      <a className="udt-link-button" href={LATEST_RELEASE_URL} target="_blank" rel="noreferrer" onClick={handleExternalLink(LATEST_RELEASE_URL)}>
         <LinkOutlined />
         {t('about.latestRelease')}
       </a>
@@ -103,7 +111,14 @@ export default function AboutPage(): React.JSX.Element {
         {THIRD_PARTY_COLUMNS.map((column, index) => (
           <div key={index} className="udt-about-page__libs-column">
             {column.map((lib) => (
-              <a key={lib.name} className="udt-link-button" href={lib.url} target="_blank" rel="noreferrer">
+              <a
+                key={lib.name}
+                className="udt-link-button"
+                href={lib.url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={handleExternalLink(lib.url)}
+              >
                 {lib.name}
               </a>
             ))}

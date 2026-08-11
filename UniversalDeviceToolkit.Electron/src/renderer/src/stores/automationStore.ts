@@ -57,6 +57,7 @@ export const useAutomationStore = create<AutomationStore>()((set, get) => ({
       const res = await automationApi.savePipelines(pipelines, isEnabled)
       if (!res.saved) return false
       await get().load()
+      window.bridge?.refreshTrayMenu?.()
       return true
     } catch (error) {
       set({ error: (error as Error).message })

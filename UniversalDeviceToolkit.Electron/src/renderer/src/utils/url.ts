@@ -36,11 +36,16 @@ export function isSafeExternalUrl(url: string): boolean {
 }
 
 /**
- * Opens an external URL through the default browser. Only http/https URLs are
- * ever opened; anything else is ignored (returns false).
+ * Opens an external URL through the OS default browser (main-process
+ * 'shell:open-external' http/https whitelist). Only http/https URLs are ever
+ * opened; anything else is ignored (returns false).
  */
-export function openExternalUrl(url: string): boolean {
+export async function openExternalUrl(url: string): Promise<boolean> {
   if (!isSafeExternalUrl(url)) return false
-  const win = window.open(url, '_blank', 'noopener,noreferrer')
-  return win != null
+  try {
+    const result = await window.bridge?.openExternal(url)
+    return result?.opened === true
+  } catch {
+    return false
+  }
 }

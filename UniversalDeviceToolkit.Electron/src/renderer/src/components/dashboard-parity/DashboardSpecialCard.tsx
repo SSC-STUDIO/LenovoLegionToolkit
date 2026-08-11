@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, Dropdown, Switch, Tooltip, message } from 'antd'
 import {
   ChevronDown16Regular,
+  Copy20Regular,
   Desktop24Regular,
   DeveloperBoard24Regular,
   DeveloperBoardLightning20Regular,
@@ -10,6 +11,7 @@ import {
   Sleep24Regular
 } from '@fluentui/react-icons'
 import { useTranslation } from 'react-i18next'
+import { copyLines } from '../../utils/clipboard'
 import {
   dashboardHardwareApi,
   type DashboardHardwareState,
@@ -72,6 +74,7 @@ function DiscreteGpuCard({
 }: Omit<DashboardSpecialCardProps, 'item'>): React.JSX.Element {
   const { t } = useTranslation()
   const [busy, setBusy] = useState(false)
+  const [copying, setCopying] = useState(false)
   const gpu = hardware.discreteGpu
   const title = t('dashboardHardware.discreteGpu.title')
   const description = t('dashboardHardware.discreteGpu.description')
@@ -88,6 +91,23 @@ function DiscreteGpuCard({
       void message.error((reason as Error).message)
     } finally {
       setBusy(false)
+    }
+  }
+
+  // Port of WPF ClipboardExtensions.SetProcesses: copy the GPU process list.
+  async function copyProcessList(): Promise<void> {
+    setCopying(true)
+    try {
+      const copied = await copyLines(gpu.processes)
+      if (copied) {
+        void message.success(t('clipboard.copySuccess', { defaultValue: 'Process list copied to clipboard' }))
+      } else {
+        void message.error(t('clipboard.copyFailed', { defaultValue: 'Failed to copy process list' }))
+      }
+    } catch {
+      void message.error(t('clipboard.copyFailed', { defaultValue: 'Failed to copy process list' }))
+    } finally {
+      setCopying(false)
     }
   }
 
@@ -113,6 +133,16 @@ function DiscreteGpuCard({
         <div className="udt-parity-gpu-accessory__status-row">
           <span className={`udt-parity-status-dot udt-parity-status-dot--${statusTone(gpu.state)}`} />
           <span className="udt-parity-gpu-accessory__status">{status}</span>
+          <Tooltip title={t('clipboard.copyProcesses', { defaultValue: 'Copy process list' })}>
+            <Button
+              aria-label={t('clipboard.copyProcesses', { defaultValue: 'Copy process list' })}
+              className="udt-parity-icon-button"
+              icon={<Copy20Regular />}
+              disabled={gpu.processes.length === 0}
+              loading={copying}
+              onClick={() => void copyProcessList()}
+            />
+          </Tooltip>
           <Tooltip title={details} placement="topRight">
             <Button
               aria-label={t('dashboardHardware.discreteGpu.information')}

@@ -12,6 +12,8 @@ export interface SensorTrendHistory {
   gpuUsage: (number | null)[]
   gpuClock: (number | null)[]
   memoryUsage: (number | null)[]
+  batteryRate: (number | null)[]
+  batteryTemperature: (number | null)[]
 }
 
 function emptyTrend(): SensorTrendHistory {
@@ -23,7 +25,9 @@ function emptyTrend(): SensorTrendHistory {
     gpuTemperature: [],
     gpuUsage: [],
     gpuClock: [],
-    memoryUsage: []
+    memoryUsage: [],
+    batteryRate: [],
+    batteryTemperature: []
   }
 }
 
@@ -36,6 +40,12 @@ function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): Senso
   const gpuUsage = [...history.gpuUsage, snapshot.gpu?.usage ?? null]
   const gpuClock = [...history.gpuClock, snapshot.gpu?.coreClock ?? null]
   const memoryUsage = [...history.memoryUsage, snapshot.memory?.usage ?? null]
+  const rateMw = snapshot.battery?.chargeRate
+  const batteryRate = [
+    ...history.batteryRate,
+    rateMw != null && Number.isFinite(rateMw) && rateMw !== -1 ? Math.abs(rateMw) / 1000 : null
+  ]
+  const batteryTemperature = [...history.batteryTemperature, snapshot.battery?.temperature ?? null]
 
   if (labels.length > TREND_POINTS) {
     labels.shift()
@@ -46,8 +56,21 @@ function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): Senso
     gpuUsage.shift()
     gpuClock.shift()
     memoryUsage.shift()
+    batteryRate.shift()
+    batteryTemperature.shift()
   }
-  return { labels, cpuTemperature, cpuUsage, cpuClock, gpuTemperature, gpuUsage, gpuClock, memoryUsage }
+  return {
+    labels,
+    cpuTemperature,
+    cpuUsage,
+    cpuClock,
+    gpuTemperature,
+    gpuUsage,
+    gpuClock,
+    memoryUsage,
+    batteryRate,
+    batteryTemperature
+  }
 }
 
 interface SensorsStoreState {
@@ -57,6 +80,8 @@ interface SensorsStoreState {
   settings: SensorsSettings | null
   trend: SensorTrendHistory
   subscribed: boolean
+  /** Current polling interval in seconds (drives the refresh context-menu checkmark). */
+  intervalSec: number
   loading: boolean
   error: string | null
 }
@@ -74,6 +99,20 @@ interface SensorsStoreActions {
 
 const offUpdated: (() => void)[] = []
 
+/** Serialize start/stop so Strict Mode remounts cannot drop the host subscription. */
+let lifecycleChain: Promise<void> = Promise.resolve()
+let subscriberCount = 0
+let activeIntervalSec = 1
+
+function enqueueLifecycle(op: () => Promise<void>): Promise<void> {
+  const next = lifecycleChain.then(op, op)
+  lifecycleChain = next.then(
+    () => undefined,
+    () => undefined
+  )
+  return next
+}
+
 export const useSensorsStore = create<SensorsStoreState & SensorsStoreActions>((set, get) => ({
   status: null,
   snapshot: null,
@@ -81,6 +120,7 @@ export const useSensorsStore = create<SensorsStoreState & SensorsStoreActions>((
   settings: null,
   trend: emptyTrend(),
   subscribed: false,
+  intervalSec: 1,
   loading: false,
   error: null,
 
@@ -103,36 +143,58 @@ export const useSensorsStore = create<SensorsStoreState & SensorsStoreActions>((
   },
 
   start: async (intervalSec = 1) => {
-    if (get().subscribed) return
-    try {
-      await sensorsApi.subscribe(intervalSec)
-      offUpdated.push(
-        sensorsApi.onUpdated((snapshot) =>
-          set((state) => ({ snapshot, trend: pushTrend(state.trend, snapshot) }))
+    activeIntervalSec = intervalSec
+    await enqueueLifecycle(async () => {
+      const wasSubscribed = get().subscribed
+      if (wasSubscribed) {
+        // Interval change while polling: drop the old subscription so the new
+        // interval takes effect (WPF SensorsControl refresh menu parity).
+        try {
+          await sensorsApi.unsubscribe()
+        } catch {
+          // Best-effort restart below.
+        }
+        while (offUpdated.length > 0) {
+          offUpdated.pop()?.()
+        }
+        set({ subscribed: false })
+      } else {
+        subscriberCount += 1
+      }
+      try {
+        await sensorsApi.subscribe(activeIntervalSec)
+        offUpdated.push(
+          sensorsApi.onUpdated((snapshot) =>
+            set((state) => ({ snapshot, trend: pushTrend(state.trend, snapshot) }))
+          )
         )
-      )
-      offUpdated.push(sensorsApi.onFpsUpdated((fps) => set({ fps })))
-      set({ subscribed: true })
-    } catch (error) {
-      set({ error: (error as Error).message })
-    }
+        offUpdated.push(sensorsApi.onFpsUpdated((fps) => set({ fps })))
+        set({ subscribed: true, error: null, intervalSec: activeIntervalSec })
+      } catch (error) {
+        if (!wasSubscribed) subscriberCount = Math.max(0, subscriberCount - 1)
+        set({ error: (error as Error).message })
+      }
+    })
   },
 
   stop: async () => {
-    if (!get().subscribed) return
-    try {
-      await sensorsApi.unsubscribe()
-    } catch (error) {
-      set({ error: (error as Error).message })
-    }
-    while (offUpdated.length > 0) {
-      offUpdated.pop()?.()
-    }
-    set({ subscribed: false })
+    await enqueueLifecycle(async () => {
+      subscriberCount = Math.max(0, subscriberCount - 1)
+      if (subscriberCount > 0 || !get().subscribed) return
+      try {
+        await sensorsApi.unsubscribe()
+      } catch (error) {
+        set({ error: (error as Error).message })
+      }
+      while (offUpdated.length > 0) {
+        offUpdated.pop()?.()
+      }
+      set({ subscribed: false })
+    })
   },
 
+  /** Restart polling with a new interval (WPF SensorsControl refresh menu parity). */
   setInterval: async (intervalSec) => {
-    await get().stop()
     await get().start(intervalSec)
   },
 

@@ -115,6 +115,21 @@ export default function StepEditorModal({ step, pipelines, onApply, onCancel }: 
     setValue(withPath.path ?? file.name)
   }
 
+  const handleBrowseFile = async (): Promise<void> => {
+    const bridge = window.bridge
+    if (bridge?.selectAudioFile != null) {
+      try {
+        const filePath = await bridge.selectAudioFile()
+        if (filePath) setValue(filePath)
+      } catch {
+        // dialog unavailable; fall back to the hidden input
+        fileInputRef.current?.click()
+      }
+      return
+    }
+    fileInputRef.current?.click()
+  }
+
   const canSave =
     def.kind === 'pipeline'
       ? quickActionPipelines.some((p) => p.id === value) || value === ''
@@ -191,7 +206,7 @@ export default function StepEditorModal({ step, pipelines, onApply, onCancel }: 
               <button
                 type="button"
                 className="udt-btn udt-btn--secondary"
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => void handleBrowseFile()}
               >
                 {t(`automation.stepEditors.${def.i18nKey}.browse`)}
               </button>

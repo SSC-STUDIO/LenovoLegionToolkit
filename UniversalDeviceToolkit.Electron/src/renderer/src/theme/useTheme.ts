@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { settingsApi } from '../api/settings'
-import { useThemeStore } from '../stores/themeStore'
+import { applyUiScale, useThemeStore } from '../stores/themeStore'
 import type { ThemeMode } from '../stores/themeStore'
 
 type ThemePreference = 'System' | 'Light' | 'Dark'
@@ -29,15 +29,25 @@ function storedThemeMode(): ThemeMode | null {
 export interface ThemeController {
   themeMode: ThemeMode
   colorPrimary?: string
+  uiScale: number
   setThemeMode: (mode: ThemeMode) => void
   setAccent: (color?: string) => void
+  setUiScale: (scale: number) => void
 }
 
 export function useTheme(): ThemeController {
   const themeMode = useThemeStore((s) => s.themeMode)
   const colorPrimary = useThemeStore((s) => s.colorPrimary)
+  const uiScale = useThemeStore((s) => s.uiScale)
   const setThemeMode = useThemeStore((s) => s.setThemeMode)
   const setAccent = useThemeStore((s) => s.setAccent)
+  const setUiScale = useThemeStore((s) => s.setUiScale)
+
+  // Keep the document scaling in sync with the store (the store also applies
+  // the initial scale at module load so the whole app is scaled from launch).
+  useEffect(() => {
+    applyUiScale(uiScale)
+  }, [uiScale])
 
   useEffect(() => {
     let disposed = false
@@ -96,5 +106,5 @@ export function useTheme(): ThemeController {
     }
   }, [setAccent, setThemeMode])
 
-  return { themeMode, colorPrimary, setThemeMode, setAccent }
+  return { themeMode, colorPrimary, uiScale, setThemeMode, setAccent, setUiScale }
 }

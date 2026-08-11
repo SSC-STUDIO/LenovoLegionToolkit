@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button, Select, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -10,6 +10,7 @@ import type {
   SpectrumEffectType,
   SpectrumSpeed
 } from '../../../api/keyboard'
+import { keyboardApi } from '../../../api/keyboard'
 import ColorPicker from '../../ColorPicker'
 import SpectrumKeyboard from './SpectrumKeyboard'
 import { normalizeKeyboardLayout } from './keyboardLayouts'
@@ -19,6 +20,8 @@ export interface SpectrumEffectModalProps {
   /** $type of the current keyboard layout ("Ansi" | "Iso" | "Jis" | ...). */
   keyboardLayout: string
   deviceKeys: number[]
+  /** Paint the keyboard with the live device backlight state while editing. */
+  previewEnabled?: boolean
   onApply: (effect: SpectrumEffect) => void
   onCancel: () => void
 }
@@ -137,6 +140,11 @@ function colorToHex(color: RgbColor): string {
   return `#${toHex(color.R)}${toHex(color.G)}${toHex(color.B)}`
 }
 
+function toByteHex(value: number): string {
+  const clamped = Math.min(255, Math.max(0, Math.round(value)))
+  return clamped.toString(16).padStart(2, '0')
+}
+
 function hexToColor(hex: string): RgbColor {
   const value = hex.replace(/^#/, '')
   return {
@@ -156,11 +164,54 @@ export default function SpectrumEffectModal({
   effect,
   keyboardLayout,
   deviceKeys,
+  previewEnabled,
   onApply,
   onCancel
 }: SpectrumEffectModalProps): React.JSX.Element | null {
   const { t } = useTranslation()
   const [draft, setDraft] = useState<SpectrumEffect>(effect ?? NEW_EFFECT)
+  // Live backlight preview — WPF SpectrumKeyboardBacklightEditEffectWindow
+  // polls GetStateAsync every 50ms and repaints the keycaps.
+  const [previewColors, setPreviewColors] = useState<Map<number, string> | undefined>(undefined)
+  const previewInFlightRef = useRef(false)
+
+  useEffect(() => {
+    if (!previewEnabled) {
+      setPreviewColors(undefined)
+      return
+    }
+    let cancelled = false
+    const timer = window.setInterval(() => {
+      if (previewInFlightRef.current) return
+      previewInFlightRef.current = true
+      keyboardApi
+        .spectrumGetState()
+        .then((result) => {
+          if (cancelled) return
+          const keys = result.keys ?? []
+          if (keys.length === 0) {
+            setPreviewColors(undefined)
+            return
+          }
+          const map = new Map<number, string>()
+          for (const keyColor of keys) {
+            map.set(keyColor.key, `#${toByteHex(keyColor.r)}${toByteHex(keyColor.g)}${toByteHex(keyColor.b)}`)
+          }
+          setPreviewColors(map)
+        })
+        .catch(() => {
+          if (!cancelled) setPreviewColors(undefined)
+        })
+        .finally(() => {
+          previewInFlightRef.current = false
+        })
+    }, 50)
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+      previewInFlightRef.current = false
+    }
+  }, [previewEnabled])
 
   useEffect(() => {
     setDraft(effect ?? NEW_EFFECT)
@@ -339,6 +390,7 @@ export default function SpectrumEffectModal({
             deviceKeys={deviceKeys}
             selected={selected}
             onToggleKey={handleToggleKey}
+            keyColors={previewColors}
           />
         </div>
 

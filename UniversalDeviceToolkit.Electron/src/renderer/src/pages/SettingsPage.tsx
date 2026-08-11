@@ -11,6 +11,8 @@ import {
 } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import { featuresApi, type FeatureKey } from '../api/features'
+import { useLoadingStore } from '../stores/loadingStore'
+import { useSettingsStore } from '../stores/settingsStore'
 import AppearanceSection from '../components/settings/AppearanceSection'
 import ApplicationSection from '../components/settings/ApplicationSection'
 import { PowerSection } from '../components/settings/PowerSection'
@@ -95,19 +97,25 @@ export default function SettingsPage(): React.JSX.Element {
 
   useEffect(() => {
     let cancelled = false
-    featuresApi
-      .list()
-      .then((infos) => {
+    const loadingId = useLoadingStore.getState().start(
+      t('loading.settings', { defaultValue: 'Loading settings…' }),
+      { canCancel: false }
+    )
+    Promise.all([featuresApi.list(), useSettingsStore.getState().load()])
+      .then(([infos]) => {
         if (cancelled) return
         setSupportsLenovoHardware(
           infos.some((info) => info.supported && LENOVO_FEATURE_KEYS.includes(info.key))
         )
+        useLoadingStore.getState().finish(loadingId)
       })
       .catch(() => {
         // Keep the default (all sections visible) when the probe fails.
+        useLoadingStore.getState().finish(loadingId)
       })
     return () => {
       cancelled = true
+      useLoadingStore.getState().finish(loadingId)
     }
   }, [])
 

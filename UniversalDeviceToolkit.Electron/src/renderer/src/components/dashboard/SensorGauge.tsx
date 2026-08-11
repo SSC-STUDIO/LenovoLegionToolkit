@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react'
-import * as echarts from 'echarts'
+import { init, type ECharts, type EChartsCoreOption } from '../../utils/echarts'
 import { useThemeStore } from '../../stores/themeStore'
 
 export interface SensorGaugeProps {
@@ -55,11 +55,11 @@ export default function SensorGauge({
   thickness = 6
 }: SensorGaugeProps): React.JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null)
-  const chartRef = useRef<echarts.ECharts | null>(null)
+  const chartRef = useRef<ECharts | null>(null)
   const isDark = useThemeStore((s) => s.themeMode === 'dark')
 
   const buildOption = useCallback(
-    (): echarts.EChartsOption => {
+    (): EChartsCoreOption => {
       const numeric = value != null && Number.isFinite(value) ? value : null
       const ratio = numeric == null ? 0 : Math.min(1, Math.max(0, (numeric - min) / (max - min)))
       const valueText = numeric == null ? '-' : numeric.toFixed(digits)
@@ -84,12 +84,14 @@ export default function SensorGauge({
       // White tip dot riding the leading edge of the value arc. ECharts has no
       // native support, so a graphic circle is placed on the arc end point:
       // screen angle = 135° (lower-left) + 270° * ratio, clockwise (y-down).
+      // Hidden while the arc is zero-length (value null or at/under min),
+      // matching WPF collapsing the tip when the sweep is empty.
       const radiusPx = size * 0.45
       const tipAngleRad = ((START_ANGLE - SWEEP_ANGLE * ratio) * Math.PI) / 180
       // ECharts 6 runtime still supports primitive 'circle' graphic elements, but its
       // published types only expose group/path/image/text — cast to keep the visual.
       const tip = (
-        numeric == null
+        numeric == null || ratio <= 0
           ? []
           : [
               {
@@ -104,7 +106,7 @@ export default function SensorGauge({
                 style: { fill: '#ffffff', stroke: color, lineWidth: TIP_STROKE_WIDTH }
               }
             ]
-      ) as unknown as echarts.EChartsOption['graphic']
+      ) as unknown as EChartsCoreOption['graphic']
 
       const baseSeries = {
         type: 'gauge' as const,
@@ -184,7 +186,7 @@ export default function SensorGauge({
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
-    const chart = echarts.init(el)
+    const chart = init(el)
     chartRef.current = chart
     return () => {
       chart.dispose()

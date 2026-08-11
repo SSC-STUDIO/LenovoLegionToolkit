@@ -14,8 +14,8 @@ import './utils.css'
 /**
  * Port of WPF StatusWindow (tray status popup): power mode + God Mode preset,
  * CPU/memory/SSD sensor summaries, discrete GPU state and battery overview,
- * plus an update-available indicator. Opened from the tray context menu
- * ("Status / 状态" → `tray:status` bridge event).
+ * plus an update-available indicator. Opened via `tray:status` bridge event
+ * (hover tooltip / explicit callers; not part of the original tray context menu).
  */
 
 interface StatusRequest {

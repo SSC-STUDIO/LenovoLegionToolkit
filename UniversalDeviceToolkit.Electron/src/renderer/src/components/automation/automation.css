@@ -201,27 +201,22 @@
   background: var(--udt-status-critical-bg);
 }
 
-/* Pipeline cards */
+/* Pipeline cards (CardExpander — collapsed by default like WPF AutomationPipelineControl) */
 .udt-pipeline-list {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-.udt-pipeline__header {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.udt-pipeline-wrap {
+  position: relative;
 }
 
-.udt-pipeline__icon {
-  flex: 0 0 auto;
-  font-size: 24px;
-  color: var(--udt-text-primary);
-  line-height: 1;
+.udt-pipeline.udt-card-expander {
+  margin-bottom: 0;
 }
 
 .udt-pipeline__steps {
-  margin-top: 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -255,9 +250,61 @@
 
 .udt-pipeline__actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
   margin-top: 16px;
   justify-content: flex-end;
+}
+
+.udt-pipeline__exclusive,
+.udt-pipeline__exclusive-spacer {
+  margin-right: auto;
+}
+
+.udt-pipeline__exclusive {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 100px;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  cursor: pointer;
+  user-select: none;
+}
+
+.udt-pipeline__exclusive input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+}
+
+.udt-pipeline__exclusive .udt-checkbox__box {
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-fill-secondary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.udt-pipeline__exclusive input:checked + .udt-checkbox__box {
+  background: var(--udt-accent-secondary);
+  border-color: var(--udt-accent-secondary);
+}
+
+.udt-pipeline__exclusive input:checked + .udt-checkbox__box::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border: solid var(--udt-accent-text);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) translateY(-1px);
 }
 
 .udt-automation-toolbar {

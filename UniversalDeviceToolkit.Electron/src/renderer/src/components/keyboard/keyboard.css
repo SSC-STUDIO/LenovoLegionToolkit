@@ -352,8 +352,10 @@
 }
 
 .udt-spectrum-keyboard {
+  position: relative;
   width: 100%;
   overflow: hidden;
+  user-select: none;
 }
 
 .udt-spectrum-keyboard__stage {
@@ -419,6 +421,85 @@
 }
 
 .udt-spectrum-keyboard__zone:not(:disabled):hover {
+  border-color: var(--udt-accent, #4f9df7);
+  filter: brightness(1.2);
+}
+
+/* Unavailable zones are aria-disabled buttons (not :disabled) so drag-box
+   selection can start anywhere on the keyboard, like the WPF SelectableControl. */
+.udt-spectrum-keyboard__zone--unavailable:hover {
+  border-color: rgba(128, 128, 128, 0.4);
+  filter: none;
+}
+
+/* --- Drag-box selection overlay (SelectableControl port) --- */
+
+.udt-spectrum-keyboard__selection,
+.udt-spectrum-device__selection {
+  position: absolute;
+  border: 1px solid var(--udt-accent, #4f9df7);
+  background: rgba(79, 157, 247, 0.25);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* --- Spectrum device visualization (port of SpectrumDevice*Control.xaml) --- */
+
+.udt-spectrum-device {
+  position: relative;
+  user-select: none;
+}
+
+.udt-spectrum-device__stage {
+  position: relative;
+  border-radius: 10px;
+  background: var(--udt-keyboard-deck, rgba(0, 0, 0, 0.35));
+  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.18);
+}
+
+.udt-spectrum-device__keyboard {
+  position: absolute;
+}
+
+.udt-spectrum-device__zone {
+  position: absolute;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  border-radius: 3px;
+  padding: 0;
+  cursor: pointer;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.28);
+  transition:
+    background-color 120ms ease,
+    border-color 120ms ease,
+    box-shadow 120ms ease,
+    filter 120ms ease;
+}
+
+.udt-spectrum-device__zone--unavailable {
+  opacity: 0.3;
+  cursor: default;
+  box-shadow: none;
+}
+
+.udt-spectrum-device__zone--selected {
+  border-color: var(--udt-accent, #4f9df7);
+  box-shadow:
+    inset 0 0 0 1px var(--udt-accent, #4f9df7),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.28);
+}
+
+.udt-spectrum-device__zone--colored {
+  border-color: rgba(0, 0, 0, 0.35);
+  background-image: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+}
+
+.udt-spectrum-device__zone:not(.udt-spectrum-device__zone--unavailable):hover {
   border-color: var(--udt-accent, #4f9df7);
   filter: brightness(1.2);
 }

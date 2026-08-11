@@ -600,27 +600,44 @@ body {
   opacity: 0.85;
   position: relative;
   overflow: hidden;
+  /* Breathing 1.0 → 0.85 (WPF SkeletonAnimationTokens.BreathingFloorOpacity),
+     same 1.65s cycle as the shimmer sweep, SineEase EaseInOut via alternate. */
+  animation: udt-breathe var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite alternate ease-in-out;
 }
 
 .udt-skeleton::after {
   content: '';
   position: absolute;
   inset: 0;
+  /* 7-stop sweep: transparent / base 14% / edge 30% / peak 48% / edge 66% / base 84% / transparent */
   background: linear-gradient(
     90deg,
     transparent 0%,
+    rgba(255, 255, 255, 0.11) 14%,
     rgba(255, 255, 255, 0.11) 30%,
     rgba(255, 255, 255, 0.27) 48%,
     rgba(255, 255, 255, 0.11) 66%,
+    rgba(255, 255, 255, 0.11) 84%,
     transparent 100%
   );
   transform: translateX(-100%);
-  animation: udt-shimmer var(--udt-anim-shimmer) infinite;
+  /* --udt-shimmer-delay (default 0): negative staggered values set by Skeleton.tsx
+     keep the sweep permanently de-phased per element (0.055s/step, cap 0.32s). */
+  animation: udt-shimmer var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite;
 }
 
 @keyframes udt-shimmer {
   to {
     transform: translateX(100%);
+  }
+}
+
+@keyframes udt-breathe {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.85;
   }
 }
 

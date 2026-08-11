@@ -488,7 +488,9 @@
           alt: 'Alt'
         },
         resetBatteryOnSince: 'Reset "On battery since" at startup',
-        resetBatteryOnSinceDesc: 'Resets the counter for "On battery since" in the battery section when the system reboots.'
+        resetBatteryOnSinceDesc: 'Resets the counter for "On battery since" in the battery section when the system reboots.',
+        godModeFnQ: 'Switch to Custom Mode with Fn+Q',
+        godModeFnQDesc: 'Allow quick switching to Custom Mode with Fn+Q.'
       },
       display: {
         navigationItems: 'Navigation Items Visibility',
@@ -549,6 +551,12 @@
         },
         includePrerelease: 'Include prerelease versions',
         includePrereleaseDesc: 'When off, only stable releases are pushed; when on, prerelease (beta) updates are also received.',
+        repository: 'Update repository',
+        repositoryDesc: 'Configure the GitHub repository to check for updates. Leave empty to use default.',
+        repositoryOwner: 'Repository Owner',
+        repositoryOwnerPlaceholder: 'e.g., SSC-STUDIO',
+        repositoryName: 'Repository Name',
+        repositoryNamePlaceholder: 'e.g., UniversalDeviceToolkit',
         check: 'Check for Updates',
         comingSoon: 'Update check will be available in a future version'
       },
@@ -656,6 +664,7 @@
       quickActionsTitle: 'Quick Actions',
       quickActionsEmpty: 'There are no quick actions yet. Click "New" to create one.',
       renamePipeline: 'Rename pipeline',
+      changeIcon: 'Change icon',
       renamePipelineTitle: 'Rename pipeline',
       renamePipelinePlaceholder: 'Enter pipeline name',
       empty: 'There are no automation scripts yet. Click "New" to create one.',

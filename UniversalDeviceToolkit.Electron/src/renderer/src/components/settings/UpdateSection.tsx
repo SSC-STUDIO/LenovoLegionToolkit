@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Alert, Button, Select, Switch, message } from 'antd'
+import { Alert, Button, Input, Select, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { updateApi } from '../../api/update'
 import { settingsApi } from '../../api/settings'
@@ -25,10 +25,18 @@ export function UpdateSection(): React.JSX.Element {
     version?: string | null
     error?: string | null
   } | null>(null)
+  const [repositoryOwner, setRepositoryOwner] = useState('')
+  const [repositoryName, setRepositoryName] = useState('')
 
   useEffect(() => {
     void load()
   }, [load])
+
+  useEffect(() => {
+    const store = scopes.updateCheck as Record<string, unknown> | undefined
+    setRepositoryOwner((store?.['UpdateRepositoryOwner'] as string | null | undefined) ?? '')
+    setRepositoryName((store?.['UpdateRepositoryName'] as string | null | undefined) ?? '')
+  }, [scopes.updateCheck])
 
   const updateCheck = (scopes.updateCheck ?? {}) as Record<string, unknown>
   const updateCheckFrequency = (updateCheck['UpdateCheckFrequency'] as string | undefined) ?? 'PerDay'
@@ -45,6 +53,16 @@ export function UpdateSection(): React.JSX.Element {
     } catch {
       message.error(t('settings.saveFailed'))
     }
+  }
+
+  // WPF parity (SettingsUpdateControl): trim; empty text persists as null (use default).
+  const persistRepository = async (): Promise<void> => {
+    const owner = repositoryOwner.trim()
+    const name = repositoryName.trim()
+    await persistUpdateCheck({
+      UpdateRepositoryOwner: owner === '' ? null : owner,
+      UpdateRepositoryName: name === '' ? null : name
+    })
   }
 
   const handleCheckForUpdates = async (): Promise<void> => {
@@ -92,6 +110,39 @@ export function UpdateSection(): React.JSX.Element {
           />
         }
       />
+      <SettingsCard
+        title={t('settings.update.repository', { defaultValue: 'Update repository' })}
+        description={t('settings.update.repositoryDesc', {
+          defaultValue: 'Configure the GitHub repository to check for updates. Leave empty to use default.'
+        })}
+      >
+        <div className="udt-settings-fields">
+          <div className="udt-settings-row">
+            <span className="udt-settings-row__label">
+              {t('settings.update.repositoryOwner', { defaultValue: 'Repository Owner' })}
+            </span>
+            <Input
+              className="udt-settings-select"
+              value={repositoryOwner}
+              placeholder={t('settings.update.repositoryOwnerPlaceholder', { defaultValue: 'e.g., SSC-STUDIO' })}
+              onChange={(event) => setRepositoryOwner(event.target.value)}
+              onBlur={() => void persistRepository()}
+            />
+          </div>
+          <div className="udt-settings-row">
+            <span className="udt-settings-row__label">
+              {t('settings.update.repositoryName', { defaultValue: 'Repository Name' })}
+            </span>
+            <Input
+              className="udt-settings-select"
+              value={repositoryName}
+              placeholder={t('settings.update.repositoryNamePlaceholder', { defaultValue: 'e.g., UniversalDeviceToolkit' })}
+              onChange={(event) => setRepositoryName(event.target.value)}
+              onBlur={() => void persistRepository()}
+            />
+          </div>
+        </div>
+      </SettingsCard>
       <SettingsCard title={t('settings.update.check')}>
         <Button
           type="primary"

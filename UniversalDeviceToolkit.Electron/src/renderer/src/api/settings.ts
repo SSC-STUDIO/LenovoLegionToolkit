@@ -64,3 +64,16 @@ export interface PluginSettingsStore {
   /** Missing entry = plugin uses the application default language. */
   pluginLanguages: Record<string, string>
 }
+
+/**
+ * Settings/UpdateCheckSettings.cs — update_check.json. The host serializes the
+ * C# store directly, so wire keys are PascalCase (as read by UpdateSection).
+ */
+export interface UpdateCheckSettingsStore {
+  LastUpdateCheckDateTime?: string | null
+  UpdateCheckFrequency: string
+  IncludePrereleaseUpdates: boolean
+  /** null means use the default repository (Constants.UpdateRepositoryOwner/Name). */
+  UpdateRepositoryOwner?: string | null
+  UpdateRepositoryName?: string | null
+}

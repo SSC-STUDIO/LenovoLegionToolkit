@@ -65,6 +65,17 @@ export interface SpectrumLayoutResult {
   keys: number[]
 }
 
+export interface SpectrumKeyColor {
+  key: number
+  r: number
+  g: number
+  b: number
+}
+
+export interface SpectrumStateResult {
+  keys: SpectrumKeyColor[]
+}
+
 export interface RgbStateResult {
   state: RgbState
 }
@@ -82,6 +93,7 @@ export interface KeyboardApi {
   nextPreset(): Promise<RgbStateResult>
   takeOwnership(enable: boolean, restorePreset?: boolean): Promise<{ ok: boolean }>
   spectrumGetLayout(): Promise<SpectrumLayoutResult>
+  spectrumGetState(): Promise<SpectrumStateResult>
   spectrumGetBrightness(): Promise<{ brightness: number }>
   spectrumSetBrightness(brightness: number): Promise<{ ok: boolean }>
   spectrumGetLogo(): Promise<{ isOn: boolean }>
@@ -122,6 +134,10 @@ export const keyboardApi: KeyboardApi = {
 
   async spectrumGetLayout() {
     return invoke<SpectrumLayoutResult>('spectrum.getLayout', {})
+  },
+
+  async spectrumGetState() {
+    return invoke<SpectrumStateResult>('spectrum.getState', {})
   },
 
   async spectrumGetBrightness() {

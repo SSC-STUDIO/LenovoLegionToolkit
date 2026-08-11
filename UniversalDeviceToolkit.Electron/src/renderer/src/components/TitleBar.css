@@ -1,26 +1,138 @@
-.udt-titlebar.udt-titlebar--original {
-  display: flex;
-  align-items: stretch;
+/* TitleBar polish + DeviceInfoModal styles (WPF DeviceInformationWindow port). */
+
+/* WPF TitleBarDeviceInfoButtonStyle triggers: pressed → tertiary fill. */
+.udt-titlebar__device-button:active {
+  background: var(--udt-control-fill-tertiary, rgba(128, 128, 128, 0.2));
 }
 
-.udt-titlebar--original .udt-titlebar__title {
-  position: relative;
-  inset: auto;
-  box-sizing: border-box;
+.udt-titlebar__log-button:active {
+  filter: brightness(0.92);
+}
+
+/* ── DeviceInfoModal ────────────────────────────────────────── */
+
+.udt-device-info-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
   display: flex;
-  flex: 1 1 auto;
-  min-width: 0;
-  height: 100%;
-  padding-left: 32px;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.45);
 }
 
-.udt-titlebar--original .udt-titlebar__title-text {
-  max-width: 100%;
-  text-align: left;
+.udt-device-info-modal {
+  display: flex;
+  flex-direction: column;
+  width: 560px;
+  max-width: min(92vw, 600px);
+  max-height: min(86vh, 720px);
+  background: var(--udt-surface-card);
+  color: var(--udt-text-primary);
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
 }
 
-.udt-titlebar--original .udt-titlebar__trailing {
-  margin-left: auto;
+.udt-device-info-modal__title {
+  padding: 20px 24px 8px;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--udt-text-primary);
+}
+
+.udt-device-info-modal__body {
+  padding: 8px 24px 0;
+  overflow: auto;
+}
+
+.udt-device-info-section {
+  margin-bottom: 16px;
+}
+
+.udt-device-info-section__title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--udt-text-primary);
+}
+
+.udt-device-info-card {
+  background: var(--udt-surface-chart, rgba(255, 255, 255, 0.045));
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.udt-device-info-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.22);
+  cursor: pointer;
+}
+
+.udt-device-info-row:last-child {
+  border-bottom: none;
+}
+
+.udt-device-info-row:hover {
+  background: var(--udt-surface-chart, rgba(255, 255, 255, 0.045));
+}
+
+.udt-device-info-row__label {
+  flex: 0 0 34%;
+  font-size: 14px;
+  color: var(--udt-text-secondary);
+}
+
+.udt-device-info-row__value {
+  flex: 1;
+  font-size: 14px;
+  color: var(--udt-text-primary);
+  text-align: right;
+  overflow-wrap: anywhere;
+  user-select: text;
+}
+
+.udt-device-info-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 12px 14px;
+  background: var(--udt-surface-chart, rgba(255, 255, 255, 0.045));
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  border-radius: 12px;
+  color: var(--udt-text-primary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.udt-device-info-link:hover {
+  background: rgba(128, 128, 128, 0.12);
+}
+
+.udt-device-info-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 24px 20px;
+}
+
+.udt-device-info-close {
+  min-width: 100px;
+  padding: 7px 16px;
+  background: transparent;
+  border: 1px solid rgba(128, 128, 128, 0.4);
+  border-radius: 12px;
+  color: var(--udt-text-primary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.udt-device-info-close:hover {
+  background: var(--udt-surface-chart, rgba(255, 255, 255, 0.045));
 }

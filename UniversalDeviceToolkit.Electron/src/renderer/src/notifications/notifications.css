@@ -1,0 +1,46 @@
+/*
+ * Host notification toasts (notifications/index.ts).
+ * Styling is scoped under the custom semantic root class added to each
+ * notice (classNames.root) instead of overriding antd's global classes.
+ * Colors follow the app theme through the --udt-* design tokens declared
+ * on :root in styles/global.css (data-theme switches included), the same
+ * mechanism the rest of the app uses for static antd overlays.
+ */
+.udt-host-notice {
+  background: var(--udt-surface-card);
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  box-shadow: var(--udt-shadow-glass);
+  color: var(--udt-text-primary);
+}
+
+.udt-host-notice .ant-notification-notice-title {
+  color: var(--udt-text-primary);
+  font-weight: 500;
+}
+
+.udt-host-notice .ant-notification-notice-description {
+  color: var(--udt-text-secondary);
+}
+
+.udt-host-notice .ant-notification-notice-close {
+  color: var(--udt-text-tertiary);
+}
+
+.udt-host-notice .ant-notification-notice-close:hover {
+  color: var(--udt-text-primary);
+}
+
+.udt-host-notice__text {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.udt-host-notice__merged {
+  flex-shrink: 0;
+  font-size: var(--udt-font-small-caption);
+  font-weight: 600;
+  color: var(--udt-accent);
+}

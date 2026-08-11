@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Select, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
+import { wmiApi } from '../../api/wmi'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { SettingsCard } from './SettingsCard'
 import PowerModesModal from './PowerModesModal'
@@ -26,10 +27,38 @@ export function PowerSection(): React.JSX.Element {
   const { scopes, load, setScope } = useSettingsStore()
   const [powerModesOpen, setPowerModesOpen] = useState(false)
   const [powerPlansOpen, setPowerPlansOpen] = useState(false)
+  const [godModeFnQ, setGodModeFnQ] = useState<{ supported: boolean; enabled: boolean | null } | null>(null)
+  const [godModeFnQLoading, setGodModeFnQLoading] = useState(false)
 
   useEffect(() => {
     void load()
   }, [load])
+
+  // WPF parity (SettingsPowerControl.RefreshAsync): probe the capability and read
+  // the current value; hide the card when unsupported or the read fails.
+  useEffect(() => {
+    void (async () => {
+      try {
+        const status = await wmiApi.getGodModeFnQ()
+        setGodModeFnQ(status)
+      } catch {
+        setGodModeFnQ(null)
+      }
+    })()
+  }, [])
+
+  const persistGodModeFnQ = async (checked: boolean): Promise<void> => {
+    setGodModeFnQLoading(true)
+    try {
+      await wmiApi.setGodModeFnQ(checked)
+      setGodModeFnQ((previous) => (previous ? { ...previous, enabled: checked } : previous))
+      message.success(t('settings.saved'))
+    } catch (error) {
+      message.error((error as Error).message)
+    } finally {
+      setGodModeFnQLoading(false)
+    }
+  }
 
   const app = (scopes.application ?? {}) as Record<string, unknown>
   const powerModeMappingMode =
@@ -57,6 +86,22 @@ export function PowerSection(): React.JSX.Element {
 
   return (
     <div className="udt-settings-section udt-settings-section--power">
+      {godModeFnQ?.supported === true && godModeFnQ.enabled !== null && (
+        <SettingsCard
+          title={t('settings.power.godModeFnQ', { defaultValue: 'Switch to Custom Mode with Fn+Q' })}
+          description={t('settings.power.godModeFnQDesc', {
+            defaultValue: 'Allow quick switching to Custom Mode with Fn+Q.'
+          })}
+          action={
+            <Switch
+              className="udt-settings-switch"
+              checked={godModeFnQ.enabled}
+              loading={godModeFnQLoading}
+              onChange={(checked) => void persistGodModeFnQ(checked)}
+            />
+          }
+        />
+      )}
       <SettingsCard
         title={t('settings.power.powerModeMapping')}
         description={t('settings.power.powerModeMappingDesc')}

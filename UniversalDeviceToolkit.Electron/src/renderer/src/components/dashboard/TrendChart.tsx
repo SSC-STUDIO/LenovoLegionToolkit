@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import * as echarts from 'echarts'
+import { init, type ECharts } from '../../utils/echarts'
 import { useThemeStore } from '../../stores/themeStore'
 
 export interface TrendSeries {
@@ -28,7 +28,7 @@ export default function TrendChart({
   height = 116
 }: TrendChartProps): React.JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null)
-  const chartRef = useRef<echarts.ECharts | null>(null)
+  const chartRef = useRef<ECharts | null>(null)
   const isDark = useThemeStore((s) => s.themeMode === 'dark')
   // WPF _smoothedAutoMax: auto-scaled series converge toward the observed max
   // instead of jumping (rise fast, fall slow).
@@ -37,7 +37,7 @@ export default function TrendChart({
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
-    const chart = echarts.init(el)
+    const chart = init(el)
     chartRef.current = chart
     const handleResize = (): void => {
       chart.resize()
@@ -134,16 +134,21 @@ export default function TrendChart({
         lineStyle: { width: 1.15, color: s.color, cap: 'round', join: 'round' },
         itemStyle: { color: s.color },
         areaStyle: {
+          // WPF tapers the area polygon toward the latest point (right edge).
+          // ECharts cannot reshape the path, so a diagonal gradient approximates
+          // the silhouette: strongest top-left, fading toward the bottom-right
+          // corner where the tapered tail sits.
           color: {
             type: 'linear' as const,
             x: 0,
             y: 0,
-            x2: 0,
+            x2: 1,
             y2: 1,
             colorStops: [
               { offset: 0, color: withAlpha(s.color, 0.298) },
               { offset: 0.48, color: withAlpha(s.color, 0.165) },
-              { offset: 1, color: withAlpha(s.color, 0.039) }
+              { offset: 0.86, color: withAlpha(s.color, 0.082) },
+              { offset: 1, color: withAlpha(s.color, 0.02) }
             ]
           }
         },

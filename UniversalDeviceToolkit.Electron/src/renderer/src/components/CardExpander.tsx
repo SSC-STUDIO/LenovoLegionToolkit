@@ -13,6 +13,10 @@ export interface CardExpanderProps {
   header?: ReactNode
   /** Secondary text under a string header. */
   description?: string
+  /** Leading icon shown before the header copy (WPF CardExpander.Icon). */
+  icon?: ReactNode
+  /** Trailing control before the chevron (e.g. Configure); clicks do not toggle. */
+  accessory?: ReactNode
   defaultExpanded?: boolean
   expanded?: boolean
   onExpandedChange?: (expanded: boolean) => void
@@ -23,6 +27,8 @@ export interface CardExpanderProps {
 export default function CardExpander({
   header,
   description,
+  icon,
+  accessory,
   defaultExpanded = false,
   expanded,
   onExpandedChange,
@@ -48,23 +54,35 @@ export default function CardExpander({
 
   return (
     <div className={classes.join(' ')}>
-      <button type="button" className="udt-card-expander__header" onClick={toggle} aria-expanded={isExpanded}>
-        <span className="udt-card-expander__copy">
-          {typeof header === 'string' ? (
-            <>
-              <span className="udt-card-expander__title">{header}</span>
-              {description != null && description !== '' && (
-                <span className="udt-card-expander__desc">{description}</span>
-              )}
-            </>
-          ) : (
-            header
-          )}
-        </span>
-        <span className="udt-card-expander__chevron" aria-hidden="true">
-          <DownOutlined />
-        </span>
-      </button>
+      <div className="udt-card-expander__header-row">
+        {icon != null && <span className="udt-card-expander__icon">{icon}</span>}
+        <button type="button" className="udt-card-expander__header" onClick={toggle} aria-expanded={isExpanded}>
+          <span className="udt-card-expander__copy">
+            {typeof header === 'string' ? (
+              <>
+                <span className="udt-card-expander__title">{header}</span>
+                {description != null && description !== '' && (
+                  <span className="udt-card-expander__desc">{description}</span>
+                )}
+              </>
+            ) : (
+              header
+            )}
+          </span>
+        </button>
+        {accessory != null && <div className="udt-card-expander__accessory">{accessory}</div>}
+        <button
+          type="button"
+          className="udt-card-expander__chevron-btn"
+          onClick={toggle}
+          aria-expanded={isExpanded}
+          aria-label={isExpanded ? 'collapse' : 'expand'}
+        >
+          <span className="udt-card-expander__chevron" aria-hidden="true">
+            <DownOutlined />
+          </span>
+        </button>
+      </div>
       {isExpanded && <div className="udt-card-expander__body">{children}</div>}
     </div>
   )

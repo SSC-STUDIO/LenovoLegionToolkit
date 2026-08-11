@@ -24,7 +24,8 @@ interface StatusBannerStore {
   limit: number
 }
 
-const DEFAULT_LIMIT = 3
+/** WPF MaxVisibleStatusNotifications = 4. */
+const DEFAULT_LIMIT = 4
 
 export const useStatusBannerStore = create<StatusBannerStore>((set) => ({
   banners: [],

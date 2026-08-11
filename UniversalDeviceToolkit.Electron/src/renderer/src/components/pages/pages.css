@@ -11,7 +11,22 @@
 
 /* ── Page scaffolding ─────────────────────────────────────────── */
 
+/* Shared page root used by Automation / Optimization / Settings pages. */
+.udt-page {
+  padding: 16px 16px 12px 0;
+  max-width: 1180px;
+}
+
 .udt-page-title {
+  margin: 16px 0 24px;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-page-title);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+/* Alias used by AutomationPage / WindowsOptimizationPage (WPF AppPageTitleTextBlockStyle). */
+.udt-page__title {
   margin: 16px 0 24px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-page-title);
@@ -21,6 +36,15 @@
 
 .udt-page-description {
   margin: 0;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-page-desc);
+  line-height: 20px;
+  white-space: pre-line;
+}
+
+/* Alias used by AutomationPage / WindowsOptimizationPage (WPF AppPageDescriptionTextBlockStyle). */
+.udt-page__subtitle {
+  margin: 0 0 16px;
   color: var(--udt-text-secondary);
   font-size: var(--udt-font-page-desc);
   line-height: 20px;

@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { invoke, on } from '../api/bridge'
-import { openDeviceInformation } from './utils/DeviceInformationModal'
-import { showCompatibilityCheckError, toCompatibilityErrorInfo } from './utils/CompatibilityCheckErrorModal'
+import type { SystemInfo } from '../api/system'
+import DeviceInfoModal from './DeviceInfoModal'
 import './TitleBar.css'
+import './titlebar.css'
 
 const DRAG_STYLE = { WebkitAppRegion: 'drag' } as React.CSSProperties
 const NO_DRAG_STYLE = { WebkitAppRegion: 'no-drag' } as React.CSSProperties
@@ -23,16 +24,13 @@ const PAGE_LABELS: Record<string, string> = {
 
 type WindowButtonKind = 'minimize' | 'maximize' | 'close'
 
-interface SystemInfo {
-  model?: string | null
-}
-
 export default function TitleBar(): React.JSX.Element {
   const { t } = useTranslation()
   const location = useLocation()
   const [isMaximized, setIsMaximized] = useState(false)
   const [hover, setHover] = useState<WindowButtonKind | null>(null)
   const [deviceModel, setDeviceModel] = useState<string | null>(null)
+  const [deviceInfoOpen, setDeviceInfoOpen] = useState(false)
 
   useEffect(() => {
     let disposed = false
@@ -57,11 +55,9 @@ export default function TitleBar(): React.JSX.Element {
         const model = systemInfo.model?.trim()
         if (!disposed && model) setDeviceModel(model)
       } catch (error) {
-        // The initial request can race the host startup; host.ready retries it.
-        // A persistent failure mirrors the WPF CompatibilityCheckErrorWindow.
-        if (!disposed) {
-          void showCompatibilityCheckError(toCompatibilityErrorInfo(error))
-        }
+        // Fall back to the i18n titlebar.deviceName; the initial request can
+        // race the host startup, so host.ready retries it.
+        if (!disposed) console.warn('[titlebar] failed to load device model:', error)
       }
     }
 
@@ -80,6 +76,12 @@ export default function TitleBar(): React.JSX.Element {
     window.bridge?.maximizeToggle()
   }
 
+  const openLogFolder = (): void => {
+    void invoke<{ ok: boolean }>('log.open-folder').catch((error) => {
+      console.warn('[titlebar] failed to open log folder:', error)
+    })
+  }
+
   const buttonClassName = (kind: WindowButtonKind): string =>
     kind === 'close' && hover === 'close' ? 'udt-titlebar__close' : ''
 
@@ -91,73 +93,80 @@ export default function TitleBar(): React.JSX.Element {
   }, [windowTitle])
 
   return (
-    <div className="udt-titlebar udt-titlebar--original">
-      <span className="udt-titlebar__title" style={DRAG_STYLE} onDoubleClick={toggleMaximize}>
-        <span className="udt-titlebar__title-text">{windowTitle}</span>
-      </span>
-      <div className="udt-titlebar__trailing" style={NO_DRAG_STYLE}>
-        <button
-          type="button"
-          className="udt-titlebar__log-button"
-          title={t('titlebar.openLogs')}
-          onClick={() => void window.bridge?.openLogFolder()}
-        >
-          {t('titlebar.log')}
-        </button>
-        <button
-          type="button"
-          className="udt-titlebar__device-button"
-          title={t('titlebar.deviceInfo')}
-          onClick={() => void openDeviceInformation()}
-        >
-          {deviceModel ?? t('titlebar.deviceName')}
-        </button>
-      </div>
-      <div className="udt-titlebar__window-controls" style={NO_DRAG_STYLE}>
-        <button
-          type="button"
-          aria-label="minimize"
-          className={buttonClassName('minimize')}
-          onMouseEnter={() => setHover('minimize')}
-          onMouseLeave={() => setHover(null)}
-          onClick={() => window.bridge?.minimize()}
-        >
-          <svg width="11" height="11" viewBox="0 0 11 11">
-            <rect x="1" y="5" width="9" height="1" fill="currentColor" />
-          </svg>
-        </button>
-        <button
-          type="button"
-          aria-label={isMaximized ? 'restore' : 'maximize'}
-          className={buttonClassName('maximize')}
-          onMouseEnter={() => setHover('maximize')}
-          onMouseLeave={() => setHover(null)}
-          onClick={toggleMaximize}
-        >
-          {isMaximized ? (
+    <>
+      <div className="udt-titlebar udt-titlebar--original">
+        <span className="udt-titlebar__title" style={DRAG_STYLE} onDoubleClick={toggleMaximize}>
+          <span className="udt-titlebar__title-text">{windowTitle}</span>
+        </span>
+        <div className="udt-titlebar__trailing" style={NO_DRAG_STYLE}>
+          <button
+            type="button"
+            className="udt-titlebar__log-button"
+            title={t('titlebar.openLogs')}
+            onClick={openLogFolder}
+          >
+            {t('titlebar.log')}
+          </button>
+          <button
+            type="button"
+            className="udt-titlebar__device-button"
+            title={t('titlebar.deviceInfo')}
+            onClick={() => setDeviceInfoOpen(true)}
+          >
+            {deviceModel ?? t('titlebar.deviceName')}
+          </button>
+        </div>
+        <div className="udt-titlebar__window-controls" style={NO_DRAG_STYLE}>
+          <button
+            type="button"
+            aria-label="minimize"
+            className={buttonClassName('minimize')}
+            onMouseEnter={() => setHover('minimize')}
+            onMouseLeave={() => setHover(null)}
+            onClick={() => window.bridge?.minimize()}
+          >
             <svg width="11" height="11" viewBox="0 0 11 11">
-              <rect x="1" y="3" width="7" height="7" fill="none" stroke="currentColor" />
-              <path d="M 3 3 L 3 1 L 10 1 L 10 8 L 8 8" fill="none" stroke="currentColor" />
+              <rect x="1" y="5" width="9" height="1" fill="currentColor" />
             </svg>
-          ) : (
+          </button>
+          <button
+            type="button"
+            aria-label={isMaximized ? 'restore' : 'maximize'}
+            className={buttonClassName('maximize')}
+            onMouseEnter={() => setHover('maximize')}
+            onMouseLeave={() => setHover(null)}
+            onClick={toggleMaximize}
+          >
+            {isMaximized ? (
+              <svg width="11" height="11" viewBox="0 0 11 11">
+                <rect x="1" y="3" width="7" height="7" fill="none" stroke="currentColor" />
+                <path d="M 3 3 L 3 1 L 10 1 L 10 8 L 8 8" fill="none" stroke="currentColor" />
+              </svg>
+            ) : (
+              <svg width="11" height="11" viewBox="0 0 11 11">
+                <rect x="1" y="1" width="9" height="9" fill="none" stroke="currentColor" />
+              </svg>
+            )}
+          </button>
+          <button
+            type="button"
+            aria-label="close"
+            className={buttonClassName('close')}
+            onMouseEnter={() => setHover('close')}
+            onMouseLeave={() => setHover(null)}
+            onClick={() => window.bridge?.closeWindow()}
+          >
             <svg width="11" height="11" viewBox="0 0 11 11">
-              <rect x="1" y="1" width="9" height="9" fill="none" stroke="currentColor" />
+              <path d="M 1 1 L 10 10 M 10 1 L 1 10" stroke="currentColor" />
             </svg>
-          )}
-        </button>
-        <button
-          type="button"
-          aria-label="close"
-          className={buttonClassName('close')}
-          onMouseEnter={() => setHover('close')}
-          onMouseLeave={() => setHover(null)}
-          onClick={() => window.bridge?.closeWindow()}
-        >
-          <svg width="11" height="11" viewBox="0 0 11 11">
-            <path d="M 1 1 L 10 10 M 10 1 L 1 10" stroke="currentColor" />
-          </svg>
-        </button>
+          </button>
+        </div>
       </div>
-    </div>
+      <DeviceInfoModal
+        key={deviceInfoOpen ? 'device-info-open' : 'device-info-closed'}
+        open={deviceInfoOpen}
+        onClose={() => setDeviceInfoOpen(false)}
+      />
+    </>
   )
 }
