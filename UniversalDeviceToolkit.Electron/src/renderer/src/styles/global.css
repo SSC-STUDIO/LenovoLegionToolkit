@@ -1,17 +1,27 @@
 :root {
   color-scheme: light;
+  --udt-bg-window: #f4f6fa;
+  --udt-bg-card: #ffffff;
+  --udt-bg-card-hover: #f7f9fc;
+  --udt-border: rgba(16, 24, 40, 0.10);
+  --udt-border-strong: rgba(16, 24, 40, 0.16);
+  --udt-text-primary: rgba(16, 24, 40, 0.92);
+  --udt-text-secondary: rgba(52, 64, 84, 0.72);
+  --udt-text-tertiary: rgba(52, 64, 84, 0.48);
+  --udt-titlebar-button-hover: rgba(16, 24, 40, 0.08);
 }
 
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --udt-bg-window: #202020;
-  --udt-bg-card: #303030;
-  --udt-bg-card-hover: #363636;
-  --udt-border: rgba(255, 255, 255, 0.08);
-  --udt-border-strong: rgba(255, 255, 255, 0.1);
-  --udt-text-primary: rgba(255, 255, 255, 0.9);
-  --udt-text-secondary: rgba(255, 255, 255, 0.55);
-  --udt-text-tertiary: rgba(255, 255, 255, 0.35);
+  --udt-bg-window: #171c25;
+  --udt-bg-card: #232a36;
+  --udt-bg-card-hover: #2a3341;
+  --udt-border: rgba(255, 255, 255, 0.09);
+  --udt-border-strong: rgba(255, 255, 255, 0.13);
+  --udt-text-primary: rgba(255, 255, 255, 0.93);
+  --udt-text-secondary: rgba(220, 228, 243, 0.68);
+  --udt-text-tertiary: rgba(220, 228, 243, 0.42);
+  --udt-titlebar-button-hover: rgba(255, 255, 255, 0.10);
   --udt-radius-card: 18px;
   --udt-radius-control: 8px;
 }
@@ -59,6 +69,65 @@ body {
 
 .udt-card-elevated {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+.udt-app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5));
+}
+
+.udt-app-shell__content {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  flex-direction: column;
+}
+
+.udt-app-shell__main {
+  flex: 1;
+  overflow: auto;
+  padding: 22px 28px 28px 30px;
+  background: var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5));
+}
+
+.udt-titlebar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  color: var(--udt-text-primary);
+  background: var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5));
+  border-bottom: 1px solid var(--udt-border);
+  user-select: none;
+}
+
+.udt-titlebar__drag-region {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 9px;
+  padding-left: 18px;
+}
+
+.udt-titlebar__app-icon {
+  flex: 0 0 auto;
+  color: var(--udt-text-secondary);
+  font-size: 15px;
+}
+
+.udt-titlebar__title {
+  overflow: hidden;
+  color: var(--udt-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-titlebar__window-controls {
+  display: flex;
 }
 
 /* Dashboard: mirrors the original application's continuous sensor surface. */

@@ -103,7 +103,7 @@ export default function AppLayout(): React.JSX.Element {
   )
 
   return (
-    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+    <div className="udt-app-shell">
       <nav
         aria-label="navigation"
         className="udt-nav"
@@ -121,16 +121,9 @@ export default function AppLayout(): React.JSX.Element {
           {collapsed ? <RightOutlined /> : <LeftOutlined />}
         </button>
       </nav>
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+      <div className="udt-app-shell__content">
         <TitleBar />
-        <main
-          style={{
-            flex: 1,
-            overflow: 'auto',
-            background: 'var(--udt-bg-window, var(--udt-color-bg-layout, #f5f5f5))',
-            padding: '16px 16px 16px 24px'
-          }}
-        >
+        <main className="udt-app-shell__main">
           <Outlet />
         </main>
       </div>

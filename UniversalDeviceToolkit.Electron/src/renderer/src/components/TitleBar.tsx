@@ -8,17 +8,30 @@ import {
 } from '@ant-design/icons'
 import { theme } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { useLocation } from 'react-router-dom'
 
 const TITLEBAR_HEIGHT = 38
 
 const DRAG_STYLE = { WebkitAppRegion: 'drag' } as React.CSSProperties
 const NO_DRAG_STYLE = { WebkitAppRegion: 'no-drag' } as React.CSSProperties
 
+const PAGE_LABELS: Record<string, string> = {
+  '/dashboard': 'nav.dashboard',
+  '/keyboard': 'nav.keyboardBacklight',
+  '/automation': 'nav.automation',
+  '/macro': 'nav.macro',
+  '/optimization': 'nav.windowsOptimization',
+  '/plugins': 'nav.pluginExtensions',
+  '/settings': 'nav.settings',
+  '/about': 'nav.about'
+}
+
 type WindowButtonKind = 'minimize' | 'maximize' | 'close'
 
 export default function TitleBar(): React.JSX.Element {
   const { t } = useTranslation()
   const { token } = theme.useToken()
+  const location = useLocation()
   const [isMaximized, setIsMaximized] = useState(false)
   const [hover, setHover] = useState<WindowButtonKind | null>(null)
 
@@ -59,33 +72,22 @@ export default function TitleBar(): React.JSX.Element {
     }
   }
 
+  const pageKey = PAGE_LABELS[location.pathname] ?? 'app.name'
+  const windowTitle = `${t('app.name')} - ${t(pageKey)}`
+
   return (
-    <div
-      style={{
-        height: TITLEBAR_HEIGHT,
-        flexShrink: 0,
-        display: 'flex',
-        alignItems: 'stretch',
-        background: token.colorBgLayout,
-        color: token.colorText,
-        userSelect: 'none'
-      }}
-    >
+    <div className="udt-titlebar" style={{ height: TITLEBAR_HEIGHT }}>
       <div
-        style={{
-          flex: 1,
-          display: 'flex',
-          alignItems: 'center',
-          gap: 8,
-          paddingLeft: 12,
-          ...DRAG_STYLE
-        }}
+        className="udt-titlebar__drag-region"
+        style={DRAG_STYLE}
         onDoubleClick={toggleMaximize}
       >
-        <ToolOutlined style={{ fontSize: 15 }} />
-        <span style={{ fontSize: 12, whiteSpace: 'nowrap' }}>{t('app.name')}</span>
+        <ToolOutlined className="udt-titlebar__app-icon" />
+        <span className="udt-titlebar__title" title={windowTitle}>
+          {windowTitle}
+        </span>
       </div>
-      <div style={{ display: 'flex', ...NO_DRAG_STYLE }}>
+      <div className="udt-titlebar__window-controls" style={NO_DRAG_STYLE}>
         <button
           type="button"
           aria-label="minimize"
