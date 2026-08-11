@@ -11,6 +11,7 @@ app.setAppUserModelId('com.universaldevicetoolkit.app')
 // WPF renders in DIPs while Chromium applies the Windows display scale to CSS.
 // This keeps the Electron renderer at the original client's physical density.
 const RENDERER_ZOOM_FACTOR = 5 / 6
+const PROJECT_ROOT = join(__dirname, '..', '..')
 
 if (!initSingleInstance()) {
   app.exit(0)
@@ -24,18 +25,17 @@ function resolveHostPath(): string {
   if (fromEnv) return fromEnv
 
   // __dirname = <project>/out/main -> project root is two levels up.
-  const projectRoot = join(__dirname, '..', '..')
   const candidates = [
     // packaged: Host copied into resources/host by electron-builder
     join(process.resourcesPath ?? '', 'host', 'UniversalDeviceToolkit.Host.exe'),
     // dev: sibling repo folder next to the Electron project
-    join(projectRoot, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Debug',
+    join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Debug',
       'net10.0-windows10.0.26100.0', 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
     // dev: Release build
-    join(projectRoot, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Release',
+    join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Release',
       'net10.0-windows10.0.26100.0', 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
     // fallback: explicit build output inside this project
-    join(projectRoot, 'host', 'UniversalDeviceToolkit.Host.exe')
+    join(PROJECT_ROOT, 'host', 'UniversalDeviceToolkit.Host.exe')
   ]
 
   for (const candidate of candidates) {
@@ -70,6 +70,10 @@ async function shouldMinimizeToTray(keys: MinimizeSetting[]): Promise<boolean> {
 }
 
 function createWindow(): void {
+  // Packaged Windows builds inherit the canonical ICO embedded by electron-builder.
+  // Development uses that same multi-size ICO instead of a rescaled single PNG.
+  const developmentIcon = app.isPackaged ? {} : { icon: join(PROJECT_ROOT, 'build', 'icon.ico') }
+
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 640,
@@ -78,7 +82,7 @@ function createWindow(): void {
     frame: false,
     backgroundColor: '#00000000',
     backgroundMaterial: 'mica',
-    icon: join(__dirname, '..', '..', 'resources', 'icon.png'),
+    ...developmentIcon,
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
