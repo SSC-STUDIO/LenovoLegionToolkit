@@ -525,13 +525,13 @@ public class PluginLoaderTests : IDisposable
     }
 
     [Fact]
-    public void ShouldShareDefaultContextAssembly_WithWpfUiAssembly_ShouldReturnTrue()
+    public void ShouldShareDefaultContextAssembly_WithWpfUiAssembly_ShouldReturnFalse()
     {
         var method = GetPrivateNestedStaticMethod("PluginAssemblyLoadContext", "ShouldShareDefaultContextAssembly");
 
         var result = InvokePrivateBoolMethod(method, "Wpf.Ui");
 
-        result.Should().BeTrue();
+        result.Should().BeFalse();
     }
 
     #endregion

@@ -427,7 +427,6 @@ public class IpcAndPluginModelTests
         m.MinimumHostVersion.Should().Be("1.0.0");
         m.Author.Should().BeNull();
         m.FilePath.Should().BeNull();
-        m.WpfUiVersion.Should().BeNull();
     }
 
     [Fact]
@@ -444,12 +443,10 @@ public class IpcAndPluginModelTests
             Version = "2.0.0",
             MinimumHostVersion = "1.5.0",
             Author = "Author",
-            FilePath = @"C:\plugins\test.dll",
-            WpfUiVersion = "4.0.0"
+            FilePath = @"C:\plugins\test.dll"
         };
         m.Id.Should().Be("plugin-id");
         m.Dependencies.Should().HaveCount(2);
-        m.WpfUiVersion.Should().Be("4.0.0");
     }
 
     #endregion

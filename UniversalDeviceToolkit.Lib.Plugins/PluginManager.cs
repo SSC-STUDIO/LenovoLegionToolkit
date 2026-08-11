@@ -521,7 +521,6 @@ public class PluginManager : IPluginManager
                 MinimumHostVersion = minimumHostVersion,
                 Author = author,
                 FilePath = pluginFilePath,
-                WpfUiVersion = TryReadPluginDependencyVersion(pluginFilePath, plugin.Id, "Wpf.Ui")
             };
 
             // Check for existing plugin with same ID
@@ -1412,40 +1411,5 @@ public class PluginManager : IPluginManager
             return leftVersion.CompareTo(rightVersion);
 
         return string.Compare(left, right, StringComparison.OrdinalIgnoreCase);
-    }
-
-    private static string? TryReadPluginDependencyVersion(string pluginFilePath, string pluginId, string dependencyName)
-    {
-        try
-        {
-            var pluginDirectory = Path.GetDirectoryName(pluginFilePath);
-            if (string.IsNullOrWhiteSpace(pluginDirectory))
-                return null;
-
-            var candidatePaths = new[]
-            {
-                Path.Combine(pluginDirectory, $"{dependencyName}.dll"),
-                Path.Combine(pluginDirectory, pluginId, $"{dependencyName}.dll"),
-                Path.Combine(pluginDirectory, "local", pluginId, $"{dependencyName}.dll")
-            };
-
-            foreach (var candidatePath in candidatePaths)
-            {
-                if (!File.Exists(candidatePath))
-                    continue;
-
-                return AssemblyName.GetAssemblyName(candidatePath).Version?.ToString();
-            }
-
-            return null;
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.TraceOnce(
-                "plugin-manager-assembly-version",
-                "Failed to resolve plugin assembly version from candidate paths.",
-                ex);
-            return null;
-        }
     }
 }

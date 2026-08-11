@@ -5,7 +5,6 @@
     <RootNamespace>UniversalDeviceToolkit.Tests</RootNamespace>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <UseWPF>false</UseWPF>
     <UseWindowsForms>false</UseWindowsForms>
     <EnableUdtTestHooks>true</EnableUdtTestHooks>
   </PropertyGroup>
@@ -37,7 +36,6 @@
     <ProjectReference Include="..\UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.SpectrumTester\UniversalDeviceToolkit.SpectrumTester.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
-    <ProjectReference Include="..\Tools\Installer\UniversalDeviceToolkit.Installer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

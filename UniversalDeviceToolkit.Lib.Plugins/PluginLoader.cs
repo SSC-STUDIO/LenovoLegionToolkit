@@ -705,9 +705,6 @@ public class PluginLoader : IPluginLoader
 
         private static bool ShouldShareDefaultContextAssembly(string assemblySimpleName)
         {
-            if (assemblySimpleName.StartsWith("Wpf.Ui", StringComparison.OrdinalIgnoreCase))
-                return true;
-
             return PluginAssemblyNaming.ShouldShareHostContractAssembly(assemblySimpleName);
         }
 

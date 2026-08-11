@@ -20,7 +20,6 @@ public class PluginMetadata
     public string MinimumHostVersion { get; set; } = "1.0.0";
     public string? Author { get; set; }
     public string? FilePath { get; set; }
-    public string? WpfUiVersion { get; set; }
     public IReadOnlyList<string>? Tags { get; set; }
     public IReadOnlyDictionary<string, string>? LocalizedNames { get; set; }
     public IReadOnlyDictionary<string, string>? LocalizedDescriptions { get; set; }
