@@ -1,7 +1,7 @@
 import './custom.css'
 import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
-import { DownOutlined } from '@ant-design/icons'
+import { ChevronDown16Regular } from '@fluentui/react-icons'
 
 /**
  * Expandable card — port of WPF Controls/Custom/CardExpander.cs
@@ -79,7 +79,7 @@ export default function CardExpander({
           aria-label={isExpanded ? 'collapse' : 'expand'}
         >
           <span className="udt-card-expander__chevron" aria-hidden="true">
-            <DownOutlined />
+            <ChevronDown16Regular />
           </span>
         </button>
       </div>

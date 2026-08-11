@@ -420,7 +420,7 @@ export default function AppearanceSection(): React.JSX.Element {
           />
         }
       />
-      <SettingsCard title={t('settingsPagethemeModetitle', { defaultValue: t('settings.appearance.theme') })}>
+      <SettingsCard title={t('wpf.settingsPagethemeModetitle', { defaultValue: t('settings.appearance.theme') })}>
         <div className="udt-theme-options">
           {THEME_OPTIONS.map((option) => (
             <ThemePreviewCard
@@ -438,20 +438,22 @@ export default function AppearanceSection(): React.JSX.Element {
             checked={applyAccentToSystem}
             onChange={(event) => handleApplyAccentToSystemChange(event.target.checked)}
           >
-            {t('settingsPageapplyAccentColorToThemetitle')}
+            {t('wpf.settingsPageapplyAccentColorToThemetitle')}
           </Checkbox>
           <Checkbox
             checked={applyAccentToTheme}
             onChange={(event) => handleApplyAccentToThemeChange(event.target.checked)}
           >
-            {t('settingsPageapplyAccentColorToThemeStyletitle')}
+            {t('wpf.settingsPageapplyAccentColorToThemeStyletitle')}
           </Checkbox>
         </div>
 
         <div className="udt-theme-accent-divider" role="separator" />
 
         <div className="udt-theme-accent-title">
-          {t('settingsPageaccentColorPresetstitle')}
+          {t('wpf.settingsPageaccentColorPresetstitle', {
+            defaultValue: t('settings.appearance.accentColor')
+          })}
         </div>
         <div className="udt-settings-swatches">
           <button

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
-import { ConfigProvider, theme } from 'antd'
+import { ConfigProvider, message, theme } from 'antd'
 import enUS from 'antd/locale/en_US'
 import zhCN from 'antd/locale/zh_CN'
 import i18n from './i18n'
@@ -13,6 +13,11 @@ import './styles/global.css'
 
 void initNotifications()
 void initCrashReportListener()
+
+// WPF SnackbarHelper parity: transient action feedback lives at the bottom
+// edge (see .ant-message override in global.css), distinct from the corner
+// notification stack (AppNotificationHost).
+message.config({ maxCount: 3 })
 
 function Root(): React.JSX.Element {
   const themeMode = useThemeStore((s) => s.themeMode)

@@ -65,14 +65,9 @@ function rgbToHex(color: { R: number; G: number; B: number }): string {
   return `#${toHex(color.R)}${toHex(color.G)}${toHex(color.B)}`
 }
 
-function storedThemeMode(): ThemeMode | null {
-  const stored = localStorage.getItem(THEME_STORAGE_KEY)
-  return stored === 'light' || stored === 'dark' ? stored : null
-}
-
 function storedThemePreference(): ThemePreference | null {
   const stored = localStorage.getItem(THEME_STORAGE_KEY)
-  if (stored === 'light' || stored === 'dark') return stored
+  if (stored === 'light' || stored === 'dark') return stored === 'light' ? 'Light' : 'Dark'
   if (stored === 'system') return 'System'
   return null
 }
@@ -137,7 +132,7 @@ export function useTheme(): ThemeController {
       } else if (stored) {
         preference = 'System'
         media = null
-        setThemeMode(stored)
+        setThemeMode(stored === 'Dark' ? 'dark' : 'light')
       } else {
         preference = settings?.Theme ?? 'System'
         if (preference === 'System') {

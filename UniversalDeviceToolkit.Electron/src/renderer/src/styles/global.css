@@ -1077,3 +1077,160 @@ body {
 :root[data-theme='light'] .udt-feature-card {
   border-color: var(--udt-control-stroke-default);
 }
+
+/* WPF SnackbarHelper parity: antd message (transient action feedback) sits at
+   the bottom edge, distinct from the corner notification stack. */
+.ant-message {
+  top: auto !important;
+  bottom: 24px;
+}
+
+
+/* ── Shared component chrome (CardControl / Button / ToggleSwitch) ────────────
+   Global copies of the classes historically scoped to automation.css so every
+   page (optimization, settings, …) renders cards/buttons without importing a
+   module stylesheet. Values mirror automation.css exactly. */
+
+.udt-card {
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+  padding: 14px 12px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.udt-card--row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 44px;
+}
+
+.udt-card__copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.udt-card__title {
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-page-desc);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.udt-card__desc {
+  margin-top: 4px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.4;
+}
+
+/* ToggleSwitch (40x20) */
+.udt-switch {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.udt-switch input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+.udt-switch__track {
+  width: 40px;
+  height: 20px;
+  border-radius: var(--udt-radius-round);
+  background: var(--udt-control-fill-secondary);
+  border: 1px solid var(--udt-control-stroke-default);
+  position: relative;
+  transition: background-color var(--udt-anim-medium) ease-out;
+}
+
+.udt-switch__track::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--udt-text-primary);
+  transition: transform var(--udt-anim-medium) ease-out;
+}
+
+.udt-switch input:checked + .udt-switch__track {
+  background: var(--udt-accent-secondary);
+  border-color: var(--udt-accent-secondary);
+}
+
+.udt-switch input:checked + .udt-switch__track::after {
+  transform: translateX(20px);
+  background: var(--udt-accent-text);
+}
+
+/* Buttons */
+.udt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 80px;
+  height: 32px;
+  padding: 0 14px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-control);
+  background: transparent;
+  color: var(--udt-text-primary);
+  font: inherit;
+  font-size: var(--udt-font-caption);
+  cursor: pointer;
+  transition: background-color var(--udt-anim-fast) ease-out, opacity var(--udt-anim-fast) ease-out;
+}
+
+.udt-btn:hover {
+  background: var(--udt-control-fill-secondary);
+}
+
+.udt-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.udt-btn--primary {
+  min-width: 120px;
+  height: 36px;
+  border-color: var(--udt-accent-secondary);
+  background: var(--udt-accent-secondary);
+  color: var(--udt-accent-text);
+}
+
+.udt-btn--primary:hover {
+  background: var(--udt-accent);
+}
+
+.udt-btn--secondary {
+  min-width: 120px;
+  height: 36px;
+}
+
+.udt-btn--sm {
+  min-width: 100px;
+  height: 32px;
+}
+
+.udt-btn--danger {
+  color: var(--udt-status-critical-text);
+}
+
+.udt-btn--danger:hover {
+  background: var(--udt-status-critical-bg);
+}

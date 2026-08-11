@@ -6,6 +6,11 @@
   gap: 16px;
   align-items: start;
   padding: 16px 16px 28px 0;
+}
+
+.udt-optimization-layout--solo {
+  grid-template-columns: minmax(0, 1fr);
+}
 
 .udt-optimization-layout__main {
   min-width: 0;
@@ -203,39 +208,10 @@
   padding: 20px;
 }
 
-.udt-side-card__list {
-  margin-top: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.udt-side-card__item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-radius: var(--udt-radius-control);
-  background: var(--udt-control-fill-default);
-}
-
-.udt-side-card__item-title {
-  flex: 1;
-  min-width: 0;
-  color: var(--udt-text-primary);
-  font-size: var(--udt-font-body);
-}
-
-.udt-side-card__star {
-  color: var(--udt-status-warning);
-  font-size: 12px;
-}
-
 .udt-side-card__actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 16px;
 }
 
 /* Network tab */
@@ -1297,5 +1273,37 @@
 
   .udt-network-diag {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── Skeleton loading (OptimizationTab / NetworkTab) ─────────────── */
+
+.udt-skeleton-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.udt-skeleton-card {
+  height: 96px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background:
+    linear-gradient(
+      90deg,
+      var(--udt-control-fill-tertiary) 25%,
+      var(--udt-subtle-fill-secondary) 50%,
+      var(--udt-control-fill-tertiary) 75%
+    );
+  background-size: 200% 100%;
+  animation: udt-skeleton-shimmer var(--udt-anim-shimmer) infinite;
+}
+
+@keyframes udt-skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
   }
 }

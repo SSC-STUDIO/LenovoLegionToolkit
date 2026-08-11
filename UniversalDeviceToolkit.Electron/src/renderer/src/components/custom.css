@@ -289,9 +289,17 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: var(--udt-icon-sm);
+  width: 16px;
+  height: 16px;
   color: var(--udt-text-secondary);
+  line-height: 0;
   transition: transform var(--udt-anim-medium) ease-out;
+}
+
+.udt-card-expander__chevron svg {
+  display: block;
+  width: 16px;
+  height: 16px;
 }
 
 .udt-card-expander--expanded .udt-card-expander__chevron {

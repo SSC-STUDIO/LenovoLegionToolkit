@@ -1,46 +1,56 @@
+/*
+ * Persistent status toasts — port of WPF MainWindow._statusNotificationStack
+ * + AppStatusBanner (NotificationToastWidth glass cards, bottom-right overlay).
+ * Must not sit in document flow or they push page content down.
+ */
+
 .udt-status-banner-stack {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 8px 16px 0;
+  gap: 8px;
+  width: 400px;
+  max-width: calc(100vw - 32px);
+  padding: 0;
+  pointer-events: none;
 }
 
 .udt-status-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 10px;
+  border: 1px solid var(--udt-control-stroke-default, rgba(128, 128, 128, 0.35));
+  border-radius: var(--udt-radius-card, 8px);
+  background: var(--udt-surface-card, rgba(32, 32, 32, 0.92));
+  box-shadow: var(--udt-shadow-glass, 0 8px 24px rgba(0, 0, 0, 0.28));
+  color: var(--udt-text-primary, #f3f3f3);
+  font-size: var(--udt-font-caption, 13px);
+  line-height: 1.4;
+  pointer-events: auto;
   animation: udt-status-banner-enter 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @keyframes udt-status-banner-enter {
   from {
     opacity: 0;
-    transform: translateY(-6px);
+    transform: translateX(12px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
-.udt-status-banner {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: var(--udt-radius-md, 8px);
-  border: 1px solid transparent;
-  font-size: 13px;
-  line-height: 1.4;
+.udt-status-banner--warning .udt-status-banner__icon {
+  color: #e6a23c;
 }
 
-.udt-status-banner--warning {
-  background: rgba(224, 169, 46, 0.12);
-  border-color: rgba(224, 169, 46, 0.45);
-  color: #b8860b;
-}
-
-.udt-status-banner--success {
-  background: rgba(82, 196, 26, 0.1);
-  border-color: rgba(82, 196, 26, 0.4);
-  color: #52c41a;
+.udt-status-banner--success .udt-status-banner__icon {
+  color: #2eb871;
 }
 
 .udt-status-banner--clickable {
@@ -55,12 +65,19 @@
 .udt-status-banner__icon {
   display: inline-flex;
   flex-shrink: 0;
-  font-size: 15px;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  font-size: 18px;
+  line-height: 1;
 }
 
 .udt-status-banner__message {
   flex: 1;
   min-width: 0;
+  font-weight: 500;
 }
 
 .udt-status-banner__close {
@@ -68,18 +85,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
+  margin: -2px -4px 0 0;
   padding: 0;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--udt-radius-control, 4px);
   background: transparent;
-  color: inherit;
+  color: var(--udt-text-tertiary, rgba(255, 255, 255, 0.55));
   cursor: pointer;
-  opacity: 0.7;
+  transition:
+    background-color 120ms ease-out,
+    color 120ms ease-out;
 }
 
 .udt-status-banner__close:hover {
-  opacity: 1;
-  background: rgba(128, 128, 128, 0.15);
+  background: var(--udt-control-fill-secondary, rgba(128, 128, 128, 0.15));
+  color: var(--udt-text-primary, #f3f3f3);
 }

@@ -9,6 +9,7 @@ using Autofac;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Automation.CLI;
+using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Integrations;
@@ -29,6 +30,14 @@ public static class Program
 {
     public static async Task<int> Main(string[] args)
     {
+        // Route an elevated optimization-worker invocation (--udt-elevated-optimization)
+        // before any host startup: the worker only speaks the named-pipe protocol and
+        // must not run the bridge/RPC lifecycle.
+        var elevatedWorkerExitCode = await WindowsOptimizationElevationBridge
+            .TryRunWorkerAsync(args).ConfigureAwait(false);
+        if (elevatedWorkerExitCode.HasValue)
+            return elevatedWorkerExitCode.Value;
+
         var flags = HostFlags.Parse(args);
 
         Log.Instance.IsTraceEnabled = flags.Trace;
@@ -123,8 +132,10 @@ public static class Program
         });
 
         SystemHandlers.Register(rpc);
+        WmiCapabilityHandlers.Register(rpc);
         SettingsHandlers.Register(rpc);
         SensorsHandlers.Register(rpc);
+        BootLogoHandlers.Register(rpc);
         FeatureHandlers.Register(rpc);
         DashboardHandlers.Register(rpc);
         DashboardHardwareHandlers.Register(rpc);
@@ -132,8 +143,14 @@ public static class Program
         MacroHandlers.Register(rpc);
         KeyboardBacklightHandlers.Register(rpc);
         OptimizationHandlers.Register(rpc);
+        AiHandlers.Register(rpc);
+        DriverDownloadHandlers.Register(rpc);
+        NetworkAccelerationHandlers.Register(rpc);
+        CleanupRulesHandlers.Register(rpc);
         PluginHandlers.Register(rpc);
         AppIntegrationHandlers.Register(rpc);
+        SoftwareDisablerHandlers.Register(rpc);
+        StartupHandlers.Register(rpc);
 
         _ = flags;
     }
@@ -189,7 +206,18 @@ public static class Program
 
             await FinalizeRuntimeProfilesAsync().ConfigureAwait(false);
 
-            // CRITICAL: release the keyboard hook before exiting.
+            // CRITICAL: release the global input hooks (recorder + playback)
+            // before exiting.
+            try
+            {
+                MacroHandlers.StopRecordingIfActive();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Error stopping active macro recording: {ex.Message}", ex);
+            }
+
             try
             {
                 if (IoCContainer.TryResolve<MacroController>() is { } macroController)

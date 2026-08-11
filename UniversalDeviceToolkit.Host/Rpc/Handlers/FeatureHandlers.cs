@@ -62,6 +62,26 @@ public static class FeatureHandlers
         rpc.RegisterHandler("feature.getStates", (request, _) => HandleGetStatesAsync(request));
         rpc.RegisterHandler("feature.getState", (request, _) => HandleGetStateAsync(request));
         rpc.RegisterHandler("feature.setState", (request, _) => HandleSetStateAsync(request));
+        rpc.RegisterHandler("feature.isHdrBlocked", (_, _) => HandleIsHdrBlockedAsync());
+    }
+
+    /// <summary>
+    /// Mirrors HDRControl.OnRefreshAsync: HDR is disabled (with a warning) while
+    /// Windows settings block it (e.g. display configuration conflicts).
+    /// </summary>
+    private static async Task<BridgeResult> HandleIsHdrBlockedAsync()
+    {
+        try
+        {
+            var hdr = IoCContainer.Resolve<HDRFeature>();
+            var blocked = await hdr.IsHdrBlockedAsync().ConfigureAwait(false);
+            return BridgeResult.Ok(new { blocked });
+        }
+        catch (Exception ex)
+        {
+            // WPF catches and re-enables the toggle — treat as not blocked.
+            return BridgeResult.Ok(new { blocked = false });
+        }
     }
 
     private static void RegisterFeature<T>(string key, IFeature<T> feature) where T : struct

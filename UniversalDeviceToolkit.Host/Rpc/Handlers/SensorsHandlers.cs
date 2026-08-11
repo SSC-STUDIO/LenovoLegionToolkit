@@ -9,6 +9,7 @@ using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Host.Rpc;
 
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
@@ -124,6 +125,7 @@ public static class SensorsHandlers
             ssdTempsTask, cpuNameTask, gpuNameTask, gpuIsIntegratedTask).ConfigureAwait(false);
 
         var ssdTemps = ssdTempsTask.Result;
+        var battery = await BuildBatteryAsync().ConfigureAwait(false);
 
         return new
         {
@@ -176,6 +178,7 @@ public static class SensorsHandlers
                 totalMb = NullIf(memTotalTask.Result),
                 highestTemperature = NullIf(memMaxTempTask.Result),
             },
+            battery,
             motherboard = new
             {
                 highestTemperature = NullIf(motherboardMaxTempTask.Result),
@@ -196,9 +199,11 @@ public static class SensorsHandlers
         }
         catch
         {
-            return new { ts = DateTime.UtcNow, source = "vendor", initialized = false };
+            var batteryOnly = await BuildBatteryAsync().ConfigureAwait(false);
+            return new { ts = DateTime.UtcNow, source = "vendor", initialized = false, battery = batteryOnly };
         }
 
+        var battery = await BuildBatteryAsync().ConfigureAwait(false);
         return new
         {
             ts = DateTime.UtcNow,
@@ -228,9 +233,41 @@ public static class SensorsHandlers
                 fanSpeed = NullIf(data.GPU.FanSpeed),
             },
             memory = new { usage = (int?)null, usedMb = (int?)null, totalMb = (int?)null, highestTemperature = (double?)null },
+            battery,
             motherboard = new { highestTemperature = (double?)null },
             storage = new { temperatures = new int?[] { null, null } },
         };
+    }
+
+    /// <summary>
+    /// Avalonia SensorsControl.RefreshBattery parity: Battery.GetBatteryInformation +
+    /// Power.IsPowerAdapterConnectedAsync for low-wattage adapter warning.
+    /// Health is 0..1 (BatteryHealth is already 0..100 percent).
+    /// </summary>
+    private static async Task<object?> BuildBatteryAsync()
+    {
+        try
+        {
+            var info = Battery.GetBatteryInformation();
+            var adapter = await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false);
+            return new
+            {
+                chargeLevel = info.BatteryPercentage >= 0 ? (int?)info.BatteryPercentage : null,
+                health = info.DesignCapacity > 0 ? (double?)(info.BatteryHealth / 100.0) : null,
+                temperature = info.BatteryTemperatureC,
+                chargeRate = info.DischargeRate,
+                designCapacity = info.DesignCapacity > 0 ? (int?)info.DesignCapacity : null,
+                fullChargeCapacity = info.FullChargeCapacity > 0 ? (int?)info.FullChargeCapacity : null,
+                isCharging = info.IsCharging,
+                isLowBattery = info.IsLowBattery,
+                isLowPowerAdapter = adapter == PowerAdapterStatus.ConnectedLowWattage,
+                modelName = string.IsNullOrWhiteSpace(info.ModelName) ? null : info.ModelName,
+            };
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     // ── handlers ────────────────────────────────────────────────────────────
@@ -481,6 +518,7 @@ public static class SensorsHandlers
         try
         {
             var controller = GetFpsController();
+            var blacklist = ParseFpsBlacklist(request.Parameters);
 
             lock (FpsLock)
             {
@@ -488,6 +526,7 @@ public static class SensorsHandlers
                 {
                     _subscribedFpsController = controller;
                     _fpsRpc = rpc;
+                    TryApplyFpsBlacklist(controller, blacklist);
                     controller.FpsDataUpdated -= OnFpsDataUpdated;
                     controller.FpsDataUpdated += OnFpsDataUpdated;
                     _ = controller.StartMonitoringAsync();
@@ -562,6 +601,48 @@ public static class SensorsHandlers
         => double.TryParse(value, out var parsed) && parsed >= 0 ? parsed : null;
 
     // ── helpers ─────────────────────────────────────────────────────────────
+
+    private static string[]? ParseFpsBlacklist(JsonElement parameters)
+    {
+        if (!parameters.TryGetProperty("blacklist", out var blacklistProp) || blacklistProp.ValueKind != JsonValueKind.Array)
+            return null;
+
+        var entries = blacklistProp.EnumerateArray()
+            .Where(e => e.ValueKind == JsonValueKind.String)
+            .Select(e => e.GetString())
+            .Where(s => !string.IsNullOrWhiteSpace(s))
+            .Select(s => s!.Trim())
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+
+        return entries.Length > 0 ? entries : null;
+    }
+
+    /// <summary>
+    /// Applies the subscription-time blacklist to the FPS controller. Lib's
+    /// FpsSensorController only exposes the blacklist read-only (Blacklist),
+    /// so the backing field is written directly; if its shape ever changes the
+    /// application is skipped and monitoring keeps the previous behavior.
+    /// </summary>
+    private static void TryApplyFpsBlacklist(FpsSensorController controller, string[]? blacklist)
+    {
+        if (blacklist is null)
+            return;
+
+        try
+        {
+            var field = typeof(FpsSensorController).GetField("_blacklist", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (field is null || field.FieldType != typeof(List<string>))
+                return;
+
+            field.SetValue(controller, new List<string>(blacklist));
+        }
+        catch (Exception ex)
+        {
+            if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"Failed to apply FPS blacklist: {ex.Message}", ex);
+        }
+    }
 
     private static float? NullIf(float value) => value < 0 ? null : value;
     private static double? NullIf(double value) => value <= 0 ? null : value;

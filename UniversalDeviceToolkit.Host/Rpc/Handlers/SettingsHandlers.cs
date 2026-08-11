@@ -11,6 +11,7 @@ using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Shared.Serialization;
 using UniversalDeviceToolkit.Host.Rpc;
+using UniversalDeviceToolkit.Host.Settings;
 
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 
@@ -46,6 +47,7 @@ public static class SettingsHandlers
         RegisterScope("updateCheck", () => IoCContainer.Resolve<UpdateCheckSettings>());
         RegisterScope("networkAcceleration", () => IoCContainer.Resolve<NetworkAccelerationSettings>());
         RegisterScope("batteryHealthAlerts", () => IoCContainer.Resolve<BatteryHealthAlertSettings>());
+        RegisterScope("dashboard", () => IoCContainer.Resolve<HostDashboardSettings>());
 
         rpc.RegisterHandler("settings.getAll", (request, _) => HandleGetAllAsync(request, rpc));
         rpc.RegisterHandler("settings.get", (request, _) => HandleGetAsync(request));

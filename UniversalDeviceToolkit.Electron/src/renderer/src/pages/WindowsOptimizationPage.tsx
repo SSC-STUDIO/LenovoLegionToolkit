@@ -32,17 +32,6 @@ function formatBytes(bytes: number): string {
   return `${bytes.toFixed(0)} B`
 }
 
-function findAction(
-  categories: OptimizationCategoryDefinition[],
-  key: string
-): OptimizationActionDefinition | null {
-  for (const category of categories) {
-    const action = category.actions.find((a) => a.key === key)
-    if (action) return action
-  }
-  return null
-}
-
 type TabKey = 'optimization' | 'cleanup' | 'driverDownload' | 'networkAcceleration'
 
 function ActionRow({
@@ -162,122 +151,29 @@ function CategoryCard({
 }
 
 function OptimizationTab(): React.JSX.Element {
-  const { t } = useTranslation()
   const categories = useOptimizationStore((s) => s.categories)
   const loading = useOptimizationStore((s) => s.loading)
-  const apply = useOptimizationStore((s) => s.apply)
-  const revert = useOptimizationStore((s) => s.revert)
-  const applyRecommended = useOptimizationStore((s) => s.applyRecommended)
-  const [selectedKeys, setSelectedKeys] = useState<string[]>([])
-  const [busy, setBusy] = useState(false)
 
   const optimizationCategories = categories.filter((c) => !c.key.startsWith('cleanup.'))
-  const selectedActions = selectedKeys
-    .map((key) => findAction(categories, key))
-    .filter((action): action is OptimizationActionDefinition => action !== null)
-
-  const toggleSelection = (key: string): void => {
-    setSelectedKeys((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]))
-  }
-
-  const handleSelectRecommended = (): void => {
-    const keys = optimizationCategories.flatMap(
-      (category) => presentCategoryActions(category.actions).recommendedKeys
-    )
-    setSelectedKeys(keys)
-  }
-
-  const handleApply = async (): Promise<void> => {
-    if (selectedKeys.length === 0) return
-    setBusy(true)
-    const ok = await apply(selectedKeys)
-    setBusy(false)
-    if (ok) setSelectedKeys([])
-  }
-
-  const handleClear = async (): Promise<void> => {
-    if (selectedKeys.length === 0) return
-    setBusy(true)
-    const ok = await revert(selectedKeys)
-    setBusy(false)
-    if (ok) setSelectedKeys([])
-  }
-
-  const handleApplyRecommended = async (): Promise<void> => {
-    setBusy(true)
-    await applyRecommended()
-    setBusy(false)
-  }
 
   return (
-    <div className="udt-optimization-layout">
+    <div className="udt-optimization-layout udt-optimization-layout--solo">
       <div className="udt-optimization-layout__main">
         {loading && <div className="udt-skeleton-list"><div className="udt-skeleton-card" /></div>}
         {optimizationCategories.map((category) => {
           const visible = presentCategoryActions(category.actions).visible
-          const count = visible.filter(({ action }) => selectedKeys.includes(action.key)).length
+          const appliedCount = visible.filter(({ action }) => action.applied === true).length
           return (
             <CategoryCard
               key={category.key}
               category={category}
-              selectedKeys={selectedKeys}
-              busy={busy}
-              onToggle={toggleSelection}
-              summary={`${count} / ${visible.length}`}
+              selectedKeys={[]}
+              busy
+              onToggle={() => {}}
+              summary={`${appliedCount} / ${visible.length}`}
             />
           )
         })}
-      </div>
-      <div className="udt-optimization-layout__side">
-        <div className="udt-card udt-side-card">
-          <div className="udt-card__title">{t('optimization.selectedActions')}</div>
-          <div className="udt-card__desc">
-            {t('optimization.selectedActions')} · {selectedActions.length}
-          </div>
-          {selectedActions.length === 0 ? (
-            <div className="udt-empty">
-              <div className="udt-empty__title">{t('optimization.noSelection')}</div>
-            </div>
-          ) : (
-            <div className="udt-side-card__list">
-              {selectedActions.map((action) => (
-                <div key={action.key} className="udt-side-card__item">
-                  <div className="udt-side-card__item-title">{action.title}</div>
-                  {action.recommended && <StarFilled className="udt-side-card__star" />}
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="udt-side-card__actions">
-            <button type="button" className="udt-btn udt-btn--secondary" onClick={handleSelectRecommended}>
-              {t('optimization.selectRecommended')}
-            </button>
-            <button
-              type="button"
-              className="udt-btn udt-btn--primary"
-              disabled={selectedActions.length === 0 || busy}
-              onClick={() => void handleApply()}
-            >
-              {t('optimization.apply')}
-            </button>
-            <button
-              type="button"
-              className="udt-btn udt-btn--danger"
-              disabled={selectedActions.length === 0 || busy}
-              onClick={() => void handleClear()}
-            >
-              {t('optimization.clear')}
-            </button>
-            <button
-              type="button"
-              className="udt-btn udt-btn--secondary"
-              disabled={busy}
-              onClick={() => void handleApplyRecommended()}
-            >
-              {t('optimization.applyRecommended')}
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   )

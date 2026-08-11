@@ -11,26 +11,31 @@ using UniversalDeviceToolkit.Host.Rpc;
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 
 /// <summary>
-/// Macro bridge: enable state, slot/sequence read/write and explicit playback.
+/// Macro bridge: enable state, slot/sequence read/write, explicit playback and
+/// recording.
 ///
-/// Recording is intentionally NOT implemented here: the headless host has no
-/// message-pumping UI thread, and MacroController's global input hooks
-/// (WH_KEYBOARD_LL / WH_MOUSE_LL) only fire when the installing thread pumps
-/// messages. Installing them from the bridge would silently capture nothing
-/// (and degrade system input while Windows times the hook out), so
-/// macro.startRecording / macro.stopRecording return -1005 — the recording UI
-/// lives in the desktop (WPF) frontend.
+/// Recording runs on a dedicated pump thread (see <see cref="GlobalInputHook"/>):
+/// the Lib MacroController installs its WH_KEYBOARD_LL / WH_MOUSE_LL hooks on
+/// that thread and a GetMessage loop keeps the callbacks flowing, so capture
+/// works without a UI thread. Captured events are streamed to the client as
+/// "macro.recorderEvent" and returned in bulk by macro.stopRecording.
 /// </summary>
 public static class MacroHandlers
 {
     private const int RecordingNotAvailable = -1005;
+
+    private static readonly object RecordingLock = new();
+    private static readonly List<MacroEvent> RecordedEvents = [];
+    private static GlobalInputHook? _recordingHook;
+    private static BridgeRpcServer? _recordingRpc;
+    private static bool _recordingEnded;
 
     public static void Register(BridgeRpcServer rpc)
     {
         rpc.RegisterHandler("macro.getState", (request, _) => HandleGetStateAsync());
         rpc.RegisterHandler("macro.setEnabled", (request, _) => HandleSetEnabledAsync(request));
         rpc.RegisterHandler("macro.play", (request, _) => HandlePlayAsync(request));
-        rpc.RegisterHandler("macro.startRecording", (request, _) => HandleStartRecordingAsync(request));
+        rpc.RegisterHandler("macro.startRecording", (request, _) => HandleStartRecordingAsync(request, rpc));
         rpc.RegisterHandler("macro.stopRecording", (request, _) => HandleStopRecordingAsync());
         rpc.RegisterHandler("macro.saveSequence", (request, _) => HandleSaveSequenceAsync(request));
         rpc.RegisterHandler("macro.clearSequence", (request, _) => HandleClearSequenceAsync(request));
@@ -57,15 +62,7 @@ public static class MacroHandlers
                     repeatCount = kv.Value.RepeatCount,
                     ignoreDelays = kv.Value.IgnoreDelays,
                     interruptOnOtherKey = kv.Value.InterruptOnOtherKey,
-                    events = (kv.Value.Events ?? []).Select(e => new
-                    {
-                        source = e.Source.ToString(),
-                        direction = e.Direction.ToString(),
-                        key = e.Key,
-                        x = e.Point.X,
-                        y = e.Point.Y,
-                        delayMs = e.Delay.TotalMilliseconds,
-                    }).ToArray(),
+                    events = (kv.Value.Events ?? []).Select(SerializeEvent).ToArray(),
                 })
                 .ToArray();
 
@@ -123,15 +120,46 @@ public static class MacroHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleStartRecordingAsync(BridgeRequest request)
+    private static async Task<BridgeResult> HandleStartRecordingAsync(BridgeRequest request, BridgeRpcServer rpc)
     {
         try
         {
             _ = GetRequiredUInt64(request.Parameters, "key");
-            _ = ParseRecordingMode(request.Parameters);
+            var settings = ParseRecordingMode(request.Parameters);
+
+            GlobalInputHook? previous;
+            GlobalInputHook? hook;
+            lock (RecordingLock)
+            {
+                // A previous session may still own the hooks (e.g. stopped via
+                // the ESC interrupt); tear it down before starting a new one.
+                previous = DetachRecording();
+
+                hook = new GlobalInputHook(Controller, settings);
+                if (!hook.Start())
+                {
+                    hook.Dispose();
+                    return RecordingUnavailable();
+                }
+
+                _recordingHook = hook;
+                _recordingRpc = rpc;
+                _recordingEnded = false;
+                RecordedEvents.Clear();
+
+                Controller.RecorderReceived -= OnRecorderReceived;
+                Controller.RecorderReceived += OnRecorderReceived;
+                Controller.RecorderStopped -= OnRecorderStopped;
+                Controller.RecorderStopped += OnRecorderStopped;
+            }
+
+            // Teardown outside the lock: joining the pump thread must not block
+            // its own event handlers.
+            previous?.Stop();
+            previous?.Dispose();
 
             await Task.CompletedTask;
-            return RecordingUnavailable();
+            return BridgeResult.Ok(new { ok = true, recording = true });
         }
         catch (BridgeErrorException ex)
         {
@@ -147,8 +175,20 @@ public static class MacroHandlers
     {
         try
         {
+            GlobalInputHook? hook;
+            MacroEvent[] events;
+            lock (RecordingLock)
+            {
+                hook = DetachRecording();
+                events = [.. RecordedEvents];
+                RecordedEvents.Clear();
+            }
+
+            hook?.Stop();
+            hook?.Dispose();
+
             await Task.CompletedTask;
-            return RecordingUnavailable();
+            return BridgeResult.Ok(new { recording = false, events = events.Select(SerializeEvent).ToArray() });
         }
         catch (Exception ex)
         {
@@ -156,9 +196,97 @@ public static class MacroHandlers
         }
     }
 
+    /// <summary>Stops an active recording session; called on host shutdown.</summary>
+    public static void StopRecordingIfActive()
+    {
+        GlobalInputHook? hook;
+        lock (RecordingLock)
+        {
+            hook = DetachRecording();
+        }
+
+        try { hook?.Stop(); } catch (Exception ex) { Trace("macro hook stop failed", ex); }
+        try { hook?.Dispose(); } catch (Exception ex) { Trace("macro hook dispose failed", ex); }
+    }
+
+    /// <summary>
+    /// Detaches the recorder events and clears the recording session state.
+    /// Callers must hold <see cref="RecordingLock"/>; hook teardown (Stop/Dispose)
+    /// happens outside the lock because it joins the pump thread, whose event
+    /// handlers also need the lock.
+    /// </summary>
+    private static GlobalInputHook? DetachRecording()
+    {
+        var hook = _recordingHook;
+        _recordingHook = null;
+        _recordingRpc = null;
+        _recordingEnded = false;
+        RecordedEvents.Clear();
+
+        if (hook is null)
+            return null;
+
+        try
+        {
+            var controller = Controller;
+            controller.RecorderReceived -= OnRecorderReceived;
+            controller.RecorderStopped -= OnRecorderStopped;
+        }
+        catch (Exception ex)
+        {
+            Trace("macro recorder detach failed", ex);
+        }
+
+        return hook;
+    }
+
+    private static void OnRecorderReceived(object? sender, MacroController.RecorderReceivedEventArgs e)
+    {
+        BridgeRpcServer? rpc;
+        lock (RecordingLock)
+        {
+            RecordedEvents.Add(e.MacroEvent);
+            rpc = _recordingRpc;
+        }
+
+        rpc?.Publish("macro.recorderEvent", new
+        {
+            eventType = "event",
+            source = e.MacroEvent.Source.ToString(),
+            direction = e.MacroEvent.Direction.ToString(),
+            key = e.MacroEvent.Key,
+            x = e.MacroEvent.Point.X,
+            y = e.MacroEvent.Point.Y,
+            delayMs = e.MacroEvent.Delay.TotalMilliseconds,
+        });
+    }
+
+    private static void OnRecorderStopped(object? sender, MacroController.RecorderStoppedEventArgs e)
+    {
+        BridgeRpcServer? rpc;
+        bool alreadyEnded;
+        lock (RecordingLock)
+        {
+            alreadyEnded = _recordingEnded;
+            _recordingEnded = true;
+            rpc = _recordingRpc;
+        }
+
+        if (alreadyEnded)
+            return;
+
+        rpc?.Publish("macro.recorderEvent", new { eventType = "stopped", interrupted = e.Interrupted });
+    }
+
     private static BridgeResult RecordingUnavailable() => BridgeResult.Error(
         RecordingNotAvailable,
-        "Recording UI lives in frontend, not implemented: the headless host has no message-pumping UI thread, so global input hooks cannot capture events; use the desktop (WPF) recording UI.");
+        "Recording hooks could not be installed (SetWindowsHookEx failed); try again after the host has an interactive session.");
+
+    private static void Trace(string message, Exception ex)
+    {
+        if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace(message, ex);
+    }
 
     private static async Task<BridgeResult> HandleSaveSequenceAsync(BridgeRequest request)
     {
@@ -241,6 +369,16 @@ public static class MacroHandlers
 
         return eventsProp.EnumerateArray().Select(ParseEvent).ToArray();
     }
+
+    private static object SerializeEvent(MacroEvent e) => new
+    {
+        source = e.Source.ToString(),
+        direction = e.Direction.ToString(),
+        key = e.Key,
+        x = e.Point.X,
+        y = e.Point.Y,
+        delayMs = e.Delay.TotalMilliseconds,
+    };
 
     private static MacroEvent ParseEvent(JsonElement element)
     {

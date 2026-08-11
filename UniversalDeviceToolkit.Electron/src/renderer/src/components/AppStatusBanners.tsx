@@ -18,10 +18,10 @@ const SOFTWARE_BANNERS: { app: SoftwareDisablerApp; id: string; messageKey: stri
 ]
 
 /**
- * Host for persistent status banners — port of the WPF MainWindow status
- * notification stack (AppStatusBanner instances): update available, plugin
- * extensions disabled and the three software-conflict banners (Vantage /
- * Legion Zone / Lenovo Hotkeys running).
+ * Host for persistent corner toasts — port of WPF MainWindow._statusNotificationStack
+ * (AppStatusBanner instances): update available, plugin extensions disabled, and
+ * the three software-conflict warnings (Vantage / Legion Zone / Lenovo Hotkeys).
+ * Renders as a bottom-right overlay so page content is not pushed down.
  */
 export default function AppStatusBanners(): React.JSX.Element {
   const { t } = useTranslation()
@@ -34,6 +34,16 @@ export default function AppStatusBanners(): React.JSX.Element {
   const load = useSettingsStore((s) => s.load)
   const softwareStatuses = useSoftwareStore((s) => s.statuses)
   const softwareStart = useSoftwareStore((s) => s.start)
+
+  // Keep transient AppNotificationHost toasts stacked above these persistent
+  // cards when both share the bottom-right corner (WPF single StackPanel).
+  useEffect(() => {
+    const offset = banners.length === 0 ? 0 : banners.length * 56 + Math.max(0, banners.length - 1) * 8
+    document.documentElement.style.setProperty('--udt-status-banner-stack-height', `${offset}px`)
+    return () => {
+      document.documentElement.style.removeProperty('--udt-status-banner-stack-height')
+    }
+  }, [banners.length])
 
   useEffect(() => {
     let cancelled = false
@@ -97,7 +107,9 @@ export default function AppStatusBanners(): React.JSX.Element {
           severity: 'Warning',
           message: t(banner.messageKey),
           persistent: true,
-          closable: false
+          // WPF AppStatusBanner always exposes a close button; session dismiss
+          // matches Closed → Collapsed until the user leaves / status changes.
+          closable: true
         })
       } else {
         remove(banner.id)

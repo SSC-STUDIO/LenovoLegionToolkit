@@ -35,6 +35,7 @@ public static class KeyboardBacklightHandlers
 
         rpc.RegisterHandler("spectrum.isSupported", (request, _) => HandleSpectrumIsSupportedAsync());
         rpc.RegisterHandler("spectrum.getLayout", (request, _) => HandleSpectrumGetLayoutAsync());
+        rpc.RegisterHandler("spectrum.getState", (request, _) => HandleSpectrumGetStateAsync());
         rpc.RegisterHandler("spectrum.getBrightness", (request, _) => HandleSpectrumGetBrightnessAsync());
         rpc.RegisterHandler("spectrum.setBrightness", (request, _) => HandleSpectrumSetBrightnessAsync(request));
         rpc.RegisterHandler("spectrum.getLogoStatus", (request, _) => HandleSpectrumGetLogoStatusAsync());
@@ -238,6 +239,27 @@ public static class KeyboardBacklightHandlers
         catch (BridgeErrorException ex)
         {
             return BridgeResult.Error(ex.Code, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    private static async Task<BridgeResult> HandleSpectrumGetStateAsync()
+    {
+        try
+        {
+            var controller = GetSpectrum();
+            if (!await controller.IsSupportedAsync().ConfigureAwait(false))
+                return BridgeResult.Ok(new { keys = Array.Empty<object>() });
+
+            var state = await controller.GetStateAsync().ConfigureAwait(false);
+            var keys = state
+                .OrderBy(pair => pair.Key)
+                .Select(pair => new { key = pair.Key, r = pair.Value.R, g = pair.Value.G, b = pair.Value.B })
+                .ToArray();
+            return BridgeResult.Ok(new { keys });
         }
         catch (Exception ex)
         {

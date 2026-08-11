@@ -275,6 +275,8 @@ export default function AppLayout(): React.JSX.Element {
       <UtilsModalHost />
       <LoadingOverlay />
       <NotificationCenter />
+      {/* WPF MainWindow._statusNotificationStack: bottom-right overlay, not in-flow. */}
+      <AppStatusBanners />
       <TitleBar />
       <div className="udt-app-shell__body">
         <nav
@@ -296,7 +298,6 @@ export default function AppLayout(): React.JSX.Element {
           </button>
         </nav>
         <div className="udt-app-shell__content">
-          <AppStatusBanners />
           <main className="udt-app-shell__main">
             <div key={location.pathname} className="udt-page-enter">
               <Outlet />

@@ -105,6 +105,42 @@ interface DeviceInfo {
   machineType: string
   serialNumber: string
   biosVersion: string
+  processor?: DeviceInfoProcessor | null
+  videoController?: DeviceInfoVideoController | null
+  memory?: DeviceInfoMemory | null
+  warranty?: DeviceInfoWarranty | null
+}
+
+interface DeviceInfoProcessor {
+  name?: string | null
+  numberOfCores?: number | null
+  numberOfLogicalProcessors?: number | null
+  maxClockSpeedMHz?: number | null
+}
+
+interface DeviceInfoVideoController {
+  name?: string | null
+  adapterCompatibility?: string | null
+  adapterRamBytes?: number | null
+}
+
+interface DeviceInfoMemory {
+  totalCapacityBytes?: number | null
+  moduleCount?: number | null
+  configuredClockSpeedMHz?: number | null
+  speedMHz?: number | null
+}
+
+interface DeviceInfoWarranty {
+  startDate?: string | null
+  endDate?: string | null
+  link?: string | null
+}
+
+interface DeviceInfoHardware {
+  processor?: DeviceInfoProcessor | null
+  videoController?: DeviceInfoVideoController | null
+  memory?: DeviceInfoMemory | null
 }
 
 const FALLBACK_DEVICE_INFO: DeviceInfo = {
@@ -115,11 +151,65 @@ const FALLBACK_DEVICE_INFO: DeviceInfo = {
   biosVersion: ''
 }
 
+function sanitizeProcessor(value: unknown): DeviceInfoProcessor | null {
+  if (!value || typeof value !== 'object') return null
+  const source = value as Record<string, unknown>
+  const processor: DeviceInfoProcessor = {}
+  if (typeof source.name === 'string' && source.name.length > 0) processor.name = source.name
+  if (typeof source.numberOfCores === 'number') processor.numberOfCores = source.numberOfCores
+  if (typeof source.numberOfLogicalProcessors === 'number') {
+    processor.numberOfLogicalProcessors = source.numberOfLogicalProcessors
+  }
+  if (typeof source.maxClockSpeedMHz === 'number') processor.maxClockSpeedMHz = source.maxClockSpeedMHz
+  return processor.name ? processor : null
+}
+
+function sanitizeVideoController(value: unknown): DeviceInfoVideoController | null {
+  if (!value || typeof value !== 'object') return null
+  const source = value as Record<string, unknown>
+  const videoController: DeviceInfoVideoController = {}
+  if (typeof source.name === 'string' && source.name.length > 0) videoController.name = source.name
+  if (typeof source.adapterCompatibility === 'string') {
+    videoController.adapterCompatibility = source.adapterCompatibility
+  }
+  if (typeof source.adapterRamBytes === 'number') videoController.adapterRamBytes = source.adapterRamBytes
+  return videoController.name ? videoController : null
+}
+
+function sanitizeMemory(value: unknown): DeviceInfoMemory | null {
+  if (!value || typeof value !== 'object') return null
+  const source = value as Record<string, unknown>
+  const memory: DeviceInfoMemory = {}
+  if (typeof source.totalCapacityBytes === 'number') memory.totalCapacityBytes = source.totalCapacityBytes
+  if (typeof source.moduleCount === 'number') memory.moduleCount = source.moduleCount
+  if (typeof source.configuredClockSpeedMHz === 'number') {
+    memory.configuredClockSpeedMHz = source.configuredClockSpeedMHz
+  }
+  if (typeof source.speedMHz === 'number') memory.speedMHz = source.speedMHz
+  return memory.totalCapacityBytes || memory.moduleCount || memory.configuredClockSpeedMHz || memory.speedMHz
+    ? memory
+    : null
+}
+
+function sanitizeWarranty(value: unknown): DeviceInfoWarranty | null {
+  if (!value || typeof value !== 'object') return null
+  const source = value as Record<string, unknown>
+  const warranty: DeviceInfoWarranty = {}
+  if (typeof source.startDate === 'string') warranty.startDate = source.startDate
+  if (typeof source.endDate === 'string') warranty.endDate = source.endDate
+  if (typeof source.link === 'string') warranty.link = source.link
+  return warranty.startDate || warranty.endDate || warranty.link ? warranty : null
+}
+
 /** Best-effort device info via the host's system.info; never throws. */
 async function getDeviceInfo(): Promise<DeviceInfo> {
   try {
-    const result = (await hostClient.invoke('system.info', {})) as Partial<DeviceInfo> | null | undefined
+    const result = (await hostClient.invoke('system.info', {})) as
+      | (Partial<DeviceInfo> & { hardware?: DeviceInfoHardware | null })
+      | null
+      | undefined
     if (!result || typeof result !== 'object') return { ...FALLBACK_DEVICE_INFO }
+    const hardware = result.hardware && typeof result.hardware === 'object' ? result.hardware : null
     return {
       vendor: typeof result.vendor === 'string' ? result.vendor : '',
       model:
@@ -128,7 +218,11 @@ async function getDeviceInfo(): Promise<DeviceInfo> {
           : FALLBACK_DEVICE_INFO.model,
       machineType: typeof result.machineType === 'string' ? result.machineType : '',
       serialNumber: typeof result.serialNumber === 'string' ? result.serialNumber : '',
-      biosVersion: typeof result.biosVersion === 'string' ? result.biosVersion : ''
+      biosVersion: typeof result.biosVersion === 'string' ? result.biosVersion : '',
+      processor: sanitizeProcessor(hardware?.processor),
+      videoController: sanitizeVideoController(hardware?.videoController),
+      memory: sanitizeMemory(hardware?.memory),
+      warranty: sanitizeWarranty(result.warranty)
     }
   } catch (error) {
     console.error('[main] failed to load device info:', error)
@@ -250,7 +344,7 @@ app.whenReady().then(() => {
     console.log(`[main] flags: ${describeFlags(flags)}`)
   }
 
-  ipcMain.handle('bridge:invoke', (_event, method: string, params?: unknown) => {
+  ipcMain.handle('bridge:invoke', async (_event, method: string, params?: unknown) => {
     // Main-side methods reachable through the generic renderer bridge without
     // preload changes (WPF MainWindow.OpenLog / LoadDeviceInfo equivalents).
     if (method === 'log.open-folder') return openLogFolder()
@@ -258,6 +352,56 @@ app.whenReady().then(() => {
     if (method === 'status-window.show') {
       void showStatusWindow()
       return { shown: true }
+    }
+    // Native dialogs and system openers (renderer cleanup/automation UIs): the
+    // headless host cannot show UI, so the main process answers these.
+    if (method === 'dialog:select-json-file') {
+      const options = {
+        title: 'Import keyboard backlight profile',
+        properties: ['openFile'] as ('openFile')[],
+        filters: [{ name: 'Json Files', extensions: ['json'] }]
+      }
+      const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
+      const result = owner == null
+        ? await dialog.showOpenDialog(options)
+        : await dialog.showOpenDialog(owner, options)
+      return result.canceled ? null : (result.filePaths[0] ?? null)
+    }
+    if (method === 'dialog:select-folder') {
+      const options = {
+        title: 'Select folder',
+        properties: ['openDirectory'] as ('openDirectory')[]
+      }
+      const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
+      const result = owner == null
+        ? await dialog.showOpenDialog(options)
+        : await dialog.showOpenDialog(owner, options)
+      return result.canceled ? null : (result.filePaths[0] ?? null)
+    }
+    if (method === 'dialog:open-path') {
+      const path = (params as { path?: unknown } | null)?.path
+      if (typeof path !== 'string' || path.length === 0) {
+        throw new Error('A file path is required.')
+      }
+      const error = await shell.openPath(path)
+      return { ok: error.length === 0 }
+    }
+    if (method === 'dialog:open-url') {
+      const url = (params as { url?: unknown } | null)?.url
+      if (typeof url !== 'string' || url.length === 0) {
+        throw new Error('A URL is required.')
+      }
+      let parsed: URL
+      try {
+        parsed = new URL(url)
+      } catch {
+        throw new Error('Invalid URL.')
+      }
+      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
+        throw new Error('Only http(s) URLs can be opened.')
+      }
+      await shell.openExternal(parsed.toString())
+      return { ok: true }
     }
     // Mirrors WPF --disable-update-checker (UpdateChecker.Disable): the host
     // does not know this switch, so short-circuit update requests here.

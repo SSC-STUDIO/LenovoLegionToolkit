@@ -23,7 +23,8 @@
 .udt-notification-center--bottom-right {
   top: auto;
   right: 16px;
-  bottom: 16px;
+  /* Sit above persistent AppStatusBanner cards (WPF single corner stack). */
+  bottom: calc(16px + var(--udt-status-banner-stack-height, 0px));
 }
 
 .udt-notification-center--bottom-center {

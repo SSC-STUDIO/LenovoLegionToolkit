@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Lib.Plugins;
@@ -20,12 +21,12 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// Windows optimization bridge (P1): optimization categories/actions, cleanup
 /// estimation/execution and network-acceleration status/control.
 ///
-/// Elevation note: the Host process runs un-elevated, so apply/revert/cleanup
-/// mutations typically throw UnauthorizedAccessException, mapped to -1006
-/// (ELEVATION_REQUIRED). The WPF app routes privileged mutations through
-/// WindowsOptimizationElevationClient (UniversalDeviceToolkit.Lib.Automation.Optimization);
-/// the Host IoC container does not register WindowsOptimizationElevationIoCModule yet —
-/// wire it here (or resolve the elevation client) when elevation support lands.
+/// Elevation note: the Host process normally runs un-elevated, so apply/revert/
+/// cleanup mutations route through WindowsOptimizationElevationClient
+/// (UniversalDeviceToolkit.Lib.Automation.Optimization), which starts an elevated
+/// worker (UAC prompt) over a private named pipe when needed. The elevated worker
+/// only supports built-in actions; plugin-provided actions fall back to the
+/// in-process service and require the Host itself to run elevated.
 /// </summary>
 public static class OptimizationHandlers
 {
@@ -110,7 +111,7 @@ public static class OptimizationHandlers
         }
     }
 
-    /// <summary>Applies the given actions; failures map to -1006 (un-elevated bridge host).</summary>
+    /// <summary>Applies the given actions through the elevation channel (or in-process for plugin actions).</summary>
     private static async Task<BridgeResult> HandleApplyAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
         try
@@ -118,7 +119,7 @@ public static class OptimizationHandlers
             if (!TryGetActionKeys(request, out var actionKeys))
                 throw new BridgeErrorException(-32602, "Missing or invalid array parameter 'actionKeys'.");
 
-            await OptimizationService.ExecuteActionsAsync(actionKeys, cancellationToken).ConfigureAwait(false);
+            await ExecuteOptimizationMutationsAsync(actionKeys, apply: true, cancellationToken).ConfigureAwait(false);
 
             return BridgeResult.Ok(new { applied = true });
         }
@@ -132,7 +133,7 @@ public static class OptimizationHandlers
         }
     }
 
-    /// <summary>Reverts the given actions (rollback); failures map to -1006 (un-elevated bridge host).</summary>
+    /// <summary>Reverts the given actions (rollback); built-in actions run in the elevated worker.</summary>
     private static async Task<BridgeResult> HandleRevertAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
         try
@@ -140,9 +141,7 @@ public static class OptimizationHandlers
             if (!TryGetActionKeys(request, out var actionKeys))
                 throw new BridgeErrorException(-32602, "Missing or invalid array parameter 'actionKeys'.");
 
-            var service = OptimizationService;
-            foreach (var key in actionKeys)
-                await service.RevertActionAsync(key, cancellationToken).ConfigureAwait(false);
+            await ExecuteOptimizationMutationsAsync(actionKeys, apply: false, cancellationToken).ConfigureAwait(false);
 
             return BridgeResult.Ok(new { reverted = true });
         }
@@ -156,14 +155,23 @@ public static class OptimizationHandlers
         }
     }
 
-    /// <summary>Applies every recommended non-cleanup action (mirrors ApplyPerformanceOptimizationsAsync).</summary>
+    /// <summary>Applies every recommended non-cleanup action through the elevation channel.</summary>
     private static async Task<BridgeResult> HandleApplyRecommendedAsync(CancellationToken cancellationToken)
     {
         try
         {
-            await OptimizationService.ApplyPerformanceOptimizationsAsync(cancellationToken).ConfigureAwait(false);
+            var recommendedKeys = OptimizationService.GetCategories()
+                .Where(category => !string.Equals(category.Key, WindowsOptimizationService.CleanupCategoryKey, StringComparison.OrdinalIgnoreCase))
+                .SelectMany(category => category.Actions.Where(action => action.Recommended).Select(action => action.Key))
+                .ToList();
+
+            await ExecuteOptimizationMutationsAsync(recommendedKeys, apply: true, cancellationToken).ConfigureAwait(false);
 
             return BridgeResult.Ok(new { applied = true });
+        }
+        catch (BridgeErrorException ex)
+        {
+            return BridgeResult.Error(ex.Code, ex.Message);
         }
         catch (Exception ex)
         {
@@ -237,18 +245,38 @@ public static class OptimizationHandlers
     }
 
     /// <summary>
-    /// Runs cleanup via WindowsCleanupService.ExecuteCustomCleanupAsync — the rule set comes
-    /// from ApplicationSettings custom cleanup rules, not from actionKeys (validated for
-    /// protocol parity only). Failures map to -1006 (un-elevated bridge host).
+    /// Runs cleanup. The selected cleanup actions (cleanup.temp, cleanup.custom, …)
+    /// execute in the elevated worker; custom-cleanup "extra folders" ride along
+    /// in-process (permission-tolerant) unless cleanup.custom was already selected.
+    /// Failures map to -1006 when the elevation channel is unavailable.
     /// </summary>
     private static async Task<BridgeResult> HandleRunCleanupAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
         try
         {
-            if (!TryGetActionKeys(request, out _))
+            if (!TryGetActionKeys(request, out var actionKeys))
                 throw new BridgeErrorException(-32602, "Missing or invalid array parameter 'actionKeys'.");
 
-            await CleanupService.ExecuteCustomCleanupAsync(cancellationToken).ConfigureAwait(false);
+            if (actionKeys.Count > 0)
+            {
+                if (!WindowsOptimizationElevationBridge.IsAvailable)
+                {
+                    LogElevationUnavailable("cleanup.run");
+                    throw new BridgeErrorException(
+                        ElevationRequiredErrorCode,
+                        "The optimization elevation executor is not registered; cleanup requires elevation and the bridge host is not elevated.");
+                }
+
+                await WindowsOptimizationElevationBridge.ExecuteCleanupAsync(actionKeys, cancellationToken).ConfigureAwait(false);
+
+                // Extra folders from custom cleanup rules (renderer CleanupRulesPanel).
+                if (!actionKeys.Contains(WindowsOptimizationService.CustomCleanupActionKey, StringComparer.OrdinalIgnoreCase))
+                    await CleanupService.ExecuteCustomCleanupAsync(cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                await CleanupService.ExecuteCustomCleanupAsync(cancellationToken).ConfigureAwait(false);
+            }
 
             return BridgeResult.Ok(new { done = true });
         }
@@ -392,6 +420,110 @@ public static class OptimizationHandlers
         {
             return false;
         }
+    }
+
+    /// <summary>
+    /// Executes apply/revert mutations. Built-in actions run through the elevation
+    /// channel (WindowsOptimizationElevationClient starts an elevated worker over a
+    /// private named pipe when the bridge host is un-elevated); the worker rejects
+    /// plugin-provided actions by design, so those fall back to the in-process
+    /// service — which can only succeed when the Host itself runs elevated.
+    /// </summary>
+    private static async Task ExecuteOptimizationMutationsAsync(
+        IReadOnlyList<string> actionKeys,
+        bool apply,
+        CancellationToken cancellationToken)
+    {
+        if (actionKeys.Count == 0)
+            return;
+
+        var (builtInKeys, pluginKeys) = SplitByPluginOrigin(actionKeys);
+
+        if (builtInKeys.Count > 0)
+        {
+            if (!WindowsOptimizationElevationBridge.IsAvailable)
+            {
+                LogElevationUnavailable(apply ? "optimization.apply" : "optimization.revert");
+                throw new BridgeErrorException(
+                    ElevationRequiredErrorCode,
+                    "The optimization elevation executor is not registered; this operation requires elevation and the bridge host is not elevated.");
+            }
+
+            if (apply)
+            {
+                await WindowsOptimizationElevationBridge
+                    .ExecuteRecommendedAsync(builtInKeys, cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                foreach (var key in builtInKeys)
+                    await WindowsOptimizationElevationBridge
+                        .ExecuteActionAsync(key, apply: false, cancellationToken).ConfigureAwait(false);
+            }
+        }
+
+        if (pluginKeys.Count > 0)
+        {
+            var service = OptimizationService;
+            foreach (var key in pluginKeys)
+            {
+                try
+                {
+                    if (apply)
+                        await service.ApplyActionAsync(key, cancellationToken).ConfigureAwait(false);
+                    else
+                        await service.RevertActionAsync(key, cancellationToken).ConfigureAwait(false);
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    throw new BridgeErrorException(
+                        ElevationRequiredErrorCode,
+                        $"Plugin action '{key}' cannot run in the elevated worker; " +
+                        $"start the bridge host elevated to mutate plugin state. {ex.Message}");
+                }
+            }
+        }
+    }
+
+    /// <summary>Classifies action keys by origin: built-in categories vs. plugin-provided ones.</summary>
+    private static (List<string> BuiltIn, List<string> Plugin) SplitByPluginOrigin(IReadOnlyList<string> actionKeys)
+    {
+        var pluginActionKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            foreach (var category in OptimizationService.GetCategories())
+            {
+                if (string.IsNullOrWhiteSpace(category.PluginId))
+                    continue;
+                foreach (var action in category.Actions)
+                    pluginActionKeys.Add(action.Key);
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to classify optimization actions by plugin origin.", ex);
+        }
+
+        var builtIn = new List<string>();
+        var plugin = new List<string>();
+        foreach (var key in actionKeys)
+        {
+            if (pluginActionKeys.Contains(key))
+                plugin.Add(key);
+            else
+                builtIn.Add(key);
+        }
+
+        return (builtIn, plugin);
+    }
+
+    /// <summary>Logs why the elevation channel cannot serve a mutation before returning -1006.</summary>
+    private static void LogElevationUnavailable(string method)
+    {
+        Log.Instance.Warning(
+            $"{method} requires elevation but the optimization elevation executor is not registered " +
+            "(WindowsOptimizationElevationIoCModule missing from the Host IoC container).");
     }
 
     private static BridgeResult ToElevationError(Exception ex, string method)
