@@ -112,7 +112,9 @@ export function dashboardItemLabel(item: DashboardItem, t: TFunction): string {
     case 'TurnOffMonitors':
       return t('dashboard.edit.items.turnOffMonitors')
     default: {
-      const feature = resolveDashboardFeature(item, {})
+      // First candidate feature key carries the display name; support-state
+      // resolution (resolveDashboardFeature) is only needed for rendering.
+      const feature = FEATURE_CANDIDATES[item]?.[0] ?? null
       return feature != null ? t(`feature.${feature}`, { defaultValue: item }) : item
     }
   }
