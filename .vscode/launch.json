@@ -1,0 +1,27 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Electron (Dev, multi-process)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/UniversalDeviceToolkit.Electron",
+      "runtimeExecutable": "${workspaceFolder}/UniversalDeviceToolkit.Electron/node_modules/.bin/electron-vite.cmd",
+      "runtimeArgs": ["dev"],
+      "outputCapture": "std",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    },
+    {
+      "name": "Electron (Dev, single-process)",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/UniversalDeviceToolkit.Electron",
+      "runtimeExecutable": "${workspaceFolder}/UniversalDeviceToolkit.Electron/node_modules/.bin/electron-vite.cmd",
+      "runtimeArgs": ["dev", "--", "--single-process"],
+      "outputCapture": "std",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"]
+    }
+  ]
+}
