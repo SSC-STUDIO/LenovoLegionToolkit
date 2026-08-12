@@ -83,6 +83,15 @@
   color: var(--udt-text-primary);
   pointer-events: auto;
   animation: udt-notification-in var(--udt-anim-medium) var(--udt-ease-cubic-out);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+/* Close-out: slide out to the right, then the store removes the item. */
+.udt-notification-item--closing {
+  opacity: 0;
+  transform: translateX(12px);
 }
 
 @keyframes udt-notification-in {

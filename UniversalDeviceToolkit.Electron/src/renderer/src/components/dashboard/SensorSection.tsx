@@ -670,7 +670,7 @@ export default function SensorSection(): React.JSX.Element {
   }
 
   return (
-    <div className="udt-sensors">
+    <div className="udt-sensors udt-fade-in">
       <div
         ref={boardRef}
         className="udt-sensor-board"

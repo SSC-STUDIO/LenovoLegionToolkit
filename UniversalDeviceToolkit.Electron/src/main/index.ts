@@ -84,7 +84,19 @@ const bufferedHostEvents: Array<{ event: string; data: unknown }> = []
 const BUFFERED_HOST_EVENT_LIMIT = 64
 let hostEventsAttached = false
 
+function sendHostEventToWebviewGuests(event: string, data: unknown): void {
+  if (!mainWindow || mainWindow.isDestroyed()) return
+  const { webContents } = require('electron') as typeof import('electron')
+  for (const webContentsItem of webContents.getAllWebContents()) {
+    if (webContentsItem === mainWindow.webContents) continue
+    if (webContentsItem.getType() === 'webview' && !webContentsItem.isDestroyed()) {
+      webContentsItem.send('plugin-host:event', event, data)
+    }
+  }
+}
+
 function bufferOrSendHostEvent(event: string, data: unknown): void {
+  sendHostEventToWebviewGuests(event, data)
   if (mainWindow && !mainWindow.isDestroyed() && !mainWindow.webContents.isLoadingMainFrame()) {
     mainWindow.webContents.send('bridge:event', event, data)
     return
@@ -93,6 +105,25 @@ function bufferOrSendHostEvent(event: string, data: unknown): void {
   if (bufferedHostEvents.length > BUFFERED_HOST_EVENT_LIMIT) {
     bufferedHostEvents.shift()
   }
+}
+
+/**
+ * Bridges plugin web pages (hosted in <webview> guests) to the host JSON-RPC
+ * backend. The guest preload (plugin-host.ts) sends `plugin-host:invoke`
+ * messages via sendToHost; responses are pushed back into the guest frame.
+ */
+function attachPluginHostBridge(): void {
+  if (!mainWindow) return
+  mainWindow.webContents.on('ipc-message', (event, channel, ...args) => {
+    if (channel !== 'plugin-host:invoke') return
+    const [id, method, params] = args as [number, string, unknown]
+    hostClient
+      .invoke(method, params)
+      .then(
+        (result) => event.senderFrame?.send('plugin-host:response', id, result, null),
+        (error: Error) => event.senderFrame?.send('plugin-host:response', id, null, error.message)
+      )
+  })
 }
 
 function flushBufferedHostEvents(window: BrowserWindow): void {
@@ -328,7 +359,9 @@ function createWindow(): void {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false
+      sandbox: false,
+      // Plugin web pages (contributes.webPage) are hosted in <webview> elements.
+      webviewTag: true
     }
   })
 
@@ -337,6 +370,7 @@ function createWindow(): void {
   // Port of WPF WindowResizeStabilityHelper: track live move/size loops so
   // heavy per-frame work can be skipped while the user drags a window edge.
   attachResizeStability(mainWindow)
+  attachPluginHostBridge()
   // Port of WPF WindowMaximizeWorkAreaHelper: keep the maximized window inside
   // the monitor work area (safety net for desktop-dock overlays).
   attachMaximizeWorkAreaClamp(mainWindow)
@@ -567,6 +601,10 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('window:is-maximized', () => mainWindow?.isMaximized() ?? false)
+
+  // Absolute path of the plugin webview guest preload (built by electron-vite
+  // into out/preload/plugin-host.js).
+  ipcMain.handle('plugin:preload-path', () => join(__dirname, '../preload/plugin-host.js'))
 
   // Port of WPF FullscreenHelper (renderer-observable window state).
   ipcMain.handle('window:is-fullscreen', () => mainWindow?.isFullScreen() ?? false)

@@ -11,6 +11,9 @@
   "contributes": {
     "featurePage": null,
     "settingsPage": null,
+    "webPage": {
+      "entry": "web/index.html"
+    },
     "runtime": {
       "class": "UniversalDeviceToolkit.Plugins.CustomMouse.ThemeWatcherRuntime"
     },

@@ -271,6 +271,7 @@ public static class PluginHandlers
         var isInstalled = installedIds.Contains(id);
         updates.TryGetValue(id, out var availableVersion);
         var capabilities = PluginUiCapabilityResolver.ResolveFromManifest(manifest);
+        var webPage = manifest.Contributes?.WebPage;
 
         return new
         {
@@ -293,6 +294,10 @@ public static class PluginHandlers
             updateAvailable = isInstalled && !string.IsNullOrWhiteSpace(availableVersion),
             availableVersion = string.IsNullOrWhiteSpace(availableVersion) ? null : availableVersion,
             state = isInstalled ? "Installed" : "NotInstalled",
+            // Local package directory + optional web UI entry. The Electron shell
+            // uses these to embed the plugin's web page (contributes.webPage).
+            directory = ResolvePluginDirectory(metadata),
+            webPage = webPage is { Entry.Length: > 0 } ? webPage.Entry : null,
             capabilities = new
             {
                 settingsPage = capabilities.SupportsSettingsPage,
@@ -302,6 +307,30 @@ public static class PluginHandlers
                 executableEntryPoint = false,
             },
         };
+    }
+
+    /// <summary>Plugin package root: the directory that holds plugin.json/manifest.</summary>
+    private static string? ResolvePluginDirectory(PluginMetadata? metadata)
+    {
+        try
+        {
+            if (metadata?.FilePath is { Length: > 0 } filePath && File.Exists(filePath))
+                return Path.GetDirectoryName(filePath);
+
+            if (metadata?.Id is { Length: > 0 } id)
+            {
+                var candidate = Path.Combine(PluginPaths.GetPluginsDirectory(), id);
+                if (Directory.Exists(candidate))
+                    return candidate;
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("plugins.list: failed to resolve plugin directory.", ex);
+        }
+
+        return null;
     }
 
     private static object ProjectInstalledOnlyView(string pluginId, PluginMetadata? metadata, Dictionary<string, string> updates)

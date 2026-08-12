@@ -11,6 +11,7 @@ const MacroPage = lazy(() => import('./pages/MacroPage'))
 const WindowsOptimizationPage = lazy(() => import('./pages/WindowsOptimizationPage'))
 const PluginExtensionsPage = lazy(() => import('./pages/PluginExtensionsPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
+const PluginPageView = lazy(() => import('./components/plugins/PluginPageView'))
 
 function PageFallback(): React.JSX.Element {
   return (
@@ -33,6 +34,7 @@ export default function App(): React.JSX.Element {
           <Route path="/macro" element={<MacroPage />} />
           <Route path="/optimization" element={<WindowsOptimizationPage />} />
           <Route path="/plugins" element={<PluginExtensionsPage />} />
+          <Route path="/plugins/:pluginId" element={<PluginPageView />} />
           <Route path="/about" element={<AboutPage />} />
         </Route>
       </Routes>

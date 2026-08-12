@@ -303,7 +303,8 @@ body {
   background: var(--udt-surface-window);
 }
 
-/* Page switch animation (PageEntranceAnimator: 200ms opacity + 6px rise, CubicOut) */
+/* Page switch animation (PageEntranceAnimator: 200ms opacity + 6px rise,
+   CubicOut; scale adds a subtle settle so the incoming page feels alive). */
 .udt-page-enter {
   animation: udt-page-enter var(--udt-anim-medium) var(--udt-ease-cubic-out) backwards;
 }
@@ -311,11 +312,11 @@ body {
 @keyframes udt-page-enter {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(6px) scale(0.995);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
 
@@ -1337,6 +1338,29 @@ body {
   .udt-context-menu-backdrop > *,
   .udt-driver-card__menu-backdrop > *,
   .udt-network-recommended__backdrop > * {
+    animation: none;
+  }
+}
+
+/* ── Content fade-in (skeleton → live panel, modal bodies) ────── */
+
+.udt-fade-in {
+  animation: udt-fade-in var(--udt-anim-medium) var(--udt-ease-cubic-out) backwards;
+}
+
+@keyframes udt-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .udt-fade-in {
     animation: none;
   }
 }

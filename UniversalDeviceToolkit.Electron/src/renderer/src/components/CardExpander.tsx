@@ -83,7 +83,13 @@ export default function CardExpander({
           </span>
         </button>
       </div>
-      {isExpanded && <div className="udt-card-expander__body">{children}</div>}
+      {/* Body stays mounted; the 0fr→1fr grid rows transition animates the
+          expand/collapse height (no layout thrash, works with content changes). */}
+      <div
+        className={`udt-card-expander__body-wrap${isExpanded ? ' udt-card-expander__body-wrap--expanded' : ''}`}
+      >
+        <div className="udt-card-expander__body">{children}</div>
+      </div>
     </div>
   )
 }

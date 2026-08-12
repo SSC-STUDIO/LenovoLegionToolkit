@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Tray, nativeImage, nativeTheme, type Rectangle } from 'electron'
+import { app, BrowserWindow, Tray, nativeImage, nativeTheme, screen, type Rectangle } from 'electron'
 import { join } from 'path'
 import { trayIconSvgForSymbol, trayNavSvg } from './tray-icons'
 import { localizePipelineName, setTrayLanguage, trayStrings } from './tray-i18n'
@@ -6,6 +6,7 @@ import {
   destroyTrayPopup,
   hideTrayPopup,
   isTrayPopupVisible,
+  prewarmTrayPopup,
   showTrayPopup,
   type TrayPopupNode
 } from './tray-popup'
@@ -190,8 +191,17 @@ function handlePopupCommand(cmd: string): void {
   }
 }
 
+function resolveTrayBounds(bounds: Rectangle): Rectangle {
+  if (bounds.width > 0 && bounds.height > 0) return bounds
+  const fromTray = tray?.getBounds()
+  if (fromTray && fromTray.width > 0) return fromTray
+  const cursor = screen.getCursorScreenPoint()
+  return { x: cursor.x - 8, y: cursor.y - 8, width: 16, height: 16 }
+}
+
 async function openFlyout(bounds: Rectangle): Promise<void> {
-  lastTrayBounds = bounds
+  const anchor = resolveTrayBounds(bounds)
+  lastTrayBounds = anchor
   if (building) {
     scheduleRebuild(80)
     return
@@ -199,7 +209,7 @@ async function openFlyout(bounds: Rectangle): Promise<void> {
   building = true
   try {
     const nodes = await buildPopupNodes()
-    await showTrayPopup(nodes, bounds, handlePopupCommand)
+    await showTrayPopup(nodes, anchor, handlePopupCommand)
   } catch (error) {
     console.error('[tray] failed to show flyout:', error)
   } finally {
@@ -251,6 +261,7 @@ export function initTray(getWin: () => BrowserWindow | null, options?: TrayOptio
     void openFlyout(bounds)
   })
 
+  prewarmTrayPopup()
   nativeTheme.on('updated', onNativeThemeUpdated)
 }
 

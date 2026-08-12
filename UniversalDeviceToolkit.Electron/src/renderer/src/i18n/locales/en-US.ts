@@ -1118,6 +1118,15 @@
       uninstallFailed: 'Failed to uninstall',
       installed: 'Installed',
       online: 'Online',
+      settings: {
+        nativePageUnavailable: 'This plugin contains native UI pages that are not available in the Electron version. Its background functionality keeps working through the backend host.',
+        capability: {
+          settingsPage: 'Settings page',
+          featurePage: 'Feature page',
+          optimizationCategory: 'Optimization category',
+          executableEntryPoint: 'Executable entry'
+        }
+      },
       installing: 'Installing…',
       downloading: 'Downloading…',
       preparingDownload: 'Preparing download…',
@@ -1152,7 +1161,17 @@
       summaryInstalled: 'Installed',
       summaryUpdates: 'Updates available',
       importFromFiles: 'Import from files',
-      updateAll: 'Update all',
+
+
+      notFound: 'Plugin not found',
+
+      back: 'Back to plugins',
+
+      noWebPage: 'This plugin has no web interface.',
+
+      pageLoadFailed: 'The plugin page could not be loaded.',
+
+      openPage: 'Open plugin page',      updateAll: 'Update all',
       emptyStore: 'The plugin store is currently empty. Stay tuned for future plugin updates.'
     },
     optimization: {

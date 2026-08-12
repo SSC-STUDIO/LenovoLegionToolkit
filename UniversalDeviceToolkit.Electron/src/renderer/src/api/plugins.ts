@@ -30,6 +30,10 @@ export interface PluginView {
   updateAvailable: boolean
   availableVersion?: string
   state: PluginState
+  /** Plugin package root directory (installed plugins only). */
+  directory?: string | null
+  /** Relative web UI entry (contributes.webPage), e.g. "web/index.html". */
+  webPage?: string | null
   capabilities: PluginCapabilities
 }
 

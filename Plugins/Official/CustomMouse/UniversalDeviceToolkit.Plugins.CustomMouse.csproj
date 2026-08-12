@@ -48,6 +48,14 @@
     </Content>
   </ItemGroup>
 
+  <!-- Web UI (contributes.webPage): copied into the plugin package so the
+       Electron shell can embed it in a <webview>. -->
+  <ItemGroup>
+    <Content Include="web\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Update="Resources\Resource.Designer.cs">
       <DesignTime>True</DesignTime>

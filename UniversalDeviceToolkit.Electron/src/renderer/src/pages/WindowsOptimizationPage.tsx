@@ -329,7 +329,7 @@ function CleanupTab({
       </div>
       <div className="udt-optimization-layout__divider" aria-hidden="true" />
       <div className="udt-optimization-layout__side">
-        <div className="udt-card udt-side-card">
+        <div className="udt-card udt-side-card udt-cleanup-info">
           <div className="udt-card__title">
             {t('wpf.windowsOptimizationPagecleanupInfo', { defaultValue: t('optimization.estimate') })}
           </div>
@@ -644,7 +644,7 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
     (tab === 'driverDownload' && driverSelectedCount === 0)
 
   return (
-    <div className="udt-page">
+    <div className="udt-page udt-optimization-page">
       <h1 className="udt-page__title">{t('optimization.title')}</h1>
       <p className="udt-page__subtitle">{t('optimization.info')}</p>
 

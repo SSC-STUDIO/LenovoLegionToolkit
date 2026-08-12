@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Cursor &amp; Pointer — Web UI</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: 'Segoe UI', 'Microsoft YaHei UI', sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+      background: transparent;
+      color: #e6e6e6;
+      box-sizing: border-box;
+    }
+    h1 { font-size: 20px; margin: 0 0 6px; }
+    p  { font-size: 13px; opacity: 0.75; margin: 0 0 16px; }
+    .card {
+      border: 1px solid rgba(128, 128, 128, 0.35);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #2f7dff;
+      color: #fff;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    code {
+      font-size: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      padding: 4px 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cursor &amp; Pointer</h1>
+  <p>Demo web UI hosted by Universal Device Toolkit (contributes.webPage).</p>
+
+  <div class="card">
+    <div class="row"><code>window.pluginHost</code> bridge:</div>
+    <div class="row">
+      <button id="probe">Probe backend (feature.getStates)</button>
+      <span id="result">—</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row"><code>pluginHost.on('settings.changed')</code> live events:</div>
+    <div id="events" style="font-size:12px;opacity:0.8;">(waiting)</div>
+  </div>
+
+  <script>
+    const result = document.getElementById('result')
+    const events = document.getElementById('events')
+
+    const bridge = window.pluginHost
+
+    document.getElementById('probe').addEventListener('click', async () => {
+      try {
+        const data = await bridge.invoke('feature.getStates', { feature: 'powerMode' })
+        result.textContent = 'ok: ' + JSON.stringify(data.states || data).slice(0, 80)
+      } catch (error) {
+        result.textContent = 'error: ' + error.message
+      }
+    })
+
+    bridge.on('settings.changed', (data) => {
+      const line = document.createElement('div')
+      line.textContent = 'settings.changed: ' + JSON.stringify(data).slice(0, 80)
+      events.prepend(line)
+    })
+  </script>
+</body>
+</html>

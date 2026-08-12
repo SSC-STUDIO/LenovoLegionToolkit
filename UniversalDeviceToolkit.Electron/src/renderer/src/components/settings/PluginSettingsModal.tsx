@@ -1,17 +1,16 @@
 import { useEffect, useState } from 'react'
 import { Alert, Modal, Spin } from 'antd'
+import { CheckCircleFilled, DownloadOutlined, UpCircleOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 import type { PluginView } from '../../api/plugins'
 import { usePluginsStore } from '../../stores/pluginsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/PluginSettingsWindow: shows the
- * plugin identity (icon, name, version, author) and either the plugin's
- * custom settings page or a "no configuration" empty state.
- *
- * Note: the WPF window hosts the plugin's WPF settings page via reflection;
- * the Electron renderer has no equivalent hosting mechanism, so the modal
- * always shows the empty-state message with the plugin description.
+ * Parity modal for WPF Windows/Settings/PluginSettingsWindow: shows the full
+ * plugin metadata (identity, state, dependencies, usage guide, update info).
+ * The WPF window hosts the plugin's WPF settings page via reflection; the
+ * Electron renderer has no equivalent hosting mechanism, so the plugin's
+ * own settings UI is not embeddable — the metadata view stands in for it.
  */
 
 interface PluginSettingsModalProps {
@@ -94,7 +93,8 @@ export default function PluginSettingsModal({
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontWeight: 600,
-                fontSize: 14
+                fontSize: 14,
+                flexShrink: 0
               }}
             >
               {iconLetterOf(plugin.name)}
@@ -103,7 +103,7 @@ export default function PluginSettingsModal({
               <div style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                 {plugin.name}
               </div>
-              <div style={{ display: 'flex', gap: 6, marginTop: 4 }}>
+              <div style={{ display: 'flex', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
                 <span
                   style={{
                     fontSize: 12,
@@ -114,6 +114,18 @@ export default function PluginSettingsModal({
                 >
                   v{plugin.version}
                 </span>
+                {plugin.installedVersion && plugin.installedVersion !== plugin.version && (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      padding: '1px 6px',
+                      borderRadius: 6,
+                      background: 'rgba(128,128,128,0.2)'
+                    }}
+                  >
+                    {t('plugins.installedVersion', '已安装')} v{plugin.installedVersion}
+                  </span>
+                )}
                 {plugin.author.length > 0 && (
                   <span
                     style={{
@@ -126,14 +138,135 @@ export default function PluginSettingsModal({
                     {t('wpf.pluginSettingsWindowauthor').replace('{0}', plugin.author)}
                   </span>
                 )}
+                {plugin.isSystemPlugin && (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      padding: '1px 6px',
+                      borderRadius: 6,
+                      background: 'rgba(128,128,128,0.2)'
+                    }}
+                  >
+                    {t('plugins.local', '本地')}
+                  </span>
+                )}
               </div>
             </div>
           </div>
+
+          {plugin.installedVersion ? (
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 12 }}>
+              <CheckCircleFilled style={{ color: '#6fbf73' }} />
+              <span style={{ fontSize: 13 }}>
+                {t('plugins.settings.installedState', '已安装（v{{version}}）').replace(
+                  '{{version}}',
+                  plugin.installedVersion
+                )}
+              </span>
+              {plugin.updateAvailable && (
+                <span style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 12, color: '#e0a92e' }}>
+                  <UpCircleOutlined /> {t('plugins.updateAvailable')} v{plugin.availableVersion}
+                </span>
+              )}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 12 }}>
+              <DownloadOutlined style={{ color: 'var(--udt-text-secondary, rgba(255,255,255,0.6))' }} />
+              <span style={{ fontSize: 13 }}>{t('plugins.settings.notInstalledState', '未安装')}</span>
+            </div>
+          )}
+
           <div style={{ opacity: 0.75, fontSize: 13 }}>
             {t('wpf.pluginSettingsWindownoConfigMessage')}
           </div>
+
+          {plugin.capabilities.settingsPage || plugin.capabilities.featurePage ? (
+            <Alert
+              type="warning"
+              showIcon
+              style={{ marginTop: 12 }}
+              message={t('plugins.settings.nativePageUnavailable')}
+            />
+          ) : null}
+
+          <div style={{ display: 'flex', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
+            {[
+              { on: plugin.capabilities.settingsPage, label: t('plugins.settings.capability.settingsPage') },
+              { on: plugin.capabilities.featurePage, label: t('plugins.settings.capability.featurePage') },
+              {
+                on: plugin.capabilities.optimizationCategory,
+                label: t('plugins.settings.capability.optimizationCategory')
+              },
+              {
+                on: plugin.capabilities.executableEntryPoint,
+                label: t('plugins.settings.capability.executableEntryPoint')
+              }
+            ].map((chip) => (
+              <span
+                key={chip.label}
+                style={{
+                  fontSize: 12,
+                  padding: '1px 6px',
+                  borderRadius: 6,
+                  background: chip.on ? 'rgba(111, 191, 115, 0.2)' : 'rgba(128,128,128,0.15)',
+                  color: chip.on ? '#6fbf73' : 'var(--udt-text-tertiary, rgba(255,255,255,0.45))'
+                }}
+              >
+                {chip.label}
+              </span>
+            ))}
+          </div>
+
           {plugin.description.length > 0 && (
             <div style={{ opacity: 0.55, fontSize: 12, marginTop: 8 }}>{plugin.description}</div>
+          )}
+
+          {plugin.details && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.7 }}>{t('plugins.details')}</div>
+              <div style={{ fontSize: 13, marginTop: 4, whiteSpace: 'pre-line' }}>{plugin.details}</div>
+            </div>
+          )}
+
+          {plugin.usageGuide && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.7 }}>{t('plugins.usageGuide')}</div>
+              <div style={{ fontSize: 13, marginTop: 4, whiteSpace: 'pre-line' }}>{plugin.usageGuide}</div>
+            </div>
+          )}
+
+          {plugin.dependencies.length > 0 && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.7 }}>
+                {t('plugins.dependencies')}
+              </div>
+              <div style={{ display: 'flex', gap: 6, marginTop: 4, flexWrap: 'wrap' }}>
+                {plugin.dependencies.map((dependency) => (
+                  <span
+                    key={dependency}
+                    style={{
+                      fontSize: 12,
+                      padding: '1px 6px',
+                      borderRadius: 6,
+                      background: 'rgba(128,128,128,0.2)'
+                    }}
+                  >
+                    {dependency}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {plugin.updateAvailable && plugin.changelog && (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 12, fontWeight: 600, opacity: 0.7 }}>
+                {t('plugins.updateInfo', '更新信息')}
+              </div>
+              <div style={{ fontSize: 12, marginTop: 4, opacity: 0.8, whiteSpace: 'pre-line' }}>
+                {plugin.changelog}
+              </div>
+            </div>
           )}
         </div>
       )}

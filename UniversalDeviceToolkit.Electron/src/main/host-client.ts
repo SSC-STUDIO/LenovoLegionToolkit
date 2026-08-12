@@ -25,7 +25,8 @@ interface ReadyWaiter {
   reject: (error: Error) => void
 }
 
-const READY_TIMEOUT_MS = 45_000
+/** Host boot window: after this the UI must surface an error instead of spinning. */
+const READY_TIMEOUT_MS = 15_000
 const MAX_RESTART_ATTEMPTS = 3
 const RESTART_DELAY_MS = 750
 
@@ -168,7 +169,10 @@ export class HostClient {
       console.error(`[host] exited code=${code} signal=${signal}`)
       const error = new Error(`Host exited (code=${code ?? 'n/a'} signal=${signal ?? 'n/a'})`)
       this.lastError = error.message
-      for (const [, request] of this.pending) request.reject(error)
+      for (const [, request] of this.pending) {
+        clearTimeout(request.timer)
+        request.reject(error)
+      }
       this.pending.clear()
       this.rl?.close()
       this.rl = null
@@ -356,6 +360,7 @@ export class HostClient {
     if (typeof message.id === 'number') {
       const request = this.pending.get(message.id)
       if (!request) return
+      clearTimeout(request.timer)
       this.pending.delete(message.id)
       if (message.error) {
         request.reject(new Error(message.error.message ?? `Host error ${message.error.code}`))

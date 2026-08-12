@@ -306,8 +306,20 @@
   transform: rotate(180deg);
 }
 
+.udt-card-expander__body-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--udt-anim-medium) var(--udt-ease-cubic-out);
+}
+
+.udt-card-expander__body-wrap--expanded {
+  grid-template-rows: 1fr;
+}
+
 .udt-card-expander__body {
-  padding: 0 var(--udt-spacing-sm) var(--udt-spacing-sm);
+  overflow: hidden;
+  min-height: 0;
+  padding: 0 var(--udt-spacing-sm);
 }
 
 /* ── LoadingOverlay (LoadStateCoordinator chrome) ──────────────────────────── */

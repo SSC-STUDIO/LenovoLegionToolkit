@@ -21,6 +21,7 @@ export interface Bridge {
   selectExeFile: () => Promise<string | null>
   selectAudioFile: () => Promise<string | null>
   isMaximized: () => Promise<boolean>
+  getPluginPreloadPath: () => Promise<string>
   onMaximizedChanged: (callback: (maximized: boolean) => void) => () => void
   isFullscreen: () => Promise<boolean>
   onFullscreenChanged: (callback: (fullscreen: boolean) => void) => () => void

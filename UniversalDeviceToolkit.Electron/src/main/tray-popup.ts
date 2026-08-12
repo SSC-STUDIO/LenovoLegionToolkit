@@ -7,7 +7,7 @@ import { BrowserWindow, nativeTheme, screen, type Rectangle } from 'electron'
  * icons as bitmap size (HiDPI capture → oversized, pixelated rows). WPF
  * TrayHelper used a WPF ContextMenu (~26–32px rows). This flyout matches
  * that density:
- *   header 11px / 18px tall, rows 26px, font 12px, icons 14px SVG,
+ *   header 11px / 21px tall, rows 26px, font 12px, icons 14px SVG,
  *   card padding 4px, separator 1px + 3px margins.
  */
 
@@ -24,6 +24,7 @@ const BLUR_CLOSE_GRACE_MS = 180
 
 let popup: BrowserWindow | null = null
 let pageLoaded = false
+let loadPromise: Promise<void> | null = null
 let blurArmed = false
 let onCommand: ((cmd: TrayPopupCommand) => void) | null = null
 
@@ -59,7 +60,9 @@ function renderNodes(nodes: TrayPopupNode[]): string {
 function pageCss(): string {
   return [
     'html,body{margin:0;padding:0;background:transparent;overflow:hidden;',
-    'font-family:"Segoe UI Variable","Segoe UI",system-ui,sans-serif;user-select:none;}',
+    'font-family:"Segoe UI Variable","Segoe UI",system-ui,sans-serif;user-select:none;',
+    'box-sizing:border-box;}',
+    '*,*::before,*::after{box-sizing:border-box;}',
     'html.dark{color-scheme:dark;',
     '--bg:#2c2c2c;--text:#f3f3f3;--muted:#b0b0b0;--hover:rgba(255,255,255,.08);',
     '--stroke:rgba(255,255,255,.1);--shadow:0 4px 16px rgba(0,0,0,.4);}',
@@ -76,7 +79,7 @@ function pageCss(): string {
     '.item{display:flex;align-items:center;gap:8px;height:26px;width:100%;',
     'padding:0 8px;border:none;border-radius:4px;background:transparent;',
     'color:var(--text);font:inherit;font-size:12px;line-height:16px;',
-    'text-align:left;cursor:pointer;}',
+    'text-align:left;cursor:pointer;-webkit-appearance:none;appearance:none;}',
     '.item:hover,.item:focus-visible{background:var(--hover);outline:none;}',
     '.icon{flex:0 0 14px;width:14px;height:14px;display:flex;align-items:center;',
     'justify-content:center;color:var(--text);}',
@@ -111,6 +114,7 @@ function ensureWindow(): BrowserWindow {
   if (popup && !popup.isDestroyed()) return popup
 
   pageLoaded = false
+  loadPromise = null
   popup = new BrowserWindow({
     width: MENU_MIN_WIDTH + SHADOW_GUTTER * 2,
     height: 200,
@@ -135,6 +139,7 @@ function ensureWindow(): BrowserWindow {
   popup.on('closed', () => {
     popup = null
     pageLoaded = false
+    loadPromise = null
     blurArmed = false
   })
   popup.on('blur', () => {
@@ -156,13 +161,26 @@ function ensureWindow(): BrowserWindow {
   return popup
 }
 
-async function setMenuHtml(win: BrowserWindow, inner: string): Promise<void> {
-  const theme = isDark() ? 'dark' : 'light'
-  if (!pageLoaded) {
-    await win.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(shellHtml(inner))}`)
-    pageLoaded = true
-    return
+async function loadShell(win: BrowserWindow): Promise<void> {
+  if (pageLoaded) return
+  if (!loadPromise) {
+    loadPromise = win
+      .loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(shellHtml(''))}`)
+      .then(() => {
+        pageLoaded = true
+      })
+      .catch(() => undefined)
+      .finally(() => {
+        loadPromise = null
+      })
   }
+  await loadPromise
+}
+
+async function setMenuHtml(win: BrowserWindow, inner: string): Promise<void> {
+  await loadShell(win)
+  if (win.isDestroyed()) return
+  const theme = isDark() ? 'dark' : 'light'
   await win.webContents.executeJavaScript(
     `document.documentElement.className=${JSON.stringify(theme)};` +
       `document.getElementById('menu').innerHTML=${JSON.stringify(inner)};`
@@ -220,6 +238,13 @@ export function destroyTrayPopup(): void {
   }
   popup = null
   pageLoaded = false
+  loadPromise = null
+}
+
+/** Create the hidden flyout window at tray init so the first right-click is instant. */
+export function prewarmTrayPopup(): void {
+  const win = ensureWindow()
+  void loadShell(win)
 }
 
 export async function showTrayPopup(

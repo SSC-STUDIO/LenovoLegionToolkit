@@ -1,5 +1,5 @@
-import '../notifications/notifications.css'
-import { useEffect } from 'react'
+﻿import '../notifications/notifications.css'
+import { useEffect, useRef, useState } from 'react'
 import {
   CheckCircleFilled,
   CloseCircleFilled,
@@ -71,15 +71,33 @@ function NotificationToast({ item }: { item: NotificationItem }): React.JSX.Elem
   const pause = useNotificationCenter((s) => s.pause)
   const resume = useNotificationCenter((s) => s.resume)
   const dismiss = useNotificationCenter((s) => s.dismiss)
+  // Close-out animation: slide out before the store removes the item.
+  const [closing, setClosing] = useState(false)
+  const closeTimerRef = useRef<number | null>(null)
+
+  useEffect(
+    () => () => {
+      if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current)
+    },
+    []
+  )
+
+  const handleClose = (): void => {
+    if (closing) return
+    setClosing(true)
+    closeTimerRef.current = window.setTimeout(() => dismiss(item.id), 180)
+  }
 
   const color = SEVERITY_COLORS[item.severity]
   const hasProgress = typeof item.progressPercent === 'number'
   const percent = hasProgress ? Math.min(100, Math.max(0, item.progressPercent ?? 0)) : 0
   const title = item.mergeCount > 1 ? `${item.title} ×${item.mergeCount}` : item.title
+  const classes = ['udt-notification-item']
+  if (closing) classes.push('udt-notification-item--closing')
 
   return (
     <div
-      className="udt-notification-item"
+      className={classes.join(' ')}
       role="status"
       onMouseEnter={() => pause(item.id)}
       onMouseLeave={() => resume(item.id)}
@@ -104,7 +122,7 @@ function NotificationToast({ item }: { item: NotificationItem }): React.JSX.Elem
         type="button"
         className="udt-notification-item__close"
         aria-label={t('common.close', { defaultValue: 'Close' })}
-        onClick={() => dismiss(item.id)}
+        onClick={handleClose}
       >
         <CloseOutlined />
       </button>

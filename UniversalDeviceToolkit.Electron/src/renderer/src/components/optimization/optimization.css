@@ -1,22 +1,33 @@
 ﻿/* Windows optimization page — mirrors WindowsOptimizationPage.xaml */
 
+/* Content-width queries (page column after the sidebar), not OS window width.
+   A 1100px window with a 220px nav is only ~850px of page — still two columns. */
+.udt-optimization-page {
+  container-type: inline-size;
+  container-name: udt-optimization;
+}
+
+.udt-optimization-page .udt-page__subtitle {
+  margin-bottom: 16px;
+}
+
 .udt-optimization-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 16px;
   align-items: start;
-  padding: 16px 16px 28px 0;
+  padding: 0 16px 28px 0;
 }
 
 .udt-optimization-layout--solo {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* Cleanup tab: collapsed category list (~60–70%) | divider | info + rules (~30–40%).
-   More specific than the 1100px stack rule so this split holds at typical window sizes. */
-.udt-optimization-layout--cleanup {
-  grid-template-columns: minmax(0, 1.7fr) 1px minmax(240px, 1fr);
-  gap: 16px 20px;
+/* Cleanup: categories (~60–70%) | divider | info + rules (~30–40%).
+   Two classes so this beats any later single-class `.udt-optimization-layout` stack rule. */
+.udt-optimization-layout.udt-optimization-layout--cleanup {
+  grid-template-columns: minmax(0, 1.7fr) 1px minmax(220px, 1fr);
+  gap: 12px 16px;
 }
 
 .udt-optimization-layout__main {
@@ -49,7 +60,7 @@
 .udt-optimization-layout--cleanup .udt-optimization-layout__side {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   position: sticky;
 }
 
@@ -58,7 +69,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
   /* Match .udt-optimization-layout’s right gutter so star/play align with cards */
   padding-right: 16px;
@@ -322,7 +333,7 @@
 
 /* Side card */
 .udt-side-card {
-  padding: 20px;
+  padding: 12px 14px;
 }
 
 .udt-side-card__actions {
@@ -334,8 +345,8 @@
 .udt-cleanup-scan {
   width: 100%;
   min-width: 0;
-  height: 40px;
-  margin-top: 16px;
+  height: 36px;
+  margin-top: 12px;
   border-radius: var(--udt-radius-round);
 }
 
@@ -391,20 +402,48 @@
   color: var(--udt-text-primary);
 }
 
-/* Responsive */
-@media (max-width: 1100px) {
-  .udt-optimization-layout {
-    grid-template-columns: 1fr;
+/* Responsive — container = page content width (sidebar already subtracted).
+   720px: tighten shared chrome (title / pills / star-play) on all tabs.
+   520px: cleanup must stack; keep two columns above this (typical “small” app window). */
+@container udt-optimization (max-width: 720px) {
+  .udt-optimization-page .udt-page__title {
+    font-size: 22px;
+    margin-bottom: 4px;
   }
 
-  .udt-optimization-layout__side {
-    position: static;
+  .udt-optimization-page .udt-page__subtitle {
+    margin-bottom: 10px;
+    line-height: 1.35;
+  }
+
+  .udt-opt-chrome {
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .udt-opt-chrome__icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .udt-segmented-nav {
+    width: 100%;
+    min-height: 36px;
+    padding: 3px;
+    overflow-x: auto;
+  }
+
+  .udt-segmented-nav__item {
+    flex: 0 0 auto;
+    min-height: 30px;
+    padding: 6px 12px;
   }
 }
 
-@media (max-width: 640px) {
-  .udt-optimization-layout--cleanup {
+@container udt-optimization (max-width: 520px) {
+  .udt-optimization-layout.udt-optimization-layout--cleanup {
     grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
   }
 
   .udt-optimization-layout--cleanup .udt-optimization-layout__divider {
@@ -412,22 +451,91 @@
   }
 
   .udt-optimization-layout--cleanup .udt-optimization-layout__side {
-    position: static;
+    order: -1;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px;
+    padding-bottom: 4px;
+    background: var(--udt-surface-window);
+  }
+
+  .udt-optimization-layout--cleanup .udt-side-card {
+    padding: 8px 10px;
+    margin-bottom: 0;
+  }
+
+  .udt-cleanup-info {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    column-gap: 8px;
+    row-gap: 2px;
+    align-items: center;
+  }
+
+  .udt-cleanup-info .udt-card__title {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .udt-cleanup-info .udt-card__desc {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0;
+  }
+
+  .udt-cleanup-info .udt-cleanup-scan {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    width: auto;
+    min-width: 72px;
+    height: 32px;
+    margin-top: 0;
+    padding: 0 14px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  .udt-optimization-layout--cleanup .udt-card-expander__header-row {
+    min-height: 40px;
+    padding: 4px 8px;
+  }
+
+  .udt-optimization-layout--cleanup .udt-card-expander__desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .udt-optimization-layout--cleanup .udt-cleanup-rules__empty,
+  .udt-optimization-layout--cleanup .udt-cleanup-rules .udt-empty-state {
+    padding: 2px 0 0;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .udt-optimization-layout--cleanup .udt-cleanup-rules .udt-empty-state__icon {
+    display: none;
+  }
+
+  .udt-optimization-layout--cleanup .udt-cleanup-rules .udt-side-card__actions {
+    margin-top: 8px;
+  }
+
+  .udt-optimization-layout--cleanup .udt-cleanup-rules .udt-btn {
+    height: 28px;
+    padding: 0 10px;
+    font-size: var(--udt-font-small-caption);
   }
 }
 
-@media (max-width: 760px) {
-  .udt-opt-chrome {
-    gap: 10px;
-  }
-
-  .udt-segmented-nav {
-    width: 100%;
-    overflow-x: auto;
-  }
-
-  .udt-segmented-nav__item {
-    flex: 0 0 auto;
+@container udt-optimization (max-width: 400px) {
+  .udt-optimization-layout--cleanup .udt-optimization-layout__side {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
@@ -469,8 +577,13 @@
   margin-top: 0;
 }
 
-.udt-cleanup-rules__empty {
-  padding: 20px 12px 8px;
+.udt-cleanup-rules .udt-empty-state {
+  padding: 8px 4px 0;
+}
+
+.udt-cleanup-rules .udt-empty-state__icon {
+  font-size: var(--udt-icon-lg);
+  margin-bottom: 4px;
 }
 
 .udt-cleanup-rules .udt-side-card__actions {
@@ -1425,4 +1538,48 @@
   .udt-network-diag {
     grid-template-columns: 1fr;
   }
+}
+
+/* Driver scan skeleton — mirrors the PackageCard layout (checkbox + title/status
+   row + meta/description lines + trailing action button). */
+.udt-driver-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.udt-driver-skeleton__card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+}
+
+.udt-driver-skeleton__check {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.udt-driver-skeleton__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.udt-driver-skeleton__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.udt-driver-skeleton__action {
+  flex: 0 0 auto;
+  width: 84px;
+  height: 30px;
+  border-radius: 8px;
 }

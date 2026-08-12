@@ -17,6 +17,7 @@ import {
 } from '@ant-design/icons'
 import { Button, Input, Popconfirm, Select, Spin, Tooltip, message } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import type { PluginView } from '../api/plugins'
 import { usePluginsStore } from '../stores/pluginsStore'
 import PluginSettingsModal from '../components/settings/PluginSettingsModal'
@@ -71,6 +72,7 @@ function iconLetterOf(name: string): string {
 
 function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const install = usePluginsStore((state) => state.install)
   const uninstall = usePluginsStore((state) => state.uninstall)
   const installingIds = usePluginsStore((state) => state.installingIds)
@@ -254,6 +256,17 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
                     onClick={() => setSettingsOpen(true)}
                   >
                     <SettingOutlined />
+                  </button>
+                </Tooltip>
+              )}
+              {installed && plugin.webPage && (
+                <Tooltip title={t('plugins.openPage', '打开插件页面')}>
+                  <button
+                    type="button"
+                    className="udt-action-btn"
+                    onClick={() => navigate(`/plugins/${encodeURIComponent(plugin.id)}`)}
+                  >
+                    <FolderOpenOutlined />
                   </button>
                 </Tooltip>
               )}

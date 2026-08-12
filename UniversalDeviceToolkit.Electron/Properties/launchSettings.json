@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Electron (npm run dev)": {
+      "commandName": "Executable",
+      "executablePath": "cmd.exe",
+      "commandLineArgs": "/c npm run dev",
+      "workingDirectory": ".."
+    },
+    "Electron (npm start)": {
+      "commandName": "Executable",
+      "executablePath": "cmd.exe",
+      "commandLineArgs": "/c npm start",
+      "workingDirectory": ".."
+    }
+  }
+}

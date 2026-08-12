@@ -581,10 +581,70 @@ export default function DriverDownloadPanel(): React.JSX.Element {
       )}
 
       {scanning && (
-        <div className="udt-driver-skeleton">
-          <div className="udt-skeleton-card" />
-          <div className="udt-skeleton-card" />
-          <div className="udt-skeleton-card" />
+        <div className="udt-driver-skeleton" role="status" aria-label={t('common.loading', { defaultValue: 'Loading…' })}>
+          {Array.from({ length: 3 }, (_, index) => (
+            <div key={index} className="udt-driver-skeleton__card">
+              <div
+                className="udt-skeleton udt-driver-skeleton__check"
+                style={{ ['--udt-shimmer-delay' as string]: `${-Math.min(index * 0.055, 0.32)}s` }}
+              />
+              <div className="udt-driver-skeleton__main">
+                <div className="udt-driver-skeleton__row">
+                  <div
+                    className="udt-skeleton"
+                    style={{
+                      width: '45%',
+                      height: 15,
+                      borderRadius: 'var(--udt-radius-small)',
+                      ['--udt-shimmer-delay' as string]: `${-Math.min(index * 0.055, 0.32)}s`
+                    }}
+                  />
+                  <div
+                    className="udt-skeleton"
+                    style={{
+                      width: 64,
+                      height: 18,
+                      borderRadius: 999,
+                      ['--udt-shimmer-delay' as string]: `${-Math.min(index * 0.055 + 0.055, 0.32)}s`
+                    }}
+                  />
+                  <div
+                    className="udt-skeleton"
+                    style={{
+                      width: 88,
+                      height: 13,
+                      borderRadius: 'var(--udt-radius-small)',
+                      ['--udt-shimmer-delay' as string]: `${-Math.min(index * 0.055 + 0.11, 0.32)}s`
+                    }}
+                  />
+                </div>
+                <div
+                  className="udt-skeleton"
+                  style={{
+                    width: '32%',
+                    height: 12,
+                    marginTop: 8,
+                    borderRadius: 'var(--udt-radius-small)',
+                    ['--udt-shimmer-delay' as string]: `${-Math.min(index * 0.055 + 0.165, 0.32)}s`
+                  }}
+                />
+                <div
+                  className="udt-skeleton"
+                  style={{
+                    width: '68%',
+                    height: 12,
+                    marginTop: 8,
+                    borderRadius: 'var(--udt-radius-small)',
+                    ['--udt-shimmer-delay' as string]: `${-Math.min(index * 0.055 + 0.22, 0.32)}s`
+                  }}
+                />
+              </div>
+              <div
+                className="udt-skeleton udt-driver-skeleton__action"
+                style={{ ['--udt-shimmer-delay' as string]: `${-Math.min(index * 0.055 + 0.11, 0.32)}s` }}
+              />
+            </div>
+          ))}
         </div>
       )}
 

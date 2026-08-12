@@ -26,6 +26,8 @@ public static class SensorsHandlers
     private static int _fpsSubscriberCount;
     private static SensorsGroupController? _subscribedGroup;
     private static BridgeRpcServer? _sensorsRpc;
+    private static System.Threading.Timer? _vendorPollTimer;
+    private static double _vendorPollIntervalSec = 1.0;
     private static FpsSensorController? _subscribedFpsController;
     private static BridgeRpcServer? _fpsRpc;
 
@@ -368,11 +370,47 @@ public static class SensorsHandlers
             intervalSec = Math.Clamp(intervalSec, 0.5, 30.0);
 
             var group = GetSensorsGroup();
-            _subscribedGroup = group;
+
+            // LibreHardwareMonitor path: the group's producer loop raises
+            // SensorsUpdated only after LHM initialization succeeds.
+            if (group.IsLibreHardwareMonitorInitialized())
+            {
+                _subscribedGroup = group;
+                _sensorsRpc = rpc;
+                group.SensorsUpdated -= OnSensorsUpdated;
+                group.SensorsUpdated += OnSensorsUpdated;
+                group.Start(SensorSubscriber.Instance, TimeSpan.FromSeconds(intervalSec));
+
+                await Task.CompletedTask;
+                return BridgeResult.Ok(new { subscribed = true, effectiveIntervalSec = intervalSec });
+            }
+
+            // Vendor fallback path (EnableHardwareSensors off / LHM unavailable):
+            // poll BuildSnapshotAsync on the interval and broadcast the same
+            // sensors.updated event the renderer subscribes to.
+            _subscribedGroup = null;
             _sensorsRpc = rpc;
-            group.SensorsUpdated -= OnSensorsUpdated;
-            group.SensorsUpdated += OnSensorsUpdated;
-            group.Start(SensorSubscriber.Instance, TimeSpan.FromSeconds(intervalSec));
+            _vendorPollIntervalSec = intervalSec;
+            _vendorPollTimer?.Dispose();
+            _vendorPollTimer = new System.Threading.Timer(
+                async _ =>
+                {
+                    var rpcRef = _sensorsRpc;
+                    if (rpcRef is null) return;
+                    try
+                    {
+                        var snapshot = await BuildSnapshotAsync().ConfigureAwait(false);
+                        rpcRef.Publish("sensors.updated", snapshot);
+                    }
+                    catch (Exception ex)
+                    {
+                        if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
+                            UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"sensors.updated vendor publish failed: {ex.Message}", ex);
+                    }
+                },
+                null,
+                TimeSpan.FromSeconds(intervalSec),
+                TimeSpan.FromSeconds(intervalSec));
 
             await Task.CompletedTask;
             return BridgeResult.Ok(new { subscribed = true, effectiveIntervalSec = intervalSec });
@@ -391,6 +429,9 @@ public static class SensorsHandlers
             group.Stop(SensorSubscriber.Instance);
             group.SensorsUpdated -= OnSensorsUpdated;
             _subscribedGroup = null;
+            _vendorPollTimer?.Dispose();
+            _vendorPollTimer = null;
+            _sensorsRpc = null;
             await Task.CompletedTask;
             return BridgeResult.Ok(new { unsubscribed = true });
         }

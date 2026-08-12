@@ -1117,6 +1117,15 @@
       uninstallFailed: '卸载失败',
       installed: '已安装',
       online: '在线',
+      settings: {
+        nativePageUnavailable: '此插件包含原生 UI 页面，Electron 版本中暂不可用；其后台功能仍通过后端 Host 正常运行。',
+        capability: {
+          settingsPage: '设置页',
+          featurePage: '功能页',
+          optimizationCategory: '优化分类',
+          executableEntryPoint: '可执行入口'
+        }
+      },
       installing: '安装中…',
       downloading: '下载中…',
       preparingDownload: '正在准备下载…',
@@ -1151,7 +1160,17 @@
       summaryInstalled: '已安装',
       summaryUpdates: '可更新',
       importFromFiles: '从文件导入',
-      updateAll: '全部更新',
+
+
+      notFound: '未找到插件',
+
+      back: '返回插件列表',
+
+      noWebPage: '此插件没有网页界面。',
+
+      pageLoadFailed: '插件页面加载失败。',
+
+      openPage: '打开插件页面',      updateAll: '全部更新',
       emptyStore: '插件商城目前为空，敬请期待未来的插件更新。'
     },
     optimization: {

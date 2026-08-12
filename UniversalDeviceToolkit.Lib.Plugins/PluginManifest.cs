@@ -179,11 +179,27 @@ public class PluginManifestContributions
     [JsonPropertyName("settingsPage")]
     public PluginManifestPageContribution? SettingsPage { get; set; }
 
+    /// <summary>
+    /// Optional web UI entry (Electron host): a local HTML file inside the
+    /// plugin package that the Electron shell renders in an embedded webview.
+    /// The page talks to the host backend through the injected pluginHost
+    /// bridge (invoke -> host JSON-RPC).
+    /// </summary>
+    [JsonPropertyName("webPage")]
+    public PluginManifestWebContribution? WebPage { get; set; }
+
     [JsonPropertyName("runtime")]
     public PluginManifestRuntimeContribution? Runtime { get; set; }
 
     [JsonPropertyName("optimizationActions")]
     public List<PluginManifestOptimizationContribution>? OptimizationActions { get; set; }
+}
+
+public class PluginManifestWebContribution
+{
+    /// <summary>Relative HTML entry, e.g. "web/index.html".</summary>
+    [JsonPropertyName("entry")]
+    public string Entry { get; set; } = string.Empty;
 }
 
 public class PluginManifestPageContribution

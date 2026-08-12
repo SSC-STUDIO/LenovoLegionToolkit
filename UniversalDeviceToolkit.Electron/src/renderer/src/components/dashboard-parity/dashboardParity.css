@@ -1071,10 +1071,7 @@
   .udt-dsk-groups__grid {
     grid-template-columns: 1fr;
   }
-
-  .udt-dsk-sensors__grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
+  /* Sensor skeleton keeps the fixed 3-across layout at every width (product
+     decision — matches the SensorSection loading chrome). */
 }
 

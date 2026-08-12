@@ -16,10 +16,6 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// </summary>
 public static class SoftwareDisablerHandlers
 {
-    private static readonly VantageDisabler Vantage = IoCContainer.Resolve<VantageDisabler>();
-    private static readonly LegionZoneDisabler LegionZone = IoCContainer.Resolve<LegionZoneDisabler>();
-    private static readonly FnKeysDisabler FnKeys = IoCContainer.Resolve<FnKeysDisabler>();
-
     public static void Register(BridgeRpcServer rpc)
     {
         rpc.RegisterHandler("software.getStatus", (request, _) => HandleGetStatusAsync(request));
@@ -28,9 +24,9 @@ public static class SoftwareDisablerHandlers
 
     private static AbstractSoftwareDisabler? GetDisabler(string app) => app switch
     {
-        "vantage" => Vantage,
-        "legionZone" => LegionZone,
-        "fnKeys" => FnKeys,
+        "vantage" => IoCContainer.Resolve<VantageDisabler>(),
+        "legionZone" => IoCContainer.Resolve<LegionZoneDisabler>(),
+        "fnKeys" => IoCContainer.Resolve<FnKeysDisabler>(),
         _ => null,
     };
 
