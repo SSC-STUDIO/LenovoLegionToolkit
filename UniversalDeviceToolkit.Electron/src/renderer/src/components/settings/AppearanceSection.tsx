@@ -8,11 +8,6 @@ import { LANGUAGES, changeLanguage } from '../../i18n'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { UI_SCALE_OPTIONS, useThemeStore } from '../../stores/themeStore'
 import { storeAccentPreference } from '../../theme/useTheme'
-import {
-  applyAccentSurfacePalette,
-  clearAccentSurfacePalette,
-  createAccentPalette
-} from '../../theme/accentPalette'
 import { SettingsCard } from './SettingsCard'
 
 type AppSettings = Record<string, unknown>
@@ -232,8 +227,8 @@ function ThemePreviewCard({
 export default function AppearanceSection(): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const setThemeMode = useThemeStore((s) => s.setThemeMode)
-  const themeMode = useThemeStore((s) => s.themeMode)
   const setAccent = useThemeStore((s) => s.setAccent)
+  const setAccentTintsSurfaces = useThemeStore((s) => s.setAccentTintsSurfaces)
   const uiScale = useThemeStore((s) => s.uiScale)
   const setUiScale = useThemeStore((s) => s.setUiScale)
   const scopes = useSettingsStore((s) => s.scopes)
@@ -356,18 +351,6 @@ export default function AppearanceSection(): React.JSX.Element {
     }
   }
 
-  /**
-   * Applies or clears the accent-tinted surface palette immediately, matching
-   * Electron ThemeManager.ApplyStylePreset gated by ApplyAccentColorToTheme.
-   */
-  const applyAccentSurfaceTint = (enabled: boolean, hex?: string): void => {
-    if (enabled && hex) {
-      applyAccentSurfacePalette(createAccentPalette(hex, themeMode === 'dark'))
-    } else {
-      clearAccentSurfacePalette()
-    }
-  }
-
   const handleApplyAccentToThemeChange = (checked: boolean): void => {
     // Palette tint gate only - do not clear/reapply the accent itself (Electron parity).
     const next: AppSettings = { ...app, ApplyAccentColorToTheme: checked }
@@ -375,7 +358,8 @@ export default function AppearanceSection(): React.JSX.Element {
       next.ThemeStylePreset = 'Default'
     }
     persistApplication(next)
-    applyAccentSurfaceTint(checked, accentHex ?? systemAccentHex)
+    // The palette effect in useTheme retints surfaces for the current mode.
+    setAccentTintsSurfaces(checked)
   }
 
   const handleSystemAccent = (): void => {
@@ -389,7 +373,6 @@ export default function AppearanceSection(): React.JSX.Element {
     persistApplication(next)
     storeAccentPreference('System')
     applyAccentToUi(next)
-    applyAccentSurfaceTint(applyAccentToTheme, systemAccentHex)
   }
 
   const handleAccentPreset = (hex: string): void => {
@@ -406,7 +389,6 @@ export default function AppearanceSection(): React.JSX.Element {
     storeAccentPreference('Custom', hex)
     applyAccentToUi(next)
     applyAccentToWindowsIfEnabled(rgb, applyAccentToSystem)
-    applyAccentSurfaceTint(applyAccentToTheme, hex)
   }
 
   const handleCustomAccent = (hex: string): void => {
@@ -423,7 +405,6 @@ export default function AppearanceSection(): React.JSX.Element {
     storeAccentPreference('Custom', hex)
     applyAccentToUi(next)
     applyAccentToWindowsIfEnabled(rgb, applyAccentToSystem)
-    applyAccentSurfaceTint(applyAccentToTheme, hex)
   }
 
   const handleUiScaleChange = (value: number): void => {

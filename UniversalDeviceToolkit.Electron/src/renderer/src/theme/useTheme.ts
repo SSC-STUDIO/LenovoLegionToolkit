@@ -90,9 +90,11 @@ export function useTheme(): ThemeController {
   const themeMode = useThemeStore((s) => s.themeMode)
   const colorPrimary = useThemeStore((s) => s.colorPrimary)
   const uiScale = useThemeStore((s) => s.uiScale)
+  const accentTintsSurfaces = useThemeStore((s) => s.accentTintsSurfaces)
   const setThemeMode = useThemeStore((s) => s.setThemeMode)
   const setAccent = useThemeStore((s) => s.setAccent)
   const setUiScale = useThemeStore((s) => s.setUiScale)
+  const setAccentTintsSurfaces = useThemeStore((s) => s.setAccentTintsSurfaces)
 
   // Keep the document scaling in sync with the store (the store also applies
   // the initial scale at module load so the whole app is scaled from launch).
@@ -100,22 +102,31 @@ export function useTheme(): ThemeController {
     applyUiScale(uiScale)
   }, [uiScale])
 
+  /**
+   * Single application point for the accent-tinted surface palette. Recomputes
+   * whenever the mode, accent or the ApplyAccentColorToTheme gate changes, so
+   * light/dark switches (manual or system-following) always retint surfaces
+   * with the mode-appropriate variant.
+   */
+  useEffect(() => {
+    const hex = colorPrimary ?? DEFAULT_SYSTEM_ACCENT_HEX
+    if (accentTintsSurfaces) {
+      applyAccentSurfacePalette(createAccentPalette(hex, themeMode === 'dark'))
+    } else {
+      clearAccentSurfacePalette()
+    }
+  }, [themeMode, colorPrimary, accentTintsSurfaces])
+
   useEffect(() => {
     let disposed = false
     let preference: ThemePreference = 'System'
     let media: MediaQueryList | null = null
     let systemAccentHex = DEFAULT_SYSTEM_ACCENT_HEX
-    let activeAccentHex = DEFAULT_SYSTEM_ACCENT_HEX
-    let accentTintsSurfaces = true
 
     const onSystemChange = (): void => {
       if (disposed || preference !== 'System') return
-      const mode = systemPrefersDark() ? 'dark' : 'light'
-      setThemeMode(mode)
-      // System light/dark switch retints the surface palette with the same accent.
-      if (accentTintsSurfaces) {
-        applyAccentSurfacePalette(createAccentPalette(activeAccentHex, mode === 'dark'))
-      }
+      // The palette effect above retints surfaces for the new mode.
+      setThemeMode(systemPrefersDark() ? 'dark' : 'light')
     }
 
     // Electron ThemeManager.SetColor always applies the resolved accent.
@@ -164,16 +175,10 @@ export function useTheme(): ThemeController {
         }
       }
       const accentHex = resolveAccent(settings)
-      activeAccentHex = accentHex
-      accentTintsSurfaces = settings?.ApplyAccentColorToTheme !== false
       setAccent(accentHex)
-      // Electron ThemeManager.ApplyStylePreset: ApplyAccentColorToTheme gates
-      // the accent-tinted surface palette, never the accent itself.
-      if (accentTintsSurfaces) {
-        applyAccentSurfacePalette(createAccentPalette(accentHex, mode === 'dark'))
-      } else {
-        clearAccentSurfacePalette()
-      }
+      // Electron ThemeManager: the accent itself always applies; the palette
+      // effect above tints surfaces when ApplyAccentColorToTheme is enabled.
+      setAccentTintsSurfaces(settings?.ApplyAccentColorToTheme !== false)
     }
 
     const load = (): void => {
@@ -207,7 +212,7 @@ export function useTheme(): ThemeController {
       media?.removeEventListener('change', onSystemChange)
       offChanged()
     }
-  }, [setAccent, setThemeMode])
+  }, [setAccent, setThemeMode, setAccentTintsSurfaces])
 
   return { themeMode, colorPrimary, uiScale, setThemeMode, setAccent, setUiScale }
 }

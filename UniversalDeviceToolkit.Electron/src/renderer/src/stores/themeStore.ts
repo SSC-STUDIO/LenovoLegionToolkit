@@ -7,9 +7,16 @@ export interface ThemeStore {
   colorPrimary?: string
   /** UI scale factor (1.0 = default). Independent of Windows display scaling. */
   uiScale: number
+  /**
+   * ApplyAccentColorToTheme gate: when true the accent tints the surface
+   * palette (surfaces/controls/strokes/secondary text); when false the
+   * neutral default surfaces from global.css are used.
+   */
+  accentTintsSurfaces: boolean
   setThemeMode: (mode: ThemeMode) => void
   setAccent: (color?: string) => void
   setUiScale: (scale: number) => void
+  setAccentTintsSurfaces: (enabled: boolean) => void
 }
 
 /**
@@ -55,6 +62,7 @@ export const useThemeStore = create<ThemeStore>()((set) => ({
   themeMode: 'dark',
   colorPrimary: undefined,
   uiScale: readStoredUiScale(),
+  accentTintsSurfaces: true,
   setThemeMode: (themeMode) => set({ themeMode }),
   setAccent: (colorPrimary) => set({ colorPrimary }),
   setUiScale: (uiScale) => {
@@ -65,7 +73,8 @@ export const useThemeStore = create<ThemeStore>()((set) => ({
       /* ignore quota / private mode */
     }
     applyUiScale(uiScale)
-  }
+  },
+  setAccentTintsSurfaces: (accentTintsSurfaces) => set({ accentTintsSurfaces })
 }))
 
 // Apply the persisted scale once at startup (themeStore is imported by main.tsx
