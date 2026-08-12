@@ -1,8 +1,15 @@
-import { app, BrowserWindow, clipboard, dialog, ipcMain, powerMonitor, shell } from 'electron'
-import { join } from 'path'
-import { existsSync, mkdirSync } from 'fs'
+import { app, BrowserWindow, clipboard, dialog, ipcMain, nativeTheme, powerMonitor, shell } from 'electron'
+import { join, dirname } from 'path'
+import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { hostClient } from './host-client'
+import {
+  initMainLogger,
+  isValidLogLevel,
+  logsDirectory,
+  writeHostLog,
+  writeRendererLog
+} from './logger'
 import { initSingleInstance, setMainWindowRef } from './single-instance'
 import { initTray, destroyTray, refreshTrayMenu, updateTrayLanguage } from './tray'
 import { initOsdWindow, destroyOsdWindow } from './osd-window'
@@ -12,8 +19,13 @@ import { attachResizeStability, attachMaximizeWorkAreaClamp } from './window-hel
 import { listPowerPlans, setActivePowerPlan } from './power-plans'
 import { restartSystem, shutdownSystem, sleepSystem } from './system-power'
 import { downloadLatestUpdate, getLatestRelease, launchInstaller, type DownloadProgress } from './update-downloader'
+import { installApplicationMenu } from './menu'
 
-app.setAppUserModelId('com.universaldevicetoolkit.app')
+// The Windows AppUserModelId (taskbar grouping, notifications) is meaningless
+// on macOS/Linux; setting it there is a no-op, so keep the call Windows-only.
+if (process.platform === 'win32') {
+  app.setAppUserModelId('com.universaldevicetoolkit.app')
+}
 
 // Force the app name to use the product name everywhere (taskbar window preview,
 // notifications, dev tools, etc.) instead of falling back to package.json name which
@@ -24,10 +36,17 @@ app.setName('Universal Device Toolkit')
 // in production, and an unsuppressed F12 would spawn a hidden 'Electron' frame that the
 // taskbar window preview surfaces as a third entry next to the main window.
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+// --single-process merges renderers into the main process so memory usage can be
+// inspected as a single entry (debug/dev only).
+if (flags.singleProcess) {
+  app.commandLine.appendSwitch('single-process')
+}
 
 // Electron renders in DIPs while Chromium applies the Windows display scale to CSS.
 // This keeps the Electron renderer at the original client's physical density.
-const RENDERER_ZOOM_FACTOR = 5 / 6
+// The 5/6 correction is Windows-only (Windows display scale vs. client DPI);
+// Linux/macOS map one CSS px to one DIP, so the zoom factor stays 1 there.
+const RENDERER_ZOOM_FACTOR = process.platform === 'win32' ? 5 / 6 : 1
 const PROJECT_ROOT = join(__dirname, '..', '..')
 
 if (!initSingleInstance()) {
@@ -47,6 +66,10 @@ function resolveHostPath(): string {
   }
 
   // __dirname = <project>/out/main -> project root is two levels up.
+  // The .NET Host is a console binary: UniversalDeviceToolkit.Host.exe on
+  // Windows, extension-less executable on Linux/macOS.
+  const hostExeName =
+    process.platform === 'win32' ? 'UniversalDeviceToolkit.Host.exe' : 'UniversalDeviceToolkit.Host'
   const tfm = 'net10.0-windows10.0.26100.0'
   const candidates: string[] = []
 
@@ -54,19 +77,37 @@ function resolveHostPath(): string {
   // In dev, process.resourcesPath points at Electron's own resources and must not
   // take priority over the sibling Host project output.
   if (app.isPackaged) {
-    candidates.push(join(process.resourcesPath, 'host', 'UniversalDeviceToolkit.Host.exe'))
+    candidates.push(join(process.resourcesPath, 'host', hostExeName))
   }
 
+  // Dev: sibling repo folder next to the Electron project (Windows layout),
+  // staged publish folders for every platform, and a local host/ staging dir.
+  if (process.platform === 'win32') {
+    candidates.push(
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Debug',
+        tfm, 'win-x64', hostExeName),
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Release',
+        tfm, 'win-x64', hostExeName),
+      // CI/installer staging: Release.yml publishes the Host here and
+      // electron-builder copies resources/host from it.
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'win-x64', hostExeName)
+    )
+  } else if (process.platform === 'darwin') {
+    candidates.push(
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', `osx-${process.arch}`, hostExeName),
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'osx-x64', hostExeName),
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'osx-arm64', hostExeName)
+    )
+  } else {
+    candidates.push(
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', `linux-${process.arch}`, hostExeName),
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'linux-x64', hostExeName),
+      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'linux-arm64', hostExeName)
+    )
+  }
   candidates.push(
-    // dev: sibling repo folder next to the Electron project
-    join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Debug',
-      tfm, 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
-    join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Release',
-      tfm, 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
     // fallback: explicit build output inside this project / staged publish folder
-    join(PROJECT_ROOT, 'host', 'UniversalDeviceToolkit.Host.exe'),
-    join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'win-x64',
-      'UniversalDeviceToolkit.Host.exe')
+    join(PROJECT_ROOT, 'host', hostExeName)
   )
 
   for (const candidate of candidates) {
@@ -147,6 +188,10 @@ function attachHostEventForwarding(): void {
   // Forward all host events (sensors.updated, settings.changed, osd.changed, …).
   // A fixed whitelist previously dropped sensors.updated, so gauges stayed at "-".
   hostClient.onAny((event, data) => {
+    // Aggregate host log lines into the unified log folder.
+    if (event === 'host.log') {
+      writeHostLog(typeof data === 'string' ? data : JSON.stringify(data))
+    }
     bufferOrSendHostEvent(event, data)
   })
 }
@@ -176,13 +221,18 @@ async function shouldMinimizeToTray(keys: MinimizeSetting[]): Promise<boolean> {
 }
 
 function resolveWindowIcon(): string | undefined {
-  // Prefer the tracked multi-size ICO (resources/ + buildResources/). The old
-  // build/icon.ico path lived under a gitignored Build/ folder on Windows, so
-  // packaged CI builds fell back to the default Electron icon/name.
+  // Windows uses the multi-size ICO; Linux/macOS need a PNG (ICO is ignored).
+  if (process.platform === 'win32') {
+    const candidates = [
+      join(PROJECT_ROOT, 'resources', 'icon.ico'),
+      join(PROJECT_ROOT, 'buildResources', 'icon.ico'),
+      join(PROJECT_ROOT, 'resources', 'icon.png')
+    ]
+    return candidates.find((candidate) => existsSync(candidate))
+  }
   const candidates = [
-    join(PROJECT_ROOT, 'resources', 'icon.ico'),
-    join(PROJECT_ROOT, 'buildResources', 'icon.ico'),
-    join(PROJECT_ROOT, 'resources', 'icon.png')
+    join(PROJECT_ROOT, 'resources', 'icon.png'),
+    join(PROJECT_ROOT, 'buildResources', 'icon-512.png')
   ]
   return candidates.find((candidate) => existsSync(candidate))
 }
@@ -336,8 +386,67 @@ async function openLogFolder(): Promise<{ ok: boolean }> {
   }
 }
 
+/**
+ * Linux autostart entry — mirrors the Windows registry Run key / macOS login
+ * item. XDG autostart .desktop file under ~/.config/autostart; "Enabled" is
+ * the file's existence.
+ */
+const AUTOSTART_FILE_NAME = 'universal-device-toolkit.desktop'
+
+function linuxAutostartFilePath(): string {
+  return join(app.getPath('home'), '.config', 'autostart', AUTOSTART_FILE_NAME)
+}
+
+function applyAutorun(enabled: boolean): void {
+  if (process.platform === 'linux') {
+    const filePath = linuxAutostartFilePath()
+    if (enabled) {
+      mkdirSync(dirname(filePath), { recursive: true })
+      // Exec quotes the path (spaces in install locations). X-GNOME-Autostart
+      // is understood by GNOME; other DEs fall back to the generic Desktop Entry.
+      writeFileSync(
+        filePath,
+        [
+          '[Desktop Entry]',
+          'Type=Application',
+          'Name=Universal Device Toolkit',
+          `Exec="${process.execPath}"`,
+          'X-GNOME-Autostart-enabled=true'
+        ].join('\n') + '\n',
+        'utf8'
+      )
+    } else if (existsSync(filePath)) {
+      unlinkSync(filePath)
+    }
+    return
+  }
+  // Windows registry Run key / macOS login item via Electron.
+  app.setLoginItemSettings({ openAtLogin: enabled })
+}
+
+function readAutorun(): boolean {
+  if (process.platform === 'linux') {
+    return existsSync(linuxAutostartFilePath())
+  }
+  return app.getLoginItemSettings().openAtLogin
+}
+
+/**
+ * Windows DWM backdrop: mica needs Windows 11 (build 22000+); older Windows
+ * gets acrylic (Win10 1809+ system backdrop). macOS/Linux never call this.
+ */
+function windowsBackgroundMaterial(): 'mica' | 'acrylic' {
+  const version = process.getSystemVersion()
+  const build = Number(version.split('.').pop())
+  if (version.startsWith('10') && Number.isFinite(build) && build >= 22000) {
+    return 'mica'
+  }
+  return 'acrylic'
+}
+
 function createWindow(): void {
   const icon = resolveWindowIcon()
+  const isMac = process.platform === 'darwin'
 
   mainWindow = new BrowserWindow({
     // Electron MainWindow: Width=1024 Height=640 MinWidth=1024 MinHeight=640. The
@@ -350,10 +459,33 @@ function createWindow(): void {
     minHeight: 640,
     show: false,
     title: 'Universal Device Toolkit',
-    autoHideMenuBar: true,
-    frame: false,
-    backgroundColor: '#00000000',
-    backgroundMaterial: 'mica',
+    // macOS: native title bar with the traffic lights (red/yellow/green) at the
+    // top-left and a vibrancy backdrop — the platform convention. Windows/Linux
+    // keep the frameless custom title bar with right-aligned window buttons.
+    ...(isMac
+      ? {
+          titleBarStyle: 'hiddenInset' as const,
+          trafficLightPosition: { x: 12, y: 11 },
+          vibrancy: 'under-window' as const,
+          visualEffectState: 'active' as const
+        }
+      : process.platform === 'linux'
+        ? {
+            // Linux: frameless custom title bar like Windows. backgroundMaterial
+            // (mica/acrylic) is a Windows-only API — Electron ignores it on
+            // Linux, so an opaque window background keeps the load flash from
+            // being jarring (matches the renderer's --udt-surface-window #202020).
+            autoHideMenuBar: true,
+            frame: false,
+            backgroundColor: '#202020',
+            backgroundMaterial: 'acrylic' as const
+          }
+        : {
+            autoHideMenuBar: true,
+            frame: false,
+            backgroundColor: '#00000000',
+            backgroundMaterial: windowsBackgroundMaterial()
+          }),
     ...(icon ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
@@ -365,7 +497,11 @@ function createWindow(): void {
     }
   })
 
-  mainWindow.webContents.setZoomFactor(RENDERER_ZOOM_FACTOR)
+  // The 5/6 correction compensates the Windows display scale vs. client DPI;
+  // Linux/macOS map one CSS px to one DIP, so the zoom factor stays 1 there.
+  if (process.platform === 'win32') {
+    mainWindow.webContents.setZoomFactor(RENDERER_ZOOM_FACTOR)
+  }
 
   // Port of Electron WindowResizeStabilityHelper: track live move/size loops so
   // heavy per-frame work can be skipped while the user drags a window edge.
@@ -387,6 +523,17 @@ function createWindow(): void {
 
   mainWindow.on('close', (event) => {
     if (isQuitting) return
+    const win = mainWindow
+    if (!win || win.isDestroyed()) return
+    if (process.platform === 'darwin') {
+      // macOS convention: the red traffic light hides the window instead of
+      // closing it — the Dock icon stays and Cmd+Q is the real quit. Unlike
+      // Windows/Linux this is unconditional (not tied to the minimize-to-tray
+      // setting): the menu bar icon is the persistent handle for reopening.
+      event.preventDefault()
+      win.hide()
+      return
+    }
     void shouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray']).then((toTray) => {
       if (!toTray || !mainWindow || mainWindow.isDestroyed()) return
       event.preventDefault()
@@ -444,6 +591,12 @@ function startHost(): void {
 }
 
 app.whenReady().then(() => {
+  initMainLogger()
+  // Notifications: the renderer uses the in-app notification center (no OS
+  // Notification API), so no permission wiring is needed here. Should native
+  // notifications ever be added: macOS requires the Notification permission
+  // (Electron requests it automatically on first use), Linux has no special
+  // handling beyond the desktop environment's own notification settings.
   console.log('[main] app ready')
   if (flags.isTraceEnabled) {
     console.log(`[main] flags: ${describeFlags(flags)}`)
@@ -528,13 +681,18 @@ app.whenReady().then(() => {
     }
     // Windows power-plan bridge (Electron WindowsPowerPlanController): the host has
     // no powercfg/WMI channel, so the main process answers from `powercfg`.
+    // powercfg does not exist on macOS/Linux — short-circuit instead of running it.
     if (method === 'powerPlans.getList') {
+      if (process.platform !== 'win32') return { plans: [] }
       return listPowerPlans().then(
         (plans) => ({ plans }),
         () => ({ plans: [] })
       )
     }
     if (method === 'powerPlans.setActive') {
+      if (process.platform !== 'win32') {
+        throw new Error('Windows only')
+      }
       const guid = (params as { guid?: unknown } | null)?.guid
       if (typeof guid !== 'string' || guid.length === 0) {
         throw new Error('A power plan GUID is required.')
@@ -590,6 +748,11 @@ app.whenReady().then(() => {
       mainWindow?.close()
       return
     }
+    if (process.platform === 'darwin') {
+      // Mirrors the native traffic light close: hide, never destroy.
+      mainWindow.hide()
+      return
+    }
     void shouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray']).then((toTray) => {
       if (!mainWindow || mainWindow.isDestroyed()) return
       if (toTray) {
@@ -618,18 +781,38 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('window:set-background-material', (_event, material: unknown) => {
+    // macOS backdrop is the fixed vibrancy chosen at window creation; there is
+    // no runtime switch, so return a silent no-op instead of erroring.
+    if (process.platform === 'darwin') return
     if (material !== 'none' && material !== 'mica' && material !== 'acrylic') {
       throw new Error(`Unsupported window background material: ${String(material)}`)
     }
-    mainWindow?.setBackgroundMaterial(material)
+    // Windows-only API (DWM backdrop); no-op elsewhere.
+    if (process.platform === 'win32') {
+      mainWindow?.setBackgroundMaterial(material)
+    }
+  })
+
+  // DWM backdrop materials (mica/acrylic) follow the OS theme, not the in-app
+  // theme — a dark app on a light system renders a washed-out white backdrop.
+  // Pin nativeTheme to the in-app mode so the material matches (Windows only;
+  // harmless no-op elsewhere).
+  ipcMain.on('window:set-theme-source', (_event, source: unknown) => {
+    if (source !== 'system' && source !== 'light' && source !== 'dark') return
+    nativeTheme.themeSource = source
   })
 
   ipcMain.handle('shell:open-log-folder', async () => {
-    const result = await hostClient.invoke('app.getLogPath', {}) as { path?: unknown }
-    if (typeof result.path !== 'string' || result.path.length === 0) {
-      throw new Error('The host did not provide a log file path.')
-    }
-    shell.showItemInFolder(result.path)
+    // Unified log folder: main.log / renderer.log / host.log live together.
+    shell.openPath(logsDirectory())
+  })
+
+  // Renderer → main log channel (utils/logger.ts double-writes console + file).
+  ipcMain.on('log:write', (_event, payload: unknown) => {
+    const record = (payload ?? {}) as { level?: unknown; message?: unknown }
+    const level = isValidLogLevel(record.level) ? record.level : 'info'
+    const message = typeof record.message === 'string' ? record.message : String(record.message ?? '')
+    writeRendererLog(level, message)
   })
 
   // Mirrors Electron MainWindow.OpenLog: open the logs directory (created on demand).
@@ -727,15 +910,16 @@ app.whenReady().then(() => {
   })
 
   // Mirrors Electron SettingsApplicationBehaviorControl Autorun (registry Run key):
-  // Electron persists the login item via setLoginItemSettings.
+  // Windows uses setLoginItemSettings (registry), macOS the login item, Linux an
+  // XDG autostart .desktop file.
   ipcMain.handle('app:set-autorun', (_event, enabled: unknown) => {
     const openAtLogin = enabled === true
-    app.setLoginItemSettings({ openAtLogin })
+    applyAutorun(openAtLogin)
     return { ok: true, enabled: openAtLogin }
   })
 
   ipcMain.handle('app:get-autorun', () => {
-    return { enabled: app.getLoginItemSettings().openAtLogin }
+    return { enabled: readAutorun() }
   })
 
   ipcMain.handle('dialog:select-plugin-files', async () => {
@@ -765,12 +949,16 @@ app.whenReady().then(() => {
   })
 
   // Mirrors Electron ProcessAutomationPipelineTriggerTabItemControl AddButton_Click
-  // (OpenFileDialog with the exe filter).
+  // (OpenFileDialog with the exe filter). Windows filters .exe; macOS/Linux
+  // leave the dialog unfiltered (an .app bundle or ELF/Mach-O binary is picked
+  // by the user).
   ipcMain.handle('dialog:select-exe-file', async () => {
     const options = {
       title: 'Open',
       properties: ['openFile'] as ('openFile')[],
-      filters: [{ name: 'Exe Files (.exe)', extensions: ['exe'] }]
+      ...(process.platform === 'win32'
+        ? { filters: [{ name: 'Exe Files (.exe)', extensions: ['exe'] }] }
+        : {})
     }
     const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
     const result = owner == null
@@ -780,10 +968,11 @@ app.whenReady().then(() => {
   })
 
   // Mirrors Electron PlaySoundAutomationStepControl file picker (audio files).
+  // C:\Windows\Media is a Windows-only default location.
   ipcMain.handle('dialog:select-audio-file', async () => {
     const options = {
       title: 'Import',
-      defaultPath: 'C:\\Windows\\Media',
+      ...(process.platform === 'win32' ? { defaultPath: 'C:\\Windows\\Media' } : {}),
       properties: ['openFile'] as ('openFile')[],
       filters: [
         { name: 'Audio Files', extensions: ['wav', 'mp3', 'ogg', 'flac', 'aac', 'm4a', 'wma'] },
@@ -816,7 +1005,7 @@ app.whenReady().then(() => {
           | { value?: Record<string, unknown> }
           | null
           | undefined
-        app.setLoginItemSettings({ openAtLogin: result?.value?.Autorun === true })
+        applyAutorun(result?.value?.Autorun === true)
       } catch (error) {
         console.error('[main] failed to apply persisted Autorun setting:', error)
       }
@@ -824,6 +1013,8 @@ app.whenReady().then(() => {
   })
   createWindow()
   setMainWindowRef(() => mainWindow)
+  // macOS: install the native system menu bar (App/File/Edit/View/Window/Help).
+  installApplicationMenu()
   const trayOpts = {
     disableTooltip: flags.disableTrayTooltip,
     invokeHost: (method: string, params?: unknown) => hostClient.invoke(method, params)
@@ -856,6 +1047,16 @@ app.whenReady().then(() => {
   }
 
   app.on('activate', () => {
+    const win = mainWindow
+    if (win && !win.isDestroyed()) {
+      // macOS: the window commonly still exists but is hidden (close hides it,
+      // Cmd+Q is the only real quit). Show the existing window instead of
+      // rebuilding it; also restores a minimized window.
+      if (win.isMinimized()) win.restore()
+      win.show()
+      win.focus()
+      return
+    }
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow()
       initTray(() => mainWindow, trayOpts)

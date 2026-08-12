@@ -19,7 +19,6 @@ import {
   Result,
   Select,
   Slider,
-  Space,
   Switch,
   Tag,
   Tooltip,
@@ -550,7 +549,7 @@ function SpectrumSection(): React.JSX.Element {
         <div className="udt-kb-spectrum-device__toolbar">
           <Tooltip title={t('keyboard.spectrum.selectAll')}>
             <Button
-              className="udt-kb-icon-btn"
+              className="udt-kb-toolbar-btn"
               size="small"
               disabled={spectrum.effects.length === 0}
               onClick={handleSelectAll}
@@ -560,7 +559,7 @@ function SpectrumSection(): React.JSX.Element {
           </Tooltip>
           <Tooltip title={t('keyboard.spectrum.deselectAll')}>
             <Button
-              className="udt-kb-icon-btn"
+              className="udt-kb-toolbar-btn"
               size="small"
               disabled={spectrum.effects.length === 0}
               onClick={handleDeselectAll}
@@ -570,7 +569,7 @@ function SpectrumSection(): React.JSX.Element {
           </Tooltip>
           <Tooltip title={t('keyboard.spectrum.switchLayout')}>
             <Button
-              className="udt-kb-icon-btn"
+              className="udt-kb-toolbar-btn"
               size="small"
               onClick={handleSwitchLayout}
             >
@@ -683,7 +682,7 @@ function SpectrumSection(): React.JSX.Element {
                       </Popconfirm>
                     ]}
                   >
-                    <Space>
+                    <div className="udt-kb-effect-row__main">
                       {effect.Colors.length > 0 && (
                         <span className="udt-kb-effect-row__swatch" aria-hidden="true">
                           {effect.Colors.slice(0, 3).map((color, colorIndex) => (
@@ -692,12 +691,14 @@ function SpectrumSection(): React.JSX.Element {
                         </span>
                       )}
                       <div className="udt-kb-effect-row__copy">
-                        <div>
+                        <span className="udt-kb-effect-row__name">
                           <Tag>{t(`keyboard.spectrum.effectTypes.${EFFECT_TYPE_LABEL_KEYS[effect.Type]}`)}</Tag>
-                        </div>
-                        <Typography.Text type="secondary">{subtitle}</Typography.Text>
+                        </span>
+                        <Typography.Text className="udt-kb-effect-row__scope" type="secondary">
+                          {subtitle}
+                        </Typography.Text>
                       </div>
-                    </Space>
+                    </div>
                   </List.Item>
                 )
               }}
@@ -743,7 +744,7 @@ function LoadingSkeleton(): React.JSX.Element {
 
 export default function KeyboardBacklightPage(): React.JSX.Element {
   const { t } = useTranslation()
-  const { mode, loading, error, load } = useKeyboardStore()
+  const { mode, loading, error, load, simulated } = useKeyboardStore()
 
   useEffect(() => {
     void load()
@@ -773,7 +774,17 @@ export default function KeyboardBacklightPage(): React.JSX.Element {
       {mode === 'rgb' ? (
         <RgbSection />
       ) : mode === 'spectrum' ? (
-        <SpectrumSection />
+        <>
+          {simulated && (
+            <InfoBar
+              severity="informational"
+              title={t('keyboard.simulatedHint', {
+                defaultValue: 'Simulation mode: no keyboard detected, showing a demo interface'
+              })}
+            />
+          )}
+          <SpectrumSection />
+        </>
       ) : (
         <div className="udt-kb-unsupported">
           <KeyOutlined className="udt-kb-unsupported__icon" />

@@ -20,6 +20,8 @@ export interface AppFlags {
   forceDisableSpectrumKeyboardSupport: boolean
   forceDisableLenovoLighting: boolean
   experimentalGpuWorkingMode: boolean
+  /** Chromium single-process mode: merge renderers into one process for memory inspection. */
+  singleProcess: boolean
   proxyUrl?: string
   proxyUsername?: string
   proxyPassword?: string
@@ -43,6 +45,7 @@ const BOOL_SWITCHES: ReadonlyArray<readonly [string, keyof AppFlags]> = [
   ['--force-disable-spectrumkb', 'forceDisableSpectrumKeyboardSupport'],
   ['--force-disable-lenovolighting', 'forceDisableLenovoLighting'],
   ['--experimental-gpu-working-mode', 'experimentalGpuWorkingMode'],
+  ['--single-process', 'singleProcess'],
   ['--proxy-allow-all-certs', 'proxyAllowAllCerts'],
   ['--disable-update-checker', 'disableUpdateChecker'],
   ['--safe-start', 'safeStart'],
@@ -88,6 +91,7 @@ export function parseFlags(argv: string[]): AppFlags {
     forceDisableSpectrumKeyboardSupport: false,
     forceDisableLenovoLighting: false,
     experimentalGpuWorkingMode: false,
+    singleProcess: false,
     proxyAllowAllCerts: false,
     disableUpdateChecker: false,
     safeStart: false,
@@ -170,6 +174,7 @@ export function describeFlags(appFlags: AppFlags): string {
     `forceDisableSpectrumKeyboardSupport: ${appFlags.forceDisableSpectrumKeyboardSupport}`,
     `forceDisableLenovoLighting: ${appFlags.forceDisableLenovoLighting}`,
     `experimentalGpuWorkingMode: ${appFlags.experimentalGpuWorkingMode}`,
+    `singleProcess: ${appFlags.singleProcess}`,
     `proxyUrl: ${appFlags.proxyUrl ?? 'null'}`,
     `proxyUsername: ${appFlags.proxyUsername ?? 'null'}`,
     'proxyPassword: [REDACTED]',

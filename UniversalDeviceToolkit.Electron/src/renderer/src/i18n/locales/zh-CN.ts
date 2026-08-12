@@ -1,4 +1,4 @@
-﻿export default {
+export default {
   translation: {
     app: {
       name: '通用设备工具箱'
@@ -112,6 +112,7 @@
         voltageRange: '电压范围',
         powerRange: '功率范围',
         details: '详情',
+        doubleClickHint: '双击查看全部传感器数据',
         chartEmpty: '等待传感器数据',
         refreshInterval: '刷新间隔',
         detail: {
@@ -616,6 +617,7 @@
     keyboard: {
       title: '键盘背光',
       unsupported: '此设备不支持键盘背光控制',
+      simulatedHint: '模拟模式：未检测到键盘，正在显示演示界面',
       rgb: {
         preset: '预设',
         settings: '背光设置',

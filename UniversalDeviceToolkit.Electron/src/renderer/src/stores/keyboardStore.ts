@@ -7,6 +7,40 @@ import type {
   SpectrumEffect,
   SpectrumLayoutResult
 } from '../api/keyboard'
+import { SPECTRUM_KEYBOARD_LAYOUTS } from '../components/keyboard/spectrum/keyboardLayouts'
+
+/**
+ * All key codes of the ANSI keyboard zone table, used to simulate a full
+ * keyboard when no physical device is present (dev-only demo mode).
+ */
+const ANSI_KEY_CODES: number[] = SPECTRUM_KEYBOARD_LAYOUTS.Ansi.flatMap((row) =>
+  row.map((zone) => zone.code).filter((code): code is number => code !== null)
+)
+
+const SIMULATED_LAYOUT: SpectrumLayoutResult = {
+  spectrumLayout: 'KeyboardOnly',
+  keyboardLayout: 'Ansi',
+  keys: ANSI_KEY_CODES
+}
+
+const DEMO_EFFECTS: SpectrumEffect[] = [
+  {
+    Type: 'RainbowScrew',
+    Speed: 'Speed1',
+    Direction: 'None',
+    ClockwiseDirection: 'Clockwise',
+    Colors: [{ R: 255, G: 255, B: 255 }],
+    Keys: ANSI_KEY_CODES
+  },
+  {
+    Type: 'ColorPulse',
+    Speed: 'Speed2',
+    Direction: 'None',
+    ClockwiseDirection: 'None',
+    Colors: [{ R: 79, G: 157, B: 247 }],
+    Keys: ANSI_KEY_CODES
+  }
+]
 
 export interface KeyboardSpectrumState {
   layout: SpectrumLayoutResult | null
@@ -22,6 +56,8 @@ export interface KeyboardStore {
   spectrum: KeyboardSpectrumState
   loading: boolean
   error: string | null
+  /** Dev-only demo mode: no keyboard detected, spectrum UI shows simulated data. */
+  simulated: boolean
   load: () => Promise<void>
   setRgb: (state: RgbState) => Promise<boolean>
   setPreset: (preset: RgbPreset) => Promise<boolean>
@@ -47,6 +83,7 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   spectrum: EMPTY_SPECTRUM,
   loading: false,
   error: null,
+  simulated: false,
 
   async load() {
     if (get().loading) return
@@ -56,7 +93,7 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
 
       if (mode === 'rgb') {
         const { state } = await keyboardApi.getRgbState()
-        set({ mode, rgbState: state })
+        set({ mode, simulated: false, rgbState: state })
       } else if (mode === 'spectrum') {
         const [layout, brightness, logo, profile] = await Promise.all([
           keyboardApi.spectrumGetLayout(),
@@ -75,6 +112,7 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
 
         set({
           mode,
+          simulated: false,
           spectrum: {
             layout,
             brightness: brightness.brightness,
@@ -83,8 +121,22 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
             effects
           }
         })
+      } else if (import.meta.env.DEV) {
+        // Dev-only demo mode: without a physical keyboard the spectrum
+        // interface renders with simulated data so the UI can be inspected.
+        set({
+          mode: 'spectrum',
+          simulated: true,
+          spectrum: {
+            layout: SIMULATED_LAYOUT,
+            brightness: 6,
+            logo: true,
+            profile: 1,
+            effects: DEMO_EFFECTS
+          }
+        })
       } else {
-        set({ mode: 'none' })
+        set({ mode: 'none', simulated: false })
       }
     } catch (error) {
       set({ error: (error as Error).message })
@@ -94,6 +146,10 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   },
 
   async setRgb(state) {
+    if (get().simulated) {
+      set({ rgbState: state })
+      return true
+    }
     try {
       await keyboardApi.setRgbState(state)
       set({ rgbState: state })
@@ -105,6 +161,9 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   },
 
   async setPreset(preset) {
+    if (get().simulated) {
+      return true
+    }
     try {
       const { state } = await keyboardApi.setPreset(preset)
       set({ rgbState: state })
@@ -116,6 +175,9 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   },
 
   async nextPreset() {
+    if (get().simulated) {
+      return true
+    }
     try {
       const { state } = await keyboardApi.nextPreset()
       set({ rgbState: state })
@@ -127,6 +189,10 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   },
 
   async setBrightness(value) {
+    if (get().simulated) {
+      set({ spectrum: { ...get().spectrum, brightness: value } })
+      return true
+    }
     try {
       await keyboardApi.spectrumSetBrightness(value)
       set({ spectrum: { ...get().spectrum, brightness: value } })
@@ -138,6 +204,10 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   },
 
   async setLogo(value) {
+    if (get().simulated) {
+      set({ spectrum: { ...get().spectrum, logo: value } })
+      return true
+    }
     try {
       await keyboardApi.spectrumSetLogo(value)
       set({ spectrum: { ...get().spectrum, logo: value } })
@@ -149,6 +219,10 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   },
 
   async setProfile(profile) {
+    if (get().simulated) {
+      set({ spectrum: { ...get().spectrum, profile } })
+      return true
+    }
     try {
       await keyboardApi.spectrumSetProfile(profile)
       set({ spectrum: { ...get().spectrum, profile } })
@@ -160,6 +234,9 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   },
 
   async loadProfileDesc(profile) {
+    if (get().simulated) {
+      return true
+    }
     try {
       const desc = await keyboardApi.spectrumGetProfileDesc(profile)
       set({ spectrum: { ...get().spectrum, profile: desc.profile, effects: desc.effects } })
@@ -171,6 +248,10 @@ export const useKeyboardStore = create<KeyboardStore>()((set, get) => ({
   },
 
   async saveProfileDesc(profile, effects) {
+    if (get().simulated) {
+      set({ spectrum: { ...get().spectrum, profile, effects } })
+      return true
+    }
     try {
       await keyboardApi.spectrumSetProfileDesc(profile, effects)
       set({ spectrum: { ...get().spectrum, profile, effects } })

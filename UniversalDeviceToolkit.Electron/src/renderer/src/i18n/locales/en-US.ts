@@ -113,6 +113,7 @@
         voltageRange: 'Voltage Range',
         powerRange: 'Power Range',
         details: 'Details',
+        doubleClickHint: 'Double-click for all sensor data',
         chartEmpty: 'Waiting for sensor data',
         refreshInterval: 'Refresh Interval',
         detail: {
@@ -617,6 +618,7 @@
     keyboard: {
       title: 'Keyboard Backlight',
       unsupported: 'Keyboard backlight is not supported on this device',
+      simulatedHint: 'Simulation mode: no keyboard detected, showing a demo interface',
       rgb: {
         preset: 'Preset',
         settings: 'Backlight Settings',
