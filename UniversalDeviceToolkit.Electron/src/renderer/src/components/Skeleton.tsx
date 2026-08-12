@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 // WPF SkeletonAnimationTokens parity: 1.65s cycle, 0.055s stagger step capped
 // at 0.32s. Delays are negative so the phase offset is permanent (Loading.xaml
 // uses SkeletonShimmer.DelaySeconds = -1) — the shimmer wave never re-syncs.
@@ -33,6 +35,7 @@ export function SkeletonCard({
   className,
   staggerBase = 0
 }: SkeletonCardProps): React.JSX.Element {
+  const { t } = useTranslation()
   const count = Math.max(1, lines)
   const lineStart = staggerBase + (withIcon ? 1 : 0)
   const switchStep = lineStart + count
@@ -41,7 +44,7 @@ export function SkeletonCard({
       className={joinClass('udt-skeleton udt-skeleton-card', className)}
       style={staggerDelay(staggerBase)}
       role="status"
-      aria-label="Loading"
+      aria-label={t('common.loading')}
     >
       {withIcon && (
         <div style={staggerDelay(staggerBase)} className="udt-skeleton udt-skeleton-icon" />
@@ -67,11 +70,13 @@ export function SkeletonCard({
 }
 
 export function SkeletonIcon({ className }: { className?: string }): React.JSX.Element {
-  return <div className={joinClass('udt-skeleton udt-skeleton-icon', className)} role="status" aria-label="Loading" />
+  const { t } = useTranslation()
+  return <div className={joinClass('udt-skeleton udt-skeleton-icon', className)} role="status" aria-label={t('common.loading')} />
 }
 
 export function SkeletonSwitch({ className }: { className?: string }): React.JSX.Element {
-  return <div className={joinClass('udt-skeleton udt-skeleton-switch', className)} role="status" aria-label="Loading" />
+  const { t } = useTranslation()
+  return <div className={joinClass('udt-skeleton udt-skeleton-switch', className)} role="status" aria-label={t('common.loading')} />
 }
 
 export function SkeletonList({
@@ -81,8 +86,9 @@ export function SkeletonList({
   rows?: number
   className?: string
 }): React.JSX.Element {
+  const { t } = useTranslation()
   return (
-    <div className={joinClass('udt-skeleton-list', className)} role="status" aria-label="Loading">
+    <div className={joinClass('udt-skeleton-list', className)} role="status" aria-label={t('common.loading')}>
       {Array.from({ length: Math.max(1, rows) }, (_, index) => (
         <SkeletonCard key={index} lines={2} withIcon withSwitch staggerBase={index * LIST_ROW_ELEMENTS} />
       ))}

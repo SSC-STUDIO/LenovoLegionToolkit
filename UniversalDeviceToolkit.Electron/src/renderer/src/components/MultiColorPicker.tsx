@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import './colorPicker.css'
 import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
@@ -27,6 +28,7 @@ export default function MultiColorPicker({
   size,
   disabled = false
 }: MultiColorPickerProps): React.JSX.Element {
+  const { t } = useTranslation()
   const colors = value.slice(0, maxItems)
   const canAdd = colors.length < maxItems
 
@@ -63,7 +65,7 @@ export default function MultiColorPicker({
           <button
             type="button"
             className="udt-multi-color-picker__delete"
-            aria-label="delete color"
+            aria-label={t('common.deleteColor')}
             disabled={disabled}
             onClick={() => handleDelete(index)}
           >

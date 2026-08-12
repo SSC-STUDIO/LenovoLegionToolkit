@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { on } from '../../api/bridge'
+import { waitForHostReady } from '../../api/bridge'
 import { settingsApi } from '../../api/settings'
 import { systemApi } from '../../api/system'
 import { changeLanguage } from '../../i18n'
@@ -23,19 +23,6 @@ import type { SystemInfo } from '../../api/system'
 
 const LANGUAGE_STORAGE_KEY = 'udt.lang'
 const DEVICE_SETUP_STORAGE_KEY = 'udt.deviceSetup'
-
-async function waitForHost(timeoutMs = 15000): Promise<void> {
-  const hostReady = new Promise<void>((resolve) => {
-    const unsubscribe = on('host.ready', () => {
-      unsubscribe()
-      resolve()
-    })
-  })
-  await Promise.race([
-    hostReady,
-    new Promise<void>((resolve) => window.setTimeout(resolve, timeoutMs))
-  ])
-}
 
 async function fetchSystemInfo(retries = 6): Promise<SystemInfo | null> {
   for (let attempt = 0; attempt < retries; attempt++) {
@@ -63,7 +50,12 @@ export default function StartupGates(): React.JSX.Element {
     if (i18n.language) markLanguage(i18n.language)
 
     const run = async (): Promise<void> => {
-      await waitForHost()
+      try {
+        await waitForHostReady()
+      } catch {
+        // Gates are best-effort; the dashboard surfaces a retryable host error.
+        return
+      }
 
       if (cancelled) return
 

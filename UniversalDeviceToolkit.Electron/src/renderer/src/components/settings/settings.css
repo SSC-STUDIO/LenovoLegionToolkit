@@ -11,7 +11,7 @@
   width: 100%;
   max-width: none;
   margin: 0;
-  padding: 16px 16px 28px;
+  padding: 16px 16px 12px 0;
 }
 
 .udt-settings-page__header {
@@ -19,7 +19,7 @@
 }
 
 .udt-settings-page__title {
-  margin: 16px 0 8px;
+  margin: 0 0 8px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-page-title);
   font-weight: 500;
@@ -383,6 +383,21 @@
   line-height: 1.3;
 }
 
+/* Dual-pane mock: Light/Dark use two identical halves; System is left light / right dark */
+.udt-theme-option__split {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.udt-theme-option__pane {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .udt-theme-option__bar {
   display: flex;
   flex: 0 0 auto;
@@ -390,6 +405,12 @@
   gap: 3px;
   height: 16px;
   padding: 0 5px;
+}
+
+.udt-theme-option__bar-blank {
+  display: block;
+  width: 100%;
+  height: 1px;
 }
 
 .udt-theme-option__dot {
@@ -464,119 +485,86 @@
   border-radius: 3px;
 }
 
-/* Light preview (ThemePreviewButtonStyle) */
-.udt-theme-option--light .udt-theme-option__preview {
+/* Light pane (hard-coded chrome so app dark theme cannot wash out the mock) */
+.udt-theme-option__pane--light {
   background: #f6f6f6;
 }
 
-.udt-theme-option--light .udt-theme-option__bar {
+.udt-theme-option__pane--light .udt-theme-option__bar {
   background: #e8e8e8;
 }
 
-.udt-theme-option--light .udt-theme-option__body {
+.udt-theme-option__pane--light .udt-theme-option__body {
   background: #ffffff;
 }
 
-.udt-theme-option--light .udt-theme-option__sline {
+.udt-theme-option__pane--light .udt-theme-option__sline {
   background: #ececec;
 }
 
-.udt-theme-option--light .udt-theme-option__sline:nth-child(n + 2) {
+.udt-theme-option__pane--light .udt-theme-option__sline:nth-child(n + 2) {
   background: #f1f1f1;
 }
 
-.udt-theme-option--light .udt-theme-option__cline--search {
+.udt-theme-option__pane--light .udt-theme-option__cline--search {
   background: #f0f0f0;
 }
 
-.udt-theme-option--light .udt-theme-option__cline {
+.udt-theme-option__pane--light .udt-theme-option__cline {
   background: #ededed;
 }
 
-.udt-theme-option--light .udt-theme-option__cline:last-child {
+.udt-theme-option__pane--light .udt-theme-option__cline:last-child {
   background: #f2f2f2;
 }
 
-.udt-theme-option--light .udt-theme-option__dock {
+.udt-theme-option__pane--light .udt-theme-option__dock {
   background: #e0e0e0;
 }
 
-.udt-theme-option--light .udt-theme-option__swatch {
+.udt-theme-option__pane--light .udt-theme-option__swatch {
   background: #c9c9c9;
 }
 
-/* Dark preview */
-.udt-theme-option--dark .udt-theme-option__preview {
+/* Dark pane */
+.udt-theme-option__pane--dark {
   background: #202020;
 }
 
-.udt-theme-option--dark .udt-theme-option__bar {
+.udt-theme-option__pane--dark .udt-theme-option__bar {
   background: #2c2c2c;
 }
 
-.udt-theme-option--dark .udt-theme-option__body {
+.udt-theme-option__pane--dark .udt-theme-option__body {
   background: #262626;
 }
 
-.udt-theme-option--dark .udt-theme-option__sline {
+.udt-theme-option__pane--dark .udt-theme-option__sline {
   background: #333333;
 }
 
-.udt-theme-option--dark .udt-theme-option__sline:nth-child(n + 2) {
+.udt-theme-option__pane--dark .udt-theme-option__sline:nth-child(n + 2) {
   background: #383838;
 }
 
-.udt-theme-option--dark .udt-theme-option__cline--search {
+.udt-theme-option__pane--dark .udt-theme-option__cline--search {
   background: #333333;
 }
 
-.udt-theme-option--dark .udt-theme-option__cline {
+.udt-theme-option__pane--dark .udt-theme-option__cline {
   background: #2f2f2f;
 }
 
-.udt-theme-option--dark .udt-theme-option__cline:last-child {
+.udt-theme-option__pane--dark .udt-theme-option__cline:last-child {
   background: #3a3a3a;
 }
 
-.udt-theme-option--dark .udt-theme-option__dock {
+.udt-theme-option__pane--dark .udt-theme-option__dock {
   background: #343434;
 }
 
-.udt-theme-option--dark .udt-theme-option__swatch {
+.udt-theme-option__pane--dark .udt-theme-option__swatch {
   background: #4a4a4a;
-}
-
-/* System preview: split light/dark with neutral overlays */
-.udt-theme-option--system .udt-theme-option__preview {
-  background: linear-gradient(90deg, #f6f6f6 0%, #f6f6f6 50%, #202020 50%, #202020 100%);
-}
-
-.udt-theme-option--system .udt-theme-option__bar {
-  background: rgba(0, 0, 0, 0.25);
-}
-
-.udt-theme-option--system .udt-theme-option__body {
-  background: transparent;
-}
-
-.udt-theme-option--system .udt-theme-option__sline {
-  background: rgba(0, 0, 0, 0.16);
-}
-
-.udt-theme-option--system .udt-theme-option__cline--search {
-  background: rgba(0, 0, 0, 0.16);
-}
-
-.udt-theme-option--system .udt-theme-option__cline {
-  background: rgba(0, 0, 0, 0.13);
-}
-
-.udt-theme-option--system .udt-theme-option__dock {
-  background: rgba(0, 0, 0, 0.25);
-}
-
-.udt-theme-option--system .udt-theme-option__swatch {
-  background: rgba(0, 0, 0, 0.33);
 }
 
 /* ── Accent options under theme mode (WPF SettingsAppearanceControl) ── */
@@ -855,3 +843,4 @@
   min-width: 130px;
   max-width: 200px;
 }
+

@@ -4,12 +4,10 @@ import { useNavigate } from 'react-router-dom'
 import AppStatusBanner from './AppStatusBanner'
 import { updateApi } from '../api/update'
 import type { SoftwareDisablerApp } from '../api/software'
-import { useSettingsStore } from '../stores/settingsStore'
 import { useSoftwareStore } from '../stores/softwareStore'
 import { useStatusBannerStore } from '../stores/statusBannerStore'
 
 const BANNER_UPDATE = 'updateAvailable'
-const BANNER_PLUGINS_DISABLED = 'pluginExtensionsDisabled'
 
 const SOFTWARE_BANNERS: { app: SoftwareDisablerApp; id: string; messageKey: string }[] = [
   { app: 'vantage', id: 'vantageRunning', messageKey: 'statusBanner.vantageRunning' },
@@ -30,8 +28,6 @@ export default function AppStatusBanners(): React.JSX.Element {
   const show = useStatusBannerStore((s) => s.show)
   const hide = useStatusBannerStore((s) => s.hide)
   const remove = useStatusBannerStore((s) => s.remove)
-  const scopes = useSettingsStore((s) => s.scopes)
-  const load = useSettingsStore((s) => s.load)
   const softwareStatuses = useSoftwareStore((s) => s.statuses)
   const softwareStart = useSoftwareStore((s) => s.start)
 
@@ -68,29 +64,6 @@ export default function AppStatusBanners(): React.JSX.Element {
       cancelled = true
     }
   }, [navigate, show, t])
-
-  useEffect(() => {
-    void load(['application'])
-  }, [load])
-
-  useEffect(() => {
-    const app =
-      typeof scopes.application === 'object' && scopes.application !== null
-        ? (scopes.application as Record<string, unknown>)
-        : {}
-    if (app.ExtensionsEnabled === false) {
-      show({
-        id: BANNER_PLUGINS_DISABLED,
-        severity: 'Warning',
-        message: t('statusBanner.pluginExtensionsDisabled'),
-        persistent: true,
-        closable: true
-      })
-    } else {
-      // Programmatic removal — do not remember it as a user dismissal.
-      remove(BANNER_PLUGINS_DISABLED)
-    }
-  }, [scopes.application, show, remove, t])
 
   // WPF MainWindow software disabler indicators: banners follow the
   // VantageDisabler / LegionZoneDisabler / FnKeysDisabler status (polled).

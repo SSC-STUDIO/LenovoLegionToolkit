@@ -39,36 +39,94 @@ let isQuitting = false
 
 function resolveHostPath(): string {
   const fromEnv = process.env['UDT_HOST_PATH']
-  if (fromEnv) return fromEnv
+  if (fromEnv) {
+    if (!existsSync(fromEnv)) {
+      throw new Error(`UDT_HOST_PATH does not exist: ${fromEnv}`)
+    }
+    return fromEnv
+  }
 
   // __dirname = <project>/out/main -> project root is two levels up.
-  const candidates = [
-    // packaged: Host copied into resources/host by electron-builder
-    join(process.resourcesPath ?? '', 'host', 'UniversalDeviceToolkit.Host.exe'),
+  const tfm = 'net10.0-windows10.0.26100.0'
+  const candidates: string[] = []
+
+  // Packaged builds only: Host is copied into resources/host by electron-builder.
+  // In dev, process.resourcesPath points at Electron's own resources and must not
+  // take priority over the sibling Host project output.
+  if (app.isPackaged) {
+    candidates.push(join(process.resourcesPath, 'host', 'UniversalDeviceToolkit.Host.exe'))
+  }
+
+  candidates.push(
     // dev: sibling repo folder next to the Electron project
     join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Debug',
-      'net10.0-windows10.0.26100.0', 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
-    // dev: Release build
+      tfm, 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
     join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Release',
-      'net10.0-windows10.0.26100.0', 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
-    // fallback: explicit build output inside this project
-    join(PROJECT_ROOT, 'host', 'UniversalDeviceToolkit.Host.exe')
-  ]
+      tfm, 'win-x64', 'UniversalDeviceToolkit.Host.exe'),
+    // fallback: explicit build output inside this project / staged publish folder
+    join(PROJECT_ROOT, 'host', 'UniversalDeviceToolkit.Host.exe'),
+    join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'win-x64',
+      'UniversalDeviceToolkit.Host.exe')
+  )
 
   for (const candidate of candidates) {
     if (existsSync(candidate)) return candidate
   }
-  return candidates[0]
+
+  throw new Error(
+    `Host executable not found. Build UniversalDeviceToolkit.Host or set UDT_HOST_PATH.\n` +
+      candidates.map((path) => `  - ${path}`).join('\n')
+  )
 }
 
-function forwardHostEvents(window: BrowserWindow): void {
+/** Events that arrived before the BrowserWindow could receive IPC. */
+const bufferedHostEvents: Array<{ event: string; data: unknown }> = []
+const BUFFERED_HOST_EVENT_LIMIT = 64
+let hostEventsAttached = false
+
+function bufferOrSendHostEvent(event: string, data: unknown): void {
+  if (mainWindow && !mainWindow.isDestroyed() && !mainWindow.webContents.isLoadingMainFrame()) {
+    mainWindow.webContents.send('bridge:event', event, data)
+    return
+  }
+  bufferedHostEvents.push({ event, data })
+  if (bufferedHostEvents.length > BUFFERED_HOST_EVENT_LIMIT) {
+    bufferedHostEvents.shift()
+  }
+}
+
+function flushBufferedHostEvents(window: BrowserWindow): void {
+  if (window.isDestroyed()) return
+  // Always re-emit the latest host.ready so late renderer subscribers (dashboard
+  // waitForHost, title bar, startup gates) observe readiness after a fast Host boot.
+  const readyPayload = hostClient.lastReadyPayload
+  if (hostClient.isReady) {
+    window.webContents.send('bridge:event', 'host.ready', readyPayload ?? {})
+  }
+  for (const item of bufferedHostEvents) {
+    if (item.event === 'host.ready') continue
+    window.webContents.send('bridge:event', item.event, item.data)
+  }
+  bufferedHostEvents.length = 0
+}
+
+function attachHostEventForwarding(): void {
+  if (hostEventsAttached) return
+  hostEventsAttached = true
   // Forward all host events (sensors.updated, settings.changed, osd.changed, …).
   // A fixed whitelist previously dropped sensors.updated, so gauges stayed at "-".
   hostClient.onAny((event, data) => {
-    if (!window.isDestroyed()) {
-      window.webContents.send('bridge:event', event, data)
-    }
+    bufferOrSendHostEvent(event, data)
   })
+}
+
+function forwardHostEvents(window: BrowserWindow): void {
+  attachHostEventForwarding()
+  const flush = (): void => flushBufferedHostEvents(window)
+  window.webContents.on('did-finish-load', flush)
+  if (!window.webContents.isLoadingMainFrame()) {
+    flush()
+  }
 }
 
 type MinimizeSetting = 'MinimizeOnClose' | 'MinimizeToTray'
@@ -251,8 +309,14 @@ function createWindow(): void {
   const icon = resolveWindowIcon()
 
   mainWindow = new BrowserWindow({
-    width: 1000,
+    // WPF MainWindow: Width=1024 Height=640 MinWidth=1024 MinHeight=640. The
+    // minimum keeps the optimization/cleanup two-column layout stable (WPF
+    // never collapses it; the old 1000px default allowed the 1100px CSS-viewport
+    // breakpoint to flip the grid to a single column mid-resize).
+    width: 1024,
     height: 640,
+    minWidth: 1024,
+    minHeight: 640,
     show: false,
     title: 'Universal Device Toolkit',
     autoHideMenuBar: true,
@@ -332,10 +396,17 @@ function createWindow(): void {
 }
 
 function startHost(): void {
-  const hostPath = resolveHostPath()
-  const hostArgs = toHostArgs(flags)
-  console.log(`[main] starting host: ${hostPath}${hostArgs.length > 0 ? ` ${hostArgs.join(' ')}` : ''}`)
-  hostClient.start(hostPath, hostArgs)
+  attachHostEventForwarding()
+  try {
+    const hostPath = resolveHostPath()
+    const hostArgs = toHostArgs(flags)
+    console.log(`[main] starting host: ${hostPath}${hostArgs.length > 0 ? ` ${hostArgs.join(' ')}` : ''}`)
+    hostClient.start(hostPath, hostArgs)
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error)
+    console.error(`[main] failed to start host: ${message}`)
+    hostClient.reportFatalError(message)
+  }
 }
 
 app.whenReady().then(() => {
@@ -343,6 +414,14 @@ app.whenReady().then(() => {
   if (flags.isTraceEnabled) {
     console.log(`[main] flags: ${describeFlags(flags)}`)
   }
+
+  // Available before createWindow so the renderer can observe readiness immediately.
+  ipcMain.handle('host:get-status', () => ({
+    running: hostClient.isRunning,
+    ready: hostClient.isReady,
+    lastError: hostClient.lastFailure,
+    readyPayload: hostClient.lastReadyPayload
+  }))
 
   ipcMain.handle('bridge:invoke', async (_event, method: string, params?: unknown) => {
     // Main-side methods reachable through the generic renderer bridge without
@@ -688,6 +767,7 @@ app.whenReady().then(() => {
     refreshTrayMenu()
   })
 
+  // Attach forwarding before spawn so a fast host.ready is buffered rather than dropped.
   startHost()
   // Apply the persisted Autorun setting once the host is up (login item may
   // have drifted out of sync; the renderer toggle keeps it current afterwards).

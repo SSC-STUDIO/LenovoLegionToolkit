@@ -21,16 +21,15 @@ const BATTERY_TEMPERATURE = '#d9883b'
 const BATTERY_CAUTION = '#e0a92e'
 const BATTERY_CRITICAL = '#e05656'
 const BATTERY_LOW_THRESHOLD = 20
-const CHART_HEIGHT = 116
 const REFRESH_INTERVALS = [1, 2, 3, 5]
 
-/** Saved refresh interval from Settings → Application (default 1s). */
+/** Saved refresh interval from the dashboard settings scope (default 1s). */
 function readSavedRefreshInterval(scopes: Record<string, unknown>): number {
-  const app =
-    typeof scopes.application === 'object' && scopes.application !== null
-      ? (scopes.application as Record<string, unknown>)
+  const dashboard =
+    typeof scopes.dashboard === 'object' && scopes.dashboard !== null
+      ? (scopes.dashboard as Record<string, unknown>)
       : {}
-  const raw = app['SensorRefreshIntervalSec']
+  const raw = dashboard['SensorsRefreshIntervalSeconds']
   return typeof raw === 'number' && Number.isFinite(raw) && raw >= 1 && raw <= 60 ? raw : 1
 }
 
@@ -62,6 +61,7 @@ interface SensorPanelProps {
   details?: SensorDetail[][]
   /** Optional block above the detail columns (battery mini gauges). */
   detailsHeader?: React.JSX.Element
+  emptyLabel?: string
 }
 
 // Formatting mirrors SensorsControl.Formatting.cs / UpdateValue():
@@ -273,7 +273,18 @@ function TemperatureIcon({ color }: { color?: string }): React.JSX.Element {
   )
 }
 
-function SensorPanel({ title, model, gauge, metrics, series, labels, warnings, details, detailsHeader }: SensorPanelProps): React.JSX.Element {
+function SensorPanel({
+  title,
+  model,
+  gauge,
+  metrics,
+  series,
+  labels,
+  warnings,
+  details,
+  detailsHeader,
+  emptyLabel
+}: SensorPanelProps): React.JSX.Element {
   const { t } = useTranslation()
   const [detailsExpanded, setDetailsExpanded] = useState(false)
   const hasDetails = details != null && details.length > 0
@@ -344,7 +355,7 @@ function SensorPanel({ title, model, gauge, metrics, series, labels, warnings, d
         </div>
       )}
       <div className="udt-sensor-panel__chart">
-        <TrendChart series={series} labels={labels} height={CHART_HEIGHT} />
+        <TrendChart series={series} labels={labels} emptyLabel={emptyLabel} />
       </div>
       <div className="udt-sensor-panel__legend">
         {series.map((item) => (
@@ -435,13 +446,12 @@ export default function SensorSection(): React.JSX.Element {
       battery.chargeLevel <= BATTERY_LOW_THRESHOLD)
   const isLowPowerAdapter = battery?.isLowPowerAdapter === true
 
+  // Low-battery warning stays in the Battery column; low-power adapter warning
+  // is rendered once as a board footer under all three sensor columns.
   const batteryWarnings =
-    battery != null && (isLowPowerAdapter || isLowBattery) ? (
+    battery != null && isLowBattery ? (
       <div className="udt-sensor-panel__warnings">
-        {isLowPowerAdapter && (
-          <div className="udt-sensor-panel__warning">{t('dashboard.sensor.lowPowerAdapter')}</div>
-        )}
-        {isLowBattery && <div className="udt-sensor-panel__warning">{t('dashboard.sensor.batteryLow')}</div>}
+        <div className="udt-sensor-panel__warning">{t('dashboard.sensor.batteryLow')}</div>
         <div className="udt-sensor-panel__battery-icon">
           <BatteryIcon level={battery.chargeLevel} charging={battery.isCharging === true} />
         </div>
@@ -491,7 +501,7 @@ export default function SensorSection(): React.JSX.Element {
 
   const gpuDetails: SensorDetail[][] = [
     [
-      { label: t('sensorsControlmemoryClocktitle'), value: formatMemoryClock(gpu?.memoryClock) },
+      { label: t('wpf.sensorsControlmemoryClocktitle'), value: formatMemoryClock(gpu?.memoryClock) },
       {
         label: snapshot?.info?.gpuIsIntegrated
           ? t('dashboard.sensor.detail.sharedMemoryUsage')
@@ -589,6 +599,9 @@ export default function SensorSection(): React.JSX.Element {
   ]
 
   const intervalSec = useSensorsStore((state) => state.intervalSec)
+  const chartEmptyLabel = t('dashboard.sensor.chartEmpty', {
+    defaultValue: 'Waiting for sensor data'
+  })
   const [refreshMenu, setRefreshMenu] = useState<{ x: number; y: number } | null>(null)
   const boardRef = useRef<HTMLDivElement>(null)
   const refreshMenuRef = useRef<HTMLDivElement>(null)
@@ -626,23 +639,28 @@ export default function SensorSection(): React.JSX.Element {
     setRefreshMenu(null)
     // start() re-subscribes with the new interval when already polling.
     void useSensorsStore.getState().start(seconds)
-    // Persist to Settings → Application so the choice survives restarts.
+    // Persist to the dashboard settings scope so the choice survives restarts.
     const scopesState = useSettingsStore.getState().scopes
-    const currentApp =
-      typeof scopesState.application === 'object' && scopesState.application !== null
-        ? (scopesState.application as Record<string, unknown>)
+    const currentDashboard =
+      typeof scopesState.dashboard === 'object' && scopesState.dashboard !== null
+        ? (scopesState.dashboard as Record<string, unknown>)
         : {}
-    const next = { ...currentApp, SensorRefreshIntervalSec: seconds }
-    useSettingsStore.getState().setScope('application', next)
+    const next = { ...currentDashboard, SensorsRefreshIntervalSeconds: seconds }
+    useSettingsStore.getState().setScope('dashboard', next)
     settingsApi
-      .set('application', next)
-      .then(() => settingsApi.save(['application']))
+      .set('dashboard', next)
+      .then(() => settingsApi.save(['dashboard']))
       .catch(() => undefined)
   }
 
   return (
     <div className="udt-sensors">
-      <div ref={boardRef} className="udt-sensor-board" onContextMenu={openRefreshMenu}>
+      <div
+        ref={boardRef}
+        className="udt-sensor-board"
+        onContextMenu={openRefreshMenu}
+        aria-busy={snapshot == null}
+      >
         <div className="udt-sensor-board__grid">
           <SensorPanel
             title={t('dashboard.sensor.cpu')}
@@ -678,6 +696,7 @@ export default function SensorSection(): React.JSX.Element {
             series={trendSeries.cpu}
             labels={labels}
             details={cpuDetails}
+            emptyLabel={chartEmptyLabel}
           />
           <SensorPanel
             title={t('dashboard.sensor.battery')}
@@ -716,6 +735,7 @@ export default function SensorSection(): React.JSX.Element {
             warnings={batteryWarnings}
             details={batteryDetails}
             detailsHeader={batteryGauges}
+            emptyLabel={chartEmptyLabel}
           />
           <SensorPanel
             title={t('dashboard.sensor.gpu')}
@@ -751,8 +771,14 @@ export default function SensorSection(): React.JSX.Element {
             series={trendSeries.gpu}
             labels={labels}
             details={gpuDetails}
+            emptyLabel={chartEmptyLabel}
           />
         </div>
+        {isLowPowerAdapter && (
+          <div className="udt-sensor-board__footer-warning" role="status">
+            {t('dashboard.sensor.lowPowerAdapter')}
+          </div>
+        )}
         {refreshMenu != null && (
           <div
             ref={refreshMenuRef}

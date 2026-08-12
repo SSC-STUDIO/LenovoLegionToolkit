@@ -11,7 +11,6 @@ interface ApplicationSettings {
   Theme?: ThemePreference
   AccentColor?: { R: number; G: number; B: number } | null
   AccentColorSource?: AccentColorSource
-  ApplyAccentColorToTheme?: boolean
 }
 
 const THEME_STORAGE_KEY = 'udt.theme'
@@ -106,8 +105,10 @@ export function useTheme(): ThemeController {
       setThemeMode(systemPrefersDark() ? 'dark' : 'light')
     }
 
-    const resolveAccent = (settings?: ApplicationSettings): string | undefined => {
-      if (settings?.ApplyAccentColorToTheme === false) return undefined
+    // WPF ThemeManager.SetColor always applies the resolved accent.
+    // ApplyAccentColorToTheme only gates the tinted surface palette (style
+    // preset), not --udt-accent / selection rings / Ant Design colorPrimary.
+    const resolveAccent = (settings?: ApplicationSettings): string => {
       // Renderer choice wins over the host value (async host reads may be stale
       // or drop the accent fields, which previously reset the picked color).
       const local = storedAccentPreference()

@@ -80,7 +80,7 @@ export function DisplaySection(): React.JSX.Element {
     <div className="udt-settings-section udt-settings-section--display">
       <SettingsCard
         title={t('settings.display.navigationItems')}
-        description={t('navigationItemsSettingsWindowdescription')}
+        description={t('wpf.navigationItemsSettingsWindowdescription')}
         onClick={() => setNavigationItemsOpen(true)}
       />
       {bootLogoSupported && (

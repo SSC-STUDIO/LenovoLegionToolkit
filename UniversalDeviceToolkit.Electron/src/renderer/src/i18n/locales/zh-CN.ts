@@ -26,6 +26,7 @@
       hostReady: '后端已连接',
       hostState: '后端状态',
       hostVersion: '后端版本',
+      hostUnavailable: '后端主机未运行。请稍后重试，或重启应用。',
       initComplete: '初始化完成',
       safeStart: '安全模式，已跳过',
       machine: '设备',
@@ -33,7 +34,7 @@
       status: '状态'
     },
     dashboard: {
-      title: '主页',
+      title: '控制台',
       customize: '编辑仪表盘',
       edit: {
         title: '编辑仪表盘',
@@ -53,6 +54,7 @@
         deleteItem: '删除',
         addItem: '添加',
         groupNamePlaceholder: '名称',
+        default: '默认',
         items: {
           discreteGpu: '独显直连模式',
           overclockGpu: '超频独立显卡',
@@ -110,6 +112,7 @@
         voltageRange: '电压范围',
         powerRange: '功率范围',
         details: '详情',
+        chartEmpty: '等待传感器数据',
         refreshInterval: '刷新间隔',
         detail: {
           power: '功耗',
@@ -301,8 +304,26 @@
       }
     },
     common: {
+
       loading: '加载中…',
-      error: '出错了',
+
+      deleteColor: '删除颜色',
+
+      notifications: '通知',
+
+      minimize: '最小化',
+
+      maximize: '最大化',
+
+      restore: '还原',
+
+      windowClose: '关闭',
+
+      navigation: '导航',
+
+      expandNavigation: '展开导航',
+
+      collapseNavigation: '收起导航',      error: '出错了',
       retry: '重试',
       close: '关闭',
       cancel: '取消',
@@ -316,7 +337,9 @@
       default: '默认',
       rename: '重命名',
       delete: '删除',
-      ok: '确定'
+      ok: '确定',
+      confirm: '确认',
+      resetDefault: '重置为默认值'
     },
     colorPicker: {
       hex: '十六进制',
@@ -392,6 +415,8 @@
         groupSensors: '硬件传感器',
         groupNotifications: '通知与警告',
         groupSoftware: '软件冲突',
+        animationsEnabled: '界面动画',
+        animationsEnabledDesc: '启用窗口、弹窗等界面元素的动画效果。关闭后可减少动画干扰。',
         sensorRefreshInterval: '传感器刷新间隔',
         sensorRefreshIntervalDesc: '传感器数值的刷新频率。也可以在仪表盘传感器卡片上右键临时更改。',
         extensionsEnabled: '启用扩展',
@@ -1096,6 +1121,7 @@
       downloadCompleted: '下载完成',
       offline: '在线商店不可用，当前仅显示本地已安装插件',
       empty: '暂无插件',
+      noResults: '未找到符合搜索条件的插件。',
       dependencies: '依赖',
       dependenciesBlocked: '该插件存在未满足的依赖，无法卸载',
       details: '详情',
@@ -1214,6 +1240,8 @@
         trafficLive: '正在收集实时代理流量',
         trafficWaiting: '启动加速后开始采集实时流量',
         trafficUnavailable: '流量数据暂时不可用',
+        connectionsWaiting: '等待连接数据…',
+        destinationsWaiting: '等待目标数据…',
         connectionsHeading: '当前及最近的连接',
         destinationsHeading: '目标地址统计',
         connectionSummary: '活跃 {{active}} / 总计 {{total}}',
@@ -1389,6 +1417,7 @@
       no: '不兼容',
       dataFolder: '数据目录',
       thirdParty: '第三方库',
+      translationCredit: 'Translated by Karl Lee. 由凌卡Karl汉化，开源社区校正。',
       copyright: '版权所有'
     },
     statusBanner: {
@@ -1407,7 +1436,84 @@
     notifications: {
       mergedCount: '×{{count}}'
     },
+    loading: {
+      automation: '正在加载自动化…',
+      dashboard: '正在加载仪表盘…',
+      settings: '正在加载设置…'
+    },
+    update: {
+      checkResult: {
+        available: '发现新版本 v{{version}}',
+        latest: '已是最新版本'
+      }
+    },
+    bootLogoWindowcustomize: '自定义',
+    bootLogoWindowcustomLogoSet: '已设置为自定义开机画面',
+    bootLogoWindowdefaultLogoSet: '已设置为默认开机画面',
+    bootLogoWindowdescription: '替换的自定义开机画面\n图片分辨率必须准确为\n{0}。\n支持的格式：{1}。',
+    bootLogoWindowsetCustomFailed: '自定义开机画面设置失败：{0}',
+    bootLogoWindowsetCustomSuccess: '已设置为自定义开机画面。',
+    bootLogoWindowsetDefaultFailed: '预设开机画面设置失败：{0}',
+    bootLogoWindowsetDefaultSuccess: '已设置为默认开机画面。',
+    bootLogoWindowstatus: '当前状态',
+    bootLogoWindowtitle: '自定义开机画面',
+    excludeRefreshRatesWindowdescription: '取消选择某个刷新率你在使用 Fn + R 快捷键时不想使用的刷新率。',
+    excludeRefreshRatesWindownoRefreshRatesFoundmessage: '请确保笔记本屏幕已打开。Universal Device Toolkit 无法获取未开启显示器的刷新率信息。',
+    excludeRefreshRatesWindowtitle: '排除刷新率',
+    hardwareSensorSectionsWindowtitle: '传感器分区',
+    keyboardvantageEnabledWarningmessage: '由于 Lenovo Vantage 或其服务正在运行导致冲突，无法在此控制键盘背光。',
+    keyboardvantageEnabledWarningtitle: 'Lenovo Vantage 与之相关服务仍在运行',
+    navigationItemsSettingsWindowdescription: '配置侧边栏中显示哪些导航项。仪表盘和设置将始终显示。',
+    navigationItemsSettingsWindowtitle: '导航项设置',
+    notificationsSettingsWindowdontShowNotificationsmessage: '禁用 Fn 键相关操作的\n弹窗。如果弹窗与\n全屏应用有冲突，\n请启用此选项。',
+    notificationsSettingsWindowdontShowNotificationstitle: '不要显示弹窗',
+    notificationsSettingsWindownotificationDurationtitle: '持续时间',
+    notificationsSettingsWindownotificationPositiontitle: '位置',
+    notificationsSettingsWindowtitle: '提示弹窗',
+    pluginSettingsWindowauthor: '作者: {0}',
+    pluginSettingsWindownoConfigMessage: '此插件没有可配置的设置。',
+    pluginSettingsWindowpluginNotFound: '未找到插件: {0}',
+    pluginSettingsWindowsettings: '设置',
+    pluginSettingsWindowtitle: '插件设置',
+    powerPlansWindowloadError: '无法加载 Windows 电源计划，仅提供默认电源计划。',
+    revertToDefault: '重置为默认设置',
+    saveButton: '保存',
+    selectSmartKeyPipelinesWindowlistdescription: '选择单个或多个快捷操作来循环执行。',
+    selectSmartKeyPipelinesWindowlistempty: '暂无快捷操作。',
+    selectSmartKeyPipelinesWindowshowThisApp: '显示本应用',
+    sensorsControlmemoryClocktitle: '显存频率',
+    sensorSectionsmoveDown: '下移',
+    sensorSectionsmoveUp: '上移',
+    sensorSectionsordertitle: '分区排序',
+    sensorSectionsvisibletitle: '可见分区',
+    settingsPagesmartKeyDoublePressActiontitle: 'Smart Key 第二快捷动作',
+    settingsPagesmartKeySinglePressActiontitle: 'Smart Key 快捷动作',
+    tryAgain: '重试',
+    windowsPowerModesWindowtitle: 'Windows 电源模式',
+    windowsPowerPlansWindowdefaultPowerPlan: '默认',
+    windowsPowerPlansWindowtitle: 'Windows 电源计划',
   wpf: {
+    'WindowsOptimization_Category_Explorer_Title': '资源管理器与界面',
+    'WindowsOptimization_Category_Explorer_Description': '调整任务栏、资源管理器及界面体验。',
+    'WindowsOptimization_Action_ExplorerTaskbar_Title': '任务栏与开始菜单布局',
+    'WindowsOptimization_Action_ExplorerStartMenu_Title': '禁用开始菜单并让 Win 键打开搜索',
+    'WindowsOptimization_Action_ExplorerResponsiveness_Title': '提升资源管理器响应速度',
+    'WindowsOptimization_Action_ExplorerVisibility_Title': '文件可见性设置',
+    'WindowsOptimization_Action_ExplorerSuggestions_Title': '禁用资源管理器推荐内容',
+    'WindowsOptimization_Category_Performance_Title': '性能优化',
+    'WindowsOptimization_Category_Performance_Description': '修改系统性能与响应相关设置。',
+    'WindowsOptimization_Action_PerformanceMultimedia_Title': '优化多媒体调度',
+    'WindowsOptimization_Action_PerformanceMemory_Title': '改进内存管理',
+    'WindowsOptimization_Action_PerformanceNotifications_Title': '禁用 Acrylic 与通知中心',
+    'WindowsOptimization_Action_PerformanceTelemetry_Title': '减少遥测与提示',
+    'WindowsOptimization_Action_PerformancePowerPlan_Title': '强制使用高性能电源计划',
+    'WindowsOptimization_Category_Services_Title': '系统服务',
+    'WindowsOptimization_Category_Services_Description': '禁用占用资源的后台服务。',
+    'WindowsOptimization_Action_ServicesDiagnostics_Title': '禁用诊断相关服务',
+    'WindowsOptimization_Action_ServicesSysMain_Title': '禁用 SysMain',
+    'WindowsOptimization_Action_ServicesSearch_Title': '禁用 Windows 搜索索引',
+    'WindowsOptimization_Action_ServicesRemoteRegistry_Title': '禁用远程注册表',
+    'WindowsOptimization_Action_ServicesErrorReporting_Title': '禁用错误报告',
     aboutPageapplicationFolders: '应用文件夹',
     aboutPagebuild: '构建',
     aboutPagedata: '数据',
@@ -2803,6 +2909,11 @@
     sensorSectionGpu: 'GPU',
     powerPlansWindowloadError: '无法加载 Windows 电源计划，仅提供默认电源计划。',
     yes: '是',
+    browse: '浏览…',
+    commonExecutableFileDialogFilter: '进程名或可执行文件路径',
+    deleteAll: '清除全部',
+    updateWindowdownloadComplete: '下载完成。',
+    updateWindowrestartToInstall: '安装并重启',
   }
   }
 }

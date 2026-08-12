@@ -12,14 +12,45 @@
   grid-template-columns: minmax(0, 1fr);
 }
 
+/* Cleanup tab: collapsed category list (~60–70%) | divider | info + rules (~30–40%).
+   More specific than the 1100px stack rule so this split holds at typical window sizes. */
+.udt-optimization-layout--cleanup {
+  grid-template-columns: minmax(0, 1.7fr) 1px minmax(240px, 1fr);
+  gap: 16px 20px;
+}
+
 .udt-optimization-layout__main {
   min-width: 0;
+}
+
+.udt-optimization-layout--cleanup .udt-optimization-layout__main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.udt-optimization-layout__divider {
+  display: none;
+}
+
+.udt-optimization-layout--cleanup .udt-optimization-layout__divider {
+  display: block;
+  width: 1px;
+  align-self: stretch;
+  background: var(--udt-control-stroke-default);
 }
 
 .udt-optimization-layout__side {
   min-width: 0;
   position: sticky;
   top: 16px;
+}
+
+.udt-optimization-layout--cleanup .udt-optimization-layout__side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
 }
 
 /* Tab chrome: pill strip + square icon actions (reference screenshot) */
@@ -29,6 +60,8 @@
   gap: 12px;
   margin-bottom: 16px;
   flex-wrap: wrap;
+  /* Match .udt-optimization-layout’s right gutter so star/play align with cards */
+  padding-right: 16px;
 }
 
 .udt-opt-chrome__actions {
@@ -36,6 +69,7 @@
   align-items: center;
   gap: 8px;
   flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .udt-opt-chrome__icon-btn {
@@ -186,6 +220,7 @@
   flex: 0 0 auto;
   color: var(--udt-text-secondary);
   font-size: var(--udt-font-small-caption);
+  white-space: nowrap;
 }
 
 .udt-category__chevron {
@@ -234,6 +269,7 @@
 .udt-checkbox {
   display: inline-flex;
   flex: 0 0 auto;
+  position: relative;
   cursor: pointer;
 }
 
@@ -293,6 +329,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+}
+
+.udt-cleanup-scan {
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  margin-top: 16px;
+  border-radius: var(--udt-radius-round);
 }
 
 /* Network tab */
@@ -358,6 +402,20 @@
   }
 }
 
+@media (max-width: 640px) {
+  .udt-optimization-layout--cleanup {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .udt-optimization-layout--cleanup .udt-optimization-layout__divider {
+    display: none;
+  }
+
+  .udt-optimization-layout--cleanup .udt-optimization-layout__side {
+    position: static;
+  }
+}
+
 @media (max-width: 760px) {
   .udt-opt-chrome {
     gap: 10px;
@@ -408,7 +466,15 @@
 /* ── Custom cleanup rules card ─────────────────────────────────── */
 
 .udt-cleanup-rules {
-  margin-top: 16px;
+  margin-top: 0;
+}
+
+.udt-cleanup-rules__empty {
+  padding: 20px 12px 8px;
+}
+
+.udt-cleanup-rules .udt-side-card__actions {
+  margin-top: 12px;
 }
 
 .udt-cleanup-rules__list {
@@ -1358,37 +1424,5 @@
 
   .udt-network-diag {
     grid-template-columns: 1fr;
-  }
-}
-
-/* ── Skeleton loading (OptimizationTab / NetworkTab) ─────────────── */
-
-.udt-skeleton-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.udt-skeleton-card {
-  height: 96px;
-  border: 1px solid var(--udt-control-stroke-default);
-  border-radius: var(--udt-radius-card);
-  background:
-    linear-gradient(
-      90deg,
-      var(--udt-control-fill-tertiary) 25%,
-      var(--udt-subtle-fill-secondary) 50%,
-      var(--udt-control-fill-tertiary) 75%
-    );
-  background-size: 200% 100%;
-  animation: udt-skeleton-shimmer var(--udt-anim-shimmer) infinite;
-}
-
-@keyframes udt-skeleton-shimmer {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
   }
 }

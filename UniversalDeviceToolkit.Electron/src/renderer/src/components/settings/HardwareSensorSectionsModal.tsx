@@ -121,7 +121,7 @@ export default function HardwareSensorSectionsModal({
   return (
     <Modal
       open={open}
-      title={t('hardwareSensorSectionsWindowtitle')}
+      title={t('wpf.hardwareSensorSectionsWindowtitle')}
       width={420}
       okText={t('saveButton')}
       cancelText={t('common.cancel')}

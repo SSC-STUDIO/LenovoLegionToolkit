@@ -171,6 +171,7 @@ function positionClass(position: string): string {
 }
 
 export default function NotificationCenter(): React.JSX.Element {
+  const { t } = useTranslation()
   const items = useNotificationCenter((s) => s.items)
   const settingsReady = useSettingsStore((s) => s.loading === false)
   const position = readNotificationPreferences().position
@@ -184,7 +185,7 @@ export default function NotificationCenter(): React.JSX.Element {
   const classes = ['udt-notification-center', positionClass(position)]
 
   return (
-    <div className={classes.join(' ')} aria-label="Notifications">
+    <div className={classes.join(' ')} aria-label={t('common.notifications')}>
       {items.map((item) => (
         <NotificationToast key={item.id} item={item} />
       ))}

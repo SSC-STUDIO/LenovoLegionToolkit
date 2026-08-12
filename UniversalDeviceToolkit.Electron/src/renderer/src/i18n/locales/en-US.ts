@@ -26,6 +26,8 @@
       hostReady: 'Backend connected',
       hostState: 'Backend state',
       hostVersion: 'Backend version',
+      hostUnavailable:
+        'The backend host is not running. Wait a moment and retry, or restart the app.',
       initComplete: 'Initialization complete',
       safeStart: 'Safe start, skipped',
       machine: 'Device',
@@ -33,7 +35,7 @@
       status: 'Status'
     },
     dashboard: {
-      title: 'Home',
+      title: 'Console',
       customize: 'Customize',
       edit: {
         title: 'Edit Dashboard',
@@ -53,6 +55,7 @@
         deleteItem: 'Delete',
         addItem: 'Add',
         groupNamePlaceholder: 'Name',
+        default: 'Default',
         items: {
           discreteGpu: 'Discrete GPU Mode',
           overclockGpu: 'Overclock GPU',
@@ -110,6 +113,7 @@
         voltageRange: 'Voltage Range',
         powerRange: 'Power Range',
         details: 'Details',
+        chartEmpty: 'Waiting for sensor data',
         refreshInterval: 'Refresh Interval',
         detail: {
           power: 'Power',
@@ -301,8 +305,26 @@
       }
     },
     common: {
+
       loading: 'Loading…',
-      error: 'Something went wrong',
+
+      deleteColor: 'Delete color',
+
+      notifications: 'Notifications',
+
+      minimize: 'Minimize',
+
+      maximize: 'Maximize',
+
+      restore: 'Restore',
+
+      windowClose: 'Close',
+
+      navigation: 'Navigation',
+
+      expandNavigation: 'Expand navigation',
+
+      collapseNavigation: 'Collapse navigation',      error: 'Something went wrong',
       retry: 'Retry',
       close: 'Close',
       cancel: 'Cancel',
@@ -316,7 +338,9 @@
       default: 'Default',
       rename: 'Rename',
       delete: 'Delete',
-      ok: 'OK'
+      ok: 'OK',
+      confirm: 'Confirm',
+      resetDefault: 'Reset to default'
     },
     colorPicker: {
       hex: 'Hex',
@@ -392,6 +416,8 @@
         groupSensors: 'Hardware Sensors',
         groupNotifications: 'Notifications & Warnings',
         groupSoftware: 'Software Conflicts',
+        animationsEnabled: 'UI Animations',
+        animationsEnabledDesc: 'Animate windows, dialogs and other interface elements. Turn off to reduce motion.',
         sensorRefreshInterval: 'Sensor Refresh Interval',
         sensorRefreshIntervalDesc: 'How often the sensor values are refreshed. You can also right-click the sensors card to change it temporarily.',
         extensionsEnabled: 'Enable Extensions',
@@ -1096,6 +1122,7 @@
       downloadCompleted: 'Download completed',
       offline: 'Online store is unavailable; showing locally installed plugins only',
       empty: 'No plugins found',
+      noResults: 'No plugins found matching your search.',
       dependencies: 'Dependencies',
       dependenciesBlocked: 'This plugin has unsatisfied dependencies and cannot be uninstalled',
       details: 'Details',
@@ -1214,6 +1241,8 @@
         trafficLive: 'Collecting live proxy traffic',
         trafficWaiting: 'Start acceleration to collect live traffic',
         trafficUnavailable: 'Traffic data is temporarily unavailable',
+        connectionsWaiting: 'Waiting for connection data…',
+        destinationsWaiting: 'Waiting for destination data…',
         connectionsHeading: 'Current and recent connections',
         destinationsHeading: 'Destination statistics',
         connectionSummary: '{{active}} active / {{total}} total',
@@ -1389,6 +1418,7 @@
       no: 'Not compatible',
       dataFolder: 'Data folder',
       thirdParty: 'Third-party libraries',
+      translationCredit: 'Translations provided by community.',
       copyright: 'Copyright'
     },
     statusBanner: {
@@ -1407,7 +1437,84 @@
     notifications: {
       mergedCount: '×{{count}}'
     },
+    loading: {
+      automation: 'Loading automation…',
+      dashboard: 'Loading dashboard…',
+      settings: 'Loading settings…'
+    },
+    update: {
+      checkResult: {
+        available: 'New version available: v{{version}}',
+        latest: 'You are up to date'
+      }
+    },
+    bootLogoWindowcustomize: 'Customize',
+    bootLogoWindowcustomLogoSet: 'Custom Boot Logo is set',
+    bootLogoWindowdefaultLogoSet: 'Default Boot Logo is set',
+    bootLogoWindowdescription: 'Custom boot logo must be exactly {0} pixels large.\nSupported formats are: {1}.',
+    bootLogoWindowsetCustomFailed: 'Custom logo could not be set: {0}',
+    bootLogoWindowsetCustomSuccess: 'Custom boot logo set.',
+    bootLogoWindowsetDefaultFailed: 'Default logo could not be set: {0}',
+    bootLogoWindowsetDefaultSuccess: 'Default boot logo set.',
+    bootLogoWindowstatus: 'Status',
+    bootLogoWindowtitle: 'Boot Logo',
+    excludeRefreshRatesWindowdescription: 'Uncheck refresh rates that you do not want to use when Fn+R shortcut is used.',
+    excludeRefreshRatesWindownoRefreshRatesFoundmessage: 'Make sure that laptop display is on. Universal Device Toolkit can\'t load refresh rates for a display that is not on.',
+    excludeRefreshRatesWindowtitle: 'Exclude Refresh Rates',
+    hardwareSensorSectionsWindowtitle: 'Sensor sections',
+    keyboardvantageEnabledWarningmessage: 'Keyboard backlight cannot be controlled in here when Lenovo Vantage or its services are running.',
+    keyboardvantageEnabledWarningtitle: 'Lenovo Vantage or its services are running',
+    navigationItemsSettingsWindowdescription: 'Configure which navigation items are displayed in the sidebar. Dashboard and Settings will always be visible.',
+    navigationItemsSettingsWindowtitle: 'Navigation Items Settings',
+    notificationsSettingsWindowdontShowNotificationsmessage: 'Disables notification for Fn keys actions like microphone mute.\nEnable this option if you have conflicts with full screen applications.',
+    notificationsSettingsWindowdontShowNotificationstitle: 'Don\'t show notifications',
+    notificationsSettingsWindownotificationDurationtitle: 'Duration',
+    notificationsSettingsWindownotificationPositiontitle: 'Position',
+    notificationsSettingsWindowtitle: 'Notifications',
+    pluginSettingsWindowauthor: 'Author: {0}',
+    pluginSettingsWindownoConfigMessage: 'This plugin has no configurable settings.',
+    pluginSettingsWindowpluginNotFound: 'Plugin not found: {0}',
+    pluginSettingsWindowsettings: 'Settings',
+    pluginSettingsWindowtitle: 'Plugin Settings',
+    powerPlansWindowloadError: 'Windows power plans could not be loaded. Only the default power plan is available.',
+    revertToDefault: 'Revert to default',
+    saveButton: 'Save',
+    selectSmartKeyPipelinesWindowlistdescription: 'Choose one or more quick actions to cycle through',
+    selectSmartKeyPipelinesWindowlistempty: 'No Quick Actions defined.',
+    selectSmartKeyPipelinesWindowshowThisApp: 'Show this app',
+    sensorsControlmemoryClocktitle: 'Memory Clock',
+    sensorSectionsmoveDown: 'Move down',
+    sensorSectionsmoveUp: 'Move up',
+    sensorSectionsordertitle: 'Section order',
+    sensorSectionsvisibletitle: 'Visible sections',
+    settingsPagesmartKeyDoublePressActiontitle: 'Smart Key Secondary Action',
+    settingsPagesmartKeySinglePressActiontitle: 'Smart Key Action',
+    tryAgain: 'Try again',
+    windowsPowerModesWindowtitle: 'Windows Power Modes',
+    windowsPowerPlansWindowdefaultPowerPlan: 'Default',
+    windowsPowerPlansWindowtitle: 'Windows Power Plans',
   wpf: {
+    'WindowsOptimization_Category_Explorer_Title': 'Explorer & interface',
+    'WindowsOptimization_Category_Explorer_Description': 'Tune taskbar, File Explorer and user interface behaviour.',
+    'WindowsOptimization_Action_ExplorerTaskbar_Title': 'Taskbar and start menu layout',
+    'WindowsOptimization_Action_ExplorerStartMenu_Title': 'Disable start menu and open search with Win key',
+    'WindowsOptimization_Action_ExplorerResponsiveness_Title': 'Improve Explorer responsiveness',
+    'WindowsOptimization_Action_ExplorerVisibility_Title': 'File visibility options',
+    'WindowsOptimization_Action_ExplorerSuggestions_Title': 'Disable Explorer suggestions',
+    'WindowsOptimization_Category_Performance_Title': 'Performance',
+    'WindowsOptimization_Category_Performance_Description': 'Adjust system performance and responsiveness settings.',
+    'WindowsOptimization_Action_PerformanceMultimedia_Title': 'Optimise multimedia scheduling',
+    'WindowsOptimization_Action_PerformanceMemory_Title': 'Improve memory management',
+    'WindowsOptimization_Action_PerformanceNotifications_Title': 'Disable acrylic and notification centre',
+    'WindowsOptimization_Action_PerformanceTelemetry_Title': 'Reduce telemetry and tips',
+    'WindowsOptimization_Action_PerformancePowerPlan_Title': 'Force high performance plan',
+    'WindowsOptimization_Category_Services_Title': 'Services',
+    'WindowsOptimization_Category_Services_Description': 'Disable background services that consume resources.',
+    'WindowsOptimization_Action_ServicesDiagnostics_Title': 'Disable diagnostic services',
+    'WindowsOptimization_Action_ServicesSysMain_Title': 'Disable SysMain',
+    'WindowsOptimization_Action_ServicesSearch_Title': 'Disable Windows Search indexing',
+    'WindowsOptimization_Action_ServicesRemoteRegistry_Title': 'Disable Remote Registry',
+    'WindowsOptimization_Action_ServicesErrorReporting_Title': 'Disable error reporting',
     aboutPageapplicationFolders: 'Application Folders',
     aboutPagebuild: 'Build',
     aboutPagedata: 'Data',
@@ -2803,6 +2910,11 @@
     sensorSectionGpu: 'GPU',
     powerPlansWindowloadError: 'Windows power plans could not be loaded. Only the default power plan is available.',
     yes: 'Yes',
+    browse: 'Browse…',
+    commonExecutableFileDialogFilter: 'Process name or executable path',
+    deleteAll: 'Clear all',
+    updateWindowdownloadComplete: 'Download complete.',
+    updateWindowrestartToInstall: 'Install & Restart',
   }
   }
 }

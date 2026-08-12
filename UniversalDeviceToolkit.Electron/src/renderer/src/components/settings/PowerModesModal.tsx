@@ -97,7 +97,7 @@ export default function PowerModesModal({ open, onClose }: PowerModesModalProps)
   return (
     <Modal
       open={open}
-      title={t('windowsPowerModesWindowtitle')}
+      title={t('wpf.windowsPowerModesWindowtitle')}
       width={600}
       footer={null}
       onCancel={onClose}

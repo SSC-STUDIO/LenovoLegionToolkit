@@ -134,8 +134,8 @@ export default function AppLayout(): React.JSX.Element {
 
   // WPF MainWindow.UpdateNavigationItemsVisibilityFromSettings: dashboard and
   // settings are always visible; everything else defaults to visible unless
-  // NavigationItemsVisibility opts it out. Plugin Extensions is additionally
-  // hidden while ExtensionsEnabled is off.
+  // NavigationItemsVisibility opts it out. Plugin Extensions stays visible by
+  // default (ExtensionsEnabled only controls whether extensions load).
   const navVisibility = useMemo(() => {
     const app = (scopes.application ?? {}) as Record<string, unknown>
     return ((app.NavigationItemsVisibility as Record<string, boolean> | undefined) ?? {})
@@ -154,15 +154,11 @@ export default function AppLayout(): React.JSX.Element {
         '/about': 'about'
       }
       const pageTag: string = pageTagMap[item.key] ?? item.key.replace('/', '')
-      if (pageTag === 'dashboard' || pageTag === 'settings') return true
+      if (pageTag === 'dashboard' || pageTag === 'settings' || pageTag === 'pluginExtensions') return true
       if (navVisibility[pageTag] === false) return false
-      if (pageTag === 'pluginExtensions') {
-        const app = (scopes.application ?? {}) as Record<string, unknown>
-        if (app.ExtensionsEnabled === false) return false
-      }
       return true
     },
-    [navVisibility, scopes.application]
+    [navVisibility]
   )
 
   const visibleMainItems = useMemo(() => MAIN_ITEMS.filter(isNavItemVisible), [isNavItemVisible])
@@ -280,7 +276,7 @@ export default function AppLayout(): React.JSX.Element {
       <TitleBar />
       <div className="udt-app-shell__body">
         <nav
-          aria-label="navigation"
+          aria-label={t('common.navigation')}
           className="udt-nav udt-nav--wpf-parity"
           style={{ width: navWidth }}
         >
@@ -290,7 +286,7 @@ export default function AppLayout(): React.JSX.Element {
           <div className="udt-nav-group udt-nav-group--footer">{visibleFooterItems.map(renderItem)}</div>
           <button
             type="button"
-            aria-label={collapsed ? 'expand-navigation' : 'collapse-navigation'}
+            aria-label={collapsed ? t('common.expandNavigation') : t('common.collapseNavigation')}
             className={`udt-nav-toggle${collapsed ? ' udt-nav-toggle--collapsed' : ''}`}
             onClick={() => setCollapsed((value) => !value)}
           >

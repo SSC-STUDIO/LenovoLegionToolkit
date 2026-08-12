@@ -1,20 +1,20 @@
-/* ── Keyboard backlight page (1:1 with WPF KeyboardBacklightPage) ── */
+﻿/* 鈹€鈹€ Keyboard backlight page (1:1 with WPF KeyboardBacklightPage) 鈹€鈹€ */
 
 .udt-kb-page {
   max-width: 1520px;
   margin: 0 auto;
-  padding: 16px 16px 28px;
+  padding: 16px 16px 12px 0;
 }
 
 .udt-kb-page__title {
-  margin: 16px 0 24px;
+  margin: 0 0 8px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-page-title);
   font-weight: 500;
   line-height: 1.2;
 }
 
-/* ── Shared card chrome (CardControl.xaml) ────────────────────── */
+/* 鈹€鈹€ Shared card chrome (CardControl.xaml) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-card {
   display: flex;
@@ -79,7 +79,7 @@
   margin-top: 12px;
 }
 
-/* ── RGB: preset row (5 buttons, 36px, 12px radius) ───────────── */
+/* 鈹€鈹€ RGB: preset row (5 buttons, 36px, 12px radius) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-presets {
   display: flex;
@@ -115,7 +115,7 @@
   font-weight: 500;
 }
 
-/* ── RGB: brightness / effect / speed combo cards ─────────────── */
+/* 鈹€鈹€ RGB: brightness / effect / speed combo cards 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-combo-card {
   margin-bottom: 8px;
@@ -126,7 +126,7 @@
   min-width: 150px;
 }
 
-/* ── RGB: zone cards (4-up above 950px, stacked below) ────────── */
+/* 鈹€鈹€ RGB: zone cards (4-up above 950px, stacked below) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-zones {
   display: grid;
@@ -178,7 +178,7 @@
   }
 }
 
-/* ── Spectrum: brightness slider card (200px, 0-9 ticks) ──────── */
+/* 鈹€鈹€ Spectrum: brightness slider card (200px, 0-9 ticks) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-spectrum-brightness-card {
   margin-bottom: 24px;
@@ -189,7 +189,7 @@
   margin: 4px 0 0;
 }
 
-/* ── Spectrum: profile radio buttons (ToggleButton-style) ─────── */
+/* 鈹€鈹€ Spectrum: profile radio buttons (ToggleButton-style) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-spectrum-profiles {
   display: flex;
@@ -230,13 +230,13 @@
   font-weight: 500;
 }
 
-/* ── Spectrum: logo card ──────────────────────────────────────── */
+/* 鈹€鈹€ Spectrum: logo card 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-logo-card {
   margin-bottom: 8px;
 }
 
-/* ── Spectrum: effects toolbar + list ─────────────────────────── */
+/* 鈹€鈹€ Spectrum: effects toolbar + list 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-effects-card__toolbar {
   display: flex;
@@ -291,7 +291,7 @@
   border-block-end: none;
 }
 
-/* ── Empty / loading states ───────────────────────────────────── */
+/* 鈹€鈹€ Empty / loading states 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-kb-unsupported {
   display: flex;
@@ -628,3 +628,4 @@
   gap: 10px;
   margin-top: 10px;
 }
+

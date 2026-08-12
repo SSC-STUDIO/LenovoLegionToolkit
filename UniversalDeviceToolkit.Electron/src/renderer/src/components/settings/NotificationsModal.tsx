@@ -220,7 +220,7 @@ export default function NotificationsModal({
   return (
     <Modal
       open={open}
-      title={t('notificationsSettingsWindowtitle')}
+      title={t('wpf.notificationsSettingsWindowtitle')}
       width={500}
       footer={null}
       onCancel={onClose}
@@ -242,9 +242,9 @@ export default function NotificationsModal({
             }}
           >
             <div>
-              <div style={{ fontWeight: 600 }}>{t('notificationsSettingsWindowdontShowNotificationstitle')}</div>
+              <div style={{ fontWeight: 600 }}>{t('wpf.notificationsSettingsWindowdontShowNotificationstitle')}</div>
               <div style={{ opacity: 0.65, fontSize: 12, whiteSpace: 'pre-line' }}>
-                {t('notificationsSettingsWindowdontShowNotificationsmessage')}
+                {t('wpf.notificationsSettingsWindowdontShowNotificationsmessage')}
               </div>
             </div>
             <Switch
@@ -293,7 +293,7 @@ export default function NotificationsModal({
               borderBottom: '1px solid rgba(128,128,128,0.15)'
             }}
           >
-            <div style={{ fontWeight: 600 }}>{t('notificationsSettingsWindownotificationPositiontitle')}</div>
+            <div style={{ fontWeight: 600 }}>{t('wpf.notificationsSettingsWindownotificationPositiontitle')}</div>
             <Select<string>
               className="udt-settings-select"
               style={{ minWidth: 200 }}
@@ -316,7 +316,7 @@ export default function NotificationsModal({
               padding: '10px 0'
             }}
           >
-            <div style={{ fontWeight: 600 }}>{t('notificationsSettingsWindownotificationDurationtitle')}</div>
+            <div style={{ fontWeight: 600 }}>{t('wpf.notificationsSettingsWindownotificationDurationtitle')}</div>
             <Select<string>
               className="udt-settings-select"
               style={{ minWidth: 200 }}

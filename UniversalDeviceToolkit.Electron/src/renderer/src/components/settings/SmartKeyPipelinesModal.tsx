@@ -152,7 +152,7 @@ export default function SmartKeyPipelinesModal({
               padding: '12px 0'
             }}
           >
-            <span style={{ fontWeight: 600 }}>{t('selectSmartKeyPipelinesWindowshowThisApp')}</span>
+            <span style={{ fontWeight: 600 }}>{t('wpf.selectSmartKeyPipelinesWindowshowThisApp')}</span>
             <Switch
               className="udt-settings-switch"
               checked={showThisApp}
@@ -164,9 +164,9 @@ export default function SmartKeyPipelinesModal({
           </div>
           {!showThisApp && (
             <>
-              <p style={{ opacity: 0.75 }}>{t('selectSmartKeyPipelinesWindowlistdescription')}</p>
+              <p style={{ opacity: 0.75 }}>{t('wpf.selectSmartKeyPipelinesWindowlistdescription')}</p>
               {pipelines.length === 0 ? (
-                <Empty description={t('selectSmartKeyPipelinesWindowlistempty')} />
+                <Empty description={t('wpf.selectSmartKeyPipelinesWindowlistempty')} />
               ) : (
                 <div
                   style={{

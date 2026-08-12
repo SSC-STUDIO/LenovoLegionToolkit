@@ -1,5 +1,11 @@
 export interface Bridge {
   invoke: (method: string, params?: unknown) => Promise<unknown>
+  getHostStatus: () => Promise<{
+    running: boolean
+    ready: boolean
+    lastError: string | null
+    readyPayload: unknown
+  }>
   on: (event: string, callback: (data: unknown) => void) => () => void
   minimize: () => void
   maximizeToggle: () => void

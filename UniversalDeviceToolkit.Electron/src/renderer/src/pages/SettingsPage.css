@@ -27,7 +27,8 @@
 .udt-settings-page__surface {
   display: grid;
   grid-template-columns: 270px minmax(0, 1fr);
-  min-height: 640px;
+  /* Fill the viewport height when maximized; keep a sane floor for small windows. */
+  min-height: max(640px, calc(100vh - 150px));
   overflow: visible;
   border: none;
   border-radius: 0;

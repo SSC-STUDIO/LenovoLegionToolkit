@@ -1,8 +1,7 @@
 import { app, BrowserWindow, Menu, Tray, nativeImage, nativeTheme, type MenuItemConstructorOptions } from 'electron'
 import { join } from 'path'
 import { clearTrayIconCache, trayIconForSymbol, trayNavIcon } from './tray-icons'
-import { getTrayLanguage, localizePipelineName, setTrayLanguage, trayStrings } from './tray-i18n'
-import { showStatusWindow } from './status-window'
+import { localizePipelineName, setTrayLanguage, trayStrings } from './tray-i18n'
 
 let tray: Tray | null = null
 let getWindow: (() => BrowserWindow | null) | null = null
@@ -60,12 +59,6 @@ function showWindow(window: BrowserWindow | null): void {
   if (window.isMinimized()) window.restore()
   window.show()
   window.focus()
-}
-
-/** Localized tray label for the status popup (WPF Resource.StatusTrayPopup*). */
-function statusLabel(): string {
-  const lang = getTrayLanguage() ?? ''
-  return lang.toLowerCase().startsWith('zh') ? '状态' : 'Status'
 }
 
 function sendToRenderer(event: string, data: unknown = null): void {
@@ -150,8 +143,11 @@ async function buildMenuTemplate(): Promise<MenuItemConstructorOptions[]> {
 
   items.push({ type: 'separator' })
 
-  // WPF inserts an extra automation separator when quick actions exist; a single
-  // separator already separates nav from the QA + Open/Close block (matches screenshot).
+  // WPF TrayHelper.SetAutomationItemsAsync: the automation block gets its own
+  // separator, inserted after the navigation separator and before Open/Close.
+  if (quickActions.length > 0) {
+    items.push({ type: 'separator' })
+  }
   for (const pipeline of quickActions) {
     items.push({
       label: localizePipelineName(pipeline.name),
@@ -162,17 +158,10 @@ async function buildMenuTemplate(): Promise<MenuItemConstructorOptions[]> {
     })
   }
 
+  // Open / Close are text-only (no icons), matching WPF TrayHelper / Fig 2.
   items.push({
     label: s.open,
     click: () => showWindow(getWindow?.() ?? null)
-  })
-
-  // Mirrors the WPF StatusWindow tray readout entry (version/model/update popup).
-  items.push({
-    label: statusLabel(),
-    click: () => {
-      void showStatusWindow()
-    }
   })
 
   items.push({
@@ -282,4 +271,4 @@ export function destroyTray(): void {
 }
 
 // Re-export for callers that only import tray.ts
-export { getTrayLanguage, setTrayLanguage }
+export { getTrayLanguage, setTrayLanguage } from './tray-i18n'

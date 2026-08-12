@@ -42,12 +42,12 @@ export function SmartKeysSection(): React.JSX.Element {
         </div>
       </SettingsCard>
       <SettingsCard
-        title={t('settingsPagesmartKeySinglePressActiontitle')}
+        title={t('wpf.settingsPagesmartKeySinglePressActiontitle')}
         description={t('settings.smartKeys.singlePressActionDesc')}
         onClick={() => setSinglePressOpen(true)}
       />
       <SettingsCard
-        title={t('settingsPagesmartKeyDoublePressActiontitle')}
+        title={t('wpf.settingsPagesmartKeyDoublePressActiontitle')}
         description={t('settings.smartKeys.doublePressActionDesc')}
         onClick={() => setDoublePressOpen(true)}
       />

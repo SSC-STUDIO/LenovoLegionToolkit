@@ -2,6 +2,8 @@
 
 .udt-sensors {
   margin-bottom: 0;
+  container-type: inline-size;
+  container-name: udt-sensors;
 }
 
 .udt-sensor-board {
@@ -16,7 +18,7 @@
 .udt-sensor-board__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
+  gap: 12px 20px;
   margin: 8px 10px;
 }
 
@@ -24,7 +26,7 @@
 
 .udt-sensor-panel {
   min-width: 0;
-  padding: 0 6px;
+  padding: 0 10px;
 }
 
 .udt-sensor-panel__heading {
@@ -55,19 +57,90 @@
   line-height: 1.3;
 }
 
-/* ── Gauge (110px) + 3 metric rows (24px each) ────────────────── */
+/* ── Gauge (fluid, max 110px) + 3 metric rows (24px each) ─────── */
+
+.udt-sensor-gauge {
+  position: relative;
+  width: 100%;
+  max-width: var(--udt-gauge-md);
+  aspect-ratio: 1 / 1;
+  justify-self: center;
+  margin-inline: auto;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.udt-sensor-gauge__ring {
+  position: absolute;
+  inset: 0;
+}
+
+.udt-sensor-gauge__readout {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--udt-sensor-gauge-gap, 4px);
+  padding: 22% 16% 26%;
+  overflow: hidden;
+  pointer-events: none;
+  text-align: center;
+}
+
+.udt-sensor-gauge__value {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.08em;
+  max-width: 100%;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-sensor-gauge-value-size, 22px);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.udt-sensor-gauge__unit {
+  color: var(--udt-text-secondary);
+  font-size: 0.55em;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.udt-sensor-gauge__caption {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--udt-text-tertiary);
+  font-size: var(--udt-sensor-gauge-caption-size, 11px);
+  font-weight: 400;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-sensor-gauge--compact .udt-sensor-gauge__caption {
+  display: none;
+}
 
 .udt-sensor-panel__summary {
   display: grid;
-  grid-template-columns: 110px minmax(0, 1fr);
+  grid-template-columns: minmax(72px, var(--udt-gauge-md)) minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 14px;
+  min-height: var(--udt-gauge-md);
 }
 
 .udt-sensor-panel__metrics {
   display: grid;
   grid-template-rows: repeat(3, 24px);
-  margin: 0;
+  align-content: center;
+  /* 270° horseshoe visual mass sits above the open bottom; nudge bars up. */
+  margin: -4px 0 0;
+  padding-bottom: 8px;
   min-width: 0;
 }
 
@@ -120,7 +193,7 @@
   width: 0;
   border-radius: 1px;
   background: var(--udt-accent);
-  transition: width var(--udt-anim-medium) var(--udt-ease-cubic-out);
+  transition: width 480ms var(--udt-ease-cubic-out);
 }
 
 /* MarqueeMetricBar value text: ellipsis when the row is too narrow for the
@@ -160,15 +233,52 @@
   color: var(--udt-text-primary);
 }
 
+/* Low-power adapter warning: centered footer under Processor/Battery/GPU. */
+.udt-sensor-board__footer-warning {
+  width: 100%;
+  margin: 10px 10px 2px;
+  text-align: center;
+  color: var(--udt-status-warning);
+  font-size: var(--udt-font-caption);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
 /* ── Trend panel (120px, radius 12, chart surface, padding 2) ─── */
 
 .udt-sensor-panel__chart {
+  position: relative;
   height: 120px;
   margin-top: 14px;
   border-radius: var(--udt-radius-control);
   background: var(--udt-surface-chart);
   padding: 2px;
   overflow: hidden;
+}
+
+.udt-trend-chart {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.udt-trend-chart__canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.udt-trend-chart__empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  pointer-events: none;
+  color: var(--udt-text-tertiary);
+  font-size: var(--udt-font-small-caption);
+  line-height: 1.4;
+  text-align: center;
 }
 
 /* ── Legend (8×8 dot, 13px secondary, item 0 14px 4px 0) ──────── */
@@ -201,23 +311,103 @@
   flex: 0 0 auto;
 }
 
-/* Avalonia SensorsControl keeps 3 equal columns at all dashboard widths
-   (GetSensorColumnCountForWidth always returns 3). Only stack on very
-   narrow content panes so Processor / Battery / GPU stay side-by-side. */
-@media (max-width: 560px) {
-  .udt-sensor-board__grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
+/* Keep 3 columns at typical viewport sizes; stacking is owned by the
+   container queries below (content width, not the OS window). */
+@media (max-width: 1000px) {
+  .udt-sensors .udt-sensor-board__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 20px;
   }
 
-  .udt-sensor-panel {
-    padding: 18px 6px 0;
+  .udt-sensors .udt-sensor-panel {
+    padding: 0 10px;
+    border-top: none;
+  }
+}
+
+/* Mid content width: keep 3 columns but shrink gauges / tracks so the
+   value + caption stay inside the ring and columns keep real gutters.
+   Selectors match the 1000px neutralize block (0,3,0) so these win. */
+@container udt-sensors (max-width: 1000px) {
+  .udt-sensor-board .udt-sensor-board__grid {
+    gap: 12px 16px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel {
+    padding: 0 8px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__summary {
+    grid-template-columns: minmax(64px, var(--udt-gauge-sm)) minmax(0, 1fr);
+    gap: 10px;
+    min-height: var(--udt-gauge-sm);
+  }
+
+  .udt-sensor-board .udt-sensor-panel__metrics {
+    grid-template-rows: repeat(3, 22px);
+    padding-bottom: 6px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__metric {
+    height: 22px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__metric-track {
+    min-width: 48px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__metric dd {
+    min-width: 52px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__chart {
+    height: 104px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__battery-gauges {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Prefer a single readable column over three squeezed ones. ~760px is
+   the sensors card / content width, not the OS window. */
+@container udt-sensors (max-width: 760px) {
+  .udt-sensor-board .udt-sensor-board__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel {
+    padding: 16px 8px 0;
     border-top: 1px solid var(--udt-control-stroke-default);
   }
 
-  .udt-sensor-panel:first-child {
+  .udt-sensor-board .udt-sensor-panel:first-child {
     padding-top: 0;
     border-top: none;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__summary {
+    grid-template-columns: minmax(72px, var(--udt-gauge-md)) minmax(0, 1fr);
+    gap: 16px;
+    min-height: var(--udt-gauge-md);
+  }
+
+  .udt-sensor-board .udt-sensor-panel__metrics {
+    grid-template-rows: repeat(3, 24px);
+    padding-bottom: 8px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__metric {
+    height: 24px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__chart {
+    height: 112px;
+  }
+
+  .udt-sensor-board .udt-sensor-panel__battery-gauges {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -255,9 +445,16 @@
     color var(--udt-anim-medium) ease-out;
 }
 
-.udt-sensor-panel__details-toggle:hover {
+.udt-sensor-panel__details-toggle:hover,
+.udt-sensor-panel__details-toggle:focus-visible {
   background: var(--udt-subtle-fill-secondary);
   color: var(--udt-text-primary);
+  outline: none;
+}
+
+.udt-sensor-panel__details-toggle--expanded {
+  color: var(--udt-text-primary);
+  background: var(--udt-control-fill-default);
 }
 
 /* WPF detail panel: two equal columns, 8px gap, 16px top margin; each row is a
@@ -435,4 +632,40 @@
   .udt-sensor-details {
     grid-template-columns: 1fr;
   }
+}
+
+/* Light theme: stronger chart well, metric tracks, and caption contrast. */
+:root[data-theme='light'] .udt-sensor-panel__chart {
+  background: rgba(15, 23, 42, 0.045);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme='light'] .udt-sensor-panel__metric-track {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+:root[data-theme='light'] .udt-sensor-panel__legend {
+  color: rgba(0, 0, 0, 0.68);
+}
+
+:root[data-theme='light'] .udt-sensor-panel__details-toggle {
+  border-color: rgba(0, 0, 0, 0.16);
+  color: rgba(0, 0, 0, 0.72);
+}
+
+:root[data-theme='light'] .udt-trend-chart__empty {
+  color: rgba(0, 0, 0, 0.48);
+}
+
+:root[data-theme='light'] .udt-sensor-gauge__value {
+  color: rgba(0, 0, 0, 0.89);
+}
+
+:root[data-theme='light'] .udt-sensor-gauge__unit {
+  color: rgba(0, 0, 0, 0.62);
+}
+
+:root[data-theme='light'] .udt-sensor-gauge__caption {
+  color: rgba(0, 0, 0, 0.52);
 }

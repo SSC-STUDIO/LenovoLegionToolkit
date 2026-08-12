@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { ArrowDownOutlined, ArrowUpOutlined, CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { Input, Modal, Spin } from 'antd'
 import type { TFunction } from 'i18next'
@@ -167,7 +168,7 @@ export default function EditDashboardModal({
     onCancel()
   }
 
-  return (
+  return createPortal(
     <div className="udt-dashboard-edit-backdrop" onClick={handleCancel}>
       <div
         className="udt-dashboard-edit"
@@ -374,6 +375,7 @@ export default function EditDashboardModal({
           onPressEnter={confirmNamePrompt}
         />
       </Modal>
-    </div>
+    </div>,
+    document.body
   )
 }

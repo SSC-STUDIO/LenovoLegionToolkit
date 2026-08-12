@@ -65,7 +65,7 @@ export default function PluginSettingsModal({
   return (
     <Modal
       open={open}
-      title={plugin != null ? `${plugin.name} — ${t('pluginSettingsWindowsettings')}` : t('pluginSettingsWindowtitle')}
+      title={plugin != null ? `${plugin.name} — ${t('wpf.pluginSettingsWindowsettings')}` : t('wpf.pluginSettingsWindowtitle')}
       width={560}
       footer={null}
       onCancel={onClose}
@@ -74,7 +74,7 @@ export default function PluginSettingsModal({
         <Alert
           type="error"
           showIcon
-          message={t('pluginSettingsWindowpluginNotFound').replace('{0}', pluginId)}
+          message={t('wpf.pluginSettingsWindowpluginNotFound').replace('{0}', pluginId)}
         />
       ) : plugin == null ? (
         <div style={{ textAlign: 'center', padding: 24 }}>
@@ -123,14 +123,14 @@ export default function PluginSettingsModal({
                       background: 'rgba(128,128,128,0.2)'
                     }}
                   >
-                    {t('pluginSettingsWindowauthor').replace('{0}', plugin.author)}
+                    {t('wpf.pluginSettingsWindowauthor').replace('{0}', plugin.author)}
                   </span>
                 )}
               </div>
             </div>
           </div>
           <div style={{ opacity: 0.75, fontSize: 13 }}>
-            {t('pluginSettingsWindownoConfigMessage')}
+            {t('wpf.pluginSettingsWindownoConfigMessage')}
           </div>
           {plugin.description.length > 0 && (
             <div style={{ opacity: 0.55, fontSize: 12, marginTop: 8 }}>{plugin.description}</div>

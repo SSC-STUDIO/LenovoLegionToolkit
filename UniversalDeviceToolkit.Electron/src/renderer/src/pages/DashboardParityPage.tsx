@@ -1,12 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Edit24Regular } from '@fluentui/react-icons'
 import { useTranslation } from 'react-i18next'
+import { isHostUnavailableError, sanitizeBridgeError, waitForHostReady } from '../api/bridge'
 import { dashboardApi, type DashboardConfig, type DashboardGroup } from '../api/dashboard'
 import EditDashboardModal from '../components/dashboard-parity/EditDashboardModal'
 import DashboardFeatureGroups from '../components/dashboard-parity/DashboardFeatureGroupsHardware'
 import { DEFAULT_DASHBOARD_GROUPS } from '../components/dashboard-parity/dashboardItems'
+import DashboardSkeleton from '../components/DashboardSkeleton'
 import SensorSection from '../components/dashboard/SensorSection'
-import { SkeletonList } from '../components/Skeleton'
 import { useFeaturesStore } from '../stores/featuresStore'
 import { useLoadingStore } from '../stores/loadingStore'
 import { useSensorsStore } from '../stores/sensorsStore'
@@ -22,29 +23,51 @@ export default function DashboardParityPage(): React.JSX.Element {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [editOpen, setEditOpen] = useState(false)
+  const [reloadToken, setReloadToken] = useState(0)
+
+  const retry = useCallback(() => {
+    setError(null)
+    setLoading(true)
+    setConfig(null)
+    setReloadToken((value) => value + 1)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
+    // DashboardPage owns its loading chrome (WPF LoadingChromeOwnership.Page):
+    // the page renders its own sensors+groups skeleton, so the session is
+    // silent — the global spinner overlay never flashes on this page.
     const loadingId = useLoadingStore.getState().start(
       t('loading.dashboard', { defaultValue: 'Loading dashboard…' }),
-      { canCancel: false }
+      { canCancel: false, silent: true }
     )
 
-    Promise.all([
-      useSensorsStore.getState().start(),
-      useFeaturesStore.getState().load(),
-      dashboardApi.getConfig()
-    ])
-      .then(([, , dashboardConfig]) => {
-        if (cancelled) return
-        setConfig(dashboardConfig)
-        useLoadingStore.getState().finish(loadingId)
-      })
+    const load = async (): Promise<void> => {
+      await waitForHostReady()
+      if (cancelled) return
+
+      const [, , dashboardConfig] = await Promise.all([
+        useSensorsStore.getState().start(),
+        useFeaturesStore.getState().load(),
+        dashboardApi.getConfig()
+      ])
+      if (cancelled) return
+      setConfig(dashboardConfig)
+      useLoadingStore.getState().finish(loadingId)
+    }
+
+    load()
       .catch((reason: unknown) => {
         if (cancelled) return
-        const message = (reason as Error).message
+        const raw = sanitizeBridgeError(reason)
+        const message = isHostUnavailableError(raw)
+          ? t('home.hostUnavailable', {
+              defaultValue: 'The backend host is not running. Wait a moment and retry, or restart the app.'
+            })
+          : raw
         setError(message)
-        useLoadingStore.getState().fail(loadingId, message)
+        // Dismiss the overlay so the page-level error + Retry action is visible.
+        useLoadingStore.getState().finish(loadingId)
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -55,12 +78,12 @@ export default function DashboardParityPage(): React.JSX.Element {
       useLoadingStore.getState().finish(loadingId)
       void useSensorsStore.getState().stop()
     }
-  }, [])
+  }, [reloadToken, t])
 
   if (loading) {
     return (
       <div className="udt-parity-dashboard__loading">
-        <SkeletonList rows={3} />
+        <DashboardSkeleton />
       </div>
     )
   }
@@ -70,13 +93,15 @@ export default function DashboardParityPage(): React.JSX.Element {
       <div className="udt-parity-dashboard__error">
         <h2>{t('common.error')}</h2>
         {error != null && <p>{error}</p>}
+        <button type="button" className="udt-btn udt-btn--secondary" onClick={retry}>
+          {t('common.retry', { defaultValue: 'Retry' })}
+        </button>
       </div>
     )
   }
 
   return (
     <div className="udt-parity-dashboard">
-      <h1>{t('dashboard.title')}</h1>
       {config.showSensors !== false && <SensorSection />}
       <DashboardFeatureGroups groups={normalizedGroups(config)} />
       <button

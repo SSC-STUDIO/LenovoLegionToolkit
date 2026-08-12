@@ -2,7 +2,7 @@
   width: 100%;
   max-width: 1520px;
   margin: 0 auto;
-  padding: 16px 16px 28px;
+  padding: 16px 16px 12px 0;
 }
 
 .udt-parity-dashboard > h1 {
@@ -19,11 +19,25 @@
   min-height: 320px;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--udt-text-primary);
+  text-align: center;
+  padding: 24px;
 }
 
-.udt-parity-dashboard__error {
-  flex-direction: column;
-  color: var(--udt-text-primary);
+/* Loading state hosts the page-owned skeleton: left-aligned, natural flow
+   (the sensors card + group cards mirror the live dashboard layout). */
+.udt-parity-dashboard__loading {
+  align-items: stretch;
+  justify-content: flex-start;
+  text-align: left;
+}
+
+.udt-parity-dashboard__error p {
+  max-width: 420px;
+  margin: 0;
+  color: var(--udt-text-secondary);
 }
 
 /* Customize dashboard link (DashboardPage "Customize" hyperlink parity) */
@@ -931,4 +945,122 @@
 .udt-god-mode-value__reset:hover {
   background: var(--udt-control-fill-secondary);
   color: var(--udt-text-primary);
+}
+
+/* Dashboard skeleton (DashboardPage.xaml loading chrome parity) */
+
+.udt-dashboard-skeleton {
+  padding-top: 16px;
+}
+
+.udt-dsk-sensors {
+  margin-bottom: 28px;
+}
+
+.udt-dsk-sensors__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding: 8px 10px;
+  min-height: 280px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+}
+
+.udt-dsk-sensors__column {
+  min-width: 0;
+  padding: 0 6px;
+}
+
+.udt-dsk-sensors__heading {
+  display: flex;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.udt-dsk-sensors__summary {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 0;
+  align-items: center;
+}
+
+.udt-dsk-sensors__gauge {
+  width: 110px;
+  height: 110px;
+  margin-right: 12px;
+  border-radius: var(--udt-radius-round);
+}
+
+.udt-dsk-sensors__metrics {
+  display: grid;
+  min-width: 0;
+}
+
+.udt-dsk-sensors__metric {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0;
+  height: 24px;
+}
+
+.udt-dsk-sensors__bar {
+  height: 3.5px;
+  min-width: 24px;
+  max-width: 260px;
+  margin: 0 8px;
+  border-radius: var(--udt-radius-progress);
+}
+
+.udt-dsk-sensors__trend {
+  height: 76px;
+  margin-top: 14px;
+  padding: 2px;
+  border-radius: var(--udt-radius-control);
+  background: var(--udt-chart-surface);
+  overflow: hidden;
+}
+
+.udt-dsk-sensors__legend {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.udt-dsk-sensors__legend-item {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 14px 4px 0;
+}
+
+.udt-dsk-groups__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 16px;
+}
+
+.udt-dsk-groups__column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+@media (max-width: 1500px) {
+  .udt-dsk-groups__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1000px) {
+  .udt-dsk-groups__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .udt-dsk-sensors__grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
 }

@@ -179,6 +179,17 @@ function NetworkTargetsCard(): React.JSX.Element {
     void setNetworkGroupEnabled(group.id, enabled)
   }
 
+  // WPF three-state CheckBox cycle is true → indeterminate → false → true;
+  // clicking an indeterminate group checkbox clears the whole group, while a
+  // plain checkbox would flip to checked (select all).
+  const handleGroupCheckboxChange = (
+    group: NetworkDomainGroup,
+    someEnabled: boolean,
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    handleGroupToggle(group, someEnabled ? false : event.target.checked)
+  }
+
   const handleSubItemToggle = (group: NetworkDomainGroup, sub: NetworkDomainSubItem, enabled: boolean): void => {
     void setNetworkSubItemEnabled(group.id, sub.id, enabled)
   }
@@ -268,7 +279,7 @@ function NetworkTargetsCard(): React.JSX.Element {
                       ref={(el) => {
                         if (el) el.indeterminate = someEnabled
                       }}
-                      onChange={(e) => handleGroupToggle(group, e.target.checked)}
+                      onChange={(e) => handleGroupCheckboxChange(group, someEnabled, e)}
                     />
                     <span className="udt-checkbox__box">
                       <CheckCircleFilled />

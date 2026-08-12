@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Design tokens mirroring the original WPF client (DesignTokens.xaml +
  * ElevationTokens.xaml + AnimationTokens.xaml + WPF-UI Dark theme values).
  */
@@ -265,7 +265,7 @@ body {
   background: rgba(0, 0, 0, 0.20);
 }
 
-/* ── Application shell (MainWindow layout) ───────────────────── */
+/* 鈹€鈹€ Application shell (MainWindow layout) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-app-shell {
   display: flex;
@@ -305,7 +305,7 @@ body {
 
 /* Page switch animation (PageEntranceAnimator: 200ms opacity + 6px rise, CubicOut) */
 .udt-page-enter {
-  animation: udt-page-enter var(--udt-anim-medium) var(--udt-ease-cubic-out) both;
+  animation: udt-page-enter var(--udt-anim-medium) var(--udt-ease-cubic-out) backwards;
 }
 
 @keyframes udt-page-enter {
@@ -319,7 +319,7 @@ body {
   }
 }
 
-/* ── Title bar (38px, WPF-UI TitleBar) ───────────────────────── */
+/* 鈹€鈹€ Title bar (38px, WPF-UI TitleBar) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-titlebar {
   position: relative;
@@ -447,7 +447,7 @@ body {
   background: rgba(0, 0, 0, 0.10);
 }
 
-/* ── Navigation rail (NavigationStore) ────────────────────────── */
+/* 鈹€鈹€ Navigation rail (NavigationStore) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-nav {
   display: flex;
@@ -602,7 +602,7 @@ body {
   margin: 4px 0 8px 0;
 }
 
-/* ── Skeleton blocks (Loading.xaml) ───────────────────────────── */
+/* 鈹€鈹€ Skeleton blocks (Loading.xaml) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-skeleton {
   border-radius: var(--udt-radius-small);
@@ -610,8 +610,8 @@ body {
   opacity: 0.85;
   position: relative;
   overflow: hidden;
-  /* Breathing 1.0 → 0.85 (WPF SkeletonAnimationTokens.BreathingFloorOpacity),
-     same 1.65s cycle as the shimmer sweep, SineEase EaseInOut via alternate. */
+  /* Breathing 1.0 鈫?0.85 (WPF BreathingFloorOpacity), same 1.65s cycle as the
+     shimmer sweep, SineEase EaseInOut via auto-reverse + ease-in-out. */
   animation: udt-breathe var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite alternate ease-in-out;
 }
 
@@ -619,26 +619,38 @@ body {
   content: '';
   position: absolute;
   inset: 0;
-  /* 7-stop sweep: transparent / base 14% / edge 30% / peak 48% / edge 66% / base 84% / transparent */
+  /* 7-stop sweep matching SkeletonShimmer.CreateShimmerBrush:
+     base 0.00 / base 0.14 / edge 0.30 / peak 0.48 / edge 0.66 / base 0.84 / base 1.00.
+     Tinted from the text color so the sweep stays visible in both themes
+     (white tint on dark, dark tint on light) — matches WPF's luminance
+     resolution (edge ~11%, peak ~27.5%). */
   background: linear-gradient(
     90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.11) 14%,
-    rgba(255, 255, 255, 0.11) 30%,
-    rgba(255, 255, 255, 0.27) 48%,
-    rgba(255, 255, 255, 0.11) 66%,
-    rgba(255, 255, 255, 0.11) 84%,
-    transparent 100%
+    color-mix(in srgb, var(--udt-text-primary) 0%, transparent) 0%,
+    color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 14%,
+    color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 30%,
+    color-mix(in srgb, var(--udt-text-primary) 18%, transparent) 48%,
+    color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 66%,
+    color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 84%,
+    color-mix(in srgb, var(--udt-text-primary) 0%, transparent) 100%
   );
-  transform: translateX(-100%);
+  /* WPF SkeletonShimmer: a relative bounding-box brush (100% of the block)
+     translated -1.25 鈫?+1.25 of the block width (SweepFrom/SweepTo), so the
+     soft-shoulder band re-enters from off-screen exactly like the WPF gradient. */
+  transform: translateX(-125%);
   /* --udt-shimmer-delay (default 0): negative staggered values set by Skeleton.tsx
-     keep the sweep permanently de-phased per element (0.055s/step, cap 0.32s). */
-  animation: udt-shimmer var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite;
+     keep the sweep permanently de-phased per element (0.055s/step, cap 0.32s).
+     SineEase EaseInOut — cubic-bezier(0.445, 0.05, 0.55, 0.95) is the standard
+     sine ease-in-out approximation. */
+  animation: udt-shimmer var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite ease-in-out;
 }
 
 @keyframes udt-shimmer {
+  from {
+    transform: translateX(-125%);
+  }
   to {
-    transform: translateX(100%);
+    transform: translateX(125%);
   }
 }
 
@@ -651,6 +663,19 @@ body {
   }
 }
 
+/* Motion / high-contrast: WPF SkeletonShimmer.IsMotionDisabled kills the sweep
+   under prefers-reduced-motion and high-contrast themes; keep the static block. */
+@media (prefers-reduced-motion: reduce) {
+  .udt-skeleton::after {
+    animation: none;
+    display: none;
+  }
+
+  .udt-skeleton {
+    animation: none;
+  }
+}
+
 .udt-skeleton-card {
   display: flex;
   align-items: center;
@@ -658,7 +683,9 @@ body {
   padding: 16px 14px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-card);
-  background: var(--udt-surface-card);
+  /* WPF AppSkeletonCardStyle: ControlFillColorDefaultBrush fill (card chrome
+     sits on the page surface), not the opaque card surface. */
+  background: var(--udt-control-fill-default);
 }
 
 .udt-skeleton-card__copy {
@@ -703,11 +730,9 @@ body {
   gap: 8px;
 }
 
-/* ── Dashboard page ──────────────────────────────────────────── */
+/* 鈹€鈹€ Dashboard page 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-dashboard-page {
-  max-width: 1520px;
-  margin: 0 auto;
   padding: 16px 0 28px;
 }
 
@@ -735,7 +760,7 @@ body {
   font-size: var(--udt-font-body);
 }
 
-/* ── Sensors board (SensorsControl) ──────────────────────────── */
+/* 鈹€鈹€ Sensors board (SensorsControl) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-sensors {
   margin-bottom: 0;
@@ -902,7 +927,7 @@ body {
   font-weight: 500;
 }
 
-/* ── Feature groups (DashboardGroupControl) ──────────────────── */
+/* 鈹€鈹€ Feature groups (DashboardGroupControl) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-feature-groups {
   display: flex;
@@ -1033,26 +1058,8 @@ body {
     grid-template-columns: 1fr;
   }
 
-  .udt-sensor-board__grid {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .udt-sensor-panel {
-    padding: 18px 6px 0;
-    border-top: 1px solid var(--udt-control-stroke-default);
-  }
-
-  .udt-sensor-panel:first-child {
-    padding-top: 0;
-    border-top: none;
-  }
-}
-
-@media (max-width: 900px) {
-  .udt-sensor-panel__summary {
-    grid-template-columns: 88px minmax(0, 1fr);
-  }
+  /* Sensor grid / gauge layout is owned by sensor.css container queries
+     (content width, not viewport). Do not force 1-col or 88px here. */
 }
 
 /* Ant Design overrides to match WPF-UI dark chrome */
@@ -1086,9 +1093,9 @@ body {
 }
 
 
-/* ── Shared component chrome (CardControl / Button / ToggleSwitch) ────────────
+/* 鈹€鈹€ Shared component chrome (CardControl / Button / ToggleSwitch) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
    Global copies of the classes historically scoped to automation.css so every
-   page (optimization, settings, …) renders cards/buttons without importing a
+   page (optimization, settings, 鈥? renders cards/buttons without importing a
    module stylesheet. Values mirror automation.css exactly. */
 
 .udt-card {
@@ -1233,4 +1240,103 @@ body {
 
 .udt-btn--danger:hover {
   background: var(--udt-status-critical-bg);
+}
+
+/* ── Skeleton reduced-motion (accessibility) ──────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .udt-skeleton,
+  .udt-skeleton::after {
+    animation: none;
+  }
+
+  .udt-skeleton::after {
+    display: none;
+  }
+}
+
+
+/* ── Modal / dialog entrance animations ───────────────────────────
+   WPF window/dialog chrome animates via AnimationDurationMedium (200ms)
+   with CubicEase EaseOut. Every in-app "small window" (custom backdrop
+   modals, dialogs, pickers) gets a fade + rise entrance; the overlay fades
+   in behind it. Turned off entirely with .udt-animations-off (Settings →
+   Application → UI Animations). */
+
+@keyframes udt-backdrop-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes udt-modal-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.udt-utils-backdrop,
+.udt-modal-backdrop,
+.udt-dashboard-edit-backdrop,
+.udt-device-info-backdrop,
+.udt-context-menu-backdrop,
+.udt-driver-card__menu-backdrop,
+.udt-network-recommended__backdrop {
+  animation: udt-backdrop-fade-in var(--udt-anim-medium) var(--udt-ease-cubic-out);
+}
+
+.udt-utils-backdrop > *,
+.udt-modal-backdrop > *,
+.udt-dashboard-edit-backdrop > *,
+.udt-device-info-backdrop > *,
+.udt-context-menu-backdrop > *,
+.udt-driver-card__menu-backdrop > *,
+.udt-network-recommended__backdrop > * {
+  animation: udt-modal-pop-in var(--udt-anim-medium) var(--udt-ease-cubic-out);
+}
+
+/* WPF AnimationsEnabled=false: all window/dialog animations are disabled. */
+.udt-animations-off .udt-utils-backdrop,
+.udt-animations-off .udt-modal-backdrop,
+.udt-animations-off .udt-dashboard-edit-backdrop,
+.udt-animations-off .udt-device-info-backdrop,
+.udt-animations-off .udt-context-menu-backdrop,
+.udt-animations-off .udt-driver-card__menu-backdrop,
+.udt-animations-off .udt-network-recommended__backdrop,
+.udt-animations-off .udt-utils-backdrop > *,
+.udt-animations-off .udt-modal-backdrop > *,
+.udt-animations-off .udt-dashboard-edit-backdrop > *,
+.udt-animations-off .udt-device-info-backdrop > *,
+.udt-animations-off .udt-context-menu-backdrop > *,
+.udt-animations-off .udt-driver-card__menu-backdrop > *,
+.udt-animations-off .udt-network-recommended__backdrop > * {
+  animation: none;
+}
+
+/* Motion preference: never animate modals when the OS asks for reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .udt-utils-backdrop,
+  .udt-modal-backdrop,
+  .udt-dashboard-edit-backdrop,
+  .udt-device-info-backdrop,
+  .udt-context-menu-backdrop,
+  .udt-driver-card__menu-backdrop,
+  .udt-network-recommended__backdrop,
+  .udt-utils-backdrop > *,
+  .udt-modal-backdrop > *,
+  .udt-dashboard-edit-backdrop > *,
+  .udt-device-info-backdrop > *,
+  .udt-context-menu-backdrop > *,
+  .udt-driver-card__menu-backdrop > *,
+  .udt-network-recommended__backdrop > * {
+    animation: none;
+  }
 }

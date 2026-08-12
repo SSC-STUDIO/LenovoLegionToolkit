@@ -19,6 +19,8 @@ export interface LoadingSession {
   progress: number | null
   /** Whether the UI shows a cancel action for this session. */
   canCancel: boolean
+  /** Page-owned loading chrome: tracked but never shown in the global overlay. */
+  silent: boolean
   cancel?: () => void
   /** Set when the session ended with an error (message carries the error text). */
   failed: boolean
@@ -29,7 +31,15 @@ export interface LoadingStore {
   sessions: LoadingSession[]
   /** Active session presented by the overlay; null when nothing is loading. */
   active: LoadingSession | null
-  start: (label: string, options?: { canCancel?: boolean; cancel?: () => void }) => string
+  /**
+   * Start a loading session. `silent` sessions (pages that own their loading
+   * chrome — WPF LoadingChromeOwnership.Page) track progress but never surface
+   * the global overlay; they keep the page's own skeleton visible instead.
+   */
+  start: (
+    label: string,
+    options?: { canCancel?: boolean; cancel?: () => void; silent?: boolean }
+  ) => string
   /** Update progress/message of a session (no-op when the session no longer exists). */
   report: (id: string, message?: string, progress?: number | null) => void
   /** Successfully finish a session. */
@@ -42,9 +52,12 @@ export interface LoadingStore {
 }
 
 function pickActive(sessions: LoadingSession[]): LoadingSession | null {
-  const activeSessions = sessions.filter((s) => !s.failed)
+  // Silent sessions (pages owning their loading chrome) never surface the
+  // global overlay; only non-silent sessions drive it.
+  const overlaySessions = sessions.filter((s) => !s.silent)
+  const activeSessions = overlaySessions.filter((s) => !s.failed)
   if (activeSessions.length === 0) {
-    const failed = sessions.filter((s) => s.failed)
+    const failed = overlaySessions.filter((s) => s.failed)
     return failed.length > 0 ? failed[failed.length - 1] : null
   }
   return activeSessions[activeSessions.length - 1]
@@ -61,6 +74,7 @@ export const useLoadingStore = create<LoadingStore>()((set, get) => ({
       progress: null,
       canCancel: options?.canCancel ?? false,
       cancel: options?.cancel,
+      silent: options?.silent ?? false,
       failed: false,
       startedAt: Date.now()
     }

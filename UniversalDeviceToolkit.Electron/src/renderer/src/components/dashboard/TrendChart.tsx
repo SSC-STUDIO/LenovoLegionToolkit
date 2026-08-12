@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { init, type ECharts } from '../../utils/echarts'
+import { init, type ECharts, type EChartsCoreOption } from '../../utils/echarts'
 import { useThemeStore } from '../../stores/themeStore'
 
 export interface TrendSeries {
@@ -13,6 +13,8 @@ export interface TrendChartProps {
   series: TrendSeries[]
   labels: string[]
   height?: number
+  /** Shown over the chart well until at least one finite sample arrives. */
+  emptyLabel?: string
 }
 
 function withAlpha(hex: string, alpha: number): string {
@@ -22,10 +24,28 @@ function withAlpha(hex: string, alpha: number): string {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
+function formatTooltipValue(series: TrendSeries, value: number): string {
+  if (series.max === 100) return `${Math.round(value)}%`
+  if (Number.isInteger(value) || Math.abs(value) >= 100) return value.toFixed(0)
+  return value.toFixed(1)
+}
+
+/** Static identity of the chart skeleton (colors, series structure, theme). */
+function skeletonKey(series: TrendSeries[], isDark: boolean): string {
+  return `${isDark ? 'd' : 'l'}|${series.map((s) => `${s.name}:${s.color}:${s.max ?? 'auto'}`).join(',')}`
+}
+
+function hasDrawableLine(series: TrendSeries[]): boolean {
+  return series.some(
+    (item) => item.data.filter((value) => value != null && Number.isFinite(value)).length >= 2
+  )
+}
+
 export default function TrendChart({
   series,
   labels,
-  height = 116
+  height,
+  emptyLabel
 }: TrendChartProps): React.JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<ECharts | null>(null)
@@ -33,53 +53,47 @@ export default function TrendChart({
   // WPF _smoothedAutoMax: auto-scaled series converge toward the observed max
   // instead of jumping (rise fast, fall slow).
   const smoothedMaxRef = useRef<Record<string, number>>({})
+  // Cached base option: rebuilt only when theme or series structure changes.
+  // Cleared on dispose so React Strict Mode remounts re-apply axes/grid.
+  const baseOptionRef = useRef<{ key: string; option: EChartsCoreOption } | null>(null)
+  const seriesRef = useRef(series)
+  const labelsRef = useRef(labels)
+  seriesRef.current = series
+  labelsRef.current = labels
 
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
     const chart = init(el)
     chartRef.current = chart
+    baseOptionRef.current = null
     const handleResize = (): void => {
       chart.resize()
     }
     window.addEventListener('resize', handleResize)
+    const observer = new ResizeObserver(handleResize)
+    observer.observe(el)
     return () => {
       window.removeEventListener('resize', handleResize)
+      observer.disconnect()
       chart.dispose()
       chartRef.current = null
+      baseOptionRef.current = null
     }
   }, [])
 
   useEffect(() => {
     const chart = chartRef.current
     if (!chart) return
-    const gridlineColor = isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(0, 0, 0, 0.10)'
-    const labelColor = isDark ? 'rgba(255, 255, 255, 0.53)' : 'rgba(0, 0, 0, 0.45)'
-    const baselineColor = isDark ? '#d2a05a' : 'rgba(210, 160, 90, 0.85)'
+    const key = skeletonKey(series, isDark)
+    if (baseOptionRef.current?.key === key) return
 
-    // WPF normalizes each series against its own Maximum (fixed or smoothed
-    // auto observed*1.08), so all series share a 0..1 plot space where "100%"
-    // is each series' own max.
-    const smoothed = { ...smoothedMaxRef.current }
-    const normalized = series.map((s) => {
-      const fixedMax = s.max != null && s.max > 0 ? s.max : null
-      let effectiveMax = fixedMax
-      if (effectiveMax == null) {
-        const observed = Math.max(
-          1,
-          ...s.data.filter((v): v is number => v != null && Number.isFinite(v) && v >= 0)
-        )
-        const target = observed * 1.08
-        const previous = smoothed[s.name]
-        effectiveMax = previous === undefined ? target : previous + (target - previous) * 0.35
-        smoothed[s.name] = effectiveMax
-      }
-      const data = s.data.map((v) =>
-        v == null || !Number.isFinite(v) ? null : Math.min(1, Math.max(0, v / effectiveMax))
-      )
-      return { name: s.name, color: s.color, data }
-    })
-    smoothedMaxRef.current = smoothed
+    const gridlineColor = isDark ? 'rgba(255, 255, 255, 0.10)' : 'rgba(0, 0, 0, 0.16)'
+    const labelColor = isDark ? 'rgba(255, 255, 255, 0.53)' : 'rgba(0, 0, 0, 0.55)'
+    const baselineColor = isDark ? '#d2a05a' : 'rgba(210, 160, 90, 0.85)'
+    const tooltipBg = isDark ? 'rgba(32, 32, 32, 0.94)' : 'rgba(255, 255, 255, 0.96)'
+    const tooltipBorder = isDark ? 'rgba(255, 255, 255, 0.14)' : 'rgba(0, 0, 0, 0.12)'
+    const tooltipText = isDark ? 'rgba(255, 255, 255, 0.92)' : 'rgba(0, 0, 0, 0.82)'
 
     // Gridlines at 75%/50%/25% only (0.5px), warm baseline at the bottom edge.
     // Drawn via markLine on the first series since ECharts cannot hide the
@@ -90,14 +104,46 @@ export default function TrendChart({
     }))
     const baseline = { yAxis: 0, lineStyle: { color: baselineColor, width: 1 } }
 
-    chart.setOption({
+    const normalized = series.map((s) => {
+      const fixedMax = s.max != null && s.max > 0 ? s.max : null
+      return { name: s.name, color: s.color, fixedMax }
+    })
+
+    const option: EChartsCoreOption = {
       animation: false,
       grid: {
         top: 4,
-        left: 26,
-        right: 4,
+        left: 28,
+        right: 6,
         bottom: 4,
         containLabel: false
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'line',
+          lineStyle: { color: isDark ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.28)', width: 1 }
+        },
+        backgroundColor: tooltipBg,
+        borderColor: tooltipBorder,
+        borderWidth: 1,
+        padding: [8, 10],
+        textStyle: { color: tooltipText, fontSize: 12 },
+        extraCssText: 'box-shadow: 0 8px 20px rgba(0,0,0,0.18); border-radius: 8px;',
+        formatter: (raw: unknown): string => {
+          const items = Array.isArray(raw) ? raw : [raw]
+          const first = items[0] as { dataIndex?: number } | undefined
+          const index = typeof first?.dataIndex === 'number' ? first.dataIndex : -1
+          if (index < 0) return ''
+          const time = labelsRef.current[index] ?? ''
+          const rows = seriesRef.current.map((item) => {
+            const sample = item.data[index]
+            const text =
+              sample == null || !Number.isFinite(sample) ? '—' : formatTooltipValue(item, sample)
+            return `<span style="display:inline-flex;align-items:center;gap:6px"><i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${item.color};flex:0 0 auto"></i>${item.name} ${text}</span>`
+          })
+          return [time, ...rows].filter((line) => line !== '').join('<br/>')
+        }
       },
       xAxis: {
         type: 'category',
@@ -126,13 +172,13 @@ export default function TrendChart({
         },
         splitLine: { show: false }
       },
-      series: normalized.map((s, index) => ({
-        name: s.name,
+      series: normalized.map((entry, index) => ({
+        name: entry.name,
         type: 'line' as const,
         showSymbol: false,
         smooth: 0.5,
-        lineStyle: { width: 1.15, color: s.color, cap: 'round', join: 'round' },
-        itemStyle: { color: s.color },
+        lineStyle: { width: 1.35, color: entry.color, cap: 'round', join: 'round' },
+        itemStyle: { color: entry.color },
         areaStyle: {
           // WPF tapers the area polygon toward the latest point (right edge).
           // ECharts cannot reshape the path, so a diagonal gradient approximates
@@ -145,10 +191,10 @@ export default function TrendChart({
             x2: 1,
             y2: 1,
             colorStops: [
-              { offset: 0, color: withAlpha(s.color, 0.298) },
-              { offset: 0.48, color: withAlpha(s.color, 0.165) },
-              { offset: 0.86, color: withAlpha(s.color, 0.082) },
-              { offset: 1, color: withAlpha(s.color, 0.02) }
+              { offset: 0, color: withAlpha(entry.color, 0.298) },
+              { offset: 0.48, color: withAlpha(entry.color, 0.165) },
+              { offset: 0.86, color: withAlpha(entry.color, 0.082) },
+              { offset: 1, color: withAlpha(entry.color, 0.02) }
             ]
           }
         },
@@ -162,10 +208,63 @@ export default function TrendChart({
                 data: [...gridlines, baseline]
               }
             : undefined,
-        data: s.data
+        data: []
       }))
+    }
+
+    baseOptionRef.current = { key, option }
+    chart.setOption(option, { notMerge: true })
+  }, [series, isDark, labels])
+
+  // Data-only update path: rebinds normalized data without rebuilding the
+  // static option (grid, axes, area gradients, mark lines).
+  useEffect(() => {
+    const chart = chartRef.current
+    const base = baseOptionRef.current
+    if (!chart || !base) return
+
+    const smoothed = { ...smoothedMaxRef.current }
+    const dataBySeries = series.map((s) => {
+      const fixedMax = s.max != null && s.max > 0 ? s.max : null
+      let effectiveMax = fixedMax
+      if (effectiveMax == null) {
+        const observed = Math.max(
+          1,
+          ...s.data.filter((v): v is number => v != null && Number.isFinite(v) && v >= 0)
+        )
+        const target = observed * 1.08
+        const previous = smoothed[s.name]
+        effectiveMax = previous === undefined ? target : previous + (target - previous) * 0.35
+        smoothed[s.name] = effectiveMax
+      }
+      return s.data.map((v) =>
+        v == null || !Number.isFinite(v) ? null : Math.min(1, Math.max(0, v / effectiveMax))
+      )
     })
+    smoothedMaxRef.current = smoothed
+
+    if (base.key !== skeletonKey(series, isDark)) {
+      chart.setOption(base.option, { notMerge: true })
+    }
+    chart.setOption(
+      {
+        xAxis: { data: labels },
+        series: dataBySeries.map((data, index) => ({ name: series[index]?.name, data }))
+      },
+      { lazyUpdate: true }
+    )
   }, [series, labels, isDark])
 
-  return <div ref={containerRef} style={{ width: '100%', height }} />
+  const waiting = emptyLabel != null && emptyLabel !== '' && !hasDrawableLine(series)
+
+  return (
+    <div className="udt-trend-chart" style={height != null ? { minHeight: height } : undefined}>
+      <div ref={containerRef} className="udt-trend-chart__canvas" />
+      {waiting && (
+        <div className="udt-trend-chart__empty" role="status">
+          {emptyLabel}
+        </div>
+      )}
+    </div>
+  )
 }

@@ -4,6 +4,7 @@ import { message } from 'antd'
 import { useEffect, useState } from 'react'
 import { optimizationApi } from '../../api/optimization'
 import { useCleanupStore } from '../../stores/cleanupStore'
+import EmptyState from '../EmptyState'
 import './optimization.css'
 
 /**
@@ -62,10 +63,22 @@ export default function CleanupRulesPanel(): React.JSX.Element {
     await clearRules()
   }
 
+  const header = t('wpf.windowsOptimizationPagecustomCleanupheader', {
+    defaultValue: t('optimization.cleanup.custom.header')
+  })
+  const emptyTitle = t('wpf.windowsOptimizationPagecustomCleanupempty', {
+    defaultValue: t('optimization.cleanup.custom.empty')
+  })
+  const addLabel = t('wpf.windowsOptimizationPagecustomCleanupadd', {
+    defaultValue: t('optimization.cleanup.custom.add')
+  })
+  const clearLabel = t('wpf.windowsOptimizationPagecustomCleanupclear', {
+    defaultValue: t('optimization.cleanup.custom.clear')
+  })
+
   return (
     <div className="udt-card udt-side-card udt-cleanup-rules">
-      <div className="udt-card__title">{t('optimization.cleanup.custom.header')}</div>
-      <div className="udt-card__desc">{t('optimization.cleanup.custom.description')}</div>
+      <div className="udt-card__title">{header}</div>
 
       {loading && <div className="udt-skeleton-list"><div className="udt-skeleton-card" /></div>}
 
@@ -84,7 +97,9 @@ export default function CleanupRulesPanel(): React.JSX.Element {
                 </div>
                 {rule.recursive && (
                   <div className="udt-cleanup-rules__item-recursive">
-                    {t('optimization.cleanup.custom.recursive')}
+                    {t('wpf.windowsOptimizationPagecustomCleanuprecursivelabel', {
+                      defaultValue: t('optimization.cleanup.custom.recursive')
+                    })}
                   </div>
                 )}
               </div>
@@ -92,7 +107,9 @@ export default function CleanupRulesPanel(): React.JSX.Element {
                 <button
                   type="button"
                   className="udt-action-btn"
-                  title={t('optimization.cleanup.custom.edit')}
+                  title={t('wpf.windowsOptimizationPagecustomCleanupedit', {
+                    defaultValue: t('optimization.cleanup.custom.edit')
+                  })}
                   disabled={busyRuleId === rule.id}
                   onClick={() => void handleEdit(rule.id)}
                 >
@@ -101,7 +118,9 @@ export default function CleanupRulesPanel(): React.JSX.Element {
                 <button
                   type="button"
                   className="udt-action-btn udt-action-btn--danger"
-                  title={t('optimization.cleanup.custom.remove')}
+                  title={t('wpf.windowsOptimizationPagecustomCleanupremove', {
+                    defaultValue: t('optimization.cleanup.custom.remove')
+                  })}
                   onClick={() => void handleRemove(rule.id)}
                 >
                   <DeleteOutlined />
@@ -113,16 +132,18 @@ export default function CleanupRulesPanel(): React.JSX.Element {
       )}
 
       {!loading && rules.length === 0 && (
-        <div className="udt-empty">
-          <div className="udt-empty__title">{t('optimization.cleanup.custom.empty')}</div>
-        </div>
+        <EmptyState
+          className="udt-cleanup-rules__empty"
+          icon={<DeleteOutlined />}
+          title={emptyTitle}
+        />
       )}
 
       {cleanupError && <div className="udt-page-error">{cleanupError}</div>}
 
       <div className="udt-side-card__actions">
         <button type="button" className="udt-btn udt-btn--secondary" onClick={() => void handleAdd()}>
-          <FolderAddOutlined /> {t('optimization.cleanup.custom.add')}
+          <FolderAddOutlined /> {addLabel}
         </button>
         <button
           type="button"
@@ -130,7 +151,7 @@ export default function CleanupRulesPanel(): React.JSX.Element {
           disabled={rules.length === 0}
           onClick={() => void handleClear()}
         >
-          {t('optimization.cleanup.custom.clear')}
+          {clearLabel}
         </button>
       </div>
     </div>

@@ -197,19 +197,23 @@ export default function ApplicationSection(): React.JSX.Element {
         message.error(t('settings.saveFailed'))
       })
   }
+  const dashboardScope =
+    typeof scopes.dashboard === 'object' && scopes.dashboard !== null
+      ? (scopes.dashboard as AppSettings)
+      : {}
   const sensorRefreshInterval =
-    typeof app['SensorRefreshIntervalSec'] === 'number' &&
-    Number.isFinite(app['SensorRefreshIntervalSec']) &&
-    (app['SensorRefreshIntervalSec'] as number) >= 1
-      ? (app['SensorRefreshIntervalSec'] as number)
+    typeof dashboardScope['SensorsRefreshIntervalSeconds'] === 'number' &&
+    Number.isFinite(dashboardScope['SensorsRefreshIntervalSeconds']) &&
+    (dashboardScope['SensorsRefreshIntervalSeconds'] as number) >= 1
+      ? (dashboardScope['SensorsRefreshIntervalSeconds'] as number)
       : 1
 
-  const handleField = (field: string, value: unknown): void => {
-    const next: AppSettings = { ...app, [field]: value }
-    setScope('application', next)
+  const handleSensorIntervalChange = (value: number): void => {
+    const next: AppSettings = { ...dashboardScope, SensorsRefreshIntervalSeconds: value }
+    setScope('dashboard', next)
     settingsApi
-      .set('application', next)
-      .then(() => settingsApi.save(['application']))
+      .set('dashboard', next)
+      .then(() => settingsApi.save(['dashboard']))
       .catch(() => message.error(t('settings.saveFailed')))
   }
 
@@ -254,6 +258,20 @@ export default function ApplicationSection(): React.JSX.Element {
           }
         />
       ))}
+      <SettingsCard
+        title={t('settings.application.animationsEnabled')}
+        description={t('settings.application.animationsEnabledDesc')}
+        action={
+          <Switch
+            className="udt-settings-switch"
+            checked={readBoolean(app, 'AnimationsEnabled')}
+            onChange={(value) => {
+              handleToggle('AnimationsEnabled', value)
+              document.documentElement.classList.toggle('udt-animations-off', !value)
+            }}
+          />
+        }
+      />
 
       <div className="udt-settings-group-title">{t('settings.application.groupSensors')}</div>
       {sensorFields.map((item) => (
@@ -282,7 +300,7 @@ export default function ApplicationSection(): React.JSX.Element {
           <Select<number>
             className="udt-settings-select"
             value={sensorRefreshInterval}
-            onChange={(value) => handleField('SensorRefreshIntervalSec', value)}
+            onChange={handleSensorIntervalChange}
             options={SENSOR_REFRESH_INTERVALS.map((seconds) => ({
               value: seconds,
               label: `${seconds} s`

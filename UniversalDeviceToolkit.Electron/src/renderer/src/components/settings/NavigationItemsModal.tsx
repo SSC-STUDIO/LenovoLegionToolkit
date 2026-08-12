@@ -121,7 +121,7 @@ export default function NavigationItemsModal({
   return (
     <Modal
       open={open}
-      title={t('navigationItemsSettingsWindowtitle')}
+      title={t('wpf.navigationItemsSettingsWindowtitle')}
       width={500}
       footer={null}
       onCancel={onClose}
@@ -132,7 +132,7 @@ export default function NavigationItemsModal({
         </div>
       ) : (
         <div>
-          <p style={{ opacity: 0.75 }}>{t('navigationItemsSettingsWindowdescription')}</p>
+          <p style={{ opacity: 0.75 }}>{t('wpf.navigationItemsSettingsWindowdescription')}</p>
           {NAVIGATION_ITEMS.map((item) => {
             if (item.key === 'keyboard' && !keyboardSupported) return null
             return (

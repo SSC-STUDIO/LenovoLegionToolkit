@@ -11,14 +11,14 @@
 
 /* ── Page scaffolding ─────────────────────────────────────────── */
 
-/* Shared page root used by Automation / Optimization / Settings pages. */
+/* Shared page root used by Automation / Optimization / Settings pages.
+   Full-bleed like the WPF content area (no max-width cap). */
 .udt-page {
   padding: 16px 16px 12px 0;
-  max-width: 1180px;
 }
 
 .udt-page-title {
-  margin: 16px 0 24px;
+  margin: 0 0 8px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-page-title);
   font-weight: 500;
@@ -27,7 +27,7 @@
 
 /* Alias used by AutomationPage / WindowsOptimizationPage (WPF AppPageTitleTextBlockStyle). */
 .udt-page__title {
-  margin: 16px 0 24px;
+  margin: 0 0 8px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-page-title);
   font-weight: 500;
@@ -44,7 +44,7 @@
 
 /* Alias used by AutomationPage / WindowsOptimizationPage (WPF AppPageDescriptionTextBlockStyle). */
 .udt-page__subtitle {
-  margin: 0 0 16px;
+  margin: 0 0 24px;
   color: var(--udt-text-secondary);
   font-size: var(--udt-font-page-desc);
   line-height: 20px;
@@ -91,7 +91,7 @@
 /* ── About page ───────────────────────────────────────────────── */
 
 .udt-about-page {
-  padding: 16px 16px 12px;
+  padding: 16px 16px 12px 0;
 }
 
 .udt-about-page__app-name {
@@ -189,7 +189,7 @@
 /* ── Plugins & extensions page ────────────────────────────────── */
 
 .udt-plugins-page {
-  padding: 16px 16px 28px;
+  padding: 16px 16px 12px 0;
 }
 
 .udt-plugins-page__header {
@@ -197,7 +197,7 @@
 }
 
 .udt-plugins-page__header .udt-page-title {
-  margin: 16px 0 0;
+  margin: 0 0 8px;
 }
 
 .udt-plugins-page__header .udt-page-description {
@@ -742,3 +742,4 @@
     align-self: flex-start;
   }
 }
+

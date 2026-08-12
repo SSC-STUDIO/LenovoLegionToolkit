@@ -55,7 +55,7 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
 
         const defaultPlan: WindowsPowerPlan = {
           guid: DEFAULT_POWER_PLAN_GUID,
-          name: t('windowsPowerPlansWindowdefaultPowerPlan'),
+          name: t('wpf.windowsPowerPlansWindowdefaultPowerPlan'),
           isActive: false
         }
 
@@ -124,7 +124,7 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
   return (
     <Modal
       open={open}
-      title={t('windowsPowerPlansWindowtitle')}
+      title={t('wpf.windowsPowerPlansWindowtitle')}
       width={600}
       footer={null}
       onCancel={onClose}
@@ -140,7 +140,7 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
               type="warning"
               showIcon
               style={{ marginBottom: 12 }}
-              message={t('powerPlansWindowloadError')}
+              message={t('wpf.powerPlansWindowloadError')}
             />
           )}
           {DEVICE_MODE_STATES.filter(

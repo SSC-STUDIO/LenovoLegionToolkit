@@ -3,6 +3,12 @@ import { contextBridge, ipcRenderer } from 'electron'
 const bridge = {
   invoke: (method: string, params?: unknown): Promise<unknown> =>
     ipcRenderer.invoke('bridge:invoke', method, params),
+  getHostStatus: (): Promise<{
+    running: boolean
+    ready: boolean
+    lastError: string | null
+    readyPayload: unknown
+  }> => ipcRenderer.invoke('host:get-status'),
   on: (event: string, callback: (data: unknown) => void): (() => void) => {
     const listener = (_event: Electron.IpcRendererEvent, receivedEvent: string, data: unknown): void => {
       if (receivedEvent === event) callback(data)

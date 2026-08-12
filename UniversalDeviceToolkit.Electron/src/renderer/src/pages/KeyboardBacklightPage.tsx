@@ -196,8 +196,8 @@ function RgbSection(): React.JSX.Element {
       {vantageBlocked && (
         <InfoBar
           severity="warning"
-          title={t('keyboardvantageEnabledWarningtitle')}
-          message={t('keyboardvantageEnabledWarningmessage')}
+          title={t('wpf.keyboardvantageEnabledWarningtitle')}
+          message={t('wpf.keyboardvantageEnabledWarningmessage')}
           className="udt-kb-vantage-warning"
         />
       )}

@@ -6,8 +6,8 @@ import { settingsApi } from '../../api/settings'
 import { systemApi } from '../../api/system'
 import { LANGUAGES, changeLanguage } from '../../i18n'
 import { useSettingsStore } from '../../stores/settingsStore'
-import { UI_SCALE_OPTIONS } from '../../stores/themeStore'
-import { useTheme, storeAccentPreference } from '../../theme/useTheme'
+import { UI_SCALE_OPTIONS, useThemeStore } from '../../stores/themeStore'
+import { storeAccentPreference } from '../../theme/useTheme'
 import { SettingsCard } from './SettingsCard'
 
 type AppSettings = Record<string, unknown>
@@ -212,7 +212,7 @@ function ThemePreviewCard({
   return (
     <button
       type="button"
-      className={`udt-theme-option${selected ? ' udt-theme-option--selected' : ''}`}
+      className={`udt-theme-option ${option.previewClass}${selected ? ' udt-theme-option--selected' : ''}`}
       onClick={onClick}
       aria-pressed={selected}
     >
@@ -226,7 +226,10 @@ function ThemePreviewCard({
 
 export default function AppearanceSection(): React.JSX.Element {
   const { t, i18n } = useTranslation()
-  const { setThemeMode, setAccent, uiScale, setUiScale } = useTheme()
+  const setThemeMode = useThemeStore((s) => s.setThemeMode)
+  const setAccent = useThemeStore((s) => s.setAccent)
+  const uiScale = useThemeStore((s) => s.uiScale)
+  const setUiScale = useThemeStore((s) => s.setUiScale)
   const scopes = useSettingsStore((s) => s.scopes)
   const load = useSettingsStore((s) => s.load)
   const setScope = useSettingsStore((s) => s.setScope)
@@ -289,20 +292,25 @@ export default function AppearanceSection(): React.JSX.Element {
       .catch(() => message.error(t('settings.saveFailed')))
   }
 
+  /**
+   * Push the resolved accent into the theme store immediately.
+   * Matches WPF ThemeManager.SetColor: the accent always applies to
+   * --udt-accent / Ant Design colorPrimary. ApplyAccentColorToTheme only
+   * controls the tinted surface palette (ThemeStylePreset), not the accent.
+   */
   const applyAccentToUi = (next: AppSettings): void => {
     const source = readAccentColorSource(next)
-    const applyTheme = readBool(next, 'ApplyAccentColorToTheme', true)
-    if (!applyTheme) {
-      setAccent(undefined)
-      return
-    }
     if (source === 'System') {
       setAccent(systemAccentHex)
       return
     }
     const custom = readAccentColor(next)
-    setAccent(custom ? accentColorToHex(custom) : undefined)
+    setAccent(custom ? accentColorToHex(custom) : systemAccentHex)
   }
+
+  /** When the theme-style checkbox is on, picking an accent resets to Default (WPF). */
+  const themeStylePresetForAccentPick = (): string | undefined =>
+    applyAccentToTheme ? 'Default' : undefined
 
   const applyAccentToWindowsIfEnabled = (rgb: AccentColorRGB, enabled: boolean): void => {
     if (!enabled) return
@@ -343,16 +351,21 @@ export default function AppearanceSection(): React.JSX.Element {
   }
 
   const handleApplyAccentToThemeChange = (checked: boolean): void => {
+    // Palette tint gate only — do not clear/reapply the accent itself (WPF parity).
     const next: AppSettings = { ...app, ApplyAccentColorToTheme: checked }
+    if (checked && accentSource === 'Custom') {
+      next.ThemeStylePreset = 'Default'
+    }
     persistApplication(next)
-    applyAccentToUi(next)
   }
 
   const handleSystemAccent = (): void => {
     const next: AppSettings = {
       ...app,
       AccentColorSource: 'System',
-      ThemeStylePreset: 'Default'
+      ...(themeStylePresetForAccentPick() != null
+        ? { ThemeStylePreset: themeStylePresetForAccentPick() }
+        : {})
     }
     persistApplication(next)
     storeAccentPreference('System')
@@ -365,7 +378,9 @@ export default function AppearanceSection(): React.JSX.Element {
       ...app,
       AccentColorSource: 'Custom',
       AccentColor: rgb,
-      ThemeStylePreset: 'Default'
+      ...(themeStylePresetForAccentPick() != null
+        ? { ThemeStylePreset: themeStylePresetForAccentPick() }
+        : {})
     }
     persistApplication(next)
     storeAccentPreference('Custom', hex)
@@ -379,7 +394,9 @@ export default function AppearanceSection(): React.JSX.Element {
       ...app,
       AccentColorSource: 'Custom',
       AccentColor: rgb,
-      ThemeStylePreset: 'Default'
+      ...(themeStylePresetForAccentPick() != null
+        ? { ThemeStylePreset: themeStylePresetForAccentPick() }
+        : {})
     }
     persistApplication(next)
     storeAccentPreference('Custom', hex)

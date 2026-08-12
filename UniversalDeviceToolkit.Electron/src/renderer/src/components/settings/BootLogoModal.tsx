@@ -84,12 +84,12 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
     setResult(null)
     try {
       await bootLogoApi.disable()
-      setResult({ kind: 'success', text: t('bootLogoWindowsetDefaultSuccess') })
+      setResult({ kind: 'success', text: t('wpf.bootLogoWindowsetDefaultSuccess') })
       setStatus(await bootLogoApi.getStatus())
     } catch (reason) {
       setResult({
         kind: 'error',
-        text: t('bootLogoWindowsetDefaultFailed').replace('{0}', errorText(reason))
+        text: t('wpf.bootLogoWindowsetDefaultFailed').replace('{0}', errorText(reason))
       })
     } finally {
       setBusy(false)
@@ -110,12 +110,12 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
         throw new Error('File path is not available')
       }
       await bootLogoApi.enable(filePath)
-      setResult({ kind: 'success', text: t('bootLogoWindowsetCustomSuccess') })
+      setResult({ kind: 'success', text: t('wpf.bootLogoWindowsetCustomSuccess') })
       setStatus(await bootLogoApi.getStatus())
     } catch (reason) {
       setResult({
         kind: 'error',
-        text: t('bootLogoWindowsetCustomFailed').replace('{0}', errorText(reason))
+        text: t('wpf.bootLogoWindowsetCustomFailed').replace('{0}', errorText(reason))
       })
     } finally {
       setBusy(false)
@@ -135,7 +135,7 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
   const description = (): string => {
     const resolution = status?.resolution?.DisplayName ?? ''
     const formats = (status?.formats ?? []).map((format) => format.toUpperCase()).join(', ')
-    return t('bootLogoWindowdescription').replace('{0}', resolution).replace('{1}', formats)
+    return t('wpf.bootLogoWindowdescription').replace('{0}', resolution).replace('{1}', formats)
   }
 
   const showRevert = status?.enabled === true
@@ -144,7 +144,7 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
   return (
     <Modal
       open={open}
-      title={t('bootLogoWindowtitle')}
+      title={t('wpf.bootLogoWindowtitle')}
       width={400}
       footer={[
         <Button key="close" onClick={onClose}>
@@ -183,16 +183,16 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
             }}
           />
           <div className="udt-settings-modal__row">
-            <span>{t('bootLogoWindowstatus')}</span>
+            <span>{t('wpf.bootLogoWindowstatus')}</span>
             <strong>
-              {showRevert ? t('bootLogoWindowcustomLogoSet') : t('bootLogoWindowdefaultLogoSet')}
+              {showRevert ? t('wpf.bootLogoWindowcustomLogoSet') : t('wpf.bootLogoWindowdefaultLogoSet')}
             </strong>
           </div>
           <div className="udt-settings-modal__description">{description()}</div>
           <div className="udt-settings-modal__actions">
             {showCustomize && (
               <Button type="primary" loading={busy} onClick={pickImage}>
-                {t('bootLogoWindowcustomize')}
+                {t('wpf.bootLogoWindowcustomize')}
               </Button>
             )}
             {showRevert && (

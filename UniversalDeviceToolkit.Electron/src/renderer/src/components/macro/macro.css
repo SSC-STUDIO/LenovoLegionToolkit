@@ -1,15 +1,15 @@
-/*
- * Macro page (MacroPage.tsx) — 1:1 with WPF MacroPage.xaml + MacroSequenceControl.xaml.
+﻿/*
+ * Macro page (MacroPage.tsx) 鈥?1:1 with WPF MacroPage.xaml + MacroSequenceControl.xaml.
  */
 
 .udt-macro-page {
   max-width: 1520px;
   margin: 0 auto;
-  padding: 16px 16px 28px;
+  padding: 16px 16px 12px 0;
 }
 
 .udt-macro-page__title {
-  margin: 16px 0 8px;
+  margin: 0 0 8px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-page-title);
   font-weight: 500;
@@ -23,7 +23,7 @@
   line-height: 1.4;
 }
 
-/* ── Card chrome (Styles/CardControl.xaml: radius 18, #303030, 1px stroke) ── */
+/* 鈹€鈹€ Card chrome (Styles/CardControl.xaml: radius 18, #303030, 1px stroke) 鈹€鈹€ */
 
 .udt-macro-card {
   min-width: 0;
@@ -49,7 +49,7 @@
   opacity: 0.5;
 }
 
-/* ── Card header (CardHeaderControl.cs) ── */
+/* 鈹€鈹€ Card header (CardHeaderControl.cs) 鈹€鈹€ */
 
 .udt-macro-card__header {
   display: flex;
@@ -100,7 +100,7 @@
   margin-top: 0;
 }
 
-/* ── Number pad (MacroPage.xaml: 3×4 grid, 56px cells, 48px buttons) ── */
+/* 鈹€鈹€ Number pad (MacroPage.xaml: 3脳4 grid, 56px cells, 48px buttons) 鈹€鈹€ */
 
 .udt-macro-numpad {
   display: grid;
@@ -143,7 +143,7 @@
   color: var(--udt-accent-text);
 }
 
-/* ── Sequence panel (MacroSequenceControl.xaml, left offset 32) ── */
+/* 鈹€鈹€ Sequence panel (MacroSequenceControl.xaml, left offset 32) 鈹€鈹€ */
 
 .udt-macro-main {
   display: flex;
@@ -192,7 +192,7 @@
   color: var(--udt-accent-text);
 }
 
-/* ── Event cards (AbstractMacroEventControl.xaml) ── */
+/* 鈹€鈹€ Event cards (AbstractMacroEventControl.xaml) 鈹€鈹€ */
 
 .udt-macro-events {
   display: flex;
@@ -241,7 +241,7 @@
   font-size: var(--udt-font-caption);
 }
 
-/* Toggle switch sized 40×20 (WPF ToggleSwitch) */
+/* Toggle switch sized 40脳20 (WPF ToggleSwitch) */
 .udt-macro-switch {
   display: inline-flex;
   width: 40px;
@@ -255,7 +255,7 @@
   transform: scale(0.90909);
 }
 
-/* ── Recording status window (MacroRecordingWindow.cs) ────────────────────── */
+/* 鈹€鈹€ Recording status window (MacroRecordingWindow.cs) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-macro-recording {
   position: fixed;
@@ -355,3 +355,4 @@
     flex-direction: column;
   }
 }
+

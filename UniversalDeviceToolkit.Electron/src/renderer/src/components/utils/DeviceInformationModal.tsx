@@ -26,6 +26,18 @@ interface DeviceInfoRequest {
 let requestSeq = 0
 let pendingResolve: (() => void) | null = null
 
+interface DeviceInfoCache {
+  info: SystemInfo
+  cpuName: string | null
+  gpuName: string | null
+}
+
+/**
+ * Module-level cache: the modal renders the cached data instantly on repeat
+ * opens and only hits the host again when the user presses refresh.
+ */
+let deviceInfoCache: DeviceInfoCache | null = null
+
 interface DeviceInfoState {
   request: DeviceInfoRequest | null
   show: () => void
@@ -75,22 +87,40 @@ export default function DeviceInformationModalHost(): React.JSX.Element {
   const [info, setInfo] = useState<SystemInfo | null>(null)
   const [cpuName, setCpuName] = useState<string | null>(null)
   const [gpuName, setGpuName] = useState<string | null>(null)
+  const [ready, setReady] = useState(false)
+  const [refreshing, setRefreshing] = useState(false)
   const [failed, setFailed] = useState(false)
 
-  const load = useCallback(async (): Promise<void> => {
-    setFailed(false)
+  const load = useCallback(async (force = false): Promise<void> => {
+    if (!force && deviceInfoCache) {
+      setInfo(deviceInfoCache.info)
+      setCpuName(deviceInfoCache.cpuName)
+      setGpuName(deviceInfoCache.gpuName)
+      setReady(true)
+      return
+    }
+    setRefreshing(true)
     try {
       const [systemInfo, sensorsStatus] = await Promise.all([
         systemApi.info(),
         sensorsApi.getStatus().catch(() => null)
       ])
-      setInfo(systemInfo)
       const status = sensorsStatus ?? null
+      deviceInfoCache = {
+        info: systemInfo,
+        cpuName: status?.cpuName ?? null,
+        gpuName: status?.gpuName ?? null
+      }
+      setInfo(systemInfo)
       setCpuName(status?.cpuName ?? null)
       setGpuName(status?.gpuName ?? null)
+      setFailed(false)
+      setReady(true)
     } catch {
-      setInfo(null)
       setFailed(true)
+      setReady(true)
+    } finally {
+      setRefreshing(false)
     }
   }, [])
 
@@ -155,6 +185,24 @@ export default function DeviceInformationModalHost(): React.JSX.Element {
       >
         <div className="udt-utils-modal__title">{t('wpf.deviceInformationWindowtitle')}</div>
         <div className="udt-utils-modal__body">
+          {!ready ? (
+            /* Show a skeleton until the data is ready instead of blank "-" rows. */
+            <div className="udt-utils-loading-card" aria-busy="true">
+              <div className="udt-utils-loading-row">
+                <span className="udt-skeleton" style={{ width: 90, height: 12 }} />
+                <span className="udt-skeleton" style={{ width: 180, height: 12 }} />
+              </div>
+              <div className="udt-utils-loading-row">
+                <span className="udt-skeleton" style={{ width: 70, height: 12 }} />
+                <span className="udt-skeleton" style={{ width: 220, height: 12 }} />
+              </div>
+              <div className="udt-utils-loading-row">
+                <span className="udt-skeleton" style={{ width: 100, height: 12 }} />
+                <span className="udt-skeleton" style={{ width: 160, height: 12 }} />
+              </div>
+            </div>
+          ) : (
+            <>
           <div className="udt-utils-card" style={{ padding: 0 }}>
             {identityRows.map((row) => (
               <div key={row.labelKey} className="udt-utils-row" onClick={() => void copyRow(row.value)}>
@@ -187,7 +235,14 @@ export default function DeviceInformationModalHost(): React.JSX.Element {
             <div className="udt-utils-section-title" style={{ margin: 0 }}>
               {t('wpf.deviceInformationWindowwarrantytitle')}
             </div>
-            <button type="button" className="udt-utils-button" style={{ minWidth: 0, padding: '4px 10px' }} onClick={() => void load()} title={t('wpf.deviceInformationWindowrefresh')}>
+            <button
+              type="button"
+              className="udt-utils-button"
+              style={{ minWidth: 0, padding: '4px 10px' }}
+              disabled={refreshing}
+              onClick={() => void load(true)}
+              title={t('wpf.deviceInformationWindowrefresh')}
+            >
               <ReloadOutlined />
             </button>
           </div>
@@ -212,6 +267,8 @@ export default function DeviceInformationModalHost(): React.JSX.Element {
               <ArrowUpOutlined style={{ transform: 'rotate(45deg)', fontSize: 12 }} /> {t('wpf.deviceInformationWindowlenovoSupport')}
             </span>
           </button>
+            </>
+          )}
         </div>
         <div className="udt-utils-modal__actions">
           <button type="button" className="udt-utils-button udt-utils-button--primary" onClick={settle}>

@@ -139,7 +139,7 @@ export default function ExcludeRefreshRatesModal({
   return (
     <Modal
       open={open}
-      title={t('excludeRefreshRatesWindowtitle')}
+      title={t('wpf.excludeRefreshRatesWindowtitle')}
       width={400}
       footer={loading || items == null ? undefined : footer}
       onCancel={onClose}
@@ -159,14 +159,14 @@ export default function ExcludeRefreshRatesModal({
         </Empty>
       ) : items == null || items.length === 0 ? (
         <div>
-          <p>{t('excludeRefreshRatesWindownoRefreshRatesFoundmessage')}</p>
+          <p>{t('wpf.excludeRefreshRatesWindownoRefreshRatesFoundmessage')}</p>
           <Button type="primary" onClick={() => void refresh()}>
             {t('tryAgain')}
           </Button>
         </div>
       ) : (
         <div>
-          <p>{t('excludeRefreshRatesWindowdescription')}</p>
+          <p>{t('wpf.excludeRefreshRatesWindowdescription')}</p>
           <div
             style={{
               maxHeight: 300,

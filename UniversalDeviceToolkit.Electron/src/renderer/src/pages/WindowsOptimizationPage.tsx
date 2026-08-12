@@ -8,6 +8,8 @@ import {
   StopOutlined
 } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
+import i18n from '../i18n'
 import type {
   NetworkAccelerationConfig,
   NetworkAccelerationMode,
@@ -16,6 +18,8 @@ import type {
 } from '../api/optimization'
 import { useDriverStore } from '../stores/driverStore'
 import { useOptimizationStore } from '../stores/optimizationStore'
+import { SkeletonCard, SkeletonList } from '../components/Skeleton'
+import CardExpander from '../components/CardExpander'
 import CleanupRulesPanel from '../components/optimization/CleanupRulesPanel'
 import DriverDownloadPanel from '../components/optimization/DriverDownloadPanel'
 import { NetworkPanels } from '../components/optimization/NetworkPanels'
@@ -63,6 +67,31 @@ function formatBytes(bytes: number): string {
   return `${bytes.toFixed(0)} B`
 }
 
+/**
+ * WPF LocalizationHelper.GetStringOrEnglish: the host sends resource keys as
+ * the category/action titles (e.g. "WindowsOptimization_Category_Explorer_Title");
+ * translate them when a matching i18n key exists, otherwise show as-is.
+ *
+ * Locale files store some keys verbatim under `wpf.*` and the rest as the
+ * migrated camelCase form (`WindowsOptimization_Category_CleanupCache_Title`
+ * → `wpf.windowsOptimizationcategorycleanupCachetitle`).
+ */
+function wpfResxToI18nKey(resourceKey: string): string {
+  return resourceKey
+    .split('_')
+    .map((part) => (part.length === 0 ? part : part[0].toLowerCase() + part.slice(1)))
+    .join('')
+}
+
+function localizeText(t: TFunction, text: string): string {
+  if (!text) return text
+  const candidates = [text, `wpf.${text}`, `wpf.${wpfResxToI18nKey(text)}`]
+  for (const key of candidates) {
+    if (i18n.exists(key)) return t(key)
+  }
+  return text
+}
+
 type TabKey = 'optimization' | 'cleanup' | 'driverDownload' | 'networkAcceleration'
 
 function ActionRow({
@@ -101,7 +130,7 @@ function ActionRow({
         </span>
       </label>
       <span className={`udt-action-row__title${disabled ? ' udt-action-row__title--muted' : ''}`}>
-        {action.title}
+        {localizeText(t, action.title)}
       </span>
       {action.recommended && (
         <span className="udt-badge">
@@ -146,6 +175,7 @@ function CategoryCard({
   summary?: string
 }): React.JSX.Element {
   const [expanded, setExpanded] = useState(true)
+  const { t } = useTranslation()
   const presentation = useMemo(
     () => presentCategoryActions(category.actions, busy),
     [category.actions, busy]
@@ -154,8 +184,8 @@ function CategoryCard({
     <div className="udt-card udt-category">
       <button type="button" className="udt-category__header" onClick={() => setExpanded(!expanded)}>
         <div className="udt-card__copy">
-          <div className="udt-card__title">{category.title}</div>
-          <div className="udt-card__desc">{category.description}</div>
+          <div className="udt-card__title">{localizeText(t, category.title)}</div>
+          <div className="udt-card__desc">{localizeText(t, category.description)}</div>
         </div>
         {summary && <span className="udt-category__summary">{summary}</span>}
         <span className={`udt-category__chevron${expanded ? ' udt-category__chevron--open' : ''}`}>
@@ -198,7 +228,7 @@ function OptimizationTab({
   return (
     <div className="udt-optimization-layout udt-optimization-layout--solo">
       <div className="udt-optimization-layout__main">
-        {loading && <div className="udt-skeleton-list"><div className="udt-skeleton-card" /></div>}
+        {loading && <SkeletonList rows={3} />}
         {optimizationCategories.map((category) => {
           const visible = presentCategoryActions(category.actions, busy).visible
           const appliedCount = visible.filter(({ action }) => action.applied === true).length
@@ -228,12 +258,12 @@ function CleanupTab({
   const { t } = useTranslation()
   const categories = useOptimizationStore((s) => s.categories)
   const estimate = useOptimizationStore((s) => s.estimate)
-  const runCleanup = useOptimizationStore((s) => s.runCleanup)
   const [estimateBytes, setEstimateBytes] = useState<number | null>(null)
   const [estimating, setEstimating] = useState(false)
-  const [cleaning, setCleaning] = useState(false)
 
-  const cleanupCategories = categories.filter((c) => c.key.startsWith('cleanup.'))
+  const cleanupCategories = categories.filter(
+    (c) => c.key.startsWith('cleanup.') && c.key !== 'cleanup.custom'
+  )
 
   const toggleSelection = (key: string): void => {
     onSelectedKeysChange(
@@ -249,55 +279,67 @@ function CleanupTab({
     setEstimateBytes(bytes)
   }
 
-  const handleRun = async (): Promise<void> => {
-    setCleaning(true)
-    const ok = await runCleanup(selectedKeys)
-    setCleaning(false)
-    if (ok) {
-      onSelectedKeysChange([])
-      setEstimateBytes(null)
-    }
-  }
+  const cleanupInfoDescription = estimating
+    ? t('wpf.windowsOptimizationPageestimatedCleanupSizepending', {
+        defaultValue: t('optimization.estimate')
+      })
+    : estimateBytes !== null
+      ? t('wpf.windowsOptimizationPageestimatedCleanupSize', {
+          defaultValue: `${t('optimization.estimateResult')}: {0}`
+        }).replace('{0}', formatBytes(estimateBytes))
+      : t('wpf.windowsOptimizationPagecleanupDescription', {
+          defaultValue: t('optimization.cleanupHint')
+        })
 
   return (
-    <div className="udt-optimization-layout">
+    <div className="udt-optimization-layout udt-optimization-layout--cleanup">
       <div className="udt-optimization-layout__main">
-        {cleanupCategories.map((category) => (
-          <CategoryCard
-            key={category.key}
-            category={category}
-            selectedKeys={selectedKeys}
-            busy={cleaning || estimating}
-            onToggle={toggleSelection}
-          />
-        ))}
+        {cleanupCategories.map((category) => {
+          const presentation = presentCategoryActions(category.actions, estimating)
+          const selectedCount = presentation.visible.filter(
+            ({ action }) => selectedKeys.includes(action.key) || action.applied === true
+          ).length
+          const summary = t('wpf.windowsOptimizationcategoryselectionSummary', {
+            defaultValue: t('optimization.selectedActions') + ' {0}/{1}'
+          })
+            .replace('{0}', String(selectedCount))
+            .replace('{1}', String(presentation.visible.length))
+          return (
+            <CardExpander
+              key={category.key}
+              header={localizeText(t, category.title)}
+              description={localizeText(t, category.description)}
+              accessory={<span className="udt-category__summary">{summary}</span>}
+              defaultExpanded={false}
+            >
+              {presentation.visible.map(({ action, editable }) => (
+                <ActionRow
+                  key={action.key}
+                  action={action}
+                  selected={selectedKeys.includes(action.key)}
+                  disabled={!editable}
+                  onToggle={toggleSelection}
+                />
+              ))}
+            </CardExpander>
+          )
+        })}
       </div>
+      <div className="udt-optimization-layout__divider" aria-hidden="true" />
       <div className="udt-optimization-layout__side">
         <div className="udt-card udt-side-card">
-          <div className="udt-card__title">{t('optimization.estimate')}</div>
-          <div className="udt-card__desc">
-            {estimateBytes !== null
-              ? `${t('optimization.estimateResult')}: ${formatBytes(estimateBytes)}`
-              : t('optimization.cleanupHint')}
+          <div className="udt-card__title">
+            {t('wpf.windowsOptimizationPagecleanupInfo', { defaultValue: t('optimization.estimate') })}
           </div>
-          <div className="udt-side-card__actions">
-            <button
-              type="button"
-              className="udt-btn udt-btn--secondary"
-              disabled={selectedKeys.length === 0 || estimating}
-              onClick={() => void handleEstimate()}
-            >
-              {t('optimization.estimate')}
-            </button>
-            <button
-              type="button"
-              className="udt-btn udt-btn--danger"
-              disabled={selectedKeys.length === 0 || cleaning}
-              onClick={() => void handleRun()}
-            >
-              <PlayCircleOutlined /> {t('optimization.runCleanup')}
-            </button>
-          </div>
+          <div className="udt-card__desc">{cleanupInfoDescription}</div>
+          <button
+            type="button"
+            className="udt-btn udt-btn--primary udt-cleanup-scan"
+            disabled={selectedKeys.length === 0 || estimating}
+            onClick={() => void handleEstimate()}
+          >
+            {t('wpf.windowsOptimizationPagescanbutton', { defaultValue: t('optimization.estimate') })}
+          </button>
         </div>
         <CleanupRulesPanel />
       </div>
@@ -383,7 +425,7 @@ function NetworkTab(): React.JSX.Element {
   }
 
   if (!networkStatus || !editableConfig) {
-    return <div className="udt-skeleton-card" style={{ minHeight: 120 }} />
+    return <SkeletonCard lines={3} withIcon />
   }
 
   const updateConfig = (patch: Partial<NetworkAccelerationConfig>): void => {

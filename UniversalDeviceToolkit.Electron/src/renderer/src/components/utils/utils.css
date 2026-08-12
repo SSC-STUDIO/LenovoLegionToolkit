@@ -327,3 +327,15 @@
   color: var(--udt-text-secondary, rgba(255, 255, 255, 0.77));
   font-size: 12px;
 }
+
+.udt-utils-loading-card {
+  padding: 4px 16px;
+}
+
+.udt-utils-loading-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+}

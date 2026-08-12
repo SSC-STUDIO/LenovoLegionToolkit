@@ -121,7 +121,7 @@ export default function TitleBar(): React.JSX.Element {
           <div className="udt-titlebar__window-controls">
             <button
               type="button"
-              aria-label="minimize"
+              aria-label={t('common.minimize')}
               className={buttonClassName('minimize')}
               onMouseEnter={() => setHover('minimize')}
               onMouseLeave={() => setHover(null)}
@@ -133,7 +133,7 @@ export default function TitleBar(): React.JSX.Element {
             </button>
             <button
               type="button"
-              aria-label={isMaximized ? 'restore' : 'maximize'}
+              aria-label={isMaximized ? t('common.restore') : t('common.maximize')}
               className={buttonClassName('maximize')}
               onMouseEnter={() => setHover('maximize')}
               onMouseLeave={() => setHover(null)}
@@ -152,7 +152,7 @@ export default function TitleBar(): React.JSX.Element {
             </button>
             <button
               type="button"
-              aria-label="close"
+              aria-label={t('common.windowClose')}
               className={buttonClassName('close')}
               onMouseEnter={() => setHover('close')}
               onMouseLeave={() => setHover(null)}
