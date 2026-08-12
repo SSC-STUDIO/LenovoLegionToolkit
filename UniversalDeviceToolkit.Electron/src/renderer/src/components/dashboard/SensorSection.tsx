@@ -6,6 +6,7 @@ import { settingsApi } from '../../api/settings'
 import { useSensorsStore } from '../../stores/sensorsStore'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { useThemeStore } from '../../stores/themeStore'
+import { SensorSkeletonColumn } from '../DashboardSkeleton'
 import SensorGauge from './SensorGauge'
 import TrendChart, { type TrendSeries } from './TrendChart'
 
@@ -376,6 +377,9 @@ export default function SensorSection(): React.JSX.Element {
   const trend = useSensorsStore((state) => state.trend)
   const scopes = useSettingsStore((state) => state.scopes)
 
+  // First-snapshot loading chrome: fixed 3-column skeleton with the global
+  // shimmer/breathing animation (same structure as DashboardSkeleton).
+
   const temperatureUnit: TemperatureUnit = (() => {
     const appearance =
       typeof scopes.appearance === 'object' && scopes.appearance !== null
@@ -653,13 +657,24 @@ export default function SensorSection(): React.JSX.Element {
       .catch(() => undefined)
   }
 
+  if (snapshot == null) {
+    return (
+      <div className="udt-dsk-sensors" role="status" aria-label={t('common.loading', { defaultValue: 'Loading…' })}>
+        <div className="udt-dsk-sensors__grid">
+          <SensorSkeletonColumn titleWidth={72} subtitleWidth={168} metricWidths={[52, 44, 40]} staggerBase={0} />
+          <SensorSkeletonColumn titleWidth={64} subtitleWidth={140} metricWidths={[48, 44, 44]} staggerBase={16} />
+          <SensorSkeletonColumn titleWidth={68} subtitleWidth={152} metricWidths={[52, 40, 44]} staggerBase={32} />
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="udt-sensors">
       <div
         ref={boardRef}
         className="udt-sensor-board"
         onContextMenu={openRefreshMenu}
-        aria-busy={snapshot == null}
       >
         <div className="udt-sensor-board__grid">
           <SensorPanel

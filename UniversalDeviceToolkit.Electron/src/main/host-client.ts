@@ -4,7 +4,13 @@ import { createInterface } from 'readline'
 interface PendingRequest {
   resolve: (value: unknown) => void
   reject: (error: Error) => void
+  timer: NodeJS.Timeout
 }
+
+/** Hard cap for a single JSON-RPC request. Host operations are request/response
+ *  (downloads and long tasks stream progress via events), so 60s is generous;
+ *  a hung host must not leave the renderer's loading states spinning forever. */
+const PENDING_TIMEOUT_MS = 60_000
 
 interface HostLine {
   event?: string
@@ -212,7 +218,12 @@ export class HostClient {
 
     const id = this.nextId++
     const promise = new Promise<unknown>((resolve, reject) => {
-      this.pending.set(id, { resolve, reject })
+      const timer = setTimeout(() => {
+        if (this.pending.delete(id)) {
+          reject(new Error(`Host request timed out after ${PENDING_TIMEOUT_MS}ms: ${method}`))
+        }
+      }, PENDING_TIMEOUT_MS)
+      this.pending.set(id, { resolve, reject, timer })
     })
     this.child.stdin.write(`${JSON.stringify({ id, method, params })}\n`)
     return promise

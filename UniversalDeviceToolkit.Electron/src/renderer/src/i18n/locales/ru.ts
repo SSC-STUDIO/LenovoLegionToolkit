@@ -1176,7 +1176,13 @@ refreshInterval: 'Интервал обновления',
       cleanupDone: 'Очистка завершена',
       cleanupFailed: 'Не удалось выполнить очистку',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Пользовательские правила очистки',
           description: 'Дополнительные папки, очищаемые вместе с выбранными действиями.',
           empty: 'Нет пользовательских правил очистки',

@@ -1174,7 +1174,13 @@ refreshInterval: 'Интервал на опресняване',
       cleanupDone: 'Почистването е завършено',
       cleanupFailed: 'Почистването не успя',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Персонализирани правила за почистване',
           description: 'Допълнителни папки, които се почистват заедно с избраните действия за почистване.',
           empty: 'Няма персонализирани правила за почистване',

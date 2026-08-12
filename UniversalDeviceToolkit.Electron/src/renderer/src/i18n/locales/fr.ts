@@ -1172,7 +1172,13 @@ refreshInterval: 'Intervalle d\'actualisation',
       cleanupDone: 'Nettoyage terminé',
       cleanupFailed: 'Échec du nettoyage',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Règles de nettoyage personnalisées',
           description: 'Dossiers supplémentaires nettoyés avec les actions de nettoyage sélectionnées.',
           empty: 'Aucune règle de nettoyage personnalisée',

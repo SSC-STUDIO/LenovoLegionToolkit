@@ -369,41 +369,17 @@
   }
 }
 
-/* Prefer a single readable column over three squeezed ones. ~760px is
-   the sensors card / content width, not the OS window. */
+/* Narrow content: the CPU / battery / GPU columns stay fixed at 3-across
+   regardless of window size (product decision); only the inner components
+   shrink so columns keep readable gutters. */
 @container udt-sensors (max-width: 760px) {
   .udt-sensor-board .udt-sensor-board__grid {
-    grid-template-columns: 1fr;
-    gap: 20px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 12px;
   }
 
   .udt-sensor-board .udt-sensor-panel {
-    padding: 16px 8px 0;
-    border-top: 1px solid var(--udt-control-stroke-default);
-  }
-
-  .udt-sensor-board .udt-sensor-panel:first-child {
-    padding-top: 0;
-    border-top: none;
-  }
-
-  .udt-sensor-board .udt-sensor-panel__summary {
-    grid-template-columns: minmax(72px, var(--udt-gauge-md)) minmax(0, 1fr);
-    gap: 16px;
-    min-height: var(--udt-gauge-md);
-  }
-
-  .udt-sensor-board .udt-sensor-panel__metrics {
-    grid-template-rows: repeat(3, 24px);
-    padding-bottom: 8px;
-  }
-
-  .udt-sensor-board .udt-sensor-panel__metric {
-    height: 24px;
-  }
-
-  .udt-sensor-board .udt-sensor-panel__chart {
-    height: 112px;
+    padding: 0 6px;
   }
 
   .udt-sensor-board .udt-sensor-panel__battery-gauges {

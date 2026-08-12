@@ -1174,7 +1174,13 @@ refreshInterval: 'Διάστημα ανανέωσης',
     cleanupDone: 'Η εκκαθάριση ολοκληρώθηκε',
     cleanupFailed: 'Η εκκαθάριση απέτυχε',
     cleanup: {
+      scanning: 'Scanning',
+      running: 'Cleaning…',
+      done: 'Cleanup complete',
+      moreItems: 'more',
+      items: 'Items',
       custom: {
+
         header: 'Προσαρμοσμένοι κανόνες εκκαθάρισης',
         description: 'Επιπλέον φάκελοι που καθαρίζονται μαζί με τις επιλεγμένες ενέργειες εκκαθάρισης.',
         empty: 'Δεν υπάρχουν προσαρμοσμένοι κανόνες εκκαθάρισης',

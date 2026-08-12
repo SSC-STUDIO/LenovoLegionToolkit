@@ -19,16 +19,45 @@
   line-height: 1.4;
 }
 
-.udt-section-title {
-  margin: 24px 0 24px;
+.udt-automation-page {
+  padding-bottom: 24px;
+}
+
+.udt-card--row.udt-automation-enable {
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.udt-automation-enable .udt-card__title,
+.udt-automation-enable .udt-card__desc {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.udt-automation-enable .udt-switch {
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.udt-automation-section {
+  margin-top: 28px;
+}
+
+.udt-automation-section__title {
+  margin: 0 0 8px;
   color: var(--udt-text-primary);
-  font-size: var(--udt-font-section);
+  font-size: var(--udt-font-section, 17px);
   font-weight: 500;
   line-height: 1.3;
 }
 
-.udt-section-title:first-of-type {
-  margin-top: 0;
+.udt-automation-section__hint {
+  margin: 0 0 16px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.45;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 /* Shared card chrome (CardControl) */
@@ -215,6 +244,13 @@
   margin-bottom: 0;
 }
 
+.udt-pipeline .udt-card-expander__title,
+.udt-pipeline .udt-card-expander__desc {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .udt-pipeline__steps {
   display: flex;
   flex-direction: column;
@@ -306,10 +342,37 @@
   transform: rotate(45deg) translateY(-1px);
 }
 
-.udt-automation-toolbar {
+.udt-automation-new-row {
   display: flex;
   justify-content: flex-end;
   margin-top: 8px;
+}
+
+.udt-btn.udt-automation-new {
+  flex: 0 0 auto;
+  min-width: 88px;
+  height: 36px;
+  padding: 0 18px;
+  border: 1px solid transparent;
+  border-radius: var(--udt-radius-control);
+  background: #24344d;
+  color: #ffffff;
+  font-size: var(--udt-font-caption);
+}
+
+.udt-btn.udt-automation-new:hover {
+  background: #2f4263;
+  color: #ffffff;
+}
+
+:root[data-theme='light'] .udt-btn.udt-automation-new {
+  background: #1e2c44;
+  color: #ffffff;
+}
+
+:root[data-theme='light'] .udt-btn.udt-automation-new:hover {
+  background: #2a3c5a;
+  color: #ffffff;
 }
 
 .udt-automation-savebar {
@@ -325,8 +388,8 @@
 .udt-empty {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  padding: 16px 24px;
+  align-items: flex-start;
+  padding: 8px 4px 12px;
 }
 
 .udt-empty__icon {

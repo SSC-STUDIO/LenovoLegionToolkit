@@ -1213,7 +1213,13 @@ refreshInterval: 'Verversingsinterval',
       cleanupDone: 'Opschonen voltooid',
       cleanupFailed: 'Opschonen mislukt',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Aangepaste opschoningsregels',
           description: 'Extra mappen die samen met de geselecteerde opschoningsacties worden opgeschoond.',
           empty: 'Geen aangepaste opschoningsregels',

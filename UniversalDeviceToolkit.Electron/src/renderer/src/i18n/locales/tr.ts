@@ -1175,7 +1175,13 @@ refreshInterval: 'Yenileme Aralığı',
       cleanupDone: 'Temizlik tamamlandı',
       cleanupFailed: 'Temizlik başarısız',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Özel Temizlik Kuralları',
           description: 'Seçilen temizlik eylemleriyle birlikte temizlenen ekstra klasörler.',
           empty: 'Özel temizlik kuralı yok',

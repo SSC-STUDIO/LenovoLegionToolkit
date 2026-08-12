@@ -1174,7 +1174,13 @@ refreshInterval: 'Intervallo di aggiornamento',
       cleanupDone: 'Pulizia completata',
       cleanupFailed: 'Pulizia non riuscita',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Regole di pulizia personalizzate',
           description: 'Cartelle aggiuntive pulite insieme alle azioni selezionate.',
           empty: 'Nessuna regola di pulizia personalizzata',

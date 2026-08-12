@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import {
   ApiOutlined,
   AppstoreOutlined,
@@ -9,6 +9,7 @@ import {
   PoweroffOutlined,
   SyncOutlined
 } from '@ant-design/icons'
+import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { featuresApi, type FeatureKey } from '../api/features'
 import { useLoadingStore } from '../stores/loadingStore'
@@ -175,9 +176,9 @@ export default function SettingsPage(): React.JSX.Element {
                   >
                     <span className="udt-settings-nav-item__accent" />
                     <span className="udt-settings-nav-item__icon">{item.icon}</span>
-                    <span className="udt-settings-nav-item__label" title={t(item.labelKey)}>
-                      {t(item.labelKey)}
-                    </span>
+                    <Tooltip title={t(item.labelKey)}>
+                      <span className="udt-settings-nav-item__label">{t(item.labelKey)}</span>
+                    </Tooltip>
                   </button>
                 </li>
               )

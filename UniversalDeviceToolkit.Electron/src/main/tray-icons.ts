@@ -1,67 +1,126 @@
-import { nativeImage, nativeTheme, type NativeImage } from 'electron'
-
 /**
- * Compact 16×16 Fluent-style glyphs for the tray context menu.
- * Light glyphs for dark system menus; dark glyphs for light menus.
+ * Tray flyout glyphs — Fluent 24px system-icon paths (same iconography as
+ * main-window navigation). Rendered as inline SVG in the compact HTML popup
+ * so they stay sharp at any DPI (the old offscreen NativeImage capture was
+ * upscaled by Windows and looked pixelated).
  */
-const LIGHT: Record<string, string> = {
-  home: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB3SURBVDhP5Yy5DYAwEASdkbkCIjKaoAmKIKMWeqECGiAjo5YxOsm2TifzRAQw0ka7s859G8ADE1Db7haRgBnYgQVo7eaUEEITJZFT1kcnMopjLadsQGedjJQXsj7prStyBQzAWJB0pJd4+5EpSDl2W8RKfzx4lQMayjNK9PBkfQAAAABJRU5ErkJggg==',
-  keyboard:
-    'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABYSURBVDhPY2AYBXDw79+/zf/+/btDIt6MbMAdFBOJACh6YJx///6Z//v3j48YNi4DQE4zJ4aN1QBSAFYDoCbn4cBgF6Droa4BpAB0A85BA4cUfA7FxKEJAL+aC2KJKR8JAAAAAElFTkSuQmCC',
-  rocket:
-    'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADBSURBVDhPzZIhDgIxEEXX4XBcAIdDIXFrCI6EBLcOx0FQOCx3wHEBJBgcloRTvE+GdDfN0LKEIHhJ03T657edaVH8PZL6wMDHPwIYA1cbkiq/3wpwqA2AC9Dxmizh6nVyPUqvywJMEwZLr8sCLBIGK6/LAsy+NrBiAaOEwdxrkwDr8IRjlHyTtPPaF6Kr761okcHJ5rf/IbTO+r0NXTCTO3AGJsDG9iUNfe6T8PN60boMpzf9B7qma5LasHr42E95ADzhE1Evj0vAAAAAAElFTkSuQmCC',
-  macro:
-    'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB/SURBVDhP3Y/BCYAwDEW9uYRDeHMCJ3Axl3CC3lzAWydwllcpVKlpGvEmPgiU5uWHNM2nABywP5STcxdRkH8S0zmbwKJsXnJHxWwmTMdsJkznRyek9wCswAS0mlOgBJz3b8AonYJKwBxC6DWnQAR0se7Gi4AapgP47O5a+XzmALp3CJDrMvwFAAAAAElFTkSuQmCC',
-  gauge:
-    'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACfSURBVDhP7ZAtDgJRDITX4XA4FA6HW4fDcQFOgAPFCbjAHoDg1hHw3IoDvK9kSMOW8hMOsF9S05lp+15V9XwFqIEd0HptgHn2vQEMgcZDax+k0oCj1yjnHkgATsAya8KHH4CrmU2yLoM2/wrrqqmZzbQoG3Rm+9J0Yjj09sAqmsYyPhtdcFtKucSwa4OPz4j4x92Ac9b+Qhv89EXWejru2UGqze1/s7cAAAAASUVORK5CYII=',
-  play: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB5SURBVDhP3ZGxDYAwDATTMQEdFR0T0LEHS9CxB4OwBAswAbNcUKRQ8JDI6RAnfRM7J9l27p8Ajb4VAUzA6r1vtWYiCo6YGai0J4sIQjZg0L4kL4IrC1Br/4OMIGQHOv1zIyOwjZIQ2JcpgvJzRkGYddSaCaA3bfsTnJaRzIBIvVsFAAAAAElFTkSuQmCC'
+
+interface IconDef {
+  paths: string[]
 }
 
-const DARK: Record<string, string> = {
-  home: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACFSURBVDhP5ZCxDYNAEATJyOjgtXu6z1wFTVAFmYuhGFfgDpyRUYe1Aa/XCQwRAR5po9vZ4Jrm3uScO5KTu6d4O0QSyRfJBcA7pfSInV3cPUuSvAbA59SISirXcpUZQB+dgo4/5DJCcoiuHtaa2Whmzw2pRHdFD44bhSjVid1NovSPA5fyBS/4XiE/J8zRAAAAAElFTkSuQmCC',
-  keyboard:
-    'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABeSURBVDhPY2AYBXCgoKCwW0FB4RmJeDeyAc9QTCQCoOiBceTk5KxUVFT4iGFjNQBEgxQQw8ZqACkAqwEgkxUVFYuxYZgL0PVQ1wBSAIoeeXn5GyABUjBID4qJQxMAAHSITP39FjhqAAAAAElFTkSuQmCC',
-  rocket:
-    'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAADRSURBVDhPzZKhDsIwEIbncEjc9v/dzuFQWNwMwZEgkDgcL4LDIXmJOZ4AA3YOR3gFckuzNMeaEYLgS5qm1//+9O6aJH9PURSSpunYxj8CwIzk3a+Nve8FwDkwqEVkYDVR9OlBcrMAlFYXheTCGjjntlYXheS6w2BndVFILr820GYBmFoDACur7QTAXksAcAkMHiRPVvtG8PRKmxYYXP0e/w9+dDXJo59CRfJJ8uacm5M86H2WZROb26A/L8/zUXAufe3t/EVkqLo2qQ/th439lBcn0E0Dt+ffDwAAAABJRU5ErkJggg==',
-  macro:
-    'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACMSURBVDhPY2AYVEBBQWG3goLCMwJ4N7o+OAApQBdDB3jVwCQVFBTWYrF5LbIarACvJBTgVYNXEgrwqhlGXgABOTk5K3l5+UMKCgphKioq7NjUYAB0A2D+l5eXvyAvL++BrgYD4DBgupycnBE2NRgAWVJZWVkWhFFVkGAALoBXjby8/A2Yv3FhkBpkPQAEPFIsajbFGQAAAABJRU5ErkJggg==',
-  gauge:
-    'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACxSURBVDhP7ZArEgIxEETjcEhc0p2PwyFxOBwn4AY4UNyAE6ARSBzFAbgTnmoq7GazbBUH2Fc1Zrp7ZhJjRgZxzi0BHEneVN77PYBV7euRUpqSPOfQToNUGkDyqgohzOrcBwkk7yQ3tSY0HMAFwDPGmGrd5M2DYV1lrZ075xZa1DHoTBk6zUwZ/vYAnEhuG1OM0crYNNrggeSjDGdt8vMZJfnjXr1z/0UbdDqAda2NtLwBSUUnLujde5oAAAAASUVORK5CYII=',
-  play: 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACASURBVDhPY2AYnkBZWVkWXYwkoKioWKygoLBFWVlZBV2OKAA14BkIy8vLV6moqLCjq8ELkA2AGnJSXl7eEV0dToBuABKerqSkJIauHgPgMQDkmhuysrLa6HpQAC4DiPYKNgNICkw0A0iPTpABIL8qKCjEossRBeTk5KyICu1BAQBX/jn5bN+t7AAAAABJRU5ErkJggg=='
+const ICON_DEFS: Record<string, IconDef> = {
+  home: {
+    paths: [
+      'M10.55 2.53c.84-.7 2.06-.7 2.9 0l6.75 5.7c.5.42.8 1.05.8 1.71v9.31c0 .97-.78 1.75-1.75 1.75h-3.5c-.97 0-1.75-.78-1.75-1.75v-5a.25.25 0 0 0-.25-.25h-3.5a.25.25 0 0 0-.25.25v5c0 .97-.78 1.75-1.75 1.75h-3.5C3.78 21 3 20.22 3 19.25v-9.3c0-.67.3-1.3.8-1.73l6.75-5.69Zm1.93 1.15a.75.75 0 0 0-.96 0l-6.75 5.7a.75.75 0 0 0-.27.56v9.31c0 .14.11.25.25.25h3.5c.14 0 .25-.1.25-.25v-5c0-.97.78-1.75 1.75-1.75h3.5c.97 0 1.75.78 1.75 1.75v5c0 .14.11.25.25.25h3.5c.14 0 .25-.1.25-.25v-9.3c0-.23-.1-.44-.27-.58l-6.75-5.7Z'
+    ]
+  },
+  keyboard: {
+    paths: [
+      'M19.75 5C20.99 5 22 6 22 7.25v9.5C22 18 20.99 19 19.75 19H4.25C3.01 19 2 18 2 16.75v-9.5C2 6.01 3 5 4.25 5h15.5Zm0 1.5H4.25a.75.75 0 0 0-.75.75v9.5c0 .42.34.75.75.75h15.5c.41 0 .75-.33.75-.75v-9.5a.75.75 0 0 0-.75-.75Zm-13 8h10.5a.75.75 0 0 1 .1 1.5H6.75a.75.75 0 0 1-.1-1.5h10.6-10.5ZM16.5 11a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm-6 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm-3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm6 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2ZM6 8a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Zm3 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2Z'
+    ]
+  },
+  rocket: {
+    paths: [
+      'M13.06 7.43a2.5 2.5 0 1 1 3.53 3.54 2.5 2.5 0 0 1-3.53-3.54Zm2.47 1.06a1 1 0 1 0-1.41 1.42 1 1 0 0 0 1.41-1.42Zm5.98-4.17a2.75 2.75 0 0 0-1.81-1.8l-.66-.21c-2.4-.75-5-.1-6.78 1.67l-1 1a3.5 3.5 0 0 0-4.56.32L5.45 6.55c-.29.29-.29.76 0 1.06l1.6 1.59-.18.18c-.69.68-.69 1.79 0 2.47l.5.5-1.4.8a.75.75 0 0 0-.16 1.17l3.89 3.9a.75.75 0 0 0 1.18-.16l.8-1.4.5.5c.68.68 1.78.68 2.47 0l.17-.18 1.6 1.6c.29.28.76.28 1.05 0l1.25-1.25a3.5 3.5 0 0 0 .32-4.57l1-1A6.75 6.75 0 0 0 21.72 5l-.21-.67Zm-2.26-.38c.4.13.7.43.83.83l.2.66c.58 1.86.08 3.9-1.3 5.27l-5.4 5.4c-.1.1-.25.1-.35 0l-5.3-5.3a.25.25 0 0 1 0-.36l5.4-5.4a5.25 5.25 0 0 1 5.26-1.3l.66.2Zm-1.29 9.9a2 2 0 0 1-.3 2.43l-.72.71-1.06-1.06 2.08-2.08ZM7.76 6.36a2 2 0 0 1 2.43-.3L8.1 8.14 7.05 7.08l.7-.72Zm2.82 9.2-.52.9-2.5-2.5.9-.51 2.12 2.11ZM6.69 18.4a.75.75 0 0 0-1.06-1.06l-2.48 2.48a.75.75 0 0 0 1.06 1.06l2.48-2.48Zm-1.94-3c.29.3.29.77 0 1.06l-1.07 1.06a.75.75 0 0 1-1.06-1.06l1.06-1.06c.3-.3.77-.3 1.07 0Zm3.88 4.95a.75.75 0 1 0-1.06-1.06l-1.06 1.06a.75.75 0 0 0 1.06 1.06l1.06-1.06Z'
+    ]
+  },
+  receiptPlay: {
+    paths: [
+      'M4 5.25C4 4.01 5 3 6.25 3h9.5C16.99 3 18 4 18 5.25V14h4v3.75c0 1.8-1.46 3.25-3.25 3.25h-6.77c.3-.46.53-.97.7-1.5h3.82V5.25a.75.75 0 0 0-.75-.75h-9.5a.75.75 0 0 0-.75.75v5.83c-.52.08-1.03.22-1.5.42V5.25Zm9.75 7.25h-3.1a6.48 6.48 0 0 0-2.83-1.37.75.75 0 0 1 .43-.13h5.5a.75.75 0 0 1 0 1.5Zm4.25 7h.75c.97 0 1.75-.78 1.75-1.75V15.5H18v4ZM8.25 7a.75.75 0 0 0 0 1.5h5.5a.75.75 0 0 0 0-1.5h-5.5ZM12 17.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0Zm-7 2c0 .4.44.64.78.42l3-2a.5.5 0 0 0 0-.84l-3-2a.5.5 0 0 0-.78.42v4Z'
+    ]
+  },
+  gauge: {
+    paths: [
+      'M7.93 16.07a.75.75 0 1 1-1.06 1.06 7.25 7.25 0 0 1 6.8-12.19.75.75 0 1 1-.34 1.46 5.75 5.75 0 0 0-5.4 9.67Zm9.96-6.93c.39-.14.82.07.95.46a7.25 7.25 0 0 1-1.71 7.53.75.75 0 1 1-1.06-1.06 5.75 5.75 0 0 0 1.36-5.97.75.75 0 0 1 .46-.96Zm-2.01-2.47a.63.63 0 0 1 .96.76l-.13.25a354.7 354.7 0 0 1-3.02 5.67c-.12.2-.24.4-.32.5a1.88 1.88 0 0 1-2.94-2.33 37.2 37.2 0 0 1 1.1-1.05 154.39 154.39 0 0 1 4.14-3.62l.2-.18ZM22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0ZM3.5 12a8.5 8.5 0 1 0 17 0 8.5 8.5 0 0 0-17 0Z'
+    ]
+  },
+  play: {
+    paths: [
+      'M7.6 4.61a.75.75 0 0 0-1.1.66v13.46c0 .56.6.93 1.1.65l12.37-6.72a.75.75 0 0 0 0-1.32L7.61 4.61ZM5 5.27c0-1.7 1.83-2.79 3.33-1.97l12.36 6.72a2.25 2.25 0 0 1 0 3.96L8.33 20.7A2.25 2.25 0 0 1 5 18.73V5.27Z'
+    ]
+  },
+  settings: {
+    paths: [
+      'M12.01 2.25c.74 0 1.47.1 2.18.25.32.07.55.33.59.65l.17 1.53a1.38 1.38 0 0 0 1.92 1.11l1.4-.61c.3-.13.64-.06.85.17a9.8 9.8 0 0 1 2.2 3.8c.1.3 0 .63-.26.82l-1.25.92a1.38 1.38 0 0 0 0 2.22l1.25.92c.26.19.36.52.27.82a9.8 9.8 0 0 1-2.2 3.8.75.75 0 0 1-.85.17l-1.4-.62a1.38 1.38 0 0 0-1.93 1.12l-.17 1.52a.75.75 0 0 1-.58.65 9.52 9.52 0 0 1-4.4 0 .75.75 0 0 1-.57-.65l-.17-1.52a1.38 1.38 0 0 0-1.93-1.11l-1.4.62a.75.75 0 0 1-.85-.18 9.8 9.8 0 0 1-2.2-3.8c-.1-.3 0-.63.26-.82l1.25-.92a1.38 1.38 0 0 0 0-2.22l-1.24-.92a.75.75 0 0 1-.28-.82 9.8 9.8 0 0 1 2.2-3.8c.23-.23.57-.3.86-.17l1.4.62c.4.17.86.15 1.25-.08.38-.22.63-.6.68-1.04l.17-1.53a.75.75 0 0 1 .58-.65c.72-.16 1.45-.24 2.2-.25Zm0 1.5c-.45 0-.9.04-1.35.12l-.11.97a2.89 2.89 0 0 1-4.03 2.33l-.9-.4A8.3 8.3 0 0 0 4.29 9.1l.8.59a2.88 2.88 0 0 1 0 4.64l-.8.59a8.3 8.3 0 0 0 1.35 2.32l.9-.4a2.88 2.88 0 0 1 4.02 2.32l.1.99c.9.15 1.8.15 2.7 0l.1-.99a2.88 2.88 0 0 1 4.02-2.32l.9.4a8.3 8.3 0 0 0 1.35-2.32l-.8-.59a2.88 2.88 0 0 1 0-4.64l.8-.59a8.3 8.3 0 0 0-1.35-2.32l-.9.4a2.88 2.88 0 0 1-4.02-2.32l-.1-.98c-.45-.08-.9-.11-1.34-.12ZM12 8.25a3.75 3.75 0 1 1 0 7.5 3.75 3.75 0 0 1 0-7.5Zm0 1.5a2.25 2.25 0 1 0 0 4.5 2.25 2.25 0 0 0 0-4.5Z'
+    ]
+  },
+  info: {
+    paths: [
+      'M12 2a10 10 0 1 1 0 20 10 10 0 0 1 0-20Zm0 1.5a8.5 8.5 0 1 0 0 17 8.5 8.5 0 0 0 0-17Zm0 7c.41 0 .75.34.75.75v5a.75.75 0 0 1-1.5 0v-5c0-.41.34-.75.75-.75ZM12 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z'
+    ]
+  },
+  desktop: {
+    paths: [
+      'M6.75 22a.75.75 0 0 1-.1-1.5H8.5V18H4.25c-1.2 0-2.17-.92-2.24-2.1L2 15.76V5.25c0-1.2.93-2.17 2.1-2.24L4.25 3h15.5c1.19 0 2.16.93 2.24 2.1v10.65c0 1.2-.92 2.17-2.09 2.25h-4.4v2.5h1.75a.75.75 0 0 1 .1 1.5H6.75ZM14 18h-4v2.5h4V18Zm5.75-13.5H4.25c-.38 0-.7.28-.74.65l-.01.1v10.5c0 .38.28.7.65.75h15.6c.38 0 .7-.28.74-.65V5.25c0-.38-.27-.7-.64-.74l-.1-.01Z'
+    ]
+  },
+  power: {
+    paths: [
+      'M8.2 4.82a.75.75 0 0 1 .64 1.36 7.51 7.51 0 1 0 6.34 0 .75.75 0 1 1 .63-1.35 9 9 0 1 1-7.6-.01ZM12 2.5c.38 0 .7.28.74.64v7.6a.75.75 0 0 1-1.48.1l-.01-.1v-7.5c0-.4.33-.74.75-.74Z'
+    ]
+  },
+  flash: {
+    paths: [
+      'M7.43 2.83C7.6 2.33 8.07 2 8.6 2h6.46c.85 0 1.45.84 1.18 1.65L14.8 8h3.96c1.1 0 1.67 1.33.9 2.12L8.59 21.54c-1.06 1.08-2.88.1-2.55-1.38l1.27-5.66-1.56-.01c-1.21 0-2.05-1.2-1.65-2.34l3.33-9.32Zm1.35.67-3.26 9.16c-.06.16.06.33.23.33l2.5.01a.75.75 0 0 1 .73.91L7.51 20.5 18.16 9.5h-4.41a.75.75 0 0 1-.71-.99L14.7 3.5H8.78Z'
+    ]
+  },
+  batteryCharge: {
+    paths: [
+      'M7.64 7.12c-.06.12-.1.25-.12.38H5c-.78 0-1.42.6-1.5 1.36V15c0 .78.6 1.42 1.36 1.5H17c.78 0 1.42-.6 1.5-1.36V9c0-.78-.6-1.42-1.36-1.5h-2.09l.3-.61c.16-.3.18-.6.11-.89H17a3 3 0 0 1 3 3v1h1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v1a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3h3.2l-.56 1.12Zm3.6-4.9c.2-.37.76-.24.76.18V6h2.2a.3.3 0 0 1 .27.44l-2.71 5.34c-.2.38-.76.24-.76-.18V8H8.8a.3.3 0 0 1-.27-.43l2.71-5.35Z'
+    ]
+  },
+  weatherMoon: {
+    paths: [
+      'M20.03 17a10 10 0 0 1-16.9.68.75.75 0 0 1 .36-1.13c3.77-1.35 5.79-2.91 6.96-5.15 1.23-2.35 1.55-4.93.69-8.46A.75.75 0 0 1 11.9 2 10 10 0 0 1 20.03 17Zm-8.25-4.9c-1.25 2.39-3.31 4.1-6.82 5.5a8.49 8.49 0 0 0 13.77-1.35 8.5 8.5 0 0 0-5.9-12.63c.64 3.39.22 6.05-1.05 8.48Z'
+    ]
+  },
+  wifi: {
+    paths: [
+      'M17.74 10.75c.6.6 1.1 1.3 1.5 2.07a.75.75 0 1 1-1.34.68 6.56 6.56 0 0 0-11.71-.02.75.75 0 1 1-1.34-.67 8.06 8.06 0 0 1 12.9-2.06Zm-2.1 3.07c.45.45.82 1 1.08 1.58a.75.75 0 1 1-1.38.6A3.6 3.6 0 0 0 8.75 16a.75.75 0 1 1-1.37-.6 5.1 5.1 0 0 1 8.26-1.57Zm4.8-5.54c.52.5 1 1.09 1.42 1.7a.75.75 0 1 1-1.24.85 10.45 10.45 0 0 0-17.23 0 .75.75 0 0 1-1.23-.86 11.95 11.95 0 0 1 18.29-1.69Zm-7.38 8.16a1.5 1.5 0 1 1-2.12 2.12 1.5 1.5 0 0 1 2.12-2.12Z'
+    ]
+  }
 }
 
-const cache = new Map<string, NativeImage>()
+const GLYPH_SIZE = 14
 
-function load(set: Record<string, string>, key: string): NativeImage | undefined {
-  const b64 = set[key]
-  if (!b64) return undefined
-  const cacheKey = `${nativeTheme.shouldUseDarkColors ? 'L' : 'D'}:${key}`
-  const hit = cache.get(cacheKey)
-  if (hit) return hit
-  const image = nativeImage.createFromDataURL(`data:image/png;base64,${b64}`)
-  if (image.isEmpty()) return undefined
-  cache.set(cacheKey, image)
-  return image
-}
-
-/** Map WPF SymbolRegular / pipeline.iconName to a tray glyph. */
-export function trayIconForSymbol(symbol?: string | null): NativeImage | undefined {
-  const set = nativeTheme.shouldUseDarkColors ? LIGHT : DARK
+/** WPF SymbolRegular name → Fluent glyph. */
+export function mapSymbolToGlyph(symbol?: string | null): string {
   const name = (symbol ?? '').replace(/\d+$/, '').toLowerCase()
-  if (name.includes('home')) return load(set, 'home')
-  if (name.includes('keyboard')) return load(set, 'keyboard')
-  if (name.includes('rocket')) return load(set, 'rocket')
-  if (name.includes('receipt') || name.includes('macro')) return load(set, 'macro')
-  if (name.includes('gauge') || name.includes('topspeed')) return load(set, 'gauge')
-  if (name.includes('play') || name === '') return load(set, 'play')
-  return load(set, 'play')
+  if (name.includes('home')) return 'home'
+  if (name.includes('keyboard')) return 'keyboard'
+  if (name.includes('rocket')) return 'rocket'
+  if (name.includes('receiptplay') || name.includes('receipt')) return 'receiptPlay'
+  if (name.includes('gauge') || name.includes('topspeed')) return 'gauge'
+  if (name.includes('settings')) return 'settings'
+  if (name.includes('info')) return 'info'
+  if (name.includes('desktop')) return 'desktop'
+  if (name.includes('power')) return 'power'
+  if (name.includes('flash') || name.includes('lightning')) return 'flash'
+  if (name.includes('battery')) return 'batteryCharge'
+  if (name.includes('moon')) return 'weatherMoon'
+  if (name.includes('wifi')) return 'wifi'
+  return 'play'
 }
 
-export function trayNavIcon(id: 'home' | 'keyboard' | 'rocket' | 'macro' | 'gauge'): NativeImage | undefined {
-  const set = nativeTheme.shouldUseDarkColors ? LIGHT : DARK
-  return load(set, id)
+function svgForGlyph(name: string, size: number): string {
+  const def = ICON_DEFS[name]
+  if (!def) return ''
+  const paths = def.paths.map((d) => `<path fill="currentColor" d="${d}"/>`).join('')
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" aria-hidden="true">${paths}</svg>`
 }
 
-export function clearTrayIconCache(): void {
-  cache.clear()
+export function trayGlyphSvg(glyph: string, size = GLYPH_SIZE): string {
+  return svgForGlyph(glyph, size)
+}
+
+export function trayIconSvgForSymbol(symbol?: string | null, size = GLYPH_SIZE): string {
+  return svgForGlyph(mapSymbolToGlyph(symbol), size)
+}
+
+export function trayNavSvg(
+  id: 'home' | 'keyboard' | 'rocket' | 'macro' | 'gauge',
+  size = GLYPH_SIZE
+): string {
+  return svgForGlyph(id === 'macro' ? 'receiptPlay' : id, size)
 }

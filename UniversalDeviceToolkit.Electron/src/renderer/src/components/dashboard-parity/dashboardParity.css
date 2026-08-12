@@ -1,8 +1,12 @@
+﻿/* Container for the feature-groups grid: the dashboard root's content width
+   drives the group column count (WPF GetColumnCountForWidth semantics). */
 .udt-parity-dashboard {
   width: 100%;
   max-width: 1520px;
   margin: 0 auto;
   padding: 16px 16px 12px 0;
+  container-type: inline-size;
+  container-name: udt-dashboard;
 }
 
 .udt-parity-dashboard > h1 {
@@ -552,11 +556,28 @@
   margin-top: 20px;
 }
 
+/* WPF DashboardPage.GetColumnCountForWidth uses the CONTENT area width
+   (>1500 = 3 cols, >1000 = 2 cols, <=1000 = 1 col). The dashboard root
+   (.udt-parity-dashboard above) is the named container; these queries
+   resolve against it, tracking the real content width. Below 1000px each
+   group stacks one card per row — exactly like the original client. */
 .udt-parity-feature-groups {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 24px 16px;
   align-items: start;
+}
+
+@container udt-dashboard (min-width: 1501px) {
+  .udt-parity-feature-groups {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@container udt-dashboard (max-width: 1000px) {
+  .udt-parity-feature-groups {
+    grid-template-columns: 1fr;
+  }
 }
 
 .udt-parity-feature-group {
@@ -678,18 +699,6 @@
 
 .udt-parity-hybrid-snackbar__message {
   margin-top: 2px;
-}
-
-@media (min-width: 1501px) {
-  .udt-parity-feature-groups {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 1000px) {
-  .udt-parity-feature-groups {
-    grid-template-columns: 1fr;
-  }
 }
 
 @media (max-width: 620px) {
@@ -950,6 +959,8 @@
 /* Dashboard skeleton (DashboardPage.xaml loading chrome parity) */
 
 .udt-dashboard-skeleton {
+  container-type: inline-size;
+  container-name: udt-dashboard-skeleton;
   padding-top: 16px;
 }
 
@@ -1048,13 +1059,15 @@
   gap: 8px;
 }
 
-@media (max-width: 1500px) {
+/* Skeleton groups mirror the live feature-groups grid (container width
+   based, same 1500/1000 content thresholds as the real cards). */
+@container udt-dashboard-skeleton (max-width: 1500px) {
   .udt-dsk-groups__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 1000px) {
+@container udt-dashboard-skeleton (max-width: 1000px) {
   .udt-dsk-groups__grid {
     grid-template-columns: 1fr;
   }
@@ -1064,3 +1077,4 @@
     gap: 18px;
   }
 }
+

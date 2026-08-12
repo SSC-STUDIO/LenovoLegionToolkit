@@ -1173,7 +1173,13 @@ refreshInterval: 'Atsvaidzināšanas intervāls',
       cleanupDone: 'Tīrīšana pabeigta',
       cleanupFailed: 'Tīrīšana neizdevās',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Pielāgoti tīrīšanas noteikumi',
           description: 'Papildu mapes, kas tiek tīrītas kopā ar atlasītajām tīrīšanas darbībām.',
           empty: 'Nav pielāgotu tīrīšanas noteikumu',

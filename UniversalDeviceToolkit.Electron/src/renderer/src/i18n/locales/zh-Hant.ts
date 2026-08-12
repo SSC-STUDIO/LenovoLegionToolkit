@@ -1173,7 +1173,13 @@
       cleanupDone: 'Cleanup finished',
       cleanupFailed: 'Cleanup failed',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Custom Cleanup Rules',
           description: 'Extra folders that are cleaned together with the selected cleanup actions.',
           empty: 'No custom cleanup rules',

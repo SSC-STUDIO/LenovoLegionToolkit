@@ -2653,7 +2653,13 @@ sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryje
     cleanupDone: 'Úklid dokončen',
     cleanupFailed: 'Úklid selhal',
     cleanup: {
+      scanning: 'Scanning',
+      running: 'Cleaning…',
+      done: 'Cleanup complete',
+      moreItems: 'more',
+      items: 'Items',
       custom: {
+
         header: 'Vlastní pravidla čištění',
         description: 'Další složky, které se vyčistí společně s vybranými akcemi úklidu.',
         empty: 'Žádná vlastní pravidla čištění',

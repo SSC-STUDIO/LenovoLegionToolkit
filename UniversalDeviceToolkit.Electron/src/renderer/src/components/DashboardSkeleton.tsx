@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { SkeletonCard } from './Skeleton'
+import './DashboardSkeleton.css'
 
 /**
  * Dashboard page skeleton — 1:1 port of WPF DashboardPage.xaml loading chrome.
@@ -23,7 +24,9 @@ interface SensorSkeletonColumnProps {
   staggerBase: number
 }
 
-function SensorSkeletonColumn({
+/** One CPU/battery/GPU skeleton column — reused by SensorSection while the
+ *  first snapshot is still loading. */
+export function SensorSkeletonColumn({
   titleWidth,
   subtitleWidth,
   metricWidths,

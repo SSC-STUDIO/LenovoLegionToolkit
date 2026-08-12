@@ -1174,7 +1174,13 @@ refreshInterval: 'Intervalo de atualização',
       cleanupDone: 'Limpeza concluída',
       cleanupFailed: 'Falha na limpeza',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Regras de limpeza personalizadas',
           description: 'Pastas extras limpas junto com as ações selecionadas.',
           empty: 'Nenhuma regra personalizada',

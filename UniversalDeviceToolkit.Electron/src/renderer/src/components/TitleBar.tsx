@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { invoke, on } from '../api/bridge'
@@ -101,22 +102,24 @@ export default function TitleBar(): React.JSX.Element {
             Title is absolutely positioned, so this group needs margin-left:auto or it packs left. */}
         <div className="udt-titlebar__chrome" style={NO_DRAG_STYLE}>
           <div className="udt-titlebar__trailing">
-            <button
-              type="button"
-              className="udt-titlebar__log-button"
-              title={t('titlebar.openLogs')}
-              onClick={openLogFolder}
-            >
-              {t('titlebar.log')}
-            </button>
-            <button
-              type="button"
-              className="udt-titlebar__device-button"
-              title={t('titlebar.deviceInfo')}
-              onClick={() => setDeviceInfoOpen(true)}
-            >
-              {deviceModel ?? t('titlebar.deviceName')}
-            </button>
+            <Tooltip title={t('titlebar.openLogs')}>
+              <button
+                type="button"
+                className="udt-titlebar__log-button"
+                onClick={openLogFolder}
+              >
+                {t('titlebar.log')}
+              </button>
+            </Tooltip>
+            <Tooltip title={t('titlebar.deviceInfo')}>
+              <button
+                type="button"
+                className="udt-titlebar__device-button"
+                onClick={() => setDeviceInfoOpen(true)}
+              >
+                {deviceModel ?? t('titlebar.deviceName')}
+              </button>
+            </Tooltip>
           </div>
           <div className="udt-titlebar__window-controls">
             <button

@@ -1268,7 +1268,13 @@ refreshInterval: 'Khoảng thời gian làm mới',
     cleanupDone: 'Đã dọn dẹp xong',
     cleanupFailed: 'Dọn dẹp thất bại',
     cleanup: {
+      scanning: 'Scanning',
+      running: 'Cleaning…',
+      done: 'Cleanup complete',
+      moreItems: 'more',
+      items: 'Items',
       custom: {
+
         header: 'Quy tắc dọn dẹp tùy chỉnh',
         description: 'Các thư mục b…?sung được dọn cùng với các hành động dọn dẹp đã chọn.',
         empty: 'Không có quy tắc dọn dẹp tùy chỉnh',

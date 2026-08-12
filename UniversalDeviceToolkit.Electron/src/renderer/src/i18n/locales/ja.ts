@@ -1175,7 +1175,13 @@ refreshInterval: '更新間隔',
       cleanupDone: 'クリーンアップが完了しました',
       cleanupFailed: 'クリーンアップに失敗しました',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'カスタムクリーンアップルール',
           description: '選択したクリーンアップアクションと一緒にクリーンアップされる追加フォルダー…?',
           empty: 'カスタムクリーンアップルールはありません',

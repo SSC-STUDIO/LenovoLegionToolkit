@@ -22,6 +22,7 @@ import {
   Space,
   Switch,
   Tag,
+  Tooltip,
   Typography,
   message
 } from 'antd'
@@ -547,32 +548,35 @@ function SpectrumSection(): React.JSX.Element {
 
       <div className="udt-kb-spectrum-device">
         <div className="udt-kb-spectrum-device__toolbar">
-          <Button
-            className="udt-kb-icon-btn"
-            size="small"
-            title={t('keyboard.spectrum.selectAll')}
-            disabled={spectrum.effects.length === 0}
-            onClick={handleSelectAll}
-          >
-            {t('keyboard.spectrum.selectAll')}
-          </Button>
-          <Button
-            className="udt-kb-icon-btn"
-            size="small"
-            title={t('keyboard.spectrum.deselectAll')}
-            disabled={spectrum.effects.length === 0}
-            onClick={handleDeselectAll}
-          >
-            {t('keyboard.spectrum.deselectAll')}
-          </Button>
-          <Button
-            className="udt-kb-icon-btn"
-            size="small"
-            title={t('keyboard.spectrum.switchLayout')}
-            onClick={handleSwitchLayout}
-          >
-            {t('keyboard.spectrum.switchLayout')} ({layoutName})
-          </Button>
+          <Tooltip title={t('keyboard.spectrum.selectAll')}>
+            <Button
+              className="udt-kb-icon-btn"
+              size="small"
+              disabled={spectrum.effects.length === 0}
+              onClick={handleSelectAll}
+            >
+              {t('keyboard.spectrum.selectAll')}
+            </Button>
+          </Tooltip>
+          <Tooltip title={t('keyboard.spectrum.deselectAll')}>
+            <Button
+              className="udt-kb-icon-btn"
+              size="small"
+              disabled={spectrum.effects.length === 0}
+              onClick={handleDeselectAll}
+            >
+              {t('keyboard.spectrum.deselectAll')}
+            </Button>
+          </Tooltip>
+          <Tooltip title={t('keyboard.spectrum.switchLayout')}>
+            <Button
+              className="udt-kb-icon-btn"
+              size="small"
+              onClick={handleSwitchLayout}
+            >
+              {t('keyboard.spectrum.switchLayout')} ({layoutName})
+            </Button>
+          </Tooltip>
         </div>
         {deviceKeys.length === 0 ? (
           <div className="udt-kb-spectrum-device__empty">

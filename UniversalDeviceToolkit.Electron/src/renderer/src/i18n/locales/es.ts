@@ -1173,7 +1173,13 @@ refreshInterval: 'Intervalo de actualización',
       cleanupDone: 'Limpieza terminada',
       cleanupFailed: 'Error en la limpieza',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Reglas de limpieza personalizadas',
           description: 'Carpetas adicionales que se limpian con las acciones seleccionadas.',
           empty: 'No hay reglas de limpieza personalizadas',

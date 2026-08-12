@@ -1,65 +1,76 @@
 import {
-  AppstoreOutlined,
-  ClockCircleOutlined,
-  DashboardOutlined,
-  DesktopOutlined,
-  DisconnectOutlined,
-  FundOutlined,
-  HighlightOutlined,
-  HourglassOutlined,
-  LockOutlined,
-  PlayCircleOutlined,
-  PoweroffOutlined,
-  RetweetOutlined,
-  SwapOutlined,
-  ThunderboltOutlined,
-  UnlockOutlined,
-  UsbOutlined,
-  WifiOutlined
-} from '@ant-design/icons'
+  ArrowSync24Regular,
+  BatteryCharge24Regular,
+  Desktop24Regular,
+  Gauge24Regular,
+  Globe24Regular,
+  Hdr24Regular,
+  Heart24Regular,
+  Link24Regular,
+  LockClosed24Regular,
+  Play24Regular,
+  Power24Regular,
+  Timer24Regular,
+  UsbPlug24Regular,
+  XboxController24Regular
+} from '@fluentui/react-icons'
 import type { ReactNode } from 'react'
+import { normalizeTriggerKind, type TriggerKind } from './triggers'
 
 /**
  * Per-trigger icon mapping — port of WPF
- * Extensions/AutomationPipelineTriggerExtensions.cs (SymbolRegular → antd icon).
+ * Extensions/AutomationPipelineTriggerExtensions.cs (SymbolRegular).
+ *
+ * AC adapter cards use Link (connection/node) to match the original UDT
+ * collapsed chrome; triggerless quick actions use Play on the page.
  */
 
-const TRIGGER_ICONS: Record<string, ReactNode> = {
-  powerState: <ThunderboltOutlined />,
-  powerMode: <DashboardOutlined />,
-  godModePresetChanged: <DashboardOutlined />,
-  game: <PlayCircleOutlined />,
-  hdr: <HighlightOutlined />,
-  processes: <DesktopOutlined />,
-  userInactivity: <ClockCircleOutlined />,
-  sessionLock: <LockOutlined />,
-  sessionUnlock: <UnlockOutlined />,
-  time: <HourglassOutlined />,
-  device: <UsbOutlined />,
-  nativeWindowsMessage: <AppstoreOutlined />,
-  onStartup: <ThunderboltOutlined />,
-  onResume: <PoweroffOutlined />,
-  wiFiConnected: <WifiOutlined />,
-  wiFiDisconnected: <DisconnectOutlined />,
-  periodic: <RetweetOutlined />,
-  hardwareSensor: <FundOutlined />,
-  batteryPercentage: <PoweroffOutlined />,
-  composite: <SwapOutlined />
+const TRIGGER_ICONS: Record<TriggerKind, ReactNode> = {
+  aCAdapterConnected: <Link24Regular />,
+  lowWattageACAdapterConnected: <Link24Regular />,
+  aCAdapterDisconnected: <Link24Regular />,
+  powerMode: <Gauge24Regular />,
+  godModePresetChanged: <Gauge24Regular />,
+  gamesAreRunning: <XboxController24Regular />,
+  gamesStop: <XboxController24Regular />,
+  processesAreRunning: <Desktop24Regular />,
+  processesStopRunning: <Desktop24Regular />,
+  userInactivity: <Timer24Regular />,
+  sessionLock: <LockClosed24Regular />,
+  sessionUnlock: <LockClosed24Regular />,
+  lidOpened: <Desktop24Regular />,
+  lidClosed: <Desktop24Regular />,
+  displayOn: <Desktop24Regular />,
+  displayOff: <Desktop24Regular />,
+  hdrOn: <Hdr24Regular />,
+  hdrOff: <Hdr24Regular />,
+  deviceConnected: <UsbPlug24Regular />,
+  deviceDisconnected: <UsbPlug24Regular />,
+  externalDisplayConnected: <Desktop24Regular />,
+  externalDisplayDisconnected: <Desktop24Regular />,
+  wiFiConnected: <Globe24Regular />,
+  wiFiDisconnected: <Globe24Regular />,
+  time: <Timer24Regular />,
+  periodic: <ArrowSync24Regular />,
+  hardwareSensor: <Heart24Regular />,
+  batteryPercentage: <BatteryCharge24Regular />,
+  onStartup: <Power24Regular />,
+  onResume: <Power24Regular />,
+  and: <Link24Regular />
 }
 
-/** "WiFiConnectedAutomationPipelineTrigger" → "wiFiConnected"; returns null when unknown. */
+/** Default icon for triggerless quick actions (WPF play triangle). */
+export const QUICK_ACTION_ICON: ReactNode = <Play24Regular />
+
+/** "WiFiConnectedAutomationPipelineTrigger" → catalog kind; null when unknown. */
 export function normalizeTriggerType($type: string): string | null {
-  const trimmed = $type
-    .replace(/AutomationPipelineTrigger$/i, '')
-    .replace(/PipelineTrigger$/i, '')
-    .replace(/Trigger$/i, '')
-  if (!trimmed) return null
-  const first = trimmed.charAt(0).toLowerCase() + trimmed.slice(1)
-  return Object.prototype.hasOwnProperty.call(TRIGGER_ICONS, first) ? first : null
+  return normalizeTriggerKind($type)
 }
 
 /** Icon for a serialized trigger $type; null when the type is unknown. */
 export function triggerIcon($type: string): ReactNode | null {
-  const key = normalizeTriggerType($type)
+  const stripped = $type.replace(/AutomationPipelineTrigger$/i, '')
+  if (/^and$/i.test(stripped)) return TRIGGER_ICONS.and
+  const key = normalizeTriggerKind($type)
   return key === null ? null : (TRIGGER_ICONS[key] ?? null)
 }

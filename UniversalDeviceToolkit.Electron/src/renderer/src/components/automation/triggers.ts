@@ -150,6 +150,22 @@ export function normalizeTriggerKind($type: string): TriggerKind | null {
   return (DEFINITION_BY_KIND.has(first) ? first : null) as TriggerKind | null
 }
 
+/** True when Configure belongs in the expanded pipeline body (not the collapsed header). */
+export function isTriggerConfigurable(trigger: AutomationTrigger): boolean {
+  if (trigger.$type === 'and' && Array.isArray(trigger.triggers)) {
+    return trigger.triggers.some(
+      (child) =>
+        typeof child === 'object' &&
+        child !== null &&
+        typeof (child as { $type?: unknown }).$type === 'string' &&
+        isTriggerConfigurable(child as AutomationTrigger)
+    )
+  }
+  const kind = normalizeTriggerKind(trigger.$type)
+  if (kind === null) return false
+  return (DEFINITION_BY_KIND.get(kind) ?? []).some((definition) => definition.configurable)
+}
+
 /** Display name lookup: prefers the exact serialized $type family, else the catalog name. */
 export function triggerDisplayNameKey(trigger: AutomationTrigger): string {
   const kind = normalizeTriggerKind(trigger.$type)

@@ -7,10 +7,9 @@ import {
   EditOutlined,
   PlusOutlined,
   PlayCircleOutlined,
-  RocketOutlined,
-  SettingOutlined,
-  ThunderboltOutlined
+  SettingOutlined
 } from '@ant-design/icons'
+import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type { AutomationPipeline, AutomationStepType } from '../api/automation'
 import { useAutomationStore } from '../stores/automationStore'
@@ -19,12 +18,16 @@ import CardExpander from '../components/CardExpander'
 import { SkeletonList } from '../components/Skeleton'
 import { StepEditorModal, createDefaultStep, stepSummaryText } from '../components/automation/StepEditor'
 import { formatStepSummary } from '../components/automation/steps'
-import { triggerIcon } from '../components/automation/triggerMeta'
+import { QUICK_ACTION_ICON, triggerIcon } from '../components/automation/triggerMeta'
 import { stepIcon } from '../components/automation/stepIcons'
 import TriggerPickerModal from '../components/automation/TriggerPickerModal'
 import TriggerConfigModal from '../components/automation/TriggerConfigModal'
 import type { AutomationTrigger } from '../components/automation/triggers'
-import { normalizeTriggerKind, triggerDisplayNameKey, triggerSubtitlePart } from '../components/automation/triggers'
+import {
+  isTriggerConfigurable,
+  normalizeTriggerKind,
+  triggerDisplayNameKey
+} from '../components/automation/triggers'
 import { openSymbolPicker } from '../components/utils/SymbolPickerModal'
 import { symbolIcon } from '../components/utils/symbolIcons'
 import '../components/automation/automation.css'
@@ -53,6 +56,17 @@ function clampToViewport(x: number, y: number, width = 200, height = 180): { x: 
     y: Math.max(margin, Math.min(y, window.innerHeight - height - margin))
   }
 }
+
+const DEACTIVATE_GPU_STABLE = '__udt.quickAction.deactivateGpu'
+const DEACTIVATE_GPU_ALIASES = new Set([
+  DEACTIVATE_GPU_STABLE,
+  '停用 GPU',
+  '停用GPU',
+  'Deactivate GPU',
+  '強制休眠獨顯',
+  '休眠独立显卡',
+  'Deaktiviere GPU'
+])
 
 export default function AutomationPage(): React.JSX.Element {
   const { t } = useTranslation()
@@ -135,8 +149,16 @@ export default function AutomationPage(): React.JSX.Element {
     setPendingTrigger(null)
   }
 
+  const localizeStoredName = (name: string): string => {
+    if (DEACTIVATE_GPU_ALIASES.has(name)) {
+      return t('automation.deactivateGpu', { defaultValue: 'Deactivate GPU' })
+    }
+    return name
+  }
+
   const pipelineTitle = (pipeline: AutomationPipeline): string => {
-    if (pipeline.name != null && pipeline.name.trim() !== '') return pipeline.name
+    const stored = pipeline.name?.trim() ?? ''
+    if (stored !== '') return localizeStoredName(stored)
     if (pipeline.trigger != null) {
       return t(triggerDisplayNameKey(pipeline.trigger as AutomationTrigger), {
         defaultValue: shortTypeName(String(pipeline.trigger['$type']))
@@ -149,22 +171,10 @@ export default function AutomationPage(): React.JSX.Element {
     const count = pipeline.steps?.length ?? 0
     const stepKey =
       count === 1 ? 'wpf.automationPipelineControlstep' : 'wpf.automationPipelineControlstepmany'
-    let result = t(stepKey, { defaultValue: t('automation.steps') + ` (${count})` }).replace(
+    return t(stepKey, { defaultValue: t('automation.steps') + ` (${count})` }).replace(
       '{0}',
       String(count)
     )
-    if (pipeline.trigger != null) {
-      if (pipeline.name != null && pipeline.name.trim() !== '') {
-        result += ` | ${t(triggerDisplayNameKey(pipeline.trigger as AutomationTrigger), {
-          defaultValue: shortTypeName(String(pipeline.trigger['$type']))
-        })}`
-      }
-      const extra = triggerSubtitlePart(pipeline.trigger as AutomationTrigger, (key) =>
-        t(key, { defaultValue: '' })
-      )
-      if (extra !== '') result += ` | ${extra}`
-    }
-    return result
   }
 
   const setExclusive = (id: string, isExclusive: boolean): void => {
@@ -308,19 +318,8 @@ export default function AutomationPage(): React.JSX.Element {
           onExpandedChange={(next) => toggleExpanded(pipelineId, next)}
           icon={
             pipeline.trigger
-              ? (triggerIcon(String(pipeline.trigger['$type'])) ?? <ThunderboltOutlined />)
-              : (symbolIcon(String(pipeline.iconName ?? '')) ?? <RocketOutlined />)
-          }
-          accessory={
-            pipeline.trigger != null ? (
-              <button
-                type="button"
-                className="udt-btn udt-btn--secondary udt-btn--sm"
-                onClick={() => setConfigFor(pipelineId)}
-              >
-                <SettingOutlined /> {t('automation.configure')}
-              </button>
-            ) : undefined
+              ? triggerIcon(String(pipeline.trigger['$type']))
+              : (symbolIcon(String(pipeline.iconName ?? '')) ?? QUICK_ACTION_ICON)
           }
           header={
             <>
@@ -349,35 +348,38 @@ export default function AutomationPage(): React.JSX.Element {
                     {summary !== '' && <span className="udt-step-row__summary">{summary}</span>}
                   </button>
                   <div className="udt-step-row__actions">
-                    <button
-                      type="button"
-                      className="udt-icon-btn"
-                      disabled={stepIndex === 0}
-                      aria-label={t('automation.moveUp')}
-                      title={t('automation.moveUp')}
-                      onClick={() => handleMoveStep(pipelineId, stepIndex, stepIndex - 1)}
-                    >
-                      <ArrowUpOutlined />
-                    </button>
-                    <button
-                      type="button"
-                      className="udt-icon-btn"
-                      disabled={stepIndex === (pipeline.steps?.length ?? 0) - 1}
-                      aria-label={t('automation.moveDown')}
-                      title={t('automation.moveDown')}
-                      onClick={() => handleMoveStep(pipelineId, stepIndex, stepIndex + 1)}
-                    >
-                      <ArrowDownOutlined />
-                    </button>
-                    <button
-                      type="button"
-                      className="udt-icon-btn udt-icon-btn--danger"
-                      aria-label={t('automation.deleteStep')}
-                      title={t('automation.deleteStep')}
-                      onClick={() => handleRemoveStep(pipelineId, stepIndex)}
-                    >
-                      <DeleteOutlined />
-                    </button>
+                    <Tooltip title={t('automation.moveUp')}>
+                      <button
+                        type="button"
+                        className="udt-icon-btn"
+                        disabled={stepIndex === 0}
+                        aria-label={t('automation.moveUp')}
+                        onClick={() => handleMoveStep(pipelineId, stepIndex, stepIndex - 1)}
+                      >
+                        <ArrowUpOutlined />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title={t('automation.moveDown')}>
+                      <button
+                        type="button"
+                        className="udt-icon-btn"
+                        disabled={stepIndex === (pipeline.steps?.length ?? 0) - 1}
+                        aria-label={t('automation.moveDown')}
+                        onClick={() => handleMoveStep(pipelineId, stepIndex, stepIndex + 1)}
+                      >
+                        <ArrowDownOutlined />
+                      </button>
+                    </Tooltip>
+                    <Tooltip title={t('automation.deleteStep')}>
+                      <button
+                        type="button"
+                        className="udt-icon-btn udt-icon-btn--danger"
+                        aria-label={t('automation.deleteStep')}
+                        onClick={() => handleRemoveStep(pipelineId, stepIndex)}
+                      >
+                        <DeleteOutlined />
+                      </button>
+                    </Tooltip>
                   </div>
                 </div>
               )
@@ -406,6 +408,16 @@ export default function AutomationPage(): React.JSX.Element {
             ) : (
               <span className="udt-pipeline__exclusive-spacer" />
             )}
+            {pipeline.trigger != null &&
+              isTriggerConfigurable(pipeline.trigger as AutomationTrigger) && (
+                <button
+                  type="button"
+                  className="udt-btn udt-btn--secondary udt-btn--sm"
+                  onClick={() => setConfigFor(pipelineId)}
+                >
+                  <SettingOutlined /> {t('automation.configure')}
+                </button>
+              )}
             <button
               type="button"
               className="udt-btn udt-btn--secondary udt-btn--sm"
@@ -461,7 +473,7 @@ export default function AutomationPage(): React.JSX.Element {
               type="button"
               role="menuitem"
               className="udt-context-menu__item"
-              onClick={() => handleRename(pipelineId, pipeline.name ?? '')}
+              onClick={() => handleRename(pipelineId, localizeStoredName(pipeline.name ?? ''))}
             >
               <EditOutlined /> {t('automation.renamePipeline')}
             </button>
@@ -490,13 +502,12 @@ export default function AutomationPage(): React.JSX.Element {
 
   const showSkeleton = automationLoading && pipelines.length === 0
 
+  const newLabel = t('wpf.automationPageaddManualPipelinetitle', {
+    defaultValue: t('automation.addPipeline')
+  })
+
   return (
     <div className="udt-page udt-automation-page">
-      <h1 className="udt-page__title">{t('automation.title')}</h1>
-      <p className="udt-page__subtitle">
-        {t('automation.subtitle', { defaultValue: 'When enabled, this app will check and run matching actions in order when device state changes.' })}
-      </p>
-
       {showSkeleton ? (
         <SkeletonList rows={3} className="udt-automation-skeleton" />
       ) : (
@@ -516,51 +527,57 @@ export default function AutomationPage(): React.JSX.Element {
             </label>
           </div>
 
-          <h2 className="udt-section-title">{t('automation.actionsTitle')}</h2>
+          {automatic.length === 0 ? (
+            <div className="udt-empty">
+              <div className="udt-empty__title">{t('automation.actionsEmpty')}</div>
+            </div>
+          ) : (
+            <div className="udt-pipeline-list">
+              {automatic.map((pipeline, index) => renderPipeline(pipeline, index, automatic))}
+            </div>
+          )}
 
-      {automatic.length === 0 ? (
-        <div className="udt-empty">
-          <ThunderboltOutlined className="udt-empty__icon" />
-          <div className="udt-empty__title">{t('automation.actionsEmpty')}</div>
-        </div>
-      ) : (
-        <div className="udt-pipeline-list">
-          {automatic.map((pipeline, index) => renderPipeline(pipeline, index, automatic))}
-        </div>
-      )}
+          <div className="udt-automation-new-row">
+            <button type="button" className="udt-btn udt-automation-new" onClick={() => setPickerOpen(true)}>
+              {newLabel}
+            </button>
+          </div>
 
-      <h2 className="udt-section-title">{t('automation.quickActionsTitle')}</h2>
+          <section className="udt-automation-section">
+            <h2 className="udt-automation-section__title">
+              {t('wpf.automationPagequickActionstitle', {
+                defaultValue: t('automation.quickActionsTitle')
+              })}
+            </h2>
+            <p className="udt-automation-section__hint">
+              {t('wpf.automationPagequickActionsmessage', {
+                defaultValue: t('automation.quickActionsHint')
+              })}
+            </p>
 
-      {manual.length === 0 ? (
-        <div className="udt-empty">
-          <RocketOutlined className="udt-empty__icon" />
-          <div className="udt-empty__title">{t('automation.quickActionsEmpty')}</div>
-        </div>
-      ) : (
-        <div className="udt-pipeline-list">
-          {manual.map((pipeline, index) => renderPipeline(pipeline, index, manual))}
-        </div>
-      )}
+            {manual.length === 0 ? (
+              <div className="udt-empty">
+                <div className="udt-empty__title">{t('automation.quickActionsEmpty')}</div>
+              </div>
+            ) : (
+              <div className="udt-pipeline-list">
+                {manual.map((pipeline, index) => renderPipeline(pipeline, index, manual))}
+              </div>
+            )}
 
-      <div className="udt-automation-toolbar">
-        <button
-          type="button"
-          className="udt-btn udt-btn--primary"
-          onClick={() => setPickerOpen(true)}
-        >
-          <PlusOutlined /> {t('automation.addAutomaticPipeline')}
-        </button>
-        <button
-          type="button"
-          className="udt-btn udt-btn--secondary"
-          onClick={() => {
-            setPendingTrigger(null)
-            setCreateOpen(true)
-          }}
-        >
-          <PlusOutlined /> {t('automation.addQuickAction')}
-        </button>
-      </div>
+            <div className="udt-automation-new-row">
+              <button
+                type="button"
+                className="udt-btn udt-automation-new"
+                onClick={() => {
+                  setPendingTrigger(null)
+                  setCreateOpen(true)
+                }}
+              >
+                {newLabel}
+              </button>
+            </div>
+          </section>
         </>
       )}
 
@@ -673,7 +690,7 @@ export default function AutomationPage(): React.JSX.Element {
                   className={`udt-step-option${selectedStepType === s ? ' udt-step-option--active' : ''}`}
                   onClick={() => setSelectedStepType(s)}
                 >
-                  <RocketOutlined />
+                  {stepIcon(s)}
                   {t(`automation.stepEditors.${s}.title`, { defaultValue: shortTypeName(s) })}
                 </button>
               ))}

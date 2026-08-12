@@ -7,6 +7,7 @@ import {
   StarOutlined,
   StopOutlined
 } from '@ant-design/icons'
+import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
 import i18n from '../i18n'
@@ -137,26 +138,27 @@ function ActionRow({
           <StarFilled /> {t('optimization.recommended')}
         </span>
       )}
-      <button
-        type="button"
-        style={{
-          marginLeft: 8,
-          border: 'none',
-          background: 'transparent',
-          color: 'var(--udt-text-secondary, rgba(255,255,255,0.6))',
-          cursor: 'pointer',
-          fontSize: 14,
-          padding: '4px 6px',
-          borderRadius: 6
-        }}
-        title={t('wpf.actionDetailsWindowtitle')}
-        onClick={(event) => {
-          event.stopPropagation()
-          showDetails()
-        }}
-      >
-        <InfoCircleOutlined />
-      </button>
+      <Tooltip title={t('wpf.actionDetailsWindowtitle')}>
+        <button
+          type="button"
+          style={{
+            marginLeft: 8,
+            border: 'none',
+            background: 'transparent',
+            color: 'var(--udt-text-secondary, rgba(255,255,255,0.6))',
+            cursor: 'pointer',
+            fontSize: 14,
+            padding: '4px 6px',
+            borderRadius: 6
+          }}
+          onClick={(event) => {
+            event.stopPropagation()
+            showDetails()
+          }}
+        >
+          <InfoCircleOutlined />
+        </button>
+      </Tooltip>
     </div>
   )
 }

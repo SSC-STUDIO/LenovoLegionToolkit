@@ -1174,7 +1174,13 @@ refreshInterval: 'فترة التحديث',
     cleanupDone: 'اكتمل التنظيف',
     cleanupFailed: 'فشل التنظيف',
     cleanup: {
+      scanning: 'Scanning',
+      running: 'Cleaning…',
+      done: 'Cleanup complete',
+      moreItems: 'more',
+      items: 'Items',
       custom: {
+
         header: 'قواعد التنظيف المخصصة',
         description: 'مجلدات إضافية تُنظف مع إجراءات التنظيف المحددة.',
         empty: 'لا توجد قواعد تنظيف مخصصة',

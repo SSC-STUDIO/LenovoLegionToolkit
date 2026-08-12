@@ -2595,7 +2595,13 @@ sensorsControldetailsToggleToolTip: 'Dupla kattintás a részletes szenzorinform
     cleanupDone: 'A takarítás befejeződött',
     cleanupFailed: 'A takarítás nem sikerült',
     cleanup: {
+      scanning: 'Scanning',
+      running: 'Cleaning…',
+      done: 'Cleanup complete',
+      moreItems: 'more',
+      items: 'Items',
       custom: {
+
         header: 'Egyéni takarítási szabályok',
         description: 'További mappák, amelyeket a kiválasztott takarítási műveletekkel együtt takarítunk.',
         empty: 'Nincsenek egyéni takarítási szabályok',

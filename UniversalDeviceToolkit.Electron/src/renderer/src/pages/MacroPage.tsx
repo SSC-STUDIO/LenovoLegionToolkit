@@ -10,7 +10,7 @@ import {
   RotateRightOutlined,
   SettingOutlined
 } from '@ant-design/icons'
-import { Button, Select, Switch, message } from 'antd'
+import { Button, Select, Switch, Tooltip, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type { MacroEvent, MacroRecordingMode, MacroSlot } from '../api/macro'
 import { useMacroStore } from '../stores/macroStore'
@@ -394,11 +394,12 @@ export default function MacroPage(): React.JSX.Element {
           <div className="udt-macro-actions">
             <Button onClick={() => void handleSave()}>{t('macro.save')}</Button>
             <Button onClick={() => void play(selectedKey)}>{t('macro.play')}</Button>
-            <Button
-              icon={<CloseOutlined />}
-              title={t('macro.clear')}
-              onClick={() => void handleClear()}
-            />
+            <Tooltip title={t('macro.clear')}>
+              <Button
+                icon={<CloseOutlined />}
+                onClick={() => void handleClear()}
+              />
+            </Tooltip>
             <Button
               type="primary"
               className="udt-macro-actions__record"

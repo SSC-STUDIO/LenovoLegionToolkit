@@ -1175,7 +1175,13 @@ refreshInterval: 'Interval obnovovania',
       cleanupDone: 'Čistenie dokončené',
       cleanupFailed: 'Čistenie zlyhalo',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Vlastné pravidlá čistenia',
           description: 'Ďalšie priečinky, ktoré sa vyčistia spolu s vybratými akciami čistenia.',
           empty: 'Žiadne vlastné pravidlá čistenia',

@@ -2598,7 +2598,13 @@ sensorsControldetailsToggleToolTip: 'Dublu clic pentru a afișa sau ascunde info
     cleanupDone: 'Curățare finalizată',
     cleanupFailed: 'Curățarea a eșuat',
     cleanup: {
+      scanning: 'Scanning',
+      running: 'Cleaning…',
+      done: 'Cleanup complete',
+      moreItems: 'more',
+      items: 'Items',
       custom: {
+
         header: 'Reguli personalizate de curățare',
         description: 'Foldere suplimentare care sunt curățate împreună cu acțiunile de curățare selectate.',
         empty: 'Nicio regulă personalizată de curățare',

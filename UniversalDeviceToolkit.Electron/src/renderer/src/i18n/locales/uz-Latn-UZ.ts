@@ -2730,7 +2730,13 @@ sensorsControldetailsToggleToolTip: 'Batafsil sensor ma\'lumotlarini ko\'rsatish
     cleanupDone: 'Tozalash yakunlandi',
     cleanupFailed: 'Tozalash muvaffaqiyatsiz',
     cleanup: {
+      scanning: 'Scanning',
+      running: 'Cleaning…',
+      done: 'Cleanup complete',
+      moreItems: 'more',
+      items: 'Items',
       custom: {
+
         header: 'Maxsus tozalash qoidalari',
         description: 'Tanlangan tozalash amallari bilan birga tozalanadigan qoʻshimcha papkalar.',
         empty: 'Maxsus tozalash qoidalari yoʻq',

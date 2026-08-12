@@ -1,0 +1,131 @@
+/* DashboardSkeleton.tsx layout — 1:1 with the live dashboard structure.
+   The shimmer/breathing animation itself comes from the global
+   .udt-skeleton base (Loading.xaml parity); these rules only lay out the
+   blocks (3 fixed columns, gauge + metric rows, trend well, legend). */
+
+.udt-dashboard-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ── Sensors card (CPU / battery / GPU, fixed 3-across) ───────── */
+
+.udt-dsk-sensors {
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+  padding: 12px 14px;
+}
+
+.udt-dsk-sensors__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 20px;
+  margin: 8px 10px;
+}
+
+.udt-dsk-sensors__column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.udt-dsk-sensors__heading {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.udt-dsk-sensors__summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 110px;
+  margin-top: 10px;
+}
+
+.udt-dsk-sensors__gauge {
+  flex: 0 0 auto;
+  width: 110px;
+  height: 110px;
+}
+
+.udt-dsk-sensors__metrics {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+  align-self: stretch;
+  padding: 6px 0;
+}
+
+.udt-dsk-sensors__metric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.udt-dsk-sensors__bar {
+  flex: 1;
+  height: 6px;
+  min-width: 24px;
+  border-radius: var(--udt-radius-round);
+}
+
+.udt-dsk-sensors__trend {
+  height: 120px;
+  margin-top: 14px;
+  border-radius: var(--udt-radius-control);
+  background: var(--udt-surface-chart);
+  padding: 2px;
+  overflow: hidden;
+}
+
+.udt-dsk-sensors__legend {
+  display: flex;
+  gap: 0;
+  margin-top: 8px;
+}
+
+.udt-dsk-sensors__legend-item {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 14px 4px 0;
+}
+
+/* ── Feature group cards below the sensors ────────────────────── */
+
+.udt-dsk-groups__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 20px;
+}
+
+.udt-dsk-groups__column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Narrow windows: keep 3 columns (product decision); only tighten gutters. */
+@media (max-width: 1000px) {
+  .udt-dsk-sensors__grid,
+  .udt-dsk-groups__grid {
+    gap: 12px 12px;
+  }
+
+  .udt-dsk-sensors__summary {
+    gap: 10px;
+    min-height: 88px;
+  }
+
+  .udt-dsk-sensors__gauge {
+    width: 88px;
+    height: 88px;
+  }
+}

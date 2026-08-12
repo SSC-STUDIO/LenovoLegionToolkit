@@ -1175,7 +1175,13 @@ refreshInterval: 'Interwał odświeżania',
       cleanupDone: 'Czyszczenie zakończone',
       cleanupFailed: 'Czyszczenie nie powiodło się',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Niestandardowe reguły czyszczenia',
           description: 'Dodatkowe foldery czyszczone razem z wybranymi akcjami czyszczenia.',
           empty: 'Brak niestandardowych reguł czyszczenia',

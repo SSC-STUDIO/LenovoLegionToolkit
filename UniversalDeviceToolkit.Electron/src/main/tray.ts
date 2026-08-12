@@ -1,13 +1,21 @@
-import { app, BrowserWindow, Menu, Tray, nativeImage, nativeTheme, type MenuItemConstructorOptions } from 'electron'
+import { app, BrowserWindow, Tray, nativeImage, nativeTheme, type Rectangle } from 'electron'
 import { join } from 'path'
-import { clearTrayIconCache, trayIconForSymbol, trayNavIcon } from './tray-icons'
+import { trayIconSvgForSymbol, trayNavSvg } from './tray-icons'
 import { localizePipelineName, setTrayLanguage, trayStrings } from './tray-i18n'
+import {
+  destroyTrayPopup,
+  hideTrayPopup,
+  isTrayPopupVisible,
+  showTrayPopup,
+  type TrayPopupNode
+} from './tray-popup'
 
 let tray: Tray | null = null
 let getWindow: (() => BrowserWindow | null) | null = null
 let invokeHost: ((method: string, params?: unknown) => Promise<unknown>) | null = null
 let refreshTimer: ReturnType<typeof setTimeout> | null = null
 let building = false
+let lastTrayBounds: Rectangle | null = null
 
 interface AutomationPipelineDto {
   id?: string
@@ -125,69 +133,75 @@ function isNavVisible(key: string | undefined, visibility: Record<string, boolea
   return true
 }
 
-async function buildMenuTemplate(): Promise<MenuItemConstructorOptions[]> {
+async function buildPopupNodes(): Promise<TrayPopupNode[]> {
   const s = trayStrings()
   const visibility = await readNavigationVisibility()
   const quickActions = await readQuickActions()
+  const nodes: TrayPopupNode[] = []
 
-  const items: MenuItemConstructorOptions[] = []
+  nodes.push({ type: 'header', label: 'Universal Device Toolkit' })
+  nodes.push({ type: 'separator' })
 
   for (const nav of NAV_ITEMS) {
     if (!isNavVisible(nav.visibilityKey, visibility)) continue
-    items.push({
+    nodes.push({
+      type: 'item',
+      cmd: `nav:${nav.route}`,
       label: nav.label(),
-      icon: trayNavIcon(nav.iconId),
-      click: () => navigate(nav.route)
+      iconSvg: trayNavSvg(nav.iconId)
     })
   }
 
-  items.push({ type: 'separator' })
-
-  // WPF TrayHelper.SetAutomationItemsAsync: the automation block gets its own
-  // separator, inserted after the navigation separator and before Open/Close.
   if (quickActions.length > 0) {
-    items.push({ type: 'separator' })
-  }
-  for (const pipeline of quickActions) {
-    items.push({
-      label: localizePipelineName(pipeline.name),
-      icon: trayIconForSymbol(pipeline.iconName ?? 'Play24'),
-      click: () => {
-        void runQuickAction(pipeline.id)
-      }
-    })
-  }
-
-  // Open / Close are text-only (no icons), matching WPF TrayHelper / Fig 2.
-  items.push({
-    label: s.open,
-    click: () => showWindow(getWindow?.() ?? null)
-  })
-
-  items.push({
-    label: s.close,
-    click: () => {
-      // Mirrors WPF Resource.Close → App.ShutdownAsync(true).
-      app.quit()
+    nodes.push({ type: 'separator' })
+    for (const pipeline of quickActions) {
+      nodes.push({
+        type: 'item',
+        cmd: `run:${pipeline.id ?? ''}`,
+        label: localizePipelineName(pipeline.name),
+        iconSvg: trayIconSvgForSymbol(pipeline.iconName ?? 'Play24')
+      })
     }
-  })
+  }
 
-  return items
+  nodes.push({ type: 'separator' })
+  nodes.push({ type: 'item', cmd: 'open', label: s.open })
+  nodes.push({ type: 'item', cmd: 'close', label: s.close })
+
+  return nodes
 }
 
-async function rebuildContextMenu(): Promise<void> {
-  if (!tray) return
+function handlePopupCommand(cmd: string): void {
+  if (cmd === 'open') {
+    showWindow(getWindow?.() ?? null)
+    return
+  }
+  if (cmd === 'close') {
+    // Mirrors WPF Resource.Close → App.ShutdownAsync(true).
+    app.quit()
+    return
+  }
+  if (cmd.startsWith('nav:')) {
+    navigate(cmd.slice(4))
+    return
+  }
+  if (cmd.startsWith('run:')) {
+    void runQuickAction(cmd.slice(4))
+  }
+}
+
+async function openFlyout(bounds: Rectangle): Promise<void> {
+  lastTrayBounds = bounds
   if (building) {
-    scheduleRebuild(100)
+    scheduleRebuild(80)
     return
   }
   building = true
   try {
-    const template = await buildMenuTemplate()
-    if (!tray) return
-    tray.setContextMenu(Menu.buildFromTemplate(template))
+    const nodes = await buildPopupNodes()
+    await showTrayPopup(nodes, bounds, handlePopupCommand)
   } catch (error) {
-    console.error('[tray] failed to rebuild context menu:', error)
+    console.error('[tray] failed to show flyout:', error)
   } finally {
     building = false
   }
@@ -197,7 +211,8 @@ function scheduleRebuild(delayMs = 50): void {
   if (refreshTimer) clearTimeout(refreshTimer)
   refreshTimer = setTimeout(() => {
     refreshTimer = null
-    void rebuildContextMenu()
+    if (!isTrayPopupVisible() || !lastTrayBounds) return
+    void openFlyout(lastTrayBounds)
   }, delayMs)
 }
 
@@ -222,26 +237,24 @@ export function initTray(getWin: () => BrowserWindow | null, options?: TrayOptio
     tray.setToolTip('Universal Device Toolkit')
   }
 
-  // Placeholder until async rebuild finishes (avoids empty right-click).
-  tray.setContextMenu(
-    Menu.buildFromTemplate([
-      { label: trayStrings().open, click: () => showWindow(getWindow?.() ?? null) },
-      { label: trayStrings().close, click: () => app.quit() }
-    ])
-  )
-
-  // Mirrors NotifyIcon: WM_LBUTTONUP raises OnClick (bring to foreground) and
-  // WM_RBUTTONUP opens the context menu (Electron shows it automatically).
-  tray.on('click', () => showWindow(getWindow?.() ?? null))
-  tray.on('double-click', () => showWindow(getWindow?.() ?? null))
+  // Custom compact flyout instead of native Menu (Win11 row height is ~44px
+  // and cannot be tightened). Left-click still brings the main window forward.
+  tray.on('click', () => {
+    hideTrayPopup()
+    showWindow(getWindow?.() ?? null)
+  })
+  tray.on('double-click', () => {
+    hideTrayPopup()
+    showWindow(getWindow?.() ?? null)
+  })
+  tray.on('right-click', (_event, bounds) => {
+    void openFlyout(bounds)
+  })
 
   nativeTheme.on('updated', onNativeThemeUpdated)
-
-  scheduleRebuild(0)
 }
 
 function onNativeThemeUpdated(): void {
-  clearTrayIconCache()
   updateTrayIcon()
   scheduleRebuild()
 }
@@ -262,12 +275,13 @@ export function destroyTray(): void {
     clearTimeout(refreshTimer)
     refreshTimer = null
   }
+  destroyTrayPopup()
   if (!tray) return
   tray.destroy()
   tray = null
   getWindow = null
   invokeHost = null
-  clearTrayIconCache()
+  lastTrayBounds = null
 }
 
 // Re-export for callers that only import tray.ts

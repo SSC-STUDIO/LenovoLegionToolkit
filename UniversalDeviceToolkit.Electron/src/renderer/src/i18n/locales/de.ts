@@ -1174,7 +1174,13 @@ refreshInterval: 'Aktualisierungsintervall',
       cleanupDone: 'Bereinigung abgeschlossen',
       cleanupFailed: 'Bereinigung fehlgeschlagen',
       cleanup: {
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        items: 'Items',
         custom: {
+
           header: 'Benutzerdefinierte Bereinigungsregeln',
           description: 'Zusätzliche Ordner, die zusammen mit den ausgewählten Bereinigungsaktionen bereinigt werden.',
           empty: 'Keine benutzerdefinierten Bereinigungsregeln',

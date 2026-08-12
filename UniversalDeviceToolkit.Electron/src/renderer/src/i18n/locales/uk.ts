@@ -1174,7 +1174,13 @@ refreshInterval: 'Інтервал оновлення',
     cleanupDone: 'Очищення завершено',
     cleanupFailed: 'Очищення не вдалося',
     cleanup: {
+      scanning: 'Scanning',
+      running: 'Cleaning…',
+      done: 'Cleanup complete',
+      moreItems: 'more',
+      items: 'Items',
       custom: {
+
         header: 'Користувацькі правила очищення',
         description: 'Додаткові теки, які очищуються разом із вибраними діями очищення.',
         empty: 'Немає користувацьких правил очищення',
