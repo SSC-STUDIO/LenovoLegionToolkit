@@ -8,6 +8,11 @@ import { LANGUAGES, changeLanguage } from '../../i18n'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { UI_SCALE_OPTIONS, useThemeStore } from '../../stores/themeStore'
 import { storeAccentPreference } from '../../theme/useTheme'
+import {
+  applyAccentSurfacePalette,
+  clearAccentSurfacePalette,
+  createAccentPalette
+} from '../../theme/accentPalette'
 import { SettingsCard } from './SettingsCard'
 
 type AppSettings = Record<string, unknown>
@@ -171,7 +176,7 @@ function ThemePreviewCard({
   onClick: () => void
 }): React.JSX.Element {
   // Electron theme preview: Light/Dark cards render two identical panes; the System
-  // card is split — one light half and one dark half.
+  // card is split - one light half and one dark half.
   const isSystem = option.value === 'System'
   const singleMode: 'light' | 'dark' = option.value === 'Light' ? 'light' : 'dark'
   const panes: ('light' | 'dark')[] = isSystem ? ['light', 'dark'] : [singleMode, singleMode]
@@ -227,6 +232,7 @@ function ThemePreviewCard({
 export default function AppearanceSection(): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const setThemeMode = useThemeStore((s) => s.setThemeMode)
+  const themeMode = useThemeStore((s) => s.themeMode)
   const setAccent = useThemeStore((s) => s.setAccent)
   const uiScale = useThemeStore((s) => s.uiScale)
   const setUiScale = useThemeStore((s) => s.setUiScale)
@@ -328,7 +334,7 @@ export default function AppearanceSection(): React.JSX.Element {
 
   const handleThemeChange = (value: ThemePreference): void => {
     // Persist the renderer-side choice (useTheme.storedThemePreference() reads
-    // it and wins over the async host value — same protection as the accent).
+    // it and wins over the async host value - same protection as the accent).
     try {
       localStorage.setItem('udt.theme', value === 'System' ? 'system' : value === 'Dark' ? 'dark' : 'light')
     } catch {
@@ -350,13 +356,26 @@ export default function AppearanceSection(): React.JSX.Element {
     }
   }
 
+  /**
+   * Applies or clears the accent-tinted surface palette immediately, matching
+   * Electron ThemeManager.ApplyStylePreset gated by ApplyAccentColorToTheme.
+   */
+  const applyAccentSurfaceTint = (enabled: boolean, hex?: string): void => {
+    if (enabled && hex) {
+      applyAccentSurfacePalette(createAccentPalette(hex, themeMode === 'dark'))
+    } else {
+      clearAccentSurfacePalette()
+    }
+  }
+
   const handleApplyAccentToThemeChange = (checked: boolean): void => {
-    // Palette tint gate only — do not clear/reapply the accent itself (Electron parity).
+    // Palette tint gate only - do not clear/reapply the accent itself (Electron parity).
     const next: AppSettings = { ...app, ApplyAccentColorToTheme: checked }
     if (checked && accentSource === 'Custom') {
       next.ThemeStylePreset = 'Default'
     }
     persistApplication(next)
+    applyAccentSurfaceTint(checked, accentHex ?? systemAccentHex)
   }
 
   const handleSystemAccent = (): void => {
@@ -370,6 +389,7 @@ export default function AppearanceSection(): React.JSX.Element {
     persistApplication(next)
     storeAccentPreference('System')
     applyAccentToUi(next)
+    applyAccentSurfaceTint(applyAccentToTheme, systemAccentHex)
   }
 
   const handleAccentPreset = (hex: string): void => {
@@ -386,6 +406,7 @@ export default function AppearanceSection(): React.JSX.Element {
     storeAccentPreference('Custom', hex)
     applyAccentToUi(next)
     applyAccentToWindowsIfEnabled(rgb, applyAccentToSystem)
+    applyAccentSurfaceTint(applyAccentToTheme, hex)
   }
 
   const handleCustomAccent = (hex: string): void => {
@@ -402,6 +423,7 @@ export default function AppearanceSection(): React.JSX.Element {
     storeAccentPreference('Custom', hex)
     applyAccentToUi(next)
     applyAccentToWindowsIfEnabled(rgb, applyAccentToSystem)
+    applyAccentSurfaceTint(applyAccentToTheme, hex)
   }
 
   const handleUiScaleChange = (value: number): void => {

@@ -3,6 +3,11 @@ import { settingsApi } from '../api/settings'
 import { systemApi } from '../api/system'
 import { applyUiScale, useThemeStore } from '../stores/themeStore'
 import type { ThemeMode } from '../stores/themeStore'
+import {
+  applyAccentSurfacePalette,
+  clearAccentSurfacePalette,
+  createAccentPalette
+} from './accentPalette'
 
 type ThemePreference = 'System' | 'Light' | 'Dark'
 type AccentColorSource = 'System' | 'Custom'
@@ -11,6 +16,7 @@ interface ApplicationSettings {
   Theme?: ThemePreference
   AccentColor?: { R: number; G: number; B: number } | null
   AccentColorSource?: AccentColorSource
+  ApplyAccentColorToTheme?: boolean
 }
 
 const THEME_STORAGE_KEY = 'udt.theme'
@@ -99,10 +105,17 @@ export function useTheme(): ThemeController {
     let preference: ThemePreference = 'System'
     let media: MediaQueryList | null = null
     let systemAccentHex = DEFAULT_SYSTEM_ACCENT_HEX
+    let activeAccentHex = DEFAULT_SYSTEM_ACCENT_HEX
+    let accentTintsSurfaces = true
 
     const onSystemChange = (): void => {
       if (disposed || preference !== 'System') return
-      setThemeMode(systemPrefersDark() ? 'dark' : 'light')
+      const mode = systemPrefersDark() ? 'dark' : 'light'
+      setThemeMode(mode)
+      // System light/dark switch retints the surface palette with the same accent.
+      if (accentTintsSurfaces) {
+        applyAccentSurfacePalette(createAccentPalette(activeAccentHex, mode === 'dark'))
+      }
     }
 
     // Electron ThemeManager.SetColor always applies the resolved accent.
@@ -124,28 +137,43 @@ export function useTheme(): ThemeController {
     const apply = (settings?: ApplicationSettings): void => {
       const stored = storedThemePreference()
       media?.removeEventListener('change', onSystemChange)
+      let mode: ThemeMode
       if (stored === 'System') {
         // Renderer-authoritative "follow system" (host value may be stale).
         preference = 'System'
         media = window.matchMedia('(prefers-color-scheme: dark)')
         media.addEventListener('change', onSystemChange)
-        onSystemChange()
+        mode = systemPrefersDark() ? 'dark' : 'light'
+        setThemeMode(mode)
       } else if (stored) {
         preference = 'System'
         media = null
-        setThemeMode(stored === 'Dark' ? 'dark' : 'light')
+        mode = stored === 'Dark' ? 'dark' : 'light'
+        setThemeMode(mode)
       } else {
         preference = settings?.Theme ?? 'System'
         if (preference === 'System') {
           media = window.matchMedia('(prefers-color-scheme: dark)')
           media.addEventListener('change', onSystemChange)
-          onSystemChange()
+          mode = systemPrefersDark() ? 'dark' : 'light'
+          setThemeMode(mode)
         } else {
           media = null
-          setThemeMode(preference === 'Dark' ? 'dark' : 'light')
+          mode = preference === 'Dark' ? 'dark' : 'light'
+          setThemeMode(mode)
         }
       }
-      setAccent(resolveAccent(settings))
+      const accentHex = resolveAccent(settings)
+      activeAccentHex = accentHex
+      accentTintsSurfaces = settings?.ApplyAccentColorToTheme !== false
+      setAccent(accentHex)
+      // Electron ThemeManager.ApplyStylePreset: ApplyAccentColorToTheme gates
+      // the accent-tinted surface palette, never the accent itself.
+      if (accentTintsSurfaces) {
+        applyAccentSurfacePalette(createAccentPalette(accentHex, mode === 'dark'))
+      } else {
+        clearAccentSurfacePalette()
+      }
     }
 
     const load = (): void => {
