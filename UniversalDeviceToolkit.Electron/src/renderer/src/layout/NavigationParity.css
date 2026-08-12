@@ -9,28 +9,28 @@
 }
 
 /* Navigation polish: accent-tinted hover, active glow, refined transitions */
-.udt-nav--wpf-parity .udt-nav-item {
+.udt-nav--electron-parity .udt-nav-item {
   transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out,
     transform var(--udt-anim-fast) ease-out;
 }
 
-.udt-nav--wpf-parity .udt-nav-item:hover .udt-nav-icon {
+.udt-nav--electron-parity .udt-nav-item:hover .udt-nav-icon {
   color: var(--udt-accent);
 }
 
-.udt-nav--wpf-parity .udt-nav-item:hover .udt-nav-label {
+.udt-nav--electron-parity .udt-nav-item:hover .udt-nav-label {
   color: var(--udt-text-primary);
 }
 
-.udt-nav--wpf-parity .udt-nav-item--active {
+.udt-nav--electron-parity .udt-nav-item--active {
   background: color-mix(in srgb, var(--udt-accent) 9%, transparent);
   border-color: color-mix(in srgb, var(--udt-accent) 22%, transparent);
 }
 
-.udt-nav--wpf-parity .udt-nav-item--active .udt-nav-accent {
+.udt-nav--electron-parity .udt-nav-item--active .udt-nav-accent {
   box-shadow: 0 0 8px var(--udt-accent);
 }
 
-.udt-nav--wpf-parity .udt-nav-item:not(.udt-nav-item--active):hover {
+.udt-nav--electron-parity .udt-nav-item:not(.udt-nav-item--active):hover {
   transform: translateX(2px);
 }

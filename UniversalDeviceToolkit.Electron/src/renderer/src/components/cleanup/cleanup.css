@@ -1,4 +1,4 @@
-/* Cleanup tab — BleachBit-style scan UI with a fixed two-pane layout.
+﻿/* Cleanup tab — BleachBit-style scan UI with a fixed two-pane layout.
    The split (1fr | 1px | 320px) is locked: it never collapses at small
    window sizes, matching the original Electron two-column layout. */
 
@@ -339,4 +339,47 @@
   .udt-cleanup {
     grid-template-columns: minmax(0, 1fr) 1px 300px;
   }
+}
+
+/* Category header micro-interaction */
+.udt-cleanup-category__header {
+  transition: background-color var(--udt-anim-fast) ease-out;
+}
+
+.udt-cleanup-category__header:hover {
+  background: var(--udt-subtle-fill-secondary, rgba(255, 255, 255, 0.03));
+}
+
+.udt-cleanup-category__icon {
+  transition: transform var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
+}
+
+.udt-cleanup-category--selected .udt-cleanup-category__icon {
+  color: var(--udt-accent-default, #2f7dff);
+}
+
+/* Scan total: gentle entrance */
+.udt-cleanup-total {
+  animation: udt-cleanup-total-in var(--udt-anim-medium) var(--udt-ease-cubic-out) both;
+}
+
+@keyframes udt-cleanup-total-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Summary actions: primary clean button emphasis while scanned */
+.udt-cleanup-summary__actions .udt-btn--danger {
+  transition: transform var(--udt-anim-fast) ease-out, box-shadow var(--udt-anim-fast) ease-out,
+    filter var(--udt-anim-fast) ease-out;
+}
+
+.udt-cleanup-summary__actions .udt-btn--danger:not(:disabled):hover {
+  box-shadow: 0 0 0 1px var(--udt-status-critical, #e5484d) inset, var(--udt-shadow-low);
 }
