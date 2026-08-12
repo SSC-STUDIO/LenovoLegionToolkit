@@ -778,6 +778,7 @@ export default function KeyboardBacklightPage(): React.JSX.Element {
           {simulated && (
             <InfoBar
               severity="informational"
+              className="udt-kb-simulated-banner"
               title={t('keyboard.simulatedHint', {
                 defaultValue: 'Simulation mode: no keyboard detected, showing a demo interface'
               })}

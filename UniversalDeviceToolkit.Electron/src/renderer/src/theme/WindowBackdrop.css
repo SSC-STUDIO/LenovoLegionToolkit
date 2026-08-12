@@ -10,6 +10,7 @@
 .udt-backdrop-setting {
   display: flex;
   min-width: 0;
+  margin: 0 0 8px 0;
   padding: 16px;
   align-items: center;
   gap: 20px;
@@ -41,4 +42,14 @@
   width: 180px;
   max-width: 40%;
   flex: 0 1 180px;
+}
+
+/* With Mica/Acrylic the content surface becomes translucent so the window
+   material (and what is behind it) shows through — this is what the
+   notification/status glass panes blur into a frosted look. */
+:root[data-backdrop='mica'] .udt-app-shell__content,
+:root[data-backdrop='mica'] .udt-app-shell__main,
+:root[data-backdrop='acrylic'] .udt-app-shell__content,
+:root[data-backdrop='acrylic'] .udt-app-shell__main {
+  background: color-mix(in srgb, var(--udt-surface-window) 88%, transparent);
 }

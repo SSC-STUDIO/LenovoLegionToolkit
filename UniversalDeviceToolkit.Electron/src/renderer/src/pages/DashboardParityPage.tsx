@@ -10,7 +10,6 @@ import DashboardSkeleton from '../components/DashboardSkeleton'
 import SensorSection from '../components/dashboard/SensorSection'
 import { useFeaturesStore } from '../stores/featuresStore'
 import { useLoadingStore } from '../stores/loadingStore'
-import { useSensorsStore } from '../stores/sensorsStore'
 import '../components/dashboard-parity/dashboardParity.css'
 
 function normalizedGroups(config: DashboardConfig): DashboardGroup[] {
@@ -46,8 +45,9 @@ export default function DashboardParityPage(): React.JSX.Element {
       await waitForHostReady()
       if (cancelled) return
 
-      const [, , dashboardConfig] = await Promise.all([
-        useSensorsStore.getState().start(),
+      // SensorSection owns the sensor subscription lifecycle (mount/unmount +
+      // persisted interval); this page only loads the feature list and config.
+      const [, dashboardConfig] = await Promise.all([
         useFeaturesStore.getState().load(),
         dashboardApi.getConfig()
       ])
@@ -76,13 +76,12 @@ export default function DashboardParityPage(): React.JSX.Element {
     return () => {
       cancelled = true
       useLoadingStore.getState().finish(loadingId)
-      void useSensorsStore.getState().stop()
     }
   }, [reloadToken, t])
 
   if (loading) {
     return (
-      <div className="udt-parity-dashboard__loading">
+      <div className="udt-parity-dashboard udt-parity-dashboard__loading">
         <DashboardSkeleton />
       </div>
     )

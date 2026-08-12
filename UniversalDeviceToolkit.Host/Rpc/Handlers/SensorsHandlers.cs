@@ -76,13 +76,17 @@ public static class SensorsHandlers
         if (group.IsLibreHardwareMonitorInitialized())
         {
             var snapshot = await BuildLhmSnapshotAsync(group).ConfigureAwait(false);
-            return snapshot;
+            if (snapshot is not null)
+                return snapshot;
+            // LibreHardwareMonitor initialized but exposed no CPU/GPU sensors
+            // (e.g. running without administrator rights) — fall back to the
+            // vendor snapshot instead of rendering empty panels.
         }
 
         return await BuildVendorSnapshotAsync().ConfigureAwait(false);
     }
 
-    private static async Task<object> BuildLhmSnapshotAsync(SensorsGroupController group)
+    private static async Task<object?> BuildLhmSnapshotAsync(SensorsGroupController group)
     {
         var cpuTempTask = group.GetCpuTemperatureAsync();
         var cpuUsageTask = group.GetCpuUsageAsync();
@@ -128,6 +132,16 @@ public static class SensorsHandlers
 
         var ssdTemps = ssdTempsTask.Result;
         var battery = await BuildBatteryAsync().ConfigureAwait(false);
+
+        // LibreHardwareMonitor may initialize without exposing any CPU/GPU
+        // sensors (e.g. without administrator rights). Treat that as "no data"
+        // so the caller falls back to the vendor snapshot.
+        var hasCpuData = HasValue(cpuTempTask.Result) || HasValue(cpuUsageTask.Result) ||
+                         HasValue(cpuClockTask.Result) || HasValue(cpuFanTask.Result);
+        var hasGpuData = HasValue(gpuTempTask.Result) || HasValue(gpuUsageTask.Result) ||
+                         HasValue(gpuClockTask.Result) || HasValue(gpuFanTask.Result);
+        if (!hasCpuData && !hasGpuData)
+            return null;
 
         return new
         {
@@ -257,9 +271,15 @@ public static class SensorsHandlers
                 chargeLevel = info.BatteryPercentage >= 0 ? (int?)info.BatteryPercentage : null,
                 health = info.DesignCapacity > 0 ? (double?)(info.BatteryHealth / 100.0) : null,
                 temperature = info.BatteryTemperatureC,
+                avgTemperature = info.AvgTemperatureC,
                 chargeRate = info.DischargeRate,
+                minDischargeRate = info.MinDischargeRate == int.MaxValue ? null : (int?)info.MinDischargeRate,
+                maxDischargeRate = (int?)info.MaxDischargeRate,
                 designCapacity = info.DesignCapacity > 0 ? (int?)info.DesignCapacity : null,
                 fullChargeCapacity = info.FullChargeCapacity > 0 ? (int?)info.FullChargeCapacity : null,
+                cycleCount = info.CycleCount >= 0 ? (int?)info.CycleCount : null,
+                manufactureDate = info.ManufactureDate?.ToString("yyyy-MM-dd"),
+                firstUseDate = info.FirstUseDate?.ToString("yyyy-MM-dd"),
                 isCharging = info.IsCharging,
                 isLowBattery = info.IsLowBattery,
                 isLowPowerAdapter = adapter == PowerAdapterStatus.ConnectedLowWattage,
@@ -373,7 +393,11 @@ public static class SensorsHandlers
 
             // LibreHardwareMonitor path: the group's producer loop raises
             // SensorsUpdated only after LHM initialization succeeds.
-            if (group.IsLibreHardwareMonitorInitialized())
+            // LHM may be marked initialized while exposing no readable sensors
+            // (e.g. NVAPI/performance counters unavailable) — in that case the
+            // vendor fallback below is stable, whereas the LHM loop would
+            // publish nothing but null frames.
+            if (group.IsLibreHardwareMonitorInitialized() && await LhmHasSensorDataAsync(group).ConfigureAwait(false))
             {
                 _subscribedGroup = group;
                 _sensorsRpc = rpc;
@@ -449,6 +473,11 @@ public static class SensorsHandlers
         try
         {
             var snapshot = BuildLhmSnapshotAsync(_subscribedGroup).GetAwaiter().GetResult();
+            // LibreHardwareMonitor may briefly report no CPU/GPU data after a
+            // re-subscribe (data recovering). Publish nothing in that case so
+            // the renderer keeps the last good frame instead of receiving null.
+            if (snapshot is null)
+                return;
             _sensorsRpc.Publish("sensors.updated", snapshot);
         }
         catch (Exception ex)
@@ -685,7 +714,30 @@ public static class SensorsHandlers
         }
     }
 
-    private static float? NullIf(float value) => value < 0 ? null : value;
+    private static bool HasValue(float value) => value >= 0 && !float.IsNaN(value) && !float.IsInfinity(value);
+
+    /// <summary>
+    /// Cheap probe for readable LHM sensors (CPU/GPU temperature or usage).
+    /// Returns false when LHM is initialized but has no readable data, so the
+    /// caller can fall back to the stable vendor snapshot path.
+    /// </summary>
+    private static async Task<bool> LhmHasSensorDataAsync(SensorsGroupController group)
+    {
+        try
+        {
+            var cpuTemp = await group.GetCpuTemperatureAsync().ConfigureAwait(false);
+            var cpuUsage = await group.GetCpuUsageAsync().ConfigureAwait(false);
+            var gpuTemp = await group.GetGpuTemperatureAsync().ConfigureAwait(false);
+            var gpuUsage = await group.GetGpuUsageAsync().ConfigureAwait(false);
+            return HasValue(cpuTemp) || HasValue(cpuUsage) || HasValue(gpuTemp) || HasValue(gpuUsage);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static float? NullIf(float value) => HasValue(value) ? value : null;
     private static double? NullIf(double value) => value <= 0 ? null : value;
     private static int? NullIf(int value) => value < 0 ? null : value;
     private static string? NullIf(string value, string sentinel) => value == sentinel ? null : value;

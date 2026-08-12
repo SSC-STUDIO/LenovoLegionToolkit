@@ -6,6 +6,11 @@
   padding: 16px 16px 12px 0;
 }
 
+/* Simulation banner sits above the spectrum cards with breathing room. */
+.udt-kb-simulated-banner {
+  margin-bottom: 12px;
+}
+
 .udt-kb-page__title {
   margin: 0 0 8px;
   color: var(--udt-text-primary);
@@ -178,30 +183,49 @@
   }
 }
 
-/* 鈹€鈹€ Spectrum: brightness slider card (200px, 0-9 ticks) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* Spectrum section: even vertical rhythm between major blocks */
+
+.udt-kb-spectrum {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Spectrum: brightness slider card (200px, 0-9 ticks) */
 
 .udt-kb-spectrum-brightness-card {
-  margin-bottom: 24px;
+  margin-bottom: 0;
+  padding-bottom: 10px;
+}
+
+.udt-kb-spectrum-brightness-card .udt-kb-card__body {
+  margin-top: 8px;
 }
 
 .udt-kb-brightness-slider {
   width: 200px;
-  margin: 4px 0 0;
+  /* Marks need a little bottom room; avoid ant-slider-with-marks default (~28px) bloat */
+  margin: 2px 0 14px;
 }
 
-/* 鈹€鈹€ Spectrum: profile radio buttons (ToggleButton-style) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+.udt-kb-brightness-slider.ant-slider-with-marks {
+  margin-bottom: 14px;
+}
+
+/* Spectrum: profile radio buttons (ToggleButton-style) */
 
 .udt-kb-spectrum-profiles {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   width: 100%;
-  margin: 0 0 48px;
+  margin: 0;
 }
 
 .udt-kb-spectrum-profiles .ant-radio-button-wrapper {
   flex: 1;
   height: 36px;
   margin: 0;
+  margin-inline-start: 0;
   padding-inline: 0;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
@@ -230,19 +254,25 @@
   font-weight: 500;
 }
 
-/* 鈹€鈹€ Spectrum: logo card 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* Spectrum: logo card */
 
 .udt-kb-logo-card {
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
-/* 鈹€鈹€ Spectrum: effects toolbar + list 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* Spectrum: effects toolbar + list */
+
+.udt-kb-effects-card {
+  margin-top: 0;
+}
 
 .udt-kb-effects-card__toolbar {
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 0;
+  flex-wrap: wrap;
+  row-gap: 6px;
 }
 
 .udt-kb-effects-card__title {
@@ -259,11 +289,32 @@
   flex: 0 0 auto;
   width: 32px;
   height: 32px;
+  padding: 0;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
   background: transparent;
   color: var(--udt-text-secondary);
   box-shadow: none;
+}
+
+.udt-kb-toolbar-btn.ant-btn {
+  flex: 0 0 auto;
+  height: 28px;
+  padding-inline: 10px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-control);
+  background: transparent;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption, 12px);
+  line-height: 1.4;
+  white-space: nowrap;
+  box-shadow: none;
+}
+
+.udt-kb-toolbar-btn.ant-btn:hover {
+  border-color: var(--udt-control-stroke-secondary);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-primary);
 }
 
 .udt-kb-icon-btn.ant-btn:hover {
@@ -337,11 +388,12 @@
 .udt-kb-spectrum-device {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px;
-  border: 1px solid var(--udt-border, rgba(128, 128, 128, 0.25));
-  border-radius: 10px;
-  background: var(--udt-card-bg, rgba(128, 128, 128, 0.06));
+  gap: 12px;
+  margin-bottom: 0;
+  padding: 16px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card, 10px);
+  background: var(--udt-surface-card);
 }
 
 .udt-kb-spectrum-device__toolbar {
@@ -349,12 +401,13 @@
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
+  row-gap: 6px;
 }
 
 .udt-spectrum-keyboard {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
   user-select: none;
 }
 
@@ -364,6 +417,7 @@
   flex-direction: column;
   gap: 4px;
   width: 660px;
+  max-width: 100%;
   padding: 6px;
   box-sizing: border-box;
   border-radius: 10px;
@@ -375,9 +429,12 @@
   display: flex;
   gap: 4px;
   align-items: flex-start;
+  flex-wrap: nowrap;
 }
 
 .udt-spectrum-keyboard__zone {
+  box-sizing: border-box;
+  flex: 0 0 auto;
   border: 1px solid rgba(128, 128, 128, 0.4);
   border-radius: 3px;
   padding: 0;
@@ -462,6 +519,7 @@
 }
 
 .udt-spectrum-device__zone {
+  box-sizing: border-box;
   position: absolute;
   border: 1px solid rgba(128, 128, 128, 0.4);
   border-radius: 3px;
@@ -506,10 +564,24 @@
 
 /* --- Effect rows --- */
 
+.udt-kb-effect-row.ant-list-item {
+  align-items: center;
+  gap: 12px;
+  padding: 10px 4px !important;
+}
+
+.udt-kb-effect-row .ant-list-item-action {
+  flex: 0 0 auto;
+  margin-inline-start: 12px !important;
+}
+
+.udt-kb-effect-row .ant-list-item-action > li {
+  padding: 0;
+}
+
 .udt-kb-effect-row {
   cursor: pointer;
   border-radius: 8px;
-  padding: 6px 8px !important;
   transition: background-color 120ms ease;
 }
 
@@ -517,10 +589,18 @@
   background: rgba(79, 157, 247, 0.12);
 }
 
+.udt-kb-effect-row__main {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
 .udt-kb-effect-row__swatch {
   display: flex;
   width: 22px;
-  height: 18px;
+  height: 22px;
   border-radius: 4px;
   border: 1px solid rgba(128, 128, 128, 0.4);
   flex-shrink: 0;
@@ -535,7 +615,23 @@
 .udt-kb-effect-row__copy {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
+  min-width: 0;
+}
+
+.udt-kb-effect-row__name {
+  display: block;
+  line-height: 1.4;
+}
+
+.udt-kb-effect-row__name .ant-tag {
+  margin-inline-end: 0;
+}
+
+.udt-kb-effect-row__scope {
+  display: block;
+  line-height: 1.4;
+  font-size: var(--udt-font-caption, 12px);
 }
 
 /* --- Effect edit modal --- */
@@ -618,7 +714,7 @@
 
 /* Vantage conflict warning (RGBKeyboardBacklightControl parity) */
 .udt-kb-vantage-warning {
-  margin: 0 0 12px;
+  margin: 0 0 24px;
 }
 
 

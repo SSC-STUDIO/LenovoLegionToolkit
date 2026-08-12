@@ -32,7 +32,8 @@ function emptyTrend(): SensorTrendHistory {
 }
 
 function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): SensorTrendHistory {
-  const labels = [...history.labels, new Date(snapshot.ts).toLocaleTimeString([], { hour12: false })]
+  const time = snapshot.ts ? new Date(snapshot.ts) : new Date()
+  const labels = [...history.labels, time.toLocaleTimeString([], { hour12: false })]
   const cpuTemperature = [...history.cpuTemperature, snapshot.cpu?.temperature ?? null]
   const cpuUsage = [...history.cpuUsage, snapshot.cpu?.usage ?? null]
   const cpuClock = [...history.cpuClock, snapshot.cpu?.coreClockAvg ?? snapshot.cpu?.coreClockMax ?? null]
@@ -147,6 +148,12 @@ export const useSensorsStore = create<SensorsStoreState & SensorsStoreActions>((
     await enqueueLifecycle(async () => {
       const wasSubscribed = get().subscribed
       if (wasSubscribed) {
+        if (get().intervalSec === intervalSec) {
+          // Already subscribed at this interval (Strict Mode double-mount or a
+          // redundant restart): keep the single host producer loop instead of
+          // re-subscribing, which could race the loop restart and stall data.
+          return
+        }
         // Interval change while polling: drop the old subscription so the new
         // interval takes effect (Electron SensorsControl refresh menu parity).
         try {
@@ -164,9 +171,13 @@ export const useSensorsStore = create<SensorsStoreState & SensorsStoreActions>((
       try {
         await sensorsApi.subscribe(activeIntervalSec)
         offUpdated.push(
-          sensorsApi.onUpdated((snapshot) =>
+          sensorsApi.onUpdated((snapshot) => {
+            // The host may publish null while LibreHardwareMonitor data is
+            // recovering (e.g. right after a re-subscribe); keep the last good
+            // frame instead of crashing the trend push.
+            if (snapshot == null) return
             set((state) => ({ snapshot, trend: pushTrend(state.trend, snapshot) }))
-          )
+          })
         )
         offUpdated.push(sensorsApi.onFpsUpdated((fps) => set({ fps })))
         set({ subscribed: true, error: null, intervalSec: activeIntervalSec })
