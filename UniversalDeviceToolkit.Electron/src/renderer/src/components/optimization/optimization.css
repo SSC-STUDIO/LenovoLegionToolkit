@@ -352,6 +352,7 @@
 
 /* Network tab */
 .udt-network-layout {
+  padding: 16px 16px 28px 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -640,6 +641,7 @@
 /* ── Driver download panel ─────────────────────────────────────── */
 
 .udt-driver-panel {
+  padding: 16px 16px 28px 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
