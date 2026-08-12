@@ -1,0 +1,17 @@
+{
+  "name": "universal-device-toolkit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Universal Device Toolkit monorepo root — npm scripts forward to UniversalDeviceToolkit.Electron",
+  "scripts": {
+    "dev": "npm --prefix UniversalDeviceToolkit.Electron run dev",
+    "build": "npm --prefix UniversalDeviceToolkit.Electron run build",
+    "typecheck": "npm --prefix UniversalDeviceToolkit.Electron run typecheck",
+    "lint": "npm --prefix UniversalDeviceToolkit.Electron run lint",
+    "start": "npm --prefix UniversalDeviceToolkit.Electron run start",
+    "dist": "npm --prefix UniversalDeviceToolkit.Electron run dist",
+    "dist:win": "npm --prefix UniversalDeviceToolkit.Electron run dist:win",
+    "dist:mac": "npm --prefix UniversalDeviceToolkit.Electron run dist:mac",
+    "dist:linux": "npm --prefix UniversalDeviceToolkit.Electron run dist:linux"
+  }
+}
