@@ -1,5 +1,5 @@
 /**
- * Trigger configuration for an existing pipeline — port of WPF
+ * Trigger configuration for an existing pipeline — port of Electron
  * Windows/Automation/AutomationPipelineTriggerConfigurationWindow.xaml.cs.
  *
  * Tabs are seeded from the pipeline's current triggers (single or composite);

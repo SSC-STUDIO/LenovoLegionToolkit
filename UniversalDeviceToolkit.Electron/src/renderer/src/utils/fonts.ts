@@ -1,6 +1,6 @@
 /**
- * Font management — port of WPF Utils/AppFontManager.cs.
- * The CSS variable --udt-font-family (global.css) already mirrors the WPF
+ * Font management — port of Electron Utils/AppFontManager.cs.
+ * The CSS variable --udt-font-family (global.css) already mirrors the Electron
  * AppFontFamily stack including SimSun; this module keeps the JS-side copy.
  */
 export const AppFontStack = [

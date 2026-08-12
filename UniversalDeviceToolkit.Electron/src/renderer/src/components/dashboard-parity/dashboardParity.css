@@ -1,5 +1,5 @@
 ﻿/* Container for the feature-groups grid: the dashboard root's content width
-   drives the group column count (WPF GetColumnCountForWidth semantics). */
+   drives the group column count (Electron GetColumnCountForWidth semantics). */
 .udt-parity-dashboard {
   width: 100%;
   max-width: 1520px;
@@ -556,7 +556,7 @@
   margin-top: 20px;
 }
 
-/* WPF DashboardPage.GetColumnCountForWidth uses the CONTENT area width
+/* Electron DashboardPage.GetColumnCountForWidth uses the CONTENT area width
    (>1500 = 3 cols, >1000 = 2 cols, <=1000 = 1 col). The dashboard root
    (.udt-parity-dashboard above) is the named container; these queries
    resolve against it, tracking the real content width. Below 1000px each
@@ -882,7 +882,7 @@
   line-height: 1.4;
 }
 
-/* GodModeValueControl rows (WPF Controls/Dashboard/GodMode/GodModeValueControl.xaml parity) */
+/* GodModeValueControl rows (Electron Controls/Dashboard/GodMode/GodModeValueControl.xaml parity) */
 
 .udt-god-mode-value {
   display: flex;

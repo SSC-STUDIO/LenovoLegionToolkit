@@ -2,15 +2,15 @@ import { app, BrowserWindow, screen } from 'electron'
 import { hostClient } from './host-client'
 
 /**
- * Tray status popup — minimal port of WPF Windows/Utils/StatusWindow.xaml(.cs).
+ * Tray status popup — minimal port of Electron Windows/Utils/StatusWindow.xaml(.cs).
  *
- * The WPF window renders power mode / discrete GPU / battery / charging rates /
+ * The Electron window renders power mode / discrete GPU / battery / charging rates /
  * sensor summaries, which requires polling several host features. This first
  * port keeps the always-safe subset: app version, machine model (host
  * system.info) and update availability (host app.update.check) with a manual
  * re-check button. Shown near the cursor from the tray menu; auto-hides.
  *
- * TODO(full parity): poll powerMode/battery/sensors like WPF
+ * TODO(full parity): poll powerMode/battery/sensors like Electron
  * GetStatusWindowDataAsync and render the full status grid.
  */
 

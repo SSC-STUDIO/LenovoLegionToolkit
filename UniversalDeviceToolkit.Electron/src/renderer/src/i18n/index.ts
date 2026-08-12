@@ -34,7 +34,7 @@ export interface LanguageOption {
 }
 
 /**
- * Selectable languages (25) — mirrors the WPF resx set. Every code here ships
+ * Selectable languages (25) — mirrors the Electron resx set. Every code here ships
  * with a full locale file; unknown legacy codes fall back to English.
  */
 export const LANGUAGES: LanguageOption[] = [
@@ -73,7 +73,7 @@ const LANGUAGE_STORAGE_KEY = 'udt-language'
 const LEGACY_LANGUAGE_STORAGE_KEY = 'udt.lang'
 
 /**
- * Legacy language codes (persisted by older builds / the WPF app) mapped onto
+ * Legacy language codes (persisted by older builds / the Electron app) mapped onto
  * the current registry.
  */
 const LEGACY_ALIASES: Record<string, string> = {

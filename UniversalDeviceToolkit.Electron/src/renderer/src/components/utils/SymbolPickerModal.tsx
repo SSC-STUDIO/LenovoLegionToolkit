@@ -5,8 +5,8 @@ import { SYMBOL_CATALOG } from './symbolIcons'
 import './utils.css'
 
 /**
- * Port of WPF SymbolRegularPicker: an icon picker with a search filter
- * (debounced like the WPF DebounceDispatcher) over a grid of symbol buttons.
+ * Port of Electron SymbolRegularPicker: an icon picker with a search filter
+ * (debounced like the Electron DebounceDispatcher) over a grid of symbol buttons.
  * Returns the selected icon name, or null for "Default".
  */
 

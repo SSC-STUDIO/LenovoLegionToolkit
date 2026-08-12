@@ -6,7 +6,7 @@ import { dashboardHardwareApi, type DashboardHardwareState } from '../../api/das
 import { settingsApi } from '../../api/settings'
 
 /**
- * Parity modal for WPF Windows/Dashboard/OverclockDiscreteGPUSettingsWindow:
+ * Parity modal for Electron Windows/Dashboard/OverclockDiscreteGPUSettingsWindow:
  * profile list (add / rename / delete / switch), core & memory frequency
  * offset sliders, and Apply / Apply & Close (or Save when overclocking is off).
  */
@@ -135,7 +135,7 @@ export default function OverclockProfilesModal({
 
   const currentInfo = (): OverclockInfo => ({ coreDeltaMhz, memoryDeltaMhz })
 
-  /** Save the working offsets into the active profile (WPF SaveProfile). */
+  /** Save the working offsets into the active profile (Electron SaveProfile). */
   function saveProfile(target: OverclockStore): OverclockStore {
     const active = target.profiles[target.activeProfileId]
     if (active == null) return target
@@ -234,7 +234,7 @@ export default function OverclockProfilesModal({
     }
   }
 
-  /** WPF Save(): persist enabled state, active profile and current offsets. */
+  /** Electron Save(): persist enabled state, active profile and current offsets. */
   async function saveAll(): Promise<void> {
     if (store == null) return
     const saved = saveProfile(store)

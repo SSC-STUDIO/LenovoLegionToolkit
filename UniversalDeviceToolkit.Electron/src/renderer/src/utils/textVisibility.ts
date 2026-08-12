@@ -1,5 +1,5 @@
 /**
- * Text → visibility helpers — port of WPF Utils/TextToVisibilityConverter.cs.
+ * Text → visibility helpers — port of Electron Utils/TextToVisibilityConverter.cs.
  */
 export function textIsVisible(value: unknown): boolean {
   return typeof value === 'string' && value.trim() !== ''

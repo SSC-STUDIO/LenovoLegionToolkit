@@ -229,7 +229,7 @@
   background: var(--udt-status-critical-bg);
 }
 
-/* Pipeline cards (CardExpander — collapsed by default like WPF AutomationPipelineControl) */
+/* Pipeline cards (CardExpander — collapsed by default like Electron AutomationPipelineControl) */
 .udt-pipeline-list {
   display: flex;
   flex-direction: column;
@@ -666,7 +666,7 @@
   background: var(--udt-control-stroke-default);
 }
 
-/* ===== Trigger picker / config (port of WPF CreateAutomationPipelineWindow /
+/* ===== Trigger picker / config (port of Electron CreateAutomationPipelineWindow /
    AutomationPipelineTriggerConfigurationWindow) ===== */
 
 .udt-modal--wide {

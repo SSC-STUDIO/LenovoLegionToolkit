@@ -1,5 +1,5 @@
 /**
- * Per-family trigger parameter editors — port of WPF
+ * Per-family trigger parameter editors — port of Electron
  * Windows/Automation/TabItemContent/*.xaml.cs
  * (IAutomationPipelineTriggerTabItemContent implementations).
  */

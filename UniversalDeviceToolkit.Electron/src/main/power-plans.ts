@@ -1,5 +1,5 @@
 /**
- * Windows power plan helpers — Electron-side counterpart of the WPF
+ * Windows power plan helpers — Electron-side counterpart of the Electron
  * WindowsPowerPlanController (Win32_PowerPlan WMI). The host does not expose
  * powerPlans.getList, so the main process answers it by parsing `powercfg`.
  */
@@ -45,7 +45,7 @@ export async function listPowerPlans(): Promise<WindowsPowerPlan[]> {
   return plans
 }
 
-/** Mirrors WPF EnsureCorrectWindowsPowerSettingsAreSetAsync / activation. */
+/** Mirrors Electron EnsureCorrectWindowsPowerSettingsAreSetAsync / activation. */
 export async function setActivePowerPlan(guid: string): Promise<void> {
   if (!/^[0-9a-fA-F-]{36}$/.test(guid)) {
     throw new Error(`Invalid power plan GUID: ${guid}`)

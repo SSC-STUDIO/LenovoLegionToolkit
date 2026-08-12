@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 
-// WPF SkeletonAnimationTokens parity: 1.65s cycle, 0.055s stagger step capped
+// Electron SkeletonAnimationTokens parity: 1.65s cycle, 0.055s stagger step capped
 // at 0.32s. Delays are negative so the phase offset is permanent (Loading.xaml
 // uses SkeletonShimmer.DelaySeconds = -1) — the shimmer wave never re-syncs.
 const STAGGER_STEP_S = 0.055

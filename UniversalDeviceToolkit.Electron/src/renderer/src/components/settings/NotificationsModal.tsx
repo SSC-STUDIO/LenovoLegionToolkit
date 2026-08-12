@@ -5,10 +5,10 @@ import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/NotificationsSettingsWindow:
+ * Parity modal for Electron Windows/Settings/NotificationsSettingsWindow:
  * toggles for every notification category plus always-on-top, all-screens,
  * position and duration. Every change is persisted immediately, like the
- * WPF window (each toggle synchronizes the store on click). While "Don't
+ * Electron window (each toggle synchronizes the store on click). While "Don't
  * show notifications" is on, the other cards are disabled.
  */
 

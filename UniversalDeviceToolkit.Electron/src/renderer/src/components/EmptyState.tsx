@@ -2,7 +2,7 @@ import './custom.css'
 import type { ReactNode } from 'react'
 
 /**
- * Unified empty-state presenter — port of WPF Controls/Custom/EmptyState.cs
+ * Unified empty-state presenter — port of Electron Controls/Custom/EmptyState.cs
  * (hero icon, title, description and an optional action slot).
  */
 

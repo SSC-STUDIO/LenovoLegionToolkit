@@ -207,7 +207,7 @@ function fileBaseName(path: string): string {
 }
 
 /**
- * Friendly one-line summary of a step's parameters, matching what the WPF
+ * Friendly one-line summary of a step's parameters, matching what the Electron
  * card shows next to the step title (selected state / text / file name).
  */
 export function formatStepSummary(

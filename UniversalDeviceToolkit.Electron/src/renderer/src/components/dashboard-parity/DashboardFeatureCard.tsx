@@ -194,7 +194,7 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
   const description = t(`feature.${feature}.desc`, { defaultValue: '' })
   const isToggle = TOGGLE_FEATURES.has(feature)
 
-  // WPF HDRControl_Warning / PowerModeControl_Warning.
+  // Electron HDRControl_Warning / PowerModeControl_Warning.
   const warning =
     feature === 'hdr' && hdrBlocked
       ? t('feature.hdr.warning', { defaultValue: 'HDR usage is blocked by Windows settings.' })
@@ -202,7 +202,7 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
         ? t('feature.powerMode.warning')
         : ''
 
-  // WPF PowerModeControl.ConfigButton: Balance → AI engine settings;
+  // Electron PowerModeControl.ConfigButton: Balance → AI engine settings;
   // Performance/GodMode → Custom Mode settings (when the machine supports God Mode).
   const powerState = feature === 'powerMode' && typeof state === 'string' ? state : undefined
   const showConfigButton =

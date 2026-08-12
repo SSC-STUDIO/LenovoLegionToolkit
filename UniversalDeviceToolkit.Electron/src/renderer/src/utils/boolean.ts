@@ -1,5 +1,5 @@
 /**
- * Boolean helpers — port of WPF Utils/BooleanAndConverter.cs and
+ * Boolean helpers — port of Electron Utils/BooleanAndConverter.cs and
  * Utils/InverseBooleanToVisibilityConverter.cs.
  */
 export function and(...values: unknown[]): boolean {
@@ -14,7 +14,7 @@ export function inverse(value: unknown): boolean {
   return value !== true
 }
 
-/** Inverse → visibility: true hides, false shows (WPF Collapsed semantics). */
+/** Inverse → visibility: true hides, false shows (Electron Collapsed semantics). */
 export function inverseToHidden(value: unknown): boolean {
   return value === true
 }

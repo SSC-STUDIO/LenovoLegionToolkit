@@ -9,7 +9,7 @@ export interface SensorDetailRow {
   value: string
 }
 
-// Formatting mirrors SensorsControl.Formatting.cs (WPF detail window parity):
+// Formatting mirrors SensorsControl.Formatting.cs (Electron detail window parity):
 // voltage 0.000 V, power 0.# W, frequency MHz→GHz 1 decimal, temperature 0
 // decimals with °F conversion, GB 1 decimal, throughput 0.00 scaled.
 
@@ -125,7 +125,7 @@ export function formatWattHours(mwh: number | null | undefined): string {
   return `${(mwh / 1000).toFixed(2)} Wh`
 }
 
-// Battery health is a 0–1 ratio → percent, 2 decimals (WPF "{0:0.00}%").
+// Battery health is a 0–1 ratio → percent, 2 decimals (Electron "{0:0.00}%").
 export function formatHealthPercent(health: number | null | undefined): string {
   if (health == null || !Number.isFinite(health) || health < 0) return '-'
   return `${(health * 100).toFixed(2)}%`
@@ -141,7 +141,7 @@ export interface SensorDetailsProps {
   temperatureUnit?: TemperatureUnit
 }
 
-// Builds the WPF detail-window row sets for the three sensor panels.
+// Builds the Electron detail-window row sets for the three sensor panels.
 export function useSensorDetails(props: SensorDetailsProps): {
   cpu: SensorDetailRow[]
   gpu: SensorDetailRow[]

@@ -6,7 +6,7 @@ export type MacroRecorderState = 'idle' | 'preparing' | 'recording'
 const VK_ESCAPE = 0x1b
 
 /**
- * Mouse button id → MacroEvent.key, mirroring the WPF MacroRecorder
+ * Mouse button id → MacroEvent.key, mirroring the Electron MacroRecorder
  * ConvertToMacroEvent (1 = left, 2 = right, 3 = middle, xbutton flags << 16).
  */
 const MOUSE_BUTTON_KEYS: Record<number, number> = {
@@ -18,7 +18,7 @@ const MOUSE_BUTTON_KEYS: Record<number, number> = {
 }
 
 /**
- * Renderer-side macro recorder — port of the WPF MacroRecorder + the
+ * Renderer-side macro recorder — port of the Electron MacroRecorder + the
  * MacroRecordingWindow flow:
  *
  * - "KeyboardMouseMovement" first shows a 3-second "preparing" state

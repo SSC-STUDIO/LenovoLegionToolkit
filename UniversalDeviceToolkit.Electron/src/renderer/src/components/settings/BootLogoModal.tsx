@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { bootLogoApi, type BootLogoStatus } from '../../api/bootLogo'
 
 /**
- * Parity modal for WPF Windows/Settings/BootLogoWindow: shows the current
+ * Parity modal for Electron Windows/Settings/BootLogoWindow: shows the current
  * boot-logo status (default vs custom), lets the user pick an image to
  * install as the custom boot logo and revert to the default one.
  */

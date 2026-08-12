@@ -16,7 +16,7 @@ const SOFTWARE_BANNERS: { app: SoftwareDisablerApp; id: string; messageKey: stri
 ]
 
 /**
- * Host for persistent corner toasts — port of WPF MainWindow._statusNotificationStack
+ * Host for persistent corner toasts — port of Electron MainWindow._statusNotificationStack
  * (AppStatusBanner instances): update available, plugin extensions disabled, and
  * the three software-conflict warnings (Vantage / Legion Zone / Lenovo Hotkeys).
  * Renders as a bottom-right overlay so page content is not pushed down.
@@ -32,7 +32,7 @@ export default function AppStatusBanners(): React.JSX.Element {
   const softwareStart = useSoftwareStore((s) => s.start)
 
   // Keep transient AppNotificationHost toasts stacked above these persistent
-  // cards when both share the bottom-right corner (WPF single StackPanel).
+  // cards when both share the bottom-right corner (Electron single StackPanel).
   useEffect(() => {
     const offset = banners.length === 0 ? 0 : banners.length * 56 + Math.max(0, banners.length - 1) * 8
     document.documentElement.style.setProperty('--udt-status-banner-stack-height', `${offset}px`)
@@ -65,7 +65,7 @@ export default function AppStatusBanners(): React.JSX.Element {
     }
   }, [navigate, show, t])
 
-  // WPF MainWindow software disabler indicators: banners follow the
+  // Electron MainWindow software disabler indicators: banners follow the
   // VantageDisabler / LegionZoneDisabler / FnKeysDisabler status (polled).
   useEffect(() => {
     const stop = softwareStart(5000)
@@ -80,7 +80,7 @@ export default function AppStatusBanners(): React.JSX.Element {
           severity: 'Warning',
           message: t(banner.messageKey),
           persistent: true,
-          // WPF AppStatusBanner always exposes a close button; session dismiss
+          // Electron AppStatusBanner always exposes a close button; session dismiss
           // matches Closed → Collapsed until the user leaves / status changes.
           closable: true
         })

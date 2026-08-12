@@ -2,10 +2,10 @@ import { CloseOutlined, SyncOutlined, WarningFilled } from '@ant-design/icons'
 import './AppStatusBanner.css'
 
 /**
- * Persistent corner toast — port of WPF Controls/Shell/AppStatusBanner.xaml(.cs).
+ * Persistent corner toast — port of Electron Controls/Shell/AppStatusBanner.xaml(.cs).
  * Hosted in the bottom-right overlay stack (MainWindow._statusNotificationStack),
  * not as a full-width top-of-page bar. Severity: Warning → warning icon;
- * Success → sync icon + clickable action (WPF ArrowSync24 / ActionArea).
+ * Success → sync icon + clickable action (Electron ArrowSync24 / ActionArea).
  * Closed is raised only from the close button.
  */
 

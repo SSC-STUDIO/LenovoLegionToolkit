@@ -6,11 +6,11 @@ import { updateApi, type DownloadProgress } from '../../api/update'
 import './utils.css'
 
 /**
- * Port of WPF UpdateWindow: shows the newest version and its release notes
+ * Port of Electron UpdateWindow: shows the newest version and its release notes
  * and offers to download/install it.
  *
  * The main process downloads the Electron installer from the GitHub latest
- * release (mirrors WPF UpdateChecker) and launches it with
+ * release (mirrors Electron UpdateChecker) and launches it with
  * `/SILENT /RESTARTAPPLICATIONS`, quitting the app.
  */
 

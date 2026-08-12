@@ -3,8 +3,8 @@ import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 
 /**
- * Command-line flags for the Electron client. Mirrors the WPF app's
- * UniversalDeviceToolkit.WPF.Flags surface: same switch names, same
+ * Command-line flags for the Electron client. Mirrors the Electron app's
+ * UniversalDeviceToolkit.Electron.Flags surface: same switch names, same
  * semantics, and the same external args.txt source so launch arguments
  * behave identically between the two clients.
  *
@@ -60,7 +60,7 @@ const VALUE_SWITCHES: ReadonlyArray<readonly [string, keyof AppFlags]> = [
 ]
 
 /**
- * Mirrors WPF Flags.StringValue: matches the key case-insensitively, taking
+ * Mirrors Electron Flags.StringValue: matches the key case-insensitively, taking
  * the following argument unless it starts with "--", and also accepts the
  * "--key=value" form.
  */
@@ -117,7 +117,7 @@ export function parseFlags(argv: string[]): AppFlags {
 }
 
 /**
- * Mirrors WPF Flags.LoadExternalArgs: reads extra switches from
+ * Mirrors Electron Flags.LoadExternalArgs: reads extra switches from
  * %LOCALAPPDATA%\UniversalDeviceToolkit\args.txt (one switch per line),
  * matching the Lib Folders.AppData root. Missing/unreadable files are ignored.
  */
@@ -159,7 +159,7 @@ export function toHostArgs(appFlags: AppFlags): string[] {
   return args
 }
 
-/** Mirrors WPF Flags.ToString() for trace logging. */
+/** Mirrors Electron Flags.ToString() for trace logging. */
 export function describeFlags(appFlags: AppFlags): string {
   return [
     `isTraceEnabled: ${appFlags.isTraceEnabled}`,

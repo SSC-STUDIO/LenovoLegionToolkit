@@ -6,7 +6,7 @@ import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/WindowsPowerModesWindow: choose the
+ * Parity modal for Electron Windows/Settings/WindowsPowerModesWindow: choose the
  * Windows power mode (Best power efficiency / Balanced / Best performance)
  * applied for each device power mode (Quiet / Balance / Performance / Custom).
  * The God Mode card is only shown when the power-mode feature reports it.

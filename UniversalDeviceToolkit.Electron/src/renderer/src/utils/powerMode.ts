@@ -1,6 +1,6 @@
 /**
  * Power mode metadata — port of PowerModeStateExtensions:
- * per-state accent color used by the WPF client
+ * per-state accent color used by the Electron client
  * (Quiet #357BF2, Balance white, Performance #D43333, Extreme #FF8C00, GodMode #6334E3).
  */
 
@@ -14,7 +14,7 @@ export const POWER_MODE_COLORS: Record<string, string> = {
 
 /**
  * Accent color for a power mode state name ("Performance" | "performance").
- * Returns undefined for unknown states (WPF falls back to Transparent).
+ * Returns undefined for unknown states (Electron falls back to Transparent).
  */
 export function powerModeColor(state: string | undefined | null): string | undefined {
   if (!state) return undefined

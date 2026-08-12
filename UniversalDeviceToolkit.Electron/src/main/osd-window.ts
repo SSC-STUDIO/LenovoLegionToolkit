@@ -2,7 +2,7 @@ import { BrowserWindow, powerMonitor, screen } from 'electron'
 import { hostClient } from './host-client'
 
 /**
- * On-screen display (OSD) —port of the WPF OsdWindowBase family:
+ * On-screen display (OSD) —port of the Electron OsdWindowBase family:
  *
  * - OsdWindowBase.cs: frameless, transparent, always-on-top window; saved
  *   position restore, edge snapping (SnapThreshold), click-through while
@@ -187,7 +187,7 @@ const ITEM_LABELS: Record<OsdItemName, string> = {
   PchFan: 'Fan'
 }
 
-/** Group definitions —mirrors the _measurementGroups of the WPF windows. */
+/** Group definitions —mirrors the _measurementGroups of the Electron windows. */
 interface OsdGroupDef {
   label: string
   items: OsdItemName[]
@@ -470,7 +470,7 @@ function setWindowPosition(): void {
   setDefaultWindowPosition()
 }
 
-/** WPF OnMouseLeftButtonDown snapping + clamping against the work area. */
+/** Electron OnMouseLeftButtonDown snapping + clamping against the work area. */
 function snapAndClampPosition(): void {
   const win = osdWindow
   if (!win || win.isDestroyed()) return
@@ -571,7 +571,7 @@ function isHybrid(): boolean {
   return lastSnapshot?.isHybrid === true
 }
 
-/** WPF UpdateMeasurementControlsVisibility: hybrid CPUs show P/E cores only. */
+/** Electron UpdateMeasurementControlsVisibility: hybrid CPUs show P/E cores only. */
 function isItemVisible(item: OsdItemName): boolean {
   if (!settings.items.includes(item)) return false
   if (isHybrid()) {
@@ -648,7 +648,7 @@ function fanValue(raw: number | null | undefined): ValueRender {
   return { text: `${raw.toFixed(0)} RPM`, color: settings.valueColor }
 }
 
-/** WPF GetMemoryDisplayText: GB when enabled, otherwise percent. */
+/** Electron GetMemoryDisplayText: GB when enabled, otherwise percent. */
 function memoryValue(
   usage: number | null | undefined,
   used: number | null | undefined,
@@ -766,7 +766,7 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } {
   return { r: (parsed >> 16) & 0xff, g: (parsed >> 8) & 0xff, b: parsed & 0xff }
 }
 
-/** WPF ApplyAppearanceSettings: background color + opacity alpha. */
+/** Electron ApplyAppearanceSettings: background color + opacity alpha. */
 function backgroundRgba(opacityFactor = 1): string {
   const { r, g, b } = hexToRgb(settings.backgroundColor)
   const alpha = Math.min(1, Math.max(0, settings.backgroundOpacity * opacityFactor))
@@ -934,7 +934,7 @@ function appearanceSignature(store: OsdSettingsStore): string {
   ].join('|')
 }
 
-/** WPF ApplyAppearanceSettings + RecalculatePosition on settings change. */
+/** Electron ApplyAppearanceSettings + RecalculatePosition on settings change. */
 function onSettingsChanged(data: unknown): void {
   const changed = (data as { scope?: string; reason?: string } | null)?.scope
   if (changed === 'osd') {
@@ -1068,7 +1068,7 @@ export function initOsdWindow(): void {
     screen.on('display-metrics-changed', listener)
     unsubscribeDisplay = () => screen.removeListener('display-metrics-changed', listener)
   }
-  // WPF OsdWindowBase listened to SystemEvents.PowerModeChanged: hide the OSD
+  // Electron OsdWindowBase listened to SystemEvents.PowerModeChanged: hide the OSD
   // while the machine suspends so it never stays pinned over the lock screen.
   if (!unsubscribePower) {
     const onSuspend = (): void => hideOsd()

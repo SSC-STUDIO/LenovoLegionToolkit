@@ -7,7 +7,7 @@ import { DEFAULT_POWER_PLAN_GUID, powerPlansApi, type WindowsPowerPlan } from '.
 import { useSettingsStore } from '../../stores/settingsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/WindowsPowerPlansWindow: choose the
+ * Parity modal for Electron Windows/Settings/WindowsPowerPlansWindow: choose the
  * Windows power plan applied for each device power mode. The first entry is
  * always the "Default" plan (empty GUID), followed by the plans reported by
  * the host, sorted by name. The God Mode card is only shown when the
@@ -101,7 +101,7 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
       await settingsApi.set('application', merged)
       await settingsApi.save(['application'])
 
-      // WPF WindowsPowerPlansWindow: activating the plan for the *current*
+      // Electron WindowsPowerPlansWindow: activating the plan for the *current*
       // power mode applies it right away (EnsureCorrectWindowsPowerSettings).
       if (guid !== DEFAULT_POWER_PLAN_GUID) {
         try {

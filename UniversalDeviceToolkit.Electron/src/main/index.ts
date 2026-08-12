@@ -25,7 +25,7 @@ app.setName('Universal Device Toolkit')
 // taskbar window preview surfaces as a third entry next to the main window.
 app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
 
-// WPF renders in DIPs while Chromium applies the Windows display scale to CSS.
+// Electron renders in DIPs while Chromium applies the Windows display scale to CSS.
 // This keeps the Electron renderer at the original client's physical density.
 const RENDERER_ZOOM_FACTOR = 5 / 6
 const PROJECT_ROOT = join(__dirname, '..', '..')
@@ -187,7 +187,7 @@ function resolveWindowIcon(): string | undefined {
   return candidates.find((candidate) => existsSync(candidate))
 }
 
-/** Device info shape — mirrors WPF MachineCompatibility.MachineInformation. */
+/** Device info shape — mirrors Electron MachineCompatibility.MachineInformation. */
 interface DeviceInfo {
   vendor: string
   model: string
@@ -320,7 +320,7 @@ async function getDeviceInfo(): Promise<DeviceInfo> {
 }
 
 /**
- * Mirrors WPF MainWindow.OpenLog: reveal the logs folder in Explorer. Electron's
+ * Mirrors Electron MainWindow.OpenLog: reveal the logs folder in Explorer. Electron's
  * "logs" path is created on demand so the folder exists before the host has
  * written anything.
  */
@@ -340,8 +340,8 @@ function createWindow(): void {
   const icon = resolveWindowIcon()
 
   mainWindow = new BrowserWindow({
-    // WPF MainWindow: Width=1024 Height=640 MinWidth=1024 MinHeight=640. The
-    // minimum keeps the optimization/cleanup two-column layout stable (WPF
+    // Electron MainWindow: Width=1024 Height=640 MinWidth=1024 MinHeight=640. The
+    // minimum keeps the optimization/cleanup two-column layout stable (Electron
     // never collapses it; the old 1000px default allowed the 1100px CSS-viewport
     // breakpoint to flip the grid to a single column mid-resize).
     width: 1024,
@@ -367,18 +367,18 @@ function createWindow(): void {
 
   mainWindow.webContents.setZoomFactor(RENDERER_ZOOM_FACTOR)
 
-  // Port of WPF WindowResizeStabilityHelper: track live move/size loops so
+  // Port of Electron WindowResizeStabilityHelper: track live move/size loops so
   // heavy per-frame work can be skipped while the user drags a window edge.
   attachResizeStability(mainWindow)
   attachPluginHostBridge()
-  // Port of WPF WindowMaximizeWorkAreaHelper: keep the maximized window inside
+  // Port of Electron WindowMaximizeWorkAreaHelper: keep the maximized window inside
   // the monitor work area (safety net for desktop-dock overlays).
   attachMaximizeWorkAreaClamp(mainWindow)
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow || mainWindow.isDestroyed()) return
     if (flags.minimized) {
-      // Mirrors WPF --minimized: start hidden in the tray instead of showing.
+      // Mirrors Electron --minimized: start hidden in the tray instead of showing.
       mainWindow.hide()
     } else {
       mainWindow.show()
@@ -459,7 +459,7 @@ app.whenReady().then(() => {
 
   ipcMain.handle('bridge:invoke', async (_event, method: string, params?: unknown) => {
     // Main-side methods reachable through the generic renderer bridge without
-    // preload changes (WPF MainWindow.OpenLog / LoadDeviceInfo equivalents).
+    // preload changes (Electron MainWindow.OpenLog / LoadDeviceInfo equivalents).
     if (method === 'log.open-folder') return openLogFolder()
     if (method === 'device.info') return getDeviceInfo()
     if (method === 'status-window.show') {
@@ -516,7 +516,7 @@ app.whenReady().then(() => {
       await shell.openExternal(parsed.toString())
       return { ok: true }
     }
-    // Mirrors WPF --disable-update-checker (UpdateChecker.Disable): the host
+    // Mirrors Electron --disable-update-checker (UpdateChecker.Disable): the host
     // does not know this switch, so short-circuit update requests here.
     if (flags.disableUpdateChecker) {
       if (method === 'app.update.check') {
@@ -526,7 +526,7 @@ app.whenReady().then(() => {
         return { status: 'Disabled', disable: true }
       }
     }
-    // Windows power-plan bridge (WPF WindowsPowerPlanController): the host has
+    // Windows power-plan bridge (Electron WindowsPowerPlanController): the host has
     // no powercfg/WMI channel, so the main process answers from `powercfg`.
     if (method === 'powerPlans.getList') {
       return listPowerPlans().then(
@@ -541,11 +541,11 @@ app.whenReady().then(() => {
       }
       return setActivePowerPlan(guid).then(() => ({ ok: true }))
     }
-    // System power actions (WPF Lib PowerActions): restart/shutdown/sleep.
+    // System power actions (Electron Lib PowerActions): restart/shutdown/sleep.
     if (method === 'power.restart') return restartSystem()
     if (method === 'power.shutdown') return shutdownSystem()
     if (method === 'power.sleep') return sleepSystem()
-    // Update download/install (WPF UpdateWindow flow): resolve the GitHub
+    // Update download/install (Electron UpdateWindow flow): resolve the GitHub
     // release asset, download it with progress events, launch the installer.
     if (method === 'update.getRelease') {
       return getLatestRelease().then((release) => ({ release }))
@@ -606,7 +606,7 @@ app.whenReady().then(() => {
   // into out/preload/plugin-host.js).
   ipcMain.handle('plugin:preload-path', () => join(__dirname, '../preload/plugin-host.js'))
 
-  // Port of WPF FullscreenHelper (renderer-observable window state).
+  // Port of Electron FullscreenHelper (renderer-observable window state).
   ipcMain.handle('window:is-fullscreen', () => mainWindow?.isFullScreen() ?? false)
 
   mainWindow?.on('enter-full-screen', () => {
@@ -632,13 +632,13 @@ app.whenReady().then(() => {
     shell.showItemInFolder(result.path)
   })
 
-  // Mirrors WPF MainWindow.OpenLog: open the logs directory (created on demand).
+  // Mirrors Electron MainWindow.OpenLog: open the logs directory (created on demand).
   ipcMain.handle('log.open-folder', () => openLogFolder())
 
-  // Mirrors WPF MainWindow.LoadDeviceInfo (MachineCompatibility.GetMachineInformationAsync).
+  // Mirrors Electron MainWindow.LoadDeviceInfo (MachineCompatibility.GetMachineInformationAsync).
   ipcMain.handle('device.info', () => getDeviceInfo())
 
-  // Mirrors WPF AboutPage "Data" / "Temp" folder buttons (Folders.AppData / Path.GetTempPath).
+  // Mirrors Electron AboutPage "Data" / "Temp" folder buttons (Folders.AppData / Path.GetTempPath).
   ipcMain.handle('shell:open-app-folder', async (_event, kind: unknown) => {
     let target: string
     if (kind === 'data') {
@@ -667,7 +667,7 @@ app.whenReady().then(() => {
     return { opened: true }
   })
 
-  // Mirrors WPF Process.Start(url) / explorer.exe for file paths (used by the
+  // Mirrors Electron Process.Start(url) / explorer.exe for file paths (used by the
   // Utils windows: update window, device info warranty link, crash report).
   ipcMain.handle('shell:open-external', async (_event, url: unknown) => {
     if (typeof url !== 'string' || url.length === 0) {
@@ -697,7 +697,7 @@ app.whenReady().then(() => {
     return { opened: true }
   })
 
-  // Port of WPF ClipboardExtensions.SetProcesses/GetProcesses: one line per
+  // Port of Electron ClipboardExtensions.SetProcesses/GetProcesses: one line per
   // executable path; reads are filtered to existing paths and deduplicated.
   ipcMain.handle('clipboard:write-lines', (_event, payload: unknown) => {
     const payloadLines = (payload as { lines?: unknown } | null)?.lines
@@ -719,14 +719,14 @@ app.whenReady().then(() => {
     return { paths }
   })
 
-  // Mirrors WPF UnsupportedWindow.Exit / LanguageSelectorWindow.Exit: terminate
+  // Mirrors Electron UnsupportedWindow.Exit / LanguageSelectorWindow.Exit: terminate
   // the whole application instead of hiding the window.
   ipcMain.on('app:quit', () => {
     isQuitting = true
     app.quit()
   })
 
-  // Mirrors WPF SettingsApplicationBehaviorControl Autorun (registry Run key):
+  // Mirrors Electron SettingsApplicationBehaviorControl Autorun (registry Run key):
   // Electron persists the login item via setLoginItemSettings.
   ipcMain.handle('app:set-autorun', (_event, enabled: unknown) => {
     const openAtLogin = enabled === true
@@ -764,7 +764,7 @@ app.whenReady().then(() => {
     return result.canceled ? null : (result.filePaths[0] ?? null)
   })
 
-  // Mirrors WPF ProcessAutomationPipelineTriggerTabItemControl AddButton_Click
+  // Mirrors Electron ProcessAutomationPipelineTriggerTabItemControl AddButton_Click
   // (OpenFileDialog with the exe filter).
   ipcMain.handle('dialog:select-exe-file', async () => {
     const options = {
@@ -779,7 +779,7 @@ app.whenReady().then(() => {
     return result.canceled ? null : (result.filePaths[0] ?? null)
   })
 
-  // Mirrors WPF PlaySoundAutomationStepControl file picker (audio files).
+  // Mirrors Electron PlaySoundAutomationStepControl file picker (audio files).
   ipcMain.handle('dialog:select-audio-file', async () => {
     const options = {
       title: 'Import',
@@ -797,7 +797,7 @@ app.whenReady().then(() => {
     return result.canceled ? null : (result.filePaths[0] ?? null)
   })
 
-  // Tray menu: language + quick-action refresh (WPF TrayHelper PipelinesChanged).
+  // Tray menu: language + quick-action refresh (Electron TrayHelper PipelinesChanged).
   ipcMain.on('tray:set-language', (_event, lang: unknown) => {
     if (typeof lang === 'string' && lang.length > 0) updateTrayLanguage(lang)
   })
@@ -838,7 +838,7 @@ app.whenReady().then(() => {
   initStatusWindow()
   if (mainWindow) forwardHostEvents(mainWindow)
 
-  // Forward OS power/session events to the renderer (WPF MainWindow listened
+  // Forward OS power/session events to the renderer (Electron MainWindow listened
   // to the same transitions for OSD/status behavior).
   const systemEvents: Array<[string, string]> = [
     ['suspend', 'system.suspend'],
@@ -884,7 +884,7 @@ app.on('before-quit', (event) => {
 })
 
 /**
- * Mirrors WPF AppDomain_UnhandledException / CrashReportHelper: save a crash
+ * Mirrors Electron AppDomain_UnhandledException / CrashReportHelper: save a crash
  * report file under userData/crash-reports and surface it to the renderer
  * (CrashReportNotificationModal) via the bridge event bus.
  */

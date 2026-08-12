@@ -3,7 +3,7 @@ import { invoke } from './bridge'
 /**
  * Machine information — mirror of the host `system.info` handler
  * (UniversalDeviceToolkit.Host → Compatibility.GetMachineInformationAsync).
- * The WPF MachineInformation exposes a serial number too, but the host does
+ * The Electron MachineInformation exposes a serial number too, but the host does
  * not currently forward it; consumers fall back to "-".
  */
 export interface SystemInfo {

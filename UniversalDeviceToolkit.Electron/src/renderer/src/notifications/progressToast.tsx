@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useNotificationCenter } from './notificationCenterStore'
 
 /**
- * Mirrors WPF ProgressToastHelper: persistent progress toasts that are
+ * Mirrors Electron ProgressToastHelper: persistent progress toasts that are
  * created once, updated in place and dismissed on completion. They live in
  * the notification center stack (progress < 100% never auto-closes).
  */

@@ -27,10 +27,10 @@ const ZOOM_MIN = 0.5
 const ZOOM_MAX = 1.5
 
 /**
- * Spectrum device visualization — port of WPF SpectrumDeviceControl: the
+ * Spectrum device visualization — port of Electron SpectrumDeviceControl: the
  * keyboard (reused SpectrumKeyboard at zoom 1) plus the clickable front-panel
  * zones from the device layout XAMLs, all on one zoomable canvas. The whole
- * canvas supports drag-box selection like the WPF SelectableControl wrapper.
+ * canvas supports drag-box selection like the Electron SelectableControl wrapper.
  */
 export default function SpectrumDevicePanel({
   layout,
@@ -84,7 +84,7 @@ export default function SpectrumDevicePanel({
 
   return (
     <div className="udt-spectrum-device" ref={hostRef} onMouseDown={onMouseDown}>
-      {/* CSS zoom keeps the scaled size in layout, like the WPF ScaleTransform. */}
+      {/* CSS zoom keeps the scaled size in layout, like the Electron ScaleTransform. */}
       <div
         className="udt-spectrum-device__stage"
         style={{ zoom: scale, width: deviceLayout.width, height: deviceLayout.height }}

@@ -1,5 +1,5 @@
 /**
- * Color utilities — port of the RGBColor conversion/mix logic used by the WPF
+ * Color utilities — port of the RGBColor conversion/mix logic used by the Electron
  * client (UniversalDeviceToolkit.Lib RGBColor struct + ColorExtensions).
  * All functions are pure and side-effect free.
  */

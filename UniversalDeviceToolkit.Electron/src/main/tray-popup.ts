@@ -4,8 +4,8 @@ import { BrowserWindow, nativeTheme, screen, type Rectangle } from 'electron'
  * Compact tray flyout — HTML popup replacing the native Windows 11 Menu.
  *
  * Win11 native menus lock row height at ~44px and treat captured NativeImage
- * icons as bitmap size (HiDPI capture → oversized, pixelated rows). WPF
- * TrayHelper used a WPF ContextMenu (~26–32px rows). This flyout matches
+ * icons as bitmap size (HiDPI capture → oversized, pixelated rows). Electron
+ * TrayHelper used a Electron ContextMenu (~26–32px rows). This flyout matches
  * that density:
  *   header 11px / 21px tall, rows 26px, font 12px, icons 14px SVG,
  *   card padding 4px, separator 1px + 3px margins.

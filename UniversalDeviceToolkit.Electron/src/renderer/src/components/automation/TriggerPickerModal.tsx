@@ -1,5 +1,5 @@
 /**
- * Trigger picker for new automatic pipelines â€?port of WPF
+ * Trigger picker for new automatic pipelines ï¿½?port of Electron
  * Windows/Automation/CreateAutomationPipelineWindow.xaml.cs.
  */
 import { useMemo, useState } from 'react'

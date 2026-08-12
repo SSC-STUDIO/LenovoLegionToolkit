@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { softwareApi, type SoftwareDisablerApp, type SoftwareStatus } from '../api/software'
 
 /**
- * Software disabler status shared across the UI — mirrors the WPF
+ * Software disabler status shared across the UI — mirrors the Electron
  * VantageDisabler / LegionZoneDisabler / FnKeysDisabler listeners. Polled from
  * the host; surfaces the "software running" banners and keyboard backlight
  * conflict state.

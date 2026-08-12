@@ -84,7 +84,7 @@ Errors: `NOT_SUPPORTED`, `AC_REQUIRED` (PowerMode no-AC), `UNDEFINED_STATE`.
 | `dashboard.getConfig` | {} | `{ showSensors, sensorsRefreshIntervalSeconds, groups: [...] }` |
 | `dashboard.saveConfig` | `{ config }` | `{ saved }` |
 
-Host has its own DashboardSettings copy (dashboard.json, same schema as WPF).
+Host has its own DashboardSettings copy (dashboard.json, same schema as Electron).
 
 ### automation (agent explores Lib.Automation `AutomationProcessor`)
 | method | params | result |

@@ -22,27 +22,27 @@ const LATEST_RELEASE_URL = `${PROJECT_URL}/releases/latest`
 
 const THIRD_PARTY_COLUMNS: ThirdPartyLibrary[][] = [
   [
-    { name: 'AsyncLock', url: 'https://github.com/neosmart/AsyncLock' },
-    { name: 'Autofac', url: 'https://github.com/autofac/Autofac' },
-    { name: 'Ben.Demystifier', url: 'https://github.com/benaadams/Ben.Demystifier' },
-    { name: 'ColorPicker', url: 'https://github.com/PixiEditor/ColorPicker' },
-    { name: 'CsWin32', url: 'https://github.com/microsoft/CsWin32' },
-    { name: 'Humanizer', url: 'https://github.com/Humanizr/Humanizer' }
+    { name: 'Electron', url: 'https://github.com/electron/electron' },
+    { name: 'React', url: 'https://react.dev' },
+    { name: 'Ant Design', url: 'https://github.com/ant-design/ant-design' },
+    { name: '@ant-design/icons', url: 'https://github.com/ant-design/ant-design-icons' },
+    { name: 'ECharts', url: 'https://github.com/apache/echarts' },
+    { name: 'Zustand', url: 'https://github.com/pmndrs/zustand' }
   ],
   [
-    { name: 'ManagedNativeWifi', url: 'https://github.com/emoacht/ManagedNativeWifi' },
-    { name: 'Markdig', url: 'https://github.com/xoofx/markdig' },
-    { name: 'Markdig.Wpf', url: 'https://github.com/Kryptos-FR/markdig.wpf' },
-    { name: 'Microsoft.CSharp', url: 'https://github.com/dotnet/runtime' },
-    { name: 'NAudio.Wasapi', url: 'https://github.com/naudio/NAudio' },
-    { name: 'Newtonsoft.Json', url: 'https://github.com/JamesNK/Newtonsoft.Json' }
+    { name: 'i18next', url: 'https://github.com/i18next/i18next' },
+    { name: 'React Router', url: 'https://github.com/remix-run/react-router' },
+    { name: 'Fluent UI System Icons', url: 'https://github.com/microsoft/fluentui-system-icons' },
+    { name: 'TypeScript', url: 'https://github.com/microsoft/TypeScript' },
+    { name: 'Vite', url: 'https://vite.dev' },
+    { name: 'electron-vite', url: 'https://electron-vite.org' }
   ],
   [
-    { name: 'Octokit', url: 'https://github.com/octokit/octokit.net' },
-    { name: 'System.Management', url: 'https://github.com/dotnet/runtime' },
-    { name: 'TaskScheduler', url: 'https://github.com/dahall/TaskScheduler' },
-    { name: 'WindowsDisplayAPI', url: 'https://github.com/falahati/WindowsDisplayAPI' },
-    { name: 'WPF-UI', url: 'https://github.com/lepoco/wpfui' }
+    { name: 'electron-builder', url: 'https://github.com/electron-userland/electron-builder' },
+    { name: 'react-i18next', url: 'https://github.com/i18next/react-i18next' },
+    { name: 'echarts-for-react', url: 'https://github.com/hustcc/echarts-for-react' },
+    { name: 'esbuild', url: 'https://github.com/evanw/esbuild' },
+    { name: 'ESLint', url: 'https://github.com/eslint/eslint' }
   ]
 ]
 

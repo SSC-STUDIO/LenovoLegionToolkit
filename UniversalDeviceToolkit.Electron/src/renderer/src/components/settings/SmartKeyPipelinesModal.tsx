@@ -7,7 +7,7 @@ import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/SelectSmartKeyPipelinesWindow:
+ * Parity modal for Electron Windows/Settings/SelectSmartKeyPipelinesWindow:
  * binds one or more manual (trigger-less) automation pipelines to the
  * smart key (Fn+F9) single or double press. "Show this app" leaves the
  * smart key action unset so pressing the key just brings the app forward.

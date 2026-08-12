@@ -7,14 +7,14 @@ import { Select } from 'antd'
 import './utils.css'
 
 /**
- * Port of WPF DeviceSetupWindow: first-launch device profile (pack) wizard.
+ * Port of Electron DeviceSetupWindow: first-launch device profile (pack) wizard.
  * Auto-detected packs are pre-selected, the user can override or skip.
  *
  * The option-building logic mirrors DeviceSetupWindow.BuildPackOptions:
  * basic mode is always offered first, hardware packs come before brand basic
  * packs, and the recommended pack is labelled "(recommended)".
  *
- * The device-support catalog download is host-side in the WPF app and is not
+ * The device-support catalog download is host-side in the Electron app and is not
  * exposed over the bridge yet, so callers pass `selectablePacks` explicitly;
  * without a catalog the wizard degrades to the basic-mode escape hatch.
  */

@@ -3,7 +3,7 @@ import { Select, Slider } from 'antd'
 import { useTranslation } from 'react-i18next'
 
 /**
- * God Mode value row — port of WPF Controls/Dashboard/GodMode/GodModeValueControl.xaml(.cs).
+ * God Mode value row — port of Electron Controls/Dashboard/GodMode/GodModeValueControl.xaml(.cs).
  * Renders title/description with either a stepped slider (Min/Max/Step) or a
  * combo box of explicit steps, plus a reset-to-default button when a default exists.
  */
@@ -26,11 +26,11 @@ export interface GodModeValueControlProps {
   description?: string
   unit?: string
   stepper?: StepperValue | null | undefined
-  /** WPF clamps out-of-range slider values to the default; falls back to default. */
+  /** Electron clamps out-of-range slider values to the default; falls back to default. */
   onChange?: (value: number) => void
 }
 
-/** WPF MathExtensions.RoundNearest(value, step). */
+/** Electron MathExtensions.RoundNearest(value, step). */
 function roundNearest(value: number, step: number): number {
   if (step <= 0) return value
   return Math.round(value / step) * step
@@ -89,7 +89,7 @@ export default function GodModeValueControl({
   const max = stepper.max ?? 100
   const step = stepper.step ?? 1
   const rawValue = stepper.value ?? min
-  // WPF: out-of-range values fall back to the default, then clamp to [min, max].
+  // Electron: out-of-range values fall back to the default, then clamp to [min, max].
   const clamped =
     defaultValue != null && (rawValue < min || rawValue > max)
       ? defaultValue

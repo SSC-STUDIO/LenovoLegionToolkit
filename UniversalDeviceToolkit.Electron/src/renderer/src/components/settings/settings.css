@@ -1,6 +1,6 @@
 ﻿/*
  * Settings page module styles.
- * Mirrors WPF Pages/SettingsPage.xaml (left nav + 8px splitter + right content)
+ * Mirrors Electron Pages/SettingsPage.xaml (left nav + 8px splitter + right content)
  * and Styles/CardControl.xaml / CardAction.xaml (card = radius 18, #303030,
  * 1px 7% white stroke, padding 14/12; 8px card gap).
  */
@@ -39,7 +39,7 @@
   align-items: stretch;
 }
 
-/* ── Left navigation (ListBox in WPF) ────────────────────────── */
+/* ── Left navigation (ListBox in Electron) ────────────────────────── */
 
 .udt-settings-page__nav {
   flex: 0 0 auto;
@@ -567,7 +567,7 @@
   background: #4a4a4a;
 }
 
-/* ── Accent options under theme mode (WPF SettingsAppearanceControl) ── */
+/* ── Accent options under theme mode (Electron SettingsAppearanceControl) ── */
 
 .udt-theme-accent-options {
   display: flex;

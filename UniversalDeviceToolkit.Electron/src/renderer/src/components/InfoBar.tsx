@@ -2,8 +2,8 @@ import { Alert } from 'antd'
 import type { ReactNode } from 'react'
 
 /**
- * Inline info bar — port of WPF Controls/Custom/InfoBar.cs (Wpf.Ui InfoBar).
- * Severity maps to the WPF InfoBarSeverity values.
+ * Inline info bar — port of Electron Controls/Custom/InfoBar.cs (Wpf.Ui InfoBar).
+ * Severity maps to the Electron InfoBarSeverity values.
  */
 
 export type InfoBarSeverity = 'informational' | 'success' | 'warning' | 'error'

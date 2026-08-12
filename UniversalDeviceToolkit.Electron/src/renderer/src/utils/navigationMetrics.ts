@@ -1,5 +1,5 @@
 /**
- * Navigation pane metrics — port of WPF Utils/NavigationPaneMetrics.cs.
+ * Navigation pane metrics — port of Electron Utils/NavigationPaneMetrics.cs.
  */
 export const NAVIGATION_DESIGN_WIDTH = 1300
 export const NAVIGATION_MIN_CONTENT_WIDTH = 700

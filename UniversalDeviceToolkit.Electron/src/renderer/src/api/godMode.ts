@@ -241,7 +241,7 @@ export const godModeApi = {
   }
 }
 
-/** WPF GodModeSettingsWindow.GetUniquePresetName — "Name (2)", "Name (3)", ... */
+/** Electron GodModeSettingsWindow.GetUniquePresetName — "Name (2)", "Name (3)", ... */
 export function getUniquePresetName(
   requestedName: string,
   presets: Record<string, GodModePreset>,
@@ -264,7 +264,7 @@ export function getUniquePresetName(
   }
 }
 
-/** WPF GodModeSettingsWindow.AddPreset — copy of the active preset under a new id. */
+/** Electron GodModeSettingsWindow.AddPreset — copy of the active preset under a new id. */
 export function addPreset(
   store: GodModeStore,
   requestedName: string,
@@ -284,7 +284,7 @@ export function addPreset(
   }
 }
 
-/** WPF GodModeSettingsWindow.RenameActivePreset. */
+/** Electron GodModeSettingsWindow.RenameActivePreset. */
 export function renameActivePreset(store: GodModeStore, requestedName: string): GodModeStore {
   const preset = store.presets[store.activePresetId]
   if (preset == null) return store
@@ -298,7 +298,7 @@ export function renameActivePreset(store: GodModeStore, requestedName: string): 
   }
 }
 
-/** WPF GodModeSettingsWindow.DeleteActivePreset — keep at least one preset. */
+/** Electron GodModeSettingsWindow.DeleteActivePreset — keep at least one preset. */
 export function deleteActivePreset(store: GodModeStore): GodModeStore {
   const preset = store.presets[store.activePresetId]
   if (preset == null || Object.keys(store.presets).length <= 1) return store

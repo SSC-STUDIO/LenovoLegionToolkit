@@ -6,10 +6,10 @@ import { changeLanguage, supportedLanguages } from '../../i18n'
 import './utils.css'
 
 /**
- * Port of WPF LanguageSelectorWindow: first-launch language gate. Lists the
+ * Port of Electron LanguageSelectorWindow: first-launch language gate. Lists the
  * available languages, applies the selection and returns the outcome.
  *
- * The WPF window downloads language packs through LanguagePackManager; the
+ * The Electron window downloads language packs through LanguagePackManager; the
  * Electron renderer ships its locale files bundled, so every listed language
  * is always "installed" and the download/install progress phase is not needed.
  * The failure actions (Retry / Continue in English / Exit) are still provided
@@ -103,7 +103,7 @@ export default function LanguageSelectorModalHost(): React.JSX.Element {
       settle({ outcome: 'ContinueEnglish', culture: 'en' })
       return
     }
-    // Bundled locale: apply immediately (WPF would install the pack first).
+    // Bundled locale: apply immediately (Electron would install the pack first).
     await changeLanguage(code).catch(() => undefined)
     settle({ outcome: 'Continue', culture: code })
   }

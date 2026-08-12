@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import './utils.css'
 
 /**
- * Port of WPF ActionDetailsWindow: shows the action title/description plus the
+ * Port of Electron ActionDetailsWindow: shows the action title/description plus the
  * technical implementation details (commands, registry tweaks or service
  * management entries) for a Windows optimization action key.
  *

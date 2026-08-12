@@ -1,5 +1,5 @@
 /**
- * Mirrors WPF PluginIconResolver pure logic: monogram creation and
+ * Mirrors Electron PluginIconResolver pure logic: monogram creation and
  * symbol-vs-monogram icon kind resolution.
  *
  * Filesystem-backed resolution (icon.png / plugin.png / logo.png discovery

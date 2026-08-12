@@ -34,7 +34,7 @@ export function PowerSection(): React.JSX.Element {
     void load()
   }, [load])
 
-  // WPF parity (SettingsPowerControl.RefreshAsync): probe the capability and read
+  // Electron parity (SettingsPowerControl.RefreshAsync): probe the capability and read
   // the current value; hide the card when unsupported or the read fails.
   useEffect(() => {
     void (async () => {

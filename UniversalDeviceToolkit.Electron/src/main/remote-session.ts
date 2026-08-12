@@ -1,9 +1,9 @@
 /**
- * Mirrors WPF RemoteSessionHelper: detects whether the app is running inside
+ * Mirrors Electron RemoteSessionHelper: detects whether the app is running inside
  * a remote-desktop session (RDP, VNC, Citrix, ...) so the main process can
  * enable software-rendering fallbacks.
  *
- * The WPF helper combines three signals (WinForms TerminalServerSession, the
+ * The Electron helper combines three signals (WinForms TerminalServerSession, the
  * SESSIONNAME environment variable and the WTS session-id comparison). The
  * first two map directly onto the environment the Electron main process
  * inherits from the Windows session:

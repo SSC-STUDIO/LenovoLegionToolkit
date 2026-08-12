@@ -24,7 +24,7 @@ function optionKey(state: StepState): string {
 }
 
 /**
- * Modal parameter editor for a single automation step. Mirrors the WPF step
+ * Modal parameter editor for a single automation step. Mirrors the Electron step
  * controls: combo-box backed steps load their states from the host
  * (feature.getStates, equivalent to GetAllStatesAsync) with a static enum
  * fallback; notification/play-sound/quick-action get dedicated editors.

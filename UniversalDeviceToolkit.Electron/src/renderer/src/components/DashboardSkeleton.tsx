@@ -3,7 +3,7 @@ import { SkeletonCard } from './Skeleton'
 import './DashboardSkeleton.css'
 
 /**
- * Dashboard page skeleton — 1:1 port of WPF DashboardPage.xaml loading chrome.
+ * Dashboard page skeleton — 1:1 port of Electron DashboardPage.xaml loading chrome.
  *
  * DashboardPage owns its loading chrome (LoadingChromeOwnership.Page), so the
  * generic navigation skeleton and the global spinner never flash; this single

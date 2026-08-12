@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * Adaptive text block — port of WPF Controls/AdaptiveTextBlock.cs. Shrinks the
+ * Adaptive text block — port of Electron Controls/AdaptiveTextBlock.cs. Shrinks the
  * font size in fixed steps until the text fits its container (or the minimum
  * size is reached).
  */

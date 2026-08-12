@@ -34,7 +34,7 @@ export default function DashboardParityPage(): React.JSX.Element {
 
   useEffect(() => {
     let cancelled = false
-    // DashboardPage owns its loading chrome (WPF LoadingChromeOwnership.Page):
+    // DashboardPage owns its loading chrome (Electron LoadingChromeOwnership.Page):
     // the page renders its own sensors+groups skeleton, so the session is
     // silent — the global spinner overlay never flashes on this page.
     const loadingId = useLoadingStore.getState().start(

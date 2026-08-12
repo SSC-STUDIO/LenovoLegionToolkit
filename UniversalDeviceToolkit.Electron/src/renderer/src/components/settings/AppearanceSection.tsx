@@ -63,7 +63,7 @@ const TEMPERATURE_UNIT_OPTIONS: { value: TemperatureUnit; label: string }[] = [
 ]
 
 /**
- * UI scale levels aligned with the WPF app
+ * UI scale levels aligned with the Electron app
  * (Compact 0.90 / Standard 1.0 / Large 1.10 / ExtraLarge 1.25).
  */
 const UI_SCALE_OPTIONS_LABELED = UI_SCALE_OPTIONS.map((value) => ({
@@ -170,7 +170,7 @@ function ThemePreviewCard({
   label: string
   onClick: () => void
 }): React.JSX.Element {
-  // WPF theme preview: Light/Dark cards render two identical panes; the System
+  // Electron theme preview: Light/Dark cards render two identical panes; the System
   // card is split — one light half and one dark half.
   const isSystem = option.value === 'System'
   const singleMode: 'light' | 'dark' = option.value === 'Light' ? 'light' : 'dark'
@@ -294,7 +294,7 @@ export default function AppearanceSection(): React.JSX.Element {
 
   /**
    * Push the resolved accent into the theme store immediately.
-   * Matches WPF ThemeManager.SetColor: the accent always applies to
+   * Matches Electron ThemeManager.SetColor: the accent always applies to
    * --udt-accent / Ant Design colorPrimary. ApplyAccentColorToTheme only
    * controls the tinted surface palette (ThemeStylePreset), not the accent.
    */
@@ -308,7 +308,7 @@ export default function AppearanceSection(): React.JSX.Element {
     setAccent(custom ? accentColorToHex(custom) : systemAccentHex)
   }
 
-  /** When the theme-style checkbox is on, picking an accent resets to Default (WPF). */
+  /** When the theme-style checkbox is on, picking an accent resets to Default (Electron). */
   const themeStylePresetForAccentPick = (): string | undefined =>
     applyAccentToTheme ? 'Default' : undefined
 
@@ -351,7 +351,7 @@ export default function AppearanceSection(): React.JSX.Element {
   }
 
   const handleApplyAccentToThemeChange = (checked: boolean): void => {
-    // Palette tint gate only — do not clear/reapply the accent itself (WPF parity).
+    // Palette tint gate only — do not clear/reapply the accent itself (Electron parity).
     const next: AppSettings = { ...app, ApplyAccentColorToTheme: checked }
     if (checked && accentSource === 'Custom') {
       next.ThemeStylePreset = 'Default'

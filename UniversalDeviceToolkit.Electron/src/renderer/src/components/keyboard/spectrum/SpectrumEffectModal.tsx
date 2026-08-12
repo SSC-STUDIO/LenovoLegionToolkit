@@ -47,13 +47,13 @@ const DIRECTIONS: SpectrumDirection[] = ['BottomToTop', 'TopToBottom', 'LeftToRi
 const CLOCKWISE_DIRECTIONS: SpectrumClockwiseDirection[] = ['Clockwise', 'CounterClockwise']
 
 /**
- * WPF SpectrumKeyboardBacklightEffectTypeExtensions: "all lights" effects
+ * Electron SpectrumKeyboardBacklightEffectTypeExtensions: "all lights" effects
  * ignore per-key selection; "whole keyboard" effects apply to every key.
  */
 const ALL_LIGHTS_TYPES: SpectrumEffectType[] = ['AudioBounce', 'AudioRipple', 'AuroraSync']
 const WHOLE_KEYBOARD_TYPES: SpectrumEffectType[] = ['Type', 'Ripple']
 
-/** Effect types that expose the speed combo (WPF RefreshVisibility). */
+/** Effect types that expose the speed combo (Electron RefreshVisibility). */
 const SPEED_VISIBLE_TYPES: SpectrumEffectType[] = [
   'ColorChange',
   'ColorPulse',
@@ -66,7 +66,7 @@ const SPEED_VISIBLE_TYPES: SpectrumEffectType[] = [
   'Type'
 ]
 
-/** Effect types that expose the multi-color picker (WPF RefreshVisibility). */
+/** Effect types that expose the multi-color picker (Electron RefreshVisibility). */
 const MULTI_COLOR_TYPES: SpectrumEffectType[] = [
   'ColorChange',
   'ColorPulse',
@@ -81,7 +81,7 @@ const DEFAULT_SPEED: SpectrumSpeed = 'Speed2'
 const DEFAULT_DIRECTION: SpectrumDirection = 'BottomToTop'
 const DEFAULT_CLOCKWISE: SpectrumClockwiseDirection = 'Clockwise'
 
-/** WPF Add-effect defaults (cards hidden until the type reveals them). */
+/** Electron Add-effect defaults (cards hidden until the type reveals them). */
 const NEW_EFFECT: SpectrumEffect = {
   Type: 'Always',
   Speed: 'None',
@@ -155,7 +155,7 @@ function hexToColor(hex: string): RgbColor {
 }
 
 /**
- * Spectrum effect editor — port of WPF
+ * Spectrum effect editor — port of Electron
  * SpectrumKeyboardBacklightEditEffectWindow: effect type, conditional
  * direction/clockwise/speed/color cards (RefreshVisibility), all-lights /
  * whole-keyboard warnings and the Apply key resolution.
@@ -170,7 +170,7 @@ export default function SpectrumEffectModal({
 }: SpectrumEffectModalProps): React.JSX.Element | null {
   const { t } = useTranslation()
   const [draft, setDraft] = useState<SpectrumEffect>(effect ?? NEW_EFFECT)
-  // Live backlight preview — WPF SpectrumKeyboardBacklightEditEffectWindow
+  // Live backlight preview — Electron SpectrumKeyboardBacklightEditEffectWindow
   // polls GetStateAsync every 50ms and repaints the keycaps.
   const [previewColors, setPreviewColors] = useState<Map<number, string> | undefined>(undefined)
   const previewInFlightRef = useRef(false)
@@ -218,7 +218,7 @@ export default function SpectrumEffectModal({
   }, [effect])
 
   useEffect(() => {
-    // WPF SetItems: when the stored value is not in the combo list (a "None"
+    // Electron SetItems: when the stored value is not in the combo list (a "None"
     // default written while the card was hidden), the default wins.
     const patch: Partial<SpectrumEffect> = {}
     if (speedVisible(draft.Type) && draft.Speed === 'None') patch.Speed = DEFAULT_SPEED
@@ -271,7 +271,7 @@ export default function SpectrumEffectModal({
     update({ Colors: draft.Colors.filter((_, i) => i !== index) })
   }
 
-  // WPF Apply_Click: AllLights effects carry no keys, whole-keyboard effects
+  // Electron Apply_Click: AllLights effects carry no keys, whole-keyboard effects
   // carry every key code, everything else uses the selected keys.
   const handleApply = (): void => {
     const keys = allLights ? [] : wholeKeyboard ? [...deviceKeys] : [...selected]

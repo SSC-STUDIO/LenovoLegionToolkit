@@ -2,7 +2,7 @@ import './custom.css'
 import type { ReactNode } from 'react'
 
 /**
- * Clickable action card row — port of WPF Controls/Custom/CardAction.cs
+ * Clickable action card row — port of Electron Controls/Custom/CardAction.cs
  * (Wpf.Ui CardAction: icon / title / description / click + accessory slot).
  */
 

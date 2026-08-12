@@ -1,5 +1,5 @@
 /**
- * Main-thread dispatch helpers — port of WPF Utils/MainThreadDispatcher.cs.
+ * Main-thread dispatch helpers — port of Electron Utils/MainThreadDispatcher.cs.
  * In the renderer, the React/Scheduler main thread is the UI thread;
  * these wrappers keep the call site contract identical.
  */
@@ -20,7 +20,7 @@ export function dispatchAsync(callback: () => Promise<void>): Promise<void> {
   })
 }
 
-/** WPF Dispatcher.InvokeAsync equivalent: runs after the current frame. */
+/** Electron Dispatcher.InvokeAsync equivalent: runs after the current frame. */
 export function invokeAsync(callback: () => void): Promise<void> {
   return dispatchAsync(async () => callback())
 }

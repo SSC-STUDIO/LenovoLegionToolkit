@@ -105,7 +105,7 @@ export function useTheme(): ThemeController {
       setThemeMode(systemPrefersDark() ? 'dark' : 'light')
     }
 
-    // WPF ThemeManager.SetColor always applies the resolved accent.
+    // Electron ThemeManager.SetColor always applies the resolved accent.
     // ApplyAccentColorToTheme only gates the tinted surface palette (style
     // preset), not --udt-accent / selection rings / Ant Design colorPrimary.
     const resolveAccent = (settings?: ApplicationSettings): string => {

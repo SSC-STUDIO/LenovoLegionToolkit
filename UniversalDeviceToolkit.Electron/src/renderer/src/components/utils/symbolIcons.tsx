@@ -1,5 +1,5 @@
 /**
- * Shared symbol catalog — port of WPF SymbolRegular picker catalog.
+ * Shared symbol catalog — port of Electron SymbolRegular picker catalog.
  * Used by SymbolPickerModal and pipeline icon rendering.
  */
 import {
@@ -135,7 +135,7 @@ export const SYMBOL_CATALOG: SymbolDefinition[] = [
   { name: 'Wrench', icon: <Wrench24Regular /> }
 ]
 
-/** Case-insensitive icon lookup by stored name (WPF Enum.TryParse equivalent). */
+/** Case-insensitive icon lookup by stored name (Electron Enum.TryParse equivalent). */
 export function symbolIcon(name: string | null | undefined): React.JSX.Element | null {
   if (name == null || name.trim() === '') return null
   const needle = name.trim().toLowerCase()

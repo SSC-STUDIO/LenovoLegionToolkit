@@ -1,5 +1,5 @@
 /**
- * Window maximize/resize stability helpers — port of WPF
+ * Window maximize/resize stability helpers — port of Electron
  * Utils/WindowMaximizeWorkAreaHelper.cs + Utils/WindowResizeStabilityHelper.cs.
  *
  * Electron maximizes within the monitor work area natively, and Chromium
@@ -50,7 +50,7 @@ export function attachResizeStability(window: BrowserWindow): void {
 }
 
 /**
- * Safety net for WPF WindowMaximizeWorkAreaHelper: Electron maximizes within the
+ * Safety net for Electron WindowMaximizeWorkAreaHelper: Electron maximizes within the
  * monitor work area natively, but desktop-dock overlays (MyDockFinder etc.) can
  * still report a full-monitor maximize area that covers the taskbar/dock. Only
  * when the maximized bounds actually exceed the work area do we snap them back

@@ -3,7 +3,7 @@ import { settingsApi } from './settings'
 /**
  * "osd" settings scope (osd.json) — mirrors OsdSettingsStore in
  * UniversalDeviceToolkit.Lib. The host serializes the store with camelCase
- * keys; defaults match the WPF OsdSettings.cs store initializers.
+ * keys; defaults match the Electron OsdSettings.cs store initializers.
  */
 export interface OsdSettingsStore {
   showOsd: boolean

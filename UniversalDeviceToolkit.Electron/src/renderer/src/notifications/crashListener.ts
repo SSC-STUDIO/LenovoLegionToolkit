@@ -4,7 +4,7 @@ import { openCrashReportNotification } from '../components/utils/CrashReportNoti
 let unsubscribe: (() => void) | undefined
 
 /**
- * Mirrors WPF AppDomain_UnhandledException → CrashReportHelper → crash
+ * Mirrors Electron AppDomain_UnhandledException → CrashReportHelper → crash
  * notification modal: forwards main-process crash reports to the modal host.
  */
 export function initCrashReportListener(): () => void {

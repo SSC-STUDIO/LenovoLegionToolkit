@@ -7,7 +7,7 @@ import { useOsdSettingsStore } from '../../stores/osdSettingsStore'
 import { SettingsCard } from './SettingsCard'
 
 /**
- * OSD settings — port of the WPF OsdSettingsWindow (General / Appearance /
+ * OSD settings — port of the Electron OsdSettingsWindow (General / Appearance /
  * Thresholds / Sensors tabs). Values are persisted to the "osd" settings
  * scope; the main-process OSD window applies them on settings.changed.
  */

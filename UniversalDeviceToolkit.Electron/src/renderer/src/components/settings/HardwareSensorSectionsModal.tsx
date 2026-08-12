@@ -5,7 +5,7 @@ import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/HardwareSensorSectionsWindow:
+ * Parity modal for Electron Windows/Settings/HardwareSensorSectionsWindow:
  * choose which sensor sections (CPU / Battery / GPU) are visible on the
  * dashboard and in which order. Persisted to the hardwareSensors scope
  * (VisibleSections / SectionOrder).

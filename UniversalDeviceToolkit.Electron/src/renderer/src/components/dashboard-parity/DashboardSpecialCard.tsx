@@ -94,7 +94,7 @@ function DiscreteGpuCard({
     }
   }
 
-  // Port of WPF ClipboardExtensions.SetProcesses: copy the GPU process list.
+  // Port of Electron ClipboardExtensions.SetProcesses: copy the GPU process list.
   async function copyProcessList(): Promise<void> {
     setCopying(true)
     try {

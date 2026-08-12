@@ -7,10 +7,10 @@ import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/NavigationItemsSettingsWindow:
+ * Parity modal for Electron Windows/Settings/NavigationItemsSettingsWindow:
  * show/hide the optional sidebar navigation items. Dashboard and Settings
  * are always visible and not listed here. The Keyboard entry is only shown
- * when the keyboard backlight is supported (like the WPF window).
+ * when the keyboard backlight is supported (like the Electron window).
  */
 
 interface NavigationItemsModalProps {

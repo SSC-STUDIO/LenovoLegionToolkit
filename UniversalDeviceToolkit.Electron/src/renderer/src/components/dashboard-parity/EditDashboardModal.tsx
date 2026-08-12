@@ -10,7 +10,7 @@ import AddDashboardItemModal from './AddDashboardItemModal'
 import InfoBar from '../InfoBar'
 
 /**
- * Parity modal for WPF Windows/Dashboard/EditDashboardWindow:
+ * Parity modal for Electron Windows/Dashboard/EditDashboardWindow:
  * sensors toggle, group list with add / rename / delete / move, per-item
  * visibility (checkbox), per-item move/delete, an add-item picker and a
  * "Default" reset that restores the built-in groups.
@@ -48,7 +48,7 @@ export default function EditDashboardModal({
   const [namePrompt, setNamePrompt] = useState<NamePromptState | null>(null)
   const [nameInput, setNameInput] = useState('')
 
-  // WPF shows a short loading state before revealing the editor.
+  // Electron shows a short loading state before revealing the editor.
   useEffect(() => {
     const timer = window.setTimeout(() => setLoading(false), 500)
     return () => window.clearTimeout(timer)

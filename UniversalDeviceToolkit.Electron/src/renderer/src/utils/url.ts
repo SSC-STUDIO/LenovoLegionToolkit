@@ -1,5 +1,5 @@
 /**
- * Safe external URL handling — port of WPF Extensions/UriExtensions.cs.
+ * Safe external URL handling — port of Electron Extensions/UriExtensions.cs.
  * Only HTTP/HTTPS schemes are allowed to prevent command injection.
  */
 
@@ -16,7 +16,7 @@ const BLOCKED_SCHEME_PREFIXES = [
 ]
 
 /**
- * SECURITY: Only allow HTTP and HTTPS schemes, mirroring the WPF allow-list.
+ * SECURITY: Only allow HTTP and HTTPS schemes, mirroring the Electron allow-list.
  * Rejects file://, ms-* (ms-settings, ms-windows-store) and any custom scheme.
  */
 export function isSafeExternalUrl(url: string): boolean {

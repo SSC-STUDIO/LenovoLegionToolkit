@@ -1,5 +1,5 @@
 ﻿/*
- * Shared page chrome mirroring the WPF client (AppPageTitleTextBlockStyle,
+ * Shared page chrome mirroring the Electron client (AppPageTitleTextBlockStyle,
  * AppSubsectionTitleTextBlockStyle, AppPageDescriptionTextBlockStyle,
  * CardControl, Badge, EmptyState, PluginExtensionsPage styles).
  */
@@ -12,7 +12,7 @@
 /* ── Page scaffolding ─────────────────────────────────────────── */
 
 /* Shared page root used by Automation / Optimization / Settings pages.
-   Full-bleed like the WPF content area (no max-width cap). */
+   Full-bleed like the Electron content area (no max-width cap). */
 .udt-page {
   padding: 16px 16px 12px 0;
 }
@@ -25,7 +25,7 @@
   line-height: 1.2;
 }
 
-/* Alias used by AutomationPage / WindowsOptimizationPage (WPF AppPageTitleTextBlockStyle). */
+/* Alias used by AutomationPage / WindowsOptimizationPage (Electron AppPageTitleTextBlockStyle). */
 .udt-page__title {
   margin: 0 0 8px;
   color: var(--udt-text-primary);
@@ -42,7 +42,7 @@
   white-space: pre-line;
 }
 
-/* Alias used by AutomationPage / WindowsOptimizationPage (WPF AppPageDescriptionTextBlockStyle). */
+/* Alias used by AutomationPage / WindowsOptimizationPage (Electron AppPageDescriptionTextBlockStyle). */
 .udt-page__subtitle {
   margin: 0 0 24px;
   color: var(--udt-text-secondary);

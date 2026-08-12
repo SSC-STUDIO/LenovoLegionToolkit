@@ -1,5 +1,5 @@
 /*
- * Persistent status toasts — port of WPF MainWindow._statusNotificationStack
+ * Persistent status toasts — port of Electron MainWindow._statusNotificationStack
  * + AppStatusBanner (NotificationToastWidth glass cards, bottom-right overlay).
  * Must not sit in document flow or they push page content down.
  */

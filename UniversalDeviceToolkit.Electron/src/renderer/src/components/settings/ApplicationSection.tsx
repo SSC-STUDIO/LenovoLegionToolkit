@@ -62,7 +62,7 @@ function readBoolean(app: AppSettings, key: string): boolean {
   return app[key] === true
 }
 
-/** WPF SettingsApplicationBehaviorControl software disabler cards. */
+/** Electron SettingsApplicationBehaviorControl software disabler cards. */
 const DISABLER_ITEMS: { app: SoftwareDisablerApp; labelKey: string; descKey: string; errorKey: string }[] = [
   {
     app: 'vantage',
@@ -154,7 +154,7 @@ export default function ApplicationSection(): React.JSX.Element {
       .set('application', next)
       .then(() => settingsApi.save(['application']))
       .catch(() => message.error(t('settings.saveFailed')))
-    // WPF Autorun writes the registry Run key; Electron applies the login item.
+    // Electron Autorun writes the registry Run key; Electron applies the login item.
     if (field === 'Autorun') {
       appApi
         .setAutorun(checked)

@@ -1,6 +1,6 @@
-/* TitleBar polish + DeviceInfoModal styles (WPF DeviceInformationWindow port). */
+/* TitleBar polish + DeviceInfoModal styles (Electron DeviceInformationWindow port). */
 
-/* WPF TitleBarDeviceInfoButtonStyle triggers: pressed → tertiary fill. */
+/* Electron TitleBarDeviceInfoButtonStyle triggers: pressed → tertiary fill. */
 .udt-titlebar__device-button:active {
   background: var(--udt-control-fill-tertiary, rgba(128, 128, 128, 0.2));
 }

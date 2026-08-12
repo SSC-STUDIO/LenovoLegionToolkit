@@ -7,7 +7,7 @@ import type { DashboardItem } from '../../api/dashboard'
 import { ALL_DASHBOARD_ITEMS, dashboardItemLabel } from './dashboardItems'
 
 /**
- * Parity modal for WPF Windows/Dashboard/AddDashboardItemWindow:
+ * Parity modal for Electron Windows/Dashboard/AddDashboardItemWindow:
  * lists every dashboard item that is not already used by any group;
  * clicking a card adds the item and closes the dialog.
  */

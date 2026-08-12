@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import './utils.css'
 
 /**
- * Port of WPF InputDialogWindow: a small modal with a single text input,
+ * Port of Electron InputDialogWindow: a small modal with a single text input,
  * optional validation, debounced confirm-button refresh and Enter/Escape
  * handling. Returns the trimmed text, '' when empty is allowed, null on
  * cancel.

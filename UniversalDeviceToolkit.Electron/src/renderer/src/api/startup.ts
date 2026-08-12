@@ -13,7 +13,7 @@ export const startupApi = {
   setAutorun: (state: AutorunState): Promise<{ ok: boolean; state: AutorunState }> =>
     invoke<{ ok: boolean; state: AutorunState }>('app.setAutorun', { state }),
   /**
-   * Renderer-side crash-report listener — mirrors the WPF crash notification
+   * Renderer-side crash-report listener — mirrors the Electron crash notification
    * modal triggered by AppDomain/Dispatcher unhandled exceptions. Returns an
    * unsubscribe function.
    */

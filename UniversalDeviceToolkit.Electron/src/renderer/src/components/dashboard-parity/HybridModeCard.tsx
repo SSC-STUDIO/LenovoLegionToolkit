@@ -8,10 +8,10 @@ import { useFeature } from '../../hooks/useFeature'
 import { useFeaturesStore } from '../../stores/featuresStore'
 
 /**
- * Parity card for the WPF HybridModeControlFactory:
+ * Parity card for the Electron HybridModeControlFactory:
  * - IGPU-capable machines get a ComboBox (On / OnIGPUOnly / OnAuto / Off)
  *   plus an info dialog; others get a plain On/Off toggle.
- * - Switching to/from Off asks whether to restart now (WPF asks before the
+ * - Switching to/from Off asks whether to restart now (Electron asks before the
  *   state change; the toggle variant asks after applying).
  * - Changes not involving Off keep the control disabled for 5 seconds.
  */
@@ -61,7 +61,7 @@ const STATE_LABEL_KEYS: Record<HybridModeValue, string> = {
   Off: 'feature.hybridMode.states.off'
 }
 
-/** WPF AbstractComboBoxFeatureCardControl.AdditionalStateChangeDelay. */
+/** Electron AbstractComboBoxFeatureCardControl.AdditionalStateChangeDelay. */
 const NON_OFF_CHANGE_DELAY_MS = 5000
 
 function isHybridModeValue(value: unknown): value is HybridModeValue {
@@ -84,7 +84,7 @@ export default function HybridModeCard(): React.JSX.Element | null {
 
   if (!supported) return null
 
-  // WPF HybridModeControlFactory picks the ComboBox when the machine supports
+  // Electron HybridModeControlFactory picks the ComboBox when the machine supports
   // IGPU mode; such machines expose OnIGPUOnly/OnAuto among their states.
   const isComboBox = states.some((value) => value === 'OnIGPUOnly' || value === 'OnAuto')
   const current = isHybridModeValue(state) ? state : undefined

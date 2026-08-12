@@ -1,4 +1,4 @@
-/* Sensors board (1:1 mirror of WPF SensorsControl.xaml + styles) */
+/* Sensors board (1:1 mirror of Electron SensorsControl.xaml + styles) */
 
 .udt-sensors {
   margin-bottom: 0;
@@ -387,7 +387,7 @@
   }
 }
 
-/* ── Refresh interval toolbar (WPF SensorsControl refresh context menu) ── */
+/* ── Refresh interval toolbar (Electron SensorsControl refresh context menu) ── */
 
 .udt-sensor-toolbar {
   display: flex;
@@ -433,7 +433,7 @@
   background: var(--udt-control-fill-default);
 }
 
-/* WPF detail panel: two equal columns, 8px gap, 16px top margin; each row is a
+/* Electron detail panel: two equal columns, 8px gap, 16px top margin; each row is a
    14px primary label above a wrapping 14px primary value, 8px row spacing. */
 .udt-sensor-panel__details {
   margin-top: 16px;
@@ -474,7 +474,7 @@
   white-space: normal;
 }
 
-/* ── Battery detail mini gauges (WPF GaugeSizeSM rings, 4px thick) ──── */
+/* ── Battery detail mini gauges (Electron GaugeSizeSM rings, 4px thick) ──── */
 
 .udt-sensor-panel__battery-gauges {
   display: grid;

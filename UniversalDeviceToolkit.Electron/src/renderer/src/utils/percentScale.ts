@@ -1,5 +1,5 @@
 /**
- * Mirrors WPF PercentageToScaleConverter: converts a percentage into a
+ * Mirrors Electron PercentageToScaleConverter: converts a percentage into a
  * clamped [0, 1] scale factor used for progress fills / gauges.
  */
 export function percentToScale(percent: number): number {

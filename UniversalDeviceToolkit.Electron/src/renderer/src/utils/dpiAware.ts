@@ -1,5 +1,5 @@
 /**
- * DPI-aware typography — port of WPF Utils/DpiAwareTypography.cs.
+ * DPI-aware typography — port of Electron Utils/DpiAwareTypography.cs.
  * Chromium already applies the Windows display scale to CSS px, so the
  * user-scale component is the only multiplier needed here.
  */
@@ -15,12 +15,12 @@ export function cssPxPerPhysicalPixel(): number {
   return devicePixelRatio()
 }
 
-/** Design px (WPF DIPs at 100% scale) → CSS px for the current display. */
+/** Design px (Electron DIPs at 100% scale) → CSS px for the current display. */
 export function dipToCssPx(dip: number): number {
   return dip
 }
 
-/** WPF UserScale-adjusted size for a design-px token. */
+/** Electron UserScale-adjusted size for a design-px token. */
 export function userScaled(dip: number, userScale: number): number {
   return dip * userScale
 }

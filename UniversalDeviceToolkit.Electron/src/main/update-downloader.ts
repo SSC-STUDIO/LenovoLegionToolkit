@@ -1,8 +1,8 @@
 /**
- * Update downloader — Electron-side counterpart of the WPF UpdateChecker.
+ * Update downloader — Electron-side counterpart of the Electron UpdateChecker.
  * The host only reports availability/version; the main process resolves the
  * release asset from the GitHub API, downloads it with progress events and
- * launches the NSIS installer silently (WPF: `/SILENT /RESTARTAPPLICATIONS`).
+ * launches the NSIS installer silently (Electron: `/SILENT /RESTARTAPPLICATIONS`).
  */
 import { app } from 'electron'
 import { createWriteStream, existsSync, mkdirSync } from 'fs'
@@ -163,7 +163,7 @@ export async function downloadLatestUpdate(onProgress: (progress: DownloadProgre
   return downloadToFile(release.assetUrl, destination, onProgress)
 }
 
-/** Launches the NSIS installer silently and exits the app (WPF /SILENT /RESTARTAPPLICATIONS). */
+/** Launches the NSIS installer silently and exits the app (Electron /SILENT /RESTARTAPPLICATIONS). */
 export async function launchInstaller(installerPath: string): Promise<{ ok: boolean }> {
   return new Promise((resolve) => {
     const child = spawn(installerPath, ['/SILENT', '/RESTARTAPPLICATIONS'], {

@@ -1,6 +1,6 @@
 ﻿/*
- * Design tokens mirroring the original WPF client (DesignTokens.xaml +
- * ElevationTokens.xaml + AnimationTokens.xaml + WPF-UI Dark theme values).
+ * Design tokens mirroring the original Electron client (DesignTokens.xaml +
+ * ElevationTokens.xaml + AnimationTokens.xaml + Electron-UI Dark theme values).
  */
 :root {
   color-scheme: dark;
@@ -11,7 +11,7 @@
   --udt-surface-navigation: #202020;
   --udt-surface-chart: rgba(255, 255, 255, 0.045);
 
-  /* WPF-UI Dark theme brushes */
+  /* Electron-UI Dark theme brushes */
   --udt-text-primary: #ffffff;
   --udt-text-secondary: rgba(255, 255, 255, 0.77);
   --udt-text-tertiary: rgba(255, 255, 255, 0.53);
@@ -320,7 +320,7 @@ body {
   }
 }
 
-/* 鈹€鈹€ Title bar (38px, WPF-UI TitleBar) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* 鈹€鈹€ Title bar (38px, Electron-UI TitleBar) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
 
 .udt-titlebar {
   position: relative;
@@ -332,7 +332,7 @@ body {
   user-select: none;
 }
 
-/* Drag layer spanning the full bar; title text sits at the far left (WPF Left-aligned) */
+/* Drag layer spanning the full bar; title text sits at the far left (Electron Left-aligned) */
 .udt-titlebar__title {
   position: absolute;
   inset: 0;
@@ -552,7 +552,7 @@ body {
   transition: color var(--udt-anim-fast) ease-out;
 }
 
-/* Collapsed: icon above, tiny label below (WPF CompactLayout, MinHeight 60) */
+/* Collapsed: icon above, tiny label below (Electron CompactLayout, MinHeight 60) */
 .udt-nav-item--collapsed {
   flex-direction: column;
   justify-content: center;
@@ -611,7 +611,7 @@ body {
   opacity: 0.85;
   position: relative;
   overflow: hidden;
-  /* Breathing 1.0 鈫?0.85 (WPF BreathingFloorOpacity), same 1.65s cycle as the
+  /* Breathing 1.0 鈫?0.85 (Electron BreathingFloorOpacity), same 1.65s cycle as the
      shimmer sweep, SineEase EaseInOut via auto-reverse + ease-in-out. */
   animation: udt-breathe var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite alternate ease-in-out;
 }
@@ -623,7 +623,7 @@ body {
   /* 7-stop sweep matching SkeletonShimmer.CreateShimmerBrush:
      base 0.00 / base 0.14 / edge 0.30 / peak 0.48 / edge 0.66 / base 0.84 / base 1.00.
      Tinted from the text color so the sweep stays visible in both themes
-     (white tint on dark, dark tint on light) — matches WPF's luminance
+     (white tint on dark, dark tint on light) — matches Electron's luminance
      resolution (edge ~11%, peak ~27.5%). */
   background: linear-gradient(
     90deg,
@@ -635,9 +635,9 @@ body {
     color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 84%,
     color-mix(in srgb, var(--udt-text-primary) 0%, transparent) 100%
   );
-  /* WPF SkeletonShimmer: a relative bounding-box brush (100% of the block)
+  /* Electron SkeletonShimmer: a relative bounding-box brush (100% of the block)
      translated -1.25 鈫?+1.25 of the block width (SweepFrom/SweepTo), so the
-     soft-shoulder band re-enters from off-screen exactly like the WPF gradient. */
+     soft-shoulder band re-enters from off-screen exactly like the Electron gradient. */
   transform: translateX(-125%);
   /* --udt-shimmer-delay (default 0): negative staggered values set by Skeleton.tsx
      keep the sweep permanently de-phased per element (0.055s/step, cap 0.32s).
@@ -664,7 +664,7 @@ body {
   }
 }
 
-/* Motion / high-contrast: WPF SkeletonShimmer.IsMotionDisabled kills the sweep
+/* Motion / high-contrast: Electron SkeletonShimmer.IsMotionDisabled kills the sweep
    under prefers-reduced-motion and high-contrast themes; keep the static block. */
 @media (prefers-reduced-motion: reduce) {
   .udt-skeleton::after {
@@ -684,7 +684,7 @@ body {
   padding: 16px 14px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-card);
-  /* WPF AppSkeletonCardStyle: ControlFillColorDefaultBrush fill (card chrome
+  /* Electron AppSkeletonCardStyle: ControlFillColorDefaultBrush fill (card chrome
      sits on the page surface), not the opaque card surface. */
   background: var(--udt-control-fill-default);
 }
@@ -1063,7 +1063,7 @@ body {
      (content width, not viewport). Do not force 1-col or 88px here. */
 }
 
-/* Ant Design overrides to match WPF-UI dark chrome */
+/* Ant Design overrides to match Electron-UI dark chrome */
 .ant-select-selector {
   border-radius: var(--udt-radius-control) !important;
   min-height: 32px !important;
@@ -1086,7 +1086,7 @@ body {
   border-color: var(--udt-control-stroke-default);
 }
 
-/* WPF SnackbarHelper parity: antd message (transient action feedback) sits at
+/* Electron SnackbarHelper parity: antd message (transient action feedback) sits at
    the bottom edge, distinct from the corner notification stack. */
 .ant-message {
   top: auto !important;
@@ -1258,7 +1258,7 @@ body {
 
 
 /* ── Modal / dialog entrance animations ───────────────────────────
-   WPF window/dialog chrome animates via AnimationDurationMedium (200ms)
+   Electron window/dialog chrome animates via AnimationDurationMedium (200ms)
    with CubicEase EaseOut. Every in-app "small window" (custom backdrop
    modals, dialogs, pickers) gets a fade + rise entrance; the overlay fades
    in behind it. Turned off entirely with .udt-animations-off (Settings →
@@ -1304,7 +1304,7 @@ body {
   animation: udt-modal-pop-in var(--udt-anim-medium) var(--udt-ease-cubic-out);
 }
 
-/* WPF AnimationsEnabled=false: all window/dialog animations are disabled. */
+/* Electron AnimationsEnabled=false: all window/dialog animations are disabled. */
 .udt-animations-off .udt-utils-backdrop,
 .udt-animations-off .udt-modal-backdrop,
 .udt-animations-off .udt-dashboard-edit-backdrop,
@@ -1363,4 +1363,108 @@ body {
   .udt-fade-in {
     animation: none;
   }
+}
+
+/* ── Global visual polish (global pass) ─────────────────────────── */
+
+::selection {
+  background: color-mix(in srgb, var(--udt-accent) 30%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--udt-accent);
+  outline-offset: 2px;
+  border-radius: var(--udt-radius-small);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--udt-text-tertiary);
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Cards: lift + inner top highlight on dark, soft shadow on light */
+.udt-card {
+  transition: transform var(--udt-anim-fast) ease-out, box-shadow var(--udt-anim-fast) ease-out,
+    border-color var(--udt-anim-fast) ease-out;
+}
+
+.udt-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-theme='dark'] .udt-card {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.udt-card:hover {
+  border-color: var(--udt-control-stroke-secondary);
+}
+
+/* Buttons: consistent micro-interaction */
+.udt-btn {
+  transition: transform var(--udt-anim-fast) ease-out, filter var(--udt-anim-fast) ease-out,
+    box-shadow var(--udt-anim-fast) ease-out, background-color var(--udt-anim-fast) ease-out;
+}
+
+.udt-btn:not(:disabled):hover {
+  filter: brightness(1.06);
+}
+
+.udt-btn:not(:disabled):active {
+  transform: scale(0.97);
+}
+
+.udt-btn--primary:not(:disabled):hover {
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--udt-accent) 45%, transparent);
+}
+
+/* Page headings: tighter tracking, crisper subline */
+.udt-page-title,
+.udt-page__title {
+  letter-spacing: -0.2px;
+}
+
+.udt-page-description,
+.udt-page__subtitle {
+  color: var(--udt-text-secondary);
+}
+
+/* Empty states: accent-tinted icon */
+.udt-empty__icon {
+  color: var(--udt-accent);
+  opacity: 0.85;
+}
+
+/* Switch: hover affordance + checked glow */
+.udt-switch:hover .udt-switch__track {
+  border-color: var(--udt-text-tertiary);
+}
+
+.udt-switch input:checked + .udt-switch__track {
+  box-shadow: 0 0 8px color-mix(in srgb, var(--udt-accent) 40%, transparent);
+}
+
+/* Feature cards: border highlight on hover */
+.udt-feature-card {
+  transition: border-color var(--udt-anim-fast) ease-out, transform var(--udt-anim-fast) ease-out,
+    box-shadow var(--udt-anim-fast) ease-out;
+}
+
+.udt-feature-card:hover {
+  border-color: var(--udt-accent);
+  transform: translateY(-1px);
+  box-shadow: var(--udt-shadow-low);
+}
+
+/* Sensor panels: gentle border lift */
+.udt-sensor-panel {
+  transition: border-color var(--udt-anim-fast) ease-out;
+}
+
+.udt-sensor-panel:hover {
+  border-color: var(--udt-control-stroke-secondary);
 }

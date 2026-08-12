@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { SpectrumZoneCenter } from './deviceLayouts'
 
 /**
- * Drag-box selection — port of WPF SelectableControl (Controls/SelectableControl.cs)
+ * Drag-box selection — port of Electron SelectableControl (Controls/SelectableControl.cs)
  * with the SpectrumKeyboardBacklightControl.SelectableControl_Selected logic:
  * mouse-down starts a selection rectangle, mouse-up collects the key codes
  * whose center falls inside the rectangle. Moves under 4px are treated as
@@ -28,7 +28,7 @@ export interface UseBoxSelectResult {
   onMouseDown: (e: React.MouseEvent) => void
 }
 
-/** WPF SelectableControl has no threshold; click/drag is told apart here. */
+/** Electron SelectableControl has no threshold; click/drag is told apart here. */
 const CLICK_THRESHOLD_PX = 4
 
 export function useBoxSelect(

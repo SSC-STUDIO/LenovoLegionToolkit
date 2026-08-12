@@ -1,5 +1,5 @@
 /**
- * Crash report model & naming — port of WPF Utils/CrashReportHelper.cs
+ * Crash report model & naming — port of Electron Utils/CrashReportHelper.cs
  * (pure parts). File IO and process-wide handlers live in the host process.
  */
 export interface CrashReport {
@@ -17,7 +17,7 @@ export interface CrashReport {
   innerExceptionStackTrace?: string
 }
 
-/** crash_yyyy_MM_dd_HH_mm_ss_fff.json — mirrors the WPF file name pattern. */
+/** crash_yyyy_MM_dd_HH_mm_ss_fff.json — mirrors the Electron file name pattern. */
 export function crashReportFileName(date: Date = new Date()): string {
   const pad = (n: number, width = 2): string => n.toString().padStart(width, '0')
   return (
@@ -42,7 +42,7 @@ export function buildCrashReport(input: Partial<CrashReport>): CrashReport {
   }
 }
 
-/** Truncates a stack trace to 1200 characters (mirrors the WPF report window). */
+/** Truncates a stack trace to 1200 characters (mirrors the Electron report window). */
 export function truncateStackTrace(stackTrace: string, maxLength = 1200): string {
   return stackTrace.length <= maxLength ? stackTrace : `${stackTrace.slice(0, maxLength)}…`
 }

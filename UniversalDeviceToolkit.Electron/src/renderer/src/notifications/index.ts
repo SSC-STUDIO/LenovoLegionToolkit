@@ -10,7 +10,7 @@ import './notifications.css'
 
 /**
  * Bridges the host `notifications.changed` events into the notification
- * center (port of WPF AppNotificationHost: right-corner stacking, per-item
+ * center (port of Electron AppNotificationHost: right-corner stacking, per-item
  * auto-close, ×N merging, progress bars, hover pause).
  */
 
@@ -18,14 +18,14 @@ let unsubscribe: (() => void) | undefined
 
 function showNotification(data: AppNotificationRequest): void {
   const prefs = readNotificationPreferences()
-  // WPF AppNotificationHost.ShouldSuppress.
+  // Electron AppNotificationHost.ShouldSuppress.
   if (prefs.suppressed) return
   if (data.severity === 'Success' && prefs.suppressSuccess) return
 
   const settings: NotificationSettings = { duration: prefs.duration }
   useNotificationCenter.getState().push(data, settings)
 
-  // WPF TryPlaySound (only on new toasts; merges keep the original sound).
+  // Electron TryPlaySound (only on new toasts; merges keep the original sound).
   if (data.progressPercent === undefined) maybePlayNotificationSound()
 }
 

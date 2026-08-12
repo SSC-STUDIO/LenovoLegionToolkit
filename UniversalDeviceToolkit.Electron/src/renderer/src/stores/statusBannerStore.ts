@@ -5,7 +5,7 @@ export interface StatusBannerItem {
   id: string
   severity: AppStatusBannerSeverity
   message: string
-  /** Mirrors WPF IsPersistent: non-persistent banners are the first to be hidden on overflow. */
+  /** Mirrors Electron IsPersistent: non-persistent banners are the first to be hidden on overflow. */
   persistent: boolean
   closable: boolean
   onClick?: () => void
@@ -13,18 +13,18 @@ export interface StatusBannerItem {
 
 interface StatusBannerStore {
   banners: StatusBannerItem[]
-  /** Banners the user explicitly dismissed (WPF: Closed event). */
+  /** Banners the user explicitly dismissed (Electron: Closed event). */
   dismissed: Set<string>
   show: (banner: StatusBannerItem) => void
   /** User dismissed the banner; the id is remembered so it is not shown again this session. */
   hide: (id: string) => void
   /** Programmatic removal (condition no longer true); does NOT remember dismissal. */
   remove: (id: string) => void
-  /** Shows max N visible banners; non-persistent banners overflow first (WPF EnforceStatusNotificationLimit). */
+  /** Shows max N visible banners; non-persistent banners overflow first (Electron EnforceStatusNotificationLimit). */
   limit: number
 }
 
-/** WPF MaxVisibleStatusNotifications = 4. */
+/** Electron MaxVisibleStatusNotifications = 4. */
 const DEFAULT_LIMIT = 4
 
 export const useStatusBannerStore = create<StatusBannerStore>((set) => ({
@@ -36,7 +36,7 @@ export const useStatusBannerStore = create<StatusBannerStore>((set) => ({
     set((state) => {
       if (state.dismissed.has(banner.id)) return state
       const next = [...state.banners.filter((b) => b.id !== banner.id), banner]
-      // WPF EnforceStatusNotificationLimit: persistent banners always stay,
+      // Electron EnforceStatusNotificationLimit: persistent banners always stay,
       // non-persistent ones overflow first (oldest removed first).
       const persistent = next.filter((b) => b.persistent)
       const maxNonPersistent = Math.max(0, state.limit - persistent.length)
@@ -55,7 +55,7 @@ export const useStatusBannerStore = create<StatusBannerStore>((set) => ({
   remove: (id) => {
     set((state) => {
       // Condition cleared — allow the banner to reappear if it becomes true again
-      // (WPF software indicators re-show on the next OnRefreshed after a dismiss + restart).
+      // (Electron software indicators re-show on the next OnRefreshed after a dismiss + restart).
       const dismissed = new Set(state.dismissed)
       dismissed.delete(id)
       return {

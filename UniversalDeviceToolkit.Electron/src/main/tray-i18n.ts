@@ -1,5 +1,5 @@
 /**
- * Main-process tray strings (mirrors WPF Resource.* used by TrayHelper).
+ * Main-process tray strings (mirrors Electron Resource.* used by TrayHelper).
  * Full renderer i18n lives in the renderer; tray only needs these labels.
  */
 
@@ -98,7 +98,7 @@ export function localizePipelineName(storedName: string | null | undefined): str
 }
 
 /**
- * OSD item labels (mirrors the WPF OsdItem localization: Resource.OsdItem_*).
+ * OSD item labels (mirrors the Electron OsdItem localization: Resource.OsdItem_*).
  * Group headers (FPS/CPU/GPU/RAM/PCH) are fixed English in both clients.
  */
 export type OsdItemName =

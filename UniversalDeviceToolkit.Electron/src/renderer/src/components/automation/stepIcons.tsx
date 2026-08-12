@@ -29,7 +29,7 @@ import {
 import type { ReactNode } from 'react'
 
 /**
- * Per-step icon mapping — mirrors the WPF step card controls' SymbolRegular
+ * Per-step icon mapping — mirrors the Electron step card controls' SymbolRegular
  * icons (RGBKeyboardBacklightAutomationStepControl → Keyboard24, Run → WindowConsole20, …).
  */
 const STEP_ICONS: Record<string, ReactNode> = {

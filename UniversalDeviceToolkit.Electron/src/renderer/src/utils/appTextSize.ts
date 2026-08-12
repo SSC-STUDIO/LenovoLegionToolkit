@@ -1,5 +1,5 @@
 /**
- * UI text size scaling — port of WPF Utils/AppTextSizeManager.cs and
+ * UI text size scaling — port of Electron Utils/AppTextSizeManager.cs and
  * Utils/DpiAwareTypography.cs (UserScale + AppScale).
  */
 
@@ -26,7 +26,7 @@ export function appScaleValue(scale: AppScale): number {
 const SCALE_VAR = '--udt-font-scale'
 const APP_SCALE_VAR = '--udt-app-scale'
 
-/** Applies the WPF UserScale semantics by setting CSS variables on the root. */
+/** Applies the Electron UserScale semantics by setting CSS variables on the root. */
 export function applyTextScales(textSize: AppTextSize, appScale: AppScale = 100): void {
   const root = document.documentElement
   root.style.setProperty(SCALE_VAR, textSizeScale(textSize).toFixed(3))

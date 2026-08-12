@@ -1,7 +1,7 @@
 /**
- * System power actions — Electron-side counterpart of the WPF Lib power
+ * System power actions — Electron-side counterpart of the Electron Lib power
  * controller (restart/shutdown/sleep). `shutdown.exe` handles elevation the
- * same way the WPF client does (process elevation for power actions).
+ * same way the Electron client does (process elevation for power actions).
  */
 import { spawn } from 'child_process'
 

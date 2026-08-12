@@ -11,7 +11,7 @@ import UnsupportedDeviceModalHost from './UnsupportedDeviceModal'
 import UpdateModalHost from './UpdateModal'
 
 /**
- * Mounts the promise-driven hosts of all WPF Windows/Utils ports. Each host is
+ * Mounts the promise-driven hosts of all Electron Windows/Utils ports. Each host is
  * invisible until its `open*`/`show*` helper is called. Add once in the app
  * shell (AppLayout) so any page can open these modals.
  */

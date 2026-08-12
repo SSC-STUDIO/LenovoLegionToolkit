@@ -1,5 +1,5 @@
 /**
- * Animation tokens — port of WPF Styles/Animations.xaml + AnimationTokens.xaml
+ * Animation tokens — port of Electron Styles/Animations.xaml + AnimationTokens.xaml
  * (exposed as CSS classes in global.css; constants kept for JS-driven timing).
  */
 export const Animations = {

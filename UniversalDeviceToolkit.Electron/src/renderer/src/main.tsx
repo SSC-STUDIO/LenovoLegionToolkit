@@ -17,7 +17,7 @@ import './styles/global.css'
 void initNotifications()
 void initCrashReportListener()
 
-// WPF SnackbarHelper parity: transient action feedback lives at the bottom
+// Electron SnackbarHelper parity: transient action feedback lives at the bottom
 // edge (see .ant-message override in global.css), distinct from the corner
 // notification stack (AppNotificationHost).
 message.config({ maxCount: 3 })
@@ -46,7 +46,7 @@ function Root(): React.JSX.Element {
     const root = document.documentElement
     if (colorPrimary) {
       root.style.setProperty('--udt-accent', colorPrimary)
-      // WPF --udt-accent-secondary is the accent at 90% opacity.
+      // Electron --udt-accent-secondary is the accent at 90% opacity.
       root.style.setProperty('--udt-accent-secondary', `color-mix(in srgb, ${colorPrimary} 90%, transparent)`)
     } else {
       root.style.removeProperty('--udt-accent')

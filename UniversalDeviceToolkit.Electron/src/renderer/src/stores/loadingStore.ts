@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 /**
- * Loading session coordinator — port of WPF Controls/Loading
+ * Loading session coordinator — port of Electron Controls/Loading
  * (LoadSession / LoadState / LoadStateCoordinator).
  *
  * Multiple sessions may run concurrently (e.g. page load + background refresh);
@@ -33,7 +33,7 @@ export interface LoadingStore {
   active: LoadingSession | null
   /**
    * Start a loading session. `silent` sessions (pages that own their loading
-   * chrome — WPF LoadingChromeOwnership.Page) track progress but never surface
+   * chrome — Electron LoadingChromeOwnership.Page) track progress but never surface
    * the global overlay; they keep the page's own skeleton visible instead.
    */
   start: (

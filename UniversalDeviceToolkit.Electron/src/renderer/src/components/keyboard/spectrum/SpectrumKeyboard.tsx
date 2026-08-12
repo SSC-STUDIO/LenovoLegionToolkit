@@ -34,10 +34,10 @@ const ZOOM_MIN = 0.5
 const ZOOM_MAX = 1.5
 
 /**
- * Spectrum keyboard grid — port of WPF SpectrumKeyboardControl + the three
- * layout XAMLs. Zones are buttons sized by the WPF zone tables; the whole
- * grid scales to fit its container (WPF Viewbox) with a manual zoom clamp.
- * Drag-box selection mirrors the WPF SelectableControl wrapper: mouse-down
+ * Spectrum keyboard grid — port of Electron SpectrumKeyboardControl + the three
+ * layout XAMLs. Zones are buttons sized by the Electron zone tables; the whole
+ * grid scales to fit its container (Electron Viewbox) with a manual zoom clamp.
+ * Drag-box selection mirrors the Electron SelectableControl wrapper: mouse-down
  * starts a selection rectangle, mouse-up collects the key centers inside it
  * (moves under 4px are clicks).
  */
@@ -74,7 +74,7 @@ export default function SpectrumKeyboard({
   const rows = SPECTRUM_KEYBOARD_LAYOUTS[layout]
 
   // Selectable key centers in host px (already scaled), only for keys present
-  // on the device — matches WPF GetVisibleButtons (visible zones only).
+  // on the device — matches Electron GetVisibleButtons (visible zones only).
   const keyCenters = useMemo(
     () =>
       getKeyboardZoneCenters(layout, scale).filter((center) => deviceSet.has(center.code)),
@@ -92,7 +92,7 @@ export default function SpectrumKeyboard({
 
   return (
     <div className="udt-spectrum-keyboard" ref={hostRef} onMouseDown={onMouseDown}>
-      {/* CSS zoom (Chromium) keeps the scaled size in layout, like the WPF Viewbox. */}
+      {/* CSS zoom (Chromium) keeps the scaled size in layout, like the Electron Viewbox. */}
       <div className="udt-spectrum-keyboard__stage" style={{ zoom: scale }}>
         {rows.map((row, rowIndex) => (
           <div key={rowIndex} className="udt-spectrum-keyboard__row">

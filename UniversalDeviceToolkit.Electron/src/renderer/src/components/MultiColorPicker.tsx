@@ -4,7 +4,7 @@ import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
 import { Button } from 'antd'
 import ColorPicker from './ColorPicker'
 
-// Port of WPF Controls/MultiColorPickerControl + MultiColorPickerItemControl:
+// Port of Electron Controls/MultiColorPickerControl + MultiColorPickerItemControl:
 // a row of up to maxItems color swatches (each with a dismiss chip overlapping
 // its top-right corner) and an add button that is disabled at the limit.
 // Changes bubble up as ColorsChangedContinuous / ColorsChangedDelayed.

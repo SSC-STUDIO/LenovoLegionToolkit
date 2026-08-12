@@ -5,7 +5,7 @@ import { completeProgressToast, startProgressToast, updateProgressToast } from '
 import type { ProgressToastId } from './progressToast'
 
 /**
- * Mirrors WPF PluginInstallNotificationBridge: mirrors plugin download
+ * Mirrors Electron PluginInstallNotificationBridge: mirrors plugin download
  * progress into a persistent progress toast so users see installs even after
  * navigating away from the extensions page. The page's own success/failure
  * feedback remains the completion signal.
@@ -44,7 +44,7 @@ function completeToast(pluginId: string): void {
   completeProgressToast(existing)
 }
 
-/** Mirrors the WPF bridge's Sync: any plugin that stopped installing dismisses its toast. */
+/** Mirrors the Electron bridge's Sync: any plugin that stopped installing dismisses its toast. */
 function syncCompleted(installingIds: Record<string, number>): void {
   for (const pluginId of [...toastsByPluginId.keys()]) {
     if (!(pluginId in installingIds)) completeToast(pluginId)

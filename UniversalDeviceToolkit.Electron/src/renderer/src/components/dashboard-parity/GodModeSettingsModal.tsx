@@ -16,13 +16,13 @@ import FanCurveEditor from '../FanCurveEditor'
 import GodModeValueControl from '../dashboard/GodModeValueControl'
 
 /**
- * Parity modal for WPF Windows/Dashboard/GodModeSettingsWindow.
+ * Parity modal for Electron Windows/Dashboard/GodModeSettingsWindow.
  *
- * Known gaps vs WPF (no matching host bridge methods yet):
+ * Known gaps vs Electron (no matching host bridge methods yet):
  * - "Load" defaults from other power modes (GodModeController.GetDefaultsInOtherPowerModesAsync)
  * - Vantage / Legion Zone running warnings (software disabler status)
  * - Applying values to hardware (GodModeController.ApplyStateAsync); the store
- *   is persisted and the power mode is switched to God Mode, like the WPF Save.
+ *   is persisted and the power mode is switched to God Mode, like the Electron Save.
  */
 
 type StepperField =
@@ -127,7 +127,7 @@ function workingFromPreset(preset: GodModePreset): WorkingValues {
   return working
 }
 
-/** WPF GodModeSettingsWindow.BuildActivePresetFromControls (store side only). */
+/** Electron GodModeSettingsWindow.BuildActivePresetFromControls (store side only). */
 function flushWorkingPreset(preset: GodModePreset, working: WorkingValues): GodModePreset {
   const next: GodModePreset = { ...preset }
   for (const field of [...CPU_FIELDS, ...GPU_FIELDS]) {
@@ -148,7 +148,7 @@ function storeWithPreset(store: GodModeStore, preset: GodModePreset): GodModeSto
   return { ...store, presets: { ...store.presets, [store.activePresetId]: preset } }
 }
 
-/** WPF CardHeaderControl warning text: strip the first line when it looks like a heading. */
+/** Electron CardHeaderControl warning text: strip the first line when it looks like a heading. */
 function removeWarningHeading(messageText: string): string {
   const lines = messageText.replace(/\r\n/g, '\n').split('\n')
   if (lines.length > 1) {
@@ -164,7 +164,7 @@ function removeWarningHeading(messageText: string): string {
   return messageText.trim()
 }
 
-/** WPF TryNormalizeOffsetValue: whole number within [min, max]. */
+/** Electron TryNormalizeOffsetValue: whole number within [min, max]. */
 function normalizeOffset(raw: number | null, minimum: number, maximum: number): number | null {
   if (raw == null || !Number.isFinite(raw)) return null
   if (raw < minimum || raw > maximum || raw !== Math.trunc(raw)) return null

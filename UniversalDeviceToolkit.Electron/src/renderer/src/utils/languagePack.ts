@@ -1,5 +1,5 @@
 /**
- * Language pack models & catalog helpers — port of WPF
+ * Language pack models & catalog helpers — port of Electron
  * Utils/LanguagePackModels.cs (models) + Utils/LanguagePackManager.cs
  * (installed-pack enumeration, culture metadata).
  */

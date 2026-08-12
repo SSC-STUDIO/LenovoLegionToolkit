@@ -1,5 +1,5 @@
 /**
- * Message box helpers — port of WPF Utils/MessageBoxHelper.cs
+ * Message box helpers — port of Electron Utils/MessageBoxHelper.cs
  * implemented with antd Modal (renderer-side equivalent of MessageBox).
  */
 import { Modal, message } from 'antd'
@@ -46,7 +46,7 @@ export function showMessageBox(options: MessageBoxOptions): Promise<boolean> {
   })
 }
 
-/** Non-blocking toast variant (WPF Snackbar semantics). */
+/** Non-blocking toast variant (Electron Snackbar semantics). */
 export function showToast(kind: 'success' | 'info' | 'warning' | 'error', text: string): void {
   message[kind](text)
 }

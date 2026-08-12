@@ -12,7 +12,7 @@ import { useSettingsStore } from '../stores/settingsStore'
 import { useNotificationCenter, type NotificationItem, type NotificationSeverity } from '../notifications/notificationCenterStore'
 
 /**
- * Right-corner notification stack — port of WPF AppNotificationHost +
+ * Right-corner notification stack — port of Electron AppNotificationHost +
  * NotificationItemViewModel: severity icon/color, ×N merge badge, progress
  * bar, per-toast auto-close (hover pauses the timer), close button.
  */
@@ -37,7 +37,7 @@ function SeverityIcon({ severity }: { severity: NotificationSeverity }): React.J
   }
 }
 
-/** WPF SystemSounds.Asterisk equivalent — short two-tone beep. */
+/** Electron SystemSounds.Asterisk equivalent — short two-tone beep. */
 function playNotificationSound(): void {
   try {
     const AudioContextClass = window.AudioContext ?? (window as unknown as { webkitAudioContext?: typeof AudioContext }).webkitAudioContext
@@ -137,7 +137,7 @@ function readApplicationScope(): Record<string, unknown> {
     : {}
 }
 
-/** Suppression + sound settings (WPF AppNotificationHost.ShouldSuppress/TryPlaySound). */
+/** Suppression + sound settings (Electron AppNotificationHost.ShouldSuppress/TryPlaySound). */
 export function readNotificationPreferences(): {
   suppressed: boolean
   suppressSuccess: boolean
@@ -166,7 +166,7 @@ export function maybePlayNotificationSound(): void {
   if (readNotificationPreferences().playSound) playNotificationSound()
 }
 
-/** WPF NotificationPosition → placement CSS class. */
+/** Electron NotificationPosition → placement CSS class. */
 function positionClass(position: string): string {
   switch (position) {
     case 'BottomCenter':

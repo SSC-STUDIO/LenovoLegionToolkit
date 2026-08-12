@@ -1,6 +1,6 @@
 /**
  * App-level API served by the Electron main process (not the host JSON-RPC).
- * Mirrors WPF Application behavior settings (Autorun → login item).
+ * Mirrors Electron Application behavior settings (Autorun → login item).
  */
 
 const bridge = window.bridge

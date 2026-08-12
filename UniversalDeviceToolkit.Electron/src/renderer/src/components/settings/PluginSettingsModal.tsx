@@ -6,9 +6,9 @@ import type { PluginView } from '../../api/plugins'
 import { usePluginsStore } from '../../stores/pluginsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/PluginSettingsWindow: shows the full
+ * Parity modal for Electron Windows/Settings/PluginSettingsWindow: shows the full
  * plugin metadata (identity, state, dependencies, usage guide, update info).
- * The WPF window hosts the plugin's WPF settings page via reflection; the
+ * The Electron window hosts the plugin's Electron settings page via reflection; the
  * Electron renderer has no equivalent hosting mechanism, so the plugin's
  * own settings UI is not embeddable — the metadata view stands in for it.
  */

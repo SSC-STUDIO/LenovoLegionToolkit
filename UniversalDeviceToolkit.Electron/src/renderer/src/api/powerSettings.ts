@@ -1,7 +1,7 @@
 import { invoke } from './bridge'
 
 /**
- * Windows power-plan bridge — renderer counterpart of WPF
+ * Windows power-plan bridge — renderer counterpart of Electron
  * WindowsPowerPlanController.GetPowerPlans(). The host is expected to expose:
  *   powerPlans.getList -> { plans: [{ guid, name, isActive }] }
  */

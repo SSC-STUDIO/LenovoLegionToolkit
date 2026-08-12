@@ -1,10 +1,10 @@
 /**
- * Mirrors WPF SmartKeyHelper pure logic: Fn+F9 single/double press
+ * Mirrors Electron SmartKeyHelper pure logic: Fn+F9 single/double press
  * disambiguation and the smart-key action rotation.
  *
  * The hardware key listener itself (SpecialKeyListener / FnKeysDisabler) is
  * host-side; this module provides the renderer with the identical timing and
- * rotation semantics for anything that must reproduce the WPF behavior.
+ * rotation semantics for anything that must reproduce the Electron behavior.
  */
 
 export const SMART_KEY_DOUBLE_PRESS_INTERVAL_MS = 500

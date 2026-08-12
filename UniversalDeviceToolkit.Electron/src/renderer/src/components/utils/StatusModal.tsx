@@ -12,7 +12,7 @@ import { systemApi } from '../../api/system'
 import './utils.css'
 
 /**
- * Port of WPF StatusWindow (tray status popup): power mode + God Mode preset,
+ * Port of Electron StatusWindow (tray status popup): power mode + God Mode preset,
  * CPU/memory/SSD sensor summaries, discrete GPU state and battery overview,
  * plus an update-available indicator. Opened via `tray:status` bridge event
  * (hover tooltip / explicit callers; not part of the original tray context menu).

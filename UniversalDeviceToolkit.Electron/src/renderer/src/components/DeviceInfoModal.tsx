@@ -7,11 +7,11 @@ import { sensorsApi } from '../api/sensors'
 import './TitleBar.css'
 
 /**
- * Device info modal — port of the WPF DeviceInformationWindow, opened from the
+ * Device info modal — port of the Electron DeviceInformationWindow, opened from the
  * TitleBar device button.
  *
  * Primary data source is the `device.info` bridge method (implemented host
- * side; contract below mirrors WPF MachineInformation + HardwareInventory +
+ * side; contract below mirrors Electron MachineInformation + HardwareInventory +
  * warranty). When `device.info` is unavailable it falls back to the existing
  * `system.info` + `sensors.getStatus` APIs so identity rows and CPU/GPU names
  * still render; the warranty section stays hidden without data.
@@ -116,7 +116,7 @@ function formatDate(value: string | null | undefined): string {
   return date.toLocaleDateString()
 }
 
-/** Mirrors the WPF warranty fallback URL builder. */
+/** Mirrors the Electron warranty fallback URL builder. */
 function buildLenovoSupportUri(serialNumber: string | null, machineType: string | null): string {
   const serial = serialNumber && serialNumber !== DASH ? serialNumber.trim() : null
   const mtm = machineType && machineType !== DASH ? machineType.trim() : null
@@ -250,7 +250,7 @@ export default function DeviceInfoModal({ open, onClose }: DeviceInfoModalProps)
         duration: 1.5
       })
     } catch {
-      // Clipboard unavailable; ignore like the WPF catch block.
+      // Clipboard unavailable; ignore like the Electron catch block.
     }
   }
 

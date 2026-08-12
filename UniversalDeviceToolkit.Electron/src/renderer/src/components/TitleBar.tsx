@@ -98,7 +98,7 @@ export default function TitleBar(): React.JSX.Element {
         <span className="udt-titlebar__title" style={DRAG_STYLE} onDoubleClick={toggleMaximize}>
           <span className="udt-titlebar__title-text">{windowTitle}</span>
         </span>
-        {/* Right chrome: Log + device stay immediately before caption buttons (WPF parity).
+        {/* Right chrome: Log + device stay immediately before caption buttons (Electron parity).
             Title is absolutely positioned, so this group needs margin-left:auto or it packs left. */}
         <div className="udt-titlebar__chrome" style={NO_DRAG_STYLE}>
           <div className="udt-titlebar__trailing">

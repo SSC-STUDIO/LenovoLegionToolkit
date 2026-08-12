@@ -22,8 +22,8 @@ import { formatStepSummary } from './steps'
 import { StepEditor as OtherStepEditor } from './stepEditors'
 
 /**
- * Electron counterpart of the 12 WPF step card controls (AbstractAutomationStepControl /
- * AbstractComboBoxAutomationStepCardControl). Each entry mirrors the WPF wiring:
+ * Electron counterpart of the 12 Electron step card controls (AbstractAutomationStepControl /
+ * AbstractComboBoxAutomationStepCardControl). Each entry mirrors the Electron wiring:
  * icon + Title/Subtitle resources, parameter collection and serialization shape
  * ($type discriminator + camelCase fields, enums as strings).
  */
@@ -76,7 +76,7 @@ const ENUM_OPTIONS: Record<string, string[]> = {
   hdr: ['Off', 'On']
 }
 
-/** Default enum state per step — mirrors default(T) used by the WPF palette factories. */
+/** Default enum state per step — mirrors default(T) used by the Electron palette factories. */
 const DEFAULT_ENUM_STATE: Record<string, string> = {
   alwaysOnUsb: 'Off',
   battery: 'Conservation',
@@ -109,7 +109,7 @@ function enumStateLabelKey(type: string, value: string): string {
 }
 
 /**
- * Default serialized payload per step type — mirrors the WPF AddStep palette
+ * Default serialized payload per step type — mirrors the Electron AddStep palette
  * factories (DisplayBrightnessAutomationStep(50), DelayAutomationStep(1), ...).
  */
 export function createDefaultStep(type: string): AutomationStepType {
@@ -332,7 +332,7 @@ function GodModePresetSelect(props: {
 
   const requested = typeof props.step.presetId === 'string' ? props.step.presetId : ''
 
-  // ResolveSelectedPreset: requested → active → first by name (WPF parity).
+  // ResolveSelectedPreset: requested → active → first by name (Electron parity).
   const current = presets.some((p) => p.id === requested)
     ? requested
     : presets.some((p) => p.id === activeId)
@@ -341,7 +341,7 @@ function GodModePresetSelect(props: {
         ? presets[0].id
         : ''
 
-  // WPF resolves the selection on load; write the resolved preset back to the step.
+  // Electron resolves the selection on load; write the resolved preset back to the step.
   useEffect(() => {
     if (loaded && current !== '' && current !== requested) {
       props.onChange({ ...props.step, presetId: current })

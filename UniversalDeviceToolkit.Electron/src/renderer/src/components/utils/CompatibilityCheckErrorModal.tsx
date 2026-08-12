@@ -5,7 +5,7 @@ import { FolderOpenOutlined, WarningOutlined } from '@ant-design/icons'
 import './utils.css'
 
 /**
- * Port of WPF CompatibilityCheckErrorWindow: startup error display with the
+ * Port of Electron CompatibilityCheckErrorWindow: startup error display with the
  * exception details, troubleshooting steps and an "open log" action.
  */
 
@@ -49,7 +49,7 @@ export function showCompatibilityCheckError(info: CompatibilityErrorInfo): Promi
   })
 }
 
-/** Normalize a caught value into the display model (mirrors WPF exception details). */
+/** Normalize a caught value into the display model (mirrors Electron exception details). */
 export function toCompatibilityErrorInfo(error: unknown): CompatibilityErrorInfo {
   if (error instanceof Error) {
     return {

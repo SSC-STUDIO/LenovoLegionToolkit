@@ -179,7 +179,7 @@ function NetworkTargetsCard(): React.JSX.Element {
     void setNetworkGroupEnabled(group.id, enabled)
   }
 
-  // WPF three-state CheckBox cycle is true → indeterminate → false → true;
+  // Electron three-state CheckBox cycle is true → indeterminate → false → true;
   // clicking an indeterminate group checkbox clears the whole group, while a
   // plain checkbox would flip to checked (select all).
   const handleGroupCheckboxChange = (

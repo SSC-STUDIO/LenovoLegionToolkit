@@ -2,13 +2,13 @@ import { screen } from 'electron'
 import { isRemoteSession } from './remote-session'
 
 /**
- * Mirrors WPF RenderingCompatibilityHelper: decides whether the client must
+ * Mirrors Electron RenderingCompatibilityHelper: decides whether the client must
  * fall back to software rendering (remote sessions, forced flag, missing or
  * invalid displays) and maps the backdrop style onto the Electron
  * background-material surface.
  *
  * Call after `app.whenReady()`; the screen queries throw before that and are
- * treated as conservative "force compatibility" like the WPF catch-all.
+ * treated as conservative "force compatibility" like the Electron catch-all.
  */
 
 export interface BackdropSurfaceOpacities {

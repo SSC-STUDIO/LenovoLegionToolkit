@@ -1,11 +1,11 @@
 /**
- * Mirrors WPF StartupDeviceSetupCoordinator.BuildSelectablePacks: preference
+ * Mirrors Electron StartupDeviceSetupCoordinator.BuildSelectablePacks: preference
  * ordering for the first-launch device-setup wizard.
  *
  * The setup state file (`%APPDATA%\UniversalDeviceToolkit\device-setup`),
  * the device-support catalog and the on-demand pack download are host-side;
  * this module contains the pure selection logic so the renderer can render
- * the exact same ordering as the WPF wizard.
+ * the exact same ordering as the Electron wizard.
  */
 
 export interface MachineInformation {

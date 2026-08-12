@@ -1,5 +1,5 @@
 /**
- * Fullscreen detection helpers — port of WPF Utils/FullscreenHelper.cs.
+ * Fullscreen detection helpers — port of Electron Utils/FullscreenHelper.cs.
  * The other-app fullscreen probe (Win32 GetForegroundWindow) runs host-side;
  * this module exposes the renderer-observable parts.
  */

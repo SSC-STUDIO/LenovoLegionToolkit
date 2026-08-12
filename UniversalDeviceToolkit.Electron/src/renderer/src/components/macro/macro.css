@@ -1,5 +1,5 @@
 ﻿/*
- * Macro page (MacroPage.tsx) 鈥?1:1 with WPF MacroPage.xaml + MacroSequenceControl.xaml.
+ * Macro page (MacroPage.tsx) 鈥?1:1 with Electron MacroPage.xaml + MacroSequenceControl.xaml.
  */
 
 .udt-macro-page {
@@ -241,7 +241,7 @@
   font-size: var(--udt-font-caption);
 }
 
-/* Toggle switch sized 40脳20 (WPF ToggleSwitch) */
+/* Toggle switch sized 40脳20 (Electron ToggleSwitch) */
 .udt-macro-switch {
   display: inline-flex;
   width: 40px;

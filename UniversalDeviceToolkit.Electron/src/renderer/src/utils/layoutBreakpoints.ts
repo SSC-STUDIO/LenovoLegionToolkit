@@ -1,5 +1,5 @@
 /**
- * Responsive breakpoints — port of WPF Utils/LayoutBreakpoints.cs.
+ * Responsive breakpoints — port of Electron Utils/LayoutBreakpoints.cs.
  */
 export const LayoutBreakpoints = {
   windowMinWidth: 1024,

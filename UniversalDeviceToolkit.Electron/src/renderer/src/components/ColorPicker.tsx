@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { Button, Input, Popover, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 
-// Port of WPF Controls/ColorPickerControl: round color swatch button that opens a
+// Port of Electron Controls/ColorPickerControl: round color swatch button that opens a
 // popup with a square HSV picker (circular hue ring + saturation/value square,
 // PixiEditor ColorPicker SquarePicker), hex/RGB text fields and an OK button.
 // onChangeContinuous maps to ColorChangedContinuous (drag), onChangeDelayed maps

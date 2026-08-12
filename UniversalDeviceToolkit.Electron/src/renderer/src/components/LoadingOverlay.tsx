@@ -4,7 +4,7 @@ import { LoadingOutlined } from '@ant-design/icons'
 import { useLoadingStore } from '../stores/loadingStore'
 
 /**
- * Global loading overlay — port of WPF Controls/Loading/LoadingChrome.xaml
+ * Global loading overlay — port of Electron Controls/Loading/LoadingChrome.xaml
  * (ILoadingChromeOwner). Renders when the LoadingStore has an active session:
  * spinner, label/message, optional determinate progress bar and cancel action.
  */

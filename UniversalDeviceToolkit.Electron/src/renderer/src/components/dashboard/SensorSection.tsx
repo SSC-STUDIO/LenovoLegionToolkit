@@ -58,7 +58,7 @@ interface SensorPanelProps {
   series: TrendSeries[]
   labels: string[]
   warnings?: React.JSX.Element
-  /** Detail rows grouped per column (WPF detail panel: two equal columns). */
+  /** Detail rows grouped per column (Electron detail panel: two equal columns). */
   details?: SensorDetail[][]
   /** Optional block above the detail columns (battery mini gauges). */
   detailsHeader?: React.JSX.Element
@@ -99,19 +99,19 @@ function formatRate(mw: number | null | undefined): string {
   return `${sign}${w.toFixed(2)} W`
 }
 
-// FormatMemoryClock: 0.0 MHz (WPF _gpuMemoryClockText).
+// FormatMemoryClock: 0.0 MHz (Electron _gpuMemoryClockText).
 function formatMemoryClock(mhz: number | null | undefined): string {
   if (mhz == null || !Number.isFinite(mhz) || mhz < 0) return '-'
   return `${mhz.toFixed(1)} MHz`
 }
 
-// FormatWattHours: mWh → Wh, 2 decimals (WPF "{0:0.00} Wh").
+// FormatWattHours: mWh → Wh, 2 decimals (Electron "{0:0.00} Wh").
 function formatWattHours(mwh: number | null | undefined): string {
   if (mwh == null || !Number.isFinite(mwh) || mwh <= 0) return '-'
   return `${(mwh / 1000).toFixed(2)} Wh`
 }
 
-// WPF UpdateBatteryHealthGauge ring color: green >= 80, caution 60–79, critical < 60.
+// Electron UpdateBatteryHealthGauge ring color: green >= 80, caution 60–79, critical < 60.
 function batteryHealthColor(healthPercent: number | null | undefined): string {
   if (healthPercent == null || !Number.isFinite(healthPercent) || healthPercent < 0) return BATTERY_LEVEL
   if (healthPercent >= 80) return BATTERY_LEVEL
@@ -193,7 +193,7 @@ function formatCpuPowerBreakdown(cpu: SensorsCpu, labels: { cores: string; memor
   return parts.length > 0 ? parts.join(' | ') : '-'
 }
 
-// WPF UpdateValue: value < 0 → bar zeroed; max < 0 → max = max(value, 1).
+// Electron UpdateValue: value < 0 → bar zeroed; max < 0 → max = max(value, 1).
 function metricBar(
   value: number | null | undefined,
   max: number | null | undefined,
@@ -209,7 +209,7 @@ function barPercent(metric: SensorMetric): number {
   return Math.min(100, Math.max(0, (metric.barValue / metric.barMax) * 100))
 }
 
-// WPF temperature thresholds: < 50 °C → green, 50–79 °C → caution, ≥ 80 °C → critical.
+// Electron temperature thresholds: < 50 °C → green, 50–79 °C → caution, ≥ 80 °C → critical.
 // Thresholds are always evaluated on the °C value, before unit conversion.
 function temperatureColor(temp: number | null | undefined): string | undefined {
   if (temp == null || !Number.isFinite(temp) || temp < 0) return undefined
@@ -219,7 +219,7 @@ function temperatureColor(temp: number | null | undefined): string | undefined {
 }
 
 // Battery ring: green >= 80 health, caution 60-79, critical < 60;
-// low charge level overrides the ring to caution (WPF IsLowBattery → ChartCautionBrush).
+// low charge level overrides the ring to caution (Electron IsLowBattery → ChartCautionBrush).
 function batteryGaugeColor(battery: SensorsBattery | undefined): string {
   if (battery?.isLowBattery === true) {
     return BATTERY_CAUTION
@@ -237,7 +237,7 @@ function batteryGaugeColor(battery: SensorsBattery | undefined): string {
   return BATTERY_LEVEL
 }
 
-// WPF SymbolIcon "Battery024", FontSizeDisplaySection (25).
+// Electron SymbolIcon "Battery024", FontSizeDisplaySection (25).
 function BatteryIcon({ level, charging }: { level?: number | null; charging?: boolean }): React.JSX.Element {
   const clamped =
     level != null && Number.isFinite(level) ? Math.min(100, Math.max(0, level)) : 40
@@ -251,7 +251,7 @@ function BatteryIcon({ level, charging }: { level?: number | null; charging?: bo
   )
 }
 
-// Compact metric-row glyph (temperature) — matches the visual weight of WPF stat rows.
+// Compact metric-row glyph (temperature) — matches the visual weight of Electron stat rows.
 function TemperatureIcon({ color }: { color?: string }): React.JSX.Element {
   return (
     <svg
@@ -290,7 +290,7 @@ function SensorPanel({
   const [detailsExpanded, setDetailsExpanded] = useState(false)
   const hasDetails = details != null && details.length > 0
   return (
-    // WPF CardControl_PreviewMouseLeftButtonDown: double-click (500ms threshold)
+    // Electron CardControl_PreviewMouseLeftButtonDown: double-click (500ms threshold)
     // toggles the detail panel; React's native onDoubleClick fires within that window.
     <section
       className="udt-sensor-panel"
@@ -463,8 +463,8 @@ export default function SensorSection(): React.JSX.Element {
     ) : undefined
 
   // Advanced details (SensorsControl detail window parity). Two columns; rows
-  // whose value is "-" are collapsed (WPF UpdateDetailContainerVisibility).
-  // Temp/voltage ranges fall back to the live value (WPF FormatFallbackRangeText).
+  // whose value is "-" are collapsed (Electron UpdateDetailContainerVisibility).
+  // Temp/voltage ranges fall back to the live value (Electron FormatFallbackRangeText).
   const cpuDetails: SensorDetail[][] = [
     [
       {
@@ -541,7 +541,7 @@ export default function SensorSection(): React.JSX.Element {
       ? (battery.chargeLevel / 100) * (fullChargeCapacity / 1000)
       : null
 
-  // Battery detail header: 3 mini gauges (WPF GaugeSizeSM rings, 4px thick).
+  // Battery detail header: 3 mini gauges (Electron GaugeSizeSM rings, 4px thick).
   const batteryGauges = (
     <div className="udt-sensor-panel__battery-gauges">
       <div className="udt-sensor-panel__battery-gauge">
@@ -628,7 +628,7 @@ export default function SensorSection(): React.JSX.Element {
     }
   }, [refreshMenu])
 
-  // WPF SensorsControl refresh context menu: right-click on the sensors card.
+  // Electron SensorsControl refresh context menu: right-click on the sensors card.
   const openRefreshMenu = (event: React.MouseEvent<HTMLDivElement>): void => {
     event.preventDefault()
     const rect = boardRef.current?.getBoundingClientRect()

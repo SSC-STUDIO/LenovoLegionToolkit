@@ -1,7 +1,7 @@
 import { invoke } from './bridge'
 
 /**
- * Boot logo bridge — renderer counterpart of WPF Lib/System/BootLogo.cs.
+ * Boot logo bridge — renderer counterpart of Electron Lib/System/BootLogo.cs.
  * The host is expected to expose:
  *   bootLogo.getStatus -> { enabled, resolution: { DisplayName }, formats: string[], filters: string[] }
  *   bootLogo.enable  { filePath }  -> { ok }

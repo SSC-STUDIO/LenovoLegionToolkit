@@ -32,7 +32,7 @@ export const settingsApi = {
 }
 
 /**
- * Settings store models mirroring the WPF settings files. The host persists
+ * Settings store models mirroring the Electron settings files. The host persists
  * these stores to JSON (dashboard.json / hardware_sensors.json / plugins.json);
  * these projections document the renderer-side schema. The dashboard store is
  * also exposed through dashboardApi (api/dashboard.ts) and the sensor store

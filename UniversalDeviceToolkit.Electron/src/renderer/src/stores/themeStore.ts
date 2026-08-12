@@ -13,7 +13,7 @@ export interface ThemeStore {
 }
 
 /**
- * Selectable UI scale levels, aligned with the WPF app
+ * Selectable UI scale levels, aligned with the Electron app
  * (Compact 0.90 / Standard 1.0 / Large 1.10 / ExtraLarge 1.25).
  */
 export const UI_SCALE_OPTIONS = [0.9, 1, 1.1, 1.25] as const
@@ -39,7 +39,7 @@ function readStoredUiScale(): number {
  *
  * The app stylesheet is px-based, so changing the root font-size alone would
  * not scale anything; CSS `zoom` (Chromium / Electron) scales layout and text
- * together and is the layout-adaptive equivalent of the WPF AppScale.
+ * together and is the layout-adaptive equivalent of the Electron AppScale.
  * Scale 1.0 resets the document to its default rendering.
  */
 export function applyUiScale(scale: number): void {

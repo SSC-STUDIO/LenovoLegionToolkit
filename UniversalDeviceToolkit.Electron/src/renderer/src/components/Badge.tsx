@@ -2,7 +2,7 @@ import './custom.css'
 import type { ReactNode } from 'react'
 
 /**
- * Small label badge — port of WPF Controls/Custom/Badge.cs (Wpf.Ui Badge).
+ * Small label badge — port of Electron Controls/Custom/Badge.cs (Wpf.Ui Badge).
  * Base shape reuses the global .udt-badge chrome; appearance adds a tone.
  */
 

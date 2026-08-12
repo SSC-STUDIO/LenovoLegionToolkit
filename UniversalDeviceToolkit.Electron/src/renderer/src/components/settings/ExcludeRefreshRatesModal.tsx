@@ -6,7 +6,7 @@ import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
 
 /**
- * Parity modal for WPF Windows/Settings/ExcludeRefreshRatesWindow:
+ * Parity modal for Electron Windows/Settings/ExcludeRefreshRatesWindow:
  * a checkbox list of all refresh rates offered by the built-in display.
  * Checked rates stay in the Fn+R rotation; unchecked rates are excluded
  * (persisted to ApplicationSettings.ExcludedRefreshRates).

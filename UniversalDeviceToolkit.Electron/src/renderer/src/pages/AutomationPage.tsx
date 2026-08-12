@@ -202,7 +202,7 @@ export default function AutomationPage(): React.JSX.Element {
     setContextMenu(null)
   }
 
-  // Mirrors WPF AutomationPage ChangePipelineIconAsync: opens the symbol
+  // Mirrors Electron AutomationPage ChangePipelineIconAsync: opens the symbol
   // picker and stores the icon name on the pipeline (null = default).
   const handleChangeIcon = async (id: string): Promise<void> => {
     setContextMenu(null)

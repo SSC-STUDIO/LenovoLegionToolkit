@@ -1,4 +1,4 @@
-﻿/* 鈹€鈹€ Keyboard backlight page (1:1 with WPF KeyboardBacklightPage) 鈹€鈹€ */
+﻿/* 鈹€鈹€ Keyboard backlight page (1:1 with Electron KeyboardBacklightPage) 鈹€鈹€ */
 
 .udt-kb-page {
   max-width: 1520px;
@@ -426,7 +426,7 @@
 }
 
 /* Unavailable zones are aria-disabled buttons (not :disabled) so drag-box
-   selection can start anywhere on the keyboard, like the WPF SelectableControl. */
+   selection can start anywhere on the keyboard, like the Electron SelectableControl. */
 .udt-spectrum-keyboard__zone--unavailable:hover {
   border-color: rgba(128, 128, 128, 0.4);
   filter: none;

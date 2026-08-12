@@ -2,7 +2,7 @@ import './fanCurve.css'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-// Port of WPF Controls/FanCurveControl: 10 vertical integer sliders (0-10 fan
+// Port of Electron Controls/FanCurveControl: 10 vertical integer sliders (0-10 fan
 // speed steps) plotted as a polyline with an area fill on a rounded chart
 // surface. Left-to-right values are kept non-decreasing (VerifyValues), each
 // slider is clamped to the minimum fan table (if provided), and hovering or

@@ -2,10 +2,10 @@ import { HourglassOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
 
 /**
- * Macro recording status window — port of the WPF MacroRecordingWindow
+ * Macro recording status window — port of the Electron MacroRecordingWindow
  * (FluentWindow: hourglass "Recording will start in 3 seconds..." while
  * preparing, record dot + "Press ESC to stop." while recording). Like the
- * WPF window it is a small floating card that does not block the page.
+ * Electron window it is a small floating card that does not block the page.
  */
 export interface MacroRecordingModalProps {
   preparing: boolean

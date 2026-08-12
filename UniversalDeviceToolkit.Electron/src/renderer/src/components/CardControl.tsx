@@ -2,7 +2,7 @@ import './custom.css'
 import type { ReactNode } from 'react'
 
 /**
- * Shared card container — port of WPF Controls/Custom/CardControl.cs
+ * Shared card container — port of Electron Controls/Custom/CardControl.cs
  * (Wpf.Ui CardControl: card chrome with optional header copy).
  */
 

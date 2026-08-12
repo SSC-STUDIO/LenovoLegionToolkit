@@ -69,7 +69,7 @@ function formatBytes(bytes: number): string {
 }
 
 /**
- * WPF LocalizationHelper.GetStringOrEnglish: the host sends resource keys as
+ * Electron LocalizationHelper.GetStringOrEnglish: the host sends resource keys as
  * the category/action titles (e.g. "WindowsOptimization_Category_Explorer_Title");
  * translate them when a matching i18n key exists, otherwise show as-is.
  *

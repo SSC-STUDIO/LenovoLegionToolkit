@@ -1,12 +1,12 @@
 import { screen } from 'electron'
 
 /**
- * Mirrors WPF ScreenHelper: thread-safe snapshots of the connected displays
+ * Mirrors Electron ScreenHelper: thread-safe snapshots of the connected displays
  * with DPI info, expressed in DIPs.
  *
  * Electron's `screen` module already tracks monitor geometry; `workArea` is
- * reported in DIPs (matching the WPF conversion `workArea * 96 / dpi`) and
- * `scaleFactor` converts back to the physical DPI the WPF side read via
+ * reported in DIPs (matching the Electron conversion `workArea * 96 / dpi`) and
+ * `scaleFactor` converts back to the physical DPI the Electron side read via
  * GetDpiForMonitor.
  */
 

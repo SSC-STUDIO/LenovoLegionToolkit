@@ -1,8 +1,8 @@
 /**
- * Mirrors WPF SkeletonAnimationTokens + SkeletonShimmer brush math.
+ * Mirrors Electron SkeletonAnimationTokens + SkeletonShimmer brush math.
  *
  * The Electron skeleton blocks are rendered with CSS (`.udt-skeleton` /
- * `--udt-anim-shimmer`), but the WPF tuning values and the overlay-color
+ * `--udt-anim-shimmer`), but the Electron tuning values and the overlay-color
  * compositing are kept here as the single source of truth for anything that
  * needs to reproduce the exact sweep (staggered shimmer, custom bones).
  */

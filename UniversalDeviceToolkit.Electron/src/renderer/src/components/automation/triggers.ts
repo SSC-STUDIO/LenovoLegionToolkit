@@ -1,5 +1,5 @@
 /**
- * Automation pipeline trigger catalog — port of WPF
+ * Automation pipeline trigger catalog — port of Electron
  * Windows/Automation/CreateAutomationPipelineWindow.cs (trigger factory list),
  * Windows/Automation/AutomationPipelineTriggerConfigurationWindow.cs (validity),
  * Controls/Automation/AutomationPipelineControl.cs (subtitle formatting).
@@ -293,7 +293,7 @@ function pad2(n: number): string {
   return Number.isFinite(n) ? n.toString().padStart(2, '0') : '00'
 }
 
-/** Humanized duration ("10 seconds", "5 minutes") — mirrors Humanizer defaults used by WPF. */
+/** Humanized duration ("10 seconds", "5 minutes") — mirrors Humanizer defaults used by Electron. */
 export function humanizeDuration(totalSeconds: number): string {
   const minutes = Math.round(totalSeconds / 60)
   if (minutes < 1) return `${totalSeconds} ${totalSeconds === 1 ? 'second' : 'seconds'}`

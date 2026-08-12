@@ -4,7 +4,7 @@ import type { ReactNode } from 'react'
 import { ChevronDown16Regular } from '@fluentui/react-icons'
 
 /**
- * Expandable card — port of WPF Controls/Custom/CardExpander.cs
+ * Expandable card — port of Electron Controls/Custom/CardExpander.cs
  * (Wpf.Ui CardExpander: clickable header toggles the body).
  */
 
@@ -13,7 +13,7 @@ export interface CardExpanderProps {
   header?: ReactNode
   /** Secondary text under a string header. */
   description?: string
-  /** Leading icon shown before the header copy (WPF CardExpander.Icon). */
+  /** Leading icon shown before the header copy (Electron CardExpander.Icon). */
   icon?: ReactNode
   /** Trailing control before the chevron (e.g. Configure); clicks do not toggle. */
   accessory?: ReactNode

@@ -79,7 +79,7 @@ function sendToRenderer(event: string, data: unknown = null): void {
 function navigate(route: string): void {
   const win = getWindow?.() ?? null
   showWindow(win)
-  // Match WPF TrayHelper delay so the window is foreground before navigation.
+  // Match Electron TrayHelper delay so the window is foreground before navigation.
   setTimeout(() => sendToRenderer('tray:navigate', { route }), 500)
 }
 
@@ -111,7 +111,7 @@ async function readQuickActions(): Promise<AutomationPipelineDto[]> {
   try {
     const state = (await invokeHost('automation.getState', {})) as AutomationStateDto | null | undefined
     const pipelines = state?.pipelines ?? []
-    // WPF TrayHelper: triggerless pipelines only, reversed so defaults appear near Open/Close.
+    // Electron TrayHelper: triggerless pipelines only, reversed so defaults appear near Open/Close.
     return pipelines.filter((p) => p.trigger == null).reverse()
   } catch (error) {
     console.error('[tray] failed to read quick actions:', error)
@@ -178,7 +178,7 @@ function handlePopupCommand(cmd: string): void {
     return
   }
   if (cmd === 'close') {
-    // Mirrors WPF Resource.Close → App.ShutdownAsync(true).
+    // Mirrors Electron Resource.Close → App.ShutdownAsync(true).
     app.quit()
     return
   }
@@ -227,7 +227,7 @@ function scheduleRebuild(delayMs = 50): void {
 }
 
 export interface TrayOptions {
-  /** Mirrors the WPF --disable-tray-tooltip flag. */
+  /** Mirrors the Electron --disable-tray-tooltip flag. */
   disableTooltip?: boolean
   invokeHost?: (method: string, params?: unknown) => Promise<unknown>
   /** Initial UI language (renderer `udt.lang` / i18n). Defaults to zh-CN. */

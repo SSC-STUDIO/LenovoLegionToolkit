@@ -5,7 +5,7 @@ import { ExclamationCircleFilled, LinkOutlined } from '@ant-design/icons'
 import './utils.css'
 
 /**
- * Port of WPF UnsupportedWindow: shown at startup for machines the app has not
+ * Port of Electron UnsupportedWindow: shown at startup for machines the app has not
  * been tested on. The Continue button is gated by a 5-second countdown; Exit
  * quits the whole application (app:quit bridge).
  */

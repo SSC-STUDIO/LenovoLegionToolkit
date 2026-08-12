@@ -5,7 +5,7 @@ import { DeleteOutlined, FolderOpenOutlined, WarningOutlined } from '@ant-design
 import './utils.css'
 
 /**
- * Port of WPF CrashReportNotificationWindow: notifies the user about a crash
+ * Port of Electron CrashReportNotificationWindow: notifies the user about a crash
  * report saved locally and lets them view or delete it.
  *
  * The host does not currently expose crash-report discovery/delete IPC, so the
@@ -58,7 +58,7 @@ export function openCrashReportNotification(report: CrashReportInfo): Promise<bo
   })
 }
 
-/** Stack trace is bounded like the WPF window (max 1200 chars). */
+/** Stack trace is bounded like the Electron window (max 1200 chars). */
 const MAX_STACK_CHARS = 1200
 
 function formatDetails(report: CrashReportInfo, t: (key: string) => string): string {
@@ -105,7 +105,7 @@ export default function CrashReportNotificationModalHost(): React.JSX.Element {
 
   const deleteReport = (): void => {
     // Deleting the file itself is host-side (CrashReportHelper.DeleteCrashReport);
-    // the WPF window closes immediately, so we just resolve here.
+    // the Electron window closes immediately, so we just resolve here.
     settle(true)
   }
 

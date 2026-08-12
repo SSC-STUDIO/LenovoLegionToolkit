@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import './MarqueeText.css'
 
 /**
- * Marquee text — port of WPF Controls/MarqueeTextBlock.cs. When the text
+ * Marquee text — port of Electron Controls/MarqueeTextBlock.cs. When the text
  * overflows its box it fades out at the right edge (TextOverflowFadeBehavior);
  * on hover it scrolls smoothly to reveal the tail.
  */

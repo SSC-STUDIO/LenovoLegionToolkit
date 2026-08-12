@@ -14,7 +14,7 @@ export interface SensorGaugeProps {
   thickness?: number
 }
 
-// Matches WPF RadialGaugeControl: open-bottom 270° ring (start 225° / end -45°),
+// Matches Electron RadialGaugeControl: open-bottom 270° ring (start 225° / end -45°),
 // track rgba(255,255,255,0.18), value arc gradient (lighten 0.35 at start),
 // glow (arc + 5px, 25% ring color), white tip dot (9px, 2.1px ring stroke)
 // riding the arc end, cubic ease-out value animation.

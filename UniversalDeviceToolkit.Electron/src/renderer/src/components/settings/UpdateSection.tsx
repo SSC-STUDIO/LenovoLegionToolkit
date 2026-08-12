@@ -55,7 +55,7 @@ export function UpdateSection(): React.JSX.Element {
     }
   }
 
-  // WPF parity (SettingsUpdateControl): trim; empty text persists as null (use default).
+  // Electron parity (SettingsUpdateControl): trim; empty text persists as null (use default).
   const persistRepository = async (): Promise<void> => {
     const owner = repositoryOwner.trim()
     const name = repositoryName.trim()

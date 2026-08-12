@@ -50,7 +50,7 @@ export default function TrendChart({
   const containerRef = useRef<HTMLDivElement>(null)
   const chartRef = useRef<ECharts | null>(null)
   const isDark = useThemeStore((s) => s.themeMode === 'dark')
-  // WPF _smoothedAutoMax: auto-scaled series converge toward the observed max
+  // Electron _smoothedAutoMax: auto-scaled series converge toward the observed max
   // instead of jumping (rise fast, fall slow).
   const smoothedMaxRef = useRef<Record<string, number>>({})
   // Cached base option: rebuilt only when theme or series structure changes.
@@ -180,7 +180,7 @@ export default function TrendChart({
         lineStyle: { width: 1.35, color: entry.color, cap: 'round', join: 'round' },
         itemStyle: { color: entry.color },
         areaStyle: {
-          // WPF tapers the area polygon toward the latest point (right edge).
+          // Electron tapers the area polygon toward the latest point (right edge).
           // ECharts cannot reshape the path, so a diagonal gradient approximates
           // the silhouette: strongest top-left, fading toward the bottom-right
           // corner where the tapered tail sits.

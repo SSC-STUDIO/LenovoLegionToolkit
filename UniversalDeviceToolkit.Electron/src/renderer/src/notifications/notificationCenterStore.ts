@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 /**
- * Notification center store — port of WPF Controls/Shell/AppNotificationHost
+ * Notification center store — port of Electron Controls/Shell/AppNotificationHost
  * + AppNotificationItemViewModel: right-corner stacked toasts with per-item
  * auto-close timers (hover pause/resume), same-key merging with a ×N badge,
  * optional progress bar and a 30-item hard cap.
@@ -36,12 +36,12 @@ export interface NotificationItem {
 
 export interface NotificationSettings {
   duration: 'Short' | 'Normal' | 'Long'
-  /** WPF AutoClose durations (seconds); Success uses the shorter ladder. */
+  /** Electron AutoClose durations (seconds); Success uses the shorter ladder. */
 }
 
 export const MAX_NOTIFICATIONS = 30
 
-/** WPF AppNotificationHost.SuccessAutoClose / duration ladder. */
+/** Electron AppNotificationHost.SuccessAutoClose / duration ladder. */
 export function resolveAutoCloseMs(request: AppNotificationRequest, settings: NotificationSettings): number {
   if (request.isPersistent) return Infinity
   if (typeof request.progressPercent === 'number' && request.progressPercent < 100) return Infinity
@@ -106,7 +106,7 @@ export const useNotificationCenter = create<NotificationCenterState>((set, get) 
 
     if (existing !== undefined && existing.progressPercent === undefined) {
       // Same-key merge: bump the count and reset the auto-close deadline
-      // (WPF ApplyMerge + ResetAutoCloseTimer).
+      // (Electron ApplyMerge + ResetAutoCloseTimer).
       const next = {
         ...existing,
         title: request.title || existing.title,
@@ -137,7 +137,7 @@ export const useNotificationCenter = create<NotificationCenterState>((set, get) 
       createdAt: Date.now()
     }
     let items = [...get().items, item]
-    // WPF TrimIfNeeded: hard cap on live toasts.
+    // Electron TrimIfNeeded: hard cap on live toasts.
     while (items.length > MAX_NOTIFICATIONS) items.shift()
     set({ items: scheduleAutoClose(items, id) })
   },

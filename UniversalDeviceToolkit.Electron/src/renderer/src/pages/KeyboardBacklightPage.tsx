@@ -141,7 +141,7 @@ function rgbToHex(color: RgbColor): string {
 function RgbSection(): React.JSX.Element {
   const { t } = useTranslation()
   const { rgbState, setRgb, setPreset } = useKeyboardStore()
-  // WPF RGBKeyboardBacklightControl: while Lenovo Vantage is running the whole
+  // Electron RGBKeyboardBacklightControl: while Lenovo Vantage is running the whole
   // section is disabled and a warning InfoBar is shown. Status is shared with
   // the AppStatusBanners host (5s poll) so the block clears once Vantage exits.
   const vantageBlocked = useSoftwareStore((s) => s.statuses.vantage === 'Enabled')
@@ -177,7 +177,7 @@ function RgbSection(): React.JSX.Element {
     void updateDesc({ [zone]: { R: rgb.r, G: rgb.g, B: rgb.b } })
   }
 
-  // WPF SynchroniseZonesMenuItem_Click: right-click a zone 鈫?all zones take its color.
+  // Electron SynchroniseZonesMenuItem_Click: right-click a zone 鈫?all zones take its color.
   const handleSynchroniseZones = (zone: 'Zone1' | 'Zone2' | 'Zone3' | 'Zone4'): void => {
     const color = desc[zone]
     void updateDesc({ Zone1: color, Zone2: color, Zone3: color, Zone4: color })
@@ -336,7 +336,7 @@ function SpectrumSection(): React.JSX.Element {
   const deviceKeys = spectrum.layout?.keys ?? []
   const effectiveLayout = layoutOverride ?? spectrum.layout?.keyboardLayout ?? 'Ansi'
   const layoutName = normalizeKeyboardLayout(effectiveLayout)
-  // WPF SpectrumLayout enum values, normalized against backend casing variants.
+  // Electron SpectrumLayout enum values, normalized against backend casing variants.
   const spectrumLayout = normalizeSpectrumLayout(spectrum.layout?.spectrumLayout ?? 'KeyboardOnly')
 
   useEffect(() => {
@@ -418,7 +418,7 @@ function SpectrumSection(): React.JSX.Element {
     persistEffects(effects)
   }
 
-  // WPF SelectableControl_Selected: box-selected zones are added to the
+  // Electron SelectableControl_Selected: box-selected zones are added to the
   // current effect without removing any already-selected ones (union).
   const handleBoxSelect = (codes: number[]): void => {
     if (spectrum.effects.length === 0) {

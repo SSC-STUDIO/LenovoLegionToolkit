@@ -1,5 +1,5 @@
 /**
- * Debounce/Throttle dispatcher — port of WPF Utils/DebounceDispatcher.cs.
+ * Debounce/Throttle dispatcher — port of Electron Utils/DebounceDispatcher.cs.
  * Single-flight semantics: debounce resets the timer on every call,
  * throttle ignores calls while a timer is pending.
  */
@@ -44,7 +44,7 @@ export function createDebounceDispatcher(): DebounceDispatcher {
   }
 }
 
-/** Cancellation token swap — port of WPF Utils/CtsSwap.cs. */
+/** Cancellation token swap — port of Electron Utils/CtsSwap.cs. */
 export interface CancellationToken {
   readonly isCancellationRequested: boolean
   cancel: () => void

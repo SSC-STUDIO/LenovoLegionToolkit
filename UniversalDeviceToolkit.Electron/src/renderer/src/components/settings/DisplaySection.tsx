@@ -51,7 +51,7 @@ export function DisplaySection(): React.JSX.Element {
       })
       .catch(() => {
         // The boot logo feature is hidden when it is unsupported or the host
-        // does not expose it, mirroring the WPF BootLogo.IsSupportedAsync gate.
+        // does not expose it, mirroring the Electron BootLogo.IsSupportedAsync gate.
       })
     return () => {
       cancelled = true

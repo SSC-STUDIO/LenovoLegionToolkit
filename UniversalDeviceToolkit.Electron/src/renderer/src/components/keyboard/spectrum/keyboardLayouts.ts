@@ -1,5 +1,5 @@
 /**
- * Spectrum keyboard layout geometry — port of the WPF
+ * Spectrum keyboard layout geometry — port of the Electron
  * SpectrumKeyboardANSIControl/ISOControl/JisControl.xaml zone tables
  * (Width × Height @ KeyCode, 2px margins; null code = non-selectable spacer).
  */

@@ -84,7 +84,7 @@ const ICON_DEFS: Record<string, IconDef> = {
 
 const GLYPH_SIZE = 14
 
-/** WPF SymbolRegular name → Fluent glyph. */
+/** Electron SymbolRegular name → Fluent glyph. */
 export function mapSymbolToGlyph(symbol?: string | null): string {
   const name = (symbol ?? '').replace(/\d+$/, '').toLowerCase()
   if (name.includes('home')) return 'home'

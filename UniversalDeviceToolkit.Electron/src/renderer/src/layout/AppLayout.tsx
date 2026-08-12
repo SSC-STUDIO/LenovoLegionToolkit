@@ -77,7 +77,7 @@ const FOOTER_ITEMS: NavItemDef[] = [
   { key: '/about', icon: (filled) => filled ? <Info24Filled /> : <Info24Regular />, labelKey: 'nav.about' }
 ]
 
-// Keyboard navigation order: main items first, then footer items (WPF
+// Keyboard navigation order: main items first, then footer items (Electron
 // NavigationStoreExtensions.Items + Footer).
 const ALL_NAV_ITEMS: NavItemDef[] = [...MAIN_ITEMS, ...FOOTER_ITEMS]
 
@@ -132,7 +132,7 @@ export default function AppLayout(): React.JSX.Element {
     void loadSettings(['application'])
   }, [loadSettings])
 
-  // WPF MainWindow.UpdateNavigationItemsVisibilityFromSettings: dashboard and
+  // Electron MainWindow.UpdateNavigationItemsVisibilityFromSettings: dashboard and
   // settings are always visible; everything else defaults to visible unless
   // NavigationItemsVisibility opts it out. Plugin Extensions stays visible by
   // default (ExtensionsEnabled only controls whether extensions load).
@@ -177,7 +177,7 @@ export default function AppLayout(): React.JSX.Element {
     return () => window.removeEventListener('resize', handleResize)
   }, [handleResize])
 
-  // Persist the navigation collapse state across sessions (WPF parity:
+  // Persist the navigation collapse state across sessions (Electron parity:
   // NavigationStore saves NavigationPaneExpanded on exit and restores it).
   useEffect(() => {
     try {
@@ -187,7 +187,7 @@ export default function AppLayout(): React.JSX.Element {
     }
   }, [collapsed])
 
-  // Tray navigation (WPF TrayHelper → NavigationStore.Navigate) and optional
+  // Tray navigation (Electron TrayHelper → NavigationStore.Navigate) and optional
   // status popup (legacy Electron-only; not part of the original tray menu).
   useEffect(() => {
     const offNavigate = on('tray:navigate', (data) => {
@@ -203,7 +203,7 @@ export default function AppLayout(): React.JSX.Element {
     }
   }, [navigate])
 
-  // Alt+ArrowLeft/ArrowRight page switching — port of WPF
+  // Alt+ArrowLeft/ArrowRight page switching — port of Electron
   // NavigationStoreExtensions.NavigateToPrevious/NavigateToNext: cycles through
   // MAIN_ITEMS followed by FOOTER_ITEMS, wrapping around at both ends.
   useEffect(() => {
@@ -226,7 +226,7 @@ export default function AppLayout(): React.JSX.Element {
   }, [location.pathname, navigate])
 
   // Ctrl+Tab / Ctrl+Shift+Tab page switching + Ctrl+1..9 direct jump — port of
-  // WPF MainWindow key bindings (NavigationStore.NavigateToNext/Previous and
+  // Electron MainWindow key bindings (NavigationStore.NavigateToNext/Previous and
   // the numbered nav-item shortcuts).
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
@@ -271,13 +271,13 @@ export default function AppLayout(): React.JSX.Element {
       <UtilsModalHost />
       <LoadingOverlay />
       <NotificationCenter />
-      {/* WPF MainWindow._statusNotificationStack: bottom-right overlay, not in-flow. */}
+      {/* Electron MainWindow._statusNotificationStack: bottom-right overlay, not in-flow. */}
       <AppStatusBanners />
       <TitleBar />
       <div className="udt-app-shell__body">
         <nav
           aria-label={t('common.navigation')}
-          className="udt-nav udt-nav--wpf-parity"
+          className="udt-nav udt-nav--electron-parity"
           style={{ width: navWidth }}
         >
           <div className="udt-nav__scroll">

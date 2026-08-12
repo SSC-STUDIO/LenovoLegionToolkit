@@ -1,5 +1,5 @@
 /*
- * Notification center (components/NotificationCenter.tsx) — port of the WPF
+ * Notification center (components/NotificationCenter.tsx) — port of the Electron
  * AppNotificationHost: right-corner stacked toasts, severity icon colors,
  * ×N merge badge, optional progress bar, hover-pause, close button.
  */
@@ -19,11 +19,11 @@
   pointer-events: none;
 }
 
-/* WPF NotificationPosition placements */
+/* Electron NotificationPosition placements */
 .udt-notification-center--bottom-right {
   top: auto;
   right: 16px;
-  /* Sit above persistent AppStatusBanner cards (WPF single corner stack). */
+  /* Sit above persistent AppStatusBanner cards (Electron single corner stack). */
   bottom: calc(16px + var(--udt-status-banner-stack-height, 0px));
 }
 

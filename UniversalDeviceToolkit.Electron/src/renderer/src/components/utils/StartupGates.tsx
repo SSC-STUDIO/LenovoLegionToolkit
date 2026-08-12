@@ -10,13 +10,13 @@ import { openUnsupportedDevice } from './UnsupportedDeviceModal'
 import type { SystemInfo } from '../../api/system'
 
 /**
- * First-launch / startup gates — port of the WPF startup sequence:
+ * First-launch / startup gates — port of the Electron startup sequence:
  *   1. Language gate (first run only; LanguageSelectorWindow)
  *   2. Device setup wizard (first run only; DeviceSetupWindow)
  *   3. Unsupported device warning (unless disabled in settings; UnsupportedWindow)
  *
  * The state markers are kept in localStorage because the renderer owns the
- * language choice; the WPF host-side `device-setup` state file has no bridge
+ * language choice; the Electron host-side `device-setup` state file has no bridge
  * equivalent yet. Every gate resolves to "proceed" unless the user explicitly
  * exits the application (app:quit).
  */

@@ -18,7 +18,7 @@ import type { ReactNode } from 'react'
 import { normalizeTriggerKind, type TriggerKind } from './triggers'
 
 /**
- * Per-trigger icon mapping — port of WPF
+ * Per-trigger icon mapping — port of Electron
  * Extensions/AutomationPipelineTriggerExtensions.cs (SymbolRegular).
  *
  * AC adapter cards use Link (connection/node) to match the original UDT
@@ -59,7 +59,7 @@ const TRIGGER_ICONS: Record<TriggerKind, ReactNode> = {
   and: <Link24Regular />
 }
 
-/** Default icon for triggerless quick actions (WPF play triangle). */
+/** Default icon for triggerless quick actions (Electron play triangle). */
 export const QUICK_ACTION_ICON: ReactNode = <Play24Regular />
 
 /** "WiFiConnectedAutomationPipelineTrigger" → catalog kind; null when unknown. */

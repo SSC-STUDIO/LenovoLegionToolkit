@@ -5,7 +5,7 @@ import { settingsApi } from '../../api/settings'
 import { useFeaturesStore } from '../../stores/featuresStore'
 
 /**
- * Parity modal for WPF Windows/Dashboard/BalanceModeSettingsWindow:
+ * Parity modal for Electron Windows/Dashboard/BalanceModeSettingsWindow:
  * a single "Enable AI Engine" toggle persisted to balancemode.json plus
  * switching the power mode to Balance.
  */

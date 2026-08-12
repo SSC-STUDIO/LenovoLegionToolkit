@@ -1,6 +1,6 @@
 /* Cleanup tab — BleachBit-style scan UI with a fixed two-pane layout.
    The split (1fr | 1px | 320px) is locked: it never collapses at small
-   window sizes, matching the original WPF two-column layout. */
+   window sizes, matching the original Electron two-column layout. */
 
 .udt-cleanup {
   display: grid;

@@ -1,8 +1,8 @@
 /**
- * Spectrum device front-panel geometry — port of the WPF
+ * Spectrum device front-panel geometry — port of the Electron
  * SpectrumDeviceFullControl / FullAlternativeControl / KeyboardAndFrontControl
  * XAML zone tables (extracted with a XAML parser: Grid.Row/Column, KeyCode,
- * Margin, Width/Height). WPF uses an Auto-sized Grid; positions here are the
+ * Margin, Width/Height). Electron uses an Auto-sized Grid; positions here are the
  * resolved pixel layout on the device canvas:
  *
  *  - the keyboard stage is 660x252 (6px padding, 4px row gaps) — see
@@ -42,7 +42,7 @@ export type SpectrumDeviceLayoutName =
 
 export type SpectrumDevicePanelLayout = Exclude<SpectrumDeviceLayoutName, 'KeyboardOnly'>
 
-/** 6 even keyboard columns of the WPF grid (keyboard spans cols 1-6). */
+/** 6 even keyboard columns of the Electron grid (keyboard spans cols 1-6). */
 const COL_WIDTH = 110
 /** Side columns next to the keyboard (28px zone + 2px margins each side). */
 const SIDE_COL_WIDTH = 32
@@ -59,7 +59,7 @@ const keyboardBox = (x: number, y: number): { x: number; y: number; w: number; h
   h: 252
 })
 
-/** Zone on a 24px WPF row (logo / rear vents / front strip): y + margin 2. */
+/** Zone on a 24px Electron row (logo / rear vents / front strip): y + margin 2. */
 const slimZone = (col: number, y: number, code: number, w = COL_WIDTH - 4): SpectrumDeviceZone => ({
   x: 2 + col * COL_WIDTH,
   y: y + 2,

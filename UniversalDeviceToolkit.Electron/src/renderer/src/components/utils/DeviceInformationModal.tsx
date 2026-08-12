@@ -8,7 +8,7 @@ import { sensorsApi } from '../../api/sensors'
 import './utils.css'
 
 /**
- * Port of WPF DeviceInformationWindow: displays machine identity rows
+ * Port of Electron DeviceInformationWindow: displays machine identity rows
  * (manufacturer, model, machine type, serial number, BIOS), a hardware section
  * (CPU/GPU names) and a warranty section with a Lenovo support link.
  *
@@ -16,7 +16,7 @@ import './utils.css'
  * and CPU/GPU names through the sensors API. Serial number, detailed hardware
  * inventory (memory/baseboard/chassis) and the warranty lookup are not exposed
  * by the host yet — those rows render as "-" or stay hidden. The Lenovo
- * support card mirrors the WPF fallback URL builder.
+ * support card mirrors the Electron fallback URL builder.
  */
 
 interface DeviceInfoRequest {
@@ -168,7 +168,7 @@ export default function DeviceInformationModalHost(): React.JSX.Element {
         duration: 1.5
       })
     } catch {
-      // Clipboard unavailable; ignore like the WPF catch block.
+      // Clipboard unavailable; ignore like the Electron catch block.
     }
   }
 

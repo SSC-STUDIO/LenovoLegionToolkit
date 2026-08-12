@@ -58,12 +58,12 @@ const bridge = {
   refreshTrayMenu: (): void => {
     ipcRenderer.send('tray:refresh')
   },
-  /** Clipboard process list (port of WPF ClipboardExtensions). */
+  /** Clipboard process list (port of Electron ClipboardExtensions). */
   writeClipboardLines: (lines: string[]): Promise<{ ok: boolean }> =>
     ipcRenderer.invoke('clipboard:write-lines', { lines }),
   readClipboardExistingPaths: (): Promise<string[]> =>
     ipcRenderer.invoke('clipboard:read-existing-paths'),
-  /** Windows login item (WPF Autorun). */
+  /** Windows login item (Electron Autorun). */
   setAutorun: (enabled: boolean): Promise<{ ok: boolean; enabled: boolean }> =>
     ipcRenderer.invoke('app:set-autorun', enabled),
   getAutorun: (): Promise<{ enabled: boolean }> => ipcRenderer.invoke('app:get-autorun')

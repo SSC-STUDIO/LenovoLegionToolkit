@@ -91,7 +91,7 @@ interface SensorsStoreActions {
   loadSnapshot: () => Promise<void>
   start: (intervalSec?: number) => Promise<void>
   stop: () => Promise<void>
-  /** Restart polling with a new interval (WPF SensorsControl refresh menu parity). */
+  /** Restart polling with a new interval (Electron SensorsControl refresh menu parity). */
   setInterval: (intervalSec: number) => Promise<void>
   loadSettings: () => Promise<void>
   saveSettings: (partial: SensorsSettings) => Promise<void>
@@ -148,7 +148,7 @@ export const useSensorsStore = create<SensorsStoreState & SensorsStoreActions>((
       const wasSubscribed = get().subscribed
       if (wasSubscribed) {
         // Interval change while polling: drop the old subscription so the new
-        // interval takes effect (WPF SensorsControl refresh menu parity).
+        // interval takes effect (Electron SensorsControl refresh menu parity).
         try {
           await sensorsApi.unsubscribe()
         } catch {
@@ -193,7 +193,7 @@ export const useSensorsStore = create<SensorsStoreState & SensorsStoreActions>((
     })
   },
 
-  /** Restart polling with a new interval (WPF SensorsControl refresh menu parity). */
+  /** Restart polling with a new interval (Electron SensorsControl refresh menu parity). */
   setInterval: async (intervalSec) => {
     await get().start(intervalSec)
   },
