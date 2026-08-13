@@ -12,15 +12,17 @@ namespace UniversalDeviceToolkit.Lib.System.Management;
 
 public static partial class WMI
 {
-    // WMI method invocations (ManagementObject.InvokeMethod) must honor the 2,500ms ceiling
-    // enforced by KNOWNLEDGE_BASE.md "WMI Timeout Protection" rule (#2). Never raise this
-    // above 3,000ms or the caller may stall well past the async contract.
+    // Caller-visible WMI method waits must honor the 2,500ms ceiling enforced by
+    // KNOWNLEDGE_BASE.md "WMI Timeout Protection" rule (#2). InvokeMethod itself cannot
+    // be cancelled, so timed-out writes retain their keyed queue slot until they really finish.
+    // Never raise this above 3,000ms or the caller may stall well past the async contract.
     // Keep well under AbstractSensorsController's 2s snapshot budget (CPU+GPU fan in parallel).
     private const int _wmiInvokeTimeoutMs = 800;
 
     // Soft-failed method signatures for this process — avoids re-invoking known-missing firmware methods
     // (which would otherwise spam first-chance ManagementException during capability probes).
     private static readonly ConcurrentDictionary<string, byte> _softFailedMethodKeys = new(StringComparer.Ordinal);
+    private static readonly WmiWriteCoordinator _writeCoordinator = new();
 
     private static bool IsAccessDenied(ManagementException ex) =>
         ex.ErrorCode == ManagementStatus.AccessDenied
@@ -95,13 +97,15 @@ public static partial class WMI
         try
         {
             result = target.InvokeMethod(methodName, args, new InvokeMethodOptions());
-            return result is not null;
+            // A completed void WMI method may legitimately return no out-parameter object.
+            // Completion without an exception is still a successful invocation.
+            return true;
         }
         catch (ManagementException ex) when (IsSoftWmiFailure(ex))
         {
             // Soft-fail including Invalid object / invalid object — never rethrow.
             // Lenovo providers often invalidate the MO between Get() and InvokeMethod();
-            // TryCallInternalAsync re-queries a fresh instance on the next attempt.
+            // TryCallReadInternalAsync re-queries a fresh instance on the next attempt.
             // Rethrowing here only spammed first-chance exceptions in the debugger while
             // fan/sensor probes ran every second.
             //
@@ -242,17 +246,27 @@ public static partial class WMI
     [DebuggerStepThrough]
     internal static async Task CallAsync(string scope, FormattableString query, string methodName, Dictionary<string, object> methodParams)
     {
-        // Soft-unavailable: do not throw (avoids debugger first-chance spam on probes).
-        // Do NOT permanently soft-fail here — only true method-missing is cached inside
-        // TryGetWmiMethodParameters. One bad invoke must not disable the method forever.
-        _ = await TryCallInternalAsync(scope, query, methodName, methodParams).ConfigureAwait(false);
+        // The non-generic overload is reserved for mutating calls. Keep its Task-returning
+        // compatibility surface, but never report successful completion for an unavailable
+        // or indeterminate write.
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
+        var result = await TryCallWriteInternalAsync(
+            scope,
+            queryFormatted,
+            methodName,
+            methodParams).ConfigureAwait(false);
+        result.ThrowIfNotSucceeded(scope, queryFormatted, methodName, _wmiInvokeTimeoutMs);
     }
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
     internal static async Task<T> CallAsync<T>(string scope, FormattableString query, string methodName, Dictionary<string, object> methodParams, Func<PropertyDataCollection, T> converter)
     {
-        var result = await TryCallInternalAsync(scope, query, methodName, methodParams).ConfigureAwait(false);
+        using var result = await TryCallReadInternalAsync(
+            scope,
+            query,
+            methodName,
+            methodParams).ConfigureAwait(false);
         if (result is null)
         {
             // Do not throw: sensor/capability probes hit this path every second on some machines.
@@ -278,7 +292,11 @@ public static partial class WMI
         Func<PropertyDataCollection, T> converter,
         T fallback = default!)
     {
-        var result = await TryCallInternalAsync(scope, query, methodName, methodParams).ConfigureAwait(false);
+        using var result = await TryCallReadInternalAsync(
+            scope,
+            query,
+            methodName,
+            methodParams).ConfigureAwait(false);
         if (result is null)
             return (false, fallback);
 
@@ -297,6 +315,111 @@ public static partial class WMI
     }
 
     /// <summary>
+    /// Mutating WMI call with an explicit outcome. It is invoked once, serialized by
+    /// scope/query/method, and remains the head of that key's queue until the underlying
+    /// invocation actually completes even if this method returns TimedOutIndeterminate.
+    /// A queued caller whose own deadline expires returns NotStartedBusy and is removed.
+    /// </summary>
+    [DebuggerNonUserCode]
+    [DebuggerStepThrough]
+    internal static Task<WmiWriteResult> CallWriteAsync(
+        string scope,
+        FormattableString query,
+        string methodName,
+        Dictionary<string, object> methodParams)
+    {
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
+        return TryCallWriteInternalAsync(scope, queryFormatted, methodName, methodParams);
+    }
+
+    /// <summary>
+    /// Mutating WMI call that also converts an out parameter. Unlike the probe/read APIs,
+    /// this call is serialized and never retried.
+    /// </summary>
+    [DebuggerNonUserCode]
+    [DebuggerStepThrough]
+    internal static Task<WmiWriteResult<T>> CallWriteAsync<T>(
+        string scope,
+        FormattableString query,
+        string methodName,
+        Dictionary<string, object> methodParams,
+        Func<PropertyDataCollection, T> converter)
+    {
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
+        return TryCallWriteInternalAsync(
+            scope,
+            queryFormatted,
+            methodName,
+            methodParams,
+            converter);
+    }
+
+    /// <summary>
+    /// Compatibility shape for a mutating method that returns an out value. The value is
+    /// returned only for a confirmed invocation; unavailable and indeterminate outcomes throw.
+    /// </summary>
+    [DebuggerNonUserCode]
+    [DebuggerStepThrough]
+    internal static async Task<T> CallWriteRequiredAsync<T>(
+        string scope,
+        FormattableString query,
+        string methodName,
+        Dictionary<string, object> methodParams,
+        Func<PropertyDataCollection, T> converter)
+    {
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
+        var result = await TryCallWriteInternalAsync(
+            scope,
+            queryFormatted,
+            methodName,
+            methodParams,
+            converter).ConfigureAwait(false);
+        return result.GetValueOrThrow(
+            scope,
+            queryFormatted,
+            methodName,
+            _wmiInvokeTimeoutMs);
+    }
+
+    /// <summary>
+    /// Serializes a complete write sequence under one scope/query/method key. The continuation
+    /// runs before the key is released, allowing a safe fallback without nested coordination.
+    /// </summary>
+    internal static async Task<WmiWriteResult> CallWriteSequenceAsync(
+        string scope,
+        FormattableString query,
+        string methodName,
+        Dictionary<string, object> methodParams,
+        Func<WmiWriteResult, Task<WmiWriteResult>> continuation)
+    {
+        ArgumentNullException.ThrowIfNull(continuation);
+
+        var queryFormatted = query.ToString(WMIPropertyValueFormatter.Instance);
+        var key = SoftFailKey(scope, queryFormatted, methodName);
+        var methodParamsSnapshot = SnapshotWriteParameters(methodParams);
+        var result = await _writeCoordinator.ExecuteAsync(
+            key,
+            async () =>
+            {
+                var classicResult = _softFailedMethodKeys.ContainsKey(key)
+                    ? WmiWriteResult.Unavailable
+                    : await Task.Run(
+                        () => ExecuteWmiWriteMethodCall(
+                            scope,
+                            queryFormatted,
+                            methodName,
+                            methodParamsSnapshot)).ConfigureAwait(false);
+                return await continuation(classicResult).ConfigureAwait(false);
+            },
+            TimeSpan.FromMilliseconds(_wmiInvokeTimeoutMs),
+            WmiWriteResult.TimedOutIndeterminate,
+            WmiWriteResult.NotStartedBusy,
+            ex => LogLateWriteFailure(scope, queryFormatted, methodName, ex)).ConfigureAwait(false);
+
+        return result;
+    }
+
+    /// <summary>
     /// Full WMI method call. Soft failures return false (no InvalidOperationException).
     /// Do not use GetAsyncWithTimeout here — it disposes the collection before InvokeMethod.
     /// </summary>
@@ -312,22 +435,272 @@ public static partial class WMI
         result = null;
         using var searcher = new ManagementObjectSearcher(scope, queryFormatted);
         using var collection = searcher.Get();
-        var mo = collection.Cast<ManagementObject>().FirstOrDefault();
+        using var mo = collection.Cast<ManagementObject>().FirstOrDefault();
         if (mo is null)
             return false;
 
         if (!TryGetWmiMethodParameters(mo, methodName, scope, queryFormatted, out var args) || args is null)
             return false;
 
-        foreach (var pair in methodParams)
-            args[pair.Key] = pair.Value;
+        using (args)
+        {
+            foreach (var pair in methodParams)
+                args[pair.Key] = pair.Value;
 
-        return TryInvokeWmiMethod(mo, methodName, args, scope, queryFormatted, out result);
+            return TryInvokeWmiMethod(mo, methodName, args, scope, queryFormatted, out result);
+        }
+    }
+
+    private static WmiWriteResult ExecuteWmiWriteMethodCall(
+        string scope,
+        string queryFormatted,
+        string methodName,
+        Dictionary<string, object> methodParams)
+    {
+        var status = ExecuteWmiWriteInvocation(
+            scope,
+            queryFormatted,
+            methodName,
+            methodParams,
+            out var result);
+
+        result?.Dispose();
+        return new WmiWriteResult(status);
+    }
+
+    private static WmiWriteResult<T> ExecuteWmiWriteMethodCall<T>(
+        string scope,
+        string queryFormatted,
+        string methodName,
+        Dictionary<string, object> methodParams,
+        Func<PropertyDataCollection, T> converter)
+    {
+        var status = ExecuteWmiWriteInvocation(
+            scope,
+            queryFormatted,
+            methodName,
+            methodParams,
+            out var result);
+        if (status != WmiWriteStatus.Succeeded || result is null)
+        {
+            result?.Dispose();
+            return new WmiWriteResult<T>(
+                status == WmiWriteStatus.Succeeded
+                    ? WmiWriteStatus.FailedIndeterminate
+                    : status,
+                default!);
+        }
+
+        using (result)
+        {
+            try
+            {
+                return WmiWriteResult<T>.Success(converter(result.Properties));
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Warning(
+                    $"WMI write completed but its response could not be converted. " +
+                    $"[scope={scope}, query={queryFormatted}, methodName={methodName}]",
+                    ex);
+                return WmiWriteResult<T>.FailedIndeterminate;
+            }
+        }
+    }
+
+    private static ManagementBaseObject? GetWmiWriteMethodParameters(
+        ManagementObject target,
+        string methodName,
+        string scope,
+        string queryFormatted)
+    {
+        try
+        {
+            return target.GetMethodParameters(methodName);
+        }
+        catch (ManagementException ex) when (IsMethodMissing(ex))
+        {
+            MarkWmiMethodSoftFailed(scope, queryFormatted, methodName);
+            return null;
+        }
+    }
+
+    private static WmiWriteStatus ExecuteWmiWriteInvocation(
+        string scope,
+        string queryFormatted,
+        string methodName,
+        Dictionary<string, object> methodParams,
+        out ManagementBaseObject? result)
+    {
+        result = null;
+        try
+        {
+            using var searcher = new ManagementObjectSearcher(scope, queryFormatted);
+            using var collection = searcher.Get();
+            using var target = collection.Cast<ManagementObject>().FirstOrDefault();
+            if (target is null)
+                return WmiWriteStatus.Unavailable;
+
+            using var args = GetWmiWriteMethodParameters(
+                target,
+                methodName,
+                scope,
+                queryFormatted);
+            if (args is null)
+                return WmiWriteStatus.Unavailable;
+
+            foreach (var pair in methodParams)
+                args[pair.Key] = pair.Value;
+
+            try
+            {
+                result = target.InvokeMethod(methodName, args, new InvokeMethodOptions());
+                return WmiWriteStatus.Succeeded;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.Warning(
+                    $"WMI write failed after InvokeMethod started; side effect is indeterminate. " +
+                    $"[scope={scope}, query={queryFormatted}, methodName={methodName}]",
+                    ex);
+                return WmiWriteStatus.FailedIndeterminate;
+            }
+        }
+        catch (ManagementException ex) when (IsPreInvocationWriteUnavailable(ex.ErrorCode))
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace(
+                    $"WMI write provider unavailable before invocation. " +
+                    $"[scope={scope}, query={queryFormatted}, methodName={methodName}, code={ex.ErrorCode}]",
+                    ex);
+            return WmiWriteStatus.Unavailable;
+        }
+    }
+
+    internal static bool IsPreInvocationWriteUnavailable(ManagementStatus status) =>
+        status is ManagementStatus.InvalidClass
+            or ManagementStatus.InvalidNamespace
+            or ManagementStatus.NotFound
+            or ManagementStatus.NotSupported;
+
+    private static Dictionary<string, object> SnapshotWriteParameters(
+        Dictionary<string, object> methodParams)
+    {
+        var snapshot = new Dictionary<string, object>(methodParams.Count, methodParams.Comparer);
+        foreach (var pair in methodParams)
+            snapshot.Add(pair.Key, pair.Value is Array array ? array.Clone() : pair.Value);
+        return snapshot;
+    }
+
+    private static async Task<WmiWriteResult> TryCallWriteInternalAsync(
+        string scope,
+        string queryFormatted,
+        string methodName,
+        Dictionary<string, object> methodParams)
+    {
+        var key = SoftFailKey(scope, queryFormatted, methodName);
+        if (_softFailedMethodKeys.ContainsKey(key))
+            return WmiWriteResult.Unavailable;
+
+        var methodParamsSnapshot = SnapshotWriteParameters(methodParams);
+        var result = await _writeCoordinator.ExecuteAsync(
+            key,
+            () =>
+            {
+                if (_softFailedMethodKeys.ContainsKey(key))
+                    return Task.FromResult(WmiWriteResult.Unavailable);
+
+                return Task.Run(
+                    () => ExecuteWmiWriteMethodCall(
+                        scope,
+                        queryFormatted,
+                        methodName,
+                        methodParamsSnapshot));
+            },
+            TimeSpan.FromMilliseconds(_wmiInvokeTimeoutMs),
+            WmiWriteResult.TimedOutIndeterminate,
+            WmiWriteResult.NotStartedBusy,
+            ex => LogLateWriteFailure(scope, queryFormatted, methodName, ex)).ConfigureAwait(false);
+
+        if (result.Status == WmiWriteStatus.TimedOutIndeterminate)
+        {
+            Log.Instance.Warning(
+                $"WMI write timed out after {_wmiInvokeTimeoutMs}ms and remains serialized until completion. " +
+                $"[scope={scope}, query={queryFormatted}, methodName={methodName}]");
+        }
+        else if (result.Status == WmiWriteStatus.NotStartedBusy)
+        {
+            Log.Instance.Warning(
+                $"WMI write was not started because the prior same-key invocation remained active for " +
+                $"{_wmiInvokeTimeoutMs}ms. [scope={scope}, query={queryFormatted}, methodName={methodName}]");
+        }
+
+        return result;
+    }
+
+    private static async Task<WmiWriteResult<T>> TryCallWriteInternalAsync<T>(
+        string scope,
+        string queryFormatted,
+        string methodName,
+        Dictionary<string, object> methodParams,
+        Func<PropertyDataCollection, T> converter)
+    {
+        var key = SoftFailKey(scope, queryFormatted, methodName);
+        if (_softFailedMethodKeys.ContainsKey(key))
+            return WmiWriteResult<T>.Unavailable;
+
+        var methodParamsSnapshot = SnapshotWriteParameters(methodParams);
+        var result = await _writeCoordinator.ExecuteAsync(
+            key,
+            () =>
+            {
+                if (_softFailedMethodKeys.ContainsKey(key))
+                    return Task.FromResult(WmiWriteResult<T>.Unavailable);
+
+                return Task.Run(
+                    () => ExecuteWmiWriteMethodCall(
+                        scope,
+                        queryFormatted,
+                        methodName,
+                        methodParamsSnapshot,
+                        converter));
+            },
+            TimeSpan.FromMilliseconds(_wmiInvokeTimeoutMs),
+            WmiWriteResult<T>.TimedOutIndeterminate,
+            WmiWriteResult<T>.NotStartedBusy,
+            ex => LogLateWriteFailure(scope, queryFormatted, methodName, ex)).ConfigureAwait(false);
+
+        if (result.Status == WmiWriteStatus.TimedOutIndeterminate)
+        {
+            Log.Instance.Warning(
+                $"WMI write timed out after {_wmiInvokeTimeoutMs}ms and remains serialized until completion. " +
+                $"[scope={scope}, query={queryFormatted}, methodName={methodName}]");
+        }
+        else if (result.Status == WmiWriteStatus.NotStartedBusy)
+        {
+            Log.Instance.Warning(
+                $"WMI write was not started because the prior same-key invocation remained active for " +
+                $"{_wmiInvokeTimeoutMs}ms. [scope={scope}, query={queryFormatted}, methodName={methodName}]");
+        }
+
+        return result;
+    }
+
+    private static void LogLateWriteFailure(
+        string scope,
+        string queryFormatted,
+        string methodName,
+        Exception exception)
+    {
+        Log.Instance.Warning(
+            $"WMI write failed after its caller received an indeterminate timeout. " +
+            $"[scope={scope}, query={queryFormatted}, methodName={methodName}]",
+            exception);
     }
 
     [DebuggerNonUserCode]
     [DebuggerStepThrough]
-    private static async Task<ManagementBaseObject?> TryCallInternalAsync(
+    private static async Task<ManagementBaseObject?> TryCallReadInternalAsync(
         string scope,
         FormattableString query,
         string methodName,
@@ -352,13 +725,11 @@ public static partial class WMI
                 var completed = await Task.WhenAny(callTask, Task.Delay(_wmiInvokeTimeoutMs)).ConfigureAwait(false);
                 if (completed != callTask)
                 {
-                    _ = callTask.ContinueWith(
-                        t =>
-                        {
-                            try { _ = t.Exception; }
-                            catch { /* observe only */ }
-                        },
-                        TaskScheduler.Default);
+                    _ = ObserveTimedOutReadInvocationAsync(
+                        callTask,
+                        scope,
+                        queryFormatted,
+                        methodName);
 
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace(
@@ -417,6 +788,25 @@ public static partial class WMI
         }
 
         return null;
+    }
+
+    private static async Task ObserveTimedOutReadInvocationAsync(
+        Task<ManagementBaseObject?> callTask,
+        string scope,
+        string queryFormatted,
+        string methodName)
+    {
+        try
+        {
+            using var lateResult = await callTask.ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace(
+                    $"Timed-out WMI read later failed. [scope={scope}, query={queryFormatted}, methodName={methodName}]",
+                    ex);
+        }
     }
 
     internal class WMIPropertyValueFormatter : IFormatProvider, ICustomFormatter

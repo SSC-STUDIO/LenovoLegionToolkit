@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Management;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -71,31 +72,148 @@ public static partial class WMI
 
         public static Task<int> GetSmartFanModeAsync() => CallGameZoneMethodWithCimFallbackAsync("GetSmartFanMode", []);
 
-        public static async Task SetSmartFanModeAsync(int data)
+        public static Task SetSmartFanModeAsync(int data) => WriteGameZoneMethodWithCimFallbackAsync(
+            "SetSmartFanMode",
+            new() { { "Data", data } },
+            data);
+
+        private static Task<int> CallGameZoneMethodWithCimFallbackAsync(
+            string methodName,
+            Dictionary<string, object> methodParams) =>
+            ResolveGameZoneSupportWithCimFallbackAsync(
+                methodName,
+                async () =>
+                {
+                    var (success, value) = await TryReadGameZoneDataAsync(methodName, methodParams).ConfigureAwait(false);
+                    return success ? value : null;
+                },
+                async () => await InvokeGameZoneMethodViaCimProcessAsync(methodName).ConfigureAwait(false));
+
+        internal static async Task<int> ResolveGameZoneSupportWithCimFallbackAsync(
+            string methodName,
+            Func<Task<int?>> classicReader,
+            Func<Task<int?>> cimReader)
         {
-            // Classic invoke first (works on most machines); the CIM-process invoke makes the
-            // write also land on providers that do not marshal out-parameters via
-            // System.Management. Same-value double write is idempotent.
-            await CallAsync("root\\WMI",
-                $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-                "SetSmartFanMode",
-                new() { { "Data", data } }).ConfigureAwait(false);
-            await InvokeGameZoneMethodViaCimProcessAsync("SetSmartFanMode", data).ConfigureAwait(false);
+            int? classic = null;
+            try
+            {
+                classic = await classicReader().ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.TraceOnce(
+                    $"wmi-gamezone-classic-fallback-{methodName}",
+                    $"Classic GameZone {methodName} fallback probe failed.",
+                    ex);
+            }
+
+            // Support/mode probes are always >= 1; null, zero, or a failed classic
+            // invoke means empty System.Management out-parameters (Y9000P IRX9)
+            // or a real "no", either of which must be confirmed through CIM.
+            if (classic is > 0)
+                return classic.Value;
+
+            try
+            {
+                var cim = await cimReader().ConfigureAwait(false);
+                return cim is > 0 ? cim.Value : 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.TraceOnce(
+                    $"wmi-gamezone-cim-fallback-{methodName}",
+                    $"CIM GameZone {methodName} fallback probe failed.",
+                    ex);
+                return 0;
+            }
         }
 
-        private static async Task<int> CallGameZoneMethodWithCimFallbackAsync(string methodName, Dictionary<string, object> methodParams)
+        /// <summary>
+        /// Reads a GameZone integer where 0 is a valid state (GSync Off, iGPU Default).
+        /// Falls back to CIM only when classic System.Management did not marshal Data.
+        /// </summary>
+        private static async Task<int> CallGameZoneStateWithCimFallbackAsync(string methodName)
         {
-            var classic = await CallAsync("root\\WMI",
-                $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-                methodName,
-                methodParams,
-                pdc => Convert.ToInt32(pdc["Data"].Value)).ConfigureAwait(false);
-
-            // Mode/support values are always >= 1; 0 means the provider returned empty out-parameters.
-            if (classic > 0)
+            var (ok, classic) = await TryReadGameZoneDataAsync(methodName, []).ConfigureAwait(false);
+            if (ok)
                 return classic;
 
             return await InvokeGameZoneMethodViaCimProcessAsync(methodName).ConfigureAwait(false);
+        }
+
+        private static async Task<(bool Success, int Value)> TryReadGameZoneDataAsync(
+            string methodName,
+            Dictionary<string, object> methodParams)
+        {
+            try
+            {
+                return await TryCallAsync(
+                    "root\\WMI",
+                    $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+                    methodName,
+                    methodParams,
+                    ConvertGameZoneData,
+                    fallback: 0).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.TraceOnce(
+                    $"wmi-gamezone-classic-{methodName}",
+                    $"Classic GameZone {methodName} probe failed.",
+                    ex);
+                return (false, 0);
+            }
+        }
+
+        private static int ConvertGameZoneData(PropertyDataCollection pdc)
+        {
+            foreach (PropertyData property in pdc)
+            {
+                if (property.Name.Equals("Data", StringComparison.OrdinalIgnoreCase) && property.Value is not null)
+                    return Convert.ToInt32(property.Value);
+            }
+
+            throw new InvalidOperationException("GameZone Data out-parameter is empty.");
+        }
+
+        private static async Task WriteGameZoneMethodWithCimFallbackAsync(
+            string methodName,
+            Dictionary<string, object> methodParams,
+            int value,
+            string cimParameterName = "Data")
+        {
+            FormattableString query = $"SELECT * FROM LENOVO_GAMEZONE_DATA";
+            var result = await CallWriteSequenceAsync(
+                "root\\WMI",
+                query,
+                methodName,
+                methodParams,
+                classicResult => ResolveGameZoneWriteWithCimFallbackAsync(
+                    () => Task.FromResult(classicResult),
+                    () => InvokeGameZoneWriteViaCimProcessAsync(
+                        methodName,
+                        value,
+                        cimParameterName))).ConfigureAwait(false);
+
+            result.ThrowIfNotSucceeded(
+                "root\\WMI",
+                query.ToString(WMIPropertyValueFormatter.Instance),
+                methodName,
+                _wmiInvokeTimeoutMs);
+        }
+
+        internal static async Task<WmiWriteResult> ResolveGameZoneWriteWithCimFallbackAsync(
+            Func<Task<WmiWriteResult>> classicWriter,
+            Func<Task<WmiWriteResult>> cimWriter)
+        {
+            ArgumentNullException.ThrowIfNull(classicWriter);
+            ArgumentNullException.ThrowIfNull(cimWriter);
+
+            var classicResult = await classicWriter().ConfigureAwait(false);
+            if (classicResult.Status != WmiWriteStatus.Unavailable)
+                return classicResult;
+
+            return await cimWriter().ConfigureAwait(false);
         }
 
         public static Task<int> GetIntelligentSubModeAsync() => CallAsync("root\\WMI",
@@ -109,39 +227,24 @@ public static partial class WMI
             "SetIntelligentSubMode",
             new() { { "Data", data } });
 
-        public static Task<int> IsSupportGSyncAsync() => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-            "IsSupportGSync",
-            [],
-            pdc => Convert.ToInt32(pdc["Data"].Value));
+        public static Task<int> IsSupportGSyncAsync() => CallGameZoneMethodWithCimFallbackAsync("IsSupportGSync", []);
 
-        public static Task<int> GetGSyncStatusAsync() => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-            "GetGSyncStatus",
-            [],
-            pdc => Convert.ToInt32(pdc["Data"].Value));
+        public static Task<int> GetGSyncStatusAsync() => CallGameZoneStateWithCimFallbackAsync("GetGSyncStatus");
 
-        public static Task SetGSyncStatusAsync(int data) => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+        public static Task SetGSyncStatusAsync(int data) => WriteGameZoneMethodWithCimFallbackAsync(
             "SetGSyncStatus",
-            new() { { "Data", data } });
+            new() { { "Data", data } },
+            data);
 
-        public static Task<int> IsSupportIGPUModeAsync() => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-            "IsSupportIGPUMode",
-            [],
-            pdc => Convert.ToInt32(pdc["Data"].Value));
+        public static Task<int> IsSupportIGPUModeAsync() => CallGameZoneMethodWithCimFallbackAsync("IsSupportIGPUMode", []);
 
-        public static Task<int> GetIGPUModeStatusAsync() => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
-            "GetIGPUModeStatus",
-            [],
-            pdc => Convert.ToInt32(pdc["Data"].Value));
+        public static Task<int> GetIGPUModeStatusAsync() => CallGameZoneStateWithCimFallbackAsync("GetIGPUModeStatus");
 
-        public static Task SetIGPUModeStatusAsync(int mode) => CallAsync("root\\WMI",
-            $"SELECT * FROM LENOVO_GAMEZONE_DATA",
+        public static Task SetIGPUModeStatusAsync(int mode) => WriteGameZoneMethodWithCimFallbackAsync(
             "SetIGPUModeStatus",
-            new() { { "mode", mode } });
+            new() { { "mode", mode } },
+            mode,
+            "mode");
 
         public static Task NotifyDGPUStatusAsync(int status) => CallAsync("root\\WMI",
             $"SELECT * FROM LENOVO_GAMEZONE_DATA",

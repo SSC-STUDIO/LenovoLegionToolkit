@@ -35,7 +35,7 @@ public static partial class WMI
             [],
             pdc => Convert.ToInt32(pdc["Flag"].Value));
 
-        public static Task<int> SetDeviceCurrentSupportFeatureAsync(int functionId, int value) => CallAsync("root\\WMI",
+        public static Task<int> SetDeviceCurrentSupportFeatureAsync(int functionId, int value) => CallWriteRequiredAsync<int>("root\\WMI",
             $"SELECT * FROM LENOVO_OTHER_METHOD",
             "Set_Device_Current_Support_Feature",
             new()
