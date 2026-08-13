@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
+#if WINDOWS
 using UniversalDeviceToolkit.Lib.Optimization;
+#endif
 
 namespace UniversalDeviceToolkit.Lib.Plugins;
 
@@ -66,10 +68,12 @@ public interface IPluginHostContext
     bool? ShowDialog(object dialogOrContent, string? title = null, string? icon = null);
 }
 
+#if WINDOWS
 public interface IOptimizationCategoryProvider
 {
     WindowsOptimizationCategoryDefinition? GetOptimizationCategory();
 }
+#endif
 
 public interface IAppStartupPlugin
 {
@@ -117,8 +121,10 @@ public abstract class PluginBase : IPlugin
         return null;
     }
 
+#if WINDOWS
     public virtual WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
     {
         return null;
     }
+#endif
 }

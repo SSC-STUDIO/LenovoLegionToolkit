@@ -3,7 +3,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using UniversalDeviceToolkit.Lib.Resources;
+#if WINDOWS
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+#endif
 
 namespace UniversalDeviceToolkit.Lib.Utils;
 
@@ -247,8 +249,10 @@ public static class ExceptionHelper
     public static InvalidOperationException SettingsPathEscapesAllowedDir(string settingsStorePath) =>
         SharedExceptionHelper.SettingsPathEscapesAllowedDir(settingsStorePath);
 
+#if WINDOWS
     public static SoftwareDisablerException FailedToRegisterTask(string taskName, string taskPath, string typeName, Exception inner) =>
         new(string.Format(Resource.Exception_FailedToRegisterTask, taskName, taskPath, typeName), inner);
+#endif
 
     public static InvalidOperationException CouldNotReadRegistrySetting(string keyName) =>
         new(string.Format(Resource.Exception_CouldNotReadRegistrySetting, keyName));
