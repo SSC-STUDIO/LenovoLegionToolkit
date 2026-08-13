@@ -99,4 +99,74 @@ public class OsdSettingsStoreTests
         store.IsLocked = true;
         store.IsLocked.Should().BeTrue();
     }
+
+    [Fact]
+    public void Normalize_Colors_ShouldCanonicalizeOrUseDefaults()
+    {
+        var store = new OsdSettings.OsdSettingsStore
+        {
+            BackgroundColor = "</style><script>alert(1)</script>",
+            CategoryColor = "#a1b2c3",
+            LabelColor = "#12345G",
+            ValueColor = "white",
+            WarningColor = "#123",
+            CriticalColor = string.Empty,
+            SeparatorColor = "#A0b1C2"
+        };
+
+        OsdSettings.Normalize(store).Should().BeSameAs(store);
+
+        store.BackgroundColor.Should().Be("#1E1E1E");
+        store.CategoryColor.Should().Be("#A1B2C3");
+        store.LabelColor.Should().Be("#ADFF2F");
+        store.ValueColor.Should().Be("#FFFFFF");
+        store.WarningColor.Should().Be("#FFFF00");
+        store.CriticalColor.Should().Be("#FF0000");
+        store.SeparatorColor.Should().Be("#A0B1C2");
+    }
+
+    [Fact]
+    public void Normalize_NumericSettings_ShouldClampAndRejectNonFiniteValues()
+    {
+        var store = new OsdSettings.OsdSettingsStore
+        {
+            OsdRefreshInterval = double.NaN,
+            SelectedStyleIndex = 42,
+            BackgroundOpacity = double.PositiveInfinity,
+            FontSize = int.MaxValue,
+            CornerRadiusTop = int.MinValue,
+            CornerRadiusBottom = int.MaxValue,
+            PanelPositionX = double.NaN,
+            PanelPositionY = 250_000,
+            BarPositionX = -250_000,
+            BarPositionY = 42.5,
+            TempThresholdWarning = -1,
+            TempThresholdCritical = int.MaxValue,
+            UsageThresholdWarning = -1,
+            UsageThresholdCritical = int.MaxValue,
+            FpsThresholdCritical = -1,
+            LowFpsDeltaThreshold = int.MaxValue,
+            SnapThreshold = int.MaxValue
+        };
+
+        OsdSettings.Normalize(store).Should().BeSameAs(store);
+
+        store.OsdRefreshInterval.Should().Be(1);
+        store.SelectedStyleIndex.Should().Be(0);
+        store.BackgroundOpacity.Should().Be(0.6);
+        store.FontSize.Should().Be(24);
+        store.CornerRadiusTop.Should().Be(0);
+        store.CornerRadiusBottom.Should().Be(50);
+        store.PanelPositionX.Should().BeNull();
+        store.PanelPositionY.Should().Be(100_000);
+        store.BarPositionX.Should().Be(-100_000);
+        store.BarPositionY.Should().Be(42.5);
+        store.TempThresholdWarning.Should().Be(0);
+        store.TempThresholdCritical.Should().Be(110);
+        store.UsageThresholdWarning.Should().Be(0);
+        store.UsageThresholdCritical.Should().Be(100);
+        store.FpsThresholdCritical.Should().Be(0);
+        store.LowFpsDeltaThreshold.Should().Be(1000);
+        store.SnapThreshold.Should().Be(100);
+    }
 }

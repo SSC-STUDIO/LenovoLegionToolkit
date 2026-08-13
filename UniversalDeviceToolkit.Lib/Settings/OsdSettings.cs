@@ -46,14 +46,73 @@ public class OsdSettings() : AbstractSettings<OsdSettings.OsdSettingsStore>("osd
     public override async Task<OsdSettingsStore?> LoadStoreAsync() =>
         Normalize(await base.LoadStoreAsync().ConfigureAwait(false));
 
-    private static OsdSettingsStore? Normalize(OsdSettingsStore? store)
+    internal static OsdSettingsStore? Normalize(OsdSettingsStore? store)
     {
         if (store is null)
             return null;
 
+        var defaults = new OsdSettingsStore();
+
+        store.OsdRefreshInterval = ClampFinite(store.OsdRefreshInterval, 0.1, 10, defaults.OsdRefreshInterval);
+        store.SelectedStyleIndex = store.SelectedStyleIndex is 0 or 1
+            ? store.SelectedStyleIndex
+            : defaults.SelectedStyleIndex;
+        store.BackgroundOpacity = ClampFinite(store.BackgroundOpacity, 0, 1, defaults.BackgroundOpacity);
+        store.FontSize = Math.Clamp(store.FontSize, 8, 24);
+        store.CornerRadiusTop = Math.Clamp(store.CornerRadiusTop, 0, 50);
+        store.CornerRadiusBottom = Math.Clamp(store.CornerRadiusBottom, 0, 50);
+        store.PanelPositionX = NormalizePosition(store.PanelPositionX);
+        store.PanelPositionY = NormalizePosition(store.PanelPositionY);
+        store.BarPositionX = NormalizePosition(store.BarPositionX);
+        store.BarPositionY = NormalizePosition(store.BarPositionY);
+        store.TempThresholdWarning = Math.Clamp(store.TempThresholdWarning, 0, 110);
+        store.TempThresholdCritical = Math.Clamp(store.TempThresholdCritical, 0, 110);
+        store.UsageThresholdWarning = Math.Clamp(store.UsageThresholdWarning, 0, 100);
+        store.UsageThresholdCritical = Math.Clamp(store.UsageThresholdCritical, 0, 100);
+        store.FpsThresholdCritical = Math.Clamp(store.FpsThresholdCritical, 0, 1000);
+        store.LowFpsDeltaThreshold = Math.Clamp(store.LowFpsDeltaThreshold, 0, 1000);
+        store.SnapThreshold = Math.Clamp(store.SnapThreshold, 0, 100);
+
+        store.BackgroundColor = NormalizeColor(store.BackgroundColor, defaults.BackgroundColor);
+        store.CategoryColor = NormalizeColor(store.CategoryColor, defaults.CategoryColor);
+        store.LabelColor = NormalizeColor(store.LabelColor, defaults.LabelColor);
+        store.ValueColor = NormalizeColor(store.ValueColor, defaults.ValueColor);
+        store.WarningColor = NormalizeColor(store.WarningColor, defaults.WarningColor);
+        store.CriticalColor = NormalizeColor(store.CriticalColor, defaults.CriticalColor);
+        store.SeparatorColor = NormalizeColor(store.SeparatorColor, defaults.SeparatorColor);
         store.Items = NormalizeItems(store.Items);
         return store;
     }
+
+    private static double ClampFinite(double value, double min, double max, double fallback) =>
+        double.IsFinite(value) ? Math.Clamp(value, min, max) : fallback;
+
+    private static double? NormalizePosition(double? value)
+    {
+        const double positionLimit = 100_000;
+        return value is not null && double.IsFinite(value.Value)
+            ? Math.Clamp(value.Value, -positionLimit, positionLimit)
+            : null;
+    }
+
+    private static string NormalizeColor(string? value, string fallback)
+    {
+        if (value is null || value.Length != 7 || value[0] != '#')
+            return fallback;
+
+        for (var index = 1; index < value.Length; index++)
+        {
+            if (!IsAsciiHexDigit(value[index]))
+                return fallback;
+        }
+
+        return value.ToUpperInvariant();
+    }
+
+    private static bool IsAsciiHexDigit(char value) =>
+        value is >= '0' and <= '9'
+            or >= 'A' and <= 'F'
+            or >= 'a' and <= 'f';
 
     private static List<OsdItem> NormalizeItems(List<OsdItem>? items)
     {

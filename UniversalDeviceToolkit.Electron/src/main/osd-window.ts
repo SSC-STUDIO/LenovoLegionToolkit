@@ -1,5 +1,8 @@
+import { randomBytes } from 'node:crypto'
 import { BrowserWindow, powerMonitor, screen } from 'electron'
 import { hostClient } from './host-client'
+import { effectiveZoom } from './ui-scale'
+import { cancelIdleDestroy, scheduleIdleDestroy, setSurfaceVisible } from './ui-activity'
 
 /**
  * On-screen display (OSD) —port of the Electron OsdWindowBase family:
@@ -12,10 +15,10 @@ import { hostClient } from './host-client'
  *
  * Style ("Panel" | "Bar"), appearance, thresholds and sensor items come from
  * the "osd" settings scope (osd.json). Position is persisted back into the
- * same scope on drag end. Sensor data is polled via sensors.getSnapshot and
- * FPS via sensors.subscribeFps (ref-counted in the host, so the renderer can
- * subscribe at the same time). OSD visibility is driven by the host's
- * "osd.changed" events (automation steps) and the showOsd setting.
+ * same scope on drag end. Sensor data is consumed from the shared
+ * sensors.updated producer (same loop as the dashboard); FPS uses
+ * sensors.subscribeFps (ref-counted in the host). OSD visibility is driven by
+ * the host's "osd.changed" events (automation steps) and the showOsd setting.
  */
 
 type OsdState = 'Hidden' | 'Show' | 'Toggle'
@@ -279,63 +282,189 @@ let lastFps: OsdFpsData | null = null
 
 let visible = false
 let pageLoaded = false
-let refreshTimer: NodeJS.Timeout | null = null
-let refreshInFlight = false
+let sensorsSubscribed = false
+let unsubscribeUpdated: (() => void) | null = null
 let fpsSubscribed = false
-let positionSaveTimer: NodeJS.Timeout | null = null
+let positionSaveTimer: ReturnType<typeof setTimeout> | null = null
 let lastAppearanceSignature = ''
 
 // ── settings ────────────────────────────────────────────────────────────────
+
+const HEX_COLOR_PATTERN = /^#[0-9A-F]{6}$/i
+const POSITION_LIMIT = 100_000
+
+function sanitizeBoolean(value: unknown, fallback: boolean): boolean {
+  return typeof value === 'boolean' ? value : fallback
+}
+
+function sanitizeFiniteNumber(
+  value: unknown,
+  min: number,
+  max: number,
+  fallback: number
+): number {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? Math.min(max, Math.max(min, value))
+    : fallback
+}
+
+function sanitizeInteger(value: unknown, min: number, max: number, fallback: number): number {
+  const sanitized = sanitizeFiniteNumber(value, min, max, fallback)
+  return Math.round(sanitized)
+}
+
+function sanitizePosition(value: unknown): number | null {
+  if (value === null) return null
+  return typeof value === 'number' && Number.isFinite(value)
+    ? Math.min(POSITION_LIMIT, Math.max(-POSITION_LIMIT, value))
+    : null
+}
+
+function sanitizeColor(value: unknown, fallback: string): string {
+  return typeof value === 'string' && value.length === 7 && HEX_COLOR_PATTERN.test(value)
+    ? value.toUpperCase()
+    : fallback
+}
+
+function sanitizeStyleIndex(value: unknown): number {
+  return value === 0 || value === 1 ? value : DEFAULT_OSD_SETTINGS.selectedStyleIndex
+}
+
+function sanitizeItems(value: unknown): OsdItemName[] {
+  if (!Array.isArray(value)) return [...DEFAULT_OSD_SETTINGS.items] as OsdItemName[]
+  const validItems = value.filter(
+    (item): item is OsdItemName =>
+      typeof item === 'string' && (OSD_ITEMS as readonly string[]).includes(item)
+  )
+  return [...new Set(validItems)]
+}
 
 function mergeSettings(value: unknown): void {
   if (!value || typeof value !== 'object') return
   // The host serializes settings stores with their .NET property names
   // (PascalCase); the in-memory model below uses camelCase.
-  const raw = value as Record<string, string | number | boolean | unknown[] | null>
+  const raw = value as Record<string, unknown>
   const merged: OsdSettingsStore = { ...DEFAULT_OSD_SETTINGS, ...settings }
-
-  const take = <K extends keyof OsdSettingsStore>(
-    pascal: string,
-    key: K,
-    fallback: OsdSettingsStore[K]
-  ): void => {
-    const v = raw[pascal]
-    merged[key] = v === undefined || v === null ? fallback : (v as OsdSettingsStore[K])
+  const read = (pascal: string, current: unknown): unknown => {
+    return Object.prototype.hasOwnProperty.call(raw, pascal) ? raw[pascal] : current
   }
 
-  take('ShowOsd', 'showOsd', settings.showOsd)
-  take('OsdRefreshInterval', 'osdRefreshInterval', settings.osdRefreshInterval)
-  take('SelectedStyleIndex', 'selectedStyleIndex', settings.selectedStyleIndex)
-  take('BackgroundOpacity', 'backgroundOpacity', settings.backgroundOpacity)
-  take('BackgroundColor', 'backgroundColor', settings.backgroundColor)
-  take('FontSize', 'fontSize', settings.fontSize)
-  take('CornerRadiusTop', 'cornerRadiusTop', settings.cornerRadiusTop)
-  take('CornerRadiusBottom', 'cornerRadiusBottom', settings.cornerRadiusBottom)
-  take('IsLocked', 'isLocked', settings.isLocked)
-  take('PanelPositionX', 'panelPositionX', settings.panelPositionX)
-  take('PanelPositionY', 'panelPositionY', settings.panelPositionY)
-  take('BarPositionX', 'barPositionX', settings.barPositionX)
-  take('BarPositionY', 'barPositionY', settings.barPositionY)
-  take('TempThresholdWarning', 'tempThresholdWarning', settings.tempThresholdWarning)
-  take('TempThresholdCritical', 'tempThresholdCritical', settings.tempThresholdCritical)
-  take('UsageThresholdWarning', 'usageThresholdWarning', settings.usageThresholdWarning)
-  take('UsageThresholdCritical', 'usageThresholdCritical', settings.usageThresholdCritical)
-  take('FpsThresholdCritical', 'fpsThresholdCritical', settings.fpsThresholdCritical)
-  take('LowFpsDeltaThreshold', 'lowFpsDeltaThreshold', settings.lowFpsDeltaThreshold)
-  take('CategoryColor', 'categoryColor', settings.categoryColor)
-  take('LabelColor', 'labelColor', settings.labelColor)
-  take('ValueColor', 'valueColor', settings.valueColor)
-  take('WarningColor', 'warningColor', settings.warningColor)
-  take('CriticalColor', 'criticalColor', settings.criticalColor)
-  take('SeparatorColor', 'separatorColor', settings.separatorColor)
-  take('SnapThreshold', 'snapThreshold', settings.snapThreshold)
-
-  if (Array.isArray(raw['Items'])) {
-    merged.items = (raw['Items'] as unknown[]).filter(
-      (item): item is OsdItemName =>
-        typeof item === 'string' && (OSD_ITEMS as readonly string[]).includes(item)
-    )
-  }
+  merged.showOsd = sanitizeBoolean(
+    read('ShowOsd', settings.showOsd),
+    DEFAULT_OSD_SETTINGS.showOsd
+  )
+  merged.osdRefreshInterval = sanitizeFiniteNumber(
+    read('OsdRefreshInterval', settings.osdRefreshInterval),
+    0.1,
+    10,
+    DEFAULT_OSD_SETTINGS.osdRefreshInterval
+  )
+  merged.selectedStyleIndex = sanitizeStyleIndex(
+    read('SelectedStyleIndex', settings.selectedStyleIndex)
+  )
+  merged.items = sanitizeItems(read('Items', settings.items))
+  merged.backgroundOpacity = sanitizeFiniteNumber(
+    read('BackgroundOpacity', settings.backgroundOpacity),
+    0,
+    1,
+    DEFAULT_OSD_SETTINGS.backgroundOpacity
+  )
+  merged.backgroundColor = sanitizeColor(
+    read('BackgroundColor', settings.backgroundColor),
+    DEFAULT_OSD_SETTINGS.backgroundColor
+  )
+  merged.fontSize = sanitizeInteger(
+    read('FontSize', settings.fontSize),
+    8,
+    24,
+    DEFAULT_OSD_SETTINGS.fontSize
+  )
+  merged.cornerRadiusTop = sanitizeInteger(
+    read('CornerRadiusTop', settings.cornerRadiusTop),
+    0,
+    50,
+    DEFAULT_OSD_SETTINGS.cornerRadiusTop
+  )
+  merged.cornerRadiusBottom = sanitizeInteger(
+    read('CornerRadiusBottom', settings.cornerRadiusBottom),
+    0,
+    50,
+    DEFAULT_OSD_SETTINGS.cornerRadiusBottom
+  )
+  merged.isLocked = sanitizeBoolean(
+    read('IsLocked', settings.isLocked),
+    DEFAULT_OSD_SETTINGS.isLocked
+  )
+  merged.panelPositionX = sanitizePosition(read('PanelPositionX', settings.panelPositionX))
+  merged.panelPositionY = sanitizePosition(read('PanelPositionY', settings.panelPositionY))
+  merged.barPositionX = sanitizePosition(read('BarPositionX', settings.barPositionX))
+  merged.barPositionY = sanitizePosition(read('BarPositionY', settings.barPositionY))
+  merged.tempThresholdWarning = sanitizeInteger(
+    read('TempThresholdWarning', settings.tempThresholdWarning),
+    0,
+    110,
+    DEFAULT_OSD_SETTINGS.tempThresholdWarning
+  )
+  merged.tempThresholdCritical = sanitizeInteger(
+    read('TempThresholdCritical', settings.tempThresholdCritical),
+    0,
+    110,
+    DEFAULT_OSD_SETTINGS.tempThresholdCritical
+  )
+  merged.usageThresholdWarning = sanitizeInteger(
+    read('UsageThresholdWarning', settings.usageThresholdWarning),
+    0,
+    100,
+    DEFAULT_OSD_SETTINGS.usageThresholdWarning
+  )
+  merged.usageThresholdCritical = sanitizeInteger(
+    read('UsageThresholdCritical', settings.usageThresholdCritical),
+    0,
+    100,
+    DEFAULT_OSD_SETTINGS.usageThresholdCritical
+  )
+  merged.fpsThresholdCritical = sanitizeInteger(
+    read('FpsThresholdCritical', settings.fpsThresholdCritical),
+    0,
+    1000,
+    DEFAULT_OSD_SETTINGS.fpsThresholdCritical
+  )
+  merged.lowFpsDeltaThreshold = sanitizeInteger(
+    read('LowFpsDeltaThreshold', settings.lowFpsDeltaThreshold),
+    0,
+    1000,
+    DEFAULT_OSD_SETTINGS.lowFpsDeltaThreshold
+  )
+  merged.categoryColor = sanitizeColor(
+    read('CategoryColor', settings.categoryColor),
+    DEFAULT_OSD_SETTINGS.categoryColor
+  )
+  merged.labelColor = sanitizeColor(
+    read('LabelColor', settings.labelColor),
+    DEFAULT_OSD_SETTINGS.labelColor
+  )
+  merged.valueColor = sanitizeColor(
+    read('ValueColor', settings.valueColor),
+    DEFAULT_OSD_SETTINGS.valueColor
+  )
+  merged.warningColor = sanitizeColor(
+    read('WarningColor', settings.warningColor),
+    DEFAULT_OSD_SETTINGS.warningColor
+  )
+  merged.criticalColor = sanitizeColor(
+    read('CriticalColor', settings.criticalColor),
+    DEFAULT_OSD_SETTINGS.criticalColor
+  )
+  merged.separatorColor = sanitizeColor(
+    read('SeparatorColor', settings.separatorColor),
+    DEFAULT_OSD_SETTINGS.separatorColor
+  )
+  merged.snapThreshold = sanitizeInteger(
+    read('SnapThreshold', settings.snapThreshold),
+    0,
+    100,
+    DEFAULT_OSD_SETTINGS.snapThreshold
+  )
 
   settings = merged
 }
@@ -534,35 +663,40 @@ function updateFpsSubscription(): void {
 }
 
 function startRefresh(): void {
-  stopRefresh()
-  const intervalMs = Math.max(500, Math.round(settings.osdRefreshInterval * 1000))
-  refreshTimer = setInterval(() => {
-    void refreshOnce()
-  }, intervalMs)
-  void refreshOnce()
+  if (!sensorsSubscribed) {
+    sensorsSubscribed = true
+    unsubscribeUpdated = hostClient.on('sensors.updated', (data) => {
+      if (!visible) return
+      lastSnapshot = (data ?? null) as OsdSnapshot | null
+      updateValues()
+    })
+    void hostClient
+      .invoke('sensors.subscribe', {
+        intervalSec: Math.max(0.5, settings.osdRefreshInterval),
+        subscriberId: 'osd'
+      })
+      .catch((error) => {
+        console.error('[osd] failed to subscribe sensors:', error)
+      })
+    void hostClient
+      .invoke('sensors.getSnapshot', {})
+      .then((snapshot) => {
+        if (!visible || snapshot == null) return
+        lastSnapshot = snapshot as OsdSnapshot
+        updateValues()
+      })
+      .catch(() => undefined)
+  }
   updateFpsSubscription()
 }
 
 function stopRefresh(): void {
-  if (refreshTimer) {
-    clearInterval(refreshTimer)
-    refreshTimer = null
+  if (sensorsSubscribed) {
+    sensorsSubscribed = false
+    unsubscribeUpdated?.()
+    unsubscribeUpdated = null
+    void hostClient.invoke('sensors.unsubscribe', { subscriberId: 'osd' }).catch(() => undefined)
   }
-  refreshInFlight = false
-}
-
-async function refreshOnce(): Promise<void> {
-  if (refreshInFlight || !visible) return
-  refreshInFlight = true
-  try {
-    const snapshot = (await hostClient.invoke('sensors.getSnapshot', {})) as OsdSnapshot | null
-    if (visible && snapshot) lastSnapshot = snapshot
-  } catch {
-    // Keep the last known values when a poll fails.
-  } finally {
-    refreshInFlight = false
-  }
-  updateValues()
 }
 
 // ── rendering ───────────────────────────────────────────────────────────────
@@ -756,135 +890,303 @@ function renderItem(item: OsdItemName): ValueRender {
   }
 }
 
-function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  const value = hex.replace(/^#/, '')
-  const full = value.length === 3
-    ? value.split('').map((c) => c + c).join('')
-    : value
-  const parsed = parseInt(full, 16)
-  if (Number.isNaN(parsed)) return { r: 0x1e, g: 0x1e, b: 0x1e }
-  return { r: (parsed >> 16) & 0xff, g: (parsed >> 8) & 0xff, b: parsed & 0xff }
+type OsdLayout = 'bar' | 'panel'
+
+interface OsdRenderItem {
+  key: OsdItemName
+  label: string
+  text: string
+  color: string
 }
 
-/** Electron ApplyAppearanceSettings: background color + opacity alpha. */
-function backgroundRgba(opacityFactor = 1): string {
-  const { r, g, b } = hexToRgb(settings.backgroundColor)
-  const alpha = Math.min(1, Math.max(0, settings.backgroundOpacity * opacityFactor))
-  return `rgba(${r},${g},${b},${alpha.toFixed(3)})`
+interface OsdRenderGroup {
+  key: string
+  label: string
+  items: OsdRenderItem[]
 }
 
-function cornerRadius(): string {
-  return `${settings.cornerRadiusTop}px ${settings.cornerRadiusTop}px ${settings.cornerRadiusBottom}px ${settings.cornerRadiusBottom}px`
+interface OsdRenderModel {
+  layout: OsdLayout
+  structure: string
+  appearance: {
+    isLocked: boolean
+    backgroundOpacity: number
+    backgroundColor: string
+    fontSize: number
+    cornerRadiusTop: number
+    cornerRadiusBottom: number
+    categoryColor: string
+    labelColor: string
+    separatorColor: string
+  }
+  groups: OsdRenderGroup[]
 }
 
-function panelGroupHtml(group: OsdGroupDef): string {
-  const rows = group.items.filter(isItemVisible).map((item) => {
-    const value = renderItem(item)
-    return (
-      '<div class="osd-row">' +
-      `<span class="osd-label">${ITEM_LABELS[item]}</span>` +
-      `<span class="osd-value" style="color:${value.color}">${value.text}</span>` +
-      '</div>'
-    )
-  })
-  return (
-    '<div class="osd-panel-group">' +
-    `<div class="osd-panel-header" style="color:${settings.categoryColor}">—${group.label} —</div>` +
-    rows.join('') +
-    '</div>'
-  )
+function buildRenderModel(): OsdRenderModel {
+  const layout: OsdLayout = isBarStyle() ? 'bar' : 'panel'
+  const groupDefinitions = layout === 'bar' ? BAR_GROUPS : PANEL_GROUPS
+  const groups = groupDefinitions.filter(groupVisible).map((group) => ({
+    key: group.label,
+    label: group.label,
+    items: group.items.filter(isItemVisible).map((item) => ({
+      key: item,
+      label: ITEM_LABELS[item],
+      ...renderItem(item)
+    }))
+  }))
+  const structure = `${layout}:${groups
+    .map((group) => `${group.key}:${group.items.map((item) => item.key).join(',')}`)
+    .join('|')}`
+
+  return {
+    layout,
+    structure,
+    appearance: {
+      isLocked: settings.isLocked,
+      backgroundOpacity: settings.backgroundOpacity,
+      backgroundColor: settings.backgroundColor,
+      fontSize: settings.fontSize,
+      cornerRadiusTop: settings.cornerRadiusTop,
+      cornerRadiusBottom: settings.cornerRadiusBottom,
+      categoryColor: settings.categoryColor,
+      labelColor: settings.labelColor,
+      separatorColor: settings.separatorColor
+    },
+    groups
+  }
 }
 
-function barGroupHtml(group: OsdGroupDef): string {
-  const cells = group.items.filter(isItemVisible).map((item) => {
-    const value = renderItem(item)
-    return `<span class="osd-bar-value" style="color:${value.color}">${value.text}</span>`
-  })
-  return (
-    `<span class="osd-bar-label" style="color:${settings.categoryColor}">${group.label}</span>` +
-    cells.join('')
-  )
-}
+const OSD_DOCUMENT_STYLE = [
+  'html,body{margin:0;padding:0;background:transparent;overflow:hidden;',
+  'font-family:"Segoe UI",-apple-system,"Noto Sans",system-ui,sans-serif;user-select:none;cursor:default;}',
+  'body.osd-body--draggable{-webkit-app-region:drag;}',
+  '.osd-root--bar{display:flex;align-items:center;white-space:nowrap;padding:4px 10px;}',
+  '.osd-bar-label{font-weight:500;margin-right:8px;min-width:25px;text-align:center;}',
+  '.osd-bar-value{display:inline-block;min-width:34px;margin-right:8px;text-align:center;}',
+  '.osd-bar-separator{width:1px;height:12px;margin:0 10px;}',
+  '.osd-root--panel{min-width:220px;padding:15px;}',
+  '.osd-panel-header{margin-bottom:5px;font-weight:500;}',
+  '.osd-row{display:flex;align-items:center;justify-content:space-between;margin:3px 0 1px;}',
+  '.osd-label{margin-right:16px;}',
+  '.osd-value{text-align:right;}',
+  '.osd-panel-separator{height:1px;margin:8px 0;}',
+  '.osd-panel-separator--clear{height:8px;margin:0;}'
+].join('')
 
-/** Values body —refreshed in place without reloading the document. */
-function buildValuesHtml(): string {
-  const groups = isBarStyle() ? BAR_GROUPS : PANEL_GROUPS
-  const visibleGroups = groups.filter(groupVisible)
+const OSD_RENDERER_SCRIPT = `(() => {
+  'use strict'
+  const root = document.getElementById('udt-root')
+  if (!root) return
 
-  if (isBarStyle()) {
-    const parts: string[] = []
-    visibleGroups.forEach((group, index) => {
-      if (index > 0) {
-        parts.push(`<span class="osd-bar-separator" style="background:${settings.separatorColor}"></span>`)
-      }
-      parts.push(barGroupHtml(group))
-    })
-    return `<div class="osd-root osd-root--bar">${parts.join('')}</div>`
+  let structure = ''
+  let categoryNodes = []
+  let labelNodes = []
+  let separatorNodes = []
+  const valueNodes = new Map()
+
+  const createElement = (tagName, className) => {
+    const element = document.createElement(tagName)
+    element.className = className
+    return element
   }
 
-  const parts: string[] = []
-  visibleGroups.forEach((group, index) => {
-    if (index > 0) {
-      const firstGap = index === 1
-      parts.push(
-        firstGap
-          ? '<div class="osd-panel-separator osd-panel-separator--clear"></div>'
-          : `<div class="osd-panel-separator" style="background:${settings.separatorColor}"></div>`
-      )
+  const rebuild = (model) => {
+    const fragment = document.createDocumentFragment()
+    categoryNodes = []
+    labelNodes = []
+    separatorNodes = []
+    valueNodes.clear()
+    root.className = model.layout === 'bar'
+      ? 'osd-root osd-root--bar'
+      : 'osd-root osd-root--panel'
+
+    if (model.layout === 'bar') {
+      model.groups.forEach((group, groupIndex) => {
+        if (groupIndex > 0) {
+          const separator = createElement('span', 'osd-bar-separator')
+          separatorNodes.push(separator)
+          fragment.append(separator)
+        }
+
+        const groupLabel = createElement('span', 'osd-bar-label')
+        groupLabel.textContent = group.label
+        categoryNodes.push(groupLabel)
+        fragment.append(groupLabel)
+
+        group.items.forEach((item) => {
+          const value = createElement('span', 'osd-bar-value')
+          valueNodes.set(item.key, value)
+          fragment.append(value)
+        })
+      })
+    } else {
+      model.groups.forEach((group, groupIndex) => {
+        if (groupIndex > 0) {
+          const separator = createElement(
+            'div',
+            groupIndex === 1
+              ? 'osd-panel-separator osd-panel-separator--clear'
+              : 'osd-panel-separator'
+          )
+          if (groupIndex > 1) separatorNodes.push(separator)
+          fragment.append(separator)
+        }
+
+        const groupElement = createElement('div', 'osd-panel-group')
+        const groupHeader = createElement('div', 'osd-panel-header')
+        groupHeader.textContent = '—' + group.label + ' —'
+        categoryNodes.push(groupHeader)
+        groupElement.append(groupHeader)
+
+        group.items.forEach((item) => {
+          const row = createElement('div', 'osd-row')
+          const label = createElement('span', 'osd-label')
+          label.textContent = item.label
+          labelNodes.push(label)
+          row.append(label)
+
+          const value = createElement('span', 'osd-value')
+          valueNodes.set(item.key, value)
+          row.append(value)
+          groupElement.append(row)
+        })
+
+        fragment.append(groupElement)
+      })
     }
-    parts.push(panelGroupHtml(group))
-  })
-  return `<div class="osd-root osd-root--panel">${parts.join('')}</div>`
-}
+
+    root.replaceChildren(fragment)
+    structure = model.structure
+  }
+
+  const backgroundColor = (hex, opacity) => {
+    const parsed = Number.parseInt(hex.slice(1), 16)
+    const red = (parsed >> 16) & 0xff
+    const green = (parsed >> 8) & 0xff
+    const blue = parsed & 0xff
+    return 'rgba(' + red + ',' + green + ',' + blue + ',' + opacity.toFixed(3) + ')'
+  }
+
+  const applyAppearance = (model) => {
+    const appearance = model.appearance
+    const opacityFactor = model.layout === 'bar' ? 0.8 : 1
+    const opacity = Math.min(1, Math.max(0, appearance.backgroundOpacity * opacityFactor))
+    const radius =
+      appearance.cornerRadiusTop + 'px ' +
+      appearance.cornerRadiusTop + 'px ' +
+      appearance.cornerRadiusBottom + 'px ' +
+      appearance.cornerRadiusBottom + 'px'
+    const smallFontSize = Math.max(8, appearance.fontSize - 1) + 'px'
+
+    document.body.classList.toggle('osd-body--draggable', !appearance.isLocked)
+    root.style.backgroundColor = backgroundColor(appearance.backgroundColor, opacity)
+    root.style.borderRadius = radius
+    root.style.fontSize = appearance.fontSize + 'px'
+
+    categoryNodes.forEach((node) => {
+      node.style.color = appearance.categoryColor
+      node.style.fontSize = model.layout === 'panel' ? smallFontSize : ''
+    })
+    labelNodes.forEach((node) => {
+      node.style.color = appearance.labelColor
+      node.style.fontSize = smallFontSize
+    })
+    separatorNodes.forEach((node) => {
+      node.style.backgroundColor = appearance.separatorColor
+    })
+    valueNodes.forEach((node) => {
+      node.style.fontSize = model.layout === 'panel' ? appearance.fontSize + 1 + 'px' : ''
+    })
+  }
+
+  const updateValues = (model) => {
+    model.groups.forEach((group) => {
+      group.items.forEach((item) => {
+        const node = valueNodes.get(item.key)
+        if (!node) return
+        node.textContent = item.text
+        node.style.color = item.color
+      })
+    })
+  }
+
+  globalThis.udtRender = (model) => {
+    if (structure !== model.structure) rebuild(model)
+    applyAppearance(model)
+    updateValues(model)
+    return [document.body.scrollWidth, document.body.scrollHeight]
+  }
+})()`
 
 function buildOsdUrl(): string {
-  const isBar = isBarStyle()
-  const fontSize = settings.fontSize
-  const dragRegion = settings.isLocked ? '' : '-webkit-app-region: drag;'
-  const css = [
-    'html,body{margin:0;padding:0;background:transparent;overflow:hidden;',
-    'font-family:"Segoe UI",system-ui,sans-serif;user-select:none;cursor:default;}',
-    `body{${dragRegion}}`,
-    `.osd-root--bar{display:flex;align-items:center;white-space:nowrap;`,
-    `background:${backgroundRgba(0.8)};border-radius:${cornerRadius()};`,
-    `padding:4px 10px;font-size:${fontSize}px;}`,
-    `.osd-bar-label{font-weight:500;margin-right:8px;min-width:25px;text-align:center;}`,
-    `.osd-bar-value{display:inline-block;min-width:${isBar ? 34 : 30}px;margin-right:8px;text-align:center;}`,
-    `.osd-bar-separator{width:1px;height:12px;margin:0 10px;}`,
-    `.osd-root--panel{min-width:220px;background:${backgroundRgba()};`,
-    `border-radius:${cornerRadius()};padding:15px;font-size:${fontSize}px;}`,
-    `.osd-panel-header{margin-bottom:5px;font-size:${Math.max(8, fontSize - 1)}px;font-weight:500;}`,
-    `.osd-row{display:flex;align-items:center;justify-content:space-between;margin:3px 0 1px;}`,
-    `.osd-label{color:${settings.labelColor};font-size:${Math.max(8, fontSize - 1)}px;margin-right:16px;}`,
-    `.osd-value{color:${settings.valueColor};font-size:${fontSize + 1}px;text-align:right;}`,
-    `.osd-panel-separator{height:1px;margin:8px 0;}`,
-    `.osd-panel-separator--clear{height:8px;margin:0;}`
-  ].join('')
-
+  const nonce = randomBytes(16).toString('base64')
+  const csp = [
+    "default-src 'none'",
+    `script-src 'nonce-${nonce}'`,
+    "style-src 'unsafe-inline'",
+    "img-src 'none'",
+    "font-src 'none'",
+    "connect-src 'none'",
+    "media-src 'none'",
+    "object-src 'none'",
+    "frame-src 'none'",
+    "worker-src 'none'",
+    "manifest-src 'none'",
+    "base-uri 'none'",
+    "form-action 'none'"
+  ].join('; ')
   const html = [
     '<!DOCTYPE html>',
     '<html>',
     '<head>',
     '<meta charset="utf-8">',
+    `<meta http-equiv="Content-Security-Policy" content="${csp}">`,
     '<style>',
-    css,
+    OSD_DOCUMENT_STYLE,
     '</style>',
     '</head>',
-    `<body><div id="udt-root"></div></body>`,
+    '<body><div id="udt-root"></div>',
+    `<script nonce="${nonce}">`,
+    OSD_RENDERER_SCRIPT,
+    '</script>',
+    '</body>',
     '</html>'
   ].join('')
   return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`
+}
+
+type ContentSize = [number, number]
+
+function isContentSize(value: unknown): value is ContentSize {
+  return (
+    Array.isArray(value) &&
+    value.length === 2 &&
+    typeof value[0] === 'number' &&
+    Number.isFinite(value[0]) &&
+    typeof value[1] === 'number' &&
+    Number.isFinite(value[1])
+  )
+}
+
+function resizeToContent(win: BrowserWindow, size: ContentSize): void {
+  // scrollWidth/Height are CSS px; the window is sized in DIPs, so convert
+  // through the shared zoom factor (ui-scale.ts applies it to every surface).
+  const zoom = effectiveZoom()
+  win.setSize(
+    Math.max(1, Math.round(size[0] * zoom)),
+    Math.max(1, Math.round(size[1] * zoom))
+  )
 }
 
 async function fitToContent(): Promise<void> {
   const win = osdWindow
   if (!win || win.isDestroyed()) return
   try {
-    const size = (await win.webContents.executeJavaScript(
+    const size: unknown = await win.webContents.executeJavaScript(
       '[document.body.scrollWidth, document.body.scrollHeight]'
-    )) as [number, number]
-    if (win.isDestroyed()) return
-    win.setSize(Math.max(1, Math.round(size[0])), Math.max(1, Math.round(size[1])))
+    )
+    if (win.isDestroyed() || !isContentSize(size)) return
+    resizeToContent(win, size)
   } catch {
     // Page not ready yet.
   }
@@ -893,11 +1195,15 @@ async function fitToContent(): Promise<void> {
 function updateValues(): void {
   const win = osdWindow
   if (!win || win.isDestroyed() || !visible) return
-  const html = buildValuesHtml()
+  const serializedModel = encodeURIComponent(JSON.stringify(buildRenderModel()))
+  const renderExpression =
+    `globalThis.udtRender(JSON.parse(decodeURIComponent(${JSON.stringify(serializedModel)})))`
   void win.webContents
-    .executeJavaScript(`document.getElementById('udt-root').innerHTML = ${JSON.stringify(html)}`)
+    .executeJavaScript(renderExpression)
+    .then((size: unknown) => {
+      if (!win.isDestroyed() && isContentSize(size)) resizeToContent(win, size)
+    })
     .catch(() => undefined)
-  void fitToContent()
 }
 
 async function applyAppearance(): Promise<void> {
@@ -971,14 +1277,19 @@ function onSettingsChanged(data: unknown): void {
 // ── visibility ──────────────────────────────────────────────────────────────
 
 function showOsd(): void {
+  // Lazy creation: the window is built on first show, not at startup.
+  cancelIdleDestroy('osd')
+  ensureOsdWindow()
   const win = osdWindow
   if (!win || win.isDestroyed()) return
 
   const apply = (): void => {
     if (win.isDestroyed()) return
     if (win.isVisible()) return
+    setWindowPosition()
     win.show()
     visible = true
+    setSurfaceVisible('osd', true)
     settings.showOsd = true
     void writeSettings()
     startRefresh()
@@ -998,6 +1309,7 @@ function hideOsd(): void {
     win.hide()
   }
   visible = false
+  setSurfaceVisible('osd', false)
   settings.showOsd = false
   void writeSettings()
   stopRefresh()
@@ -1007,6 +1319,7 @@ function hideOsd(): void {
     unsubscribeFps = null
     void hostClient.invoke('sensors.unsubscribeFps', {}).catch(() => undefined)
   }
+  scheduleIdleDestroy('osd', releaseOsdWindow)
 }
 
 function handleOsdChanged(data: unknown): void {
@@ -1027,35 +1340,11 @@ function handleOsdChanged(data: unknown): void {
 // ── public API ──────────────────────────────────────────────────────────────
 
 export function initOsdWindow(): void {
+  // Lazy window creation: registering the subscriptions is cheap (no
+  // renderer process), the BrowserWindow itself is only created when the OSD
+  // actually needs to show (showOsd setting or osd.changed event). Each OSD
+  // window costs a renderer process (~60-90MB), so never build it at startup.
   if (osdWindow && !osdWindow.isDestroyed()) return
-
-  osdWindow = new BrowserWindow({
-    width: OSD_WIDTH,
-    height: OSD_HEIGHT,
-    show: false,
-    frame: false,
-    transparent: true,
-    backgroundColor: '#00000000',
-    alwaysOnTop: true,
-    skipTaskbar: true,
-    resizable: false,
-    focusable: false,
-    hasShadow: false,
-    webPreferences: {
-      sandbox: true
-    }
-  })
-
-  osdWindow.on('closed', () => {
-    osdWindow = null
-    pageLoaded = false
-    visible = false
-    stopRefresh()
-  })
-
-  osdWindow.on('moved', () => {
-    if (visible) snapAndClampPosition()
-  })
 
   if (!unsubscribe) {
     unsubscribe = hostClient.on('osd.changed', handleOsdChanged)
@@ -1083,20 +1372,92 @@ export function initOsdWindow(): void {
     }
   }
 
+  // If the persisted setting enables the OSD, create + show it on startup.
   void readSettingsWithRetry().then(() => {
-    void readSiblingSettings().then(async () => {
-      if (!osdWindow || osdWindow.isDestroyed()) return
-      lastAppearanceSignature = appearanceSignature(settings)
-      await applyAppearance()
+    void readSiblingSettings().then(() => {
       if (settings.showOsd) {
-        setWindowPosition()
         showOsd()
       }
     })
   })
 }
 
+function ensureOsdWindow(): void {
+  if (osdWindow && !osdWindow.isDestroyed()) return
+
+  osdWindow = new BrowserWindow({
+    width: OSD_WIDTH,
+    height: OSD_HEIGHT,
+    show: false,
+    frame: false,
+    transparent: true,
+    backgroundColor: '#00000000',
+    // Always-on-top + skip-taskbar is the OSD contract on every platform:
+    // Linux pins it above normal windows without an entry in the taskbar/dock
+    // (some WMs also honor it as an override-redirect-style float); Windows
+    // keeps it above apps and out of Alt+Tab. macOS keeps it above windows on
+    // the active Space (see setVisibleOnAllWorkspaces below).
+    alwaysOnTop: true,
+    skipTaskbar: true,
+    resizable: false,
+    focusable: false,
+    hasShadow: false,
+    webPreferences: {
+      sandbox: true,
+      backgroundThrottling: true
+    }
+  })
+
+  // macOS limitation: macOS has no overlay/coverage API for third-party apps,
+  // so the OSD cannot be drawn above a game running in true fullscreen
+  // (exclusive display capture) — the game will simply cover it. macOS Spaces
+  // "Full Screen" is handled by setVisibleOnAllWorkspaces below; only direct
+  // display-grabbing fullscreen (e.g. games) defeats the OSD, same as the
+  // Windows client's limitation on exclusive-fullscreen games.
+
+  // macOS: Mission Control Spaces would hide the OSD when the user switches
+  // desktops; pin it to every Space so it behaves like the Windows always-on-top
+  // OSD. Older macOS may reject the call — the OSD still works on the active Space.
+  if (process.platform === 'darwin') {
+    try {
+      osdWindow.setVisibleOnAllWorkspaces(true)
+    } catch {
+      // ignore — visible-on-current-Space fallback
+    }
+  }
+
+  osdWindow.on('closed', () => {
+    osdWindow = null
+    pageLoaded = false
+    visible = false
+    setSurfaceVisible('osd', false)
+    stopRefresh()
+  })
+
+  osdWindow.on('moved', () => {
+    if (visible) snapAndClampPosition()
+  })
+}
+
+function releaseOsdWindow(): void {
+  stopRefresh()
+  if (fpsSubscribed) {
+    fpsSubscribed = false
+    unsubscribeFps?.()
+    unsubscribeFps = null
+    void hostClient.invoke('sensors.unsubscribeFps', {}).catch(() => undefined)
+  }
+  setSurfaceVisible('osd', false)
+  if (osdWindow && !osdWindow.isDestroyed()) {
+    osdWindow.destroy()
+  }
+  osdWindow = null
+  visible = false
+  pageLoaded = false
+}
+
 export function destroyOsdWindow(): void {
+  cancelIdleDestroy('osd')
   if (positionSaveTimer) {
     clearTimeout(positionSaveTimer)
     positionSaveTimer = null
@@ -1107,11 +1468,14 @@ export function destroyOsdWindow(): void {
   unsubscribeSettings = null
   unsubscribeFps?.()
   unsubscribeFps = null
+  unsubscribeUpdated?.()
+  unsubscribeUpdated = null
   unsubscribeDisplay?.()
   unsubscribeDisplay = null
   unsubscribePower?.()
   unsubscribePower = null
   stopRefresh()
+  setSurfaceVisible('osd', false)
   if (osdWindow && !osdWindow.isDestroyed()) {
     osdWindow.destroy()
   }
