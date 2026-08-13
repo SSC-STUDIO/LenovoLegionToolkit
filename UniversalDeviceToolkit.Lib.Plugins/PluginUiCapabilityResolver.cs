@@ -14,7 +14,14 @@ public readonly struct PluginUiCapabilities
     public bool SupportsFeaturePage { get; init; }
     public bool SupportsOptimizationCategory { get; init; }
 
-    public bool HasAny => SupportsSettingsPage || SupportsFeaturePage || SupportsOptimizationCategory;
+    /// <summary>
+    /// True when the manifest declares a web UI entry (<c>contributes.webPage</c>)
+    /// that the Electron host renders in an embedded webview.
+    /// </summary>
+    public bool SupportsWebPage { get; init; }
+
+    public bool HasAny =>
+        SupportsSettingsPage || SupportsFeaturePage || SupportsOptimizationCategory || SupportsWebPage;
 
     public PluginUiCapabilities Merge(PluginUiCapabilities other) =>
         new()
@@ -22,6 +29,7 @@ public readonly struct PluginUiCapabilities
             SupportsSettingsPage = SupportsSettingsPage || other.SupportsSettingsPage,
             SupportsFeaturePage = SupportsFeaturePage || other.SupportsFeaturePage,
             SupportsOptimizationCategory = SupportsOptimizationCategory || other.SupportsOptimizationCategory,
+            SupportsWebPage = SupportsWebPage || other.SupportsWebPage,
         };
 }
 
@@ -106,6 +114,7 @@ public static class PluginUiCapabilityResolver
             SupportsSettingsPage = HasContribution(contributes.SettingsPage),
             SupportsFeaturePage = HasContribution(contributes.FeaturePage),
             SupportsOptimizationCategory = SupportsOptimizationActions(manifest),
+            SupportsWebPage = manifest?.Contributes?.WebPage is { Entry.Length: > 0 },
         };
     }
 
@@ -138,11 +147,16 @@ public static class PluginUiCapabilityResolver
             HasContribution(contributes, "featurePage") ||
             ReadBool(root, "hasFeaturePage", "featurePage", "supportsFeaturePage", "hasPluginPage");
 
+        var supportsWebPage =
+            HasContribution(contributes, "webPage") ||
+            ReadBool(root, "hasWebPage", "supportsWebPage");
+
         return new PluginUiCapabilities
         {
             SupportsSettingsPage = supportsSettings,
             SupportsFeaturePage = supportsFeature,
             SupportsOptimizationCategory = HasOptimizationActions(contributes),
+            SupportsWebPage = supportsWebPage,
         };
     }
 

@@ -17,6 +17,7 @@ public class PluginUiCapabilitiesAndLifecycleTests
         caps.SupportsSettingsPage.Should().BeFalse();
         caps.SupportsFeaturePage.Should().BeFalse();
         caps.SupportsOptimizationCategory.Should().BeFalse();
+        caps.SupportsWebPage.Should().BeFalse();
         caps.HasAny.Should().BeFalse();
     }
 
@@ -35,6 +36,13 @@ public class PluginUiCapabilitiesAndLifecycleTests
     }
 
     [Fact]
+    public void PluginUiCapabilities_HasAny_WhenWebPageTrue_ShouldBeTrue()
+    {
+        var caps = new PluginUiCapabilities { SupportsWebPage = true };
+        caps.HasAny.Should().BeTrue();
+    }
+
+    [Fact]
     public void PluginUiCapabilities_HasAny_WhenOptimizationTrue_ShouldBeTrue()
     {
         var caps = new PluginUiCapabilities { SupportsOptimizationCategory = true };
@@ -48,7 +56,8 @@ public class PluginUiCapabilitiesAndLifecycleTests
         {
             SupportsSettingsPage = false,
             SupportsFeaturePage = false,
-            SupportsOptimizationCategory = false
+            SupportsOptimizationCategory = false,
+            SupportsWebPage = false
         };
         caps.HasAny.Should().BeFalse();
     }
@@ -97,6 +106,18 @@ public class PluginUiCapabilitiesAndLifecycleTests
         merged.SupportsSettingsPage.Should().BeTrue();
         merged.SupportsFeaturePage.Should().BeTrue();
         merged.SupportsOptimizationCategory.Should().BeTrue();
+        merged.SupportsWebPage.Should().BeFalse();
+    }
+
+    [Fact]
+    public void PluginUiCapabilities_Merge_WhenWebPageTrue_ShouldKeepWebPage()
+    {
+        var a = new PluginUiCapabilities { SupportsWebPage = true };
+        var b = new PluginUiCapabilities { SupportsSettingsPage = true };
+        var merged = a.Merge(b);
+        merged.SupportsWebPage.Should().BeTrue();
+        merged.SupportsSettingsPage.Should().BeTrue();
+        merged.HasAny.Should().BeTrue();
     }
 
     #endregion
