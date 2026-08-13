@@ -1,10 +1,21 @@
+using System;
+using System.Linq;
+#if !WINDOWS
+using System.Reflection;
+#endif
 using Autofac;
+using UniversalDeviceToolkit.Abstractions.Hardware;
+using UniversalDeviceToolkit.Abstractions.Lifecycle;
+using UniversalDeviceToolkit.Abstractions.Platform;
+using UniversalDeviceToolkit.Abstractions.Utils;
+using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
+#if WINDOWS
 using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Controllers.GodMode;
 using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
-using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
@@ -35,17 +46,20 @@ using UniversalDeviceToolkit.Lib.System.Driver;
 using UniversalDeviceToolkit.Lib.System.EC;
 using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Lib.System.Razer;
-using UniversalDeviceToolkit.Lib.Utils;
-using UniversalDeviceToolkit.Abstractions.Hardware;
-using UniversalDeviceToolkit.Abstractions.Utils;
+#endif
 
 namespace UniversalDeviceToolkit.Lib;
 
-public class IoCModule : Module
+public class IoCModule : Autofac.Module
 {
     protected override void Load(ContainerBuilder builder)
     {
         builder.Register<HttpClientFactory>().SingleInstance();
+
+        // Register default delay provider for production code so IDelayProvider can be injected
+        builder.Register<DefaultDelayProvider>().As<IDelayProvider>().SingleInstance();
+
+#if WINDOWS
         builder.Register<OnlineResourceCatalogClient>();
         builder.RegisterType<AppNotificationService>().As<IAppNotificationService>().SingleInstance();
 
@@ -211,9 +225,6 @@ public class IoCModule : Module
 
         builder.Register<SunriseSunset>();
 
-        // Register default delay provider for production code so IDelayProvider can be injected
-        builder.Register<DefaultDelayProvider>().As<IDelayProvider>().SingleInstance();
-
         builder.Register<BatteryHealthAlertSettings>().SingleInstance();
         builder.Register<BatteryDischargeRateMonitorService>().SingleInstance();
         builder.Register<AmdOverclockingController>();
@@ -229,5 +240,71 @@ public class IoCModule : Module
         builder.Register<NetworkAccelerationService>().As<INetworkAccelerationService>().SingleInstance();
         builder.Register<NetworkDiagnosticsService>().As<INetworkDiagnosticsService>().SingleInstance();
         builder.Register<NetworkStateRecoveryService>().As<INetworkStateRecoveryService>().SingleInstance();
+#else
+        RegisterPlatformServices(builder);
+#endif
     }
+
+#if !WINDOWS
+    /// <summary>
+    /// Registers the platform backends (Platform.Linux / Platform.MacOS) behind
+    /// the Lib.Abstractions interfaces. Implementations are referenced directly
+    /// by the csproj (conditional ItemGroup); discovery by name keeps this module
+    /// free of per-platform compile-time dependencies.
+    /// </summary>
+    private static void RegisterPlatformServices(ContainerBuilder builder)
+    {
+        var platform = OperatingSystem.IsLinux() ? "Linux"
+            : OperatingSystem.IsMacOS() ? "MacOS"
+            : null;
+
+        if (platform is null)
+        {
+            Log.Instance.Warning("No platform backend available for this operating system.");
+            return;
+        }
+
+        var assemblyName = $"UniversalDeviceToolkit.Platform.{platform}";
+        Assembly assembly;
+        try
+        {
+            assembly = Assembly.Load(assemblyName);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning($"Platform backend '{assemblyName}' could not be loaded.", ex);
+            return;
+        }
+
+        var registrations = new (string TypeName, Type ServiceType)[]
+        {
+            ($"{platform}PlatformServices", typeof(IPlatformServices)),
+            ($"{platform}DeviceAdapter", typeof(IDeviceAdapter)),
+            ($"{platform}SensorBackend", typeof(ISensorBackend)),
+            ($"{platform}PowerProfileProvider", typeof(IPowerProfileProvider)),
+            ($"{platform}GpuBackend", typeof(IGpuBackend)),
+            ($"{platform}AutorunManager", typeof(IAutorunManager)),
+            ($"{platform}SingleInstanceManager", typeof(ISingleInstanceManager)),
+            ($"{platform}ConfigurationStore", typeof(IConfigurationStore)),
+        };
+
+        foreach (var (typeName, serviceType) in registrations)
+        {
+            // Implementations live in different sub-namespaces per area
+            // (e.g. UniversalDeviceToolkit.Platform.Linux.Hardware.LinuxSensorBackend),
+            // so resolve by simple name within the platform assembly.
+            var implementationType = assembly.GetTypes()
+                .FirstOrDefault(t => string.Equals(t.Name, typeName, StringComparison.Ordinal) && !t.IsAbstract && !t.IsInterface);
+            if (implementationType is null)
+            {
+                // Name-based discovery fails silently on a rename; warn loudly
+                // so a missing backend service is visible in the default log.
+                Log.Instance.Warning($"Platform backend type '{typeName}' not found in {assemblyName}; {serviceType.Name} stays unregistered.");
+                continue;
+            }
+
+            builder.RegisterType(implementationType).As(serviceType).SingleInstance();
+        }
+    }
+#endif
 }
