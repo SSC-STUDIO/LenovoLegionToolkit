@@ -1,6 +1,8 @@
 using Autofac;
 using UniversalDeviceToolkit.Lib.Extensions;
+#if WINDOWS
 using UniversalDeviceToolkit.Lib.Optimization;
+#endif
 
 namespace UniversalDeviceToolkit.Lib.Plugins;
 
@@ -44,10 +46,18 @@ public class IoCModule : Module
 
         builder.Register<PluginRepositoryService>().AsSelf().SingleInstance();
 
+#if !WINDOWS
+        // Portable substitute for the Windows ApplicationSettings-backed plugin
+        // state (PluginManager ctor resolves this on non-Windows builds).
+        builder.Register<PluginStateStore>().SingleInstance();
+#endif
+
+#if WINDOWS
         // Register optimization category extender so Lib can discover plugin categories
         // without a direct circular reference to Lib.Plugins.
         builder.RegisterType<OptimizationCategoryExtender>()
             .As<IOptimizationCategoryExtender>()
             .SingleInstance();
+#endif
     }
 }

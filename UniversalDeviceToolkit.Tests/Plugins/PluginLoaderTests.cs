@@ -9,7 +9,6 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class PluginLoaderTests : IDisposable
 {
@@ -354,6 +353,15 @@ public class PluginLoaderTests : IDisposable
 
         // Assert - Returns null because assembly loading fails
         result.Should().BeNull();
+        var transactionalLoader = (ITransactionalPluginLoader)_loader;
+        for (var attempt = 0;
+             attempt < 10 && transactionalLoader.PendingDiscardedCandidateCount > 0;
+             attempt++)
+        {
+            transactionalLoader.RecoverDiscardedCandidates();
+        }
+        PluginLoader.DiscardedContextCount.Should().Be(0,
+            "explicit recovery must collect a released rejected context");
     }
 
     [Fact]
@@ -684,7 +692,7 @@ public class PluginLoaderTests : IDisposable
     }
 
     [Fact]
-    public void Unload_WithRegisteredDependencyContext_ShouldRemoveContext()
+    public void Unload_WithResolverOnlyContext_ShouldNotPretendRuntimeWasCollected()
     {
         // Arrange
         const string pluginId = "test-plugin";
@@ -706,9 +714,9 @@ public class PluginLoaderTests : IDisposable
             var unloaded = _loader.Unload(pluginId);
 
             // Assert
-            unloaded.Should().BeTrue();
+            unloaded.Should().BeFalse();
             var contexts = GetScopedDependencyResolutionContexts(null);
-            contexts.Should().BeEmpty();
+            contexts.Should().ContainSingle();
         }
         finally
         {

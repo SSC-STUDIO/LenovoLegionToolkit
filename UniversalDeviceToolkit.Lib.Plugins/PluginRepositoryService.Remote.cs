@@ -19,7 +19,7 @@ public partial class PluginRepositoryService
     {
         Exception? lastException = null;
 
-        foreach (var url in PluginStoreUrls)
+        foreach (var url in _pluginStoreUrls)
         {
             for (var attempt = 1; attempt <= RemoteRequestRetryCount; attempt++)
             {
@@ -84,7 +84,7 @@ public partial class PluginRepositoryService
 
     private async Task<PublishedPluginAsset?> TryResolvePublishedAssetAsync(PluginManifest manifest)
     {
-        foreach (var releaseApiUrl in PluginReleasesApiUrls)
+        foreach (var releaseApiUrl in _pluginReleasesApiUrls)
         {
             for (var attempt = 1; attempt <= RemoteRequestRetryCount; attempt++)
             {
@@ -119,14 +119,16 @@ public partial class PluginRepositoryService
                         if (release.TryGetProperty("draft", out var draftElement) && draftElement.GetBoolean())
                             continue;
 
-                        if (release.TryGetProperty("prerelease", out var prereleaseElement) && prereleaseElement.GetBoolean())
-                            continue;
-
                         var tagName = release.TryGetProperty("tag_name", out var tagNameElement)
                             ? tagNameElement.GetString() ?? string.Empty
                             : string.Empty;
 
-                        if (!tagName.Equals("plugin-catalog", StringComparison.OrdinalIgnoreCase) ||
+                        if (release.TryGetProperty("prerelease", out var prereleaseElement) &&
+                            prereleaseElement.GetBoolean() &&
+                            !_allowCatalogPrerelease)
+                            continue;
+
+                        if (!tagName.Equals(_catalogTag, StringComparison.OrdinalIgnoreCase) ||
                             !release.TryGetProperty("assets", out var assetsElement) ||
                             assetsElement.ValueKind != JsonValueKind.Array)
                             continue;
@@ -232,7 +234,7 @@ public partial class PluginRepositoryService
 
         if (!segments[2].Equals("releases", StringComparison.OrdinalIgnoreCase) ||
             !segments[3].Equals("download", StringComparison.OrdinalIgnoreCase) ||
-            !segments[4].Equals("plugin-catalog", StringComparison.OrdinalIgnoreCase))
+            !PluginCatalogTags.IsCatalogTag(segments[4]))
             return false;
 
         return IsMatchingPublishedPluginAsset(segments[5], pluginId, pluginVersion);

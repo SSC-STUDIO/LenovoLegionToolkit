@@ -98,6 +98,30 @@ public class PluginSignatureValidator : IPluginSignatureValidator
                     string.Format(Resource.Plugin_Error_Signature_FileNotFound, dllPath));
             }
 
+            if (TrustedPluginPackageStore.IsTrustedFile(dllPath))
+            {
+                return new PluginSignatureResult(
+                    PluginSignatureStatus.Valid,
+                    "Authorized by the exact committed repository package trust record.");
+            }
+
+            if (!OperatingSystem.IsWindows())
+            {
+                if (_settings.ValidationMode == PluginSignatureValidationMode.AllowUnsigned)
+                {
+                    return new PluginSignatureResult(
+                        PluginSignatureStatus.NotSigned,
+                        Resource.Plugin_Error_Signature_NotSigned_AllowUnsigned)
+                    {
+                        IsAllowedByPolicy = true,
+                    };
+                }
+
+                return new PluginSignatureResult(
+                    PluginSignatureStatus.NotSigned,
+                    Resource.Plugin_Error_Signature_NotSigned_Required);
+            }
+
             // Integrity first: WinVerifyTrust checks the Authenticode digest over file bytes.
             // Extracting a cert blob alone is insufficient (tampered PE can still carry a cert).
             var authenticodeOk = AuthenticodeVerifier.TryVerifyFile(dllPath, out var trustStatus);
@@ -135,7 +159,8 @@ public class PluginSignatureValidator : IPluginSignatureValidator
             if (!authenticodeOk)
             {
                 // A certificate with an invalid digest is still invalid. A package
-                // hash must never replace Authenticode validation in production.
+                // authorization may replace it only when the exact bytes and path were
+                // committed from a verified official repository transaction.
                 if (_settings.ValidationMode == PluginSignatureValidationMode.AllowUnsigned)
                 {
                     return new PluginSignatureResult(PluginSignatureStatus.NotSigned,

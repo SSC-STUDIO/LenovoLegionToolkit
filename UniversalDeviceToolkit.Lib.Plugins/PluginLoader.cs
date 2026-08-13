@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
 
@@ -22,7 +24,17 @@ public interface IPluginLoader
     Task<IPlugin?> LoadFromFileAsync(string dllPath, IPluginSignatureValidator signatureValidator);
 
     /// <summary>
-    /// Unload a previously loaded plugin assembly context, when applicable.
+    /// Request unload of a previously loaded plugin assembly context without forcing collection.
+    /// </summary>
+    PluginUnloadRequestResult RequestUnload(string pluginId);
+
+    /// <summary>
+    /// Confirm collection of a previously requested plugin assembly context.
+    /// </summary>
+    PluginUnloadConfirmationResult ConfirmUnload(string pluginId);
+
+    /// <summary>
+    /// Compatibility shim for third-party loaders. New code must use request and confirmation.
     /// </summary>
     bool Unload(string pluginId);
 
@@ -33,17 +45,140 @@ public interface IPluginLoader
 }
 
 /// <summary>
+/// Observable state of a collectible plugin runtime.
+/// </summary>
+public enum PluginRuntimeUnloadState
+{
+    NotTracked,
+    Active,
+    UnloadRequested,
+    ConfirmedCollected,
+}
+
+public enum PluginUnloadRequestResult
+{
+    NotTracked,
+    Requested,
+    AlreadyRequested,
+    Failed,
+}
+
+public enum PluginUnloadConfirmationResult
+{
+    NotTracked,
+    NotRequested,
+    Pending,
+    Confirmed,
+}
+
+/// <summary>
+/// Exposes whether a failed unload was refused before the request or is still pending collection.
+/// </summary>
+public interface IPluginRuntimeUnloadStateProvider
+{
+    PluginRuntimeUnloadState GetUnloadState(string pluginId);
+}
+
+internal interface ITransactionalPluginLoader
+{
+    bool CommitCandidate(IPlugin plugin);
+
+    PluginCandidateUnloadToken DiscardCandidate(IPlugin plugin);
+
+    bool ConfirmDiscardedCandidate(PluginCandidateUnloadToken token);
+
+    PluginCandidateUnloadSweepResult SweepDiscardedCandidates();
+
+    PluginCandidateUnloadSweepResult RecoverDiscardedCandidates();
+
+    int PendingDiscardedCandidateCount { get; }
+}
+
+internal readonly record struct PluginCandidateUnloadToken(Guid Value);
+internal readonly record struct PluginCandidateUnloadSweepResult(int Confirmed, int Pending);
+
+internal sealed class PluginLoadContextUnloadPendingException(
+    PluginCandidateUnloadToken token) : Exception
+{
+    public PluginCandidateUnloadToken Token { get; } = token;
+}
+
+/// <summary>
 /// Plugin loader implementation
 /// Handles loading plugin assemblies and creating plugin instances
 /// </summary>
-public class PluginLoader : IPluginLoader
+public class PluginLoader : IPluginLoader, ITransactionalPluginLoader, IPluginRuntimeUnloadStateProvider
 {
+    private const int MaxTrackedDiscardedContexts = 128;
+    private const int ScheduledDiscardedSweepBatchSize = 8;
+    private const int ExplicitDiscardedRecoveryBatchSize = 16;
+    private sealed record PendingPluginRuntime(
+        PluginAssemblyLoadContext LoadContext,
+        RegisteredPluginDependencyResolutionContext? DependencyContext);
+
+    private sealed class TrackedPluginRuntime(
+        PluginAssemblyLoadContext loadContext,
+        PluginDependencyResolutionContext? dependencyContext)
+    {
+        public object SyncRoot { get; } = new();
+        public PluginAssemblyLoadContext? LoadContext { get; set; } = loadContext;
+        public WeakReference? LoadContextWeakReference { get; set; }
+        public PluginDependencyResolutionContext? DependencyContext { get; set; } = dependencyContext;
+        public PluginRuntimeUnloadState State { get; set; } = PluginRuntimeUnloadState.Active;
+    }
+
+    private sealed class DiscardedPluginRuntime(WeakReference loadContextWeakReference)
+    {
+        public object SyncRoot { get; } = new();
+        public WeakReference LoadContextWeakReference { get; } = loadContextWeakReference;
+        public PluginRuntimeUnloadState State { get; set; } =
+            PluginRuntimeUnloadState.UnloadRequested;
+        public long NextScheduledCheckUtcTicks { get; set; }
+        public int ScheduledCheckCount { get; set; }
+        public int ProcessingState;
+    }
+
     private static readonly ConcurrentDictionary<string, PluginDependencyResolutionContext> DependencyResolutionContexts = new(StringComparer.OrdinalIgnoreCase);
     private static readonly ConcurrentDictionary<string, PluginDependencyResolutionContext> PluginDependencyContexts = new(StringComparer.OrdinalIgnoreCase);
-    private static readonly ConcurrentDictionary<string, PluginAssemblyLoadContext> PluginLoadContexts = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<string, TrackedPluginRuntime> PluginLoadContexts = new(StringComparer.OrdinalIgnoreCase);
     private static readonly ConcurrentDictionary<string, byte> RejectedDependencyPaths = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly ConcurrentDictionary<IPlugin, PendingPluginRuntime> PendingPluginRuntimes =
+        new(ReferenceEqualityComparer.Instance);
+    private static readonly ConcurrentDictionary<Guid, DiscardedPluginRuntime> DiscardedPluginLoadContexts = new();
+    private static readonly object DiscardedQueueLock = new();
+    private static readonly LinkedList<Guid> DiscardedPluginLoadContextQueue = new();
+    private static readonly Dictionary<Guid, LinkedListNode<Guid>>
+        DiscardedPluginLoadContextMembership = new();
     private static readonly object DependencyResolverRegistrationLock = new();
     private static bool _dependencyResolverRegistered;
+
+    internal static int TrackedContextCount => PluginLoadContexts.Count;
+
+    internal static int PendingContextCount => PendingPluginRuntimes.Count;
+
+    internal static int DiscardedContextCount => DiscardedPluginLoadContexts.Count;
+    internal static int DiscardedQueueCount
+    {
+        get
+        {
+            lock (DiscardedQueueLock)
+                return DiscardedPluginLoadContextMembership.Count;
+        }
+    }
+    internal static int DiscardedForcedCollectionCount =>
+        global::System.Threading.Volatile.Read(ref _discardedForcedCollectionCount);
+    internal static int DiscardedSweepPassCount =>
+        global::System.Threading.Volatile.Read(ref _discardedSweepPassCount);
+    internal static int DiscardedScheduledCheckCount =>
+        global::System.Threading.Volatile.Read(ref _discardedScheduledCheckCount);
+    private static int _discardedForcedCollectionCount;
+    private static int _discardedSweepPassCount;
+    private static int _discardedScheduledCheckCount;
+    private static int _discardedSweepActive;
+
+    public PluginLoader()
+    {
+    }
 
     private readonly HashSet<string> _cultureFolders = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -57,6 +192,12 @@ public class PluginLoader : IPluginLoader
     /// </summary>
     public async Task<IPlugin?> LoadFromFileAsync(string dllPath, IPluginSignatureValidator signatureValidator)
     {
+        if (DiscardedPluginLoadContexts.Count >= MaxTrackedDiscardedContexts)
+        {
+            throw new InvalidOperationException(
+                $"Plugin candidate loading is blocked by {DiscardedPluginLoadContexts.Count} uncollected discarded contexts.");
+        }
+
         if (string.IsNullOrWhiteSpace(dllPath))
         {
             Log.Instance.Warning("LoadFromFileAsync: DLL path is empty");
@@ -95,100 +236,32 @@ public class PluginLoader : IPluginLoader
                 return null;
             }
 
-            // Load the main assembly from bytes to avoid file locking, but resolve plugin-local
-            // dependencies through a dedicated AssemblyLoadContext.
-            Assembly? assembly = null;
-            PluginAssemblyLoadContext? pluginLoadContext = null;
-            try
+            var assemblyBytes = await File
+                .ReadAllBytesAsync(normalizedDllPath)
+                .ConfigureAwait(false);
+            var loadAttempt = CreatePluginCandidate(
+                normalizedDllPath,
+                pluginDirectory ?? string.Empty,
+                signatureValidator,
+                registeredDependencyContext,
+                assemblyBytes);
+            if (loadAttempt.Plugin is not null)
             {
-                var assemblyBytes = await File.ReadAllBytesAsync(normalizedDllPath).ConfigureAwait(false);
-                pluginLoadContext = new PluginAssemblyLoadContext(normalizedDllPath, pluginDirectory ?? string.Empty, signatureValidator);
-                assembly = pluginLoadContext.LoadFromStream(new MemoryStream(assemblyBytes));
-                registeredDependencyContext?.Context.SetPluginMainAssembly(assembly);
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Error($"Failed to load assembly from {dllPath}", ex);
-                pluginLoadContext?.Unload();
-                return null;
-            }
-
-            // Find all types that implement IPlugin
-            Type[] pluginTypes;
-            try
-            {
-                pluginTypes = assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException ex)
-            {
-                Log.Instance.Warning($"Failed to get types from assembly {dllPath}. Loader exceptions:");
-                if (ex.LoaderExceptions != null)
-                {
-                    foreach (var loaderEx in ex.LoaderExceptions)
-                    {
-                        Log.Instance.Warning($"  - {loaderEx?.Message}", loaderEx);
-                    }
-                }
-                // Try to continue with successfully loaded types
-                pluginTypes = ex.Types.Where(t => t != null).OfType<Type>().ToArray();
-            }
-            catch (Exception ex)
-            {
-                Log.Instance.Error($"Error getting types from assembly {dllPath}", ex);
-                pluginLoadContext?.Unload();
-                return null;
+                keepDependencyContext = true;
+                Log.Instance.Info(
+                    $"Successfully created plugin instance: {loadAttempt.Plugin.Id} ({loadAttempt.Plugin.Name}) from {dllPath}");
+                return loadAttempt.Plugin;
             }
 
-            var validPluginTypes = pluginTypes
-                .Where(t => t != null
-                    && IsPluginTypeCandidate(t)
-                    && !t.IsInterface
-                    && !t.IsAbstract
-                    && t.GetConstructor(Type.EmptyTypes) != null)
-                .ToList();
-
-            if (validPluginTypes.Count == 0)
+            if (loadAttempt.RejectedLoadContext is not null)
             {
-                Log.Instance.Warning($"No valid plugin types found in {dllPath}");
-                pluginLoadContext?.Unload();
-                return null;
+                TrackDiscardedLoadContext(loadAttempt.RejectedLoadContext);
             }
-
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Found {validPluginTypes.Count} plugin type(s) in {dllPath}");
-
-            // Return the first valid plugin instance
-            foreach (var pluginType in validPluginTypes)
-            {
-                try
-                {
-                    var plugin = CreatePluginInstance(pluginType, dllPath);
-                    if (plugin != null)
-                    {
-                        if (string.IsNullOrWhiteSpace(plugin.Id))
-                        {
-                            Log.Instance.Warning($"Plugin from {dllPath} has empty ID, skipping");
-                            continue;
-                        }
-
-                        if (pluginLoadContext is not null)
-                            PluginLoadContexts[plugin.Id] = pluginLoadContext;
-                        if (registeredDependencyContext is not null)
-                            PluginDependencyContexts[plugin.Id] = registeredDependencyContext.Context;
-                        keepDependencyContext = true;
-                        
-                        Log.Instance.Info($"Successfully created plugin instance: {plugin.Id} ({plugin.Name}) from {dllPath}");
-                        return plugin;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Log.Instance.Error($"Failed to create instance of plugin type {pluginType.Name} from {dllPath}", ex);
-                }
-            }
-
-            pluginLoadContext?.Unload();
             return null;
+        }
+        catch (PluginLoadContextUnloadPendingException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -202,43 +275,512 @@ public class PluginLoader : IPluginLoader
         }
     }
 
-    public bool Unload(string pluginId)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static PluginCandidateLoadAttempt CreatePluginCandidate(
+        string normalizedDllPath,
+        string pluginDirectory,
+        IPluginSignatureValidator signatureValidator,
+        RegisteredPluginDependencyResolutionContext? registeredDependencyContext,
+        byte[] assemblyBytes)
+    {
+        PluginAssemblyLoadContext? pluginLoadContext = null;
+        try
+        {
+            pluginLoadContext = new PluginAssemblyLoadContext(
+                normalizedDllPath,
+                pluginDirectory,
+                signatureValidator);
+            var assembly = pluginLoadContext.LoadFromStream(new MemoryStream(assemblyBytes));
+            registeredDependencyContext?.Context.SetPluginMainAssembly(assembly);
+
+            Type[] pluginTypes;
+            try
+            {
+                pluginTypes = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException ex)
+            {
+                Log.Instance.Warning($"Failed to get types from assembly {normalizedDllPath}. Loader exceptions:");
+                if (ex.LoaderExceptions != null)
+                {
+                    foreach (var loaderException in ex.LoaderExceptions)
+                        Log.Instance.Warning($"  - {loaderException?.Message}", loaderException);
+                }
+                pluginTypes = ex.Types.Where(type => type != null).OfType<Type>().ToArray();
+            }
+
+            var validPluginTypes = pluginTypes
+                .Where(type => IsPluginTypeCandidate(type)
+                               && !type.IsInterface
+                               && !type.IsAbstract
+                               && type.GetConstructor(Type.EmptyTypes) != null)
+                .ToArray();
+            if (validPluginTypes.Length == 0)
+            {
+                Log.Instance.Warning($"No valid plugin types found in {normalizedDllPath}");
+                return RejectPluginCandidate(
+                    pluginLoadContext,
+                    registeredDependencyContext);
+            }
+
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Found {validPluginTypes.Length} plugin type(s) in {normalizedDllPath}");
+
+            foreach (var pluginType in validPluginTypes)
+            {
+                try
+                {
+                    var plugin = CreatePluginInstance(pluginType, normalizedDllPath);
+                    if (plugin is null)
+                        continue;
+                    if (string.IsNullOrWhiteSpace(plugin.Id))
+                    {
+                        Log.Instance.Warning(
+                            $"Plugin from {normalizedDllPath} has empty ID, skipping");
+                        continue;
+                    }
+
+                    PendingPluginRuntimes[plugin] = new PendingPluginRuntime(
+                        pluginLoadContext,
+                        registeredDependencyContext);
+                    return new PluginCandidateLoadAttempt(plugin, null);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Error(
+                        $"Failed to create instance of plugin type {pluginType.Name} from {normalizedDllPath}",
+                        ex);
+                }
+            }
+
+            return RejectPluginCandidate(
+                pluginLoadContext,
+                registeredDependencyContext);
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error($"Failed to load assembly from {normalizedDllPath}", ex);
+            return pluginLoadContext is null
+                ? new PluginCandidateLoadAttempt(null, null)
+                : RejectPluginCandidate(pluginLoadContext, registeredDependencyContext);
+        }
+    }
+
+    private static PluginCandidateLoadAttempt RejectPluginCandidate(
+        PluginAssemblyLoadContext loadContext,
+        RegisteredPluginDependencyResolutionContext? registeredDependencyContext)
+    {
+        registeredDependencyContext?.Context.ReleasePluginMainAssembly();
+        return new PluginCandidateLoadAttempt(
+            null,
+            RequestCollectibleUnload(loadContext));
+    }
+
+    private static PluginCandidateUnloadToken TrackDiscardedLoadContext(
+        WeakReference weakReference)
+    {
+        var token = new PluginCandidateUnloadToken(Guid.NewGuid());
+        if (!DiscardedPluginLoadContexts.TryAdd(
+                token.Value,
+                new DiscardedPluginRuntime(weakReference)))
+            throw new InvalidOperationException("Could not track rejected plugin load context.");
+        AddDiscardedQueueMembership(token.Value);
+        return token;
+    }
+
+    private static bool ConfirmDiscardedLoadContext(
+        PluginCandidateUnloadToken token)
+    {
+        if (!DiscardedPluginLoadContexts.TryGetValue(token.Value, out var discarded))
+            return true;
+        if (global::System.Threading.Interlocked.CompareExchange(
+                ref discarded.ProcessingState,
+                1,
+                0) != 0)
+        {
+            return false;
+        }
+        try
+        {
+            lock (discarded.SyncRoot)
+            {
+                if (discarded.State == PluginRuntimeUnloadState.UnloadRequested &&
+                    discarded.LoadContextWeakReference.IsAlive)
+                {
+                    return false;
+                }
+
+                discarded.State = PluginRuntimeUnloadState.ConfirmedCollected;
+                var removed = DiscardedPluginLoadContexts.TryRemove(
+                    new KeyValuePair<Guid, DiscardedPluginRuntime>(
+                        token.Value,
+                        discarded));
+                if (removed)
+                    RemoveDiscardedQueueMembership(token.Value);
+                return removed;
+            }
+        }
+        finally
+        {
+            global::System.Threading.Volatile.Write(ref discarded.ProcessingState, 0);
+        }
+    }
+
+    private sealed record PluginCandidateLoadAttempt(
+        IPlugin? Plugin,
+        WeakReference? RejectedLoadContext);
+
+    bool ITransactionalPluginLoader.CommitCandidate(IPlugin plugin)
+    {
+        if (!PendingPluginRuntimes.TryGetValue(plugin, out var pending))
+            return false;
+
+        var tracked = new TrackedPluginRuntime(
+            pending.LoadContext,
+            pending.DependencyContext?.Context);
+        if (!PluginLoadContexts.TryAdd(plugin.Id, tracked))
+            return false;
+
+        if (pending.DependencyContext is not null &&
+            !PluginDependencyContexts.TryAdd(
+                plugin.Id,
+                pending.DependencyContext.Context))
+        {
+            PluginLoadContexts.TryRemove(
+                new KeyValuePair<string, TrackedPluginRuntime>(plugin.Id, tracked));
+            return false;
+        }
+
+        PendingPluginRuntimes.TryRemove(
+            new KeyValuePair<IPlugin, PendingPluginRuntime>(plugin, pending));
+        return true;
+    }
+
+    PluginCandidateUnloadToken ITransactionalPluginLoader.DiscardCandidate(IPlugin plugin)
+    {
+        if (!PendingPluginRuntimes.TryRemove(plugin, out var pending))
+            return default;
+
+        return DiscardPendingRuntime(pending);
+    }
+
+    bool ITransactionalPluginLoader.ConfirmDiscardedCandidate(
+        PluginCandidateUnloadToken token)
+    {
+        if (token.Value == Guid.Empty)
+            return true;
+        return ConfirmDiscardedLoadContext(token);
+    }
+
+    int ITransactionalPluginLoader.PendingDiscardedCandidateCount =>
+        DiscardedPluginLoadContexts.Count;
+
+    PluginCandidateUnloadSweepResult ITransactionalPluginLoader.SweepDiscardedCandidates() =>
+        SweepDiscardedLoadContexts(
+            ScheduledDiscardedSweepBatchSize,
+            requestCollection: false,
+            respectBackoff: true);
+
+    PluginCandidateUnloadSweepResult ITransactionalPluginLoader.RecoverDiscardedCandidates() =>
+        SweepDiscardedLoadContexts(
+            ExplicitDiscardedRecoveryBatchSize,
+            requestCollection: true,
+            respectBackoff: false);
+
+    private static PluginCandidateUnloadSweepResult SweepDiscardedLoadContexts(
+        int batchSize,
+        bool requestCollection,
+        bool respectBackoff)
+    {
+        if (global::System.Threading.Interlocked.CompareExchange(
+                ref _discardedSweepActive,
+                1,
+                0) != 0)
+        {
+            return new PluginCandidateUnloadSweepResult(
+                0,
+                DiscardedPluginLoadContexts.Count);
+        }
+        try
+        {
+        global::System.Threading.Interlocked.Increment(ref _discardedSweepPassCount);
+        if (requestCollection && !DiscardedPluginLoadContexts.IsEmpty)
+        {
+            global::System.Threading.Interlocked.Increment(
+                ref _discardedForcedCollectionCount);
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true);
+            GC.WaitForPendingFinalizers();
+        }
+        var confirmed = 0;
+        var processed = 0;
+        var dequeueBudget = Math.Min(
+            GetDiscardedQueueCount(),
+            batchSize * 2);
+        var nowTicks = DateTime.UtcNow.Ticks;
+        while (processed < batchSize &&
+               dequeueBudget-- > 0 &&
+               TryTakeDiscardedQueueHead(out var token))
+        {
+            if (!DiscardedPluginLoadContexts.TryGetValue(token, out var discarded))
+                continue;
+
+            processed++;
+            if (respectBackoff && discarded.NextScheduledCheckUtcTicks > nowTicks)
+            {
+                AddDiscardedQueueMembership(token);
+                continue;
+            }
+            if (respectBackoff)
+            {
+                global::System.Threading.Interlocked.Increment(
+                    ref _discardedScheduledCheckCount);
+            }
+            if (ConfirmDiscardedLoadContext(
+                    new PluginCandidateUnloadToken(token)))
+            {
+                confirmed++;
+                continue;
+            }
+
+            if (respectBackoff)
+            {
+                lock (discarded.SyncRoot)
+                {
+                    discarded.ScheduledCheckCount++;
+                    var delayMilliseconds = Math.Min(
+                        5000,
+                        50 * (1 << Math.Min(discarded.ScheduledCheckCount, 6)));
+                    discarded.NextScheduledCheckUtcTicks =
+                        DateTime.UtcNow.AddMilliseconds(delayMilliseconds).Ticks;
+                }
+            }
+            if (DiscardedPluginLoadContexts.TryGetValue(token, out var retained) &&
+                ReferenceEquals(retained, discarded))
+            {
+                AddDiscardedQueueMembership(token);
+            }
+        }
+        return new PluginCandidateUnloadSweepResult(
+            confirmed,
+            DiscardedPluginLoadContexts.Count);
+        }
+        finally
+        {
+            global::System.Threading.Volatile.Write(ref _discardedSweepActive, 0);
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static PluginCandidateUnloadToken DiscardPendingRuntime(PendingPluginRuntime pending)
+    {
+        if (pending.DependencyContext is { IsNew: true })
+        {
+            pending.DependencyContext.Context.ReleasePluginMainAssembly();
+            RemovePluginDependencyResolutionContext(pending.DependencyContext.Context);
+        }
+
+        var weakReference = RequestCollectibleUnload(pending.LoadContext);
+        var token = new PluginCandidateUnloadToken(Guid.NewGuid());
+        if (!DiscardedPluginLoadContexts.TryAdd(
+                token.Value,
+                new DiscardedPluginRuntime(weakReference)))
+            throw new InvalidOperationException("Could not track discarded plugin load context.");
+        AddDiscardedQueueMembership(token.Value);
+        return token;
+    }
+
+    private static int GetDiscardedQueueCount()
+    {
+        lock (DiscardedQueueLock)
+            return DiscardedPluginLoadContextMembership.Count;
+    }
+
+    private static void AddDiscardedQueueMembership(Guid token)
+    {
+        lock (DiscardedQueueLock)
+        {
+            if (DiscardedPluginLoadContextMembership.ContainsKey(token))
+                return;
+            var node = DiscardedPluginLoadContextQueue.AddLast(token);
+            DiscardedPluginLoadContextMembership.Add(token, node);
+        }
+    }
+
+    private static void RemoveDiscardedQueueMembership(Guid token)
+    {
+        lock (DiscardedQueueLock)
+        {
+            if (!DiscardedPluginLoadContextMembership.Remove(token, out var node))
+                return;
+            DiscardedPluginLoadContextQueue.Remove(node);
+        }
+    }
+
+    private static bool TryTakeDiscardedQueueHead(out Guid token)
+    {
+        lock (DiscardedQueueLock)
+        {
+            var node = DiscardedPluginLoadContextQueue.First;
+            if (node is null)
+            {
+                token = default;
+                return false;
+            }
+            token = node.Value;
+            DiscardedPluginLoadContextQueue.RemoveFirst();
+            DiscardedPluginLoadContextMembership.Remove(token);
+            return true;
+        }
+    }
+
+    public PluginUnloadRequestResult RequestUnload(string pluginId)
     {
         if (string.IsNullOrWhiteSpace(pluginId))
+            return PluginUnloadRequestResult.NotTracked;
+
+        if (!PluginLoadContexts.TryGetValue(pluginId, out var tracked))
+            return PluginUnloadRequestResult.NotTracked;
+
+        lock (tracked.SyncRoot)
+        {
+            if (tracked.State == PluginRuntimeUnloadState.UnloadRequested ||
+                tracked.State == PluginRuntimeUnloadState.ConfirmedCollected)
+                return PluginUnloadRequestResult.AlreadyRequested;
+
+            if (!TryRequestUnload(pluginId, tracked))
+                return PluginUnloadRequestResult.Failed;
+            TryReleaseDependencyReferences(pluginId, tracked);
+            return PluginUnloadRequestResult.Requested;
+        }
+    }
+
+    public PluginUnloadConfirmationResult ConfirmUnload(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId) ||
+            !PluginLoadContexts.TryGetValue(pluginId, out var tracked))
+        {
+            return PluginUnloadConfirmationResult.NotTracked;
+        }
+
+        lock (tracked.SyncRoot)
+        {
+            if (tracked.State == PluginRuntimeUnloadState.Active)
+                return PluginUnloadConfirmationResult.NotRequested;
+            if (tracked.State == PluginRuntimeUnloadState.UnloadRequested)
+            {
+                var weakReference = tracked.LoadContextWeakReference;
+                if (weakReference is null || !ConfirmUnloadCollected(weakReference))
+                    return PluginUnloadConfirmationResult.Pending;
+                tracked.State = PluginRuntimeUnloadState.ConfirmedCollected;
+            }
+
+            if (!PluginLoadContexts.TryRemove(
+                    new KeyValuePair<string, TrackedPluginRuntime>(pluginId, tracked)))
+            {
+                return PluginUnloadConfirmationResult.Pending;
+            }
+
+            return PluginUnloadConfirmationResult.Confirmed;
+        }
+    }
+
+    public bool Unload(string pluginId)
+    {
+        var request = RequestUnload(pluginId);
+        if (request is PluginUnloadRequestResult.Failed or
+            PluginUnloadRequestResult.NotTracked)
+        {
             return false;
+        }
+        return ConfirmUnload(pluginId) is
+            PluginUnloadConfirmationResult.Confirmed or
+            PluginUnloadConfirmationResult.NotTracked;
+    }
 
-        PluginLoadContexts.TryRemove(pluginId, out var loadContext);
-        PluginDependencyContexts.TryRemove(pluginId, out var dependencyContext);
+    public PluginRuntimeUnloadState GetUnloadState(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId) ||
+            !PluginLoadContexts.TryGetValue(pluginId, out var tracked))
+        {
+            return PluginRuntimeUnloadState.NotTracked;
+        }
 
-        if (loadContext is null && dependencyContext is null)
+        lock (tracked.SyncRoot)
+            return tracked.State;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static bool TryRequestUnload(string pluginId, TrackedPluginRuntime tracked)
+    {
+        var loadContext = tracked.LoadContext;
+        if (loadContext is null)
             return false;
-
-        var success = true;
 
         try
         {
-            if (dependencyContext is not null)
-                RemovePluginDependencyResolutionContext(dependencyContext);
+            var weakReference = RequestCollectibleUnload(loadContext);
+            tracked.LoadContextWeakReference = weakReference;
+            tracked.LoadContext = null;
+            tracked.State = PluginRuntimeUnloadState.UnloadRequested;
+            return true;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to remove plugin dependency resolution context for {pluginId}: {ex.Message}", ex);
-            success = false;
+                Log.Instance.Trace($"Failed to request plugin load context unload for {pluginId}: {ex.Message}", ex);
+            return false;
         }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference RequestCollectibleUnload(PluginAssemblyLoadContext loadContext)
+    {
+        var weakReference = new WeakReference(loadContext, trackResurrection: false);
+        loadContext.Unload();
+        return weakReference;
+    }
+
+    private static bool TryReleaseDependencyReferences(
+        string pluginId,
+        TrackedPluginRuntime tracked)
+    {
+        var dependencyContext = tracked.DependencyContext;
+        if (dependencyContext is null)
+            return true;
 
         try
         {
-            loadContext?.Unload();
+            dependencyContext.ReleasePluginMainAssembly();
+            RemovePluginDependencyResolutionContext(dependencyContext);
+            PluginDependencyContexts.TryRemove(
+                new KeyValuePair<string, PluginDependencyResolutionContext>(
+                    pluginId,
+                    dependencyContext));
+            tracked.DependencyContext = null;
+            return true;
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to unload plugin load context for {pluginId}: {ex.Message}", ex);
-            success = false;
+                Log.Instance.Trace($"Failed to release plugin dependency resolution context for {pluginId}: {ex.Message}", ex);
+            return false;
+        }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static bool ConfirmUnloadCollected(WeakReference loadContextWeakReference)
+    {
+        const int maxAttempts = 5;
+        for (var attempt = 0; attempt < maxAttempts && loadContextWeakReference.IsAlive; attempt++)
+        {
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+            GC.WaitForPendingFinalizers();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: true);
+            if (loadContextWeakReference.IsAlive)
+                Thread.Yield();
         }
 
-        return success;
+        return !loadContextWeakReference.IsAlive;
     }
 
     private static RegisteredPluginDependencyResolutionContext RegisterPluginDependencyResolutionContext(
@@ -271,7 +813,10 @@ public class PluginLoader : IPluginLoader
 
     private static void RemovePluginDependencyResolutionContext(PluginDependencyResolutionContext context)
     {
-        DependencyResolutionContexts.TryRemove(context.PluginMainAssemblyPath, out _);
+        DependencyResolutionContexts.TryRemove(
+            new KeyValuePair<string, PluginDependencyResolutionContext>(
+                context.PluginMainAssemblyPath,
+                context));
 
         lock (DependencyResolverRegistrationLock)
         {
@@ -638,6 +1183,11 @@ public class PluginLoader : IPluginLoader
             PluginMainAssembly = assembly;
             PluginMainAssemblyFullName = assembly.FullName;
         }
+
+        public void ReleasePluginMainAssembly()
+        {
+            PluginMainAssembly = null;
+        }
     }
 
     private sealed record RegisteredPluginDependencyResolutionContext(
@@ -754,7 +1304,7 @@ public class PluginLoader : IPluginLoader
     /// <summary>
     /// Create a plugin instance from a type
     /// </summary>
-    private IPlugin? CreatePluginInstance(Type pluginType, string dllPath)
+    private static IPlugin? CreatePluginInstance(Type pluginType, string dllPath)
     {
         try
         {

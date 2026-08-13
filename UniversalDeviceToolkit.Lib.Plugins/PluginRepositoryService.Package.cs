@@ -226,50 +226,11 @@ public partial class PluginRepositoryService
 
     private static string? FindPluginMainDll(string extractPath, string pluginId)
     {
-        var pluginDlls = Directory.GetFiles(extractPath, "*.dll", SearchOption.AllDirectories)
-            .Where(path =>
-            {
-                var fileName = Path.GetFileName(path);
-                return !fileName.Contains(".resources.dll", StringComparison.OrdinalIgnoreCase) &&
-                       !PluginAssemblyNaming.IsSdkOrSharedDllFileName(fileName);
-            })
-            .ToList();
-
-        if (!pluginDlls.Any())
-            return null;
-
-        var exactMatch = pluginDlls.FirstOrDefault(path =>
-            Path.GetFileNameWithoutExtension(path).Equals(pluginId, StringComparison.OrdinalIgnoreCase));
-        if (exactMatch != null)
-            return exactMatch;
-
-        var normalizedPluginId = NormalizePluginToken(pluginId);
-        var normalizedMatches = pluginDlls
-            .Where(path => NormalizePluginToken(Path.GetFileNameWithoutExtension(path))
-                .Equals(normalizedPluginId, StringComparison.OrdinalIgnoreCase))
-            .ToList();
-
-        if (normalizedMatches.Count == 1)
-            return normalizedMatches[0];
-
-        if (normalizedMatches.Count > 1)
-        {
-            return normalizedMatches.FirstOrDefault(path =>
-                PluginAssemblyNaming.IsPluginPrefixedFileName(Path.GetFileName(path)))
-                ?? normalizedMatches[0];
-        }
-
-        var prefixedMatch = pluginDlls.FirstOrDefault(path =>
-        {
-            var fileName = Path.GetFileName(path);
-            if (!PluginAssemblyNaming.IsPluginPrefixedFileName(fileName))
-                return false;
-
-            var normalizedFileName = NormalizePluginToken(Path.GetFileNameWithoutExtension(path));
-            return normalizedFileName.Contains(normalizedPluginId, StringComparison.OrdinalIgnoreCase);
-        });
-
-        return prefixedMatch ?? pluginDlls[0];
+        return PluginInstallationService.FindPluginMainDll(
+            extractPath,
+            manifestPluginId: pluginId,
+            expectedPluginId: pluginId,
+            SearchOption.AllDirectories);
     }
 
     private static string NormalizePluginToken(string value)
@@ -277,8 +238,7 @@ public partial class PluginRepositoryService
         if (string.IsNullOrWhiteSpace(value))
             return string.Empty;
 
-        var chars = value.Where(char.IsLetterOrDigit).ToArray();
-        return new string(chars).ToLowerInvariant();
+        return new string(value.Where(char.IsLetterOrDigit).ToArray()).ToLowerInvariant();
     }
 
     private static bool ShouldSkipPluginPayloadFile(string filePath)

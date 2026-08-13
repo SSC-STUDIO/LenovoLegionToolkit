@@ -21,6 +21,11 @@ public interface IPluginRegistry
     void Unregister(string pluginId);
 
     /// <summary>
+    /// Remove a runtime registration without lifecycle callbacks.
+    /// </summary>
+    void Forget(string pluginId);
+
+    /// <summary>
     /// Get a registered plugin by ID
     /// </summary>
     IPlugin? Get(string pluginId);
@@ -196,6 +201,23 @@ public class PluginRegistry : IPluginRegistry
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Unregistered plugin: {pluginId}");
+    }
+
+    /// <summary>
+    /// Remove a runtime registration without invoking Stop or OnUninstalled.
+    /// The manager unloads the corresponding assembly context separately.
+    /// </summary>
+    public void Forget(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return;
+
+        lock (_lock)
+        {
+            _registeredPlugins.Remove(pluginId);
+            _pluginMetadataCache.Remove(pluginId);
+            _startedPlugins.Remove(pluginId);
+        }
     }
 
     /// <summary>

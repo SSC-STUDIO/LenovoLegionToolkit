@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>$(UDTTargetFramework)</TargetFramework>
+    <AssemblyName>UniversalDeviceToolkit.Plugins.LoaderFixture</AssemblyName>
+    <RootNamespace>UniversalDeviceToolkit.Tests.PluginFixture</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
+  </ItemGroup>
+</Project>

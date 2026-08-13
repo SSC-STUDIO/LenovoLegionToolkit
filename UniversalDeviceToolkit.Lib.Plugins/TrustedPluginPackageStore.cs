@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,10 +11,275 @@ using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Plugins;
 
+internal static class PluginInstallationCommitCoordinator
+{
+    private static readonly global::System.Threading.ReaderWriterLockSlim Gate =
+        new(global::System.Threading.LockRecursionPolicy.SupportsRecursion);
+
+    internal static IDisposable EnterRead()
+    {
+        Gate.EnterReadLock();
+        return new Lease(static () => Gate.ExitReadLock());
+    }
+
+    internal static IDisposable EnterWrite()
+    {
+        Gate.EnterWriteLock();
+        return new Lease(static () => Gate.ExitWriteLock());
+    }
+
+    internal static bool IsWriteLockHeld => Gate.IsWriteLockHeld;
+
+    private sealed class Lease(Action release) : IDisposable
+    {
+        private Action? _release = release;
+        public void Dispose() =>
+            global::System.Threading.Interlocked.Exchange(ref _release, null)?.Invoke();
+    }
+}
+
+/// <summary>
+/// Exact, non-ambient authorization for DLLs from one verified repository package.
+/// </summary>
+public sealed class PluginPackageAuthorization
+{
+    private enum AuthorizationState
+    {
+        Active,
+        Publishing,
+        Consumed,
+        Closed,
+        Failed,
+    }
+
+    private static readonly ConcurrentDictionary<
+        Guid,
+        WeakReference<PluginPackageAuthorization>> ActiveAuthorizations = new();
+    private readonly IReadOnlyDictionary<string, string> _authorizedFiles;
+    private readonly Guid _transactionIdentity;
+    private IPluginSignatureValidator? _boundValidator;
+    private int _state = (int)AuthorizationState.Active;
+
+    private PluginPackageAuthorization(
+        Guid transactionIdentity,
+        string pluginId,
+        string pluginDirectory,
+        IReadOnlyDictionary<string, string> authorizedFiles,
+        string serializedTrustRecord)
+    {
+        _transactionIdentity = transactionIdentity;
+        PluginId = pluginId;
+        PluginDirectory = pluginDirectory;
+        _authorizedFiles = authorizedFiles;
+        SerializedTrustRecord = serializedTrustRecord;
+    }
+
+    public string PluginId { get; }
+
+    public string PluginDirectory { get; }
+
+    internal string SerializedTrustRecord { get; }
+
+    internal static PluginPackageAuthorization Mint(
+        string pluginId,
+        string pluginDirectory,
+        IReadOnlyDictionary<string, string> authorizedFiles,
+        string serializedTrustRecord)
+    {
+        foreach (var entry in ActiveAuthorizations)
+        {
+            if (!entry.Value.TryGetTarget(out _))
+            {
+                ActiveAuthorizations.TryRemove(
+                    new KeyValuePair<Guid, WeakReference<PluginPackageAuthorization>>(
+                        entry.Key,
+                        entry.Value));
+            }
+        }
+
+        var transactionIdentity = Guid.NewGuid();
+        var authorization = new PluginPackageAuthorization(
+            transactionIdentity,
+            pluginId,
+            pluginDirectory,
+            authorizedFiles,
+            serializedTrustRecord);
+        if (!ActiveAuthorizations.TryAdd(
+                transactionIdentity,
+                new WeakReference<PluginPackageAuthorization>(authorization)))
+        {
+            throw new InvalidOperationException(
+                "Could not register plugin package transaction authorization.");
+        }
+        return authorization;
+    }
+
+    internal bool IsActive =>
+        (AuthorizationState)global::System.Threading.Volatile.Read(ref _state) ==
+            AuthorizationState.Active &&
+        IsExactRegisteredAuthorization();
+
+    internal void EnsureActive()
+    {
+        if (!IsActive)
+            throw new InvalidOperationException(
+                $"Plugin package authorization for {PluginId} is closed or invalid.");
+    }
+
+    internal void Close()
+    {
+        if (global::System.Threading.Interlocked.CompareExchange(
+                ref _state,
+                (int)AuthorizationState.Closed,
+                (int)AuthorizationState.Active) !=
+            (int)AuthorizationState.Active)
+        {
+            throw new InvalidOperationException(
+                $"Plugin package authorization for {PluginId} has already been claimed or closed.");
+        }
+        RemoveExactRegistration();
+    }
+
+    internal bool Authorizes(string filePath)
+    {
+        if (!IsActive ||
+            string.IsNullOrWhiteSpace(filePath) ||
+            !File.Exists(filePath))
+            return false;
+
+        try
+        {
+            var normalizedPath = Path.GetFullPath(filePath);
+            return _authorizedFiles.TryGetValue(normalizedPath, out var expectedSha256) &&
+                   string.Equals(
+                       expectedSha256,
+                       TrustedPluginPackageStore.ComputeSha256(normalizedPath),
+                       StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Scoped plugin package authorization failed for {filePath}: {ex.Message}", ex);
+            return false;
+        }
+    }
+
+    private bool AuthorizesAllFilesForPublication() =>
+        _authorizedFiles.Count > 0 &&
+        _authorizedFiles.All(file =>
+            File.Exists(file.Key) &&
+            string.Equals(
+                file.Value,
+                TrustedPluginPackageStore.ComputeSha256(file.Key),
+                StringComparison.OrdinalIgnoreCase));
+
+    internal void ClaimForPublication()
+    {
+        if (!IsExactRegisteredAuthorization() ||
+            global::System.Threading.Interlocked.CompareExchange(
+                ref _state,
+                (int)AuthorizationState.Publishing,
+                (int)AuthorizationState.Active) !=
+            (int)AuthorizationState.Active)
+        {
+            throw new InvalidOperationException(
+                $"Plugin package authorization for {PluginId} has already been claimed or closed.");
+        }
+        RemoveExactRegistration();
+    }
+
+    internal void CompletePublication()
+    {
+        if (global::System.Threading.Interlocked.CompareExchange(
+                ref _state,
+                (int)AuthorizationState.Consumed,
+                (int)AuthorizationState.Publishing) !=
+            (int)AuthorizationState.Publishing)
+        {
+            throw new InvalidOperationException(
+                $"Plugin package authorization for {PluginId} is not being published.");
+        }
+    }
+
+    internal void FailPublication()
+    {
+        global::System.Threading.Interlocked.CompareExchange(
+            ref _state,
+            (int)AuthorizationState.Failed,
+            (int)AuthorizationState.Publishing);
+        RemoveExactRegistration();
+    }
+
+    internal void ValidateClaimedPublication()
+    {
+        if ((AuthorizationState)global::System.Threading.Volatile.Read(ref _state) !=
+                AuthorizationState.Publishing ||
+            !AuthorizesAllFilesForPublication())
+        {
+            throw new InvalidDataException(
+                $"Plugin package {PluginId} changed after transaction authorization.");
+        }
+    }
+
+    private bool IsExactRegisteredAuthorization() =>
+        ActiveAuthorizations.TryGetValue(_transactionIdentity, out var registered) &&
+        registered.TryGetTarget(out var target) &&
+        ReferenceEquals(target, this);
+
+    private void RemoveExactRegistration()
+    {
+        if (ActiveAuthorizations.TryGetValue(_transactionIdentity, out var registered) &&
+            registered.TryGetTarget(out var target) &&
+            ReferenceEquals(target, this))
+        {
+            ActiveAuthorizations.TryRemove(
+                new KeyValuePair<Guid, WeakReference<PluginPackageAuthorization>>(
+                    _transactionIdentity,
+                    registered));
+        }
+    }
+
+    internal IPluginSignatureValidator Scope(IPluginSignatureValidator signatureValidator)
+    {
+        ArgumentNullException.ThrowIfNull(signatureValidator);
+        EnsureActive();
+        var boundValidator = global::System.Threading.Interlocked.CompareExchange(
+            ref _boundValidator,
+            signatureValidator,
+            null);
+        if (boundValidator is not null && !ReferenceEquals(boundValidator, signatureValidator))
+        {
+            throw new InvalidOperationException(
+                $"Plugin package authorization for {PluginId} is bound to a different signature policy.");
+        }
+        return new AuthorizedPluginSignatureValidator(signatureValidator, this);
+    }
+
+    private sealed class AuthorizedPluginSignatureValidator(
+        IPluginSignatureValidator signatureValidator,
+        PluginPackageAuthorization authorization) : IPluginSignatureValidator
+    {
+        public async global::System.Threading.Tasks.Task<PluginSignatureResult> ValidateAsync(string dllPath)
+        {
+            var signatureResult = await signatureValidator.ValidateAsync(dllPath).ConfigureAwait(false);
+            if (signatureResult.IsValid || !authorization.Authorizes(dllPath))
+                return signatureResult;
+
+            return new PluginSignatureResult(
+                PluginSignatureStatus.Valid,
+                "Authorized by the exact verified repository package transaction.");
+        }
+    }
+}
+
 internal static class TrustedPluginPackageStore
 {
     private static readonly object Lock = new();
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
+    private static readonly StringComparer PathComparer =
+        OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+
+    internal static Action? PersistenceBoundaryOverride { get; set; }
 
     private static string StorePath => Path.Combine(Folders.AppData, "trusted-plugin-packages.json");
 
@@ -24,39 +290,96 @@ internal static class TrustedPluginPackageStore
 
         try
         {
-            var normalizedDirectory = Path.GetFullPath(pluginDirectory);
-            // Include nested runtimes/ dependencies — a top-level-only scan leaves unsigned
-            // helper DLLs in subdirectories untrusted and they fail signature checks at load.
-            var dlls = Directory.GetFiles(normalizedDirectory, "*.dll", SearchOption.AllDirectories)
-                .Where(path => !Path.GetFileName(path).Contains(".resources.dll", StringComparison.OrdinalIgnoreCase))
-                .Select(path => new TrustedPluginFile
-                {
-                    Path = Path.GetFullPath(path),
-                    Sha256 = ComputeSha256(path),
-                })
-                .Where(file => !string.IsNullOrWhiteSpace(file.Sha256))
-                .ToList();
-
-            if (dlls.Count == 0)
-                return;
-
-            lock (Lock)
-            {
-                var store = ReadStore();
-                store.Plugins[pluginId] = new TrustedPluginPackage
-                {
-                    PluginId = pluginId,
-                    PluginDirectory = normalizedDirectory,
-                    TrustedAtUtc = DateTimeOffset.UtcNow,
-                    Files = dlls,
-                };
-                WriteStore(store);
-            }
+            PublishAuthorizationStrict(CreateAuthorization(pluginId, pluginDirectory));
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to trust plugin package {pluginId}: {ex.Message}", ex);
+        }
+    }
+
+    internal static PluginPackageAuthorization CreateAuthorization(
+        string pluginId,
+        string pluginDirectory)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(pluginId);
+        ArgumentException.ThrowIfNullOrWhiteSpace(pluginDirectory);
+        if (!Directory.Exists(pluginDirectory))
+            throw new DirectoryNotFoundException($"Plugin package directory does not exist: {pluginDirectory}");
+
+        var normalizedDirectory = Path.GetFullPath(pluginDirectory);
+        var files = Directory.GetFiles(normalizedDirectory, "*.dll", SearchOption.AllDirectories)
+            .Where(path => !Path.GetFileName(path).Contains(
+                ".resources.dll",
+                StringComparison.OrdinalIgnoreCase))
+            .Select(path => new TrustedPluginFile
+            {
+                Path = Path.GetFullPath(path),
+                Sha256 = ComputeSha256(path),
+            })
+            .ToList();
+        if (files.Count == 0)
+            throw new InvalidDataException($"Plugin package {pluginId} contains no trustable DLLs.");
+
+        var package = new TrustedPluginPackage
+        {
+            PluginId = pluginId,
+            PluginDirectory = normalizedDirectory,
+            TrustedAtUtc = DateTimeOffset.UtcNow,
+            Files = files,
+        };
+        var authorizedFiles = files.ToDictionary(
+            file => file.Path,
+            file => file.Sha256,
+            PathComparer);
+        return PluginPackageAuthorization.Mint(
+            pluginId,
+            normalizedDirectory,
+            authorizedFiles,
+            JsonSerializer.Serialize(package, JsonOptions));
+    }
+
+    internal static void PublishAuthorizationStrict(PluginPackageAuthorization authorization)
+    {
+        ArgumentNullException.ThrowIfNull(authorization);
+        using var commitWrite = PluginInstallationCommitCoordinator.EnterWrite();
+        PublishAuthorizationStrictUnderCommitLease(authorization);
+    }
+
+    internal static void PublishAuthorizationStrictUnderCommitLease(
+        PluginPackageAuthorization authorization)
+    {
+        ArgumentNullException.ThrowIfNull(authorization);
+        if (!PluginInstallationCommitCoordinator.IsWriteLockHeld)
+            throw new InvalidOperationException("Plugin installation commit write lease is required.");
+        authorization.ClaimForPublication();
+        try
+        {
+            authorization.ValidateClaimedPublication();
+            var package = JsonSerializer.Deserialize<TrustedPluginPackage>(
+                authorization.SerializedTrustRecord,
+                JsonOptions)
+                ?? throw new InvalidDataException("Plugin package authorization record is invalid.");
+            if (!package.PluginId.Equals(
+                    authorization.PluginId,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidDataException("Plugin package authorization ID does not match.");
+            }
+
+            lock (Lock)
+            {
+                var store = ReadStoreStrict();
+                store.Plugins[authorization.PluginId] = package;
+                WriteStore(store);
+            }
+            authorization.CompletePublication();
+        }
+        catch
+        {
+            authorization.FailPublication();
+            throw;
         }
     }
 
@@ -67,6 +390,7 @@ internal static class TrustedPluginPackageStore
 
         try
         {
+            using var commitRead = PluginInstallationCommitCoordinator.EnterRead();
             var normalizedPath = Path.GetFullPath(filePath);
             var sha256 = ComputeSha256(normalizedPath);
             if (string.IsNullOrWhiteSpace(sha256))
@@ -83,19 +407,8 @@ internal static class TrustedPluginPackageStore
                             continue;
 
                         var storedPath = TryNormalizePath(file.Path);
-                        if (string.Equals(storedPath, normalizedPath, StringComparison.OrdinalIgnoreCase))
+                        if (storedPath is not null && PathComparer.Equals(storedPath, normalizedPath))
                             return true;
-
-                        if (!string.Equals(Path.GetFileName(file.Path), Path.GetFileName(normalizedPath), StringComparison.OrdinalIgnoreCase))
-                            continue;
-
-                        file.Path = normalizedPath;
-                        var directory = Path.GetDirectoryName(normalizedPath);
-                        if (!string.IsNullOrWhiteSpace(directory))
-                            plugin.PluginDirectory = directory;
-
-                        WriteStore(store);
-                        return true;
                     }
                 }
 
@@ -107,6 +420,51 @@ internal static class TrustedPluginPackageStore
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to verify trusted plugin file {filePath}: {ex.Message}", ex);
             return false;
+        }
+    }
+
+    internal static string? CaptureExactTrustRecord(string pluginId)
+    {
+        using var commitRead = PluginInstallationCommitCoordinator.EnterRead();
+        lock (Lock)
+        {
+            var store = ReadStoreStrict();
+            return store.Plugins.TryGetValue(pluginId, out var package)
+                ? JsonSerializer.Serialize(package, JsonOptions)
+                : null;
+        }
+    }
+
+    internal static void RestoreExactTrustRecord(string pluginId, string? serializedRecord)
+    {
+        using var commitWrite = PluginInstallationCommitCoordinator.EnterWrite();
+        RestoreExactTrustRecordUnderCommitLease(pluginId, serializedRecord);
+    }
+
+    internal static void RestoreExactTrustRecordUnderCommitLease(
+        string pluginId,
+        string? serializedRecord)
+    {
+        if (!PluginInstallationCommitCoordinator.IsWriteLockHeld)
+            throw new InvalidOperationException("Plugin installation commit write lease is required.");
+        lock (Lock)
+        {
+            var store = ReadStoreStrict();
+            if (serializedRecord is null)
+            {
+                store.Plugins.Remove(pluginId);
+            }
+            else
+            {
+                var package = JsonSerializer.Deserialize<TrustedPluginPackage>(
+                    serializedRecord,
+                    JsonOptions)
+                    ?? throw new InvalidDataException("Captured plugin trust record is invalid.");
+                if (!package.PluginId.Equals(pluginId, StringComparison.OrdinalIgnoreCase))
+                    throw new InvalidDataException("Captured plugin trust record ID does not match.");
+                store.Plugins[pluginId] = package;
+            }
+            WriteStore(store);
         }
     }
 
@@ -129,27 +487,93 @@ internal static class TrustedPluginPackageStore
         }
     }
 
-    public static void Remove(string pluginId)
+    internal static void RemoveStrict(string pluginId)
     {
         if (string.IsNullOrWhiteSpace(pluginId))
             return;
 
+        using var commitWrite = PluginInstallationCommitCoordinator.EnterWrite();
+        RemoveStrictUnderCommitLease(pluginId);
+    }
+
+    internal static void RemoveStrictUnderCommitLease(string pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return;
+        if (!PluginInstallationCommitCoordinator.IsWriteLockHeld)
+            throw new InvalidOperationException("Plugin installation commit write lease is required.");
+        lock (Lock)
+        {
+            var store = ReadStoreStrict();
+            if (!store.Plugins.Remove(pluginId))
+                return;
+
+            WriteStore(store);
+        }
+    }
+
+    internal static void RemoveBestEffort(string pluginId)
+    {
         try
         {
-            lock (Lock)
-            {
-                var store = ReadStore();
-                if (!store.Plugins.Remove(pluginId))
-                    return;
-
-                WriteStore(store);
-            }
+            RemoveStrict(pluginId);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to remove trusted plugin package {pluginId}: {ex.Message}", ex);
         }
+    }
+
+    private static TrustedPluginPackageStoreModel ReadStoreStrict()
+    {
+        if (!File.Exists(StorePath))
+            return new TrustedPluginPackageStoreModel();
+
+        var encryptedBytes = File.ReadAllBytes(StorePath);
+        if (encryptedBytes.Length == 0)
+            return new TrustedPluginPackageStoreModel();
+
+        var decryptedBytes = UnprotectStoreBytes(encryptedBytes);
+        var envelope = JsonSerializer.Deserialize<StoreEnvelope>(decryptedBytes)
+            ?? throw new InvalidDataException("Trusted plugin package store envelope is invalid.");
+        if (string.IsNullOrWhiteSpace(envelope.Data) ||
+            string.IsNullOrWhiteSpace(envelope.Hmac) ||
+            string.IsNullOrWhiteSpace(envelope.Salt))
+        {
+            throw new InvalidDataException("Trusted plugin package store envelope is incomplete.");
+        }
+
+        byte[] salt;
+        try
+        {
+            salt = Convert.FromBase64String(envelope.Salt);
+        }
+        catch (FormatException ex)
+        {
+            throw new InvalidDataException("Trusted plugin package store salt is invalid.", ex);
+        }
+
+        if (salt.Length != 16)
+            throw new InvalidDataException("Trusted plugin package store salt has an invalid length.");
+
+        var computedHmac = ComputeHmac(envelope.Data, salt);
+        if (!string.Equals(envelope.Hmac, computedHmac, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidDataException("Trusted plugin package store integrity validation failed.");
+
+        byte[] jsonBytes;
+        try
+        {
+            jsonBytes = Convert.FromBase64String(envelope.Data);
+        }
+        catch (FormatException ex)
+        {
+            throw new InvalidDataException("Trusted plugin package store payload is invalid.", ex);
+        }
+
+        return NormalizeStore(
+            JsonSerializer.Deserialize<TrustedPluginPackageStoreModel>(jsonBytes)
+            ?? throw new InvalidDataException("Trusted plugin package store payload is empty."));
     }
 
     private static TrustedPluginPackageStoreModel ReadStore()
@@ -166,7 +590,7 @@ internal static class TrustedPluginPackageStore
             byte[] decryptedBytes;
             try
             {
-                decryptedBytes = ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.CurrentUser);
+                decryptedBytes = UnprotectStoreBytes(encryptedBytes);
             }
             catch
             {
@@ -235,6 +659,8 @@ internal static class TrustedPluginPackageStore
 
     private static void WriteStore(TrustedPluginPackageStoreModel store)
     {
+        PersistenceBoundaryOverride?.Invoke();
+
         var directory = Path.GetDirectoryName(StorePath);
         if (!string.IsNullOrWhiteSpace(directory))
             Directory.CreateDirectory(directory);
@@ -252,8 +678,14 @@ internal static class TrustedPluginPackageStore
         };
 
         var envelopeJson = JsonSerializer.SerializeToUtf8Bytes(envelope, JsonOptions);
-        var encrypted = ProtectedData.Protect(envelopeJson, null, DataProtectionScope.CurrentUser);
+        var encrypted = ProtectStoreBytes(envelopeJson);
         File.WriteAllBytes(StorePath, encrypted);
+        if (!OperatingSystem.IsWindows())
+        {
+            File.SetUnixFileMode(
+                StorePath,
+                UnixFileMode.UserRead | UnixFileMode.UserWrite);
+        }
     }
 
     private static void ResetStore()
@@ -273,8 +705,9 @@ internal static class TrustedPluginPackageStore
     private static byte[] DeriveHmacKey(byte[] salt)
     {
         byte[] secret;
-        using (var identity = WindowsIdentity.GetCurrent())
+        if (OperatingSystem.IsWindows())
         {
+            using var identity = WindowsIdentity.GetCurrent();
             if (identity.User is not null)
             {
                 var sidBinary = new byte[identity.User.BinaryLength];
@@ -286,7 +719,34 @@ internal static class TrustedPluginPackageStore
                 secret = Encoding.UTF8.GetBytes(Environment.MachineName);
             }
         }
+        else
+        {
+            secret = Encoding.UTF8.GetBytes(
+                $"{Environment.UserName}\n{Environment.MachineName}");
+        }
         return Rfc2898DeriveBytes.Pbkdf2(secret, salt, 100_000, HashAlgorithmName.SHA256, 32);
+    }
+
+    private static byte[] ProtectStoreBytes(byte[] envelopeBytes)
+    {
+        if (!OperatingSystem.IsWindows())
+            return envelopeBytes;
+
+        return ProtectedData.Protect(
+            envelopeBytes,
+            null,
+            DataProtectionScope.CurrentUser);
+    }
+
+    private static byte[] UnprotectStoreBytes(byte[] storedBytes)
+    {
+        if (!OperatingSystem.IsWindows())
+            return storedBytes;
+
+        return ProtectedData.Unprotect(
+            storedBytes,
+            null,
+            DataProtectionScope.CurrentUser);
     }
 
     private static string ComputeHmac(string data, byte[] salt)
@@ -297,7 +757,7 @@ internal static class TrustedPluginPackageStore
         return Convert.ToHexString(hash).ToLowerInvariant();
     }
 
-    private static string ComputeSha256(string filePath)
+    internal static string ComputeSha256(string filePath)
     {
         using var sha256 = SHA256.Create();
         using var stream = File.OpenRead(filePath);

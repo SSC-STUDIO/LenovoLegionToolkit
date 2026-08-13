@@ -35,6 +35,8 @@ public static class PluginHandlers
         rpc.RegisterHandler("plugins.uninstall", (request, _) => HandleUninstallAsync(request));
         rpc.RegisterHandler("plugins.import", (request, _) => HandleImportAsync(request));
         rpc.RegisterHandler("plugins.refresh", (request, _) => HandleRefreshAsync(request));
+        rpc.RegisterHandler("plugins.getConfig", (request, _) => HandleGetConfigAsync(request));
+        rpc.RegisterHandler("plugins.setConfig", (request, _) => HandleSetConfigAsync(request));
     }
 
     // ── handlers ────────────────────────────────────────────────────────────
@@ -160,15 +162,29 @@ public static class PluginHandlers
             _activeInstallPluginId = pluginId;
             try
             {
-                var installed = await _repository.DownloadAndInstallPluginAsync(manifest).ConfigureAwait(false);
-                if (!installed)
-                    throw new BridgeErrorException(-32603, $"Failed to download and install plugin '{pluginId}'.");
-
-                await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
-                _pluginManager.InstallPlugin(pluginId);
+                var outcome = await _repository
+                    .DownloadAndInstallPluginWithOutcomeAsync(manifest)
+                    .ConfigureAwait(false);
+                if (!outcome.Success)
+                {
+                    return BridgeResult.Ok(new
+                    {
+                        ok = false,
+                        degraded = outcome.Degraded,
+                        unloadPending = outcome.UnloadPending,
+                        recoveryId = outcome.RecoveryId,
+                        recoveryPath = outcome.RecoveryPath,
+                        error = outcome.Error,
+                    });
+                }
 
                 PublishEvent("plugins.installed", new { pluginId });
-                return BridgeResult.Ok(new { ok = true });
+                return BridgeResult.Ok(new
+                {
+                    ok = true,
+                    degraded = false,
+                    unloadPending = false,
+                });
             }
             finally
             {
@@ -181,6 +197,18 @@ public static class PluginHandlers
         catch (BridgeErrorException ex)
         {
             return BridgeResult.Error(ex.Code, ex.Message);
+        }
+        catch (PluginOperationRecoveryException ex)
+        {
+            return BridgeResult.Ok(new
+            {
+                ok = false,
+                degraded = true,
+                unloadPending = ex.UnloadPending,
+                recoveryId = ex.RecoveryId,
+                recoveryPath = ex.RecoveryPath,
+                error = ex.Message,
+            });
         }
         catch (Exception ex)
         {
@@ -198,14 +226,19 @@ public static class PluginHandlers
             if (!_pluginManager.CheckDependencies(pluginId, out _))
                 return BridgeResult.Ok(new { ok = false, dependencyBlocked = true });
 
-            _pluginManager.StopPlugin(pluginId);
             var removed = _pluginManager.UninstallPlugin(pluginId);
 
             if (removed)
                 PublishEvent("plugins.uninstalled", new { pluginId });
 
+            var unloadState = _pluginManager.GetPluginRuntimeUnloadState(pluginId);
             await Task.CompletedTask;
-            return BridgeResult.Ok(new { ok = removed });
+            return BridgeResult.Ok(new
+            {
+                ok = removed,
+                unloadPending = !removed &&
+                                unloadState == PluginRuntimeUnloadState.UnloadRequested,
+            });
         }
         catch (BridgeErrorException ex)
         {
@@ -224,15 +257,20 @@ public static class PluginHandlers
             if (!TryGetStringParameter(request, "filePath", out var filePath) || string.IsNullOrWhiteSpace(filePath))
                 throw new BridgeErrorException(-32602, "Missing or invalid string parameter 'filePath'.");
 
-            var installed = await _installationService
-                .ExtractAndInstallPluginAsync(filePath, PluginPaths.GetPluginsDirectory())
+            var outcome = await _installationService
+                .ExtractAndInstallPluginWithOutcomeAsync(
+                    filePath,
+                    PluginPaths.GetPluginsDirectory())
                 .ConfigureAwait(false);
-            if (!installed)
-                throw new BridgeErrorException(-32603, $"Failed to import plugin from '{filePath}'.");
-
-            await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
-
-            return BridgeResult.Ok(new { ok = true });
+            return BridgeResult.Ok(new
+            {
+                ok = outcome.Success,
+                degraded = outcome.Degraded,
+                unloadPending = outcome.UnloadPending,
+                recoveryId = outcome.RecoveryId,
+                recoveryPath = outcome.RecoveryPath,
+                error = outcome.Error,
+            });
         }
         catch (BridgeErrorException ex)
         {
@@ -248,14 +286,180 @@ public static class PluginHandlers
     {
         try
         {
-            await _pluginManager.ScanAndLoadPluginsAsync(forceRefresh: true).ConfigureAwait(false);
-            var registeredCount = _pluginManager.GetRegisteredPlugins().Count();
-            return BridgeResult.Ok(new { registeredCount });
+            var outcome = await _pluginManager
+                .ScanAndLoadPluginsWithOutcomeAsync(forceRefresh: true)
+                .ConfigureAwait(false);
+            return BridgeResult.Ok(new
+            {
+                ok = outcome.Success,
+                registeredCount = outcome.RegisteredCount,
+                degraded = outcome.Degraded,
+                unloadPending = outcome.UnloadPending,
+                failures = outcome.Failures,
+            });
         }
         catch (Exception ex)
         {
             return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
         }
+    }
+
+    // ── plugin configuration RPC ────────────────────────────────────────────
+
+    // Plugin web pages (contributes.webPage) need a way to persist their own
+    // settings. The legacy IPluginConfiguration route only exposes single
+    // typed key access and stores into an AppData sidecar file, so config is
+    // read/written directly on the plugin's own config.json instead. Isolation
+    // is inherent: every plugin only ever touches {pluginDir}/config.json.
+    private static readonly object ConfigFileGate = new();
+
+    private static async Task<BridgeResult> HandleGetConfigAsync(BridgeRequest request)
+    {
+        try
+        {
+            if (!TryGetStringParameter(request, "pluginId", out var pluginId) || !IsValidPluginId(pluginId))
+                throw new BridgeErrorException(-32602, "Missing or invalid string parameter 'pluginId'.");
+
+            var validPluginId = pluginId!;
+
+            string? key = null;
+            if (request.Parameters.ValueKind == JsonValueKind.Object
+                && request.Parameters.TryGetProperty("key", out var keyProperty)
+                && keyProperty.ValueKind == JsonValueKind.String)
+            {
+                key = keyProperty.GetString();
+                if (string.IsNullOrWhiteSpace(key))
+                    throw new BridgeErrorException(-32602, "Invalid string parameter 'key'.");
+            }
+
+            Dictionary<string, JsonElement> config;
+            lock (ConfigFileGate)
+            {
+                config = ReadConfigMap(ResolvePluginConfigPath(validPluginId));
+            }
+
+            if (key is not null)
+            {
+                var single = new Dictionary<string, JsonElement>(StringComparer.Ordinal);
+                if (config.TryGetValue(key, out var value))
+                    single[key] = value;
+                return BridgeResult.Ok(new { config = single });
+            }
+
+            return BridgeResult.Ok(new { config });
+        }
+        catch (BridgeErrorException ex)
+        {
+            return BridgeResult.Error(ex.Code, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    private static async Task<BridgeResult> HandleSetConfigAsync(BridgeRequest request)
+    {
+        try
+        {
+            if (!TryGetStringParameter(request, "pluginId", out var pluginId) || !IsValidPluginId(pluginId))
+                throw new BridgeErrorException(-32602, "Missing or invalid string parameter 'pluginId'.");
+
+            var validPluginId = pluginId!;
+
+            if (request.Parameters.ValueKind != JsonValueKind.Object
+                || !request.Parameters.TryGetProperty("key", out var keyProperty)
+                || keyProperty.ValueKind != JsonValueKind.String
+                || string.IsNullOrWhiteSpace(keyProperty.GetString()))
+            {
+                throw new BridgeErrorException(-32602, "Missing or invalid string parameter 'key'.");
+            }
+
+            if (!request.Parameters.TryGetProperty("value", out var valueProperty))
+                throw new BridgeErrorException(-32602, "Missing parameter 'value'.");
+
+            var key = keyProperty.GetString()!;
+            var value = valueProperty.Clone();
+            var configPath = ResolvePluginConfigPath(validPluginId);
+            var configDirectory = Path.GetDirectoryName(configPath);
+            if (!string.IsNullOrWhiteSpace(configDirectory))
+                Directory.CreateDirectory(configDirectory);
+
+            await Task.Run(() =>
+            {
+                lock (ConfigFileGate)
+                {
+                    var config = ReadConfigMap(configPath);
+                    config[key] = value;
+                    var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
+                    File.WriteAllText(configPath, json);
+                }
+            }).ConfigureAwait(false);
+
+            return BridgeResult.Ok(new { ok = true });
+        }
+        catch (BridgeErrorException ex)
+        {
+            return BridgeResult.Error(ex.Code, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    private static Dictionary<string, JsonElement> ReadConfigMap(string configPath)
+    {
+        var map = new Dictionary<string, JsonElement>(StringComparer.Ordinal);
+        if (!File.Exists(configPath))
+            return map;
+
+        using var stream = File.OpenRead(configPath);
+        using var document = JsonDocument.Parse(stream);
+        if (document.RootElement.ValueKind != JsonValueKind.Object)
+            return map;
+
+        foreach (var property in document.RootElement.EnumerateObject())
+            map[property.Name] = property.Value.Clone();
+
+        return map;
+    }
+
+    private static string ResolvePluginConfigPath(string pluginId)
+    {
+        try
+        {
+            var pluginDirectory = ResolvePluginDirectory(_pluginManager.GetPluginMetadata(pluginId));
+            if (!string.IsNullOrWhiteSpace(pluginDirectory))
+                return Path.Combine(pluginDirectory, "config.json");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"plugins config: failed to resolve plugin directory for {pluginId}, falling back to default.", ex);
+        }
+
+        return PluginPaths.GetPluginConfigFilePath(pluginId);
+    }
+
+    /// <summary>
+    /// Guards the plugin id before it is used to build a filesystem path:
+    /// rejects path separators, traversal segments and characters that are
+    /// invalid in Windows file names so a hostile renderer cannot escape the
+    /// plugin directory.
+    /// </summary>
+    private static bool IsValidPluginId(string? pluginId)
+    {
+        if (string.IsNullOrWhiteSpace(pluginId))
+            return false;
+
+        if (pluginId.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
+            return false;
+
+        var normalized = pluginId.Replace('\\', '/');
+        return !normalized.Contains("..", StringComparison.Ordinal)
+            && !normalized.Contains('/', StringComparison.Ordinal)
+            && !normalized.Contains(':', StringComparison.Ordinal);
     }
 
     // ── view projection ─────────────────────────────────────────────────────
@@ -303,6 +507,7 @@ public static class PluginHandlers
                 settingsPage = capabilities.SupportsSettingsPage,
                 featurePage = capabilities.SupportsFeaturePage,
                 optimizationCategory = capabilities.SupportsOptimizationCategory,
+                webPage = capabilities.SupportsWebPage,
                 // Lib.Plugins has no executable entry point concept yet; reserved for future use.
                 executableEntryPoint = false,
             },
@@ -338,6 +543,8 @@ public static class PluginHandlers
         var version = metadata?.Version ?? string.Empty;
         var capabilities = PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId);
         updates.TryGetValue(pluginId, out var availableVersion);
+        var installedManifest = PluginUiCapabilityResolver.ReadInstalledManifest(pluginId);
+        var webPage = installedManifest?.Contributes?.WebPage;
 
         return new
         {
@@ -360,11 +567,14 @@ public static class PluginHandlers
             updateAvailable = !string.IsNullOrWhiteSpace(version) && !string.IsNullOrWhiteSpace(availableVersion),
             availableVersion = string.IsNullOrWhiteSpace(availableVersion) ? null : availableVersion,
             state = "Installed",
+            directory = ResolvePluginDirectory(metadata),
+            webPage = webPage is { Entry.Length: > 0 } ? webPage.Entry : null,
             capabilities = new
             {
                 settingsPage = capabilities.SupportsSettingsPage,
                 featurePage = capabilities.SupportsFeaturePage,
                 optimizationCategory = capabilities.SupportsOptimizationCategory,
+                webPage = capabilities.SupportsWebPage,
                 executableEntryPoint = false,
             },
         };

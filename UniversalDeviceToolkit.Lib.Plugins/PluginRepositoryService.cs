@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -27,7 +28,10 @@ public partial class PluginRepositoryService : IDisposable
     private readonly string _pluginsDirectory;
     private readonly string _tempDownloadDirectory;
     private readonly string _storeCachePath;
-    private readonly SemaphoreSlim _installationGate = new(1, 1);
+    private readonly Action<string, string> _moveDirectory;
+    private readonly Action<string> _deleteDirectory;
+    private readonly Func<string, string, bool> _atomicMoveSupported;
+    private readonly Action<string> _repositoryMutationBoundary;
     private static readonly JsonSerializerOptions ManifestJsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -51,15 +55,12 @@ public partial class PluginRepositoryService : IDisposable
     ];
 
     // The catalog and plugin packages are published together in one rolling release
-    // so the main repository's Releases page stays readable.
-    private static readonly string[] PluginStoreUrls =
-    {
-        "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json"
-    };
-    private static readonly string[] PluginReleasesApiUrls =
-    {
-        "https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/tags/plugin-catalog"
-    };
+    // so the main repository's Releases page stays readable. Preview hosts read
+    // plugin-catalog-preview; stable hosts keep plugin-catalog.
+    private readonly string _catalogTag;
+    private readonly bool _allowCatalogPrerelease;
+    private readonly string[] _pluginStoreUrls;
+    private readonly string[] _pluginReleasesApiUrls;
     private const int RemoteRequestRetryCount = 3;
     private const int RemoteDownloadRetryCount = 3;
     private static readonly TimeSpan StoreRequestTimeout = TimeSpan.FromSeconds(20);
@@ -97,12 +98,34 @@ public partial class PluginRepositoryService : IDisposable
     }
 
     public PluginRepositoryService(IPluginManager pluginManager, HttpClientFactory httpClientFactory, bool forceAllowFileUrls)
+        : this(pluginManager, httpClientFactory, forceAllowFileUrls, informationalVersion: null)
+    {
+    }
+
+    internal PluginRepositoryService(
+        IPluginManager pluginManager,
+        HttpClientFactory httpClientFactory,
+        bool forceAllowFileUrls,
+        string? informationalVersion,
+        Action<string, string>? moveDirectory = null,
+        Action<string>? deleteDirectory = null,
+        Func<string, string, bool>? atomicMoveSupported = null,
+        Action<string>? mutationBoundary = null)
     {
         _pluginManager = pluginManager;
         _httpClient = httpClientFactory.Create();
         _forceAllowFileUrls = forceAllowFileUrls;
+        _moveDirectory = moveDirectory ?? Directory.Move;
+        _deleteDirectory = deleteDirectory ?? (path => Directory.Delete(path, recursive: true));
+        _atomicMoveSupported = atomicMoveSupported ?? PluginInstallationService.ProbeAtomicDirectoryMove;
+        _repositoryMutationBoundary = mutationBoundary ?? (static _ => { });
         _httpClient.DefaultRequestHeaders.Add("User-Agent", "UniversalDeviceToolkit-PluginManager");
         _httpClient.DefaultRequestHeaders.Add("Accept", "application/vnd.github.v3+json");
+
+        _catalogTag = PluginCatalogTags.ResolveTag(informationalVersion ?? ReadInformationalVersion());
+        _allowCatalogPrerelease = string.Equals(_catalogTag, PluginCatalogTags.Preview, StringComparison.OrdinalIgnoreCase);
+        _pluginStoreUrls = [PluginCatalogTags.StoreDownloadUrl(_catalogTag)];
+        _pluginReleasesApiUrls = [PluginCatalogTags.ReleasesApiUrl(_catalogTag)];
 
         _pluginsDirectory = GetPluginsDirectory();
         _tempDownloadDirectory = Path.Combine(Path.GetTempPath(), "UDTPluginDownloads");
@@ -113,6 +136,11 @@ public partial class PluginRepositoryService : IDisposable
             Directory.CreateDirectory(_tempDownloadDirectory);
         }
     }
+
+    private static string? ReadInformationalVersion() =>
+        typeof(PluginRepositoryService).Assembly
+            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+            ?.InformationalVersion;
 
     /// <summary>
     /// Fetch available plugins from the online repository
@@ -499,7 +527,7 @@ public partial class PluginRepositoryService : IDisposable
         }
         
         // Official plugin packages are assets of the main repository's rolling catalog release.
-        return $"https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/{manifest.Id}-v{manifest.Version}.zip";
+        return PluginCatalogTags.PackageDownloadUrl(_catalogTag, manifest.Id, manifest.Version);
     }
 
     private void TryWriteStoreCache(string storeJson)
@@ -655,7 +683,6 @@ public partial class PluginRepositoryService : IDisposable
             {
                 try
                 {
-                    _installationGate.Dispose();
                     _httpClient?.Dispose();
                 }
                 catch (Exception ex)

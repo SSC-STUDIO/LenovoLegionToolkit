@@ -12,13 +12,12 @@ public partial class PluginRepositoryService
     /// <summary>
     /// Extract plugin zip and install to plugins directory
     /// </summary>
-    private async Task<bool> ExtractAndInstallPluginAsync(
+    private async Task<RepositoryInstallationTransaction?> ExtractAndInstallPluginAsync(
         string zipPath,
         string extractPath,
         PluginManifest manifest,
         bool trustAsOfficialOnlinePackage)
     {
-        string? backupDir = null;
         var pluginDir = Path.Combine(_pluginsDirectory, manifest.Id);
 
         try
@@ -66,7 +65,7 @@ public partial class PluginRepositoryService
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Unable to normalize plugin package structure for {manifest.Id}");
-                return false;
+                return null;
             }
 
             if (!resolvedPluginId.Equals(manifest.Id, StringComparison.OrdinalIgnoreCase))
@@ -74,7 +73,7 @@ public partial class PluginRepositoryService
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Normalized plugin package id '{resolvedPluginId}' does not match requested manifest id '{manifest.Id}'. Aborting installation.");
 
-                return false;
+                return null;
             }
 
             // Verify hash
@@ -83,7 +82,7 @@ public partial class PluginRepositoryService
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Plugin DLL not found for {manifest.Id}");
-                return false;
+                return null;
             }
 
             var requireDllIntegrity = RequirePackageIntegrity(trustAsOfficialOnlinePackage);
@@ -95,7 +94,7 @@ public partial class PluginRepositoryService
                     out var dllIntegrityFailure))
             {
                 Log.Instance.Warning($"Plugin DLL integrity check failed for {manifest.Id}: {dllIntegrityFailure}");
-                return false;
+                return null;
             }
 
             if (string.IsNullOrWhiteSpace(manifest.FileHash) && !requireDllIntegrity)
@@ -108,31 +107,26 @@ public partial class PluginRepositoryService
             if (!PathSecurity.IsValidPluginId(manifest.Id))
             {
                 Log.Instance.Warning($"SECURITY: Invalid plugin ID format: {manifest.Id}");
-                return false;
+                return null;
             }
 
             // SECURITY: Verify the constructed path is within allowed directory
             if (!PathSecurity.IsPathWithinAllowedDirectory(pluginDir, _pluginsDirectory))
             {
                 Log.Instance.Warning($"SECURITY: Plugin directory path traversal detected: {pluginDir}");
-                return false;
+                return null;
             }
 
-            InstallExtractedPluginPayload(
+            return InstallExtractedPluginPayload(
                 extractPath,
                 pluginDir,
                 manifest,
-                trustAsOfficialOnlinePackage,
-                out backupDir);
-
-            return true;
+                trustAsOfficialOnlinePackage);
         }
         catch (Exception ex)
         {
-            await RestorePluginDirectoryAsync(pluginDir, backupDir, manifest.Id).ConfigureAwait(false);
-
             Log.Instance.Error($"Error extracting plugin {manifest.Id}: {ex.Message}", ex);
-            return false;
+            throw;
         }
     }
 

@@ -14,6 +14,11 @@
   <ItemGroup>
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
   </ItemGroup>
+  <!-- OptimizationCategoryExtender bridges the Windows-only optimization categories
+       (WindowsOptimizationCategoryDefinition); excluded from the portable build. -->
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0-windows10.0.26100.0'">
+    <Compile Remove="OptimizationCategoryExtender.cs" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\Resource.Designer.cs">
       <DesignTime>True</DesignTime>
