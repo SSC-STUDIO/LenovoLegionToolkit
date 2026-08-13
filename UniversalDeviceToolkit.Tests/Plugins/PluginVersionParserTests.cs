@@ -4,7 +4,6 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public sealed class PluginVersionParserTests
 {
@@ -19,7 +18,9 @@ public sealed class PluginVersionParserTests
     [InlineData("   ", false, null)]
     [InlineData("not-a-version", false, null)]
     [InlineData("v", false, null)]
-    [InlineData("1.0.0-beta", false, null)]
+    [InlineData("1.0.0-beta", true, "1.0.0")]
+    [InlineData("2.0.0-preview.1", true, "2.0.0")]
+    [InlineData("2.0.0-preview.1+deadbeef", true, "2.0.0")]
     public void TryParse_ShouldNormalizePluginVersions(string? raw, bool expectedSuccess, string? expectedVersion)
     {
         var success = PluginVersionParser.TryParse(raw, out var version);
@@ -48,7 +49,11 @@ public sealed class PluginVersionParserTests
     [InlineData("1.0.18", "1.0.17", true)]
     [InlineData("v1.0.18", "1.0.17", true)]
     [InlineData("1.0.18", "v1.0.17", true)]
-    [InlineData("2.0.0", "1.9.9", true)]
+    [InlineData("2.0.0-preview.1", "1.0.18", true)]
+    [InlineData("2.0.0-preview.2", "2.0.0-preview.1", true)]
+    [InlineData("2.0.0", "2.0.0-preview.1", true)]
+    [InlineData("2.0.0-preview.1", "2.0.0", false)]
+    [InlineData("2.0.0-preview.1", "2.0.0-preview.1", false)]
     [InlineData("1.0.17", "1.0.17", false)]
     [InlineData("v1.0.17", "1.0.17", false)]
     [InlineData("1.0.17", "v1.0.17", false)]

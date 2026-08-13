@@ -7,7 +7,6 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class VersionCheckerTests
 {
@@ -297,6 +296,9 @@ public class VersionCheckerTests
     [InlineData("2.14.0", "2.15.0", false)]
     [InlineData("2.14.0", "3.0.0", false)]
     [InlineData("2.14.0", "2.14.1", false)]
+    [InlineData("6.0.0-preview.1", "6.0.0", true)]
+    [InlineData("6.0.0-preview.1", "6.0.1", false)]
+    [InlineData("5.0.2", "6.0.0", false)]
     public void IsCompatible_WithVariousVersions_ReturnsExpectedResult(
         string currentVersion, string minimumVersion, bool expected)
     {
@@ -311,7 +313,6 @@ public class VersionCheckerTests
     }
 }
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class PluginUpdateInfoTests
 {
@@ -354,7 +355,6 @@ public class PluginUpdateInfoTests
     }
 }
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class UpdateCheckResultTests
 {
@@ -423,7 +423,6 @@ public class UpdateCheckResultTests
     }
 }
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class PluginManifestTests
 {
@@ -477,7 +476,6 @@ public class PluginManifestTests
     }
 }
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class PluginMetadataTests
 {

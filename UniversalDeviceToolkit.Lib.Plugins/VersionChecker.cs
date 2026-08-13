@@ -71,18 +71,15 @@ public class VersionChecker
         if (string.IsNullOrWhiteSpace(minimumHostVersion))
             return true;
 
-        try
+        if (!PluginVersionParser.TryParse(minimumHostVersion, out var minVersion) ||
+            !PluginVersionParser.TryParse(_currentHostVersion, out var currentVersion))
         {
-            var minVersion = new Version(minimumHostVersion.TrimStart('v', 'V'));
-            var currentVersion = new Version(_currentHostVersion.TrimStart('v', 'V'));
-            return currentVersion >= minVersion;
-        }
-        catch (Exception ex)
-        {
-            // Fail closed: unparseable host requirements must not allow installs.
-            Log.Instance.Warning($"Error checking version compatibility (rejecting): {ex.Message}");
+            Log.Instance.Warning(
+                $"Error checking version compatibility (rejecting): unable to parse host '{_currentHostVersion}' and/or minimum '{minimumHostVersion}'.");
             return false;
         }
+
+        return currentVersion >= minVersion;
     }
 
     /// <summary>
@@ -111,13 +108,14 @@ public class VersionChecker
     {
         var leftRaw = string.IsNullOrWhiteSpace(version1) ? "0.0.0.0" : version1;
         var rightRaw = string.IsNullOrWhiteSpace(version2) ? "0.0.0.0" : version2;
+        if (!PluginVersionParser.TryParseSemVer(leftRaw, out _) ||
+            !PluginVersionParser.TryParseSemVer(rightRaw, out _))
+        {
+            Log.Instance.Warning($"Error comparing versions: unable to parse '{version1}' and/or '{version2}'");
+            return 0;
+        }
 
-        if (PluginVersionParser.TryParse(leftRaw, out var left) &&
-            PluginVersionParser.TryParse(rightRaw, out var right))
-            return left.CompareTo(right);
-
-        Log.Instance.Warning($"Error comparing versions: unable to parse '{version1}' and/or '{version2}'");
-        return 0;
+        return PluginVersionParser.Compare(leftRaw, rightRaw);
     }
 
     /// <summary>
