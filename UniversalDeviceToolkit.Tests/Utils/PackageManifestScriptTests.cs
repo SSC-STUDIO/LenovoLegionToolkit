@@ -3,7 +3,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 
-[Trait("Category", TestCategories.Unit)]
+[Trait("Category", TestCategories.Guard)]
 public sealed class PackageManifestScriptTests
 {
     [Fact]
@@ -13,21 +13,15 @@ public sealed class PackageManifestScriptTests
         var tempRoot = NewTempDirectory("UDT-package-manifests");
         const string version = "9.8.7";
         const string releaseDate = "2026-06-06";
-        var installerHash = new string('a', 64);
+        var fullHash = new string('a', 64);
+        var portableHash = new string('b', 64);
+        var onlineHash = new string('d', 64);
         var hashManifestPath = Path.Combine(tempRoot, "UniversalDeviceToolkit_v9.8.7_SHA256.txt");
-        var installerScriptPath = Path.Combine(tempRoot, "InstallerMetadata.defines");
 
         try
         {
             Directory.CreateDirectory(Path.Combine(tempRoot, "Packaging"));
-            File.WriteAllText(
-                hashManifestPath,
-                $"{installerHash.ToUpperInvariant()}  LenovoLegionToolkit_v{version}_Setup.exe{Environment.NewLine}");
-            File.WriteAllText(
-                installerScriptPath,
-                """
-                #define MyAppPublisher "SSC-STUDIO"
-                """);
+            File.WriteAllText(hashManifestPath, BuildSha256Manifest(version, fullHash, portableHash, onlineHash));
 
             RunPowerShellScript(
                 Path.Combine(repositoryRoot, "Packaging", "Prepare-PackageManifests.ps1"),
@@ -40,11 +34,11 @@ public sealed class PackageManifestScriptTests
                 ],
                 repositoryRoot);
 
-            var wingetDirectory = Path.Combine(tempRoot, "Packaging", "winget", "manifests", "s", "SSC-STUDIO", "LenovoLegionToolkit", version);
-            var scoopDraftPath = Path.Combine(tempRoot, "Packaging", "scoop", $"lenovolegiontoolkit.{version}.draft.json");
-            var scoopPublishedPath = Path.Combine(tempRoot, "Packaging", "scoop", "lenovolegiontoolkit.json");
+            var wingetDirectory = Path.Combine(tempRoot, "Packaging", "winget", "manifests", "s", "SSC-STUDIO", "UniversalDeviceToolkit", version);
+            var scoopDraftPath = Path.Combine(tempRoot, "Packaging", "scoop", $"universaldevicetoolkit.{version}.draft.json");
+            var scoopPublishedPath = Path.Combine(tempRoot, "Packaging", "scoop", "universaldevicetoolkit.json");
 
-            File.Exists(Path.Combine(wingetDirectory, "SSC-STUDIO.LenovoLegionToolkit.installer.yaml")).Should().BeTrue();
+            File.Exists(Path.Combine(wingetDirectory, "SSC-STUDIO.UniversalDeviceToolkit.installer.yaml")).Should().BeTrue();
             File.Exists(scoopDraftPath).Should().BeTrue();
             File.Exists(scoopPublishedPath).Should().BeTrue();
 
@@ -53,7 +47,6 @@ public sealed class PackageManifestScriptTests
                 [
                     "-Version", version,
                     "-HashManifestPath", hashManifestPath,
-                    "-InstallerScriptPath", installerScriptPath,
                     "-WingetManifestDirectory", wingetDirectory,
                     "-ScoopManifestPaths", scoopDraftPath,
                 ],
@@ -63,14 +56,13 @@ public sealed class PackageManifestScriptTests
                 [
                     "-Version", version,
                     "-HashManifestPath", hashManifestPath,
-                    "-InstallerScriptPath", installerScriptPath,
                     "-WingetManifestDirectory", wingetDirectory,
                     "-ScoopManifestPaths", scoopPublishedPath,
                 ],
                 repositoryRoot);
 
-            draftValidationOutput.Should().Contain($"Package manifests match LenovoLegionToolkit_v{version}_Setup.exe");
-            publishedValidationOutput.Should().Contain($"Package manifests match LenovoLegionToolkit_v{version}_Setup.exe");
+            draftValidationOutput.Should().Contain($"Package manifests match UniversalDeviceToolkit_v{version}_Full_Setup.exe");
+            publishedValidationOutput.Should().Contain($"Package manifests match UniversalDeviceToolkit_v{version}_Full_Setup.exe");
         }
         finally
         {
@@ -85,14 +77,14 @@ public sealed class PackageManifestScriptTests
         var tempRoot = NewTempDirectory("UDT-package-manifest-hash-mismatch");
         const string version = "9.8.6";
         var releaseHash = new string('b', 64);
-        var wrongHash = new string('c', 64);
+        var portableHash = new string('c', 64);
+        var onlineHash = new string('e', 64);
+        var wrongHash = new string('f', 64);
         var hashManifestPath = Path.Combine(tempRoot, "UniversalDeviceToolkit_v9.8.6_SHA256.txt");
 
         try
         {
-            File.WriteAllText(
-                hashManifestPath,
-                $"{releaseHash.ToUpperInvariant()}  LenovoLegionToolkit_v{version}_Setup.exe{Environment.NewLine}");
+            File.WriteAllText(hashManifestPath, BuildSha256Manifest(version, releaseHash, portableHash, onlineHash));
 
             RunPowerShellScript(
                     Path.Combine(repositoryRoot, "Packaging", "Test-PackageManifests.ps1"),
@@ -110,6 +102,21 @@ public sealed class PackageManifestScriptTests
         {
             Directory.Delete(tempRoot, recursive: true);
         }
+    }
+
+    private static string BuildSha256Manifest(string version, string fullHash, string portableHash, string onlineHash)
+    {
+        var hash = fullHash.ToUpperInvariant();
+        var portable = portableHash.ToUpperInvariant();
+        var online = onlineHash.ToUpperInvariant();
+        return string.Join(
+            Environment.NewLine,
+            [
+                $"{hash}  UniversalDeviceToolkit_v{version}_Full_Setup.exe",
+                $"{portable}  UniversalDeviceToolkit_v{version}_Full_win-x64.zip",
+                $"{online}  UniversalDeviceToolkit_v{version}_Online_Setup.exe",
+                string.Empty,
+            ]);
     }
 
     private static string RunPowerShellScript(string scriptPath, string[] arguments, string workingDirectory, bool expectSuccess = true)
@@ -156,5 +163,4 @@ public sealed class PackageManifestScriptTests
         Directory.CreateDirectory(path);
         return path;
     }
-
 }

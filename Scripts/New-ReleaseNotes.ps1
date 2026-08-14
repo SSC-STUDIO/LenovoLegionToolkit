@@ -191,8 +191,7 @@ function Get-DownloadLines {
   $crossPlatformCliZip = $sorted | Where-Object { $_ -match '_CLI_cross-platform\.zip$' } | Select-Object -First 1
   $englishSetup = $sorted | Where-Object { $_ -match '_English_Setup\.exe$' } | Select-Object -First 1
   $englishZip = $sorted | Where-Object { $_ -match '_English_win-x64\.zip$' } | Select-Object -First 1
-  $legacyAlias = $sorted | Where-Object { $_ -match '^LenovoLegionToolkit_v\d+\.\d+\.\d+_Setup\.exe$' } | Select-Object -First 1
-  $setup = $sorted | Where-Object { $_ -match 'Setup\.exe$' -and $_ -ne $fullSetup -and $_ -ne $onlineSetup -and $_ -ne $englishSetup -and $_ -ne $legacyAlias } | Select-Object -First 1
+  $setup = $sorted | Where-Object { $_ -match 'Setup\.exe$' -and $_ -ne $fullSetup -and $_ -ne $onlineSetup -and $_ -ne $englishSetup } | Select-Object -First 1
   $zip = $sorted | Where-Object { $_ -match '_win-x64\.zip$' -and $_ -ne $fullZip -and $_ -ne $onlineZip -and $_ -ne $englishZip } | Select-Object -First 1
   $sha = $sorted | Where-Object { $_ -match '_SHA256\.txt$' } | Select-Object -First 1
   $languagePacks = @($sorted | Where-Object { $_ -match '_lang_[^/]+\.zip$' })
@@ -202,7 +201,6 @@ function Get-DownloadLines {
   if ($fullZip) { Add-AssetLine $lines $fullZip 'Full portable package with bundled languages and device support data.' }
   if ($onlineZip) { Add-AssetLine $lines $onlineZip 'Online portable package with the base app; additional resources install from the in-app online catalog.' }
   if ($crossPlatformCliZip) { Add-AssetLine $lines $crossPlatformCliZip 'Framework-dependent diagnostics CLI for Windows, macOS, and Linux. Includes `udt.cmd`, `udt`, and `README.txt` launch guidance; `dotnet udt.dll <command>` still works on any OS.' }
-  if ($legacyAlias) { Add-AssetLine $lines $legacyAlias 'Compatibility installer alias for existing Lenovo Legion Toolkit updater, winget, and Scoop users.' }
   if ($englishSetup) { Add-AssetLine $lines $englishSetup 'Legacy online-style installer asset; prefer the Online installer for current releases.' }
   if ($englishZip) { Add-AssetLine $lines $englishZip 'Legacy online-style portable asset; prefer the Online portable package for current releases.' }
   if ($setup) { Add-AssetLine $lines $setup 'installer package.' }

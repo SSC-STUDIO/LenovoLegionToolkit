@@ -87,7 +87,8 @@ public sealed class CiWorkflowGuardTests
     {
         var job = ReadWorkflow("Ci-tests.yml").Job("build-test-and-smoke");
 
-        job.Steps.Should().NotContain(s => s.Name.Contains("WPF l10n", StringComparison.OrdinalIgnoreCase));
+        job.Steps.Should().NotContain(
+            s => s.Name != null && s.Name.Contains("WPF l10n", StringComparison.OrdinalIgnoreCase));
     }
 
     [Fact]

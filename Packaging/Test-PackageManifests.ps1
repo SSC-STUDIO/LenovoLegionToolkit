@@ -8,13 +8,15 @@ param(
 
     [string]$ExpectedInstallerSha256,
 
-    [string]$ExpectedPackageIdentifier = 'SSC-STUDIO.LenovoLegionToolkit',
+    [string]$ExpectedPortableSha256,
+
+    [string]$ExpectedPackageIdentifier = 'SSC-STUDIO.UniversalDeviceToolkit',
 
     [string]$ExpectedPackageName = 'Universal Device Toolkit',
 
     [string]$ExpectedPublisher = 'SSC-STUDIO',
 
-    [string]$InstallerScriptPath = 'Packaging\InstallerMetadata.defines',
+    [string]$ElectronBuilderConfig = 'UniversalDeviceToolkit.Electron\electron-builder.yml',
 
     [string]$WingetManifestDirectory,
 
@@ -83,55 +85,69 @@ function Assert-Equal {
     }
 }
 
-function Get-InnoDefine {
+function Get-ElectronBuilderValue {
     param(
-        [Parameter(Mandatory = $true)][string]$ScriptPath,
+        [Parameter(Mandatory = $true)][string]$ConfigPath,
         [Parameter(Mandatory = $true)][string]$Name
     )
 
-    if (-not (Test-Path -LiteralPath $ScriptPath)) {
-        throw "Inno Setup script not found at '$ScriptPath'."
+    if (-not (Test-Path -LiteralPath $ConfigPath)) {
+        throw "electron-builder config not found at '$ConfigPath'."
     }
 
-    $pattern = '^\s*#define\s+' + [regex]::Escape($Name) + '\s+"(?<value>[^"]+)"\s*$'
-    foreach ($line in Get-Content -LiteralPath $ScriptPath) {
+    $pattern = '^\s*' + [regex]::Escape($Name) + '\s*:\s*(?:"(?<value>[^"]+)"|(?<value>[^#]+?))\s*(?:#.*)?$'
+    foreach ($line in Get-Content -LiteralPath $ConfigPath) {
         if ($line -match $pattern) {
-            return $Matches.value
+            return $Matches.value.Trim()
         }
     }
 
-    throw "Could not find Inno Setup define '$Name'."
+    throw "Could not find electron-builder key '$Name'."
 }
 
-$legacyAssetName = "LenovoLegionToolkit_v${Version}_Setup.exe"
-$expectedInstallerUrl = "https://github.com/$Repository/releases/download/v$Version/$legacyAssetName"
+$fullAssetName = "UniversalDeviceToolkit_v${Version}_Full_Setup.exe"
+$onlineAssetName = "UniversalDeviceToolkit_v${Version}_Online_Setup.exe"
+$fullZipAssetName = "UniversalDeviceToolkit_v${Version}_Full_win-x64.zip"
+$expectedInstallerUrl = "https://github.com/$Repository/releases/download/v$Version/$fullAssetName"
+$expectedPortableUrl = "https://github.com/$Repository/releases/download/v$Version/$fullZipAssetName"
 
 if (-not [string]::IsNullOrWhiteSpace($HashManifestPath)) {
     $resolvedHashManifestPath = Resolve-RepositoryPath $HashManifestPath
-    $manifestHash = Get-HashFromManifest -ManifestPath $resolvedHashManifestPath -AssetName $legacyAssetName
+    $fullHash = Get-HashFromManifest -ManifestPath $resolvedHashManifestPath -AssetName $fullAssetName
+    $onlineHash = Get-HashFromManifest -ManifestPath $resolvedHashManifestPath -AssetName $onlineAssetName
+    $portableHash = Get-HashFromManifest -ManifestPath $resolvedHashManifestPath -AssetName $fullZipAssetName
+
+    if ($fullHash.ToUpperInvariant() -ceq $onlineHash.ToUpperInvariant() -or $fullHash.ToUpperInvariant() -ceq $portableHash.ToUpperInvariant()) {
+        throw "Full Setup, Online Setup, and Full ZIP SHA256 hashes must differ."
+    }
+
     if ([string]::IsNullOrWhiteSpace($ExpectedInstallerSha256)) {
-        $ExpectedInstallerSha256 = $manifestHash
+        $ExpectedInstallerSha256 = $fullHash
     }
     else {
-        Assert-Equal 'Expected installer SHA256 and release SHA256 manifest' $ExpectedInstallerSha256.ToUpperInvariant() $manifestHash
+        Assert-Equal 'Expected installer SHA256 and release SHA256 manifest' $ExpectedInstallerSha256.ToUpperInvariant() $fullHash.ToUpperInvariant()
     }
+    if ([string]::IsNullOrWhiteSpace($ExpectedPortableSha256)) { $ExpectedPortableSha256 = $portableHash }
+    else { Assert-Equal 'Expected portable SHA256 and release SHA256 manifest' $ExpectedPortableSha256.ToUpperInvariant() $portableHash.ToUpperInvariant() }
 }
 
 if ([string]::IsNullOrWhiteSpace($ExpectedInstallerSha256)) {
     throw 'Provide either -HashManifestPath or -ExpectedInstallerSha256.'
 }
+if ([string]::IsNullOrWhiteSpace($ExpectedPortableSha256)) { throw 'Provide either -HashManifestPath or -ExpectedPortableSha256.' }
 
 $expectedInstallerSha256Upper = $ExpectedInstallerSha256.ToUpperInvariant()
 $expectedInstallerSha256Lower = $ExpectedInstallerSha256.ToLowerInvariant()
+$expectedPortableSha256Lower = $ExpectedPortableSha256.ToLowerInvariant()
 
 if ([string]::IsNullOrWhiteSpace($WingetManifestDirectory)) {
-    $WingetManifestDirectory = "Packaging\winget\manifests\s\SSC-STUDIO\LenovoLegionToolkit\$Version"
+    $WingetManifestDirectory = "Packaging\winget\manifests\s\SSC-STUDIO\UniversalDeviceToolkit\$Version"
 }
 
 $resolvedWingetDirectory = Resolve-RepositoryPath $WingetManifestDirectory
-$wingetVersionManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.yaml'
-$wingetLocaleManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.locale.en-US.yaml'
-$wingetInstallerManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.LenovoLegionToolkit.installer.yaml'
+$wingetVersionManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.UniversalDeviceToolkit.yaml'
+$wingetLocaleManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.UniversalDeviceToolkit.locale.en-US.yaml'
+$wingetInstallerManifestPath = Join-Path $resolvedWingetDirectory 'SSC-STUDIO.UniversalDeviceToolkit.installer.yaml'
 if (-not (Test-Path -LiteralPath $wingetVersionManifestPath)) {
     throw "winget version manifest not found at '$wingetVersionManifestPath'."
 }
@@ -142,12 +158,14 @@ if (-not (Test-Path -LiteralPath $wingetInstallerManifestPath)) {
     throw "winget installer manifest not found at '$wingetInstallerManifestPath'."
 }
 
-$resolvedInstallerScriptPath = Resolve-RepositoryPath $InstallerScriptPath
-$installerPublisher = Get-InnoDefine -ScriptPath $resolvedInstallerScriptPath -Name 'MyAppPublisher'
+$resolvedInstallerConfigPath = Resolve-RepositoryPath $ElectronBuilderConfig
+$installerPublisher = Get-ElectronBuilderValue -ConfigPath $resolvedInstallerConfigPath -Name 'productName'
+$electronExecutableName = Get-ElectronBuilderValue -ConfigPath $resolvedInstallerConfigPath -Name 'executableName'
+$expectedShortcutExecutable = "$electronExecutableName.exe"
 $wingetVersionLines = Get-Content -LiteralPath $wingetVersionManifestPath
 $wingetLocaleLines = Get-Content -LiteralPath $wingetLocaleManifestPath
 
-Assert-Equal 'installer AppPublisher' $installerPublisher $ExpectedPublisher
+Assert-Equal 'installer productName' $installerPublisher $ExpectedPackageName
 Assert-Equal 'winget version PackageIdentifier' (Read-YamlScalar -Lines $wingetVersionLines -Key 'PackageIdentifier') $ExpectedPackageIdentifier
 Assert-Equal 'winget version PackageVersion' (Read-YamlScalar -Lines $wingetVersionLines -Key 'PackageVersion') $Version
 Assert-Equal 'winget version DefaultLocale' (Read-YamlScalar -Lines $wingetVersionLines -Key 'DefaultLocale') 'en-US'
@@ -161,14 +179,16 @@ $wingetLines = Get-Content -LiteralPath $wingetInstallerManifestPath
 Assert-Equal 'winget installer PackageIdentifier' (Read-YamlScalar -Lines $wingetLines -Key 'PackageIdentifier') $ExpectedPackageIdentifier
 Assert-Equal 'winget PackageVersion' (Read-YamlScalar -Lines $wingetLines -Key 'PackageVersion') $Version
 Assert-Equal 'winget InstallerType' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerType') 'exe'
-Assert-Equal 'winget Scope' (Read-YamlScalar -Lines $wingetLines -Key 'Scope') 'user'
+Assert-Equal 'winget Scope' (Read-YamlScalar -Lines $wingetLines -Key 'Scope') 'machine'
 Assert-Equal 'winget InstallerUrl' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerUrl') $expectedInstallerUrl
 Assert-Equal 'winget InstallerSha256' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerSha256').ToUpperInvariant() $expectedInstallerSha256Upper
+Assert-Equal 'winget Silent switch' (Read-YamlScalar -Lines $wingetLines -Key 'Silent') '--silent'
+Assert-Equal 'winget SilentWithProgress switch' (Read-YamlScalar -Lines $wingetLines -Key 'SilentWithProgress') '--silent'
 
 if ($ScoopManifestPaths.Count -eq 0) {
     $defaultScoopPaths = @(
-        'Packaging\scoop\lenovolegiontoolkit.json',
-        "Packaging\scoop\lenovolegiontoolkit.$Version.draft.json"
+        'Packaging\scoop\universaldevicetoolkit.json',
+        "Packaging\scoop\universaldevicetoolkit.$Version.draft.json"
     )
 
     $ScoopManifestPaths = @(
@@ -189,8 +209,12 @@ foreach ($scoopManifestPath in $ScoopManifestPaths) {
 
     $scoopManifest = Get-Content -Raw -LiteralPath $resolvedScoopManifestPath | ConvertFrom-Json
     Assert-Equal "Scoop version in '$scoopManifestPath'" ([string]$scoopManifest.version) $Version
-    Assert-Equal "Scoop URL in '$scoopManifestPath'" ([string]$scoopManifest.architecture.'64bit'.url) $expectedInstallerUrl
-    Assert-Equal "Scoop hash in '$scoopManifestPath'" ([string]$scoopManifest.architecture.'64bit'.hash) $expectedInstallerSha256Lower
+    Assert-Equal "Scoop URL in '$scoopManifestPath'" ([string]$scoopManifest.architecture.'64bit'.url) $expectedPortableUrl
+    Assert-Equal "Scoop hash in '$scoopManifestPath'" ([string]$scoopManifest.architecture.'64bit'.hash) $expectedPortableSha256Lower
+    Assert-Equal "Scoop innosetup in '$scoopManifestPath'" ([string]$scoopManifest.innosetup) 'False'
+    if ([string]$scoopManifest.shortcuts[0][0] -cne $expectedShortcutExecutable) {
+        throw "Scoop shortcut in '$scoopManifestPath' must target $expectedShortcutExecutable from electron-builder executableName."
+    }
 }
 
-Write-Host "Package manifests match $legacyAssetName and SHA256 $expectedInstallerSha256Upper."
+Write-Host "Package manifests match $fullAssetName, $fullZipAssetName, and SHA256 $expectedInstallerSha256Upper / $expectedPortableSha256Lower."

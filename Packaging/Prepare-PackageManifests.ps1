@@ -7,6 +7,9 @@ param(
     [ValidatePattern('^[A-Fa-f0-9]{64}$')]
     [string]$InstallerSha256,
 
+    [ValidatePattern('^[A-Fa-f0-9]{64}$')]
+    [string]$PortableSha256,
+
     [string]$HashManifestPath,
 
     [Parameter(Mandatory)]
@@ -84,18 +87,34 @@ function Get-HashFromManifest
     throw "SHA256 manifest '$ManifestPath' does not contain '$AssetName'."
 }
 
-$legacyAssetName = "LenovoLegionToolkit_v${Version}_Setup.exe"
+$fullAssetName = "UniversalDeviceToolkit_v${Version}_Full_Setup.exe"
+$onlineAssetName = "UniversalDeviceToolkit_v${Version}_Online_Setup.exe"
+$fullZipAssetName = "UniversalDeviceToolkit_v${Version}_Full_win-x64.zip"
 
 if (-not [string]::IsNullOrWhiteSpace($HashManifestPath))
 {
-    $manifestHash = Get-HashFromManifest -ManifestPath (Resolve-RepositoryPath $HashManifestPath) -AssetName $legacyAssetName
+    $resolvedHashManifestPath = Resolve-RepositoryPath $HashManifestPath
+    $fullHash = Get-HashFromManifest -ManifestPath $resolvedHashManifestPath -AssetName $fullAssetName
+    $onlineHash = Get-HashFromManifest -ManifestPath $resolvedHashManifestPath -AssetName $onlineAssetName
+    $portableHash = Get-HashFromManifest -ManifestPath $resolvedHashManifestPath -AssetName $fullZipAssetName
+
+    if ($fullHash.ToUpperInvariant() -ceq $onlineHash.ToUpperInvariant() -or $fullHash.ToUpperInvariant() -ceq $portableHash.ToUpperInvariant())
+    {
+        throw "Full Setup, Online Setup, and Full ZIP SHA256 hashes must be distinct."
+    }
+
     if ([string]::IsNullOrWhiteSpace($InstallerSha256))
     {
-        $InstallerSha256 = $manifestHash
+        $InstallerSha256 = $fullHash
     }
-    elseif ($InstallerSha256.ToUpperInvariant() -cne $manifestHash.ToUpperInvariant())
+    elseif ($InstallerSha256.ToUpperInvariant() -cne $fullHash.ToUpperInvariant())
     {
-        throw "Installer SHA256 '$InstallerSha256' does not match '$legacyAssetName' in '$HashManifestPath'."
+        throw "Installer SHA256 '$InstallerSha256' does not match '$fullAssetName' in '$HashManifestPath'."
+    }
+
+    if ([string]::IsNullOrWhiteSpace($PortableSha256)) { $PortableSha256 = $portableHash }
+    elseif ($PortableSha256.ToUpperInvariant() -cne $portableHash.ToUpperInvariant()) {
+        throw "Portable SHA256 '$PortableSha256' does not match '$fullZipAssetName' in '$HashManifestPath'."
     }
 }
 
@@ -103,14 +122,20 @@ if ([string]::IsNullOrWhiteSpace($InstallerSha256))
 {
     throw 'Provide either -InstallerSha256 or -HashManifestPath.'
 }
+if ([string]::IsNullOrWhiteSpace($PortableSha256))
+{
+    throw 'Provide either -PortableSha256 or -HashManifestPath.'
+}
 
 $installerSha256Upper = $InstallerSha256.ToUpperInvariant()
-$installerSha256Lower = $InstallerSha256.ToLowerInvariant()
+$portableSha256Lower = $PortableSha256.ToLowerInvariant()
 
 if ([string]::IsNullOrWhiteSpace($InstallerUrl))
 {
-    $InstallerUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${Version}/$legacyAssetName"
+    $InstallerUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${Version}/$fullAssetName"
 }
+
+$portableUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${Version}/$fullZipAssetName"
 
 function Ensure-Directory
 {
@@ -148,10 +173,10 @@ function Get-ScoopManifestContent
         [string]$Version,
 
         [Parameter(Mandatory)]
-        [string]$InstallerUrl,
+        [string]$PortableUrl,
 
         [Parameter(Mandatory)]
-        [string]$InstallerSha256,
+        [string]$PortableSha256,
 
         [Parameter(Mandatory)]
         [string]$Notes
@@ -166,14 +191,14 @@ function Get-ScoopManifestContent
   "notes": "$Notes",
   "architecture": {
     "64bit": {
-      "url": "$InstallerUrl",
-      "hash": "$InstallerSha256"
+      "url": "$PortableUrl",
+      "hash": "$PortableSha256"
     }
   },
-  "innosetup": true,
+  "innosetup": false,
   "shortcuts": [
     [
-      "Universal Device Toolkit.exe",
+      "UniversalDeviceToolkit.exe",
       "Universal Device Toolkit"
     ]
   ],
@@ -184,7 +209,7 @@ function Get-ScoopManifestContent
   "autoupdate": {
     "architecture": {
       "64bit": {
-        "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v`$version/LenovoLegionToolkit_v`$version_Setup.exe"
+         "url": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v`$version/UniversalDeviceToolkit_v`$version_Full_win-x64.zip"
       }
     }
   }
@@ -192,17 +217,17 @@ function Get-ScoopManifestContent
 "@
 }
 
-$wingetVersionDirectory = Join-Path $repoRoot "Packaging\winget\manifests\s\SSC-STUDIO\LenovoLegionToolkit\$Version"
+$wingetVersionDirectory = Join-Path $repoRoot "Packaging\winget\manifests\s\SSC-STUDIO\UniversalDeviceToolkit\$Version"
 Ensure-Directory -Path $wingetVersionDirectory
 
-$wingetVersionManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.yaml'
-$wingetLocaleManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.locale.en-US.yaml'
-$wingetInstallerManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.LenovoLegionToolkit.installer.yaml'
+$wingetVersionManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.UniversalDeviceToolkit.yaml'
+$wingetLocaleManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.UniversalDeviceToolkit.locale.en-US.yaml'
+$wingetInstallerManifestPath = Join-Path $wingetVersionDirectory 'SSC-STUDIO.UniversalDeviceToolkit.installer.yaml'
 
 $wingetVersionManifest = @"
 # yaml-language-server: `$schema=https://aka.ms/winget-manifest.version.1.10.0.schema.json
 
-PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
+PackageIdentifier: SSC-STUDIO.UniversalDeviceToolkit
 PackageVersion: $Version
 DefaultLocale: en-US
 ManifestType: version
@@ -212,7 +237,7 @@ ManifestVersion: 1.10.0
 $wingetLocaleManifest = @"
 # yaml-language-server: `$schema=https://aka.ms/winget-manifest.defaultLocale.1.10.0.schema.json
 
-PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
+PackageIdentifier: SSC-STUDIO.UniversalDeviceToolkit
 PackageVersion: $Version
 PackageLocale: en-US
 Publisher: SSC-STUDIO
@@ -223,8 +248,8 @@ PackageUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 License: GPL-3.0
 LicenseUrl: https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/LICENSE
 Copyright: Copyright (C) Universal Device Toolkit contributors
-ShortDescription: Lightweight open-source Windows device toolkit — Legion hardware control, plugins, no telemetry.
-Description: Universal Device Toolkit (UDT) is a lightweight, open-source Windows utility. Supported Lenovo Legion, LOQ, and IdeaPad Gaming laptops get direct hardware controls (power modes, RGB, dGPU, battery, Custom Mode, and more). Other Lenovo models and non-Lenovo PCs run in basic mode with plugins, system optimization, themes, and updates. No background service, no telemetry, no account. CLI automation via udt-cli.exe (llt.exe shipped as a one-release compatibility shim). Package identity remains SSC-STUDIO.LenovoLegionToolkit so existing winget installs upgrade in place.
+ShortDescription: Lightweight open-source Windows device toolkit - Legion hardware control, plugins, no telemetry.
+Description: Universal Device Toolkit (UDT) is a lightweight, open-source Windows utility. Supported Lenovo Legion, LOQ, and IdeaPad Gaming laptops get direct hardware controls (power modes, RGB, dGPU, battery, Custom Mode, and more). Other Lenovo models and non-Lenovo PCs run in basic mode with plugins, system optimization, themes, and updates. No background service, no telemetry, no account.
 Moniker: universaldevicetoolkit
 Tags:
 - lenovo
@@ -243,10 +268,10 @@ ManifestVersion: 1.10.0
 $wingetInstallerManifest = @"
 # yaml-language-server: `$schema=https://aka.ms/winget-manifest.installer.1.10.0.schema.json
 
-PackageIdentifier: SSC-STUDIO.LenovoLegionToolkit
+PackageIdentifier: SSC-STUDIO.UniversalDeviceToolkit
 PackageVersion: $Version
 InstallerType: exe
-Scope: user
+Scope: machine
 UpgradeBehavior: install
 ReleaseDate: $ReleaseDate
 Installers:
@@ -264,14 +289,14 @@ Write-Utf8NoBomFile -Path $wingetVersionManifestPath -Content $wingetVersionMani
 Write-Utf8NoBomFile -Path $wingetLocaleManifestPath -Content $wingetLocaleManifest
 Write-Utf8NoBomFile -Path $wingetInstallerManifestPath -Content $wingetInstallerManifest
 
-$draftScoopManifestPath = Join-Path $repoRoot "Packaging\scoop\lenovolegiontoolkit.$Version.draft.json"
-$publishedScoopManifestPath = Join-Path $repoRoot 'Packaging\scoop\lenovolegiontoolkit.json'
+$draftScoopManifestPath = Join-Path $repoRoot "Packaging\scoop\universaldevicetoolkit.$Version.draft.json"
+$publishedScoopManifestPath = Join-Path $repoRoot 'Packaging\scoop\universaldevicetoolkit.json'
 
 $draftScoopManifest = Get-ScoopManifestContent `
     -Version $Version `
-    -InstallerUrl $InstallerUrl `
-    -InstallerSha256 $installerSha256Lower `
-    -Notes "Draft manifest generated from release metadata for version $Version. Publish it to the Scoop bucket only after validating install and upgrade behavior."
+    -PortableUrl $portableUrl `
+    -PortableSha256 $portableSha256Lower `
+    -Notes "Draft manifest generated from release metadata for version $Version. Publish it to the Scoop bucket only after validating install behavior."
 
 Write-Utf8NoBomFile -Path $draftScoopManifestPath -Content $draftScoopManifest
 
@@ -279,15 +304,16 @@ if ($UpdatePublishedScoopManifest)
 {
     $publishedScoopManifest = Get-ScoopManifestContent `
         -Version $Version `
-        -InstallerUrl $InstallerUrl `
-        -InstallerSha256 $installerSha256Lower `
-        -Notes 'Universal Device Toolkit keeps the legacy lenovolegiontoolkit Scoop package name so existing installs can upgrade in place.'
+        -PortableUrl $portableUrl `
+        -PortableSha256 $portableSha256Lower `
+        -Notes 'Universal Device Toolkit 6.x uses the universaldevicetoolkit Scoop package identity.'
 
     Write-Utf8NoBomFile -Path $publishedScoopManifestPath -Content $publishedScoopManifest
 }
 
 Write-Host "Updated winget manifests in: $wingetVersionDirectory"
 Write-Host "Updated scoop draft manifest: $draftScoopManifestPath"
+Write-Host "Winget points at Full Setup; Scoop points at Full Electron ZIP."
 
 if ($UpdatePublishedScoopManifest)
 {

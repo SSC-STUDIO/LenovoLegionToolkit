@@ -5,6 +5,11 @@ param(
     [Alias('EnglishBuildDir')]
     [string]$OnlineBuildDir,
 
+    # Directory that contains the published .NET Host payload
+    # (UniversalDeviceToolkit.Host/publish/<rid>). Language packs are built from
+    # the Host culture satellites. Defaults to BuildDir when not provided.
+    [string]$HostBuildDir,
+
     [Parameter(Mandatory = $true)]
     [string]$ReleaseOutput,
 
@@ -20,9 +25,11 @@ param(
 
     [string]$OnlineInstallerPath,
 
-    [string]$PublicAssetPrefix = 'UniversalDeviceToolkit',
+    [string]$FullZipPath,
 
-    [string]$LegacyAssetPrefix = 'LenovoLegionToolkit',
+    [string]$OnlineZipPath,
+
+    [string]$PublicAssetPrefix = 'UniversalDeviceToolkit',
 
     [string]$ProductName = 'Universal Device Toolkit',
 
@@ -122,7 +129,6 @@ function Get-FullZipAssetName { param([string]$AssetVersion) "${PublicAssetPrefi
 function Get-OnlineZipAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_Online_win-x64.zip" }
 function Get-CrossPlatformCliAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_CLI_cross-platform.zip" }
 function Get-HashAssetName { param([string]$AssetVersion) "${PublicAssetPrefix}_v${AssetVersion}_SHA256.txt" }
-function Get-LegacySetupAssetName { param([string]$AssetVersion) "${LegacyAssetPrefix}_v${AssetVersion}_Setup.exe" }
 function Get-LanguageAssetName { param([string]$AssetVersion, [string]$Culture) "$Culture.zip" }
 function Get-DeviceAssetName { param([string]$PackId) "$PackId.zip" }
 
@@ -145,19 +151,37 @@ function Compress-DirectoryContents {
 }
 
 function Get-LanguageDirectories {
+    # Localized satellite culture folders that the Online (English-only) copy
+    # must not ship, regardless of which assembly produced the satellite.
     param([Parameter(Mandatory = $true)][string]$BuildPath)
 
     Get-ChildItem -LiteralPath $BuildPath -Directory |
         Where-Object {
-            Test-MainAppSatellite $_.FullName
+            $_.Name -ne 'en' -and (Test-SatelliteDirectory $_.FullName)
         } |
         Sort-Object Name
 }
 
-function Test-MainAppSatellite {
+function Test-SatelliteDirectory {
     param([Parameter(Mandatory = $true)][string]$DirectoryPath)
 
-    Test-Path -LiteralPath (Join-Path $DirectoryPath 'Universal Device Toolkit.resources.dll')
+    $null -ne (
+        Get-ChildItem -LiteralPath $DirectoryPath -File -Filter '*.resources.dll' -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+    )
+}
+
+function Test-HostSatelliteDirectory {
+    # The shipping app is the Electron shell plus UniversalDeviceToolkit.Host;
+    # localized Host strings live in the UniversalDeviceToolkit.* satellite
+    # assemblies (Lib, Lib.Plugins, Lib.Automation, Lib.Macro). The retired WPF
+    # satellite "Universal Device Toolkit.resources.dll" no longer exists.
+    param([Parameter(Mandatory = $true)][string]$DirectoryPath)
+
+    $null -ne (
+        Get-ChildItem -LiteralPath $DirectoryPath -File -Filter 'UniversalDeviceToolkit.*.resources.dll' -ErrorAction SilentlyContinue |
+            Select-Object -First 1
+    )
 }
 
 function New-FileMetadata {
@@ -232,8 +256,9 @@ function Write-HashFile {
 }
 
 function Get-LanguagePackDefinitions {
-    # Culture names use the BCP 47 canonical form from LocalizationCatalog. The
-    # pack is skipped with a warning when no satellite directory was produced.
+    # Culture names use the BCP 47 canonical form from LocalizationCatalog.
+    # Packaging fails when a supported culture produced no Host satellite
+    # directory instead of publishing an incomplete pack.
     $definitions = @(
         @{ Culture = 'ar'; Directories = @('ar') },
         @{ Culture = 'bg'; Directories = @('bg') },
@@ -316,7 +341,6 @@ function Write-StableCatalog {
     $onlineZipName = Get-OnlineZipAssetName $Version
     $crossPlatformCliName = Get-CrossPlatformCliAssetName $Version
     $hashName = Get-HashAssetName $Version
-    $legacySetupName = Get-LegacySetupAssetName $Version
 
     $downloads = [ordered]@{}
 
@@ -374,17 +398,6 @@ function Write-StableCatalog {
         }
     }
 
-    $legacyAliases = @()
-    if (Test-Path -LiteralPath (Join-Path $ReleaseOutputPath $legacySetupName)) {
-        $legacyAlias = New-FileMetadata `
-            -FilePath (Join-Path $ReleaseOutputPath $legacySetupName) `
-            -Name $legacySetupName `
-            -CatalogPath "releases/v$Version/$legacySetupName" `
-            -Url "$releaseBaseUrl/$legacySetupName"
-        $legacyAlias['target'] = $fullSetupName
-        $legacyAliases += $legacyAlias
-    }
-
     $languages = @()
     if (Test-Path -LiteralPath $languagesCatalogPath) {
         $languageCatalog = Get-Content -LiteralPath $languagesCatalogPath -Raw | ConvertFrom-Json
@@ -435,7 +448,7 @@ function Write-StableCatalog {
         productName = $ProductName
         downloads = $downloads
         sha256 = $sha256
-        legacyAliases = $legacyAliases
+        legacyAliases = @()
         languages = $languages
         devicePacks = $devicePacks
     }
@@ -456,9 +469,14 @@ function Prepare-ReleaseAssets {
     $onlineBuildPath = Resolve-RepoPath $OnlineBuildDir
     $releaseOutputPath = Resolve-RepoPath $ReleaseOutput
     $pagesOutputPath = Resolve-RepoPath $PagesOutput
+    $hostBuildPath = if ([string]::IsNullOrWhiteSpace($HostBuildDir)) { $buildPath } else { Resolve-RepoPath $HostBuildDir }
 
     if (-not (Test-Path -LiteralPath $buildPath)) {
         throw "Build output not found at '$buildPath'."
+    }
+
+    if (-not (Test-Path -LiteralPath $hostBuildPath)) {
+        throw "Host build output not found at '$hostBuildPath'. Publish UniversalDeviceToolkit.Host before packaging language assets."
     }
 
     Remove-Item -LiteralPath $onlineBuildPath, $releaseOutputPath, $pagesOutputPath -Recurse -Force -ErrorAction SilentlyContinue
@@ -474,18 +492,13 @@ function Prepare-ReleaseAssets {
         }
     }
 
-    $fullZip = Join-Path $releaseOutputPath (Get-FullZipAssetName $Version)
-    $onlineZip = Join-Path $releaseOutputPath (Get-OnlineZipAssetName $Version)
-    Compress-DirectoryContents -SourceDir $buildPath -DestinationPath $fullZip
-    Compress-DirectoryContents -SourceDir $onlineBuildPath -DestinationPath $onlineZip
-
     $resourcesRoot = Join-Path $pagesOutputPath "resources\$Version"
     $languageOutputPath = Join-Path $resourcesRoot 'languages'
     $deviceOutputPath = Join-Path $resourcesRoot 'devices'
     New-Item -ItemType Directory -Path $languageOutputPath, $deviceOutputPath -Force | Out-Null
 
     $languageEntries = @()
-    $stagingRoot = Join-Path ([System.IO.Path]::GetTempPath()) "${LegacyAssetPrefix}-lang-assets-$([Guid]::NewGuid().ToString('N'))"
+    $stagingRoot = Join-Path ([System.IO.Path]::GetTempPath()) "${PublicAssetPrefix}-lang-assets-$([Guid]::NewGuid().ToString('N'))"
     try {
         New-Item -ItemType Directory -Path $stagingRoot -Force | Out-Null
 
@@ -493,14 +506,14 @@ function Prepare-ReleaseAssets {
             $culture = [string]$pack.Culture
             $sourceDirectories = @($pack.Directories |
                 ForEach-Object {
-                    $candidate = Join-Path $buildPath $_
-                    if (Test-MainAppSatellite $candidate) {
+                    $candidate = Join-Path $hostBuildPath $_
+                    if ((Test-Path -LiteralPath $candidate) -and (Test-HostSatelliteDirectory $candidate)) {
                         $candidate
                     }
                 })
 
             if ($sourceDirectories.Count -eq 0) {
-                throw "Language pack '$culture' cannot be created because the main WPF satellite '$culture/Universal Device Toolkit.resources.dll' is missing from '$buildPath'. Build all supported satellite cultures before packaging."
+                throw "Language pack '$culture' cannot be created because no '$culture/UniversalDeviceToolkit.*.resources.dll' Host satellite exists in '$hostBuildPath'. Publish the Host with all supported satellite cultures before packaging."
             }
 
             $packStage = Join-Path $stagingRoot $culture
@@ -606,7 +619,7 @@ function Prepare-ReleaseAssets {
 
     Write-StableCatalog -ReleaseOutputPath $releaseOutputPath -PagesOutputPath $pagesOutputPath
 
-    Write-Host "Prepared Full and Online portable zips in '$releaseOutputPath'."
+    Write-Host "Prepared language and device resources in '$pagesOutputPath'. Electron packaging supplies the desktop ZIP assets."
     Write-Host "Prepared Online build output in '$onlineBuildPath'."
     Write-Host "Prepared GitHub Pages resources in '$pagesOutputPath'."
 }
@@ -622,17 +635,28 @@ function Finalize-ReleaseAssets {
     if ([string]::IsNullOrWhiteSpace($OnlineInstallerPath)) {
         throw 'OnlineInstallerPath is required with -FinalizeOnly.'
     }
+    if ([string]::IsNullOrWhiteSpace($FullZipPath) -or [string]::IsNullOrWhiteSpace($OnlineZipPath)) {
+        throw 'FullZipPath and OnlineZipPath are required with -FinalizeOnly.'
+    }
 
     $releaseOutputPath = Resolve-RepoPath $ReleaseOutput
     $pagesOutputPath = Resolve-RepoPath $PagesOutput
     $fullInstallerSource = Resolve-RepoPath $FullInstallerPath
     $onlineInstallerSource = Resolve-RepoPath $OnlineInstallerPath
+    $fullZipSource = Resolve-RepoPath $FullZipPath
+    $onlineZipSource = Resolve-RepoPath $OnlineZipPath
 
     if (-not (Test-Path -LiteralPath $fullInstallerSource)) {
         throw "Full installer not found at '$fullInstallerSource'."
     }
     if (-not (Test-Path -LiteralPath $onlineInstallerSource)) {
         throw "Online installer not found at '$onlineInstallerSource'."
+    }
+    if (-not (Test-Path -LiteralPath $fullZipSource)) {
+        throw "Full Electron ZIP not found at '$fullZipSource'."
+    }
+    if (-not (Test-Path -LiteralPath $onlineZipSource)) {
+        throw "Online Electron ZIP not found at '$onlineZipSource'."
     }
 
     New-Item -ItemType Directory -Path $releaseOutputPath, $pagesOutputPath -Force | Out-Null
@@ -642,13 +666,19 @@ function Finalize-ReleaseAssets {
     $fullZipName = Get-FullZipAssetName $Version
     $onlineZipName = Get-OnlineZipAssetName $Version
     $hashName = Get-HashAssetName $Version
-    $legacySetupName = Get-LegacySetupAssetName $Version
 
     Copy-Item -LiteralPath $fullInstallerSource -Destination (Join-Path $releaseOutputPath $fullSetupName) -Force
-    Copy-Item -LiteralPath $fullInstallerSource -Destination (Join-Path $releaseOutputPath $legacySetupName) -Force
     Copy-Item -LiteralPath $onlineInstallerSource -Destination (Join-Path $releaseOutputPath $onlineSetupName) -Force
+    Copy-Item -LiteralPath $fullZipSource -Destination (Join-Path $releaseOutputPath $fullZipName) -Force
+    Copy-Item -LiteralPath $onlineZipSource -Destination (Join-Path $releaseOutputPath $onlineZipName) -Force
 
-    $hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName, $legacySetupName)
+    $hashAssetNames = @($fullSetupName, $onlineSetupName, $fullZipName, $onlineZipName)
+    $installerDir = Split-Path -Parent $onlineInstallerSource
+    Get-ChildItem -LiteralPath $installerDir -Filter '*.nsis.7z' -ErrorAction SilentlyContinue |
+        ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $releaseOutputPath $_.Name) -Force
+            $hashAssetNames += $_.Name
+        }
     if ($IncludeCrossPlatformCli) {
         $crossPlatformCliName = Get-CrossPlatformCliAssetName $Version
         $crossPlatformCliPath = Join-Path $releaseOutputPath $crossPlatformCliName
@@ -662,7 +692,7 @@ function Finalize-ReleaseAssets {
     Write-HashFile -AssetNames $hashAssetNames -ReleaseOutputPath $releaseOutputPath -HashFileName $hashName
     Write-StableCatalog -ReleaseOutputPath $releaseOutputPath -PagesOutputPath $pagesOutputPath
 
-    Write-Host "Finalized installer aliases and SHA256 file in '$releaseOutputPath'."
+    Write-Host "Finalized Electron installers, portable ZIPs, and SHA256 file in '$releaseOutputPath'."
     Write-Host "Finalized stable catalogs in '$pagesOutputPath\stable\catalog.json' and '$pagesOutputPath\resources\stable\catalog.json'."
 }
 

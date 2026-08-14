@@ -1,4 +1,4 @@
-﻿appId: com.universaldevicetoolkit.app
+appId: com.universaldevicetoolkit.app
 productName: Universal Device Toolkit
 copyright: Universal Device Toolkit Contributors
 executableName: UniversalDeviceToolkit
@@ -11,18 +11,32 @@ files:
   - out/**
   - resources/**
   - package.json
-extraResources:
-  - from: ../UniversalDeviceToolkit.Host/publish/win-x64
-    to: host
-    filter:
-      - "**/*"
+compression: maximum
+publish:
+  provider: github
+  owner: SSC-STUDIO
+  repo: UniversalDeviceToolkit
 win:
   icon: buildResources/icon.ico
   target:
     - target: nsis
       arch:
         - x64
+    - target: nsis-web
+      arch:
+        - x64
+    - target: zip
+      arch:
+        - x64
   artifactName: UniversalDeviceToolkitSetup-${version}.${ext}
+  # Per-platform .NET Host payload. The Release workflow publishes a
+  # self-contained runtime per RID into UniversalDeviceToolkit.Host/publish/<rid>;
+  # a missing publish dir only warns and is skipped (appFileCopier.js).
+  extraResources:
+    - from: ../UniversalDeviceToolkit.Host/publish/win-x64
+      to: host
+      filter:
+        - "**/*"
 nsis:
   oneClick: false
   perMachine: true
@@ -60,6 +74,23 @@ nsis:
     - vi
   installerIcon: buildResources/icon.ico
   uninstallerIcon: buildResources/icon.ico
+nsisWeb:
+  artifactName: UniversalDeviceToolkitOnlineSetup-${version}.${ext}
+  oneClick: false
+  perMachine: true
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Universal Device Toolkit
+  uninstallDisplayName: Universal Device Toolkit
+  deleteAppDataOnUninstall: false
+  include: buildResources/installer.nsh
+  # nsisWeb inherits nsis options; keep the stub English-only so it stays <= 15MB.
+  multiLanguageInstaller: false
+  installerLanguages:
+    - en_US
+  installerIcon: buildResources/icon.ico
+  uninstallerIcon: buildResources/icon.ico
 mac:
   target:
     - target: dmg
@@ -76,9 +107,4 @@ linux:
 npmRebuild: false
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
-
-
-
-
-
 
