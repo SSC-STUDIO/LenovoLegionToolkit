@@ -1,12 +1,12 @@
 ﻿import '../notifications/notifications.css'
 import { useEffect, useRef, useState } from 'react'
 import {
-  CheckCircleFilled,
-  CloseCircleFilled,
-  CloseOutlined,
-  InfoCircleFilled,
-  WarningFilled
-} from '@ant-design/icons'
+  CheckmarkCircle24Filled,
+  Dismiss24Regular,
+  DismissCircle24Filled,
+  Info24Filled,
+  Warning24Filled
+} from './icons/fluent'
 import { useTranslation } from 'react-i18next'
 import { useSettingsStore } from '../stores/settingsStore'
 import { useNotificationCenter, type NotificationItem, type NotificationSeverity } from '../notifications/notificationCenterStore'
@@ -27,13 +27,13 @@ const SEVERITY_COLORS: Record<NotificationSeverity, string> = {
 function SeverityIcon({ severity }: { severity: NotificationSeverity }): React.JSX.Element {
   switch (severity) {
     case 'Success':
-      return <CheckCircleFilled />
+      return <CheckmarkCircle24Filled />
     case 'Warning':
-      return <WarningFilled />
+      return <Warning24Filled />
     case 'Error':
-      return <CloseCircleFilled />
+      return <DismissCircle24Filled />
     default:
-      return <InfoCircleFilled />
+      return <Info24Filled />
   }
 }
 
@@ -124,7 +124,7 @@ function NotificationToast({ item }: { item: NotificationItem }): React.JSX.Elem
         aria-label={t('common.close', { defaultValue: 'Close' })}
         onClick={handleClose}
       >
-        <CloseOutlined />
+        <Dismiss24Regular />
       </button>
     </div>
   )
@@ -192,7 +192,13 @@ export default function NotificationCenter(): React.JSX.Element {
   const { t } = useTranslation()
   const items = useNotificationCenter((s) => s.items)
   const settingsReady = useSettingsStore((s) => s.loading === false)
-  const position = readNotificationPreferences().position
+  // Subscribed (not getState) so position changes apply immediately.
+  const applicationScope = useSettingsStore((s) => s.scopes.application)
+  const storedPosition =
+    typeof applicationScope === 'object' && applicationScope !== null
+      ? ((applicationScope as Record<string, unknown>)['NotificationPosition'] as string | undefined)
+      : undefined
+  const position = typeof storedPosition === 'string' ? storedPosition : 'BottomRight'
 
   useEffect(() => {
     void useSettingsStore.getState().load(['application'])
@@ -202,8 +208,10 @@ export default function NotificationCenter(): React.JSX.Element {
 
   const classes = ['udt-notification-center', positionClass(position)]
 
+  // key={position}: remounting on placement change replays the slide-in
+  // animation, so moving the notification corner is visible immediately.
   return (
-    <div className={classes.join(' ')} aria-label={t('common.notifications')}>
+    <div key={position} className={classes.join(' ')} aria-label={t('common.notifications')}>
       {items.map((item) => (
         <NotificationToast key={item.id} item={item} />
       ))}

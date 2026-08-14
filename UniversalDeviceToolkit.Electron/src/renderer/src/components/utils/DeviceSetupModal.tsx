@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
-import { LaptopOutlined } from '@ant-design/icons'
+import { Laptop24Regular } from '../icons/fluent'
 import { Select } from 'antd'
 import './utils.css'
 
@@ -211,13 +211,13 @@ export default function DeviceSetupModalHost(): React.JSX.Element {
     <div className="udt-utils-backdrop">
       <div
         className="udt-utils-modal"
-        style={{ width: 620, maxWidth: 620, maxHeight: 480 }}
+        style={{ width: 620, maxWidth: 'min(92vw, 620px)', maxHeight: 'min(88vh, 480px)' }}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="udt-utils-modal__title">{t('wpf.deviceSetupWindowtitle')}</div>
         <div className="udt-utils-modal__body">
           <div style={{ display: 'flex', gap: 16 }}>
-            <LaptopOutlined style={{ fontSize: 40, color: 'var(--udt-text-secondary)' }} />
+            <Laptop24Regular style={{ fontSize: 40, color: 'var(--udt-text-secondary)' }} />
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600, marginBottom: 8 }}>{t('wpf.deviceSetupWindowtitle')}</div>
               <p className="udt-utils-text" style={{ marginTop: 0, marginBottom: 14 }}>

@@ -13,7 +13,14 @@
  *    evenly across the 6 keyboard columns (660 / 6 = 110px).
  */
 
-import { SPECTRUM_KEYBOARD_LAYOUTS, type SpectrumKeyboardLayoutName } from './keyboardLayouts'
+import {
+  SPECTRUM_KEYBOARD_DESIGN,
+  SPECTRUM_KEYBOARD_LAYOUTS,
+  KEYBOARD_STAGE_PADDING,
+  enumerateSpectrumZones,
+  getSpectrumLayoutBounds,
+  type SpectrumKeyboardLayoutName
+} from './keyboardLayouts'
 
 /** Front panel / device zone: absolute rect on the device canvas. */
 export interface SpectrumDeviceZone {
@@ -48,16 +55,21 @@ const COL_WIDTH = 110
 const SIDE_COL_WIDTH = 32
 const SIDE_ZONE_W = 28
 
-/** Keyboard stage geometry shared with SpectrumKeyboard.tsx. */
-const KEYBOARD_STAGE_PADDING = 6
-const KEYBOARD_ROW_GAP = 4
+/** Deck padding around the WPF keyboard grid (imported from keyboardLayouts). */
 
-const keyboardBox = (x: number, y: number): { x: number; y: number; w: number; h: number } => ({
-  x,
-  y,
-  w: 660,
-  h: 252
-})
+const keyboardBox = (
+  x: number,
+  y: number,
+  keyboardLayout: SpectrumKeyboardLayoutName = 'Ansi'
+): { x: number; y: number; w: number; h: number } => {
+  const bounds = getSpectrumLayoutBounds(SPECTRUM_KEYBOARD_LAYOUTS[keyboardLayout])
+  return {
+    x,
+    y,
+    w: bounds.width,
+    h: bounds.height + KEYBOARD_STAGE_PADDING * 2
+  }
+}
 
 /** Zone on a 24px Electron row (logo / rear vents / front strip): y + margin 2. */
 const slimZone = (col: number, y: number, code: number, w = COL_WIDTH - 4): SpectrumDeviceZone => ({
@@ -78,17 +90,17 @@ const sideZone = (x: number, kbY: number, rowTop: number, rowH: number, code: nu
 })
 
 /**
- * Keyboard rows (top offsets within the 252px stage): row 0 is the 24px
- * function-key row, rows 1-6 are 32px each, 4px gaps, 6px padding.
+ * Keyboard rows (top offsets within the padded stage): row 0 is the 24px
+ * function-key row, rows 1-6 are 32px each with 4px gaps.
  */
 const KEYBOARD_ROWS: ReadonlyArray<{ top: number; h: number }> = [
-  { top: 6, h: 24 },
-  { top: 34, h: 32 },
-  { top: 70, h: 32 },
-  { top: 106, h: 32 },
-  { top: 142, h: 32 },
-  { top: 178, h: 32 },
-  { top: 214, h: 32 }
+  { top: KEYBOARD_STAGE_PADDING, h: 24 },
+  { top: KEYBOARD_STAGE_PADDING + 28, h: 32 },
+  { top: KEYBOARD_STAGE_PADDING + 64, h: 32 },
+  { top: KEYBOARD_STAGE_PADDING + 100, h: 32 },
+  { top: KEYBOARD_STAGE_PADDING + 136, h: 32 },
+  { top: KEYBOARD_STAGE_PADDING + 172, h: 32 },
+  { top: KEYBOARD_STAGE_PADDING + 208, h: 32 }
 ]
 
 const rearVentsFull = (y: number): SpectrumDeviceZone[] => [
@@ -177,7 +189,9 @@ const KEYBOARD_AND_FRONT: SpectrumDeviceLayout = {
   width: 660,
   height: 276,
   keyboard: keyboardBox(0, 0),
-  zones: frontStrip(252, [0x01f5, 0x01f6, 0x01f7, 0x01f8, 0x01f9, 0x01fa])
+  zones: frontStrip(SPECTRUM_KEYBOARD_DESIGN.height + KEYBOARD_STAGE_PADDING * 2, [
+    0x01f5, 0x01f6, 0x01f7, 0x01f8, 0x01f9, 0x01fa
+  ])
 }
 
 export const SPECTRUM_DEVICE_LAYOUTS: Record<SpectrumDevicePanelLayout, SpectrumDeviceLayout> = {
@@ -213,24 +227,12 @@ export function getKeyboardZoneCenters(
   offsetX = 0,
   offsetY = 0
 ): SpectrumZoneCenter[] {
-  const centers: SpectrumZoneCenter[] = []
-  const rows = SPECTRUM_KEYBOARD_LAYOUTS[layout]
-  let y = KEYBOARD_STAGE_PADDING
-  for (const row of rows) {
-    let x = KEYBOARD_STAGE_PADDING
-    let rowH = 0
-    for (const zone of row) {
-      rowH = Math.max(rowH, zone.h)
-      if (zone.code !== null) {
-        centers.push({
-          code: zone.code,
-          x: (offsetX + x + zone.w / 2) * scale,
-          y: (offsetY + y + zone.h / 2) * scale
-        })
-      }
-      x += zone.w + KEYBOARD_ROW_GAP
-    }
-    y += rowH + KEYBOARD_ROW_GAP
-  }
-  return centers
+  const keyboardLayout = SPECTRUM_KEYBOARD_LAYOUTS[layout]
+  return enumerateSpectrumZones(keyboardLayout)
+    .filter((entry): entry is typeof entry & { zone: { code: number } } => entry.zone.code !== null)
+    .map((entry) => ({
+      code: entry.zone.code,
+      x: (offsetX + KEYBOARD_STAGE_PADDING + entry.x + entry.zone.w / 2) * scale,
+      y: (offsetY + KEYBOARD_STAGE_PADDING + entry.y + entry.zone.h / 2) * scale
+    }))
 }

@@ -1,5 +1,5 @@
 import { Select, Switch, Tooltip } from 'antd'
-import { SettingOutlined } from '@ant-design/icons'
+import { Settings24Regular } from '../icons/fluent'
 import type { TFunction } from 'i18next'
 import {
   BatteryCharge24Regular,
@@ -187,12 +187,14 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
     }
   }, [supported, feature, state])
 
-  if (!supported) return null
-  if (HIDE_SINGLE_OPTION_FEATURES.has(feature) && states.length < 2) return null
+  if (HIDE_SINGLE_OPTION_FEATURES.has(feature) && supported && states.length < 2) return null
 
   const title = t(`feature.${feature}`, { defaultValue: feature })
   const description = t(`feature.${feature}.desc`, { defaultValue: '' })
   const isToggle = TOGGLE_FEATURES.has(feature)
+  const notSupportedReason = t('dashboard.card.notSupported', {
+    defaultValue: 'Not supported on this device'
+  })
 
   // Electron HDRControl_Warning / PowerModeControl_Warning.
   const warning =
@@ -206,6 +208,7 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
   // Performance/GodMode → Custom Mode settings (when the machine supports God Mode).
   const powerState = feature === 'powerMode' && typeof state === 'string' ? state : undefined
   const showConfigButton =
+    supported &&
     feature === 'powerMode' &&
     (powerState === 'Balance' ||
       ((powerState === 'Performance' || powerState === 'GodMode') && states.includes('GodMode')))
@@ -216,7 +219,7 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
 
   return (
     <>
-      <article className="udt-parity-feature-card">
+      <article className={`udt-parity-feature-card${supported ? '' : ' udt-parity-feature-card--disabled'}`}>
         <div className="udt-parity-feature-card__body">
           <FeatureIcon
             feature={feature}
@@ -227,6 +230,11 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
             {description !== '' && (
               <div className="udt-parity-feature-card__description" title={description}>{description}</div>
             )}
+            {!supported && (
+              <div className="udt-parity-feature-card__warning" title={notSupportedReason}>
+                {notSupportedReason}
+              </div>
+            )}
             {error != null && <div className="udt-parity-feature-card__warning" title={error}>{error}</div>}
             {warning !== '' && <div className="udt-parity-feature-card__warning" title={warning}>{warning}</div>}
           </div>
@@ -235,7 +243,7 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
               <Switch
                 aria-label={title}
                 checked={isOnState(state)}
-                disabled={loading || error != null || (feature === 'hdr' && hdrBlocked)}
+                disabled={!supported || loading || error != null || (feature === 'hdr' && hdrBlocked)}
                 loading={loading}
                 onChange={(checked) => void setState(checked ? 'On' : 'Off')}
               />
@@ -243,7 +251,7 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
               <Select
                 aria-label={title}
                 className="udt-parity-feature-card__select"
-                disabled={loading || error != null || states.length === 0}
+                disabled={!supported || loading || error != null || states.length === 0}
                 loading={loading}
                 value={state == null ? undefined : wireKey(state)}
                 options={states.map((value) => ({
@@ -268,7 +276,7 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
                     setSettingsModal(powerState === 'Balance' ? 'balance' : 'godMode')
                   }
                 >
-                  <SettingOutlined />
+                  <Settings24Regular />
                 </button>
               </Tooltip>
             )}

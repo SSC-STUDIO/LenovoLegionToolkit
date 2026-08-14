@@ -1,0 +1,249 @@
+/**
+ * Fluent UI icons — WPF SymbolRegular / SymbolIcon parity.
+ * Prefer these exports over @ant-design/icons across the renderer.
+ */
+import type { ReactNode } from 'react'
+import {
+  Add24Regular,
+  Apps24Regular,
+  ArrowCircleUp24Filled,
+  ArrowCircleUp24Regular,
+  ArrowClockwise24Regular,
+  ArrowCounterclockwise24Regular,
+  ArrowDown24Regular,
+  ArrowDownload24Filled,
+  ArrowDownload24Regular,
+  ArrowEnterLeft24Regular,
+  ArrowExport24Regular,
+  ArrowImport24Regular,
+  ArrowLeft24Regular,
+  ArrowMove24Regular,
+  ArrowRepeatAll24Regular,
+  ArrowRight24Regular,
+  ArrowRotateClockwise24Regular,
+  ArrowSync24Regular,
+  ArrowUndo24Regular,
+  ArrowUp24Regular,
+  Battery024Regular,
+  BatteryCharge24Regular,
+  Battery624Regular,
+  Beaker24Regular,
+  BoardRegular,
+  BookOpen24Regular,
+  Broom24Regular,
+  Checkmark24Regular,
+  CheckmarkCircle24Filled,
+  CheckmarkCircle24Regular,
+  CheckboxChecked24Regular,
+  ChevronDown24Regular,
+  ChevronUp24Regular,
+  Clock24Regular,
+  Code24Regular,
+  Color24Regular,
+  Copy24Regular,
+  Database24Regular,
+  Delete24Regular,
+  Desktop24Regular,
+  Dismiss24Regular,
+  DismissCircle24Filled,
+  DocumentQuestionMark24Regular,
+  DocumentSearch24Regular,
+  Edit24Regular,
+  ErrorCircle24Filled,
+  ErrorCircle24Regular,
+  Eye24Regular,
+  EyeOff24Regular,
+  Flash24Regular,
+  FolderAdd24Regular,
+  FolderOpen24Regular,
+  Gauge24Regular,
+  Globe24Regular,
+  HardDrive24Regular,
+  Heart24Regular,
+  Highlight24Regular,
+  Hourglass24Regular,
+  Info24Filled,
+  Info24Regular,
+  Keyboard24Regular,
+  Key24Regular,
+  Laptop24Regular,
+  Lightbulb24Regular,
+  Link24Regular,
+  Mic24Regular,
+  MoreVertical24Regular,
+  Open24Regular,
+  Options24Regular,
+  PaintBrush24Regular,
+  PauseCircle24Regular,
+  Phone24Regular,
+  Play24Regular,
+  PlayCircle24Regular,
+  PlugConnected24Regular,
+  Power24Regular,
+  RecordStop24Regular,
+  ReOrder24Regular,
+  Rocket24Regular,
+  Search24Regular,
+  ServiceBell24Regular,
+  Settings24Regular,
+  SoundSource24Regular,
+  Star24Filled,
+  Star24Regular,
+  Stop24Regular,
+  Tablet24Regular,
+  TextFont24Regular,
+  TopSpeed24Regular,
+  UsbPlug24Regular,
+  Warning24Filled,
+  Warning24Regular,
+  WeatherMoon24Regular,
+  WeatherSunny24Regular,
+  Wifi124Regular,
+  WindowConsole20Regular
+} from '@fluentui/react-icons'
+
+export {
+  Add24Regular,
+  Apps24Regular,
+  ArrowCircleUp24Filled,
+  ArrowCircleUp24Regular,
+  ArrowClockwise24Regular,
+  ArrowCounterclockwise24Regular,
+  ArrowDown24Regular,
+  ArrowDownload24Filled,
+  ArrowDownload24Regular,
+  ArrowEnterLeft24Regular,
+  ArrowExport24Regular,
+  ArrowImport24Regular,
+  ArrowLeft24Regular,
+  ArrowMove24Regular,
+  ArrowRepeatAll24Regular,
+  ArrowRight24Regular,
+  ArrowRotateClockwise24Regular,
+  ArrowSync24Regular,
+  ArrowUndo24Regular,
+  ArrowUp24Regular,
+  Battery024Regular,
+  BatteryCharge24Regular,
+  Battery624Regular,
+  Beaker24Regular,
+  BoardRegular,
+  BookOpen24Regular,
+  Broom24Regular,
+  Checkmark24Regular,
+  CheckmarkCircle24Filled,
+  CheckmarkCircle24Regular,
+  CheckboxChecked24Regular,
+  ChevronDown24Regular,
+  ChevronUp24Regular,
+  Clock24Regular,
+  Code24Regular,
+  Color24Regular,
+  Copy24Regular,
+  Database24Regular,
+  Delete24Regular,
+  Desktop24Regular,
+  Dismiss24Regular,
+  DismissCircle24Filled,
+  DocumentQuestionMark24Regular,
+  DocumentSearch24Regular,
+  Edit24Regular,
+  ErrorCircle24Filled,
+  ErrorCircle24Regular,
+  Eye24Regular,
+  EyeOff24Regular,
+  Flash24Regular,
+  FolderAdd24Regular,
+  FolderOpen24Regular,
+  Gauge24Regular,
+  Globe24Regular,
+  HardDrive24Regular,
+  Heart24Regular,
+  Highlight24Regular,
+  Hourglass24Regular,
+  Info24Filled,
+  Info24Regular,
+  Keyboard24Regular,
+  Key24Regular,
+  Laptop24Regular,
+  Lightbulb24Regular,
+  Link24Regular,
+  Mic24Regular,
+  MoreVertical24Regular,
+  Open24Regular,
+  Options24Regular,
+  PaintBrush24Regular,
+  PauseCircle24Regular,
+  Phone24Regular,
+  Play24Regular,
+  PlayCircle24Regular,
+  PlugConnected24Regular,
+  Power24Regular,
+  RecordStop24Regular,
+  ReOrder24Regular,
+  Rocket24Regular,
+  Search24Regular,
+  ServiceBell24Regular,
+  Settings24Regular,
+  SoundSource24Regular,
+  Star24Filled,
+  Star24Regular,
+  Stop24Regular,
+  Tablet24Regular,
+  TextFont24Regular,
+  TopSpeed24Regular,
+  UsbPlug24Regular,
+  Warning24Filled,
+  Warning24Regular,
+  WeatherMoon24Regular,
+  WeatherSunny24Regular,
+  Wifi124Regular,
+  WindowConsole20Regular
+}
+
+export interface FluentIconProps {
+  size?: number
+  className?: string
+  spin?: boolean
+  color?: string
+  children: ReactNode
+}
+
+/** Spinning sync glyph — replaces ant-design LoadingOutlined. */
+export function FluentLoadingIcon({
+  size = 16,
+  className
+}: {
+  size?: number
+  className?: string
+}): React.JSX.Element {
+  return (
+    <FluentIcon spin size={size} className={className}>
+      <ArrowSync24Regular />
+    </FluentIcon>
+  )
+}
+
+/** Wrap a 24px Fluent glyph at a smaller display size (metric rows, buttons). */
+export function FluentIcon({
+  size = 16,
+  className,
+  spin = false,
+  color,
+  children
+}: FluentIconProps): React.JSX.Element {
+  const classNames = ['udt-fluent-icon', spin && 'udt-fluent-icon--spin', className].filter(Boolean).join(' ')
+  return (
+    <span
+      className={classNames}
+      style={{
+        width: size,
+        height: size,
+        ...(color != null ? { color } : {})
+      }}
+      aria-hidden="true"
+    >
+      {children}
+    </span>
+  )
+}

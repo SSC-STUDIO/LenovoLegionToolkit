@@ -2,10 +2,11 @@
  * Update downloader — Electron-side counterpart of the Electron UpdateChecker.
  * The host only reports availability/version; the main process resolves the
  * release asset from the GitHub API, downloads it with progress events and
- * launches the NSIS installer silently (Electron: `/SILENT /RESTARTAPPLICATIONS`).
+ * launches the installer (Windows: NSIS silently; macOS: `open` the .dmg;
+ * Linux: run the AppImage).
  */
 import { app } from 'electron'
-import { createWriteStream, existsSync, mkdirSync } from 'fs'
+import { chmodSync, createWriteStream, existsSync, mkdirSync, readFileSync } from 'fs'
 import { join } from 'path'
 import { spawn } from 'child_process'
 import { get as httpsGet } from 'https'
@@ -13,8 +14,38 @@ import { get as httpsGet } from 'https'
 const REPO_OWNER = 'SSC-STUDIO'
 const REPO_NAME = 'UniversalDeviceToolkit'
 const API_LATEST = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases/latest`
-const ASSET_PATTERN = /UniversalDeviceToolkitSetup-.*\.exe$/i
 const USER_AGENT = 'UniversalDeviceToolkit-Electron'
+
+export type InstallChannel = 'full' | 'online'
+
+/** Packed by Scripts/Build-ElectronInstaller.ps1 (`full` or `online`). */
+export function readInstallChannel(): InstallChannel {
+  const candidates = [
+    join(process.resourcesPath, 'install-channel'),
+    join(app.getAppPath(), 'resources', 'install-channel')
+  ]
+  for (const candidate of candidates) {
+    try {
+      if (!existsSync(candidate)) continue
+      const value = readFileSync(candidate, 'utf8').trim().toLowerCase()
+      if (value === 'online') return 'online'
+      if (value === 'full') return 'full'
+    } catch {
+      // Keep looking; missing markers default to Full.
+    }
+  }
+  return 'full'
+}
+
+/** electron-builder artifact name per platform: NSIS .exe / .dmg / .AppImage. */
+function assetPatternForPlatform(): RegExp {
+  if (process.platform === 'darwin') return /UniversalDeviceToolkit.*\.dmg$/i
+  if (process.platform === 'linux') return /UniversalDeviceToolkit.*\.AppImage$/i
+  if (readInstallChannel() === 'online') {
+    return /UniversalDeviceToolkit_v.+_Online_Setup\.exe$|UniversalDeviceToolkitOnlineSetup-.+\.exe$/i
+  }
+  return /UniversalDeviceToolkit_v.+_Full_Setup\.exe$|UniversalDeviceToolkitSetup-.+\.exe$/i
+}
 
 export interface UpdateReleaseInfo {
   version: string
@@ -75,7 +106,8 @@ export async function getLatestRelease(): Promise<UpdateReleaseInfo | null> {
       body?: string
       assets?: Array<{ name?: string; browser_download_url?: string; size?: number }>
     }
-    const asset = (release.assets ?? []).find((item) => item.name != null && ASSET_PATTERN.test(item.name))
+    const assetPattern = assetPatternForPlatform()
+    const asset = (release.assets ?? []).find((item) => item.name != null && assetPattern.test(item.name))
     if (asset?.browser_download_url == null || asset.name == null) {
       return null
     }
@@ -163,14 +195,38 @@ export async function downloadLatestUpdate(onProgress: (progress: DownloadProgre
   return downloadToFile(release.assetUrl, destination, onProgress)
 }
 
-/** Launches the NSIS installer silently and exits the app (Electron /SILENT /RESTARTAPPLICATIONS). */
+/**
+ * Launches the installer and exits the app: NSIS silently on Windows
+ * (Electron /SILENT /RESTARTAPPLICATIONS), `open` on macOS (mounts the dmg),
+ * direct spawn on Linux (AppImage needs the executable bit first).
+ */
 export async function launchInstaller(installerPath: string): Promise<{ ok: boolean }> {
   return new Promise((resolve) => {
-    const child = spawn(installerPath, ['/SILENT', '/RESTARTAPPLICATIONS'], {
-      detached: true,
-      stdio: 'ignore',
-      windowsHide: false
-    })
+    let child: ReturnType<typeof spawn>
+    if (process.platform === 'darwin') {
+      child = spawn('open', [installerPath], {
+        detached: true,
+        stdio: 'ignore'
+      })
+    } else if (process.platform === 'linux') {
+      // Downloaded files lose the executable bit; AppImage refuses to run
+      // without it. Failures here surface through the spawn error below.
+      try {
+        chmodSync(installerPath, 0o755)
+      } catch {
+        // ignore — the spawn error carries the real reason
+      }
+      child = spawn(installerPath, [], {
+        detached: true,
+        stdio: 'ignore'
+      })
+    } else {
+      child = spawn(installerPath, ['/SILENT', '/RESTARTAPPLICATIONS'], {
+        detached: true,
+        stdio: 'ignore',
+        windowsHide: false
+      })
+    }
     child.on('error', () => resolve({ ok: false }))
     child.on('spawn', () => {
       resolve({ ok: true })

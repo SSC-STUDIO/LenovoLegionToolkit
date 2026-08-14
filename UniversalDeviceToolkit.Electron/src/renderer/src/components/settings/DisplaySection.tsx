@@ -8,31 +8,16 @@ import { SettingsCard } from './SettingsCard'
 import WindowBackdropSetting from './WindowBackdropSetting'
 import BootLogoModal from './BootLogoModal'
 import ExcludeRefreshRatesModal from './ExcludeRefreshRatesModal'
-import NavigationItemsModal from './NavigationItemsModal'
+import NavigationItemsSetting from './NavigationItemsSetting'
 import NotificationsModal from './NotificationsModal'
-
-const NOTIFICATION_POSITIONS: Array<{ value: string; i18nKey: string }> = [
-  { value: 'BottomRight', i18nKey: 'settings.display.notificationPositions.bottomRight' },
-  { value: 'BottomCenter', i18nKey: 'settings.display.notificationPositions.bottomCenter' },
-  { value: 'BottomLeft', i18nKey: 'settings.display.notificationPositions.bottomLeft' },
-  { value: 'CenterLeft', i18nKey: 'settings.display.notificationPositions.centerLeft' },
-  { value: 'TopLeft', i18nKey: 'settings.display.notificationPositions.topLeft' },
-  { value: 'TopCenter', i18nKey: 'settings.display.notificationPositions.topCenter' },
-  { value: 'TopRight', i18nKey: 'settings.display.notificationPositions.topRight' },
-  { value: 'CenterRight', i18nKey: 'settings.display.notificationPositions.centerRight' },
-  { value: 'Center', i18nKey: 'settings.display.notificationPositions.center' }
-]
-
-const NOTIFICATION_DURATIONS: Array<{ value: string; i18nKey: string }> = [
-  { value: 'Short', i18nKey: 'settings.display.notificationDurations.short' },
-  { value: 'Normal', i18nKey: 'settings.display.notificationDurations.normal' },
-  { value: 'Long', i18nKey: 'settings.display.notificationDurations.long' }
-]
+import {
+  buildNotificationDurationOptions,
+  buildNotificationPositionOptions
+} from './notificationSettingsOptions'
 
 export function DisplaySection(): React.JSX.Element {
   const { t } = useTranslation()
   const { scopes, load, setScope } = useSettingsStore()
-  const [navigationItemsOpen, setNavigationItemsOpen] = useState(false)
   const [notificationsOpen, setNotificationsOpen] = useState(false)
   const [excludeRefreshRatesOpen, setExcludeRefreshRatesOpen] = useState(false)
   const [bootLogoOpen, setBootLogoOpen] = useState(false)
@@ -50,8 +35,7 @@ export function DisplaySection(): React.JSX.Element {
         if (!cancelled) setBootLogoSupported(true)
       })
       .catch(() => {
-        // The boot logo feature is hidden when it is unsupported or the host
-        // does not expose it, mirroring the Electron BootLogo.IsSupportedAsync gate.
+        // Hidden when unsupported, mirroring Electron BootLogo.IsSupportedAsync gate.
       })
     return () => {
       cancelled = true
@@ -78,11 +62,44 @@ export function DisplaySection(): React.JSX.Element {
 
   return (
     <div className="udt-settings-section udt-settings-section--display">
+      <NavigationItemsSetting />
+
+      <div className="udt-settings-group-title">{t('settings.display.groupNotifications')}</div>
       <SettingsCard
-        title={t('settings.display.navigationItems')}
-        description={t('wpf.navigationItemsSettingsWindowdescription')}
-        onClick={() => setNavigationItemsOpen(true)}
-      />
+        title={t('settings.display.notifications')}
+        description={t('settings.display.notificationsDesc')}
+      >
+        <div className="udt-settings-card__fields">
+          <div className="udt-settings-row">
+            <span className="udt-settings-row__label">{t('settings.display.notificationPosition')}</span>
+            <Select<string>
+              className="udt-settings-row__select udt-settings-select"
+              value={notificationPosition}
+              onChange={(value) => void persistApplication({ NotificationPosition: value })}
+              options={buildNotificationPositionOptions(t)}
+            />
+          </div>
+          <div className="udt-settings-row">
+            <span className="udt-settings-row__label">{t('settings.display.notificationDuration')}</span>
+            <Select<string>
+              className="udt-settings-row__select udt-settings-select"
+              value={notificationDuration}
+              onChange={(value) => void persistApplication({ NotificationDuration: value })}
+              options={buildNotificationDurationOptions(t)}
+            />
+          </div>
+        </div>
+        <button
+          type="button"
+          className="udt-settings-card__link-row"
+          onClick={() => setNotificationsOpen(true)}
+        >
+          <span>{t('settings.display.notificationCategories')}</span>
+        </button>
+      </SettingsCard>
+
+      <div className="udt-settings-group-title">{t('settings.display.groupWindow')}</div>
+      <WindowBackdropSetting application={app} persist={(patch) => void persistApplication(patch)} />
       {bootLogoSupported && (
         <SettingsCard
           title={t('settings.display.bootLogo')}
@@ -90,40 +107,6 @@ export function DisplaySection(): React.JSX.Element {
           onClick={() => setBootLogoOpen(true)}
         />
       )}
-      <SettingsCard
-        title={t('settings.display.notifications')}
-        description={t('settings.display.notificationsDesc')}
-        onClick={() => setNotificationsOpen(true)}
-      />
-      <WindowBackdropSetting application={app} persist={(patch) => void persistApplication(patch)} />
-      <SettingsCard
-        title={t('settings.display.notificationPosition')}
-        action={
-          <Select<string>
-            className="udt-settings-select"
-            value={notificationPosition}
-            onChange={(value) => void persistApplication({ NotificationPosition: value })}
-            options={NOTIFICATION_POSITIONS.map((option) => ({
-              value: option.value,
-              label: t(option.i18nKey)
-            }))}
-          />
-        }
-      />
-      <SettingsCard
-        title={t('settings.display.notificationDuration')}
-        action={
-          <Select<string>
-            className="udt-settings-select"
-            value={notificationDuration}
-            onChange={(value) => void persistApplication({ NotificationDuration: value })}
-            options={NOTIFICATION_DURATIONS.map((option) => ({
-              value: option.value,
-              label: t(option.i18nKey)
-            }))}
-          />
-        }
-      />
       <SettingsCard
         title={t('settings.display.excludedRefreshRates')}
         description={t('settings.display.excludedRefreshRatesDesc')}
@@ -134,23 +117,16 @@ export function DisplaySection(): React.JSX.Element {
             {t('settings.display.excludedRefreshRatesEmpty')}
           </div>
         ) : (
-          <div className="udt-settings-switch-list">
+          <div className="udt-settings-tag-list">
             {excludedRefreshRates.map((rate) => (
-              <div key={rate.Frequency} className="udt-settings-switch-list__row">
-                <span className="udt-settings-switch-list__label">{rate.Frequency}Hz</span>
-              </div>
+              <span key={rate.Frequency} className="udt-settings-tag-list__tag">
+                {rate.Frequency} Hz
+              </span>
             ))}
           </div>
         )}
-        <div className="udt-settings-card__hint">
-          {t('settings.display.excludedRefreshRatesManageHint')}
-        </div>
       </SettingsCard>
 
-      <NavigationItemsModal
-        open={navigationItemsOpen}
-        onClose={() => setNavigationItemsOpen(false)}
-      />
       <NotificationsModal open={notificationsOpen} onClose={() => setNotificationsOpen(false)} />
       <ExcludeRefreshRatesModal
         open={excludeRefreshRatesOpen}

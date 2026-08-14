@@ -1,6 +1,6 @@
 import './custom.css'
 import { useTranslation } from 'react-i18next'
-import { LoadingOutlined } from '@ant-design/icons'
+import { ArrowSync24Regular, FluentIcon } from './icons/fluent'
 import { useLoadingStore } from '../stores/loadingStore'
 
 /**
@@ -20,7 +20,9 @@ export default function LoadingOverlay(): React.JSX.Element | null {
   return (
     <div className="udt-loading-overlay" role="status" aria-live="polite">
       <div className="udt-loading-overlay__card">
-        <LoadingOutlined style={{ fontSize: 40, color: 'var(--udt-accent-secondary)' }} />
+        <FluentIcon size={40} spin color="var(--udt-accent-secondary)">
+          <ArrowSync24Regular />
+        </FluentIcon>
         <div className="udt-loading-overlay__message">{active.label}</div>
         {active.message != null && active.message !== '' && (
           <div className="udt-loading-overlay__sub">{active.message}</div>

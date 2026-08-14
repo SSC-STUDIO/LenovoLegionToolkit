@@ -104,7 +104,6 @@ function hexToRgbString(hex: string): string {
 /** Live preview of the OSD background/rounded box. */
 function OsdPreview(): React.JSX.Element {
   const { settings } = useOsdSettingsStore()
-  const { t } = useTranslation()
   const alpha = Math.min(1, Math.max(0, settings.backgroundOpacity))
   const radius =
     settings.selectedStyleIndex === 1
@@ -120,7 +119,6 @@ function OsdPreview(): React.JSX.Element {
             borderRadius: radius
           }}
         />
-        <div className="udt-osd-preview__label">{t('settings.osd.previewHint')}</div>
       </div>
     </div>
   )
@@ -224,15 +222,17 @@ export function OsdSection(): React.JSX.Element {
 
   return (
     <div className="udt-settings-section udt-settings-section--osd">
-      <SettingsCard title={t('settings.osd.title')}>
-        <Tabs
-          className="udt-settings-tabs"
-          items={[
+      <SettingsCard>
+        <div className="udt-osd-settings-layout">
+          <div className="udt-osd-settings-layout__main">
+            <Tabs
+              className="udt-settings-tabs udt-osd-settings-tabs"
+              items={[
             {
               key: 'general',
               label: t('settings.osd.tabs.general'),
               children: (
-                <div className="udt-settings-fields">
+                <div className="udt-settings-fields udt-osd-settings-fields udt-osd-settings-fields--form">
                   <div className="udt-settings-row">
                     <div className="udt-settings-row__copy">
                       <span className="udt-settings-row__label">{t('settings.osd.showOsd')}</span>
@@ -305,7 +305,7 @@ export function OsdSection(): React.JSX.Element {
               key: 'appearance',
               label: t('settings.osd.tabs.appearance'),
               children: (
-                <div className="udt-settings-fields">
+                <div className="udt-settings-fields udt-osd-settings-fields udt-osd-settings-fields--form">
                   {sliderRow(
                     t('settings.osd.opacity'),
                     settings.backgroundOpacity,
@@ -348,7 +348,7 @@ export function OsdSection(): React.JSX.Element {
               key: 'thresholds',
               label: t('settings.osd.tabs.thresholds'),
               children: (
-                <div className="udt-settings-fields">
+                <div className="udt-settings-fields udt-osd-threshold-groups">
                   {thresholdGroup(
                     t('settings.osd.thresholds.performance'),
                     numberField(
@@ -413,7 +413,7 @@ export function OsdSection(): React.JSX.Element {
               key: 'sensors',
               label: t('settings.osd.tabs.sensors'),
               children: (
-                <div className="udt-settings-fields">
+                <div className="udt-settings-fields udt-osd-settings-fields">
                   {groups.map((group) => (
                     <div key={group.key} className="udt-settings-group">
                       <div className="udt-settings-group__title">
@@ -442,8 +442,13 @@ export function OsdSection(): React.JSX.Element {
               )
             }
           ]}
-        />
-        <OsdPreview />
+            />
+          </div>
+          <aside className="udt-osd-settings-layout__aside" aria-label={t('settings.osd.previewHint')}>
+            <div className="udt-osd-preview__heading">{t('settings.osd.previewHint')}</div>
+            <OsdPreview />
+          </aside>
+        </div>
       </SettingsCard>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { SensorsBattery, SensorsCpu, SensorsGpu, SensorsMemory } from '../../api/sensors'
+import { formatUsageInGigabytes } from '../../utils/format'
 
 export type TemperatureUnit = 'C' | 'F'
 
@@ -52,29 +53,6 @@ export function formatTemperaturePair(
   if (a != null) return a
   if (b != null) return b
   return '-'
-}
-
-// FormatUsageInGigabytes: "x.x / y.y GB (z%)", "x.x GB (z%)" or "x.x GB".
-export function formatUsageInGigabytes(
-  usedMb: number | null | undefined,
-  totalMb: number | null | undefined,
-  percentage: number | null | undefined = -1
-): string {
-  if (usedMb == null || !Number.isFinite(usedMb) || usedMb < 0) {
-    return percentage != null && Number.isFinite(percentage) && percentage >= 0
-      ? `${percentage.toFixed(0)}%`
-      : '-'
-  }
-  const usedGb = usedMb / 1024
-  const totalGb = totalMb != null && Number.isFinite(totalMb) && totalMb > 0 ? totalMb / 1024 : 0
-  const percent =
-    percentage != null && Number.isFinite(percentage) && percentage >= 0
-      ? percentage
-      : totalGb > 0
-        ? (usedGb / totalGb) * 100
-        : -1
-  const base = totalGb > 0 ? `${usedGb.toFixed(1)} / ${totalGb.toFixed(1)} GB` : `${usedGb.toFixed(1)} GB`
-  return percent >= 0 ? `${base} (${percent.toFixed(0)}%)` : base
 }
 
 // FormatThroughput: B/s → KB/s → MB/s → GB/s (0.00 decimals).
@@ -208,10 +186,40 @@ export function useSensorDetails(props: SensorDetailsProps): {
     { label: t('dashboard.sensor.detail.designCapacity'), value: formatWattHours(props.battery?.designCapacity) },
     { label: t('dashboard.sensor.detail.fullChargeCapacity'), value: formatWattHours(props.battery?.fullChargeCapacity) },
     { label: t('dashboard.sensor.health'), value: formatHealthPercent(props.battery?.health) },
-    { label: t('dashboard.sensor.cycles'), value: '-' },
-    { label: t('dashboard.sensor.date'), value: '-' },
+    {
+      label: t('dashboard.sensor.cycles'),
+      value:
+        props.battery?.cycleCount != null && Number.isFinite(props.battery.cycleCount) && props.battery.cycleCount >= 0
+          ? String(Math.round(props.battery.cycleCount))
+          : '-'
+    },
+    {
+      label: t('dashboard.sensor.date'),
+      value: (() => {
+        const iso = props.battery?.manufactureDate ?? props.battery?.firstUseDate
+        if (iso == null || iso === '') return '-'
+        const parsed = new Date(`${iso}T00:00:00`)
+        return Number.isFinite(parsed.getTime()) ? parsed.toLocaleDateString() : iso
+      })()
+    },
     { label: t('dashboard.sensor.voltage'), value: formatVoltage(props.battery?.voltage) },
-    { label: t('dashboard.sensor.powerRange'), value: '-' },
+    {
+      label: t('dashboard.sensor.powerRange'),
+      value: (() => {
+        const minMw = props.battery?.minDischargeRate
+        const maxMw = props.battery?.maxDischargeRate
+        const toW = (mw: number): string => {
+          const w = mw / 1000
+          const sign = w > 0 ? '+' : w < 0 ? '-' : ''
+          return `${sign}${Math.abs(w).toFixed(2)} W`
+        }
+        const minOk = minMw != null && Number.isFinite(minMw) && minMw !== -1
+        const maxOk = maxMw != null && Number.isFinite(maxMw) && maxMw !== -1
+        if (!minOk && !maxOk) return '-'
+        if (minOk && maxOk) return `${toW(minMw)} ~ ${toW(maxMw)}`
+        return toW((minOk ? minMw : maxMw) as number)
+      })()
+    },
     {
       label: t('dashboard.sensor.detail.currentPower', { defaultValue: 'Current Power' }),
       value: batteryPowerText

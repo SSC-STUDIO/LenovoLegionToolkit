@@ -1,4 +1,6 @@
 import { BrowserWindow, nativeTheme, screen, type Rectangle } from 'electron'
+import { effectiveZoom } from './ui-scale'
+import { cancelIdleDestroy, scheduleIdleDestroy, setSurfaceVisible } from './ui-activity'
 
 /**
  * Compact tray flyout — HTML popup replacing the native Windows 11 Menu.
@@ -60,7 +62,7 @@ function renderNodes(nodes: TrayPopupNode[]): string {
 function pageCss(): string {
   return [
     'html,body{margin:0;padding:0;background:transparent;overflow:hidden;',
-    'font-family:"Segoe UI Variable","Segoe UI",system-ui,sans-serif;user-select:none;',
+    'font-family:"Segoe UI Variable","Segoe UI",-apple-system,"Noto Sans",system-ui,sans-serif;user-select:none;',
     'box-sizing:border-box;}',
     '*,*::before,*::after{box-sizing:border-box;}',
     'html.dark{color-scheme:dark;',
@@ -131,7 +133,8 @@ function ensureWindow(): BrowserWindow {
     maximizable: false,
     fullscreenable: false,
     webPreferences: {
-      sandbox: true
+      sandbox: true,
+      backgroundThrottling: true
     }
   })
 
@@ -192,8 +195,10 @@ async function fitToContent(win: BrowserWindow): Promise<void> {
     const size = (await win.webContents.executeJavaScript(
       '[document.body.scrollWidth, document.body.scrollHeight]'
     )) as [number, number]
-    const width = Math.max(1, Math.round(size[0]))
-    const height = Math.max(1, Math.round(size[1]))
+    // CSS px -> DIP via the shared zoom factor (see ui-scale.ts).
+    const zoom = effectiveZoom()
+    const width = Math.max(1, Math.round(size[0] * zoom))
+    const height = Math.max(1, Math.round(size[1] * zoom))
     if (!win.isDestroyed()) win.setContentSize(width, height)
   } catch {
     // Keep the last size if measurement fails.
@@ -228,11 +233,15 @@ export function hideTrayPopup(): void {
   if (popup && !popup.isDestroyed() && popup.isVisible()) {
     popup.hide()
   }
+  setSurfaceVisible('trayPopup', false)
+  scheduleIdleDestroy('trayPopup', destroyTrayPopup)
 }
 
 export function destroyTrayPopup(): void {
+  cancelIdleDestroy('trayPopup')
   blurArmed = false
   onCommand = null
+  setSurfaceVisible('trayPopup', false)
   if (popup && !popup.isDestroyed()) {
     popup.destroy()
   }
@@ -241,18 +250,13 @@ export function destroyTrayPopup(): void {
   loadPromise = null
 }
 
-/** Create the hidden flyout window at tray init so the first right-click is instant. */
-export function prewarmTrayPopup(): void {
-  const win = ensureWindow()
-  void loadShell(win)
-}
-
 export async function showTrayPopup(
   nodes: TrayPopupNode[],
   trayBounds: Rectangle,
   handler: (cmd: TrayPopupCommand) => void
 ): Promise<void> {
   onCommand = handler
+  cancelIdleDestroy('trayPopup')
   const win = ensureWindow()
   const inner = renderNodes(nodes)
   await setMenuHtml(win, inner)
@@ -262,6 +266,7 @@ export async function showTrayPopup(
   positionNearTray(win, trayBounds)
   blurArmed = false
   if (!win.isVisible()) win.show()
+  setSurfaceVisible('trayPopup', true)
   win.focus()
   setTimeout(() => {
     blurArmed = true

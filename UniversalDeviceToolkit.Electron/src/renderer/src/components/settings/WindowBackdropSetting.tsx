@@ -1,17 +1,22 @@
-import { Select } from 'antd'
+﻿import { Select } from 'antd'
 import { useTranslation } from 'react-i18next'
 import {
   applyWindowBackdrop,
   normalizeWindowBackdropStyle,
   type WindowBackdropStyle
 } from '../../theme/windowBackdrop'
+import { SettingsCard } from './SettingsCard'
 
 interface WindowBackdropSettingProps {
   application: Record<string, unknown>
   persist: (patch: Record<string, unknown>) => void
 }
 
-const OPTIONS: WindowBackdropStyle[] = ['Windows', 'macOS', 'Off']
+const PLATFORM: string = window.bridge?.platform ?? 'win32'
+
+/** Options meaningful on the current platform (mica is Windows-only). */
+const OPTIONS: WindowBackdropStyle[] =
+  PLATFORM === 'win32' ? ['Windows', 'macOS', 'Off'] : ['macOS', 'Off']
 
 export default function WindowBackdropSetting({
   application,
@@ -23,27 +28,24 @@ export default function WindowBackdropSetting({
     macOS: t('wpf.settingsPagewindowBackdropacrylic'),
     Off: t('wpf.settingsPagewindowBackdropoff')
   }
-  const style = normalizeWindowBackdropStyle(application['WindowBackdropStyle'])
+  const rawStyle = normalizeWindowBackdropStyle(application['WindowBackdropStyle'])
+  const style: WindowBackdropStyle = OPTIONS.includes(rawStyle) ? rawStyle : 'macOS'
 
   return (
-    <div className="udt-backdrop-setting">
-      <div className="udt-backdrop-setting__copy">
-        <span className="udt-backdrop-setting__title">
-          {t('wpf.settingsPagewindowBackdroptitle')}
-        </span>
-        <span className="udt-backdrop-setting__description">
-          {t('wpf.settingsPagewindowBackdropmessage')}
-        </span>
-      </div>
-      <Select<WindowBackdropStyle>
-        className="udt-backdrop-setting__select"
-        value={style}
-        onChange={(value) => {
-          applyWindowBackdrop(value)
-          persist({ WindowBackdropStyle: value })
-        }}
-        options={OPTIONS.map((value) => ({ value, label: labels[value] }))}
-      />
-    </div>
+    <SettingsCard
+      title={t('wpf.settingsPagewindowBackdroptitle')}
+      description={t('wpf.settingsPagewindowBackdropmessage')}
+      action={
+        <Select<WindowBackdropStyle>
+          className="udt-settings-select"
+          value={style}
+          onChange={(value) => {
+            applyWindowBackdrop(value)
+            persist({ WindowBackdropStyle: value })
+          }}
+          options={OPTIONS.map((value) => ({ value, label: labels[value] }))}
+        />
+      }
+    />
   )
 }

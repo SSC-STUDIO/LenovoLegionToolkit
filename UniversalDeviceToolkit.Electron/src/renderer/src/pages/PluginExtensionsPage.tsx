@@ -1,29 +1,37 @@
 ﻿import { useEffect, useMemo, useState } from 'react'
 import {
-  AppstoreOutlined,
-  CheckCircleOutlined,
-  CheckOutlined,
-  CopyOutlined,
-  DeleteOutlined,
-  DownOutlined,
-  DownloadOutlined,
-  ExclamationCircleOutlined,
-  FolderOpenOutlined,
-  ReloadOutlined,
-  SearchOutlined,
-  SettingOutlined,
-  UpCircleOutlined,
-  UpOutlined
-} from '@ant-design/icons'
+  Apps24Regular,
+  CheckmarkCircle24Regular,
+  Checkmark24Regular,
+  Copy24Regular,
+  Delete24Regular,
+  ChevronDown24Regular,
+  ArrowDownload24Regular,
+  ErrorCircle24Regular,
+  FolderOpen24Regular,
+  ArrowClockwise24Regular,
+  Search24Regular,
+  Settings24Regular,
+  ArrowCircleUp24Regular,
+  ChevronUp24Regular
+} from '../components/icons/fluent'
 import { Button, Input, Popconfirm, Select, Spin, Tooltip, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { PluginView } from '../api/plugins'
+import { SkeletonBone } from '../components/Skeleton'
 import { usePluginsStore } from '../stores/pluginsStore'
 import PluginSettingsModal from '../components/settings/PluginSettingsModal'
-import '../components/pages/pages.css'
-
-type FilterValue = 'all' | 'installed' | 'notInstalled'
+import {
+  filterPlugins,
+  pluginCardActions,
+  pluginFileName,
+  runPluginOperations,
+  summarizePlugins,
+  uninstallFeedback
+} from './pluginExtensionsModel'
+import type { PluginFilterValue } from './pluginExtensionsModel'
+import './pages.css'
 
 interface ContextMenuState {
   id: string
@@ -82,12 +90,8 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
 
   const installing = plugin.id in installingIds
   const progress = installingIds[plugin.id] ?? 0
-  const installed = Boolean(plugin.installedVersion)
-  const supportsOpen =
-    plugin.capabilities.settingsPage ||
-    plugin.capabilities.featurePage ||
-    plugin.capabilities.optimizationCategory ||
-    plugin.capabilities.executableEntryPoint
+  const actions = pluginCardActions(plugin)
+  const installed = actions.installed
   const hasUpdateInfo =
     plugin.updateAvailable && Boolean(plugin.availableVersion || plugin.releaseDate || plugin.changelog)
   const hasExpandableContent = Boolean(plugin.details || plugin.usageGuide || hasUpdateInfo)
@@ -108,11 +112,24 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
 
   const handleUninstall = async (): Promise<void> => {
     const result = await uninstall(plugin.id)
-    if (result.dependencyBlocked) {
+    const feedback = uninstallFeedback(result)
+    if (feedback === 'dependencyBlocked') {
       message.warning(t('plugins.dependenciesBlocked'))
-    } else if (!result.ok) {
+    } else if (feedback === 'failed') {
       message.error(t('plugins.uninstallFailed'))
     }
+  }
+
+  const handleInstall = async (): Promise<void> => {
+    if (await install(plugin.id)) return
+    message.error(
+      t(
+        plugin.updateAvailable
+          ? 'pluginExtensionsPageupdateFailed'
+          : 'pluginExtensionsPageinstallFailed',
+        { defaultValue: plugin.updateAvailable ? 'Update failed' : 'Installation failed' }
+      )
+    )
   }
 
   const handleCopyId = async (): Promise<void> => {
@@ -131,17 +148,8 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
     setContextMenu({ id: plugin.id, x: position.x, y: position.y })
   }
 
-  const handleDoubleClick = (): void => {
-    // Mirrors PluginListBox_MouseDoubleClick → OpenPluginDefaultActionAsync. The
-    // plugin pages themselves are hosted by the .NET side (PluginPageWrapper),
-    // which the renderer cannot embed; surface the closest equivalent: expand
-    // the details so settings/guide content stays reachable.
-    setExpanded((value) => !value)
-    setContextMenu(null)
-  }
-
   return (
-    <div className="udt-plugin-card" onContextMenu={openContextMenu} onDoubleClick={handleDoubleClick}>
+    <div className="udt-plugin-card" onContextMenu={openContextMenu}>
       <div className="udt-plugin-card__row">
         <div
           className="udt-plugin-card__icon"
@@ -150,7 +158,7 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
           {iconLetterOf(plugin.name)}
           {installed && !installing && (
             <span className="udt-plugin-card__installed-badge">
-              <CheckOutlined />
+              <Checkmark24Regular />
             </span>
           )}
         </div>
@@ -185,7 +193,7 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
               className="udt-plugin-card__toggle"
               onClick={() => setExpanded((value) => !value)}
             >
-              {expanded ? <UpOutlined /> : <DownOutlined />}
+              {expanded ? <ChevronUp24Regular /> : <ChevronDown24Regular />}
               {expanded
                 ? t('plugins.collapseDetails', '隐藏详细资料')
                 : t('plugins.showDetails', '显示详细资料')}
@@ -212,7 +220,7 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
                     {t('plugins.updateInfo', '更新信息')}
                   </div>
                   <div className="udt-plugin-card__details-version-row">
-                    <span>{t('plugins.versionLabel', '版本：')}</span>
+                    <span>{t('plugins.versionLabel', 'Version:')}</span>
                     <strong>{plugin.availableVersion}</strong>
                     {plugin.releaseDate && (
                       <span className="udt-plugin-card__details-date">{plugin.releaseDate}</span>
@@ -237,56 +245,64 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
             </div>
           ) : (
             <>
-              {(!installed || plugin.updateAvailable) && (
+              {actions.canInstallOrUpdate && (
                 <Tooltip title={plugin.updateAvailable ? t('plugins.update') : t('plugins.install')}>
                   <button
                     type="button"
                     className="udt-action-btn udt-action-btn--accent"
-                    onClick={() => void install(plugin.id)}
+                    aria-label={`${plugin.updateAvailable ? t('plugins.update') : t('plugins.install')} ${plugin.name}`}
+                    onClick={() => void handleInstall()}
                   >
-                    <DownloadOutlined />
+                    <ArrowDownload24Regular />
                   </button>
                 </Tooltip>
               )}
-              {installed && plugin.capabilities.settingsPage && (
+              {actions.canConfigure && (
                 <Tooltip title={t('plugins.configure', '配置')}>
                   <button
                     type="button"
                     className="udt-action-btn"
+                    aria-label={`${t('plugins.configure', 'Configure')} ${plugin.name}`}
                     onClick={() => setSettingsOpen(true)}
                   >
-                    <SettingOutlined />
+                    <Settings24Regular />
                   </button>
                 </Tooltip>
               )}
-              {installed && plugin.webPage && (
+              {actions.canOpenWebPage && (
                 <Tooltip title={t('plugins.openPage', '打开插件页面')}>
                   <button
                     type="button"
                     className="udt-action-btn"
+                    aria-label={`${t('plugins.openPage', 'Open plugin page')} ${plugin.name}`}
                     onClick={() => navigate(`/plugins/${encodeURIComponent(plugin.id)}`)}
                   >
-                    <FolderOpenOutlined />
+                    <FolderOpen24Regular />
                   </button>
                 </Tooltip>
               )}
-              {installed && supportsOpen && (
+              {actions.canOpenCapability && (
                 <Tooltip title={t('plugins.open', '打开')}>
                   <button
                     type="button"
                     className="udt-action-btn"
+                    aria-label={`${t('plugins.open', 'Open')} ${plugin.name}`}
                     onClick={() => {
                       setExpanded((value) => !value)
                     }}
                   >
-                    <FolderOpenOutlined />
+                    <FolderOpen24Regular />
                   </button>
                 </Tooltip>
               )}
-              {installed && (
+              {actions.canUninstall && (
                 <Popconfirm title={t('plugins.uninstallConfirm')} onConfirm={() => void handleUninstall()}>
-                  <button type="button" className="udt-action-btn udt-action-btn--danger">
-                    <DeleteOutlined />
+                  <button
+                    type="button"
+                    className="udt-action-btn udt-action-btn--danger"
+                    aria-label={`${t('plugins.uninstall')} ${plugin.name}`}
+                  >
+                    <Delete24Regular />
                   </button>
                 </Popconfirm>
               )}
@@ -314,7 +330,7 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
             role="menu"
           >
             <button type="button" role="menuitem" onClick={() => void handleCopyId()}>
-              <CopyOutlined /> {t('plugins.copyId')}
+              <Copy24Regular /> {t('plugins.copyId')}
             </button>
           </div>
           <div
@@ -330,19 +346,40 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
     </div>
   )
 }
+/**
+ * Mirrors the live plugin card: bordered card shell, 44px icon, name row with
+ * version badge, secondary/description lines and a trailing action button.
+ */
 function PluginSkeleton(): React.JSX.Element {
   return (
     <div className="udt-plugins-page__skeleton">
       {SKELETON_ROWS.map((row, index) => (
-        <div key={index} className="udt-plugins-page__skeleton-row">
-          <div className="udt-skeleton udt-plugins-page__skeleton-icon" />
-          <div className="udt-plugins-page__skeleton-copy">
-            <div className="udt-skeleton" style={{ width: row.name, height: 14 }} />
-            <div className="udt-skeleton" style={{ width: row.sub, height: 10 }} />
-            <div
-              className="udt-skeleton udt-plugins-page__skeleton-line"
-              style={{ height: 10, marginRight: row.right }}
-            />
+        <div key={index} className="udt-plugin-card">
+          <div className="udt-plugin-card__row">
+            <SkeletonBone delay={index * 4} className="udt-plugins-page__skeleton-icon" />
+            <div className="udt-plugins-page__skeleton-copy">
+              <div className="udt-plugins-page__skeleton-title-row">
+                <SkeletonBone delay={index * 4 + 1} width={row.name} height={15} radius="small" />
+                <SkeletonBone delay={index * 4 + 1} variant="muted" width={36} height={12} radius="small" />
+              </div>
+              <SkeletonBone
+                delay={index * 4 + 2}
+                width={row.sub}
+                height={12}
+                radius="small"
+                style={{ marginTop: 8 }}
+              />
+              <SkeletonBone
+                delay={index * 4 + 3}
+                className="udt-plugins-page__skeleton-line"
+                height={12}
+                radius="small"
+                style={{ marginRight: row.right }}
+              />
+            </div>
+            <div className="udt-plugin-card__actions">
+              <SkeletonBone delay={index * 4 + 3} width={84} height={32} radius="control" />
+            </div>
           </div>
         </div>
       ))}
@@ -352,9 +389,18 @@ function PluginSkeleton(): React.JSX.Element {
 
 export default function PluginExtensionsPage(): React.JSX.Element {
   const { t } = useTranslation()
-  const { plugins, loading, offline, error, load, refresh, install, importFile } = usePluginsStore()
+  // Field-level selectors: only the consumed slices re-render this page
+  // (install progress mutates other store fields at a high rate).
+  const plugins = usePluginsStore((s) => s.plugins)
+  const loading = usePluginsStore((s) => s.loading)
+  const offline = usePluginsStore((s) => s.offline)
+  const error = usePluginsStore((s) => s.error)
+  const load = usePluginsStore((s) => s.load)
+  const refresh = usePluginsStore((s) => s.refresh)
+  const install = usePluginsStore((s) => s.install)
+  const importFile = usePluginsStore((s) => s.importFile)
   const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState<FilterValue>('all')
+  const [filter, setFilter] = useState<PluginFilterValue>('all')
   const [importing, setImporting] = useState(false)
   const [bulkUpdating, setBulkUpdating] = useState(false)
 
@@ -363,48 +409,35 @@ export default function PluginExtensionsPage(): React.JSX.Element {
   }, [load])
 
   const filtered = useMemo(() => {
-    const query = search.trim().toLowerCase()
-    return plugins.filter((plugin) => {
-      if (filter === 'installed' && !plugin.installedVersion) return false
-      if (filter === 'notInstalled' && plugin.installedVersion) return false
-      if (!query) return true
-      return (
-        plugin.name.toLowerCase().includes(query) ||
-        plugin.description.toLowerCase().includes(query) ||
-        plugin.id.toLowerCase().includes(query) ||
-        plugin.tags.some((tag) => tag.toLowerCase().includes(query))
-      )
-    })
+    return filterPlugins(plugins, filter, search)
   }, [plugins, search, filter])
 
-  const installedCount = plugins.filter((plugin) => plugin.installedVersion).length
-  const updateCount = plugins.filter((plugin) => plugin.updateAvailable).length
-  const installableIds = useMemo(
-    () => plugins.filter((plugin) => !plugin.installedVersion && !plugin.isSystemPlugin).map((plugin) => plugin.id),
-    [plugins]
-  )
-  const updatableIds = useMemo(
-    () => plugins.filter((plugin) => plugin.updateAvailable).map((plugin) => plugin.id),
-    [plugins]
-  )
+  const {
+    totalCount,
+    installedCount,
+    updateCount,
+    installableIds,
+    updatableIds
+  } = useMemo(() => summarizePlugins(plugins), [plugins])
 
   const handleImport = async (): Promise<void> => {
     const files = (await window.bridge?.selectPluginFiles()) ?? []
-    if (files.length === 0) return
+    if (files.length === 0) {
+      if (window.bridge?.platform === 'web') {
+        message.warning(
+          t('plugins.importDesktopOnly', {
+            defaultValue: 'Importing plugin files requires the desktop app.'
+          })
+        )
+      }
+      return
+    }
     setImporting(true)
     try {
       message.info(t('plugins.importProgress'))
-      const succeeded: string[] = []
-      const failed: string[] = []
-      for (const file of files) {
-        const name = file.split(/[\\/]/).pop() ?? file
-        try {
-          if (await importFile(file)) succeeded.push(name)
-          else failed.push(name)
-        } catch {
-          failed.push(name)
-        }
-      }
+      const result = await runPluginOperations(files, importFile)
+      const succeeded = result.succeeded.map(pluginFileName)
+      const failed = result.failed.map(pluginFileName)
       if (succeeded.length > 0) {
         message.success(
           t('plugins.importSuccess', { count: succeeded.length, defaultValue: 'Imported {{count}} plugin package(s)' })
@@ -423,14 +456,11 @@ export default function PluginExtensionsPage(): React.JSX.Element {
   const handleInstallAll = async (): Promise<void> => {
     setBulkUpdating(true)
     try {
-      let succeeded = 0
-      for (const pluginId of installableIds) {
-        if (await install(pluginId)) succeeded += 1
-      }
-      if (succeeded === installableIds.length) {
-        message.success(t('plugins.installAllComplete', { count: succeeded, defaultValue: 'Installed {{count}} plugin(s)' }))
+      const result = await runPluginOperations(installableIds, install)
+      if (result.failed.length === 0) {
+        message.success(t('plugins.installAllComplete', { count: result.succeeded.length, defaultValue: 'Installed {{count}} plugin(s)' }))
       } else {
-        message.warning(t('plugins.installAllPartial', { count: succeeded, total: installableIds.length, defaultValue: '{{count}} of {{total}} plugin operations completed' }))
+        message.warning(t('plugins.installAllPartial', { count: result.succeeded.length, total: installableIds.length, defaultValue: '{{count}} of {{total}} plugin operations completed' }))
       }
     } finally {
       setBulkUpdating(false)
@@ -440,14 +470,11 @@ export default function PluginExtensionsPage(): React.JSX.Element {
   const handleUpdateAll = async (): Promise<void> => {
     setBulkUpdating(true)
     try {
-      let succeeded = 0
-      for (const pluginId of updatableIds) {
-        if (await install(pluginId)) succeeded += 1
-      }
-      if (succeeded === updatableIds.length) {
-        message.success(`Updated ${succeeded} plugin${succeeded === 1 ? '' : 's'}`)
+      const result = await runPluginOperations(updatableIds, install)
+      if (result.failed.length === 0) {
+        message.success(`Updated ${result.succeeded.length} plugin${result.succeeded.length === 1 ? '' : 's'}`)
       } else {
-        message.warning(`${succeeded} of ${updatableIds.length} plugin operations completed`)
+        message.warning(`${result.succeeded.length} of ${updatableIds.length} plugin operations completed`)
       }
     } finally {
       setBulkUpdating(false)
@@ -455,7 +482,7 @@ export default function PluginExtensionsPage(): React.JSX.Element {
   }
 
   return (
-    <div className="udt-plugins-page">
+    <div className="udt-plugins-page udt-content-column udt-content-fill">
       <header className="udt-plugins-page__header">
         <h1 className="udt-page-title">{t('plugins.title')}</h1>
         <p className="udt-page-description">{t('plugins.description', '安装和管理插件以扩展功能')}</p>
@@ -463,7 +490,7 @@ export default function PluginExtensionsPage(): React.JSX.Element {
 
       {offline && (
         <div className="udt-plugins-page__offline-banner">
-          <ExclamationCircleOutlined className="udt-plugins-page__offline-icon" />
+          <ErrorCircle24Regular className="udt-plugins-page__offline-icon" />
           <div className="udt-plugins-page__offline-copy">
             <div className="udt-plugins-page__offline-title">
               {t('plugins.storeUnavailable', '插件商店不可用')}
@@ -471,7 +498,7 @@ export default function PluginExtensionsPage(): React.JSX.Element {
             <div className="udt-plugins-page__offline-message">{t('plugins.offline')}</div>
           </div>
           <Button
-            className="udt-btn-secondary"
+            className="udt-btn udt-btn--secondary"
             loading={loading}
             onClick={() => void refresh()}
           >
@@ -482,12 +509,12 @@ export default function PluginExtensionsPage(): React.JSX.Element {
 
       {!offline && error && (
         <div className="udt-plugins-page__offline-banner">
-          <ExclamationCircleOutlined className="udt-plugins-page__offline-icon udt-plugins-page__offline-icon--error" />
+          <ErrorCircle24Regular className="udt-plugins-page__offline-icon udt-plugins-page__offline-icon--error" />
           <div className="udt-plugins-page__offline-copy">
             <div className="udt-plugins-page__offline-message">{error}</div>
           </div>
           <Button
-            className="udt-btn-secondary"
+            className="udt-btn udt-btn--secondary"
             loading={loading}
             onClick={() => void refresh()}
           >
@@ -498,17 +525,17 @@ export default function PluginExtensionsPage(): React.JSX.Element {
 
       <div className="udt-plugins-page__summary">
         <div className="udt-plugins-page__metric">
-          <AppstoreOutlined />
+          <Apps24Regular />
           <span className="udt-plugins-page__metric-label">{t('plugins.summaryTotal', '插件总数')}</span>
-          <span className="udt-plugins-page__metric-value">{plugins.length}</span>
+          <span className="udt-plugins-page__metric-value">{totalCount}</span>
         </div>
         <div className="udt-plugins-page__metric">
-          <CheckCircleOutlined />
+          <CheckmarkCircle24Regular />
           <span className="udt-plugins-page__metric-label">{t('plugins.summaryInstalled', '已安装')}</span>
           <span className="udt-plugins-page__metric-value">{installedCount}</span>
         </div>
         <div className="udt-plugins-page__metric">
-          <UpCircleOutlined />
+          <ArrowCircleUp24Regular />
           <span className="udt-plugins-page__metric-label">{t('plugins.summaryUpdates', '可更新')}</span>
           <span className="udt-plugins-page__metric-value">{updateCount}</span>
         </div>
@@ -517,12 +544,12 @@ export default function PluginExtensionsPage(): React.JSX.Element {
       <div className="udt-plugins-page__toolbar">
         <Input
           allowClear
-          prefix={<SearchOutlined />}
+          prefix={<Search24Regular />}
           placeholder={t('plugins.search')}
           value={search}
           onChange={(event) => setSearch(event.target.value)}
         />
-        <Select<FilterValue>
+        <Select<PluginFilterValue>
           className="udt-plugins-page__filter"
           value={filter}
           onChange={setFilter}
@@ -533,8 +560,8 @@ export default function PluginExtensionsPage(): React.JSX.Element {
           ]}
         />
         <Button
-          className="udt-btn-secondary"
-          icon={<FolderOpenOutlined />}
+          className="udt-btn udt-btn--secondary"
+          icon={<FolderOpen24Regular />}
           loading={importing}
           onClick={() => void handleImport()}
         >
@@ -542,16 +569,16 @@ export default function PluginExtensionsPage(): React.JSX.Element {
         </Button>
         <Tooltip title={t('plugins.refresh')}>
           <Button
-            className="udt-btn-secondary udt-btn-icon"
-            icon={<ReloadOutlined />}
+            className="udt-btn udt-btn--secondary udt-btn-icon"
+            icon={<ArrowClockwise24Regular />}
             loading={loading}
             onClick={() => void refresh()}
           />
         </Tooltip>
         {updateCount > 0 && (
           <Button
-            className="udt-btn-primary"
-            icon={<UpCircleOutlined />}
+            className="udt-btn udt-btn--primary"
+            icon={<ArrowCircleUp24Regular />}
             loading={bulkUpdating}
             onClick={() => void handleUpdateAll()}
           >
@@ -560,8 +587,8 @@ export default function PluginExtensionsPage(): React.JSX.Element {
         )}
         {installableIds.length > 0 && (
           <Button
-            className="udt-btn-primary"
-            icon={<DownloadOutlined />}
+            className="udt-btn udt-btn--primary"
+            icon={<ArrowDownload24Regular />}
             loading={bulkUpdating}
             onClick={() => void handleInstallAll()}
           >
@@ -575,15 +602,18 @@ export default function PluginExtensionsPage(): React.JSX.Element {
       ) : filtered.length === 0 ? (
         plugins.length === 0 ? (
           <div className="udt-plugins-page__empty">
-            <AppstoreOutlined className="udt-plugins-page__empty-icon" />
+            <Apps24Regular className="udt-plugins-page__empty-icon" />
             <div className="udt-plugins-page__empty-title">{t('plugins.empty')}</div>
             <div className="udt-plugins-page__empty-description">
-              {t('plugins.emptyStore', '插件商城目前为空，敬请期待未来的插件更新。')}
+              {t(
+                'plugins.emptyStore',
+                'The plugin store is currently empty. Stay tuned for future plugin updates.'
+              )}
             </div>
           </div>
         ) : (
           <div className="udt-plugins-page__empty">
-            <SearchOutlined className="udt-plugins-page__empty-icon" />
+            <Search24Regular className="udt-plugins-page__empty-icon" />
             <div className="udt-plugins-page__empty-title">
               {t('plugins.noResults', '未找到符合搜索条件的插件')}
             </div>

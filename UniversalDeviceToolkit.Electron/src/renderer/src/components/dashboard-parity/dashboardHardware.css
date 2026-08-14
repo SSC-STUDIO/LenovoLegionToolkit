@@ -1,11 +1,11 @@
 .udt-parity-icon-button.ant-btn {
   display: inline-flex;
-  width: 36px;
-  height: 36px;
+  width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
   align-items: center;
   justify-content: center;
   padding: 0;
-  border-radius: var(--udt-radius-control, 6px);
+  border-radius: var(--udt-radius-small);
 }
 
 .udt-parity-gpu-accessory {
@@ -84,7 +84,8 @@
   gap: 16px;
 }
 
-@media (max-width: 620px) {
+/* Matches the dashboardParity.css narrow-card wrap (shared 640 container cut). */
+@container udt-dashboard (max-width: 640px) {
   .udt-parity-gpu-accessory {
     width: 100%;
     margin-left: 38px;

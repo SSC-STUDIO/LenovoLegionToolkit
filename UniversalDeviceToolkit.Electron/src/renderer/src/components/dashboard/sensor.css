@@ -29,15 +29,18 @@
   padding: 0 10px;
 }
 
+/* WPF SensorsControl: title + model on one row (Grid Auto | *). */
 .udt-sensor-panel__heading {
   display: flex;
-  align-items: baseline;
-  gap: 8px;
+  flex-direction: row;
+  align-items: center;
+  gap: 0;
   min-width: 0;
   margin-bottom: 14px;
 }
 
 .udt-sensor-panel__heading h2 {
+  flex: 0 0 auto;
   margin: 0;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-section);
@@ -47,14 +50,33 @@
 }
 
 .udt-sensor-panel__model {
+  flex: 1 1 auto;
   min-width: 0;
+  margin: 1px 0 0 8px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--udt-text-primary);
+  color: var(--udt-text-secondary);
   font-size: var(--udt-font-caption);
   font-weight: 500;
   line-height: 1.3;
+}
+
+.udt-sensor-panel__heading .udt-sensor-panel__details-toggle {
+  flex: 0 0 auto;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border: 0;
+  border-radius: var(--udt-radius-small);
+  background: transparent;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+  font-weight: 500;
+  line-height: 1.3;
+  cursor: pointer;
 }
 
 /* ── Gauge (fluid, max 110px) + 3 metric rows (24px each) ─────── */
@@ -70,9 +92,29 @@
   min-width: 0;
 }
 
-.udt-sensor-gauge__ring {
+.udt-sensor-gauge__svg {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.udt-sensor-gauge__track {
+  opacity: 1;
+}
+
+.udt-sensor-gauge__progress {
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--udt-sensor-gauge-color, #4f9df7) 35%, transparent));
+  transition-property: stroke-dasharray;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .udt-sensor-gauge__progress {
+    transition-duration: 0ms;
+  }
 }
 
 .udt-sensor-gauge__readout {
@@ -140,8 +182,11 @@
   align-content: center;
   /* 270° horseshoe visual mass sits above the open bottom; nudge bars up. */
   margin: -4px 0 0;
-  padding-bottom: 8px;
+  padding-bottom: 12px;
   min-width: 0;
+  /* Per-column width drives icon-only vs icon+text on metric labels. */
+  container-type: inline-size;
+  container-name: udt-sensor-metrics;
 }
 
 .udt-sensor-panel__metric {
@@ -149,6 +194,8 @@
   align-items: center;
   min-width: 0;
   height: 24px;
+  /* Clip only decorative overflow; value is flex-shrink:0 so it never
+     gets hard-clipped by this box when the bar yields space. */
   overflow: hidden;
 }
 
@@ -157,11 +204,14 @@
   align-items: center;
   gap: 4px;
   flex: 0 0 auto;
-  min-width: 0;
   padding: 2px 0;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-body);
   white-space: nowrap;
+}
+
+.udt-sensor-panel__metric-label {
+  min-width: 0;
 }
 
 .udt-sensor-panel__metric-icon {
@@ -169,45 +219,96 @@
   opacity: 0.92;
 }
 
-/* MarqueeMetricBar: 6px track, 2px radius, tertiary fill, 1px stroke,
-   1px inner inset; width flexes with content (min 100 / max 260),
-   bar↔text gap 8px. */
+.udt-fluent-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  line-height: 0;
+}
+
+.udt-fluent-icon > svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.udt-fluent-icon--spin {
+  animation: udt-fluent-spin 1s linear infinite;
+}
+
+@keyframes udt-fluent-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .udt-fluent-icon--spin {
+    animation: none;
+  }
+}
+
+/* Responsive metric row tiers (value is always protected):
+   Wide  (>256px): icon + text + bar + value
+   Medium (168–256): icon-only + bar + value
+   Narrow (<168): icon-only + value (bar hidden)
+   Long zh labels (核心频率) need ~256px+ for icon+text. */
+@container udt-sensor-metrics (max-width: 256px) {
+  .udt-sensor-panel__metric-label {
+    display: none;
+  }
+}
+
+/* Icon (~14) + gaps + usable bar (~36) + longest reading (~"2300.0 RPM")
+   no longer fit: drop the sacrificial progress track, keep the value. */
+@container udt-sensor-metrics (max-width: 168px) {
+  .udt-sensor-panel__metric-track {
+    display: none;
+  }
+}
+
+/* MarqueeMetricBar: shared progress tokens; flex:1 absorbs shortage;
+   min-width:0 so the value column wins. Usable floor is enforced by hiding
+   the track via the 168px CQ above. */
 .udt-sensor-panel__metric-track {
   position: relative;
   flex: 1 1 auto;
-  min-width: 100px;
+  min-width: 0;
   max-width: 260px;
-  height: 6px;
+  height: var(--udt-progress-height);
   margin-left: 8px;
-  border-radius: var(--udt-radius-progress);
-  background: var(--udt-control-fill-tertiary);
-  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-track);
   overflow: hidden;
 }
 
 .udt-sensor-panel__metric-fill {
   position: absolute;
-  top: 1px;
-  bottom: 1px;
-  left: 1px;
+  top: 0;
+  bottom: 0;
+  left: 0;
   width: 0;
-  border-radius: 1px;
-  background: var(--udt-accent);
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-fill);
   transition: width 480ms var(--udt-ease-cubic-out);
 }
 
-/* MarqueeMetricBar value text: ellipsis when the row is too narrow for the
-   reading (values usually fit; the full text is available via the title attr). */
+/* Metric reading: never ellipsis/clip units (GHz, RPM, °C, W, %).
+   flex-shrink:0 + nowrap keep 「2.8 GHz」 / 「2300.0 RPM」 fully visible;
+   the bar (or label) yields first when space is tight. */
 .udt-sensor-panel__metric dd {
   flex: 0 0 auto;
-  min-width: 72px;
-  max-width: 100%;
+  flex-shrink: 0;
   margin: 0 0 0 8px;
   padding: 2px 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow: visible;
   color: var(--udt-text-secondary);
   font-size: var(--udt-font-body);
+  font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
 }
@@ -217,6 +318,11 @@
 .udt-sensor-panel__warnings {
   margin-top: 12px;
   text-align: center;
+}
+
+.udt-sensor-panel__warnings--after-chart {
+  margin-top: 10px;
+  margin-bottom: 2px;
 }
 
 .udt-sensor-panel__warning {
@@ -233,7 +339,7 @@
   color: var(--udt-text-primary);
 }
 
-/* Low-power adapter warning: centered footer under Processor/Battery/GPU. */
+/* Legacy board-footer warning kept for any external callers; unused by SensorSection. */
 .udt-sensor-board__footer-warning {
   width: 100%;
   margin: 10px 10px 2px;
@@ -249,7 +355,8 @@
 .udt-sensor-panel__chart {
   position: relative;
   height: 120px;
-  margin-top: 14px;
+  /* Extra air between metric/gauge readout and the chart's top (100%) label. */
+  margin-top: 22px;
   border-radius: var(--udt-radius-control);
   background: var(--udt-surface-chart);
   padding: 2px;
@@ -345,27 +452,19 @@
 
   .udt-sensor-board .udt-sensor-panel__metrics {
     grid-template-rows: repeat(3, 22px);
-    padding-bottom: 6px;
+    padding-bottom: 10px;
   }
 
   .udt-sensor-board .udt-sensor-panel__metric {
     height: 22px;
   }
 
-  .udt-sensor-board .udt-sensor-panel__metric-track {
-    min-width: 48px;
-  }
-
-  .udt-sensor-board .udt-sensor-panel__metric dd {
-    min-width: 52px;
-  }
+  /* Value/bar sizing is owned by the metric-row rules + udt-sensor-metrics
+     container queries (value never shrinks; bar hides under 168px). */
 
   .udt-sensor-board .udt-sensor-panel__chart {
     height: 104px;
-  }
-
-  .udt-sensor-board .udt-sensor-panel__battery-gauges {
-    grid-template-columns: 1fr;
+    margin-top: 18px;
   }
 }
 
@@ -380,10 +479,6 @@
 
   .udt-sensor-board .udt-sensor-panel {
     padding: 0 6px;
-  }
-
-  .udt-sensor-board .udt-sensor-panel__battery-gauges {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -402,24 +497,8 @@
   line-height: 1.4;
 }
 
-/* ── Advanced details (SensorsControl detail window parity) ────────────── */
-
-.udt-sensor-panel__details-toggle {
-  flex: 0 0 auto;
-  margin-left: auto;
-  padding: 2px 8px;
-  border: 1px solid var(--udt-control-stroke-secondary);
-  border-radius: var(--udt-radius-control);
-  background: var(--udt-control-fill-secondary);
-  color: var(--udt-text-secondary);
-  font-size: var(--udt-font-dense-caption);
-  font-weight: 500;
-  line-height: 1.5;
-  cursor: pointer;
-  transition:
-    background-color var(--udt-anim-medium) ease-out,
-    color var(--udt-anim-medium) ease-out;
-}
+/* ── Advanced details (SensorsControl detail window parity, double-click) ──
+   Expanded order matches reference: gauge+metrics → chart → details bottom. */
 
 .udt-sensor-panel__details-toggle:hover,
 .udt-sensor-panel__details-toggle:focus-visible {
@@ -471,33 +550,110 @@
   font-size: var(--udt-font-caption);
   line-height: 1.4;
   overflow-wrap: anywhere;
-  white-space: normal;
+  white-space: pre-line;
 }
 
-/* ── Battery detail mini gauges (Electron GaugeSizeSM rings, 4px thick) ──── */
+/* GPU VRAM frequency bar (full-width above the detail grid). */
+.udt-sensor-panel__vram-clock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  margin-bottom: 12px;
+  container-type: inline-size;
+  container-name: udt-sensor-vram-clock;
+}
 
-.udt-sensor-panel__battery-gauges {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.udt-sensor-panel__vram-clock dt {
+  flex: 0 0 auto;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.udt-sensor-panel__vram-clock-track {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: var(--udt-progress-height);
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-track);
+  overflow: hidden;
+}
+
+.udt-sensor-panel__vram-clock-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-fill);
+  transition: width 480ms var(--udt-ease-cubic-out);
+}
+
+.udt-sensor-panel__vram-clock dd {
+  flex: 0 0 auto;
+  margin: 0;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+@container udt-sensor-vram-clock (max-width: 168px) {
+  .udt-sensor-panel__vram-clock-track {
+    display: none;
+  }
+}
+
+/* ── Battery detail capacity rows (label + value, no progress track) ── */
+
+.udt-sensor-panel__battery-stats {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
   margin-bottom: 12px;
 }
 
-.udt-sensor-panel__battery-gauge {
+.udt-sensor-panel__battery-stat {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: baseline;
+  gap: 8px;
   min-width: 0;
 }
 
-.udt-sensor-panel__battery-gauge-value {
-  max-width: 100%;
-  margin-top: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.udt-sensor-panel__battery-stat dt {
+  margin: 0;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.4;
   white-space: nowrap;
-  color: var(--udt-text-secondary);
-  font-size: var(--udt-font-small-body);
+}
+
+.udt-sensor-panel__battery-stat dd {
+  margin: 0;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+/* Panel footer (e.g. low-power adapter warning at the bottom). */
+.udt-sensor-panel__footer {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--udt-control-stroke-default);
+  text-align: center;
+}
+
+.udt-sensor-panel__footer--warning {
+  color: var(--udt-status-warning);
+  font-size: var(--udt-font-caption);
+  font-weight: 500;
   line-height: 1.4;
 }
 
@@ -541,7 +697,7 @@
   color: var(--udt-accent);
 }
 
-@media (max-width: 640px) {
+@container udt-sensors (max-width: 640px) {
   .udt-sensor-panel__details-cols {
     grid-template-columns: 1fr;
   }
@@ -604,7 +760,7 @@
   white-space: pre-line;
 }
 
-@media (max-width: 640px) {
+@container udt-sensors (max-width: 640px) {
   .udt-sensor-details {
     grid-template-columns: 1fr;
   }
@@ -617,6 +773,11 @@
 }
 
 :root[data-theme='light'] .udt-sensor-panel__metric-track {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+:root[data-theme='light'] .udt-sensor-panel__vram-clock-track {
   background: rgba(0, 0, 0, 0.08);
   border-color: rgba(0, 0, 0, 0.14);
 }

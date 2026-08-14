@@ -81,7 +81,7 @@ export default function DashboardParityPage(): React.JSX.Element {
 
   if (loading) {
     return (
-      <div className="udt-parity-dashboard udt-parity-dashboard__loading">
+      <div className="udt-parity-dashboard udt-parity-dashboard__loading udt-content-wide">
         <DashboardSkeleton />
       </div>
     )
@@ -100,7 +100,7 @@ export default function DashboardParityPage(): React.JSX.Element {
   }
 
   return (
-    <div className="udt-parity-dashboard">
+    <div className="udt-parity-dashboard udt-content-wide">
       {config.showSensors !== false && <SensorSection />}
       <DashboardFeatureGroups groups={normalizedGroups(config)} />
       <button

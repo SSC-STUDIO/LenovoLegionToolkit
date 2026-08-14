@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
-import { GlobalOutlined } from '@ant-design/icons'
-import { changeLanguage, supportedLanguages } from '../../i18n'
+import { Globe24Regular } from '../icons/fluent'
+import { Select } from 'antd'
+import { changeLanguage, LANGUAGES } from '../../i18n'
 import './utils.css'
 
 /**
@@ -61,11 +62,6 @@ export function openLanguageSelector(options: LanguageSelectorOptions): Promise<
   })
 }
 
-const NATIVE_NAMES: Record<string, string> = {
-  'zh-CN': '中文（简体）',
-  'en-US': 'English'
-}
-
 export default function LanguageSelectorModalHost(): React.JSX.Element {
   const { t } = useTranslation()
   const request = useLanguageSelectorStore((s) => s.request)
@@ -74,18 +70,23 @@ export default function LanguageSelectorModalHost(): React.JSX.Element {
 
   const languages = useMemo(() => {
     if (!request) return []
-    const list = request.options.languages ?? supportedLanguages.map((code) => ({
-      code,
-      displayName: NATIVE_NAMES[code] ?? code
-    }))
-    return [...list].sort((a, b) => a.displayName.localeCompare(b.displayName, undefined, { sensitivity: 'base' }))
+    const list =
+      request.options.languages ??
+      LANGUAGES.map((language) => ({
+        code: language.code,
+        displayName: language.name
+      }))
+    return [...list].sort((a, b) =>
+      a.displayName.localeCompare(b.displayName, undefined, { sensitivity: 'base' })
+    )
   }, [request])
 
   useEffect(() => {
     if (!request) return
     const preferred =
       languages.find((lang) => lang.code === request.options.defaultLanguage) ??
-      languages.find((lang) => lang.code === 'zh-CN' || lang.code === 'en-US') ??
+      languages.find((lang) => lang.code === 'zh-CN') ??
+      languages.find((lang) => lang.code === 'en') ??
       languages[0]
     setSelected(preferred?.code ?? '')
   }, [request, languages])
@@ -99,7 +100,7 @@ export default function LanguageSelectorModalHost(): React.JSX.Element {
     if (!code) return
     const selectedLanguage = languages.find((lang) => lang.code === code)
     if (!selectedLanguage) return
-    if (allowOfflineEnglish && !['zh-CN', 'en-US'].includes(code)) {
+    if (allowOfflineEnglish && !['zh-CN', 'en-US', 'en'].includes(code)) {
       settle({ outcome: 'ContinueEnglish', culture: 'en' })
       return
     }
@@ -116,28 +117,27 @@ export default function LanguageSelectorModalHost(): React.JSX.Element {
     <div className="udt-utils-backdrop">
       <div
         className="udt-utils-modal"
-        style={{ width: 460, maxWidth: 520, minHeight: 280 }}
+        style={{ width: 460, maxWidth: 'min(92vw, 520px)', minHeight: 280 }}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="udt-utils-modal__title">{t('app.name')}</div>
         <div className="udt-utils-modal__body">
           <div style={{ display: 'flex', gap: 16 }}>
-            <GlobalOutlined style={{ fontSize: 40, color: 'var(--udt-text-secondary)' }} />
+            <Globe24Regular style={{ fontSize: 40, color: 'var(--udt-text-secondary)' }} />
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 500, marginBottom: 12 }}>
                 {t('wpf.languageSelectorWindowselectLanguage')}
               </div>
-              <select
+              <Select
+                aria-label={t('wpf.languageSelectorWindowselectLanguage')}
                 className="udt-utils-select"
-                value={selected}
-                onChange={(event) => setSelected(event.target.value)}
-              >
-                {languages.map((lang) => (
-                  <option key={lang.code} value={lang.code}>
-                    {lang.displayName}
-                  </option>
-                ))}
-              </select>
+                value={selected || undefined}
+                onChange={setSelected}
+                options={languages.map((lang) => ({
+                  value: lang.code,
+                  label: lang.displayName
+                }))}
+              />
               {allowOfflineEnglish && (
                 <p className="udt-utils-status">{t('wpf.languageSelectorWindowsafeModeHint')}</p>
               )}

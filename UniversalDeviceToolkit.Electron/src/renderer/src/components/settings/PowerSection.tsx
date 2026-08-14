@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { Select, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
@@ -9,6 +9,9 @@ import PowerModesModal from './PowerModesModal'
 import PowerPlansModal from './PowerPlansModal'
 
 type PowerModeMappingMode = 'Disabled' | 'WindowsPowerMode' | 'WindowsPowerPlan'
+
+/** Windows-only entries (powercfg based) are hidden on other platforms. */
+const PLATFORM: string = window.bridge?.platform ?? 'win32'
 
 const POWER_MODE_MAPPING_OPTIONS: Array<{ value: PowerModeMappingMode; i18nKey: string }> = [
   { value: 'Disabled', i18nKey: 'settings.power.mappingModes.disabled' },
@@ -117,16 +120,20 @@ export function PowerSection(): React.JSX.Element {
           />
         }
       />
-      <SettingsCard
-        title={t('settings.power.windowsPowerModes')}
-        description={t('settings.power.windowsPowerModesDesc')}
-        onClick={() => setPowerModesOpen(true)}
-      />
-      <SettingsCard
-        title={t('settings.power.windowsPowerPlans')}
-        description={t('settings.power.windowsPowerPlansDesc')}
-        onClick={() => setPowerPlansOpen(true)}
-      />
+      {PLATFORM === 'win32' && (
+        <>
+          <SettingsCard
+            title={t('settings.power.windowsPowerModes')}
+            description={t('settings.power.windowsPowerModesDesc')}
+            onClick={() => setPowerModesOpen(true)}
+          />
+          <SettingsCard
+            title={t('settings.power.windowsPowerPlans')}
+            description={t('settings.power.windowsPowerPlansDesc')}
+            onClick={() => setPowerPlansOpen(true)}
+          />
+        </>
+      )}
       <SettingsCard
         title={t('settings.power.synchronizeBrightness')}
         description={t('settings.power.synchronizeBrightnessDesc')}

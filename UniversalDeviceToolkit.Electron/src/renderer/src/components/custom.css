@@ -1,7 +1,7 @@
 /* Shared custom control styles — ports of Electron Controls/Custom (Badge, EmptyState,
    CardControl, CardAction, CardExpander) and Controls/Loading (LoadingOverlay). */
 
-/* ── Badge (Wpf.Ui Badge; base shape mirrors pages.css .udt-badge) ─────────── */
+/* ── Badge (Wpf.Ui Badge; base shape mirrors pages/pages.css .udt-badge) ─────────── */
 
 .udt-badge {
   display: inline-flex;
@@ -368,16 +368,16 @@
 
 .udt-loading-overlay__progress {
   width: 100%;
-  height: 4px;
-  border-radius: var(--udt-radius-round);
-  background: var(--udt-control-fill-secondary);
+  height: var(--udt-progress-height);
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-track);
   overflow: hidden;
 }
 
 .udt-loading-overlay__progress-bar {
   height: 100%;
-  border-radius: var(--udt-radius-round);
-  background: var(--udt-accent-secondary);
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-fill);
   transition: width var(--udt-anim-medium) ease-out;
 }
 

@@ -1,4 +1,4 @@
-import { HourglassOutlined } from '@ant-design/icons'
+import { Hourglass24Regular } from '../icons/fluent'
 import { useTranslation } from 'react-i18next'
 
 /**
@@ -20,7 +20,7 @@ export default function MacroRecordingModal({
       <div className="udt-macro-recording__window">
         <span className="udt-macro-recording__icon">
           {preparing ? (
-            <HourglassOutlined />
+            <Hourglass24Regular />
           ) : (
             <span className="udt-macro-recording__dot" aria-hidden="true" />
           )}

@@ -108,7 +108,7 @@ export default function InputDialogHost(): React.JSX.Element {
     <div className="udt-utils-backdrop" onClick={handleCancel}>
       <div
         className="udt-utils-modal"
-        style={{ width: 420, maxWidth: 520 }}
+        style={{ width: 420, maxWidth: 'min(92vw, 520px)' }}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="udt-utils-modal__title">{title}</div>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Button, Modal, Select, Switch, message } from 'antd'
-import { InfoCircleOutlined } from '@ant-design/icons'
+import { Info24Regular } from '../icons/fluent'
 import { LeafOne24Regular } from '@fluentui/react-icons'
 import { useTranslation } from 'react-i18next'
 import { powerApi } from '../../api/power'
@@ -82,7 +82,23 @@ export default function HybridModeCard(): React.JSX.Element | null {
     }
   }, [])
 
-  if (!supported) return null
+  if (!supported) {
+    const title = t('feature.hybridMode', { defaultValue: 'hybridMode' })
+    const reason = t('dashboard.card.notSupported', {
+      defaultValue: 'Not supported on this device'
+    })
+    return (
+      <article className="udt-parity-feature-card udt-parity-feature-card--disabled">
+        <div className="udt-parity-feature-card__body">
+          <span className="udt-parity-feature-card__icon" aria-hidden="true"><LeafOne24Regular /></span>
+          <div className="udt-parity-feature-card__copy">
+            <div className="udt-parity-feature-card__title" title={title}>{title}</div>
+            <div className="udt-parity-feature-card__warning" title={reason}>{reason}</div>
+          </div>
+        </div>
+      </article>
+    )
+  }
 
   // Electron HybridModeControlFactory picks the ComboBox when the machine supports
   // IGPU mode; such machines expose OnIGPUOnly/OnAuto among their states.
@@ -205,7 +221,7 @@ export default function HybridModeCard(): React.JSX.Element | null {
                 size="small"
                 className="udt-parity-hybrid-info-btn"
                 aria-label={t('feature.hybridMode.info.title')}
-                icon={<InfoCircleOutlined />}
+                icon={<Info24Regular />}
                 onClick={() => setInfoOpen(true)}
               />
             </>

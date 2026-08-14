@@ -4,7 +4,8 @@
  * (IAutomationPipelineTriggerTabItemContent implementations).
  */
 import { useEffect, useMemo, useState } from 'react'
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import { Delete24Regular, Add24Regular } from '../icons/fluent'
+import { Select } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { automationApi } from '../../api/automation'
 import type { AutomationTrigger } from './triggers'
@@ -26,17 +27,15 @@ function DropdownField(props: {
   return (
     <label className="udt-trigger-field">
       <span className="udt-trigger-field__label">{props.label}</span>
-      <select
+      <Select
         className="udt-select"
         value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
-      >
-        {props.options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+        onChange={props.onChange}
+        options={props.options.map((option) => ({
+          value: option,
+          label: option
+        }))}
+      />
     </label>
   )
 }
@@ -266,7 +265,7 @@ export function ProcessesEditor({ trigger, onChange }: TriggerEditorProps): Reac
           disabled={!selected.trim()}
           onClick={() => addProcess(selected, selected)}
         >
-          <PlusOutlined /> {t('wpf.open', { defaultValue: 'Add' })}
+          <Add24Regular /> {t('wpf.open', { defaultValue: 'Add' })}
         </button>
         {window.bridge?.selectExeFile != null && (
           <button type="button" className="udt-btn udt-btn--secondary udt-btn--sm" onClick={() => void browse()}>
@@ -291,7 +290,7 @@ export function ProcessesEditor({ trigger, onChange }: TriggerEditorProps): Reac
                 title={t('automation.deleteStep')}
                 onClick={() => removeProcess(index)}
               >
-                <DeleteOutlined />
+                <Delete24Regular />
               </button>
             </div>
           ))}
@@ -329,17 +328,15 @@ export function UserInactivityEditor({ trigger, onChange }: TriggerEditorProps):
     <div className="udt-trigger-fields">
       <label className="udt-trigger-field">
         <span className="udt-trigger-field__label">{t('automation.triggerEditors.inactivityTimeout', { defaultValue: 'Timeout' })}</span>
-        <select
+        <Select<number>
           className="udt-select"
           value={currentSeconds}
-          onChange={(e) => onChange({ ...trigger, inactivityTimeSpan: formatTimeSpan(Number(e.target.value)) })}
-        >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          onChange={(value) => onChange({ ...trigger, inactivityTimeSpan: formatTimeSpan(value) })}
+          options={options.map((option) => ({
+            value: option.value,
+            label: option.label
+          }))}
+        />
       </label>
     </div>
   )
@@ -388,13 +385,13 @@ export function WiFiEditor({ trigger, onChange }: TriggerEditorProps): React.JSX
             title={t('automation.deleteStep')}
             onClick={() => remove(index)}
           >
-            <DeleteOutlined />
+            <Delete24Regular />
           </button>
         </div>
       ))}
       <div>
         <button type="button" className="udt-btn udt-btn--secondary udt-btn--sm" onClick={add}>
-          <PlusOutlined /> {t('automation.triggerEditors.addSsid', { defaultValue: 'Add network name' })}
+          <Add24Regular /> {t('automation.triggerEditors.addSsid', { defaultValue: 'Add network name' })}
         </button>
       </div>
     </div>
@@ -606,7 +603,7 @@ export function DeviceEditor({ trigger, onChange }: TriggerEditorProps): React.J
           disabled={!selected.trim()}
           onClick={add}
         >
-          <PlusOutlined /> {t('wpf.open', { defaultValue: 'Add' })}
+          <Add24Regular /> {t('wpf.open', { defaultValue: 'Add' })}
         </button>
       </div>
       {instanceIds.length > 0 ? (
@@ -621,7 +618,7 @@ export function DeviceEditor({ trigger, onChange }: TriggerEditorProps): React.J
                 title={t('automation.deleteStep')}
                 onClick={() => remove(index)}
               >
-                <DeleteOutlined />
+                <Delete24Regular />
               </button>
             </div>
           ))}

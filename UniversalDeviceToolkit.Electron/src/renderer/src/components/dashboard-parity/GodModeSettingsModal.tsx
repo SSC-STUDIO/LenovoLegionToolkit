@@ -1,6 +1,12 @@
-import { useEffect, useState } from 'react'
-import { Button, Input, InputNumber, Modal, Select, Spin, message } from 'antd'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { useEffect, useMemo, useState } from 'react'
+import { Button, Dropdown, Input, InputNumber, Modal, Select, Spin, Switch, message } from 'antd'
+import {
+  Delete24Regular,
+  ChevronDown24Regular,
+  Edit24Regular,
+  Add24Regular,
+  ArrowCounterclockwise24Regular
+} from '../icons/fluent'
 import { useTranslation } from 'react-i18next'
 import {
   addPreset,
@@ -8,21 +14,18 @@ import {
   getUniquePresetName,
   godModeApi,
   renameActivePreset,
+  type GodModeDefaults,
   type GodModePreset,
   type GodModeStore
 } from '../../api/godMode'
 import { useFeaturesStore } from '../../stores/featuresStore'
 import FanCurveEditor from '../FanCurveEditor'
 import GodModeValueControl from '../dashboard/GodModeValueControl'
+import InfoBar from '../InfoBar'
 
 /**
- * Parity modal for Electron Windows/Dashboard/GodModeSettingsWindow.
- *
- * Known gaps vs Electron (no matching host bridge methods yet):
- * - "Load" defaults from other power modes (GodModeController.GetDefaultsInOtherPowerModesAsync)
- * - Vantage / Legion Zone running warnings (software disabler status)
- * - Applying values to hardware (GodModeController.ApplyStateAsync); the store
- *   is persisted and the power mode is switched to God Mode, like the Electron Save.
+ * Parity modal for WPF Windows/Dashboard/GodModeSettingsWindow.
+ * Business logic lives in Host GodModeController (godMode.getState / setState / apply).
  */
 
 type StepperField =
@@ -94,12 +97,20 @@ const STEPPER_UNITS: Partial<Record<StepperField, string>> = {
   cpuCrossLoadingPowerLimit: 'W',
   cpuPL1Tau: 's',
   apUsPPTPowerLimit: 'W',
-  cpuTemperatureLimit: '°C',
+  cpuTemperatureLimit: '\u00B0C',
   gpuPowerBoost: 'W',
   gpuConfigurableTGP: 'W',
-  gpuTemperatureLimit: '°C',
+  gpuTemperatureLimit: '\u00B0C',
   gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline: 'W',
   gpuToCPUDynamicBoost: 'W'
+}
+
+const POWER_MODE_LABEL_KEYS: Record<string, string> = {
+  Quiet: 'powerModeStateQuiet',
+  Balance: 'powerModeStateBalance',
+  Performance: 'powerModeStatePerformance',
+  Extreme: 'powerModeStateExtreme',
+  GodMode: 'powerModeStateGodMode'
 }
 
 interface WorkingValues {
@@ -127,7 +138,7 @@ function workingFromPreset(preset: GodModePreset): WorkingValues {
   return working
 }
 
-/** Electron GodModeSettingsWindow.BuildActivePresetFromControls (store side only). */
+/** WPF GodModeSettingsWindow.BuildActivePresetFromControls (store side only). */
 function flushWorkingPreset(preset: GodModePreset, working: WorkingValues): GodModePreset {
   const next: GodModePreset = { ...preset }
   for (const field of [...CPU_FIELDS, ...GPU_FIELDS]) {
@@ -148,15 +159,15 @@ function storeWithPreset(store: GodModeStore, preset: GodModePreset): GodModeSto
   return { ...store, presets: { ...store.presets, [store.activePresetId]: preset } }
 }
 
-/** Electron CardHeaderControl warning text: strip the first line when it looks like a heading. */
+/** WPF CardHeaderControl warning text: strip the first line when it looks like a heading. */
 function removeWarningHeading(messageText: string): string {
   const lines = messageText.replace(/\r\n/g, '\n').split('\n')
   if (lines.length > 1) {
     const heading = lines[0].trim()
     if (
       heading.length <= 32 &&
-      (heading.includes('!') || heading.includes('！') ||
-        heading.endsWith(':') || heading.endsWith('：'))
+      (heading.includes('!') || heading.includes('\uFF01') ||
+        heading.endsWith(':') || heading.endsWith('\uFF1A'))
     ) {
       return lines.slice(1).join('\n').trim()
     }
@@ -164,11 +175,35 @@ function removeWarningHeading(messageText: string): string {
   return messageText.trim()
 }
 
-/** Electron TryNormalizeOffsetValue: whole number within [min, max]. */
+/** WPF TryNormalizeOffsetValue: whole number within [min, max]. */
 function normalizeOffset(raw: number | null, minimum: number, maximum: number): number | null {
   if (raw == null || !Number.isFinite(raw)) return null
   if (raw < minimum || raw > maximum || raw !== Math.trunc(raw)) return null
   return raw
+}
+
+function applyDefaultsToWorking(
+  working: WorkingValues,
+  defaults: GodModeDefaults,
+  activePreset: GodModePreset
+): WorkingValues {
+  const steppers: Partial<Record<StepperField, number>> = { ...working.steppers }
+  for (const field of [...CPU_FIELDS, ...GPU_FIELDS]) {
+    if (activePreset[field] == null) continue
+    const value = defaults[field]
+    if (value != null) steppers[field] = value
+  }
+  return {
+    steppers,
+    fanTable: activePreset.fanTable != null && defaults.fanTable != null
+      ? defaults.fanTable
+      : working.fanTable,
+    fanFullSpeed: working.fanFullSpeed != null && defaults.fanFullSpeed != null
+      ? defaults.fanFullSpeed
+      : working.fanFullSpeed,
+    maxValueOffset: working.maxValueOffset != null ? 0 : null,
+    minValueOffset: working.minValueOffset != null ? 0 : null
+  }
 }
 
 interface NamePromptState {
@@ -191,18 +226,29 @@ export default function GodModeSettingsModal({
   const [saving, setSaving] = useState(false)
   const [store, setStore] = useState<GodModeStore | null>(null)
   const [working, setWorking] = useState<WorkingValues>(emptyWorkingValues())
+  const [minimumFanTable, setMinimumFanTable] = useState<number[] | null>(null)
+  const [defaultFanTable, setDefaultFanTable] = useState<number[] | null>(null)
+  const [defaults, setDefaults] = useState<Record<string, GodModeDefaults>>({})
+  const [warnVantage, setWarnVantage] = useState(false)
+  const [warnLegionZone, setWarnLegionZone] = useState(false)
   const [namePrompt, setNamePrompt] = useState<NamePromptState | null>(null)
   const [nameInput, setNameInput] = useState('')
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
+    setLoading(true)
     godModeApi
       .load()
       .then((loaded) => {
         if (cancelled || loaded == null) return
-        setStore(loaded)
-        const preset = loaded.presets[loaded.activePresetId]
+        setStore(loaded.store)
+        setMinimumFanTable(loaded.minimumFanTable)
+        setDefaultFanTable(loaded.defaultFanTable)
+        setDefaults(loaded.defaults)
+        setWarnVantage(loaded.warnVantage)
+        setWarnLegionZone(loaded.warnLegionZone)
+        const preset = loaded.store.presets[loaded.store.activePresetId]
         if (preset != null) setWorking(workingFromPreset(preset))
       })
       .catch((reason: unknown) => {
@@ -231,6 +277,21 @@ export default function GodModeSettingsModal({
   const advancedVisible = activePreset != null &&
     (working.maxValueOffset != null || working.minValueOffset != null)
 
+  const loadMenuItems = useMemo(
+    () =>
+      Object.entries(defaults)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([mode, modeDefaults]) => ({
+          key: mode,
+          label: t(POWER_MODE_LABEL_KEYS[mode] ?? mode, { defaultValue: mode }),
+          onClick: () => {
+            if (activePreset == null) return
+            setWorking((prev) => applyDefaultsToWorking(prev, modeDefaults, activePreset))
+          }
+        })),
+    [defaults, t, activePreset]
+  )
+
   function updateStepper(field: StepperField, value: number): void {
     setWorking((prev) => {
       const steppers: Partial<Record<StepperField, number>> = { ...prev.steppers, [field]: value }
@@ -246,9 +307,10 @@ export default function GodModeSettingsModal({
     })
   }
 
-  async function persist(flushed: GodModeStore): Promise<void> {
-    await godModeApi.save(flushed)
-    setStore(flushed)
+  async function persist(flushed: GodModeStore, apply: boolean): Promise<GodModeStore> {
+    const next = await godModeApi.save(flushed, apply)
+    setStore(next)
+    return next
   }
 
   async function handlePresetSwitch(id: string): Promise<void> {
@@ -256,8 +318,9 @@ export default function GodModeSettingsModal({
     const flushed = storeWithPreset(store, flushWorkingPreset(activePreset, working))
     const next = { ...flushed, activePresetId: id }
     try {
-      await persist(next)
-      const preset = next.presets[id]
+      const powerState = useFeaturesStore.getState().states.powerMode
+      const saved = await persist(next, powerState === 'GodMode')
+      const preset = saved.presets[id]
       if (preset != null) setWorking(workingFromPreset(preset))
     } catch (reason) {
       void message.error(`${t('godMode.errorApply')}: ${(reason as Error).message}`)
@@ -278,20 +341,21 @@ export default function GodModeSettingsModal({
   }
 
   async function confirmNamePrompt(): Promise<void> {
-    if (namePrompt == null || store == null) return
+    if (namePrompt == null || store == null || activePreset == null) return
     const name = nameInput.trim()
     setNamePrompt(null)
     if (name.length === 0) return
 
     let next: GodModeStore
     if (namePrompt.mode === 'add') {
-      next = addPreset(store, name)
+      const flushed = storeWithPreset(store, flushWorkingPreset(activePreset, working))
+      next = addPreset(flushed, name)
       setWorking(workingFromPreset(next.presets[next.activePresetId]))
     } else {
       next = renameActivePreset(store, name)
     }
     try {
-      await persist(next)
+      await persist(next, false)
     } catch (reason) {
       void message.error(`${t('godMode.errorApply')}: ${(reason as Error).message}`)
     }
@@ -301,12 +365,18 @@ export default function GodModeSettingsModal({
     if (store == null || Object.keys(store.presets).length <= 1) return
     const next = deleteActivePreset(store)
     try {
-      await persist(next)
-      const preset = next.presets[next.activePresetId]
+      const powerState = useFeaturesStore.getState().states.powerMode
+      const saved = await persist(next, powerState === 'GodMode')
+      const preset = saved.presets[saved.activePresetId]
       if (preset != null) setWorking(workingFromPreset(preset))
     } catch (reason) {
       void message.error(`${t('godMode.errorApply')}: ${(reason as Error).message}`)
     }
+  }
+
+  function handleDefaultFanCurve(): void {
+    if (defaultFanTable == null || working.fanTable == null) return
+    setWorking((prev) => ({ ...prev, fanTable: [...defaultFanTable] }))
   }
 
   function validateOffsets(): string | null {
@@ -332,7 +402,7 @@ export default function GodModeSettingsModal({
       if (powerState !== 'GodMode') {
         await useFeaturesStore.getState().setState('powerMode', 'GodMode')
       }
-      await persist(flushed)
+      await persist(flushed, true)
       message.success(t('godMode.applySuccess'))
       return true
     } catch (reason) {
@@ -362,6 +432,11 @@ export default function GodModeSettingsModal({
     }
   }
 
+  const maxOffsetWarningVisible =
+    working.maxValueOffset != null && normalizeOffset(working.maxValueOffset, 0, 100) !== 0
+  const minOffsetWarningVisible =
+    working.minValueOffset != null && normalizeOffset(working.minValueOffset, -100, 0) !== 0
+
   return (
     <Modal
       open={open}
@@ -372,7 +447,19 @@ export default function GodModeSettingsModal({
       confirmLoading={saving}
       onOk={() => void handleSaveAndClose()}
       onCancel={onClose}
+      destroyOnHidden
+      className="udt-god-mode-dialog"
       footer={[
+        ...(loadMenuItems.length > 0
+          ? [
+              <Dropdown key="load" menu={{ items: loadMenuItems }} placement="topLeft" trigger={['click']}>
+                <Button icon={<ChevronDown24Regular />}>
+                  {t('common.load', { defaultValue: 'Load' })}
+                </Button>
+              </Dropdown>
+            ]
+          : []),
+        <span key="spacer" className="udt-god-mode__footer-spacer" />,
         <Button key="save" loading={saving} onClick={() => void handleSave()}>
           {t('common.save')}
         </Button>,
@@ -380,7 +467,7 @@ export default function GodModeSettingsModal({
           {t('common.saveAndClose')}
         </Button>
       ]}
-      styles={{ body: { maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' } }}
+      styles={{ body: { maxHeight: 'calc(100vh - 200px)', overflowY: 'auto', paddingBottom: 8 } }}
     >
       {loading ? (
         <div className="udt-dashboard-edit__loading">
@@ -390,6 +477,30 @@ export default function GodModeSettingsModal({
         <div className="udt-dashboard-edit__error">{t('godMode.errorLoad')}</div>
       ) : (
         <div className="udt-god-mode">
+          {(warnVantage || warnLegionZone) && (
+            <div className="udt-god-mode__warnings">
+              {warnVantage && (
+                <InfoBar
+                  severity="warning"
+                  message={t('godMode.vantageWarning', {
+                    defaultValue:
+                      'Custom Mode settings will not be applied correctly when Lenovo Vantage or its services are running.'
+                  })}
+                />
+              )}
+              {warnLegionZone && (
+                <InfoBar
+                  severity="warning"
+                  message={t('godMode.legionZoneWarning', {
+                    defaultValue:
+                      'Custom Mode settings will not be applied correctly when Legion Zone or its services are running.'
+                  })}
+                />
+              )}
+            </div>
+          )}
+
+          <div className="udt-god-mode__preset-label">{t('godMode.activePreset')}</div>
           <div className="udt-god-mode__preset-row">
             <Select
               className="udt-god-mode__preset-select"
@@ -399,19 +510,21 @@ export default function GodModeSettingsModal({
               onChange={(value) => void handlePresetSwitch(value)}
             />
             <Button
-              icon={<EditOutlined />}
+              className="udt-god-mode__icon-btn"
+              icon={<Edit24Regular />}
               title={t('common.rename')}
               onClick={() => openNamePrompt('rename')}
             />
             <Button
-              icon={<DeleteOutlined />}
+              className="udt-god-mode__icon-btn"
+              icon={<Delete24Regular />}
               title={t('common.delete')}
               disabled={Object.keys(store.presets).length <= 1}
               onClick={() => void handleDeletePreset()}
             />
             <Button
               type="primary"
-              icon={<PlusOutlined />}
+              icon={<Add24Regular />}
               onClick={() => openNamePrompt('add')}
             >
               {t('common.add')}
@@ -476,19 +589,30 @@ export default function GodModeSettingsModal({
             <div className="udt-god-mode__section">
               <h3 className="udt-god-mode__section-title">{t('godMode.fans.title')}</h3>
               {fanCurveVisible && (
-                <div className="udt-god-mode__card">
+                <div className={`udt-god-mode__card${working.fanFullSpeed === true ? ' udt-god-mode__card--disabled' : ''}`}>
                   <div className="udt-god-mode__card-title">{t('godMode.fans.curve')}</div>
                   <div className="udt-god-mode__card-desc">{t('godMode.fans.curveMessage')}</div>
                   <FanCurveEditor
                     value={working.fanTable ?? []}
+                    minimum={minimumFanTable ?? undefined}
+                    sensors={activePreset.fanSensors}
                     disabled={working.fanFullSpeed === true}
                     onChange={(value) => setWorking((prev) => ({ ...prev, fanTable: value }))}
                   />
+                  <div className="udt-god-mode__fan-default-row">
+                    <Button
+                      icon={<ArrowCounterclockwise24Regular />}
+                      disabled={working.fanFullSpeed === true || defaultFanTable == null}
+                      onClick={handleDefaultFanCurve}
+                    >
+                      {t('common.default')}
+                    </Button>
+                  </div>
                 </div>
               )}
               {fanFullSpeedVisible && (
                 <div className="udt-god-mode__card">
-                  <div className="udt-god-mode__card-row">
+                  <div className="udt-god-mode__card-row udt-god-mode__card-row--top">
                     <div className="udt-god-mode__card-copy">
                       <div className="udt-god-mode__card-title">{t('godMode.fans.maxSpeed')}</div>
                       {working.fanFullSpeed === true && (
@@ -497,15 +621,13 @@ export default function GodModeSettingsModal({
                         </div>
                       )}
                     </div>
-                    <input
-                      type="checkbox"
-                      className="udt-dashboard-edit__checkbox"
+                    <Switch
                       checked={working.fanFullSpeed === true}
-                      onChange={(event) => {
-                        setWorking((prev) => ({ ...prev, fanFullSpeed: event.target.checked }))
+                      aria-label={t('godMode.fans.maxSpeed')}
+                      onChange={(checked) => {
+                        setWorking((prev) => ({ ...prev, fanFullSpeed: checked }))
                       }}
                     />
-                    <span className="udt-dashboard-edit__switch" aria-hidden="true" />
                   </div>
                 </div>
               )}
@@ -513,21 +635,22 @@ export default function GodModeSettingsModal({
           )}
 
           {advancedVisible && (
-            <div className="udt-god-mode__section">
+            <div className="udt-god-mode__section udt-god-mode__section--advanced">
               <h3 className="udt-god-mode__section-title">{t('godMode.advanced.title')}</h3>
               <div className="udt-god-mode__advanced-hint">{t('godMode.advanced.message')}</div>
               {working.maxValueOffset != null && (
                 <div className="udt-god-mode__card">
-                  <div className="udt-god-mode__card-row">
+                  <div className="udt-god-mode__card-row udt-god-mode__card-row--top">
                     <div className="udt-god-mode__card-copy">
                       <div className="udt-god-mode__card-title">{t('godMode.advanced.maxOffset')}</div>
-                      {normalizeOffset(working.maxValueOffset, 0, 100) !== 0 && (
+                      {maxOffsetWarningVisible && (
                         <div className="udt-god-mode__card-warning">
                           {removeWarningHeading(t('godMode.advanced.maxOffsetWarning'))}
                         </div>
                       )}
                     </div>
                     <InputNumber
+                      className="udt-god-mode__offset-input"
                       min={0}
                       max={100}
                       precision={0}
@@ -541,16 +664,17 @@ export default function GodModeSettingsModal({
               )}
               {working.minValueOffset != null && (
                 <div className="udt-god-mode__card">
-                  <div className="udt-god-mode__card-row">
+                  <div className="udt-god-mode__card-row udt-god-mode__card-row--top">
                     <div className="udt-god-mode__card-copy">
                       <div className="udt-god-mode__card-title">{t('godMode.advanced.minOffset')}</div>
-                      {normalizeOffset(working.minValueOffset, -100, 0) !== 0 && (
+                      {minOffsetWarningVisible && (
                         <div className="udt-god-mode__card-warning">
                           {removeWarningHeading(t('godMode.advanced.minOffsetWarning'))}
                         </div>
                       )}
                     </div>
                     <InputNumber
+                      className="udt-god-mode__offset-input"
                       min={-100}
                       max={0}
                       precision={0}

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
-import { MobileOutlined, SyncOutlined, ThunderboltOutlined } from '@ant-design/icons'
+import { Flash24Regular, Phone24Regular, ArrowSync24Regular } from '../icons/fluent'
 import { featuresApi } from '../../api/features'
 import { dashboardHardwareApi, type DiscreteGpuState } from '../../api/dashboardHardware'
 import { sensorsApi, type SensorSnapshot } from '../../api/sensors'
@@ -186,7 +186,8 @@ export default function StatusModalHost(): React.JSX.Element {
           if (state === 'GodMode') {
             try {
               const godMode = await godModeApi.load()
-              const preset = godMode?.presets[godMode.activePresetId]
+              const store = godMode?.store
+              const preset = store != null ? store.presets[store.activePresetId] : undefined
               next.godModePresetName = preset?.name?.trim() ? preset.name : '-'
             } catch {
               next.godModePresetName = '-'
@@ -309,7 +310,7 @@ export default function StatusModalHost(): React.JSX.Element {
           <div className="udt-utils-card" style={{ padding: 0 }}>
             <div className="udt-utils-row" style={{ cursor: 'default' }}>
               <span className="udt-utils-row__label" style={{ flex: '0 0 auto', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <ThunderboltOutlined />
+                <Flash24Regular />
                 {t('wpf.statusTrayPopuppowerMode')}
               </span>
               <span className="udt-utils-row__value" style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
@@ -354,7 +355,7 @@ export default function StatusModalHost(): React.JSX.Element {
           <div className="udt-utils-card" style={{ padding: 0 }}>
             <div className="udt-utils-row" style={{ cursor: 'default' }}>
               <span className="udt-utils-row__label" style={{ flex: '0 0 auto', display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <MobileOutlined />
+                <Phone24Regular />
                 {t('wpf.statusTrayPopupbattery')}
               </span>
               <span className="udt-utils-row__value">
@@ -383,7 +384,7 @@ export default function StatusModalHost(): React.JSX.Element {
                 fontSize: 12
               }}
             >
-              <SyncOutlined /> {t('wpf.statusTrayPopupupdateAvailable')}
+              <ArrowSync24Regular /> {t('wpf.statusTrayPopupupdateAvailable')}
             </div>
           )}
         </div>

@@ -3,6 +3,7 @@ import {
   dashboardHardwareApi,
   type DashboardHardwareState
 } from '../api/dashboardHardware'
+import { subscribeUiVisibility } from '../utils/uiVisibility'
 
 export interface DashboardHardwareResult {
   state: DashboardHardwareState | null
@@ -25,11 +26,34 @@ export function useDashboardHardware(): DashboardHardwareResult {
   }, [])
 
   useEffect(() => {
-    const initialLoad = window.setTimeout(() => void refresh(), 0)
-    const interval = window.setInterval(() => void refresh(), 5_000)
+    let cancelled = false
+    let monitoring = false
+    const setMonitoring = (enabled: boolean): void => {
+      if (monitoring === enabled) return
+      monitoring = enabled
+      void dashboardHardwareApi.setMonitoring(enabled).catch(() => undefined)
+    }
+    const start = (): void => {
+      setMonitoring(true)
+      if (!cancelled) void refresh()
+    }
+    const stop = (): void => {
+      setMonitoring(false)
+    }
+
+    if (!document.hidden) start()
+    const interval = window.setInterval(() => {
+      if (!document.hidden) void refresh()
+    }, 5_000)
+    const unsubscribeVisibility = subscribeUiVisibility((active) => {
+      if (active) start()
+      else stop()
+    })
     return () => {
-      window.clearTimeout(initialLoad)
+      cancelled = true
       window.clearInterval(interval)
+      unsubscribeVisibility()
+      stop()
     }
   }, [refresh])
 

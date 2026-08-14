@@ -31,7 +31,9 @@ export interface SensorsGpu {
   vramTemperature?: number | null
   hotSpotTemperature?: number | null
   vramUtilization?: number | null
+  /** Dedicated / shared GPU memory used, in MiB. */
   vramUsedMb?: number | null
+  /** Dedicated / shared GPU memory total, in MiB. */
   vramTotalMb?: number | null
   pcieRxThroughput?: number | null
   pcieTxThroughput?: number | null
@@ -40,7 +42,9 @@ export interface SensorsGpu {
 
 export interface SensorsMemory {
   usage?: number | null
+  /** Physical memory used, in MiB. */
   usedMb?: number | null
+  /** Physical memory total, in MiB. */
   totalMb?: number | null
   highestTemperature?: number | null
 }
@@ -49,10 +53,21 @@ export interface SensorsBattery {
   chargeLevel?: number | null
   health?: number | null
   temperature?: number | null
+  /** Session average battery temperature (°C) when Host tracks samples. */
+  avgTemperature?: number | null
   chargeRate?: number | null
+  /** Session min discharge/charge rate in mW (Host Battery.MinDischargeRate). */
+  minDischargeRate?: number | null
+  /** Session max discharge/charge rate in mW (Host Battery.MaxDischargeRate). */
+  maxDischargeRate?: number | null
   voltage?: number | null
   designCapacity?: number | null
   fullChargeCapacity?: number | null
+  cycleCount?: number | null
+  /** ISO date string yyyy-MM-dd from Host. */
+  manufactureDate?: string | null
+  /** ISO date string yyyy-MM-dd from Host. */
+  firstUseDate?: string | null
   isCharging?: boolean
   isLowBattery?: boolean
   isLowPowerAdapter?: boolean
@@ -104,8 +119,9 @@ export const sensorsApi = {
   getSnapshot: (): Promise<SensorSnapshot> => invoke<SensorSnapshot>('sensors.getSnapshot'),
   getDetailed: (): Promise<SensorSnapshot> => invoke<SensorSnapshot>('sensors.getDetailed'),
   subscribe: (intervalSec = 1): Promise<{ subscribed: boolean; effectiveIntervalSec: number }> =>
-    invoke('sensors.subscribe', { intervalSec }),
-  unsubscribe: (): Promise<{ unsubscribed: boolean }> => invoke('sensors.unsubscribe'),
+    invoke('sensors.subscribe', { intervalSec, subscriberId: 'dashboard' }),
+  unsubscribe: (): Promise<{ unsubscribed: boolean }> =>
+    invoke('sensors.unsubscribe', { subscriberId: 'dashboard' }),
   getFps: (): Promise<FpsData> => invoke<FpsData>('sensors.getFps'),
   subscribeFps: (blacklist?: string[]): Promise<{ monitoring: boolean }> =>
     invoke('sensors.subscribeFps', blacklist ? { blacklist } : {}),

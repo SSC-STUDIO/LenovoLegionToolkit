@@ -1,11 +1,22 @@
 /**
  * System power actions — Electron-side counterpart of the Electron Lib power
- * controller (restart/shutdown/sleep). `shutdown.exe` handles elevation the
- * same way the Electron client does (process elevation for power actions).
+ * controller (restart/shutdown/sleep).
+ *
+ * - Windows: `shutdown.exe` handles elevation the same way the Electron client
+ *   does (process elevation for power actions).
+ * - macOS: AppleScript via `osascript` for restart/shutdown, `pmset sleepnow`
+ *   for sleep; no elevation needed.
+ * - Linux: `systemctl` (systemd); returns an error result when the tool is
+ *   unavailable or the call fails.
  */
 import { spawn } from 'child_process'
 
-function runShutdown(args: string[]): Promise<{ ok: boolean }> {
+export interface PowerActionResult {
+  ok: boolean
+  error?: string
+}
+
+function runWindowsShutdown(args: string[]): Promise<PowerActionResult> {
   return new Promise((resolve) => {
     const child = spawn('shutdown.exe', args, {
       windowsHide: true,
@@ -17,14 +28,49 @@ function runShutdown(args: string[]): Promise<{ ok: boolean }> {
   })
 }
 
-export function restartSystem(): Promise<{ ok: boolean }> {
-  return runShutdown(['/r', '/t', '0'])
+/** Spawn a platform command and resolve with its exit status. */
+function runCommand(command: string, args: string[]): Promise<PowerActionResult> {
+  return new Promise((resolve) => {
+    const child = spawn(command, args, {
+      windowsHide: true,
+      stdio: 'ignore'
+    })
+    child.on('error', (error) => resolve({ ok: false, error: error.message }))
+    child.on('exit', (code) => {
+      if (code === 0) {
+        resolve({ ok: true })
+      } else {
+        resolve({ ok: false, error: `${command} exited with code ${code}` })
+      }
+    })
+  })
 }
 
-export function shutdownSystem(): Promise<{ ok: boolean }> {
-  return runShutdown(['/s', '/t', '0'])
+function runOsxScript(command: 'restart' | 'shut down'): Promise<PowerActionResult> {
+  return runCommand('osascript', ['-e', `tell app "System Events" to ${command}`])
 }
 
-export function sleepSystem(): Promise<{ ok: boolean }> {
-  return runShutdown(['/h'])
+const UNSUPPORTED_PLATFORM: PowerActionResult = { ok: false, error: '平台不支持' }
+
+export function restartSystem(): Promise<PowerActionResult> {
+  if (process.platform === 'win32') return runWindowsShutdown(['/r', '/t', '0'])
+  if (process.platform === 'darwin') return runOsxScript('restart')
+  if (process.platform === 'linux') return runCommand('systemctl', ['reboot'])
+  return Promise.resolve(UNSUPPORTED_PLATFORM)
+}
+
+export function shutdownSystem(): Promise<PowerActionResult> {
+  if (process.platform === 'win32') return runWindowsShutdown(['/s', '/t', '0'])
+  if (process.platform === 'darwin') return runOsxScript('shut down')
+  if (process.platform === 'linux') return runCommand('systemctl', ['poweroff'])
+  return Promise.resolve(UNSUPPORTED_PLATFORM)
+}
+
+export function sleepSystem(): Promise<PowerActionResult> {
+  if (process.platform === 'win32') return runWindowsShutdown(['/h'])
+  // pmset sleepnow is the reliable macOS sleep trigger; AppleScript's
+  // "System Events to sleep" is inconsistent across macOS versions.
+  if (process.platform === 'darwin') return runCommand('pmset', ['sleepnow'])
+  if (process.platform === 'linux') return runCommand('systemctl', ['suspend'])
+  return Promise.resolve(UNSUPPORTED_PLATFORM)
 }

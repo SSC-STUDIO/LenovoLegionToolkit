@@ -1,12 +1,9 @@
 import './fanCurve.css'
-import { useCallback, useEffect, useId, useRef, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-// Port of Electron Controls/FanCurveControl: 10 vertical integer sliders (0-10 fan
-// speed steps) plotted as a polyline with an area fill on a rounded chart
-// surface. Left-to-right values are kept non-decreasing (VerifyValues), each
-// slider is clamped to the minimum fan table (if provided), and hovering or
-// dragging a thumb shows a tooltip with per-sensor "temp °C @ rpm RPM" rows.
+// Port of WPF Controls/FanCurveControl: 10 vertical sliders in equal columns;
+// polyline and thumbs share one coordinate space (thumb center = graph point).
 
 export type FanCurveSensorType = 'CPU' | 'CPUSensor' | 'GPU' | 'GPU2'
 
@@ -30,13 +27,12 @@ const STEP_MIN = 0
 const STEP_MAX = 10
 const THUMB_SIZE = 18
 const THUMB_RADIUS = THUMB_SIZE / 2
-const TRACK_MARGIN_Y = 10
-const PADDING_X = 14
-const PADDING_TOP = 12
-const PADDING_BOTTOM = 14
+const PLOT_PADDING_X = 14
+const PLOT_PADDING_TOP = 12
 const GRID_LINES = 5
 const LINE_COLOR = '#4f9df7'
 const CELSIUS = '\u00B0C'
+const INVALID_TEMP = 127
 
 const SENSOR_LABEL_KEYS: Record<FanCurveSensorType, string> = {
   CPU: 'cpu',
@@ -46,6 +42,20 @@ const SENSOR_LABEL_KEYS: Record<FanCurveSensorType, string> = {
 }
 
 const SENSOR_ORDER: FanCurveSensorType[] = ['CPU', 'CPUSensor', 'GPU', 'GPU2']
+
+function resolveAxisTemps(sensors: FanCurveSensorData[], count: number): (number | undefined)[] {
+  const source = sensors.find((sensor) => sensor.temps.length >= count)?.temps
+  if (source == null) return Array.from({ length: count }, () => undefined)
+  return Array.from({ length: count }, (_, index) => {
+    const temp = source[index]
+    return temp == null || temp >= INVALID_TEMP ? undefined : temp
+  })
+}
+
+function pointX(index: number, count: number, width: number): number {
+  if (count <= 0 || width <= 0) return 0
+  return ((index + 0.5) / count) * width
+}
 
 export default function FanCurveEditor({
   value,
@@ -59,27 +69,30 @@ export default function FanCurveEditor({
   const { t } = useTranslation()
   const gradientId = useId()
   const plotRef = useRef<HTMLDivElement>(null)
-  const [contentWidth, setContentWidth] = useState(0)
+  const [plotSize, setPlotSize] = useState({ width: 0, height: 0 })
   const [dragIndex, setDragIndex] = useState<number | null>(null)
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
 
   const values = value.length >= 2 ? value.slice(0, 10) : []
   const count = values.length
-  const contentHeight = height - PADDING_TOP - PADDING_BOTTOM
-  const rangeTop = TRACK_MARGIN_Y + THUMB_RADIUS
-  const rangeBottom = contentHeight - TRACK_MARGIN_Y - THUMB_RADIUS
 
   useEffect(() => {
     const el = plotRef.current
     if (!el) return
     const update = (): void => {
-      setContentWidth(Math.max(0, el.clientWidth - PADDING_X * 2))
+      setPlotSize({
+        width: Math.max(0, el.clientWidth),
+        height: Math.max(0, el.clientHeight)
+      })
     }
     update()
     const observer = new ResizeObserver(update)
     observer.observe(el)
     return () => observer.disconnect()
   }, [])
+
+  const rangeTop = THUMB_RADIUS
+  const rangeBottom = Math.max(rangeTop + 1, plotSize.height - THUMB_RADIUS)
 
   const valueY = useCallback(
     (v: number): number => {
@@ -107,7 +120,7 @@ export default function FanCurveEditor({
     const el = plotRef.current
     if (!el) return 0
     const rect = el.getBoundingClientRect()
-    const y = clientY - rect.top - PADDING_TOP
+    const y = clientY - rect.top
     const span = rangeBottom - rangeTop
     const ratio = span > 0 ? 1 - (y - rangeTop) / span : 0
     return ratio * STEP_MAX
@@ -134,10 +147,14 @@ export default function FanCurveEditor({
     setDragIndex(null)
   }
 
-  const points = values.map((v, i) => ({
-    x: ((i + 0.5) / count) * contentWidth,
-    y: valueY(v)
-  }))
+  const points = useMemo(
+    () =>
+      values.map((v, i) => ({
+        x: pointX(i, count, plotSize.width),
+        y: valueY(v)
+      })),
+    [values, count, plotSize.width, valueY]
+  )
 
   const linePath = points
     .map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(2)},${p.y.toFixed(2)}`)
@@ -148,20 +165,20 @@ export default function FanCurveEditor({
       ? `${linePath} L${points[points.length - 1].x.toFixed(2)},${rangeBottom.toFixed(2)} L${points[0].x.toFixed(2)},${rangeBottom.toFixed(2)} Z`
       : ''
 
-  const axisTemps = sensors.find((s) => s.temps.length >= count)?.temps
+  const axisTemps = useMemo(() => resolveAxisTemps(sensors, count), [sensors, count])
 
   const formatTempLabel = (index: number): string => {
-    const temp = axisTemps?.[index]
-    return temp == null || temp >= 127 ? '-' : `${temp}${CELSIUS}`
+    const temp = axisTemps[index]
+    return temp == null ? '-' : `${temp}${CELSIUS}`
   }
 
-  const formatTooltipValue = (sensor: FanCurveSensorData, index: number, v: number): string => {
+  const formatTooltipValue = (sensor: FanCurveSensorData, index: number, v: number): string | null => {
     const temp = sensor.temps[index]
-    if (temp == null || temp >= 127) return '-'
+    if (temp == null || temp >= INVALID_TEMP) return null
     const rpmIndex = v - 1
     if (rpmIndex < 0) return `0 ${t('fanCurve.rpm')}`
     const rpm = sensor.fanSpeeds[rpmIndex]
-    if (rpm == null) return '-'
+    if (rpm == null) return null
     return `${temp}${CELSIUS} @ ${rpm} ${t('fanCurve.rpm')}`
   }
 
@@ -172,14 +189,17 @@ export default function FanCurveEditor({
       : SENSOR_ORDER.map((type) => {
           const sensor = sensors.find((s) => s.type === type)
           if (!sensor) return null
+          const valueText = formatTooltipValue(sensor, activeIndex, values[activeIndex] ?? 0)
+          if (valueText == null) return null
           return {
             label: t(`fanCurve.${SENSOR_LABEL_KEYS[type]}`),
-            value: formatTooltipValue(sensor, activeIndex, values[activeIndex] ?? 0)
+            value: valueText
           }
         }).filter((row): row is { label: string; value: string } => row != null)
 
-  const tooltipX = activeIndex == null ? 0 : PADDING_X + (points[activeIndex]?.x ?? 0)
-  const tooltipY = activeIndex == null ? 0 : PADDING_TOP + (points[activeIndex]?.y ?? 0)
+  const tooltipPoint = activeIndex == null ? null : points[activeIndex]
+
+  const chartHeight = height - PLOT_PADDING_TOP
 
   return (
     <div className={`udt-fan-curve${disabled ? ' udt-fan-curve--disabled' : ''}`}>
@@ -198,83 +218,94 @@ export default function FanCurveEditor({
         </div>
 
         <div className="udt-fan-curve__plot-wrap">
-          <div className="udt-fan-curve__plot" ref={plotRef} style={{ height }}>
-            {contentWidth > 0 && count > 1 && (
-              <svg
-                className="udt-fan-curve__graph"
-                width={contentWidth}
-                height={contentHeight}
-                aria-hidden="true"
-              >
-                <defs>
-                  <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0" stopColor={LINE_COLOR} stopOpacity={0.431} />
-                    <stop offset="1" stopColor={LINE_COLOR} stopOpacity={0.094} />
-                  </linearGradient>
-                </defs>
-                {Array.from({ length: GRID_LINES + 1 }, (_, i) => {
-                  const y = rangeTop + ((rangeBottom - rangeTop) * i) / GRID_LINES
-                  return (
-                    <line
-                      key={i}
-                      x1={0}
-                      y1={y}
-                      x2={contentWidth}
-                      y2={y}
-                      style={{ stroke: 'var(--udt-chart-gridline)' }}
-                      strokeWidth={0.75}
-                      opacity={0.7}
-                    />
-                  )
-                })}
-                <path d={areaPath} fill={`url(#${gradientId})`} />
-                <path
-                  d={linePath}
-                  fill="none"
-                  style={{ stroke: 'var(--udt-chart-utilization)' }}
-                  strokeWidth={2.25}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            )}
-
-            {contentWidth > 0 && count > 1 && (
-              <div className="udt-fan-curve__sliders">
-                {values.map((_, i) => {
-                  const x = points[i].x
-                  const y = points[i].y
-                  return (
-                    <div
-                      key={i}
-                      className="udt-fan-curve__column"
-                      style={{ left: `${(i / count) * 100}%`, width: `${100 / count}%` }}
-                      onPointerDown={handlePointerDown(i)}
-                      onPointerMove={handlePointerMove}
-                      onPointerUp={handlePointerUp}
-                      onPointerCancel={handlePointerUp}
-                      onPointerEnter={() => {
-                        if (dragIndex == null) setHoverIndex(i)
-                      }}
-                      onPointerLeave={() => {
-                        if (dragIndex == null) setHoverIndex(null)
-                      }}
-                    >
-                      <div
-                        className={`udt-fan-curve__thumb${dragIndex === i ? ' udt-fan-curve__thumb--dragging' : ''}`}
-                        style={{ left: x - THUMB_RADIUS, top: y - THUMB_RADIUS }}
+          <div className="udt-fan-curve__plot" style={{ height }}>
+            <div
+              className="udt-fan-curve__plot-inner"
+              ref={plotRef}
+              style={{ height: chartHeight }}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+            >
+              {plotSize.width > 0 && count > 1 && (
+                <>
+                <svg
+                  className="udt-fan-curve__graph"
+                  width={plotSize.width}
+                  height={plotSize.height}
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stopColor={LINE_COLOR} stopOpacity={0.431} />
+                      <stop offset="1" stopColor={LINE_COLOR} stopOpacity={0.094} />
+                    </linearGradient>
+                  </defs>
+                  {Array.from({ length: GRID_LINES + 1 }, (_, i) => {
+                    const y = rangeTop + ((rangeBottom - rangeTop) * i) / GRID_LINES
+                    return (
+                      <line
+                        key={`h-${i}`}
+                        x1={0}
+                        y1={y}
+                        x2={plotSize.width}
+                        y2={y}
+                        className="udt-fan-curve__grid-line"
                       />
-                    </div>
-                  )
-                })}
-              </div>
-            )}
+                    )
+                  })}
+                  {points.map((point, i) => (
+                    <line
+                      key={`v-${i}`}
+                      x1={point.x}
+                      y1={rangeTop}
+                      x2={point.x}
+                      y2={rangeBottom}
+                      className="udt-fan-curve__grid-line udt-fan-curve__grid-line--column"
+                    />
+                  ))}
+                  <path d={areaPath} fill={`url(#${gradientId})`} />
+                  <path
+                    d={linePath}
+                    fill="none"
+                    className="udt-fan-curve__line"
+                    strokeWidth={2.25}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+
+                {points.map((point, i) => (
+                  <div
+                    key={`thumb-${i}`}
+                    className={`udt-fan-curve__thumb-hit${dragIndex === i ? ' udt-fan-curve__thumb-hit--dragging' : ''}${hoverIndex === i ? ' udt-fan-curve__thumb-hit--hover' : ''}`}
+                    style={{
+                      left: `${point.x}px`,
+                      top: `${point.y}px`
+                    }}
+                    onPointerDown={handlePointerDown(i)}
+                    onPointerEnter={() => {
+                      if (dragIndex == null) setHoverIndex(i)
+                    }}
+                    onPointerLeave={() => {
+                      if (dragIndex == null) setHoverIndex(null)
+                    }}
+                  >
+                    <div className="udt-fan-curve__thumb" />
+                  </div>
+                ))}
+                </>
+              )}
+            </div>
           </div>
 
-          {tooltipRows.length > 0 && activeIndex != null && (
+          {tooltipRows.length > 0 && tooltipPoint != null && (
             <div
               className="udt-fan-curve__tooltip"
-              style={{ left: tooltipX, top: tooltipY }}
+              style={{
+                left: PLOT_PADDING_X + tooltipPoint.x,
+                top: PLOT_PADDING_TOP + tooltipPoint.y
+              }}
             >
               {tooltipRows.map((row) => (
                 <div key={row.label} className="udt-fan-curve__tooltip-row">
@@ -284,14 +315,24 @@ export default function FanCurveEditor({
               ))}
             </div>
           )}
-        </div>
 
-        <div className="udt-fan-curve__x-labels">
-          {values.map((_, i) => (
-            <span key={i} className="udt-fan-curve__x-label">
-              {formatTempLabel(i)}
-            </span>
-          ))}
+          {plotSize.width > 0 && count > 1 && (
+            <div
+              className="udt-fan-curve__x-labels"
+              style={{ width: plotSize.width, marginLeft: PLOT_PADDING_X, marginRight: PLOT_PADDING_X }}
+            >
+              {points.map((point, i) => (
+                <span
+                  key={i}
+                  className="udt-fan-curve__x-label"
+                  style={{ left: `${point.x}px` }}
+                  title={formatTempLabel(i)}
+                >
+                  {formatTempLabel(i)}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

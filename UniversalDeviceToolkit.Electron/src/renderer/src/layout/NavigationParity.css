@@ -8,10 +8,12 @@
   display: block;
 }
 
-/* Navigation polish: accent-tinted hover, active glow, refined transitions */
+/* Navigation polish: accent-tinted hover, refined transitions.
+   Do not use translateX on hover — overflow-y:auto on .udt-nav__scroll computes
+   overflow-x to auto as well, so a 2px shift shows a horizontal scrollbar that
+   reads as a gray bar above the footer (「插件扩展」). */
 .udt-nav--electron-parity .udt-nav-item {
-  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out,
-    transform var(--udt-anim-fast) ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
 }
 
 .udt-nav--electron-parity .udt-nav-item:hover .udt-nav-icon {
@@ -27,10 +29,3 @@
   border-color: color-mix(in srgb, var(--udt-accent) 22%, transparent);
 }
 
-.udt-nav--electron-parity .udt-nav-item--active .udt-nav-accent {
-  box-shadow: 0 0 8px var(--udt-accent);
-}
-
-.udt-nav--electron-parity .udt-nav-item:not(.udt-nav-item--active):hover {
-  transform: translateX(2px);
-}

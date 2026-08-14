@@ -1,4 +1,4 @@
-import { CloseOutlined, SyncOutlined, WarningFilled } from '@ant-design/icons'
+import { ArrowSync24Regular, Dismiss24Regular, Warning24Filled } from './icons/fluent'
 import './AppStatusBanner.css'
 
 /**
@@ -35,7 +35,7 @@ export default function AppStatusBanner({
       onClick={onClick}
     >
       <span className="udt-status-banner__icon" aria-hidden="true">
-        {isSuccess ? <SyncOutlined /> : <WarningFilled />}
+        {isSuccess ? <ArrowSync24Regular /> : <Warning24Filled />}
       </span>
       <span className="udt-status-banner__message">{message}</span>
       {closable && (
@@ -43,12 +43,12 @@ export default function AppStatusBanner({
           type="button"
           className="udt-status-banner__close"
           aria-label="Close"
-          onClick={(e) => {
-            e.stopPropagation()
+          onClick={(event) => {
+            event.stopPropagation()
             onClosed?.()
           }}
         >
-          <CloseOutlined />
+          <Dismiss24Regular />
         </button>
       )}
     </div>

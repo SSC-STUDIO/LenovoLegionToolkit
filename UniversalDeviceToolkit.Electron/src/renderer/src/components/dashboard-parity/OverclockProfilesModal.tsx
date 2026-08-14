@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Button, Input, Modal, Select, Slider, Spin, message } from 'antd'
-import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons'
+import { Delete24Regular, Edit24Regular, Add24Regular } from '../icons/fluent'
 import { useTranslation } from 'react-i18next'
 import { dashboardHardwareApi, type DashboardHardwareState } from '../../api/dashboardHardware'
 import { settingsApi } from '../../api/settings'
@@ -325,17 +325,17 @@ export default function OverclockProfilesModal({
               onChange={(value) => void handleProfileSwitch(value)}
             />
             <Button
-              icon={<EditOutlined />}
+              icon={<Edit24Regular />}
               title={t('common.rename')}
               onClick={() => openNamePrompt('rename')}
             />
             <Button
-              icon={<DeleteOutlined />}
+              icon={<Delete24Regular />}
               title={t('common.delete')}
               disabled={Object.keys(store.profiles).length <= 1}
               onClick={() => void handleDeleteProfile()}
             />
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => openNamePrompt('add')}>
+            <Button type="primary" icon={<Add24Regular />} onClick={() => openNamePrompt('add')}>
               {t('common.add')}
             </Button>
           </div>

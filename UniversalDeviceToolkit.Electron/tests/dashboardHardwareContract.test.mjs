@@ -8,6 +8,7 @@ const handler = readFileSync(new URL('../../UniversalDeviceToolkit.Host/Rpc/Hand
 test('dashboard hardware RPC operation names stay aligned', () => {
   for (const operation of [
     'getState',
+    'setMonitoring',
     'killGpuProcesses',
     'restartGpu',
     'setOverclockEnabled',
@@ -17,6 +18,12 @@ test('dashboard hardware RPC operation names stay aligned', () => {
     assert.match(api, new RegExp(`dashboardHardware\\.${operation}`))
     assert.match(handler, new RegExp(`dashboardHardware\\.${operation}`))
   }
+})
+
+test('GPU monitoring uses a subscriber count and stops at zero', () => {
+  assert.match(handler, /_gpuMonitorCount\+\+/)
+  assert.match(handler, /_gpuMonitorCount = Math\.Max\(0, _gpuMonitorCount - 1\)/)
+  assert.match(handler, /gpuController\.StopAsync/)
 })
 
 test('special dashboard items remain represented by dedicated cards', () => {

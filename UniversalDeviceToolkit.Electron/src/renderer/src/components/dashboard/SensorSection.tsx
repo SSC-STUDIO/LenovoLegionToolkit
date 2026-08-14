@@ -2,6 +2,16 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
+import {
+  ArrowSync24Regular,
+  ChevronDown24Regular,
+  ChevronUp24Regular,
+  Flash24Regular,
+  FluentIcon,
+  Gauge24Regular,
+  Heart24Regular,
+  WeatherSunny24Regular
+} from '../icons/fluent'
 import type { SensorsBattery, SensorsCpu } from '../../api/sensors'
 import { settingsApi } from '../../api/settings'
 import { useSensorsStore } from '../../stores/sensorsStore'
@@ -10,6 +20,8 @@ import { useThemeStore } from '../../stores/themeStore'
 import { SensorSkeletonColumn } from '../DashboardSkeleton'
 import SensorGauge from './SensorGauge'
 import TrendChart, { type TrendSeries } from './TrendChart'
+import { formatUsageInGigabytes } from '../../utils/format'
+import { subscribeUiVisibility } from '../../utils/uiVisibility'
 
 const CPU_UTILIZATION = '#4f9df7'
 const CPU_CLOCK = '#6fbf73'
@@ -62,6 +74,8 @@ interface SensorPanelProps {
   warnings?: React.JSX.Element
   /** Warning/status between chart legend and details (e.g. low-power adapter). */
   afterChart?: React.JSX.Element
+  /** Pinned to the bottom of the panel (below expanded details). */
+  footer?: React.JSX.Element
   /** Detail rows grouped per column (Electron detail panel: two equal columns). */
   details?: SensorDetail[][]
   /** Optional block above the detail columns (battery mini gauges / GPU VRAM bar). */
@@ -118,14 +132,6 @@ function formatWattHours(mwh: number | null | undefined): string {
   return `${(mwh / 1000).toFixed(2)} Wh`
 }
 
-// Electron UpdateBatteryHealthGauge ring color: green >= 80, caution 60–79, critical < 60.
-function batteryHealthColor(healthPercent: number | null | undefined): string {
-  if (healthPercent == null || !Number.isFinite(healthPercent) || healthPercent < 0) return BATTERY_LEVEL
-  if (healthPercent >= 80) return BATTERY_LEVEL
-  if (healthPercent >= 60) return BATTERY_CAUTION
-  return BATTERY_CRITICAL
-}
-
 // FormatPower: wattage 0.# decimals.
 function formatPower(w: number | null | undefined): string {
   if (w == null || !Number.isFinite(w) || w < 0) return '-'
@@ -136,29 +142,6 @@ function formatPower(w: number | null | undefined): string {
 function formatVoltage(v: number | null | undefined): string {
   if (v == null || !Number.isFinite(v) || v <= 0) return '-'
   return `${v.toFixed(3)} V`
-}
-
-// FormatUsageInGigabytes: "x.x / y.y GB (z%)", "x.x GB (z%)" or "x.x GB".
-function formatUsageInGigabytes(
-  usedMb: number | null | undefined,
-  totalMb: number | null | undefined,
-  percentage: number | null | undefined = -1
-): string {
-  if (usedMb == null || !Number.isFinite(usedMb) || usedMb < 0) {
-    return percentage != null && Number.isFinite(percentage) && percentage >= 0
-      ? `${percentage.toFixed(0)}%`
-      : '-'
-  }
-  const usedGb = usedMb / 1024
-  const totalGb = totalMb != null && Number.isFinite(totalMb) && totalMb > 0 ? totalMb / 1024 : 0
-  const percent =
-    percentage != null && Number.isFinite(percentage) && percentage >= 0
-      ? percentage
-      : totalGb > 0
-        ? (usedGb / totalGb) * 100
-        : -1
-  const base = totalGb > 0 ? `${usedGb.toFixed(1)} / ${totalGb.toFixed(1)} GB` : `${usedGb.toFixed(1)} GB`
-  return percent >= 0 ? `${base} (${percent.toFixed(0)}%)` : base
 }
 
 // FormatThroughput: B/s → KB/s → MB/s → GB/s (0.00 decimals).
@@ -316,96 +299,69 @@ function BatteryIcon({ level, charging }: { level?: number | null; charging?: bo
   )
 }
 
-/** Shared 14×14 metric-row glyph chrome (icon-only / icon+text toggle). */
-function MetricGlyph({
-  color,
-  children
-}: {
-  color?: string
-  children: React.ReactNode
-}): React.JSX.Element {
-  return (
-    <svg
-      className="udt-sensor-panel__metric-icon"
-      width="14"
-      height="14"
-      viewBox="0 0 16 16"
-      fill="none"
-      aria-hidden="true"
-      style={color != null ? { color } : undefined}
-    >
-      {children}
-    </svg>
-  )
-}
-
 function FrequencyIcon(): React.JSX.Element {
   return (
-    <MetricGlyph>
-      <path
-        d="M2.5 11.5 5.2 6.8 7.6 9.4 10.4 4.2 13.5 11.5"
-        stroke="currentColor"
-        strokeWidth="1.25"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M2 13.2h12" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" opacity="0.55" />
-    </MetricGlyph>
+    <FluentIcon size={14} className="udt-sensor-panel__metric-icon">
+      <Gauge24Regular />
+    </FluentIcon>
   )
 }
 
 function TemperatureIcon({ color }: { color?: string }): React.JSX.Element {
   return (
-    <MetricGlyph color={color}>
-      <path
-        d="M7.2 1.6h1.6a1.2 1.2 0 0 1 1.2 1.2v6.1a2.8 2.8 0 1 1-4 0V2.8A1.2 1.2 0 0 1 7.2 1.6Z"
-        stroke="currentColor"
-        strokeWidth="1.2"
-      />
-      <circle cx="8" cy="11.2" r="1.5" fill="currentColor" />
-      <path d="M8 4v5.2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-    </MetricGlyph>
+    <FluentIcon size={14} className="udt-sensor-panel__metric-icon" color={color}>
+      <WeatherSunny24Regular />
+    </FluentIcon>
   )
 }
 
 function FanIcon(): React.JSX.Element {
   return (
-    <MetricGlyph>
-      <circle cx="8" cy="8" r="1.35" fill="currentColor" />
-      <path
-        d="M8 6.65c1.7-2.9 4.4-3.6 5.2-2.4.7 1-.4 3.2-2.6 4.1M9.35 8c2.9 1.7 3.6 4.4 2.4 5.2-1 .7-3.2-.4-4.1-2.6M8 9.35c-1.7 2.9-4.4 3.6-5.2 2.4-.7-1 .4-3.2 2.6-4.1M6.65 8C3.75 6.3 3.05 3.6 4.25 2.8c1-.7 3.2.4 4.1 2.6"
-        stroke="currentColor"
-        strokeWidth="1.15"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </MetricGlyph>
+    <FluentIcon size={14} className="udt-sensor-panel__metric-icon">
+      <ArrowSync24Regular />
+    </FluentIcon>
   )
 }
 
 function HealthIcon(): React.JSX.Element {
   return (
-    <MetricGlyph>
-      <path
-        d="M8 13.2S2.8 9.6 2.8 5.9A2.85 2.85 0 0 1 8 4.2a2.85 2.85 0 0 1 5.2 1.7c0 3.7-5.2 7.3-5.2 7.3Z"
-        stroke="currentColor"
-        strokeWidth="1.2"
-        strokeLinejoin="round"
-      />
-    </MetricGlyph>
+    <FluentIcon size={14} className="udt-sensor-panel__metric-icon">
+      <Heart24Regular />
+    </FluentIcon>
   )
 }
 
 function RateIcon(): React.JSX.Element {
   return (
-    <MetricGlyph>
-      <path
-        d="M9.1 1.8 4.2 8.4h3.1L6.9 14.2l4.9-6.6H8.7L9.1 1.8Z"
-        stroke="currentColor"
-        strokeWidth="1.15"
-        strokeLinejoin="round"
-      />
-    </MetricGlyph>
+    <FluentIcon size={14} className="udt-sensor-panel__metric-icon">
+      <Flash24Regular />
+    </FluentIcon>
+  )
+}
+
+// Static metric icons hoisted to module scope so the 1 Hz sensor render loop
+// reuses the same elements instead of re-creating them every tick
+// (TemperatureIcon stays inline - its color follows the reading).
+const FREQUENCY_ICON = <FrequencyIcon />
+const FAN_ICON = <FanIcon />
+const HEALTH_ICON = <HealthIcon />
+const RATE_ICON = <RateIcon />
+
+interface BatteryCapacityStat {
+  label: string
+  value: string
+}
+
+function BatteryCapacityStats({ rows }: { rows: BatteryCapacityStat[] }): React.JSX.Element {
+  return (
+    <div className="udt-sensor-panel__battery-stats">
+      {rows.map((row) => (
+        <div key={row.label} className="udt-sensor-panel__battery-stat">
+          <dt title={row.label}>{row.label}</dt>
+          <dd title={row.value}>{row.value}</dd>
+        </div>
+      ))}
+    </div>
   )
 }
 
@@ -418,6 +374,7 @@ function SensorPanel({
   labels,
   warnings,
   afterChart,
+  footer,
   details,
   detailsHeader,
   emptyLabel,
@@ -448,6 +405,22 @@ function SensorPanel({
           <span className="udt-sensor-panel__model" title={model}>
             {model}
           </span>
+        )}
+        {hasDetails && (
+          <button
+            type="button"
+            className={`udt-sensor-panel__details-toggle${detailsExpanded ? ' udt-sensor-panel__details-toggle--expanded' : ''}`}
+            aria-expanded={detailsExpanded}
+            onClick={(event) => {
+              event.stopPropagation()
+              onToggleDetails()
+            }}
+          >
+            {detailsExpanded ? <ChevronUp24Regular /> : <ChevronDown24Regular />}
+            {detailsExpanded
+              ? t('dashboard.sensor.hideDetails', { defaultValue: 'Hide details' })
+              : t('dashboard.sensor.showDetails', { defaultValue: 'Show details' })}
+          </button>
         )}
       </div>
       <div className="udt-sensor-panel__summary">
@@ -501,6 +474,7 @@ function SensorPanel({
           </div>
         </div>
       )}
+      {footer}
       </section>
     </Tooltip>
   )
@@ -510,6 +484,7 @@ export default function SensorSection(): React.JSX.Element {
   const { t } = useTranslation()
   const isDark = useThemeStore((state) => state.themeMode === 'dark')
   const snapshot = useSensorsStore((state) => state.snapshot)
+  const status = useSensorsStore((state) => state.status)
   const trend = useSensorsStore((state) => state.trend)
   const scopes = useSettingsStore((state) => state.scopes)
   // WPF SensorsControl._detailsExpanded: one flag toggles all detail panels.
@@ -542,14 +517,22 @@ export default function SensorSection(): React.JSX.Element {
     const store = useSensorsStore.getState()
     void store.loadStatus()
     void store.loadSnapshot()
-    // Start with the interval persisted in Settings → Application.
+    let savedInterval = 1
     const startWithSavedInterval = async (): Promise<void> => {
       await useSettingsStore.getState().load()
-      const saved = readSavedRefreshInterval(useSettingsStore.getState().scopes)
-      await store.start(saved)
+      savedInterval = readSavedRefreshInterval(useSettingsStore.getState().scopes)
+      await store.start(savedInterval)
     }
     void startWithSavedInterval()
+    const unsubscribeVisibility = subscribeUiVisibility((active) => {
+      if (active) {
+        void useSensorsStore.getState().start(savedInterval)
+      } else {
+        void useSensorsStore.getState().stop()
+      }
+    })
     return () => {
+      unsubscribeVisibility()
       void useSensorsStore.getState().stop()
     }
   }, [])
@@ -578,6 +561,8 @@ export default function SensorSection(): React.JSX.Element {
   const gpu = snapshot?.gpu
   const memory = snapshot?.memory
   const battery = snapshot?.battery
+  const cpuModel = snapshot?.info?.cpuName ?? status?.cpuName ?? null
+  const gpuModel = snapshot?.info?.gpuName ?? status?.gpuName ?? null
   const labels = trend.labels
   const valueColor = isDark ? 'rgba(255, 255, 255, 0.77)' : 'rgba(0, 0, 0, 0.62)'
 
@@ -618,11 +603,10 @@ export default function SensorSection(): React.JSX.Element {
       </div>
     ) : undefined
 
-  // Low-power adapter: battery column, between chart legend and expanded details
-  // (reference screenshot placement — not a board footer).
-  const batteryAfterChart = isLowPowerAdapter ? (
-    <div className="udt-sensor-panel__warnings udt-sensor-panel__warnings--after-chart" role="status">
-      <div className="udt-sensor-panel__warning">{t('dashboard.sensor.lowPowerAdapter')}</div>
+  // Low-power adapter: pinned to the bottom of the battery column.
+  const batteryFooter = isLowPowerAdapter ? (
+    <div className="udt-sensor-panel__footer udt-sensor-panel__footer--warning" role="status">
+      {t('dashboard.sensor.lowPowerAdapter')}
     </div>
   ) : undefined
 
@@ -726,61 +710,29 @@ export default function SensorSection(): React.JSX.Element {
   const designCapacityValid = designCapacity != null && Number.isFinite(designCapacity) && designCapacity > 0
   const fullChargeCapacityValid =
     fullChargeCapacity != null && Number.isFinite(fullChargeCapacity) && fullChargeCapacity > 0
-  const fullChargePercent =
-    designCapacityValid && fullChargeCapacityValid
-      ? Math.min(100, Math.max(0, (fullChargeCapacity / designCapacity) * 100))
-      : null
   const remainingWh =
     battery?.chargeLevel != null && Number.isFinite(battery.chargeLevel) && fullChargeCapacityValid
       ? (battery.chargeLevel / 100) * (fullChargeCapacity / 1000)
       : null
 
-  // Battery detail header: 3 mini gauges (Electron GaugeSizeSM rings, 4px thick).
-  // Remaining / Full Charge / Health(+Design Wh) — matches reference screenshot.
-  const batteryGauges = (
-    <div className="udt-sensor-panel__battery-gauges">
-      <div className="udt-sensor-panel__battery-gauge">
-        <SensorGauge
-          value={battery?.chargeLevel}
-          max={100}
-          size={88}
-          thickness={4}
-          label={t('dashboard.sensor.capacity')}
-          color={BATTERY_LEVEL}
-        />
-        <span className="udt-sensor-panel__battery-gauge-value">
-          {remainingWh != null ? `${remainingWh.toFixed(2)} Wh` : '-'}
-        </span>
-      </div>
-      <div className="udt-sensor-panel__battery-gauge">
-        <SensorGauge
-          value={fullChargePercent}
-          max={100}
-          size={88}
-          thickness={4}
-          label={t('dashboard.sensor.fullCapacity')}
-          color={CPU_UTILIZATION}
-        />
-        <span className="udt-sensor-panel__battery-gauge-value">
-          {fullChargeCapacityValid ? formatWattHours(fullChargeCapacity) : '-'}
-        </span>
-      </div>
-      <div className="udt-sensor-panel__battery-gauge">
-        <SensorGauge
-          value={healthPercent}
-          max={100}
-          size={88}
-          thickness={4}
-          label={t('dashboard.sensor.health')}
-          color={batteryHealthColor(healthPercent)}
-        />
-        <span className="udt-sensor-panel__battery-gauge-value">
-          {designCapacityValid
-            ? `${t('dashboard.sensor.designCapacity')}: ${formatWattHours(designCapacity)}`
-            : '-'}
-        </span>
-      </div>
-    </div>
+  // Battery detail header: capacity / full charge / health as label+value (no bars).
+  const batteryDetailsHeader = (
+    <BatteryCapacityStats
+      rows={[
+        {
+          label: t('dashboard.sensor.capacity'),
+          value: remainingWh != null ? `${remainingWh.toFixed(2)} Wh` : '-'
+        },
+        {
+          label: t('dashboard.sensor.fullCapacity'),
+          value: fullChargeCapacityValid ? formatWattHours(fullChargeCapacity) : '-'
+        },
+        {
+          label: t('dashboard.sensor.health'),
+          value: formatHealth(battery?.health)
+        }
+      ]}
+    />
   )
 
   const batteryAmbientTemp = battery?.avgTemperature ?? battery?.temperature
@@ -791,7 +743,10 @@ export default function SensorSection(): React.JSX.Element {
         label: t('dashboard.sensor.powerRange'),
         value: formatPowerRangeMw(battery?.minDischargeRate, battery?.maxDischargeRate)
       },
-      { label: t('dashboard.sensor.cycles'), value: formatCycleCount(battery?.cycleCount) }
+      { label: t('dashboard.sensor.cycles'), value: formatCycleCount(battery?.cycleCount) },
+      ...(designCapacityValid
+        ? [{ label: t('dashboard.sensor.designCapacity'), value: formatWattHours(designCapacity) }]
+        : [])
     ],
     [
       { label: t('dashboard.sensor.date'), value: formatBatteryDate(batteryDate) },
@@ -855,11 +810,24 @@ export default function SensorSection(): React.JSX.Element {
 
   if (snapshot == null) {
     return (
-      <div className="udt-dsk-sensors" role="status" aria-label={t('common.loading', { defaultValue: 'Loading…' })}>
-        <div className="udt-dsk-sensors__grid">
-          <SensorSkeletonColumn titleWidth={72} subtitleWidth={168} metricWidths={[52, 44, 40]} staggerBase={0} />
-          <SensorSkeletonColumn titleWidth={64} subtitleWidth={140} metricWidths={[48, 44, 44]} staggerBase={16} />
-          <SensorSkeletonColumn titleWidth={68} subtitleWidth={152} metricWidths={[52, 40, 44]} staggerBase={32} />
+      <div className="udt-sensors udt-fade-in" role="status" aria-label={t('common.loading', { defaultValue: 'Loading…' })}>
+        <div className="udt-sensor-board">
+          <div className="udt-sensor-board__grid">
+            <SensorSkeletonColumn
+              titleWidth={72}
+              subtitleWidth={168}
+              metricWidths={[52, 44, 40]}
+              staggerBase={0}
+            />
+            <SensorSkeletonColumn
+              titleWidth={64}
+              subtitleWidth={140}
+              metricWidths={[48, 44, 44]}
+              staggerBase={16}
+              legendCount={2}
+            />
+            <SensorSkeletonColumn titleWidth={68} subtitleWidth={152} metricWidths={[52, 40, 44]} staggerBase={32} />
+          </div>
         </div>
       </div>
     )
@@ -875,7 +843,7 @@ export default function SensorSection(): React.JSX.Element {
         <div className="udt-sensor-board__grid">
           <SensorPanel
             title={t('dashboard.sensor.cpu')}
-            model={snapshot?.info?.cpuName}
+            model={cpuModel}
             gauge={
               <SensorGauge
                 value={cpu?.usage}
@@ -889,7 +857,7 @@ export default function SensorSection(): React.JSX.Element {
               {
                 label: t('dashboard.sensor.frequency'),
                 value: formatFrequency(cpuClock),
-                icon: <FrequencyIcon />,
+                icon: FREQUENCY_ICON,
                 ...metricBar(cpuClock, cpu?.coreClockMax, 5000)
               },
               {
@@ -902,7 +870,7 @@ export default function SensorSection(): React.JSX.Element {
               {
                 label: t('dashboard.sensor.fan'),
                 value: formatFan(cpu?.fanSpeed),
-                icon: <FanIcon />,
+                icon: FAN_ICON,
                 ...metricBar(cpu?.fanSpeed, null, 5000)
               }
             ]}
@@ -929,7 +897,7 @@ export default function SensorSection(): React.JSX.Element {
               {
                 label: t('dashboard.sensor.health'),
                 value: formatHealth(battery?.health),
-                icon: <HealthIcon />,
+                icon: HEALTH_ICON,
                 ...metricBar(healthPercent, 100, 100)
               },
               {
@@ -942,7 +910,7 @@ export default function SensorSection(): React.JSX.Element {
               {
                 label: t('dashboard.sensor.rate'),
                 value: formatRate(battery?.chargeRate),
-                icon: <RateIcon />,
+                icon: RATE_ICON,
                 barValue: rateBarValue,
                 barMax: 100
               }
@@ -950,16 +918,16 @@ export default function SensorSection(): React.JSX.Element {
             series={trendSeries.battery}
             labels={labels}
             warnings={batteryWarnings}
-            afterChart={batteryAfterChart}
+            footer={batteryFooter}
             details={batteryDetails}
             detailsExpanded={allDetailsExpanded}
             onToggleDetails={toggleAllDetails}
-            detailsHeader={batteryGauges}
+            detailsHeader={batteryDetailsHeader}
             emptyLabel={chartEmptyLabel}
           />
           <SensorPanel
             title={t('dashboard.sensor.gpu')}
-            model={snapshot?.info?.gpuName}
+            model={gpuModel}
             gauge={
               <SensorGauge
                 value={gpu?.usage}
@@ -973,7 +941,7 @@ export default function SensorSection(): React.JSX.Element {
               {
                 label: t('dashboard.sensor.frequency'),
                 value: formatFrequency(gpu?.coreClock),
-                icon: <FrequencyIcon />,
+                icon: FREQUENCY_ICON,
                 ...metricBar(gpu?.coreClock, null, 2500)
               },
               {
@@ -986,7 +954,7 @@ export default function SensorSection(): React.JSX.Element {
               {
                 label: t('dashboard.sensor.fan'),
                 value: formatFan(gpu?.fanSpeed),
-                icon: <FanIcon />,
+                icon: FAN_ICON,
                 ...metricBar(gpu?.fanSpeed, null, 5000)
               }
             ]}

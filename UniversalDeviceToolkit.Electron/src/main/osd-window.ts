@@ -795,11 +795,13 @@ function memoryValue(
     settings.valueColor
   )
   if (displayMemoryInGigabytes) {
-    if (typeof used === 'number' && used >= 0 && typeof total === 'number' && total > 0) {
-      return { text: `${used.toFixed(1)}/${total.toFixed(1)} GB`, color: severity }
+    const usedGb = typeof used === 'number' && Number.isFinite(used) && used >= 0 ? used / 1024 : null
+    const totalGb = typeof total === 'number' && Number.isFinite(total) && total > 0 ? total / 1024 : null
+    if (usedGb != null && totalGb != null) {
+      return { text: `${usedGb.toFixed(1)}/${totalGb.toFixed(1)} GB`, color: severity }
     }
-    if (typeof used === 'number' && used >= 0) {
-      return { text: `${used.toFixed(1)} GB`, color: severity }
+    if (usedGb != null) {
+      return { text: `${usedGb.toFixed(1)} GB`, color: severity }
     }
     return dash()
   }

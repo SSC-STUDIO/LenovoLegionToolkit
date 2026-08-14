@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { DeleteOutlined, EditOutlined, FolderAddOutlined } from '@ant-design/icons'
+import { Delete24Regular, Edit24Regular, FolderAdd24Regular } from '../icons/fluent'
 import { message } from 'antd'
 import { useEffect, useState } from 'react'
 import { optimizationApi } from '../../api/optimization'
@@ -113,7 +113,7 @@ export default function CleanupRulesPanel(): React.JSX.Element {
                   disabled={busyRuleId === rule.id}
                   onClick={() => void handleEdit(rule.id)}
                 >
-                  <EditOutlined />
+                  <Edit24Regular />
                 </button>
                 <button
                   type="button"
@@ -123,7 +123,7 @@ export default function CleanupRulesPanel(): React.JSX.Element {
                   })}
                   onClick={() => void handleRemove(rule.id)}
                 >
-                  <DeleteOutlined />
+                  <Delete24Regular />
                 </button>
               </div>
             </div>
@@ -134,7 +134,7 @@ export default function CleanupRulesPanel(): React.JSX.Element {
       {!loading && rules.length === 0 && (
         <EmptyState
           className="udt-cleanup-rules__empty"
-          icon={<DeleteOutlined />}
+          icon={<Delete24Regular />}
           title={emptyTitle}
         />
       )}
@@ -143,7 +143,7 @@ export default function CleanupRulesPanel(): React.JSX.Element {
 
       <div className="udt-side-card__actions">
         <button type="button" className="udt-btn udt-btn--secondary" onClick={() => void handleAdd()}>
-          <FolderAddOutlined /> {addLabel}
+          <FolderAdd24Regular /> {addLabel}
         </button>
         <button
           type="button"

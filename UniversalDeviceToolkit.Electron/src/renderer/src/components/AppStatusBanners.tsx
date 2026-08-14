@@ -6,6 +6,7 @@ import { updateApi } from '../api/update'
 import type { SoftwareDisablerApp } from '../api/software'
 import { useSoftwareStore } from '../stores/softwareStore'
 import { useStatusBannerStore } from '../stores/statusBannerStore'
+import { subscribeUiVisibility } from '../utils/uiVisibility'
 
 const BANNER_UPDATE = 'updateAvailable'
 
@@ -68,8 +69,24 @@ export default function AppStatusBanners(): React.JSX.Element {
   // Electron MainWindow software disabler indicators: banners follow the
   // VantageDisabler / LegionZoneDisabler / FnKeysDisabler status (polled).
   useEffect(() => {
-    const stop = softwareStart(5000)
-    return stop
+    let stopPoll: (() => void) | null = null
+    const startPoll = (): void => {
+      if (stopPoll) return
+      stopPoll = softwareStart(5000)
+    }
+    const haltPoll = (): void => {
+      stopPoll?.()
+      stopPoll = null
+    }
+    if (!document.hidden) startPoll()
+    const unsubscribeVisibility = subscribeUiVisibility((active) => {
+      if (active) startPoll()
+      else haltPoll()
+    })
+    return () => {
+      unsubscribeVisibility()
+      haltPoll()
+    }
   }, [softwareStart])
 
   useEffect(() => {

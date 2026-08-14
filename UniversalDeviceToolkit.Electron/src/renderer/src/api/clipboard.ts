@@ -5,10 +5,11 @@
  * preload bridge methods instead of bridge.invoke.
  */
 
-const bridge = window.bridge
+const getBridge = (): typeof window.bridge => window.bridge
 
 /** Port of Electron ClipboardExtensions.SetProcesses: write one path per line. */
 export async function writeLines(lines: string[]): Promise<{ ok: boolean }> {
+  const bridge = getBridge()
   if (!bridge?.writeClipboardLines) {
     throw new Error('Bridge is not available')
   }
@@ -17,6 +18,7 @@ export async function writeLines(lines: string[]): Promise<{ ok: boolean }> {
 
 /** Port of Electron ClipboardExtensions.GetProcesses: existing paths, deduplicated. */
 export async function readExistingPaths(): Promise<string[]> {
+  const bridge = getBridge()
   if (!bridge?.readClipboardExistingPaths) {
     throw new Error('Bridge is not available')
   }

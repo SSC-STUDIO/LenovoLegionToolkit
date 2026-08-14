@@ -4,13 +4,22 @@
       "commandName": "Executable",
       "executablePath": "cmd.exe",
       "commandLineArgs": "/c npm run dev",
-      "workingDirectory": ".."
+      "workingDirectory": "."
     },
     "Electron (npm start)": {
       "commandName": "Executable",
       "executablePath": "cmd.exe",
       "commandLineArgs": "/c npm start",
-      "workingDirectory": ".."
+      "workingDirectory": "."
+    },
+    "Electron (debug direct)": {
+      "commandName": "Executable",
+      "executablePath": "node_modules\\electron\\dist\\electron.exe",
+      "commandLineArgs": ".",
+      "workingDirectory": ".",
+      "environmentVariables": {
+        "NODE_ENV": "production"
+      }
     }
   }
 }

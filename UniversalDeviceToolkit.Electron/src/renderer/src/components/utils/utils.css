@@ -3,7 +3,7 @@
 .udt-utils-backdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 2400;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,18 +132,18 @@
 }
 
 .udt-utils-progress-track {
-  height: 6px;
+  height: var(--udt-progress-height);
   margin-top: 8px;
-  background: rgba(128, 128, 128, 0.25);
-  border-radius: 3px;
+  background: var(--udt-progress-track);
+  border-radius: var(--udt-progress-radius);
   overflow: hidden;
 }
 
 .udt-utils-progress-fill {
   height: 100%;
-  background: var(--udt-accent, #ff2121);
-  border-radius: 3px;
-  transition: width 0.2s ease;
+  background: var(--udt-progress-fill);
+  border-radius: var(--udt-progress-radius);
+  transition: width var(--udt-anim-medium) var(--udt-ease-cubic-out);
 }
 
 .udt-utils-symbol-grid {
@@ -201,6 +201,9 @@
 
 .udt-utils-select.ant-select {
   height: 40px;
+  padding: 0;
+  border: none;
+  background: transparent;
 }
 
 .udt-utils-select.ant-select .ant-select-selector {

@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { ArrowDownOutlined, ArrowUpOutlined, CheckOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import {
+  ArrowDown24Regular,
+  ArrowUp24Regular,
+  Checkmark24Regular,
+  Delete24Regular,
+  Edit24Regular
+} from '../icons/fluent'
 import { Input, Modal, Spin } from 'antd'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
@@ -220,7 +226,7 @@ export default function EditDashboardModal({
                         title={t('dashboard.edit.renameGroup')}
                         onClick={() => openNamePrompt('rename', groupIndex, groupTitle(group, t))}
                       >
-                        <EditOutlined />
+                        <Edit24Regular />
                       </button>
                       <button
                         type="button"
@@ -229,7 +235,7 @@ export default function EditDashboardModal({
                         disabled={groupIndex === 0}
                         onClick={() => moveGroup(groupIndex, -1)}
                       >
-                        <ArrowUpOutlined />
+                        <ArrowUp24Regular />
                       </button>
                       <button
                         type="button"
@@ -238,7 +244,7 @@ export default function EditDashboardModal({
                         disabled={groupIndex === groups.length - 1}
                         onClick={() => moveGroup(groupIndex, 1)}
                       >
-                        <ArrowDownOutlined />
+                        <ArrowDown24Regular />
                       </button>
                       <button
                         type="button"
@@ -246,7 +252,7 @@ export default function EditDashboardModal({
                         title={t('dashboard.edit.deleteGroup')}
                         onClick={() => deleteGroup(groupIndex)}
                       >
-                        <DeleteOutlined />
+                        <Delete24Regular />
                       </button>
                     </span>
                   </div>
@@ -260,7 +266,7 @@ export default function EditDashboardModal({
                             onChange={() => toggleItem(groupIndex, item)}
                           />
                           <span className="udt-dashboard-edit__item-check">
-                            <CheckOutlined />
+                            <Checkmark24Regular />
                           </span>
                           <span className="udt-dashboard-edit__item-label">
                             {dashboardItemLabel(item, t)}
@@ -274,7 +280,7 @@ export default function EditDashboardModal({
                             disabled={itemIndex === 0}
                             onClick={() => moveItem(groupIndex, itemIndex, -1)}
                           >
-                            <ArrowUpOutlined />
+                            <ArrowUp24Regular />
                           </button>
                           <button
                             type="button"
@@ -283,7 +289,7 @@ export default function EditDashboardModal({
                             disabled={itemIndex === group.items.length - 1}
                             onClick={() => moveItem(groupIndex, itemIndex, 1)}
                           >
-                            <ArrowDownOutlined />
+                            <ArrowDown24Regular />
                           </button>
                           <button
                             type="button"
@@ -291,7 +297,7 @@ export default function EditDashboardModal({
                             title={t('dashboard.edit.deleteItem')}
                             onClick={() => deleteItem(groupIndex, item)}
                           >
-                            <DeleteOutlined />
+                            <Delete24Regular />
                           </button>
                         </span>
                       </div>

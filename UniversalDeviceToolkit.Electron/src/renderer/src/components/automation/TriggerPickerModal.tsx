@@ -3,7 +3,7 @@
  * Windows/Automation/CreateAutomationPipelineWindow.xaml.cs.
  */
 import { useMemo, useState } from 'react'
-import { CheckSquareOutlined, PlusOutlined } from '@ant-design/icons'
+import { CheckboxChecked24Regular, Add24Regular } from '../icons/fluent'
 import { ChevronRight16Regular } from '@fluentui/react-icons'
 import { useTranslation } from 'react-i18next'
 import type { AutomationTrigger } from './triggers'
@@ -70,7 +70,7 @@ export default function TriggerPickerModal(props: TriggerPickerModalProps): Reac
               onClick={() => setMultiSelect(true)}
             >
               <span className="udt-trigger-card__icon">
-                <CheckSquareOutlined />
+                <CheckboxChecked24Regular />
               </span>
               <span className="udt-trigger-card__copy">
                 <span className="udt-trigger-card__title">
@@ -92,7 +92,7 @@ export default function TriggerPickerModal(props: TriggerPickerModalProps): Reac
                 onClick={() => pick(index)}
               >
                 <span className="udt-trigger-card__icon">
-                  {triggerIcon(definition.kind) ?? <PlusOutlined />}
+                  {triggerIcon(definition.kind) ?? <Add24Regular />}
                 </span>
                 <span className="udt-trigger-card__copy">
                   <span className="udt-trigger-card__title">
@@ -127,7 +127,7 @@ export default function TriggerPickerModal(props: TriggerPickerModalProps): Reac
               disabled={checked.size === 0}
               onClick={createComposite}
             >
-              <PlusOutlined /> {t('common.confirm', { defaultValue: 'Create' })}
+              <Add24Regular /> {t('common.confirm', { defaultValue: 'Create' })}
             </button>
           )}
         </div>

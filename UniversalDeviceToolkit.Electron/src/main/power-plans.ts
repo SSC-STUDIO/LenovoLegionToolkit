@@ -33,6 +33,8 @@ function runPowerCfg(args: string[]): Promise<string> {
 const SCHEME_RE = /GUID:\s*([0-9a-fA-F-]{36})\s*\(([^)]*)\)\s*(\*)?/g
 
 export async function listPowerPlans(): Promise<WindowsPowerPlan[]> {
+  // powercfg is a Windows-only tool; macOS/Linux have no power plans.
+  if (process.platform !== 'win32') return []
   const output = await runPowerCfg(['/list'])
   const plans: WindowsPowerPlan[] = []
   for (const match of output.matchAll(SCHEME_RE)) {
@@ -47,6 +49,9 @@ export async function listPowerPlans(): Promise<WindowsPowerPlan[]> {
 
 /** Mirrors Electron EnsureCorrectWindowsPowerSettingsAreSetAsync / activation. */
 export async function setActivePowerPlan(guid: string): Promise<void> {
+  if (process.platform !== 'win32') {
+    throw new Error('Windows only')
+  }
   if (!/^[0-9a-fA-F-]{36}$/.test(guid)) {
     throw new Error(`Invalid power plan GUID: ${guid}`)
   }

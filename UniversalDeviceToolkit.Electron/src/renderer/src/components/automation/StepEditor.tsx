@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react'
 import {
-  ArrowRightOutlined,
-  ClockCircleOutlined,
-  DesktopOutlined,
-  EyeInvisibleOutlined,
-  FontSizeOutlined,
-  HighlightOutlined,
-  KeyOutlined,
-  MoonOutlined,
-  PoweroffOutlined,
-  SlidersOutlined,
-  SunOutlined,
-  ThunderboltOutlined,
-  UsbOutlined
-} from '@ant-design/icons'
+  ArrowRight24Regular,
+  Clock24Regular,
+  Desktop24Regular,
+  EyeOff24Regular,
+  TextFont24Regular,
+  Highlight24Regular,
+  Key24Regular,
+  WeatherMoon24Regular,
+  Power24Regular,
+  Options24Regular,
+  WeatherSunny24Regular,
+  Flash24Regular,
+  UsbPlug24Regular
+} from '../icons/fluent'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { Select } from 'antd'
 import { automationApi } from '../../api/automation'
 import type { AutomationPipeline, AutomationStepType } from '../../api/automation'
 import { formatStepSummary } from './steps'
@@ -43,18 +44,18 @@ interface StepMeta {
 }
 
 const STEP_META: Record<string, StepMeta> = {
-  alwaysOnUsb: { kind: 'select', icon: <UsbOutlined /> },
-  battery: { kind: 'select', icon: <ThunderboltOutlined /> },
-  batteryNightCharge: { kind: 'select', icon: <MoonOutlined /> },
-  deactivateGPU: { kind: 'select', icon: <DesktopOutlined /> },
-  delay: { kind: 'select', icon: <ClockCircleOutlined /> },
-  displayBrightness: { kind: 'number', icon: <HighlightOutlined /> },
-  dpiScale: { kind: 'select', icon: <FontSizeOutlined /> },
-  flipToStart: { kind: 'select', icon: <PoweroffOutlined /> },
-  fnLock: { kind: 'select', icon: <KeyOutlined /> },
-  godModePreset: { kind: 'preset', icon: <SlidersOutlined /> },
-  hdr: { kind: 'select', icon: <SunOutlined /> },
-  hideMainWindow: { kind: 'none', icon: <EyeInvisibleOutlined /> }
+  alwaysOnUsb: { kind: 'select', icon: <UsbPlug24Regular /> },
+  battery: { kind: 'select', icon: <Flash24Regular /> },
+  batteryNightCharge: { kind: 'select', icon: <WeatherMoon24Regular /> },
+  deactivateGPU: { kind: 'select', icon: <Desktop24Regular /> },
+  delay: { kind: 'select', icon: <Clock24Regular /> },
+  displayBrightness: { kind: 'number', icon: <Highlight24Regular /> },
+  dpiScale: { kind: 'select', icon: <TextFont24Regular /> },
+  flipToStart: { kind: 'select', icon: <Power24Regular /> },
+  fnLock: { kind: 'select', icon: <Key24Regular /> },
+  godModePreset: { kind: 'preset', icon: <Options24Regular /> },
+  hdr: { kind: 'select', icon: <WeatherSunny24Regular /> },
+  hideMainWindow: { kind: 'none', icon: <EyeOff24Regular /> }
 }
 
 export function stepTitleKey(type: string): string {
@@ -160,18 +161,16 @@ function EnumStateSelect(props: {
   const options = ENUM_OPTIONS[props.type] ?? []
   const current = typeof props.step.state === 'string' ? props.step.state : (options[0] ?? '')
   return (
-    <select
+    <Select
       className="udt-select"
-      value={current}
+      value={current || undefined}
       disabled={options.length === 0}
-      onChange={(e) => props.onChange({ ...props.step, state: e.target.value })}
-    >
-      {options.map((o) => (
-        <option key={o} value={o}>
-          {t(enumStateLabelKey(props.type, o), { defaultValue: o })}
-        </option>
-      ))}
-    </select>
+      onChange={(value) => props.onChange({ ...props.step, state: value })}
+      options={options.map((o) => ({
+        value: o,
+        label: t(enumStateLabelKey(props.type, o), { defaultValue: o })
+      }))}
+    />
   )
 }
 
@@ -184,17 +183,15 @@ function DelaySelect(props: {
   const seconds = typeof state?.delaySeconds === 'number' ? state.delaySeconds : DELAY_OPTIONS[0]
   const current = DELAY_OPTIONS.includes(seconds) ? seconds : DELAY_OPTIONS[0]
   return (
-    <select
+    <Select<number>
       className="udt-select"
       value={current}
-      onChange={(e) => props.onChange({ ...props.step, state: { delaySeconds: Number(e.target.value) } })}
-    >
-      {DELAY_OPTIONS.map((s) => (
-        <option key={s} value={s}>
-          {t('automation.stepEditors.delay.second', { count: s })}
-        </option>
-      ))}
-    </select>
+      onChange={(value) => props.onChange({ ...props.step, state: { delaySeconds: value } })}
+      options={DELAY_OPTIONS.map((s) => ({
+        value: s,
+        label: t('automation.stepEditors.delay.second', { count: s })
+      }))}
+    />
   )
 }
 
@@ -270,19 +267,17 @@ function DpiScaleSelect(props: {
   const disabled = !loaded || scales.length === 0
 
   return (
-    <select
+    <Select<number>
       className="udt-select"
-      value={current}
+      value={typeof current === 'number' ? current : undefined}
       disabled={disabled}
-      onChange={(e) => props.onChange({ ...props.step, state: { scale: Number(e.target.value) } })}
-    >
-      {disabled && <option value="">—</option>}
-      {scales.map((s) => (
-        <option key={s} value={s}>
-          {t('automation.stepEditors.dpiScale.percent', { value: s })}
-        </option>
-      ))}
-    </select>
+      placeholder="—"
+      onChange={(value) => props.onChange({ ...props.step, state: { scale: value } })}
+      options={scales.map((s) => ({
+        value: s,
+        label: t('automation.stepEditors.dpiScale.percent', { value: s })
+      }))}
+    />
   )
 }
 
@@ -350,19 +345,17 @@ function GodModePresetSelect(props: {
 
   const disabled = !loaded || presets.length === 0
   return (
-    <select
+    <Select
       className="udt-select"
-      value={current}
+      value={current || undefined}
       disabled={disabled}
-      onChange={(e) => props.onChange({ ...props.step, presetId: e.target.value })}
-    >
-      {disabled && <option value="">—</option>}
-      {presets.map((p) => (
-        <option key={p.id} value={p.id}>
-          {p.name}
-        </option>
-      ))}
-    </select>
+      placeholder="—"
+      onChange={(value) => props.onChange({ ...props.step, presetId: value })}
+      options={presets.map((p) => ({
+        value: p.id,
+        label: p.name
+      }))}
+    />
   )
 }
 
@@ -434,7 +427,7 @@ export function StepEditorModal(props: StepEditorModalProps): React.JSX.Element 
             {t('common.cancel', { defaultValue: '取消' })}
           </button>
           <button type="button" className="udt-btn udt-btn--primary" onClick={() => onApply(draft)}>
-            <ArrowRightOutlined /> {t('common.confirm', { defaultValue: '确定' })}
+            <ArrowRight24Regular /> {t('common.confirm', { defaultValue: '确定' })}
           </button>
         </div>
       </div>

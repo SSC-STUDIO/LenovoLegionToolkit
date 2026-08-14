@@ -148,7 +148,8 @@ export const flags: AppFlags = parseFlags([...process.argv.slice(2), ...loadExte
 /**
  * Subset of switches understood by the headless host (HostFlags). UI-owned
  * switches (--minimized, --disable-tray-tooltip, ...) are consumed here and
- * deliberately not forwarded.
+ * deliberately not forwarded. `--experimental-gpu-working-mode` is forwarded
+ * because the Host owns IGPUModeFeature / DGPUNotify backend selection.
  */
 export function toHostArgs(appFlags: AppFlags): string[] {
   const args: string[] = []
@@ -156,6 +157,7 @@ export function toHostArgs(appFlags: AppFlags): string[] {
   if (appFlags.safeStart) args.push('--safe-start')
   if (appFlags.noPlugins) args.push('--no-plugins')
   if (appFlags.noHardware) args.push('--no-hardware')
+  if (appFlags.experimentalGpuWorkingMode) args.push('--experimental-gpu-working-mode')
   if (appFlags.proxyUrl) args.push('--proxy-url', appFlags.proxyUrl)
   if (appFlags.proxyUsername) args.push('--proxy-username', appFlags.proxyUsername)
   if (appFlags.proxyPassword) args.push('--proxy-password', appFlags.proxyPassword)

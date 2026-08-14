@@ -676,6 +676,59 @@
   border-radius: 999px;
 }
 
+/* Right-side window chrome (min / max / close), glyphs drawn with currentColor */
+.udt-theme-option__win {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.udt-theme-option__win-btn {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+}
+
+.udt-theme-option__win-btn--min::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1px;
+  height: 1px;
+  background: currentColor;
+}
+
+.udt-theme-option__win-btn--max::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+}
+
+.udt-theme-option__win-btn--close::before,
+.udt-theme-option__win-btn--close::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+}
+
+.udt-theme-option__win-btn--close::before {
+  transform: rotate(45deg);
+}
+
+.udt-theme-option__win-btn--close::after {
+  transform: rotate(-45deg);
+}
+
 .udt-theme-option__body {
   display: flex;
   flex: 1 1 auto;
@@ -794,12 +847,38 @@
   width: 62%;
 }
 
+.udt-theme-option__row-icon {
+  flex: 0 0 auto;
+  width: 14%;
+  max-width: 14px;
+  aspect-ratio: 1;
+  border-radius: 24%;
+}
+
 .udt-theme-option__control {
+  position: relative;
   flex: 0 0 18%;
   max-width: 22px;
   height: 38%;
   min-height: 8px;
   border-radius: 999px;
+}
+
+/* Toggle knob: parked left when off, right when on */
+.udt-theme-option__control::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  height: 72%;
+  aspect-ratio: 1;
+  transform: translateY(-50%);
+  border-radius: 50%;
+}
+
+.udt-theme-option__control--on::after {
+  left: auto;
+  right: 10%;
 }
 
 /* Light pane (hard-coded chrome so app dark theme cannot wash out the mock) */
@@ -828,10 +907,17 @@
   background: #cfcfcf;
 }
 
+.udt-theme-option__pane--light .udt-theme-option__nav-item--active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
 .udt-theme-option__pane--light .udt-theme-option__nav-item--active .udt-theme-option__nav-icon,
-.udt-theme-option__pane--light .udt-theme-option__nav-item--active .udt-theme-option__nav-label,
-.udt-theme-option__pane--light .udt-theme-option__nav-accent {
+.udt-theme-option__pane--light .udt-theme-option__nav-item--active .udt-theme-option__nav-label {
   background: #9a9a9a;
+}
+
+.udt-theme-option__pane--light .udt-theme-option__win {
+  color: #8a8a8a;
 }
 
 .udt-theme-option__pane--light .udt-theme-option__row {
@@ -847,8 +933,17 @@
   background: #dddddd;
 }
 
+.udt-theme-option__pane--light .udt-theme-option__row-icon {
+  background: #d9d9d9;
+}
+
 .udt-theme-option__pane--light .udt-theme-option__control {
   background: #d6d6d6;
+}
+
+.udt-theme-option__pane--light .udt-theme-option__control::after {
+  background: #ffffff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
 /* Dark pane */
@@ -877,10 +972,17 @@
   background: #3f3f3f;
 }
 
+.udt-theme-option__pane--dark .udt-theme-option__nav-item--active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
 .udt-theme-option__pane--dark .udt-theme-option__nav-item--active .udt-theme-option__nav-icon,
-.udt-theme-option__pane--dark .udt-theme-option__nav-item--active .udt-theme-option__nav-label,
-.udt-theme-option__pane--dark .udt-theme-option__nav-accent {
+.udt-theme-option__pane--dark .udt-theme-option__nav-item--active .udt-theme-option__nav-label {
   background: #6a6a6a;
+}
+
+.udt-theme-option__pane--dark .udt-theme-option__win {
+  color: #b5b5b5;
 }
 
 .udt-theme-option__pane--dark .udt-theme-option__row {
@@ -896,8 +998,16 @@
   background: #404040;
 }
 
+.udt-theme-option__pane--dark .udt-theme-option__row-icon {
+  background: #454545;
+}
+
 .udt-theme-option__pane--dark .udt-theme-option__control {
   background: #4a4a4a;
+}
+
+.udt-theme-option__pane--dark .udt-theme-option__control::after {
+  background: #d8d8d8;
 }
 
 .udt-theme-option__split .udt-theme-option__pane--dark {
@@ -906,6 +1016,48 @@
 
 .udt-theme-option__bar--system .udt-theme-option__caption {
   background: linear-gradient(to right, #d4d4d4 50%, #4a4a4a 50%);
+}
+
+/* System bar: window controls land on the dark right half */
+.udt-theme-option__bar--system .udt-theme-option__win {
+  color: #b5b5b5;
+}
+
+/* Accent touches mirror the real app: active nav indicator + toggled switch.
+   Scoped under .udt-theme-option__pane so they beat the pane gray defaults. */
+.udt-theme-option__nav-accent {
+  background: var(--udt-accent, #0078d4);
+}
+
+.udt-theme-option__pane .udt-theme-option__control--on {
+  background: var(--udt-accent, #0078d4);
+}
+
+.udt-theme-option__pane .udt-theme-option__control--on::after {
+  background: #ffffff;
+  box-shadow: none;
+}
+
+/* Split panes are half width: an icon-only rail and two rows keep the mock
+   readable instead of cramming the full layout into each half. */
+.udt-theme-option__split .udt-theme-option__sidebar {
+  flex-basis: 30%;
+}
+
+.udt-theme-option__split .udt-theme-option__nav-label {
+  display: none;
+}
+
+.udt-theme-option__split .udt-theme-option__nav-icon {
+  width: 46%;
+}
+
+.udt-theme-option__split .udt-theme-option__row--tertiary {
+  display: none;
+}
+
+.udt-theme-option__split .udt-theme-option__content {
+  padding: 9% 8%;
 }
 
 /* ── Accent options under theme mode (Electron SettingsAppearanceControl) ── */

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
-import { DownloadOutlined, UpCircleFilled } from '@ant-design/icons'
+import { ArrowCircleUp24Filled, ArrowDownload24Regular } from '../icons/fluent'
 import { updateApi, type DownloadProgress } from '../../api/update'
 import './utils.css'
 
@@ -166,7 +166,7 @@ export default function UpdateModalHost(): React.JSX.Element {
     <div className="udt-utils-backdrop" onClick={() => settle(false)}>
       <div
         className="udt-utils-modal"
-        style={{ width: 720, maxWidth: 720, maxHeight: 560 }}
+        style={{ width: 720, maxWidth: 'min(92vw, 720px)', maxHeight: 'min(88vh, 560px)' }}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="udt-utils-modal__title">{t('wpf.updateWindowtitle')}</div>
@@ -186,7 +186,7 @@ export default function UpdateModalHost(): React.JSX.Element {
                 color: '#4f9df7'
               }}
             >
-              <UpCircleFilled />
+              <ArrowCircleUp24Filled />
             </span>
             <div style={{ flex: 1 }}>
               <div style={{ fontWeight: 600 }}>{t('wpf.updateWindowwhatsNew')}</div>
@@ -218,7 +218,7 @@ export default function UpdateModalHost(): React.JSX.Element {
             )}
           </div>
 
-          <div className="udt-utils-progress-track" style={{ visibility: showProgress ? 'visible' : 'hidden', height: 4, marginTop: 12 }}>
+          <div className="udt-utils-progress-track" style={{ visibility: showProgress ? 'visible' : 'hidden', marginTop: 12 }}>
             <div
               className="udt-utils-progress-fill"
               style={{ width: `${Math.min(100, progress?.percent ?? 0)}%` }}
@@ -252,11 +252,11 @@ export default function UpdateModalHost(): React.JSX.Element {
               className="udt-utils-button udt-utils-button--primary"
               onClick={() => void startDownload()}
             >
-              <DownloadOutlined /> {t('wpf.update')}
+              <ArrowDownload24Regular /> {t('wpf.update')}
             </button>
           ) : downloadState === 'downloaded' ? (
             <button type="button" className="udt-utils-button udt-utils-button--primary" onClick={() => void launch()}>
-              <DownloadOutlined /> {t('wpf.updateWindowrestartToInstall', { defaultValue: 'Install & Restart' })}
+              <ArrowDownload24Regular /> {t('wpf.updateWindowrestartToInstall', { defaultValue: 'Install & Restart' })}
             </button>
           ) : null}
         </div>

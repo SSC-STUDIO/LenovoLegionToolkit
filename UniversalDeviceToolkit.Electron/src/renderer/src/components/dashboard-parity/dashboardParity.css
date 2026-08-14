@@ -2,8 +2,6 @@
    drives the group column count (Electron GetColumnCountForWidth semantics). */
 .udt-parity-dashboard {
   width: 100%;
-  max-width: 1520px;
-  margin: 0 auto;
   padding: 16px 16px 12px 0;
   container-type: inline-size;
   container-name: udt-dashboard;
@@ -27,6 +25,9 @@
   gap: 12px;
   color: var(--udt-text-primary);
   text-align: center;
+}
+
+.udt-parity-dashboard__error {
   padding: 24px;
 }
 
@@ -422,9 +423,17 @@
 
 /* God Mode settings (GodModeSettingsWindow parity) */
 
+.udt-god-mode__preset-label {
+  margin: 0 0 8px;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-mid-header);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
 .udt-god-mode__preset-row {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 8px;
   margin-bottom: 16px;
 }
@@ -434,8 +443,20 @@
   min-width: 0;
 }
 
+.udt-god-mode__icon-btn {
+  flex: 0 0 auto;
+  width: var(--udt-icon-tool-size);
+  min-width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
+  padding: 0;
+}
+
 .udt-god-mode__section + .udt-god-mode__section {
   margin-top: 8px;
+}
+
+.udt-god-mode__section--advanced {
+  padding-bottom: 12px;
 }
 
 .udt-god-mode__section-title {
@@ -457,11 +478,25 @@
   background: var(--udt-surface-card);
 }
 
+.udt-god-mode__card--disabled {
+  opacity: 0.55;
+}
+
 .udt-god-mode__card-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.udt-god-mode__card-row--top {
+  align-items: flex-start;
+}
+
+.udt-god-mode__card-row--top .ant-switch,
+.udt-god-mode__card-row--top .udt-god-mode__offset-input {
+  flex: 0 0 auto;
+  margin-top: 2px;
 }
 
 .udt-god-mode__card-copy {
@@ -485,10 +520,11 @@
 }
 
 .udt-god-mode__card-warning {
-  margin-top: 4px;
+  margin-top: 8px;
+  padding-right: 8px;
   color: var(--udt-status-critical);
   font-size: var(--udt-font-caption);
-  line-height: 1.4;
+  line-height: 1.45;
   white-space: pre-line;
 }
 
@@ -498,6 +534,34 @@
   font-size: var(--udt-font-caption);
   line-height: 1.4;
   white-space: pre-line;
+}
+
+.udt-god-mode__fan-default-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.udt-god-mode__offset-input {
+  width: 112px;
+}
+
+.udt-god-mode__footer-spacer {
+  flex: 1 1 auto;
+}
+
+.udt-god-mode-dialog .ant-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.udt-god-mode__warnings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
 }
 
 /* Overclock profiles (OverclockDiscreteGPUSettingsWindow parity) */
@@ -607,6 +671,10 @@
   background: var(--udt-surface-card);
 }
 
+.udt-parity-feature-card--disabled {
+  opacity: 0.72;
+}
+
 .udt-parity-feature-card__body {
   display: flex;
   min-height: 72px;
@@ -701,7 +769,10 @@
   margin-top: 2px;
 }
 
-@media (max-width: 620px) {
+/* Narrow feature cards wrap their accessory row below the copy. Container
+   width (not viewport) so nav state and interface scale behave consistently;
+   640 aligns with the shared narrow cut used by sensors/cleanup. */
+@container udt-dashboard (max-width: 640px) {
   .udt-parity-feature-card__body {
     align-items: flex-start;
     flex-wrap: wrap;
@@ -768,11 +839,11 @@
   justify-content: center;
   gap: 6px;
   min-width: 80px;
-  height: 32px;
+  height: var(--udt-control-height);
   padding: 0 14px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
-  background: transparent;
+  background: var(--udt-control-fill-default);
   color: var(--udt-text-primary);
   font: inherit;
   font-size: var(--udt-font-caption);
@@ -791,7 +862,7 @@
 
 .udt-btn--primary {
   min-width: 120px;
-  height: 36px;
+  height: var(--udt-control-height);
   border-color: var(--udt-accent-secondary);
   background: var(--udt-accent-secondary);
   color: var(--udt-accent-text);
@@ -803,14 +874,14 @@
 
 .udt-input {
   width: 100%;
-  height: 36px;
-  padding: 8px 12px;
+  height: var(--udt-control-height);
+  padding: 0 12px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
   background: var(--udt-control-fill-default);
   color: var(--udt-text-primary);
   font: inherit;
-  font-size: var(--udt-font-body);
+  font-size: var(--udt-font-caption);
   outline: none;
 }
 
@@ -820,14 +891,14 @@
 
 .udt-select {
   width: 100%;
-  height: 36px;
-  padding: 8px 12px;
+  height: var(--udt-control-height);
+  padding: 0 12px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
   background: var(--udt-control-fill-default);
   color: var(--udt-text-primary);
   font: inherit;
-  font-size: var(--udt-font-body);
+  font-size: var(--udt-font-caption);
   outline: none;
   cursor: pointer;
 }
@@ -861,8 +932,9 @@
 
 .udt-god-mode-modal__icon-btn {
   flex: 0 0 auto;
-  width: 36px;
-  min-width: 36px;
+  width: var(--udt-icon-tool-size);
+  min-width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
   padding: 0;
 }
 
@@ -955,123 +1027,3 @@
   background: var(--udt-control-fill-secondary);
   color: var(--udt-text-primary);
 }
-
-/* Dashboard skeleton (DashboardPage.xaml loading chrome parity) */
-
-.udt-dashboard-skeleton {
-  container-type: inline-size;
-  container-name: udt-dashboard-skeleton;
-  padding-top: 16px;
-}
-
-.udt-dsk-sensors {
-  margin-bottom: 28px;
-}
-
-.udt-dsk-sensors__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  padding: 8px 10px;
-  min-height: 280px;
-  border: 1px solid var(--udt-control-stroke-default);
-  border-radius: var(--udt-radius-card);
-  background: var(--udt-surface-card);
-}
-
-.udt-dsk-sensors__column {
-  min-width: 0;
-  padding: 0 6px;
-}
-
-.udt-dsk-sensors__heading {
-  display: flex;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.udt-dsk-sensors__summary {
-  display: grid;
-  grid-template-columns: 110px minmax(0, 1fr);
-  gap: 0;
-  align-items: center;
-}
-
-.udt-dsk-sensors__gauge {
-  width: 110px;
-  height: 110px;
-  margin-right: 12px;
-  border-radius: var(--udt-radius-round);
-}
-
-.udt-dsk-sensors__metrics {
-  display: grid;
-  min-width: 0;
-}
-
-.udt-dsk-sensors__metric {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 0;
-  height: 24px;
-}
-
-.udt-dsk-sensors__bar {
-  height: 3.5px;
-  min-width: 24px;
-  max-width: 260px;
-  margin: 0 8px;
-  border-radius: var(--udt-radius-progress);
-}
-
-.udt-dsk-sensors__trend {
-  height: 76px;
-  margin-top: 14px;
-  padding: 2px;
-  border-radius: var(--udt-radius-control);
-  background: var(--udt-chart-surface);
-  overflow: hidden;
-}
-
-.udt-dsk-sensors__legend {
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 8px;
-}
-
-.udt-dsk-sensors__legend-item {
-  display: inline-flex;
-  align-items: center;
-  margin: 0 14px 4px 0;
-}
-
-.udt-dsk-groups__grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 16px;
-}
-
-.udt-dsk-groups__column {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Skeleton groups mirror the live feature-groups grid (container width
-   based, same 1500/1000 content thresholds as the real cards). */
-@container udt-dashboard-skeleton (max-width: 1500px) {
-  .udt-dsk-groups__grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@container udt-dashboard-skeleton (max-width: 1000px) {
-  .udt-dsk-groups__grid {
-    grid-template-columns: 1fr;
-  }
-  /* Sensor skeleton keeps the fixed 3-across layout at every width (product
-     decision — matches the SensorSection loading chrome). */
-}
-

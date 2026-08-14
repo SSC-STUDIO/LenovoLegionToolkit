@@ -1,4 +1,4 @@
-import { FolderOpenOutlined } from '@ant-design/icons'
+import { FolderOpen24Regular } from '../icons/fluent'
 import { Button, Checkbox, Input, Select } from 'antd'
 import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
@@ -223,7 +223,7 @@ function ImportProfileStepEditor({ step, onChange }: StepEditorProps): React.JSX
         value={path}
         onChange={(e) => onChange({ ...step, path: e.target.value })}
       />
-      <Button size="small" icon={<FolderOpenOutlined />} onClick={() => void handleBrowse()}>
+      <Button size="small" icon={<FolderOpen24Regular />} onClick={() => void handleBrowse()}>
         {t('automation.stepLabels.browse')}
       </Button>
     </div>

@@ -33,44 +33,46 @@ function emptyTrend(): SensorTrendHistory {
 
 function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): SensorTrendHistory {
   const time = snapshot.ts ? new Date(snapshot.ts) : new Date()
-  const labels = [...history.labels, time.toLocaleTimeString([], { hour12: false })]
-  const cpuTemperature = [...history.cpuTemperature, snapshot.cpu?.temperature ?? null]
-  const cpuUsage = [...history.cpuUsage, snapshot.cpu?.usage ?? null]
-  const cpuClock = [...history.cpuClock, snapshot.cpu?.coreClockAvg ?? snapshot.cpu?.coreClockMax ?? null]
-  const gpuTemperature = [...history.gpuTemperature, snapshot.gpu?.temperature ?? null]
-  const gpuUsage = [...history.gpuUsage, snapshot.gpu?.usage ?? null]
-  const gpuClock = [...history.gpuClock, snapshot.gpu?.coreClock ?? null]
-  const memoryUsage = [...history.memoryUsage, snapshot.memory?.usage ?? null]
+  const label = time.toLocaleTimeString([], { hour12: false })
   const rateMw = snapshot.battery?.chargeRate
-  const batteryRate = [
-    ...history.batteryRate,
+  const batteryRatePoint =
     rateMw != null && Number.isFinite(rateMw) && rateMw !== -1 ? Math.abs(rateMw) / 1000 : null
-  ]
-  const batteryTemperature = [...history.batteryTemperature, snapshot.battery?.temperature ?? null]
 
-  if (labels.length > TREND_POINTS) {
-    labels.shift()
-    cpuTemperature.shift()
-    cpuUsage.shift()
-    cpuClock.shift()
-    gpuTemperature.shift()
-    gpuUsage.shift()
-    gpuClock.shift()
-    memoryUsage.shift()
-    batteryRate.shift()
-    batteryTemperature.shift()
+  history.labels.push(label)
+  history.cpuTemperature.push(snapshot.cpu?.temperature ?? null)
+  history.cpuUsage.push(snapshot.cpu?.usage ?? null)
+  history.cpuClock.push(snapshot.cpu?.coreClockAvg ?? snapshot.cpu?.coreClockMax ?? null)
+  history.gpuTemperature.push(snapshot.gpu?.temperature ?? null)
+  history.gpuUsage.push(snapshot.gpu?.usage ?? null)
+  history.gpuClock.push(snapshot.gpu?.coreClock ?? null)
+  history.memoryUsage.push(snapshot.memory?.usage ?? null)
+  history.batteryRate.push(batteryRatePoint)
+  history.batteryTemperature.push(snapshot.battery?.temperature ?? null)
+
+  if (history.labels.length > TREND_POINTS) {
+    history.labels.shift()
+    history.cpuTemperature.shift()
+    history.cpuUsage.shift()
+    history.cpuClock.shift()
+    history.gpuTemperature.shift()
+    history.gpuUsage.shift()
+    history.gpuClock.shift()
+    history.memoryUsage.shift()
+    history.batteryRate.shift()
+    history.batteryTemperature.shift()
   }
+
   return {
-    labels,
-    cpuTemperature,
-    cpuUsage,
-    cpuClock,
-    gpuTemperature,
-    gpuUsage,
-    gpuClock,
-    memoryUsage,
-    batteryRate,
-    batteryTemperature
+    labels: history.labels,
+    cpuTemperature: history.cpuTemperature,
+    cpuUsage: history.cpuUsage,
+    cpuClock: history.cpuClock,
+    gpuTemperature: history.gpuTemperature,
+    gpuUsage: history.gpuUsage,
+    gpuClock: history.gpuClock,
+    memoryUsage: history.memoryUsage,
+    batteryRate: history.batteryRate,
+    batteryTemperature: history.batteryTemperature
   }
 }
 

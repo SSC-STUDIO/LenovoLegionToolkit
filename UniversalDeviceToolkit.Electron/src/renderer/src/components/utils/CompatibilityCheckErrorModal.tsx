@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
-import { FolderOpenOutlined, WarningOutlined } from '@ant-design/icons'
+import { FolderOpen24Regular, Warning24Regular } from '../icons/fluent'
 import './utils.css'
 
 /**
@@ -109,7 +109,7 @@ export default function CompatibilityCheckErrorModalHost(): React.JSX.Element {
         <div className="udt-utils-modal__title">{t('wpf.compatibilityCheckErrorWindowtitle')}</div>
         <div className="udt-utils-modal__body">
           <div className="udt-utils-banner">
-            <WarningOutlined className="udt-utils-banner__icon" />
+            <Warning24Regular className="udt-utils-banner__icon" />
             <div className="udt-utils-banner__copy">
               <div className="udt-utils-banner__title">{t('wpf.compatibilityCheckErrormessage')}</div>
               <div className="udt-utils-banner__desc">
@@ -130,7 +130,7 @@ export default function CompatibilityCheckErrorModalHost(): React.JSX.Element {
         </div>
         <div className="udt-utils-modal__actions udt-utils-modal__actions--space-between">
           <button type="button" className="udt-utils-button" onClick={openLog}>
-            <FolderOpenOutlined /> {t('wpf.compatibilityCheckErrorWindowopenLog')}
+            <FolderOpen24Regular /> {t('wpf.compatibilityCheckErrorWindowopenLog')}
           </button>
           <button type="button" className="udt-utils-button udt-utils-button--primary" onClick={settle}>
             {t('wpf.close')}

@@ -21,14 +21,12 @@ function RegularDashboardItem({ item }: { item: DashboardItem }): React.JSX.Elem
 
 export default function DashboardFeatureGroups({ groups }: { groups: DashboardGroup[] }): React.JSX.Element {
   const { t } = useTranslation()
+  const infos = useFeaturesStore((state) => state.infos)
 
   return (
     <div className="udt-parity-feature-groups">
       {groups.map((group, index) => {
-        const regularItems = group.items.filter((item) => resolveDashboardFeature(
-          item,
-          useFeaturesStore.getState().infos
-        ) != null)
+        const regularItems = group.items.filter((item) => resolveDashboardFeature(item, infos) != null)
         if (regularItems.length === 0) return null
 
         return (

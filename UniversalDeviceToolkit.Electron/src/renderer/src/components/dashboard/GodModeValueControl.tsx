@@ -1,4 +1,4 @@
-import { RedoOutlined } from '@ant-design/icons'
+import { ArrowCounterclockwise24Regular } from '../icons/fluent'
 import { Select, Slider } from 'antd'
 import { useTranslation } from 'react-i18next'
 
@@ -78,7 +78,7 @@ export default function GodModeValueControl({
             title={t('common.resetDefault', { defaultValue: 'Reset to default' })}
             onClick={() => onChange?.(defaultValue!)}
           >
-            <RedoOutlined />
+            <ArrowCounterclockwise24Regular />
           </button>
         )}
       </div>
@@ -123,7 +123,7 @@ export default function GodModeValueControl({
           title={t('common.resetDefault', { defaultValue: 'Reset to default' })}
           onClick={() => onChange?.(defaultValue!)}
         >
-          <RedoOutlined />
+          <ArrowCounterclockwise24Regular />
         </button>
       )}
     </div>

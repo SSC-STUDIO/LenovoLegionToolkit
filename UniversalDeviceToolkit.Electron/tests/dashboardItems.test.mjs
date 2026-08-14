@@ -73,8 +73,8 @@ test('hybrid and keyboard items select the supported WPF fallback implementation
   }), 'oneLevelWhiteKeyboard')
 })
 
-test('unsupported and special dashboard items do not become fake feature cards', () => {
-  assert.equal(resolveDashboardFeature('PowerMode', { powerMode: info('powerMode', false) }), null)
+test('unsupported features still resolve when present; special items stay null', () => {
+  assert.equal(resolveDashboardFeature('PowerMode', { powerMode: info('powerMode', false) }), 'powerMode')
   assert.equal(resolveDashboardFeature('DiscreteGpu', {}), null)
   assert.equal(resolveDashboardFeature('OverclockDiscreteGpu', {}), null)
   assert.equal(resolveDashboardFeature('TurnOffMonitors', {}), null)

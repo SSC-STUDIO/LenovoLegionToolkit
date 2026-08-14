@@ -1,4 +1,5 @@
 import { app, BrowserWindow, Tray, nativeImage, nativeTheme, screen, type Rectangle } from 'electron'
+import { existsSync } from 'fs'
 import { join } from 'path'
 import { trayIconSvgForSymbol, trayNavSvg } from './tray-icons'
 import { localizePipelineName, setTrayLanguage, trayStrings } from './tray-i18n'
@@ -6,7 +7,6 @@ import {
   destroyTrayPopup,
   hideTrayPopup,
   isTrayPopupVisible,
-  prewarmTrayPopup,
   showTrayPopup,
   type TrayPopupNode
 } from './tray-popup'
@@ -49,15 +49,37 @@ const NAV_ITEMS: NavItem[] = [
   }
 ]
 
-function trayIconPath(): string {
+interface TrayIconSource {
+  path: string
+  /** macOS template image: the system tints it to match the menu bar theme. */
+  template: boolean
+}
+
+function trayIconSource(): TrayIconSource {
+  // macOS: menu bar icons should be monochrome template images so the system
+  // adapts them to the active menu bar theme. trayTemplate.png takes priority;
+  // tray-dark.png (black glyph + alpha) is a valid template fallback.
+  if (process.platform === 'darwin') {
+    const templatePath = join(__dirname, '..', '..', 'resources', 'trayTemplate.png')
+    if (existsSync(templatePath)) return { path: templatePath, template: true }
+    const darkPath = join(__dirname, '..', '..', 'resources', 'tray-dark.png')
+    if (existsSync(darkPath)) return { path: darkPath, template: true }
+  }
   const dark = nativeTheme.shouldUseDarkColors
   const file = dark ? 'tray-light.png' : 'tray-dark.png'
-  return join(__dirname, '..', '..', 'resources', file)
+  return { path: join(__dirname, '..', '..', 'resources', file), template: false }
+}
+
+function createTrayImage() {
+  const source = trayIconSource()
+  const image = nativeImage.createFromPath(source.path)
+  if (source.template) image.setTemplateImage(true)
+  return image
 }
 
 function updateTrayIcon(): void {
   if (!tray) return
-  const image = nativeImage.createFromPath(trayIconPath())
+  const image = createTrayImage()
   if (!image.isEmpty()) {
     tray.setImage(image)
   }
@@ -241,7 +263,7 @@ export function initTray(getWin: () => BrowserWindow | null, options?: TrayOptio
   invokeHost = options?.invokeHost ?? null
   if (options?.language) setTrayLanguage(options.language)
 
-  const image = nativeImage.createFromPath(trayIconPath())
+  const image = createTrayImage()
   tray = new Tray(image.isEmpty() ? nativeImage.createEmpty() : image)
   if (!options?.disableTooltip) {
     tray.setToolTip('Universal Device Toolkit')
@@ -249,7 +271,24 @@ export function initTray(getWin: () => BrowserWindow | null, options?: TrayOptio
 
   // Custom compact flyout instead of native Menu (Win11 row height is ~44px
   // and cannot be tightened). Left-click still brings the main window forward.
-  tray.on('click', () => {
+  // Linux (GNOME) has no tray right-click, so left-click opens the flyout menu
+  // there; Windows/macOS keep the menu on right-click.
+  //
+  // macOS: the menu bar icon is the app's persistent handle (macOS has no
+  // system tray — the icon replaces it). mac convention would open a menu on
+  // left-click, but the mapping is deliberately kept identical to Windows
+  // (left-click = show window, right-click = flyout) for cross-platform
+  // consistency; the template image lets the system tint it for light/dark
+  // menu bar themes.
+  // Linux: tray visibility depends on AppIndicator/StatusNotifier support —
+  // GNOME hides tray icons unless the "AppIndicator and KStatusNotifierItem
+  // Support" extension is installed, so on some desktops the tray does not
+  // exist at all; the window itself remains the primary entry point there.
+  tray.on('click', (_event, bounds) => {
+    if (process.platform === 'linux') {
+      void openFlyout(bounds)
+      return
+    }
     hideTrayPopup()
     showWindow(getWindow?.() ?? null)
   })
@@ -261,7 +300,6 @@ export function initTray(getWin: () => BrowserWindow | null, options?: TrayOptio
     void openFlyout(bounds)
   })
 
-  prewarmTrayPopup()
   nativeTheme.on('updated', onNativeThemeUpdated)
 }
 

@@ -1,0 +1,158 @@
+import type { Bridge } from '../../../preload/index.d'
+
+type EventCallback = (data: unknown) => void
+
+/**
+ * Browser dev shim: talks to scripts/dev-bridge-server.mjs over HTTP + SSE.
+ * Electron-only APIs are stubbed so UI code can run without crashing.
+ * Pass ?udtPlatform=darwin|linux|win32 to preview native layout chrome.
+ */
+function resolveDevWebPlatform(): string {
+  if (typeof window === 'undefined') return 'web'
+  const requested = new URLSearchParams(window.location.search).get('udtPlatform')
+  if (requested === 'darwin' || requested === 'linux' || requested === 'win32' || requested === 'web') {
+    return requested
+  }
+  return 'web'
+}
+
+export function createWebBridge(baseUrl: string): Bridge {
+  const normalizedBase = baseUrl.replace(/\/$/, '')
+  const listeners = new Map<string, Set<EventCallback>>()
+  let eventSource: EventSource | null = null
+  let reconnectTimer: ReturnType<typeof setTimeout> | null = null
+
+  const dispatch = (event: string, data: unknown): void => {
+    const set = listeners.get(event)
+    if (set) {
+      for (const callback of set) {
+        try {
+          callback(data)
+        } catch (error) {
+          console.error(`[web-bridge] event handler failed: ${error}`)
+        }
+      }
+    }
+  }
+
+  const connectEvents = (): void => {
+    if (eventSource) {
+      eventSource.close()
+      eventSource = null
+    }
+    eventSource = new EventSource(`${normalizedBase}/events`)
+    eventSource.onmessage = (message) => {
+      try {
+        const payload = JSON.parse(message.data) as { event?: string; data?: unknown }
+        if (typeof payload.event === 'string') {
+          dispatch(payload.event, payload.data)
+        }
+      } catch (error) {
+        console.error(`[web-bridge] invalid SSE payload: ${error}`)
+      }
+    }
+    eventSource.onerror = () => {
+      eventSource?.close()
+      eventSource = null
+      if (reconnectTimer === null) {
+        reconnectTimer = setTimeout(() => {
+          reconnectTimer = null
+          connectEvents()
+        }, 1500)
+      }
+    }
+  }
+
+  connectEvents()
+
+  const noop = (): void => undefined
+  const noopAsync = async (): Promise<void> => undefined
+  const noopBool = async (): Promise<boolean> => false
+  const noopOpened = async (): Promise<{ opened: boolean }> => ({ opened: false })
+  const noopAutorun = async (): Promise<{ ok: boolean; enabled: boolean }> => ({
+    ok: false,
+    enabled: false
+  })
+  const noopAutorunGet = async (): Promise<{ enabled: boolean }> => ({ enabled: false })
+  const noopMemory = async (): Promise<{
+    processes: Array<{ name: string; type: string; workingSetMB: number }>
+    totalMB: number
+  }> => ({ processes: [], totalMB: 0 })
+  const noopPaths = async (): Promise<string[]> => []
+  const noopStringArray = async (): Promise<string[]> => []
+  const noopString = async (): Promise<string> => ''
+  const noopNullableString = async (): Promise<string | null> => null
+  const noopClipboardOk = async (): Promise<{ ok: boolean }> => ({ ok: true })
+
+  return {
+    platform: resolveDevWebPlatform(),
+    invoke: async (method: string, params?: unknown): Promise<unknown> => {
+      const response = await fetch(`${normalizedBase}/invoke`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ method, params: params ?? {} })
+      })
+      const body = (await response.json()) as {
+        result?: unknown
+        error?: { code?: number; message?: string }
+      }
+      if (body.error) {
+        const code = typeof body.error.code === 'number' ? body.error.code : -32603
+        const text = body.error.message?.trim() || 'Bridge invoke failed'
+        throw new Error(`[UDT:${code}] ${text}`)
+      }
+      return body.result
+    },
+    getHostStatus: async () => {
+      const response = await fetch(`${normalizedBase}/status`)
+      return (await response.json()) as {
+        running: boolean
+        ready: boolean
+        lastError: string | null
+        readyPayload: unknown
+      }
+    },
+    on: (event: string, callback: EventCallback): (() => void) => {
+      if (!listeners.has(event)) listeners.set(event, new Set())
+      listeners.get(event)!.add(callback)
+      return () => listeners.get(event)?.delete(callback)
+    },
+    minimize: noop,
+    maximizeToggle: noop,
+    closeWindow: noop,
+    setBackgroundMaterial: noopAsync,
+    openLogFolder: noopAsync,
+    log: (level: string, message: string): void => {
+      console.log(`[renderer:${level}] ${message}`)
+    },
+    openAppFolder: noopOpened,
+    openExternal: async (url: string): Promise<{ opened: boolean }> => {
+      window.open(url, '_blank', 'noopener,noreferrer')
+      return { opened: true }
+    },
+    openPath: noopOpened,
+    quitApp: noop,
+    selectPluginFiles: noopStringArray,
+    selectJsonFile: noopNullableString,
+    selectExeFile: noopNullableString,
+    selectAudioFile: noopNullableString,
+    isMaximized: noopBool,
+    getPluginPreloadPath: noopString,
+    onMaximizedChanged: (): (() => void) => noop,
+    isFullscreen: noopBool,
+    onFullscreenChanged: (): (() => void) => noop,
+    setTrayLanguage: noop,
+    refreshTrayMenu: noop,
+    writeClipboardLines: noopClipboardOk,
+    readClipboardExistingPaths: noopPaths,
+    setAutorun: noopAutorun,
+    getAutorun: noopAutorunGet,
+    setThemeSource: noop,
+    // Browser dev has no main process; themeStore falls back to CSS zoom.
+    setUiScale: async (scale: number): Promise<{ ok: boolean; scale: number }> => ({
+      ok: false,
+      scale
+    }),
+    getMemoryUsage: noopMemory
+  }
+}

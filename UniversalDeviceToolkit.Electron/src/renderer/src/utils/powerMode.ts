@@ -15,8 +15,14 @@ export const POWER_MODE_COLORS: Record<string, string> = {
 /**
  * Accent color for a power mode state name ("Performance" | "performance").
  * Returns undefined for unknown states (Electron falls back to Transparent).
+ * Balance resolves to the theme foreground instead of WPF's white so the
+ * icon stays visible on light surfaces too.
  */
 export function powerModeColor(state: string | undefined | null): string | undefined {
   if (!state) return undefined
-  return POWER_MODE_COLORS[state] ?? POWER_MODE_COLORS[state.charAt(0).toUpperCase() + state.slice(1)]
+  const normalized = POWER_MODE_COLORS[state] !== undefined
+    ? state
+    : state.charAt(0).toUpperCase() + state.slice(1)
+  if (normalized === 'Balance') return 'var(--udt-text-primary)'
+  return POWER_MODE_COLORS[normalized]
 }

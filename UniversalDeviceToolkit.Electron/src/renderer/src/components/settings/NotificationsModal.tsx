@@ -3,6 +3,10 @@ import { Modal, Select, Spin, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import {
+  buildNotificationDurationOptions,
+  buildNotificationPositionOptions
+} from './notificationSettingsOptions'
 
 /**
  * Parity modal for Electron Windows/Settings/NotificationsSettingsWindow:
@@ -60,20 +64,6 @@ const DEFAULT_FIELDS: NotificationFields = {
   smartKey: false,
   automation: true
 }
-
-const NOTIFICATION_POSITIONS = [
-  'BottomRight',
-  'BottomCenter',
-  'BottomLeft',
-  'CenterLeft',
-  'TopLeft',
-  'TopCenter',
-  'TopRight',
-  'CenterRight',
-  'Center'
-] as const
-
-const NOTIFICATION_DURATIONS = ['Short', 'Normal', 'Long'] as const
 
 function readBoolean(record: Record<string, unknown>, key: string, fallback: boolean): boolean {
   const value = record[key]
@@ -135,16 +125,6 @@ const TOGGLE_ROWS: ToggleRow[] = [
   { key: 'smartKey', titleKey: 'notificationsSettingsWindowsmartKey' },
   { key: 'automation', titleKey: 'notificationsSettingsWindowautomation' }
 ]
-
-function positionKey(value: string): string {
-  const lower = value.charAt(0).toLowerCase() + value.slice(1)
-  return `settings.display.notificationPositions.${lower}`
-}
-
-function durationKey(value: string): string {
-  const lower = value.charAt(0).toLowerCase() + value.slice(1)
-  return `settings.display.notificationDurations.${lower}`
-}
 
 export default function NotificationsModal({
   open,
@@ -300,10 +280,7 @@ export default function NotificationsModal({
               disabled={notificationsDisabled}
               value={fields.position}
               onChange={(value) => void persist({ position: value })}
-              options={NOTIFICATION_POSITIONS.map((value) => ({
-                value,
-                label: t(positionKey(value))
-              }))}
+              options={buildNotificationPositionOptions(t)}
             />
           </div>
 
@@ -323,10 +300,7 @@ export default function NotificationsModal({
               disabled={notificationsDisabled}
               value={fields.duration}
               onChange={(value) => void persist({ duration: value })}
-              options={NOTIFICATION_DURATIONS.map((value) => ({
-                value,
-                label: t(durationKey(value))
-              }))}
+              options={buildNotificationDurationOptions(t)}
             />
           </div>
         </div>

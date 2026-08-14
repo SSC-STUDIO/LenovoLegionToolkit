@@ -97,6 +97,49 @@
   user-select: text;
 }
 
+.udt-device-info-row--loading {
+  cursor: default;
+}
+
+.udt-device-info-row--loading:hover {
+  background: transparent;
+}
+
+/* Value-cell bones: right-aligned to match live values; shimmer from .udt-skeleton. */
+.udt-device-info-row__skeleton {
+  display: inline-block;
+  flex: 0 0 auto;
+  margin-left: auto;
+  height: 12px;
+  max-width: 66%;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+/* Skeleton → live values: opacity-only (~180ms). Instant when cache hit / reduced motion. */
+.udt-device-info-modal__body--reveal {
+  animation: udt-device-info-reveal 180ms ease-out backwards;
+}
+
+@keyframes udt-device-info-reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .udt-device-info-modal__body--reveal {
+    animation: none;
+  }
+}
+
+.udt-animations-off .udt-device-info-modal__body--reveal {
+  animation: none;
+}
+
 .udt-device-info-link {
   display: flex;
   align-items: center;
@@ -135,4 +178,22 @@
 
 .udt-device-info-close:hover {
   background: var(--udt-surface-chart, rgba(255, 255, 255, 0.045));
+}
+
+/* ── macOS native title bar layout ──────────────────────────────
+   The traffic lights (red/yellow/green) are drawn by macOS at the top-left;
+   leave 78px of drag space for them, hide the custom caption buttons, and
+   inset the title so it does not overlap the lights. */
+.udt-titlebar--mac {
+  height: 44px;
+}
+
+.udt-titlebar--mac .udt-titlebar__window-controls {
+  display: none;
+}
+
+.udt-titlebar--mac .udt-titlebar__title {
+  left: 78px;
+  right: 16px;
+  text-align: left;
 }

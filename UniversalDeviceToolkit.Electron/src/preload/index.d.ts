@@ -1,4 +1,6 @@
-export interface Bridge {
+﻿export interface Bridge {
+  /** Runtime platform ('darwin' on macOS) — drives native title bar layout. */
+  platform: string
   invoke: (method: string, params?: unknown) => Promise<unknown>
   getHostStatus: () => Promise<{
     running: boolean
@@ -12,6 +14,8 @@ export interface Bridge {
   closeWindow: () => void
   setBackgroundMaterial: (material: 'none' | 'mica' | 'acrylic') => Promise<void>
   openLogFolder: () => Promise<void>
+  /** Renderer → main log channel (leveled; lands in userData/logs/renderer.log). */
+  log: (level: string, message: string) => void
   openAppFolder: (kind: 'data' | 'temp' | 'log') => Promise<{ opened: boolean }>
   openExternal: (url: string) => Promise<{ opened: boolean }>
   openPath: (path: string) => Promise<{ opened: boolean }>
@@ -31,6 +35,14 @@ export interface Bridge {
   readClipboardExistingPaths: () => Promise<string[]>
   setAutorun: (enabled: boolean) => Promise<{ ok: boolean; enabled: boolean }>
   getAutorun: () => Promise<{ enabled: boolean }>
+  setThemeSource: (source: 'system' | 'light' | 'dark') => void
+  /** Applies platformBaseZoom x scale to every surface in the main process. */
+  setUiScale: (scale: number) => Promise<{ ok: boolean; scale: number }>
+  /** Real production memory footprint across every Electron process (MB). */
+  getMemoryUsage: () => Promise<{
+    processes: Array<{ name: string; type: string; workingSetMB: number }>
+    totalMB: number
+  }>
 }
 
 declare global {

@@ -61,14 +61,12 @@ export default function SpectrumDevicePanel({
   const scale = fitScale
   const deviceSet = new Set(deviceKeys)
 
-  // Selectable key centers in host px: front-panel zones + the keyboard zones
-  // (the nested keyboard renders at zoom 1 inside the canvas, so its stage
-  // coordinates map 1:1 onto the canvas offset by the keyboard box).
   const keyCenters = useMemo(() => {
+    const present = new Set(deviceKeys)
     const kb = deviceLayout.keyboard
     const centers = getKeyboardZoneCenters(keyboardLayout, scale, kb.x, kb.y)
     deviceLayout.zones.forEach((zone) => {
-      if (deviceSet.has(zone.code)) {
+      if (present.has(zone.code)) {
         centers.push({
           code: zone.code,
           x: (zone.x + zone.w / 2) * scale,
@@ -77,7 +75,6 @@ export default function SpectrumDevicePanel({
       }
     })
     return centers
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deviceLayout, keyboardLayout, scale, deviceKeys])
 
   const { selection, didDragRef, onMouseDown } = useBoxSelect(hostRef, keyCenters, onBoxSelect)
@@ -94,7 +91,8 @@ export default function SpectrumDevicePanel({
           style={{
             left: deviceLayout.keyboard.x,
             top: deviceLayout.keyboard.y,
-            width: deviceLayout.keyboard.w
+            width: deviceLayout.keyboard.w,
+            height: deviceLayout.keyboard.h
           }}
         >
           <SpectrumKeyboard

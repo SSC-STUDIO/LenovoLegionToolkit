@@ -6,7 +6,7 @@ import { useFeaturesStore } from '../../stores/featuresStore'
 import DashboardFeatureCard from './DashboardFeatureCard'
 import DashboardSpecialCard, { type SpecialDashboardItem } from './DashboardSpecialCard'
 import { isSpecialItemSupported } from './dashboardHardwareSupport'
-import { isSpecialDashboardItem, resolveDashboardFeature } from './dashboardItems'
+import { isSpecialDashboardItem, resolveDashboardFeature, dashboardItemLabel } from './dashboardItems'
 import './dashboardHardware.css'
 
 function groupTitle(group: DashboardGroup, t: TFunction): string {
@@ -25,20 +25,35 @@ export default function DashboardFeatureGroupsHardware({
 
   function itemIsVisible(item: DashboardItem): boolean {
     if (resolveDashboardFeature(item, infos) != null) return true
-    return isSpecialDashboardItem(item) &&
-      isSpecialItemSupported(item as SpecialDashboardItem, hardware.state)
+    return isSpecialDashboardItem(item)
   }
 
   function renderItem(item: DashboardItem): React.JSX.Element | null {
-    if (isSpecialDashboardItem(item) && hardware.state != null) {
+    if (isSpecialDashboardItem(item)) {
+      if (hardware.state != null && isSpecialItemSupported(item as SpecialDashboardItem, hardware.state)) {
+        return (
+          <DashboardSpecialCard
+            key={item}
+            item={item as SpecialDashboardItem}
+            hardware={hardware.state}
+            error={hardware.error}
+            onChanged={hardware.refresh}
+          />
+        )
+      }
+      const title = dashboardItemLabel(item, t)
+      const reason = t('dashboard.card.notSupported', {
+        defaultValue: 'Not supported on this device'
+      })
       return (
-        <DashboardSpecialCard
-          key={item}
-          item={item as SpecialDashboardItem}
-          hardware={hardware.state}
-          error={hardware.error}
-          onChanged={hardware.refresh}
-        />
+        <article key={item} className="udt-parity-feature-card udt-parity-feature-card--disabled">
+          <div className="udt-parity-feature-card__body">
+            <div className="udt-parity-feature-card__copy">
+              <div className="udt-parity-feature-card__title" title={title}>{title}</div>
+              <div className="udt-parity-feature-card__warning" title={reason}>{reason}</div>
+            </div>
+          </div>
+        </article>
       )
     }
 

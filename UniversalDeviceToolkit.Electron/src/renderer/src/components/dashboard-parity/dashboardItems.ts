@@ -95,7 +95,9 @@ export function resolveDashboardFeature(
   const candidates = FEATURE_CANDIDATES[item]
   if (candidates == null) return null
 
-  return candidates.find((candidate) => infos[candidate]?.supported === true) ?? null
+  return candidates.find((candidate) => infos[candidate]?.supported === true)
+    ?? candidates.find((candidate) => infos[candidate] != null)
+    ?? null
 }
 
 export function isSpecialDashboardItem(item: DashboardItem): boolean {

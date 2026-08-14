@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Select } from 'antd'
 import type { AutomationPipeline, AutomationStepType } from '../../api/automation'
 import { featuresApi } from '../../api/features'
 import {
@@ -164,20 +165,17 @@ export default function StepEditorModal({ step, pipelines, onApply, onCancel }: 
         <div className="udt-step-editor__body">
           {def.kind === 'select' && (
             <>
-              <select
+              <Select
                 className="udt-select"
-                value={optionKey(value as StepState)}
-                onChange={(e) => handleSelect(e.target.value)}
-              >
-                {optionsLoading && uniqueOptions.length === 0 && (
-                  <option value="">{t('automation.optionsLoading')}</option>
-                )}
-                {uniqueOptions.map((option) => (
-                  <option key={optionKey(option.value)} value={optionKey(option.value)}>
-                    {option.labelText ?? stateLabel(option.value, def, t)}
-                  </option>
-                ))}
-              </select>
+                value={uniqueOptions.length === 0 ? undefined : optionKey(value as StepState)}
+                loading={optionsLoading}
+                placeholder={optionsLoading ? t('automation.optionsLoading') : undefined}
+                onChange={handleSelect}
+                options={uniqueOptions.map((option) => ({
+                  value: optionKey(option.value),
+                  label: option.labelText ?? stateLabel(option.value, def, t)
+                }))}
+              />
               {!optionsLoading && uniqueOptions.length === 0 && (
                 <div className="udt-step-editor__empty">{t(`automation.stepEditors.${def.i18nKey}.empty`)}</div>
               )}
@@ -222,18 +220,17 @@ export default function StepEditorModal({ step, pipelines, onApply, onCancel }: 
 
           {def.kind === 'pipeline' && (
             <>
-              <select
+              <Select
                 className="udt-select"
-                value={(value as string) ?? ''}
-                onChange={(e) => setValue(e.target.value || null)}
-              >
-                <option value="">{t(`automation.stepEditors.${def.i18nKey}.placeholder`)}</option>
-                {quickActionPipelines.map((pipeline) => (
-                  <option key={pipeline.id} value={pipeline.id}>
-                    {pipeline.name ?? t('automation.quickAction')}
-                  </option>
-                ))}
-              </select>
+                value={(value as string) || undefined}
+                placeholder={t(`automation.stepEditors.${def.i18nKey}.placeholder`)}
+                onChange={(next) => setValue(next ?? null)}
+                options={quickActionPipelines.map((pipeline) => ({
+                  value: pipeline.id,
+                  label: pipeline.name ?? t('automation.quickAction')
+                }))}
+                allowClear
+              />
               {quickActionPipelines.length === 0 && (
                 <div className="udt-step-editor__empty">{t(`automation.stepEditors.${def.i18nKey}.empty`)}</div>
               )}

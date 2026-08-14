@@ -1,11 +1,13 @@
 /**
- * App-level API served by the Electron main process (not the host JSON-RPC).
- * Mirrors Electron Application behavior settings (Autorun → login item).
+ * App-level APIs served by the Electron main process (window shell).
+ * Windows autorun is the Host scheduled task (`startupApi` / `app.setAutorun`).
+ * macOS/Linux use this login-item / XDG channel because Host Autorun is Windows-only.
  */
 
-const bridge = window.bridge
+const getBridge = (): typeof window.bridge => window.bridge
 
 export async function setAutorun(enabled: boolean): Promise<{ ok: boolean; enabled: boolean }> {
+  const bridge = getBridge()
   if (!bridge?.setAutorun) {
     throw new Error('Bridge is not available')
   }
@@ -13,6 +15,7 @@ export async function setAutorun(enabled: boolean): Promise<{ ok: boolean; enabl
 }
 
 export async function getAutorun(): Promise<{ enabled: boolean }> {
+  const bridge = getBridge()
   if (!bridge?.getAutorun) {
     throw new Error('Bridge is not available')
   }

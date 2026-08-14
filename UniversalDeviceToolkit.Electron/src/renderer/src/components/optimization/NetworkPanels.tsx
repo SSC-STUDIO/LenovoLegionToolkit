@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   AutoComplete,
@@ -8,14 +8,14 @@ import {
   message
 } from 'antd'
 import {
-  CheckCircleFilled,
-  ExperimentOutlined,
-  InfoCircleOutlined,
-  SearchOutlined,
-  StarFilled,
-  SyncOutlined,
-  UndoOutlined
-} from '@ant-design/icons'
+  CheckmarkCircle24Filled,
+  Beaker24Regular,
+  Info24Regular,
+  Search24Regular,
+  Star24Filled,
+  ArrowSync24Regular,
+  ArrowUndo24Regular
+} from '../icons/fluent'
 import TrendChart from '../dashboard/TrendChart'
 import {
   optimizationApi,
@@ -218,7 +218,7 @@ function NetworkTargetsCard(): React.JSX.Element {
               disabled={recommendedGroups.length === 0}
               onClick={() => setRecommendedOpen(!recommendedOpen)}
             >
-              <StarFilled /> {t('optimization.network.recommendedMenu')}
+              <Star24Filled /> {t('optimization.network.recommendedMenu')}
             </button>
             {recommendedOpen && (
               <>
@@ -244,7 +244,7 @@ function NetworkTargetsCard(): React.JSX.Element {
             )}
           </div>
           <div className="udt-network-search">
-            <SearchOutlined />
+            <Search24Regular />
             <input
               type="text"
               placeholder={t('optimization.network.searchTargets')}
@@ -282,12 +282,12 @@ function NetworkTargetsCard(): React.JSX.Element {
                       onChange={(e) => handleGroupCheckboxChange(group, someEnabled, e)}
                     />
                     <span className="udt-checkbox__box">
-                      <CheckCircleFilled />
+                      <CheckmarkCircle24Filled />
                     </span>
                   </label>
                   <BrandIcon iconKey={group.iconKey} displayName={group.displayName} />
                   <span className="udt-network-group__name">{group.displayName}</span>
-                  {group.isFavorite && <StarFilled className="udt-network-group__fav" />}
+                  {group.isFavorite && <Star24Filled className="udt-network-group__fav" />}
                   <span className="udt-network-group__runtime">{groupRuntime(group)}</span>
                   <button
                     type="button"
@@ -310,13 +310,13 @@ function NetworkTargetsCard(): React.JSX.Element {
                             onChange={(e) => handleSubItemToggle(group, sub, e.target.checked)}
                           />
                           <span className="udt-checkbox__box">
-                            <CheckCircleFilled />
+                            <CheckmarkCircle24Filled />
                           </span>
                         </label>
                         <span className="udt-network-subitem__name">{sub.displayName}</span>
                         {sub.isBeta && (
                           <span className="udt-network-subitem__beta">
-                            <ExperimentOutlined /> Beta
+                            <Beaker24Regular /> Beta
                           </span>
                         )}
                         <span className="udt-network-subitem__domain" title={sub.domain}>
@@ -384,9 +384,19 @@ function NetworkTrafficCard(): React.JSX.Element | null {
     }
   }, [isRunning])
 
+  // Chart inputs are memoized so the 1 Hz traffic poll reuses stable series
+  // objects (TrendChart applies data updates incrementally).
+  const trafficSeries = useMemo(
+    () => [
+      { name: t('optimization.network.metrics.upload'), color: '#ee9146', data: uploadSamples },
+      { name: t('optimization.network.metrics.download'), color: '#4da6e8', data: downloadSamples }
+    ],
+    [uploadSamples, downloadSamples, t]
+  )
+  const labels = useMemo(() => uploadSamples.map((_, index) => `${index}`), [uploadSamples])
+
   if (!isRunning) return null
 
-  const labels = uploadSamples.map((_, index) => `${index}`)
   const health = formatHealth(runtimeSnapshot?.healthStatus ?? 'unknown', t)
 
   return (
@@ -425,14 +435,7 @@ function NetworkTrafficCard(): React.JSX.Element | null {
         </div>
 
         <div className="udt-network-traffic__chart">
-          <TrendChart
-            series={[
-              { name: t('optimization.network.metrics.upload'), color: '#ee9146', data: uploadSamples },
-              { name: t('optimization.network.metrics.download'), color: '#4da6e8', data: downloadSamples }
-            ]}
-            labels={labels}
-            height={156}
-          />
+          <TrendChart series={trafficSeries} labels={labels} height={156} />
         </div>
 
         <div className="udt-network-traffic__legend">
@@ -619,17 +622,17 @@ function NetworkDiagnosticsRow(): React.JSX.Element {
     <>
       <div className="udt-network-diag">
         <button type="button" className="udt-network-diag__card" onClick={() => setActivePopup('nat')}>
-          <InfoCircleOutlined />
+          <Info24Regular />
           <span className="udt-network-diag__title">{t('optimization.network.diag.natTitle')}</span>
           <span className="udt-network-diag__summary">{natResult?.summary ?? t('optimization.network.diag.unknown')}</span>
         </button>
         <button type="button" className="udt-network-diag__card" onClick={() => setActivePopup('dns')}>
-          <InfoCircleOutlined />
+          <Info24Regular />
           <span className="udt-network-diag__title">{t('optimization.network.diag.dnsTitle')}</span>
           <span className="udt-network-diag__summary">{dnsResult?.latency ?? t('optimization.network.diag.unknown')}</span>
         </button>
         <button type="button" className="udt-network-diag__card" onClick={() => setActivePopup('ipv6')}>
-          <InfoCircleOutlined />
+          <Info24Regular />
           <span className="udt-network-diag__title">{t('optimization.network.diag.ipv6Title')}</span>
           <span className="udt-network-diag__summary">
             {ipv6Result
@@ -655,7 +658,7 @@ function NetworkDiagnosticsRow(): React.JSX.Element {
             placeholder="stun.miwifi.com"
           />
           <button type="button" className="udt-btn udt-btn--secondary" disabled={natBusy} onClick={() => void handleNatDetect()}>
-            <SyncOutlined /> {t('optimization.network.diag.detect')}
+            <ArrowSync24Regular /> {t('optimization.network.diag.detect')}
           </button>
           <div className="udt-network-diag-popup__grid">
             <span>{t('optimization.network.diag.natType')}</span>
@@ -710,7 +713,7 @@ function NetworkDiagnosticsRow(): React.JSX.Element {
           </div>
           <div className="udt-network-diag-popup__actions">
             <button type="button" className="udt-btn udt-btn--secondary" disabled={dnsBusy} onClick={() => void handleDnsDetect()}>
-              <SyncOutlined /> {t('optimization.network.diag.detect')}
+              <ArrowSync24Regular /> {t('optimization.network.diag.detect')}
             </button>
           </div>
           <div className="udt-network-diag-popup__grid">
@@ -731,7 +734,7 @@ function NetworkDiagnosticsRow(): React.JSX.Element {
         <div className="udt-network-diag-popup">
           <div className="udt-network-diag-popup__actions">
             <button type="button" className="udt-btn udt-btn--secondary" disabled={ipv6Busy} onClick={() => void handleIpv6Detect()}>
-              <SyncOutlined /> {t('optimization.network.diag.detect')}
+              <ArrowSync24Regular /> {t('optimization.network.diag.detect')}
             </button>
           </div>
           <div className="udt-network-diag-popup__grid">
@@ -799,7 +802,7 @@ function NetworkAdvancedPanel(): React.JSX.Element | null {
               onConfirm={() => void handleRestore()}
             >
               <button type="button" className="udt-btn udt-btn--danger" disabled={restoring}>
-                <UndoOutlined /> {t('optimization.network.restoreNetwork')}
+                <ArrowUndo24Regular /> {t('optimization.network.restoreNetwork')}
               </button>
             </Popconfirm>
           </div>

@@ -68,13 +68,21 @@ export function findTogglePair(
 
 /**
  * The feature's applied state, derived from the pair's reported states.
- * The host may report the probe on either side, so accept both.
+ * Enable reports the feature state while disable reports its inverse. A probe
+ * may be unavailable on either side; contradictory known probes are unknown.
  */
 export function getTogglePairFeatureState(pair: ToggleActionPair): boolean | null {
   const { enable, disable } = pair
-  if (enable.applied === true || disable.applied === true) return true
-  if (enable.applied !== null) return enable.applied
-  return disable.applied
+  const stateFromEnable = enable.applied
+  const stateFromDisable = disable.applied === null ? null : !disable.applied
+  if (
+    stateFromEnable !== null &&
+    stateFromDisable !== null &&
+    stateFromEnable !== stateFromDisable
+  ) {
+    return null
+  }
+  return stateFromEnable ?? stateFromDisable
 }
 
 export interface TogglePairPresentation {
@@ -147,7 +155,8 @@ export function presentCategoryActions(
       visible.push({ action, editable: presentation.canEdit && !busy })
       if (getRecommendedSelectedState(action, actions)) recommendedKeys.push(action.key)
     } else {
-      visible.push({ action, editable: action.applied !== null && !busy })
+      const cleanup = action.key.toLowerCase().startsWith('cleanup.')
+      visible.push({ action, editable: (cleanup || action.applied !== null) && !busy })
       if (action.recommended) recommendedKeys.push(action.key)
     }
   }

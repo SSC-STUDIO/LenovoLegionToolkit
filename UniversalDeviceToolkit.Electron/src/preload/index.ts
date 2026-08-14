@@ -1,6 +1,8 @@
-import { contextBridge, ipcRenderer } from 'electron'
+﻿import { contextBridge, ipcRenderer } from 'electron'
 
 const bridge = {
+  /** Runtime platform ('darwin' on macOS) — drives native title bar layout. */
+  platform: process.platform,
   invoke: (method: string, params?: unknown): Promise<unknown> =>
     ipcRenderer.invoke('bridge:invoke', method, params),
   getHostStatus: (): Promise<{
@@ -22,6 +24,7 @@ const bridge = {
   setBackgroundMaterial: (material: 'none' | 'mica' | 'acrylic'): Promise<void> =>
     ipcRenderer.invoke('window:set-background-material', material),
   openLogFolder: (): Promise<void> => ipcRenderer.invoke('shell:open-log-folder'),
+  log: (level: string, message: string): void => ipcRenderer.send('log:write', { level, message }),
   openAppFolder: (kind: 'data' | 'temp' | 'log'): Promise<{ opened: boolean }> =>
     ipcRenderer.invoke('shell:open-app-folder', kind),
   openExternal: (url: string): Promise<{ opened: boolean }> =>
@@ -63,10 +66,25 @@ const bridge = {
     ipcRenderer.invoke('clipboard:write-lines', { lines }),
   readClipboardExistingPaths: (): Promise<string[]> =>
     ipcRenderer.invoke('clipboard:read-existing-paths'),
-  /** Windows login item (Electron Autorun). */
+  /** macOS login item / Linux XDG autostart. Unused on Windows (Host scheduled task). */
   setAutorun: (enabled: boolean): Promise<{ ok: boolean; enabled: boolean }> =>
     ipcRenderer.invoke('app:set-autorun', enabled),
-  getAutorun: (): Promise<{ enabled: boolean }> => ipcRenderer.invoke('app:get-autorun')
+  getAutorun: (): Promise<{ enabled: boolean }> => ipcRenderer.invoke('app:get-autorun'),
+  /** Keep DWM backdrop materials (mica/acrylic) in sync with the in-app theme. */
+  setThemeSource: (source: 'system' | 'light' | 'dark'): void => {
+    ipcRenderer.send('window:set-theme-source', source)
+  },
+  /**
+   * Push the "Interface scale" setting to the main process, which applies
+   * platformBaseZoom x scale to every window/webview via setZoomFactor.
+   */
+  setUiScale: (scale: number): Promise<{ ok: boolean; scale: number }> =>
+    ipcRenderer.invoke('window:set-ui-scale', scale),
+  /** Real production memory footprint across every Electron process (MB). */
+  getMemoryUsage: (): Promise<{
+    processes: Array<{ name: string; type: string; workingSetMB: number }>
+    totalMB: number
+  }> => ipcRenderer.invoke('app:memory-usage')
 }
 
 contextBridge.exposeInMainWorld('bridge', bridge)

@@ -5,10 +5,25 @@
 .udt-optimization-page {
   container-type: inline-size;
   container-name: udt-optimization;
+  /* Match .udt-macro-page / .udt-macro-card inset (12px 14px). */
+  --udt-opt-card-padding-y: 12px;
+  --udt-opt-card-padding-x: 14px;
+  padding: 16px 16px 12px 0;
+}
+
+.udt-optimization-page .udt-page__title {
+  margin: 0 0 8px;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-page-title);
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .udt-optimization-page .udt-page__subtitle {
-  margin-bottom: 16px;
+  margin: 0 0 16px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-page-desc);
+  line-height: 1.4;
 }
 
 .udt-optimization-layout {
@@ -16,11 +31,24 @@
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 16px;
   align-items: start;
-  padding: 0 16px 28px 0;
+  padding-bottom: 28px;
 }
 
 .udt-optimization-layout--solo {
   grid-template-columns: minmax(0, 1fr);
+}
+
+@container udt-optimization (min-width: 1100px) {
+  .udt-optimization-layout--solo .udt-optimization-layout__main {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: start;
+  }
+
+  .udt-optimization-layout--solo .udt-category {
+    margin-bottom: 0;
+  }
 }
 
 /* Cleanup: categories (~60–70%) | divider | info + rules (~30–40%).
@@ -71,8 +99,6 @@
   gap: 12px;
   margin-bottom: 12px;
   flex-wrap: wrap;
-  /* Match .udt-optimization-layout’s right gutter so star/play align with cards */
-  padding-right: 16px;
 }
 
 .udt-opt-chrome__actions {
@@ -85,14 +111,14 @@
 
 .udt-opt-chrome__icon-btn {
   box-sizing: border-box;
-  width: 40px;
-  height: 40px;
+  width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
   padding: 0;
-  border: none;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 16px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-icon-tool-glyph);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -104,8 +130,8 @@
 }
 
 .udt-opt-chrome__icon-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.92);
+  background: var(--udt-control-fill-secondary);
+  color: var(--udt-text-primary);
 }
 
 .udt-opt-chrome__icon-btn:disabled {
@@ -115,16 +141,18 @@
 
 .udt-opt-chrome__play-icon {
   display: block;
+  width: var(--udt-icon-tool-glyph);
+  height: var(--udt-icon-tool-glyph);
 }
 
 :root[data-theme='light'] .udt-opt-chrome__icon-btn {
-  background: rgba(0, 0, 0, 0.06);
-  color: rgba(0, 0, 0, 0.55);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-secondary);
 }
 
 :root[data-theme='light'] .udt-opt-chrome__icon-btn:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.1);
-  color: rgba(0, 0, 0, 0.82);
+  background: var(--udt-control-fill-secondary);
+  color: var(--udt-text-primary);
 }
 
 /* Pill-shaped segmented navigation */
@@ -208,6 +236,21 @@
   animation: udt-page-enter var(--udt-anim-medium) var(--udt-ease-cubic-out);
 }
 
+/*
+ * Match Custom Macro card inset (.udt-macro-card: 12px 14px).
+ */
+.udt-optimization-page .udt-card {
+  padding: var(--udt-opt-card-padding-y) var(--udt-opt-card-padding-x);
+}
+
+.udt-optimization-page .udt-card-expander__header-row {
+  padding: 8px var(--udt-opt-card-padding-x);
+}
+
+.udt-optimization-page .udt-card-expander__body {
+  padding: 0 var(--udt-opt-card-padding-x);
+}
+
 /* Category expander card (CardExpander) */
 .udt-category {
   margin-bottom: 8px;
@@ -253,11 +296,13 @@
 
 /* Action row */
 .udt-action-row {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 88px 32px;
   align-items: center;
-  gap: 8px;
-  min-height: 32px;
-  padding: 4px 8px;
+  column-gap: 8px;
+  box-sizing: border-box;
+  min-height: calc(var(--udt-icon-tool-size) + 16px);
+  padding: 8px 10px;
   margin-bottom: 8px;
   border-radius: var(--udt-radius-small);
   cursor: pointer;
@@ -269,11 +314,37 @@
 }
 
 .udt-action-row__title {
-  flex: 1;
   min-width: 0;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-body);
   line-height: 1.4;
+}
+
+.udt-action-row__badge {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.udt-action-row__badge .udt-badge {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.udt-action-row__badge .udt-badge svg {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+}
+
+.udt-action-row__info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
 }
 
 /* Checkbox */
@@ -333,7 +404,7 @@
 
 /* Side card */
 .udt-side-card {
-  padding: 12px 14px;
+  padding: var(--udt-opt-card-padding-y) var(--udt-opt-card-padding-x);
 }
 
 .udt-side-card__actions {
@@ -352,17 +423,128 @@
 
 /* Network tab */
 .udt-network-layout {
-  padding: 16px 16px 28px 0;
+  padding-bottom: 28px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
 }
 
+/* Basic configuration card — enable + mode on one grouped row, actions below */
+.udt-network-config {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+  min-width: 0;
+  padding: var(--udt-opt-card-padding-y) var(--udt-opt-card-padding-x);
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+}
+
+.udt-network-config .udt-card__title {
+  margin: 0;
+}
+
+.udt-network-config__fields {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px 24px;
+  min-width: 0;
+  width: 100%;
+}
+
+.udt-network-field {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 12px;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 36px;
+  color: var(--udt-text-primary);
+  /* Caption, not body: the Select value is capped at --udt-font-caption by the
+     global .ant-select-selection-item override, and the label must match it
+     (same pairing as .udt-settings-row__label). */
+  font-size: var(--udt-font-caption);
+}
+
+.udt-network-field--switch {
+  flex: 0 0 auto;
+}
+
+.udt-network-field__label {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.udt-network-field--switch .udt-switch {
+  flex: 0 0 auto;
+}
+
+/* antd Select: same reset as .udt-driver-select (no native .udt-select chrome). */
+.udt-network-select.ant-select {
+  display: flex;
+  flex: 0 1 var(--udt-content-control-width);
+  width: var(--udt-content-control-width);
+  min-width: 0;
+  max-width: 100%;
+  height: auto;
+  min-height: var(--udt-control-height);
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.udt-network-select.ant-select .ant-select-selector {
+  width: 100%;
+  height: var(--udt-control-height) !important;
+  min-height: var(--udt-control-height) !important;
+  padding: 0 11px;
+  border: 1px solid var(--udt-control-stroke-default) !important;
+  border-radius: var(--udt-radius-control) !important;
+  background: var(--udt-control-fill-default) !important;
+}
+
+.udt-network-select.ant-select-focused .ant-select-selector,
+.udt-network-select.ant-select-open .ant-select-selector {
+  border-color: var(--udt-accent) !important;
+}
+
+.udt-network-select.ant-select .ant-select-selection-item,
+.udt-network-select.ant-select .ant-select-selection-placeholder {
+  line-height: calc(var(--udt-control-height) - 2px);
+}
+
+.udt-network-select.ant-select .ant-select-selection-search-input {
+  color: transparent;
+}
+
+.udt-network-config__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.udt-network-config__actions .udt-btn {
+  flex: 0 1 auto;
+}
+
+/* Legacy row helper (unused by config card; kept for status-style rows) */
 .udt-network-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-width: 0;
   min-height: 44px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-body);
@@ -382,7 +564,7 @@
 
 /* Select */
 .udt-select {
-  height: 32px;
+  height: var(--udt-control-height);
   min-width: 168px;
   padding: 0 12px;
   border: 1px solid var(--udt-control-stroke-default);
@@ -423,8 +605,8 @@
   }
 
   .udt-opt-chrome__icon-btn {
-    width: 32px;
-    height: 32px;
+    width: var(--udt-icon-tool-size);
+    height: var(--udt-icon-tool-size);
   }
 
   .udt-segmented-nav {
@@ -438,6 +620,19 @@
     flex: 0 0 auto;
     min-height: 30px;
     padding: 6px 12px;
+  }
+
+  /* Network basic config: keep enable+mode grouped; wrap rather than stretch */
+  .udt-network-config__fields {
+    gap: 10px 16px;
+  }
+
+  .udt-network-select.ant-select {
+    width: min(var(--udt-content-control-width), 100%);
+  }
+
+  .udt-network-config__actions .udt-btn {
+    min-width: 72px;
   }
 }
 
@@ -493,7 +688,7 @@
     grid-row: 1 / span 2;
     width: auto;
     min-width: 72px;
-    height: 32px;
+    height: var(--udt-control-height);
     margin-top: 0;
     padding: 0 14px;
     flex-shrink: 0;
@@ -502,7 +697,7 @@
 
   .udt-optimization-layout--cleanup .udt-card-expander__header-row {
     min-height: 40px;
-    padding: 4px 8px;
+    padding: 4px var(--udt-opt-card-padding-x) 4px var(--udt-opt-card-padding-x);
   }
 
   .udt-optimization-layout--cleanup .udt-card-expander__desc {
@@ -532,11 +727,26 @@
     padding: 0 10px;
     font-size: var(--udt-font-small-caption);
   }
+
+  /* Network basic config: buttons share the row more evenly when wrapping */
+  .udt-network-config__actions .udt-btn {
+    flex: 1 1 calc(50% - 4px);
+    min-width: 0;
+  }
 }
 
 @container udt-optimization (max-width: 400px) {
   .udt-optimization-layout--cleanup .udt-optimization-layout__side {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .udt-network-config__actions {
+    flex-direction: column;
+  }
+
+  .udt-network-config__actions .udt-btn {
+    flex: 1 1 auto;
+    width: 100%;
   }
 }
 
@@ -641,7 +851,7 @@
 /* ── Driver download panel ─────────────────────────────────────── */
 
 .udt-driver-panel {
-  padding: 16px 16px 28px 0;
+  padding-bottom: 28px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -649,9 +859,10 @@
 
 .udt-driver-filter {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
-  gap: 18px;
-  padding: 12px 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: stretch;
+  padding: var(--udt-opt-card-padding-y) var(--udt-opt-card-padding-x);
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-card);
   background: var(--udt-surface-card);
@@ -660,15 +871,19 @@
 .udt-driver-filter__fields {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 10px;
   min-width: 0;
+  width: 100%;
 }
 
 .udt-driver-field {
   display: grid;
   grid-template-columns: 122px minmax(0, 1fr);
   align-items: center;
+  justify-items: stretch;
   gap: 12px;
+  width: 100%;
 }
 
 .udt-driver-field > label {
@@ -677,10 +892,57 @@
   font-weight: 500;
 }
 
+/* antd Select must not use native .udt-select chrome (border + CSS chevron),
+   or the inner .ant-select-selector / .ant-select-arrow ghost on top of it. */
+.udt-driver-select.ant-select {
+  display: flex;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  min-height: var(--udt-control-height);
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+}
+
+.udt-driver-select.ant-select .ant-select-selector {
+  width: 100%;
+  height: var(--udt-control-height) !important;
+  min-height: var(--udt-control-height) !important;
+  padding: 0 11px;
+  border: 1px solid var(--udt-control-stroke-default) !important;
+  border-radius: var(--udt-radius-control) !important;
+  background: var(--udt-control-fill-default) !important;
+}
+
+.udt-driver-select.ant-select-focused .ant-select-selector,
+.udt-driver-select.ant-select-open .ant-select-selector {
+  border-color: var(--udt-accent) !important;
+}
+
+.udt-driver-select.ant-select .ant-select-selection-item,
+.udt-driver-select.ant-select .ant-select-selection-placeholder {
+  line-height: calc(var(--udt-control-height) - 2px);
+}
+
+.udt-driver-select.ant-select .ant-select-selection-search-input {
+  color: transparent;
+}
+
+.udt-driver-toolbar .udt-driver-select.ant-select {
+  width: auto;
+  min-width: 168px;
+  flex: 0 0 auto;
+}
+
 .udt-driver-field input[type='text'],
 .udt-driver-field__path input {
-  height: 32px;
+  width: 100%;
+  height: var(--udt-control-height);
   min-width: 0;
+  max-width: none;
   padding: 0 12px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
@@ -700,6 +962,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  width: 100%;
   min-width: 0;
 }
 
@@ -709,7 +972,12 @@
 }
 
 .udt-driver-source {
-  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  width: 100%;
+  padding: var(--udt-opt-card-padding-y) var(--udt-opt-card-padding-x);
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
   background: var(--udt-surface-card);
@@ -777,7 +1045,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
+  padding: var(--udt-opt-card-padding-y) var(--udt-opt-card-padding-x);
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
   background: var(--udt-surface-card);
@@ -789,7 +1057,7 @@
   gap: 8px;
   flex: 1;
   min-width: 200px;
-  height: 32px;
+  height: var(--udt-control-height);
   padding: 0 10px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
@@ -852,7 +1120,7 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 14px;
+  padding: 14px var(--udt-opt-card-padding-x);
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-card);
   background: var(--udt-surface-card);
@@ -1073,7 +1341,7 @@
   align-items: center;
   gap: 8px;
   width: 200px;
-  height: 32px;
+  height: var(--udt-control-height);
   padding: 0 10px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
@@ -1524,7 +1792,7 @@
   background: var(--udt-control-fill-secondary);
 }
 
-@media (max-width: 900px) {
+@container udt-optimization (max-width: 900px) {
   .udt-driver-filter {
     grid-template-columns: 1fr;
   }

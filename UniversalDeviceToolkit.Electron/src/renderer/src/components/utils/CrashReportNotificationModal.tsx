@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
-import { DeleteOutlined, FolderOpenOutlined, WarningOutlined } from '@ant-design/icons'
+import { Delete24Regular, FolderOpen24Regular, Warning24Regular } from '../icons/fluent'
 import './utils.css'
 
 /**
@@ -119,7 +119,7 @@ export default function CrashReportNotificationModalHost(): React.JSX.Element {
         <div className="udt-utils-modal__title">{t('wpf.crashReportNotificationtitle')}</div>
         <div className="udt-utils-modal__body">
           <div className="udt-utils-banner">
-            <WarningOutlined className="udt-utils-banner__icon" />
+            <Warning24Regular className="udt-utils-banner__icon" />
             <div className="udt-utils-banner__copy">
               <div className="udt-utils-banner__title">{t('wpf.crashReportNotificationmessage')}</div>
               <div className="udt-utils-banner__desc">
@@ -139,7 +139,7 @@ export default function CrashReportNotificationModalHost(): React.JSX.Element {
             </div>
           </div>
           <div className="udt-utils-chip" style={{ marginBottom: 16 }}>
-            <FolderOpenOutlined />
+            <FolderOpen24Regular />
             <span>
               {t('wpf.crashReportNotificationreportPath').replace('{0}', report.path)}
             </span>
@@ -147,11 +147,11 @@ export default function CrashReportNotificationModalHost(): React.JSX.Element {
         </div>
         <div className="udt-utils-modal__actions udt-utils-modal__actions--space-between">
           <button type="button" className="udt-utils-button" onClick={deleteReport}>
-            <DeleteOutlined /> {t('wpf.crashReportNotificationdeleteReport')}
+            <Delete24Regular /> {t('wpf.crashReportNotificationdeleteReport')}
           </button>
           <div style={{ display: 'flex', gap: 10 }}>
             <button type="button" className="udt-utils-button" onClick={openReport}>
-              <FolderOpenOutlined /> {t('wpf.crashReportNotificationopenReport')}
+              <FolderOpen24Regular /> {t('wpf.crashReportNotificationopenReport')}
             </button>
             <button type="button" className="udt-utils-button udt-utils-button--primary" onClick={() => settle(false)}>
               {t('wpf.crashReportNotificationclose')}

@@ -175,11 +175,22 @@ function ThemePreviewTrafficLights(): React.JSX.Element {
   )
 }
 
+function ThemePreviewWindowControls(): React.JSX.Element {
+  return (
+    <span className="udt-theme-option__win">
+      <span className="udt-theme-option__win-btn udt-theme-option__win-btn--min" />
+      <span className="udt-theme-option__win-btn udt-theme-option__win-btn--max" />
+      <span className="udt-theme-option__win-btn udt-theme-option__win-btn--close" />
+    </span>
+  )
+}
+
 function ThemePreviewBar({ system = false }: { system?: boolean }): React.JSX.Element {
   return (
     <span className={`udt-theme-option__bar${system ? ' udt-theme-option__bar--system' : ''}`}>
       <ThemePreviewTrafficLights />
       <span className="udt-theme-option__caption" />
+      <ThemePreviewWindowControls />
     </span>
   )
 }
@@ -213,11 +224,16 @@ function ThemePreviewNav(): React.JSX.Element {
 function ThemePreviewRow({ variant }: { variant: 'primary' | 'secondary' | 'tertiary' }): React.JSX.Element {
   return (
     <span className={`udt-theme-option__row udt-theme-option__row--${variant}`}>
+      <span className="udt-theme-option__row-icon" />
       <span className="udt-theme-option__copy">
         <span className="udt-theme-option__line udt-theme-option__line--title" />
         <span className="udt-theme-option__line udt-theme-option__line--desc" />
       </span>
-      <span className="udt-theme-option__control" />
+      <span
+        className={`udt-theme-option__control${
+          variant === 'primary' ? ' udt-theme-option__control--on' : ''
+        }`}
+      />
     </span>
   )
 }

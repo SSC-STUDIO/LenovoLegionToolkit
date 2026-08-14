@@ -48,7 +48,7 @@ export interface InstalledLanguagePack {
   builtIn: boolean
 }
 
-/** Native name for a culture (e.g. "zh-Hans" → "中文 (简体)"). */
+/** Native display name for a culture (for example zh-Hans -> Chinese Simplified). */
 export function cultureDisplayName(culture: string): string {
   try {
     return new Intl.DisplayNames(['en'], { type: 'language' }).of(culture) ?? culture

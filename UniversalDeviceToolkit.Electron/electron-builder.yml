@@ -98,13 +98,45 @@ mac:
         - arm64
         - x64
   category: public.app-category.utilities
+  artifactName: UniversalDeviceToolkit-${version}-${os}-${arch}.${ext}
+  # ${arch} expands per built arch (arm64 / x64) and matches the .NET RIDs
+  # osx-arm64 / osx-x64. ${os} expands to "mac" (not "osx"), so only the arch
+  # suffix is templated here.
+  extraResources:
+    - from: ../UniversalDeviceToolkit.Host/publish/osx-${arch}
+      to: host
+      filter:
+        - "**/*"
+  # Mac app icon: buildResources/icon.icns (generated from icon-512.png via
+  # electron-icon-builder) is auto-detected by electron-builder; no explicit
+  # mac.icon needed.
+  # TODO(mac signing/notarization): uncomment once a Developer ID certificate is
+  # available (CSC_LINK + CSC_KEY_PASSWORD). Without credentials both signing and
+  # notarization fail, so they are intentionally left off:
+  #   hardenedRuntime: true
+  #   entitlements: buildResources/entitlements.mac.plist
+  #   entitlementsInherit: buildResources/entitlements.mac.plist
+  #   notarize: false   # flip to the notarize block once APPLE_ID/APPLE_PASSWORD are set
 linux:
   target:
     - target: AppImage
       arch:
         - x64
+    - target: deb
+      arch:
+        - x64
   category: Utility
+  artifactName: UniversalDeviceToolkit-${version}-${os}-${arch}.${ext}
+  icon: buildResources/icons
+  maintainer: Universal Device Toolkit Contributors
+  # Homepage comes from package.json ("homepage" metadata); the deb target
+  # hard-fails without it (FpmTarget.computeFpmMetaInfoOptions).
+  synopsis: Universal Device Toolkit desktop client
+  extraResources:
+    - from: ../UniversalDeviceToolkit.Host/publish/linux-x64
+      to: host
+      filter:
+        - "**/*"
 npmRebuild: false
 electronDownload:
   mirror: https://npmmirror.com/mirrors/electron/
-

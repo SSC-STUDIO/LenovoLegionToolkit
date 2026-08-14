@@ -20,6 +20,13 @@ interface HostLine {
   error?: { code: number; message: string }
 }
 
+/** Keep the JSON-RPC code in Error.message so IPC and the renderer can map it. */
+export function formatHostRpcError(error: { code?: number; message?: string } | undefined): Error {
+  const code = typeof error?.code === 'number' ? error.code : -32603
+  const text = error?.message?.trim() || 'Host error'
+  return new Error(`[UDT:${code}] ${text}`)
+}
+
 interface ReadyWaiter {
   resolve: () => void
   reject: (error: Error) => void
@@ -363,7 +370,7 @@ export class HostClient {
       clearTimeout(request.timer)
       this.pending.delete(message.id)
       if (message.error) {
-        request.reject(new Error(message.error.message ?? `Host error ${message.error.code}`))
+        request.reject(formatHostRpcError(message.error))
       } else {
         request.resolve(message.result)
       }

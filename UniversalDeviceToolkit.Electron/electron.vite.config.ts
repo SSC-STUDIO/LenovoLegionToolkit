@@ -21,6 +21,21 @@ export default defineConfig({
         '@renderer': resolve('src/renderer/src')
       }
     },
-    plugins: [react()]
+    plugins: [react()],
+    build: {
+      rollupOptions: {
+        output: {
+          // Split heavy vendor libs out of the main entry chunk so each loads
+          // on demand and the renderer keeps its memory footprint smaller:
+          // antd + React → vendor, echarts → charts (only imported by the
+          // dashboard gauges/trends, which are lazy routes).
+          manualChunks: {
+            vendor: ['react', 'react-dom', 'react-router-dom', 'antd'],
+            charts: ['echarts/core', 'echarts/charts', 'echarts/components', 'echarts/renderers'],
+            icons: ['@fluentui/react-icons']
+          }
+        }
+      }
+    }
   }
 })

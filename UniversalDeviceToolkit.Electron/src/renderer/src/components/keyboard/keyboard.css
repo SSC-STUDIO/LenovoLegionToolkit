@@ -1,17 +1,21 @@
-﻿/* 鈹€鈹€ Keyboard backlight page (1:1 with Electron KeyboardBacklightPage) 鈹€鈹€ */
+/* --- Keyboard backlight page (1:1 with Electron KeyboardBacklightPage) --- */
 
 .udt-kb-page {
-  max-width: 1520px;
-  margin: 0 auto;
   padding: 16px 16px 12px 0;
+  /* Layout breakpoints below query this container (content width, not viewport)
+     so nav collapse and interface scale behave consistently. */
+  container-type: inline-size;
+  container-name: udt-keyboard;
 }
 
 /* Simulation banner sits above the spectrum cards with breathing room. */
 .udt-kb-simulated-banner {
+  flex-shrink: 0;
   margin-bottom: 12px;
 }
 
 .udt-kb-page__title {
+  flex-shrink: 0;
   margin: 0 0 8px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-page-title);
@@ -19,7 +23,7 @@
   line-height: 1.2;
 }
 
-/* 鈹€鈹€ Shared card chrome (CardControl.xaml) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* --- Shared card chrome (CardControl.xaml) --- */
 
 .udt-kb-card {
   display: flex;
@@ -84,7 +88,7 @@
   margin-top: 12px;
 }
 
-/* 鈹€鈹€ RGB: preset row (5 buttons, 36px, 12px radius) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* --- RGB: preset row (5 buttons, 36px, 12px radius) --- */
 
 .udt-kb-presets {
   display: flex;
@@ -120,7 +124,7 @@
   font-weight: 500;
 }
 
-/* 鈹€鈹€ RGB: brightness / effect / speed combo cards 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* --- RGB: brightness / effect / speed combo cards --- */
 
 .udt-kb-combo-card {
   margin-bottom: 8px;
@@ -131,7 +135,7 @@
   min-width: 150px;
 }
 
-/* 鈹€鈹€ RGB: zone cards (4-up above 950px, stacked below) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* --- RGB: zone cards (4-up above 950px, stacked below) --- */
 
 .udt-kb-zones {
   display: grid;
@@ -177,18 +181,63 @@
   border-radius: inherit;
 }
 
-@media (max-width: 950px) {
+@container udt-keyboard (max-width: 760px) {
   .udt-kb-zones {
     grid-template-columns: 1fr;
   }
 }
 
-/* Spectrum section: even vertical rhythm between major blocks */
+/* Spectrum section: sidebar controls + keyboard preview */
 
 .udt-kb-spectrum {
   display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--udt-content-gap);
+  min-height: 0;
+}
+
+.udt-kb-spectrum-sidebar {
+  display: flex;
   flex-direction: column;
   gap: 12px;
+  min-width: 0;
+}
+
+@container udt-keyboard (min-width: 1000px) {
+  .udt-kb-spectrum {
+    display: grid;
+    grid-template-columns: minmax(280px, 22rem) minmax(0, 1fr);
+    gap: var(--udt-content-gap);
+    align-items: stretch;
+  }
+
+  .udt-kb-spectrum-sidebar {
+    grid-column: 1;
+    min-height: 0;
+  }
+
+  .udt-kb-spectrum-device {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .udt-kb-effects-card {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .udt-kb-effects-card__body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    max-height: none;
+  }
 }
 
 /* Spectrum: brightness slider card (200px, 0-9 ticks) */
@@ -203,7 +252,8 @@
 }
 
 .udt-kb-brightness-slider {
-  width: 200px;
+  width: 100%;
+  max-width: 280px;
   /* Marks need a little bottom room; avoid ant-slider-with-marks default (~28px) bloat */
   margin: 2px 0 14px;
 }
@@ -287,23 +337,23 @@
 
 .udt-kb-icon-btn.ant-btn {
   flex: 0 0 auto;
-  width: 32px;
-  height: 32px;
+  width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
   padding: 0;
   border: 1px solid var(--udt-control-stroke-default);
-  border-radius: var(--udt-radius-control);
-  background: transparent;
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-fill-default);
   color: var(--udt-text-secondary);
   box-shadow: none;
 }
 
 .udt-kb-toolbar-btn.ant-btn {
   flex: 0 0 auto;
-  height: 28px;
+  height: var(--udt-control-height);
   padding-inline: 10px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
-  background: transparent;
+  background: var(--udt-control-fill-default);
   color: var(--udt-text-secondary);
   font-size: var(--udt-font-caption, 12px);
   line-height: 1.4;
@@ -342,13 +392,15 @@
   border-block-end: none;
 }
 
-/* 鈹€鈹€ Empty / loading states 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* --- Empty / loading states --- */
 
 .udt-kb-unsupported {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 16px;
+  min-height: min(420px, 60vh);
   padding: 48px 24px;
   text-align: center;
 }
@@ -370,30 +422,41 @@
   gap: 12px;
 }
 
-.udt-kb-loading__card {
-  min-height: 200px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
+/* Preset bone matches .udt-kb-preset.ant-btn (flex row, 36px tall). */
+.udt-kb-loading__preset {
+  flex: 1;
+  min-width: 0;
+  height: 36px;
 }
 
-.udt-kb-loading__row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+/* Combo cards sit 8px apart, same as the live RGB section stack. */
+.udt-kb-loading__card-gap {
+  margin-bottom: 8px;
 }
 
 /* --- Spectrum keyboard visualization (port of SpectrumKeyboardControl / layout XAMLs) --- */
 
 .udt-kb-spectrum-device {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 12px;
   margin-bottom: 0;
-  padding: 16px;
+  padding: 16px 18px 18px;
   border: 1px solid var(--udt-control-stroke-default);
-  border-radius: var(--udt-radius-card, 10px);
-  background: var(--udt-surface-card);
+  border-radius: var(--udt-radius-card, 12px);
+  background:
+    linear-gradient(165deg, var(--udt-surface-card) 0%, color-mix(in srgb, var(--udt-surface-card) 92%, var(--udt-accent) 8%) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.04) inset,
+    0 8px 24px rgba(0, 0, 0, 0.06);
+  min-width: 0;
+  min-height: 280px;
+}
+
+.udt-kb-spectrum-device .udt-spectrum-keyboard {
+  flex: 1;
+  min-height: 200px;
 }
 
 .udt-kb-spectrum-device__toolbar {
@@ -402,91 +465,115 @@
   gap: 8px;
   flex-wrap: wrap;
   row-gap: 6px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--udt-control-stroke-default);
 }
 
 .udt-spectrum-keyboard {
   position: relative;
   width: 100%;
-  overflow: visible;
+  min-height: 140px;
+  padding: 4px 0;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   user-select: none;
 }
 
-.udt-spectrum-keyboard__stage {
+.udt-spectrum-keyboard__viewport {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 660px;
-  max-width: 100%;
-  padding: 6px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background: var(--udt-keyboard-deck, rgba(0, 0, 0, 0.35));
-  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.18);
+  flex: 0 0 auto;
 }
 
-.udt-spectrum-keyboard__row {
-  display: flex;
-  gap: 4px;
-  align-items: flex-start;
-  flex-wrap: nowrap;
+.udt-spectrum-keyboard__stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: top left;
+  box-sizing: border-box;
+  border-radius: 12px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 55%),
+    var(--udt-keyboard-deck, rgba(12, 14, 18, 0.72));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 -12px 24px rgba(0, 0, 0, 0.28),
+    0 4px 16px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.udt-spectrum-keyboard__canvas {
+  position: relative;
+  box-sizing: border-box;
 }
 
 .udt-spectrum-keyboard__zone {
   box-sizing: border-box;
-  flex: 0 0 auto;
-  border: 1px solid rgba(128, 128, 128, 0.4);
-  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
   padding: 0;
   cursor: pointer;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--udt-accent, #4f9df7) 42%, #ffffff 12%) 0%,
+    color-mix(in srgb, var(--udt-accent, #4f9df7) 28%, #1a2030 72%) 100%
+  );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.28);
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.2);
   transition:
     background-color 120ms ease,
     border-color 120ms ease,
     box-shadow 120ms ease,
-    filter 120ms ease;
+    filter 120ms ease,
+    transform 120ms ease;
 }
 
 .udt-spectrum-keyboard__zone--spacer {
   background: transparent;
   border-color: transparent;
   box-shadow: none;
+  pointer-events: none;
 }
 
 .udt-spectrum-keyboard__zone--unavailable {
-  opacity: 0.3;
+  opacity: 0.22;
   cursor: default;
-  box-shadow: none;
+  filter: grayscale(0.35);
+  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .udt-spectrum-keyboard__zone--selected {
-  border-color: var(--udt-accent, #4f9df7);
+  border-color: color-mix(in srgb, var(--udt-accent, #4f9df7) 80%, #ffffff 20%);
   box-shadow:
-    inset 0 0 0 1px var(--udt-accent, #4f9df7),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.28);
+    inset 0 0 0 1px color-mix(in srgb, var(--udt-accent, #4f9df7) 70%, #ffffff 30%),
+    0 0 0 1px color-mix(in srgb, var(--udt-accent, #4f9df7) 55%, transparent),
+    0 0 10px color-mix(in srgb, var(--udt-accent, #4f9df7) 45%, transparent),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
 }
 
 .udt-spectrum-keyboard__zone--colored {
-  border-color: rgba(0, 0, 0, 0.35);
+  border-color: rgba(0, 0, 0, 0.28);
   background-image: none;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.38),
+    0 0 8px color-mix(in srgb, currentColor 30%, transparent);
 }
 
-.udt-spectrum-keyboard__zone:not(:disabled):hover {
-  border-color: var(--udt-accent, #4f9df7);
-  filter: brightness(1.2);
+.udt-spectrum-keyboard__zone:not(.udt-spectrum-keyboard__zone--unavailable):hover {
+  border-color: color-mix(in srgb, var(--udt-accent, #4f9df7) 65%, #ffffff 35%);
+  filter: brightness(1.12);
+  transform: translateY(-1px);
 }
 
-/* Unavailable zones are aria-disabled buttons (not :disabled) so drag-box
-   selection can start anywhere on the keyboard, like the Electron SelectableControl. */
 .udt-spectrum-keyboard__zone--unavailable:hover {
-  border-color: rgba(128, 128, 128, 0.4);
+  border-color: rgba(255, 255, 255, 0.1);
   filter: none;
+  transform: none;
 }
 
 /* --- Drag-box selection overlay (SelectableControl port) --- */
@@ -509,57 +596,75 @@
 
 .udt-spectrum-device__stage {
   position: relative;
-  border-radius: 10px;
-  background: var(--udt-keyboard-deck, rgba(0, 0, 0, 0.35));
-  box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.18);
+  border-radius: 12px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(255, 255, 255, 0.06), transparent 55%),
+    var(--udt-keyboard-deck, rgba(12, 14, 18, 0.72));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    inset 0 -12px 24px rgba(0, 0, 0, 0.28),
+    0 4px 16px rgba(0, 0, 0, 0.12);
 }
 
 .udt-spectrum-device__keyboard {
   position: absolute;
+  overflow: visible;
 }
 
 .udt-spectrum-device__zone {
   box-sizing: border-box;
   position: absolute;
-  border: 1px solid rgba(128, 128, 128, 0.4);
-  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
   padding: 0;
   cursor: pointer;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.04));
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--udt-accent, #4f9df7) 38%, #ffffff 10%) 0%,
+    color-mix(in srgb, var(--udt-accent, #4f9df7) 24%, #1a2030 76%) 100%
+  );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.28);
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35),
+    0 1px 2px rgba(0, 0, 0, 0.2);
   transition:
     background-color 120ms ease,
     border-color 120ms ease,
     box-shadow 120ms ease,
-    filter 120ms ease;
+    filter 120ms ease,
+    transform 120ms ease;
 }
 
 .udt-spectrum-device__zone--unavailable {
-  opacity: 0.3;
+  opacity: 0.22;
   cursor: default;
-  box-shadow: none;
+  filter: grayscale(0.35);
+  box-shadow: inset 0 -1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .udt-spectrum-device__zone--selected {
-  border-color: var(--udt-accent, #4f9df7);
+  border-color: color-mix(in srgb, var(--udt-accent, #4f9df7) 80%, #ffffff 20%);
   box-shadow:
-    inset 0 0 0 1px var(--udt-accent, #4f9df7),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.28);
+    inset 0 0 0 1px color-mix(in srgb, var(--udt-accent, #4f9df7) 70%, #ffffff 30%),
+    0 0 0 1px color-mix(in srgb, var(--udt-accent, #4f9df7) 55%, transparent),
+    0 0 10px color-mix(in srgb, var(--udt-accent, #4f9df7) 45%, transparent),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.35);
+  transform: translateY(-1px);
 }
 
 .udt-spectrum-device__zone--colored {
-  border-color: rgba(0, 0, 0, 0.35);
+  border-color: rgba(0, 0, 0, 0.28);
   background-image: none;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -2px 3px rgba(0, 0, 0, 0.35);
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.38),
+    0 0 8px color-mix(in srgb, currentColor 30%, transparent);
 }
 
 .udt-spectrum-device__zone:not(.udt-spectrum-device__zone--unavailable):hover {
-  border-color: var(--udt-accent, #4f9df7);
-  filter: brightness(1.2);
+  border-color: color-mix(in srgb, var(--udt-accent, #4f9df7) 65%, #ffffff 35%);
+  filter: brightness(1.12);
+  transform: translateY(-1px);
 }
 
 /* --- Effect rows --- */

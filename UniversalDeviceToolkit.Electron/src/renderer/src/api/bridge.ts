@@ -23,6 +23,8 @@ export interface HostStatus {
 
 const bridge = window.bridge
 
+const HOST_ERROR_CODE = /\[UDT:(-?\d+)\]/
+
 /** Strip Electron's verbose ipcRenderer.invoke wrapper from Error.message. */
 export function sanitizeBridgeError(error: unknown): string {
   const raw = error instanceof Error ? error.message : String(error)
@@ -32,10 +34,49 @@ export function sanitizeBridgeError(error: unknown): string {
     .trim()
 }
 
+/** JSON-RPC code preserved by the Host client as `[UDT:<code>]`. */
+export function parseHostErrorCode(error: unknown): number | null {
+  const match = sanitizeBridgeError(error).match(HOST_ERROR_CODE)
+  if (match == null) return null
+  const code = Number(match[1])
+  return Number.isFinite(code) ? code : null
+}
+
+export function stripHostErrorPrefix(message: string): string {
+  return message.replace(HOST_ERROR_CODE, '').trim()
+}
+
 export function isHostUnavailableError(message: string): boolean {
   return /host is not running|host did not become ready|host exited|host spawn failed|host executable not found/i.test(
     message
   )
+}
+
+/**
+ * Map stable Host codes to UI copy. Unknown codes keep the Host message
+ * without the `[UDT:]` prefix.
+ */
+export function localizeHostError(
+  error: unknown,
+  translate: (key: string, options?: { defaultValue: string }) => string
+): string {
+  const raw = sanitizeBridgeError(error)
+  const fallback = stripHostErrorPrefix(raw) || raw
+  const code = parseHostErrorCode(raw)
+  switch (code) {
+    case -1006:
+      return translate('optimization.elevationRequired', { defaultValue: fallback })
+    case -1010:
+      return translate('optimization.network.proxyMissing', { defaultValue: fallback })
+    case -1011:
+      return translate('optimization.network.hostsModeRefused', { defaultValue: fallback })
+    case -1012:
+      return translate('optimization.network.startRefused', { defaultValue: fallback })
+    case -32099:
+      return translate('common.notSupportedOnPlatform', { defaultValue: fallback })
+    default:
+      return fallback
+  }
 }
 
 /** Typed invoke wrapper over the preload bridge. */

@@ -1,97 +1,255 @@
 import { useTranslation } from 'react-i18next'
+import {
+  shimmerDelayStyle,
+  skeletonBoneClass,
+  type SkeletonBoneVariant,
+  type ShimmerDelayStyle
+} from '../utils/skeleton'
 
-// Electron SkeletonAnimationTokens parity: 1.65s cycle, 0.055s stagger step capped
-// at 0.32s. Delays are negative so the phase offset is permanent (Loading.xaml
-// uses SkeletonShimmer.DelaySeconds = -1) — the shimmer wave never re-syncs.
-const STAGGER_STEP_S = 0.055
-const STAGGER_MAX_S = 0.32
-// Elements per SkeletonList row: icon + 2 lines + switch (fixed usage below).
 const LIST_ROW_ELEMENTS = 4
 
-type ShimmerDelayStyle = React.CSSProperties & { '--udt-shimmer-delay': string }
+type RadiusToken = 'small' | 'control' | 'round' | 'micro'
 
-function staggerDelay(step: number): ShimmerDelayStyle {
-  const seconds = -Math.min(step * STAGGER_STEP_S, STAGGER_MAX_S)
-  return { '--udt-shimmer-delay': `${seconds}s` }
+function joinClass(...parts: Array<string | undefined | false>): string {
+  return parts.filter(Boolean).join(' ')
 }
+
+function radiusStyle(radius?: RadiusToken | number): React.CSSProperties | undefined {
+  if (radius == null) return undefined
+  if (typeof radius === 'number') return { borderRadius: radius }
+  const map: Record<RadiusToken, string> = {
+    small: 'var(--udt-radius-small)',
+    control: 'var(--udt-radius-control)',
+    round: 'var(--udt-radius-round)',
+    micro: 'var(--udt-radius-micro)'
+  }
+  return { borderRadius: map[radius] }
+}
+
+export interface SkeletonBoneProps {
+  width?: number | string
+  height?: number | string
+  delay?: number
+  variant?: SkeletonBoneVariant
+  className?: string
+  style?: React.CSSProperties
+  radius?: RadiusToken | number
+  'aria-label'?: string
+  role?: React.AriaRole
+}
+
+/** Lowest-level shimmer bone — prefer this over raw `.udt-skeleton` divs. */
+export function SkeletonBone({
+  width,
+  height,
+  delay = 0,
+  variant = 'default',
+  className,
+  style,
+  radius,
+  'aria-label': ariaLabel,
+  role
+}: SkeletonBoneProps): React.JSX.Element {
+  const sizeStyle: React.CSSProperties = {
+    ...(width != null ? { width } : {}),
+    ...(height != null ? { height } : {}),
+    ...radiusStyle(radius),
+    ...style
+  }
+  return (
+    <div
+      className={skeletonBoneClass(variant, className)}
+      style={{ ...shimmerDelayStyle(delay), ...sizeStyle }}
+      role={role}
+      aria-label={ariaLabel}
+      aria-hidden={ariaLabel == null && role == null ? true : undefined}
+    />
+  )
+}
+
+/** Trailing control placeholder shape for card skeletons. */
+export type SkeletonCardAccessory = 'none' | 'switch' | 'select'
 
 export interface SkeletonCardProps {
   lines?: number
   withIcon?: boolean
-  withSwitch?: boolean
+  accessory?: SkeletonCardAccessory
   className?: string
-  /** Stagger step offset (in 0.055s steps) so cards in a list cascade. */
   staggerBase?: number
-}
-
-function joinClass(...parts: Array<string | undefined>): string {
-  return parts.filter(Boolean).join(' ')
 }
 
 export function SkeletonCard({
   lines = 2,
   withIcon = false,
-  withSwitch = false,
+  accessory = 'none',
   className,
   staggerBase = 0
 }: SkeletonCardProps): React.JSX.Element {
   const { t } = useTranslation()
   const count = Math.max(1, lines)
   const lineStart = staggerBase + (withIcon ? 1 : 0)
-  const switchStep = lineStart + count
+  const accessoryStep = lineStart + count
+
   return (
-    <div
-      className={joinClass('udt-skeleton udt-skeleton-card', className)}
-      style={staggerDelay(staggerBase)}
-      role="status"
-      aria-label={t('common.loading')}
-    >
-      {withIcon && (
-        <div style={staggerDelay(staggerBase)} className="udt-skeleton udt-skeleton-icon" />
-      )}
+    <div className={joinClass('udt-skeleton-card', className)} role="status" aria-label={t('common.loading')}>
+      {withIcon && <SkeletonBone delay={staggerBase} variant="on-card" className="udt-skeleton-icon" />}
       <div className="udt-skeleton-card__copy">
         {Array.from({ length: count }, (_, index) => (
-          <div
+          <SkeletonBone
             key={index}
-            style={staggerDelay(lineStart + index)}
+            delay={lineStart + index}
+            variant="on-card"
             className={
-              index === 0
-                ? 'udt-skeleton udt-skeleton-line'
-                : 'udt-skeleton udt-skeleton-line udt-skeleton-line--secondary'
+              index === 0 ? 'udt-skeleton-line' : 'udt-skeleton-line udt-skeleton-line--secondary'
             }
           />
         ))}
       </div>
-      {withSwitch && (
-        <div style={staggerDelay(switchStep)} className="udt-skeleton udt-skeleton-switch" />
+      {accessory === 'switch' && (
+        <SkeletonBone delay={accessoryStep} variant="on-card" className="udt-skeleton-switch" radius="round" />
+      )}
+      {accessory === 'select' && (
+        <SkeletonBone delay={accessoryStep} variant="on-card" className="udt-skeleton-select" radius="control" />
       )}
     </div>
   )
 }
 
-export function SkeletonIcon({ className }: { className?: string }): React.JSX.Element {
+export function SkeletonIcon({ className, delay = 0 }: { className?: string; delay?: number }): React.JSX.Element {
   const { t } = useTranslation()
-  return <div className={joinClass('udt-skeleton udt-skeleton-icon', className)} role="status" aria-label={t('common.loading')} />
+  return (
+    <SkeletonBone
+      delay={delay}
+      className={joinClass('udt-skeleton-icon', className)}
+      role="status"
+      aria-label={t('common.loading')}
+    />
+  )
 }
 
-export function SkeletonSwitch({ className }: { className?: string }): React.JSX.Element {
+export function SkeletonSwitch({ className, delay = 0 }: { className?: string; delay?: number }): React.JSX.Element {
   const { t } = useTranslation()
-  return <div className={joinClass('udt-skeleton udt-skeleton-switch', className)} role="status" aria-label={t('common.loading')} />
+  return (
+    <SkeletonBone
+      delay={delay}
+      className={joinClass('udt-skeleton-switch', className)}
+      radius="round"
+      role="status"
+      aria-label={t('common.loading')}
+    />
+  )
 }
 
 export function SkeletonList({
   rows = 3,
-  className
+  className,
+  withIcon = true,
+  accessory = 'switch'
 }: {
   rows?: number
   className?: string
+  withIcon?: boolean
+  accessory?: SkeletonCardAccessory
 }): React.JSX.Element {
   const { t } = useTranslation()
   return (
     <div className={joinClass('udt-skeleton-list', className)} role="status" aria-label={t('common.loading')}>
       {Array.from({ length: Math.max(1, rows) }, (_, index) => (
-        <SkeletonCard key={index} lines={2} withIcon withSwitch staggerBase={index * LIST_ROW_ELEMENTS} />
+        <SkeletonCard
+          key={index}
+          lines={2}
+          withIcon={withIcon}
+          accessory={accessory}
+          staggerBase={index * LIST_ROW_ELEMENTS}
+        />
       ))}
     </div>
   )
 }
+
+export interface SkeletonPageHeaderProps {
+  titleWidth?: number | string
+  subtitleWidth?: number | string
+  staggerBase?: number
+  className?: string
+}
+
+export function SkeletonPageHeader({
+  titleWidth = 'min(220px, 72%)',
+  subtitleWidth = 'min(280px, 88%)',
+  staggerBase = 0,
+  className
+}: SkeletonPageHeaderProps): React.JSX.Element {
+  return (
+    <div className={joinClass('udt-skeleton-page-header', className)} aria-hidden="true">
+      <SkeletonBone
+        delay={staggerBase}
+        className="udt-skeleton-page-header__title"
+        width={titleWidth}
+        height={28}
+      />
+      <SkeletonBone
+        delay={staggerBase + 1}
+        className="udt-skeleton-page-header__subtitle"
+        width={subtitleWidth}
+        height={14}
+      />
+    </div>
+  )
+}
+
+const GAUGE_SVG_RADIUS = 42
+const GAUGE_SWEEP = 270 / 360
+const GAUGE_ROTATE = 135
+
+export interface SkeletonGaugeRingProps {
+  delay?: number
+  size?: number
+  valueDelay?: number
+}
+
+/** Open-bottom 270° ring matching SensorGauge.tsx geometry. */
+export function SkeletonGaugeRing({
+  delay = 0,
+  size,
+  valueDelay
+}: SkeletonGaugeRingProps): React.JSX.Element {
+  const circumference = 2 * Math.PI * GAUGE_SVG_RADIUS
+  const arcLength = circumference * GAUGE_SWEEP
+  const hintLength = arcLength * 0.58
+  const sizeStyle = size != null ? { width: size, height: size } : undefined
+
+  return (
+    <div
+      className="udt-skeleton udt-skeleton-gauge"
+      style={{ ...shimmerDelayStyle(delay), ...sizeStyle }}
+      aria-hidden="true"
+    >
+      <svg className="udt-skeleton-gauge__svg" viewBox="0 0 100 100" aria-hidden="true">
+        <circle
+          className="udt-skeleton-gauge__track"
+          cx="50"
+          cy="50"
+          r={GAUGE_SVG_RADIUS}
+          strokeDasharray={`${arcLength} ${circumference}`}
+          transform={`rotate(${GAUGE_ROTATE} 50 50)`}
+        />
+        <circle
+          className="udt-skeleton-gauge__arc"
+          cx="50"
+          cy="50"
+          r={GAUGE_SVG_RADIUS}
+          strokeDasharray={`${hintLength} ${circumference}`}
+          transform={`rotate(${GAUGE_ROTATE} 50 50)`}
+        />
+      </svg>
+      <SkeletonBone
+        delay={valueDelay ?? delay + 1}
+        variant="static"
+        className="udt-skeleton-gauge__value"
+      />
+    </div>
+  )
+}
+
+export { shimmerDelayStyle, type ShimmerDelayStyle }

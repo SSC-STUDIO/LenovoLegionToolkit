@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react'
 import { Select, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
-import { appApi } from '../../api/app'
 import { softwareApi, type SoftwareDisablerApp, type SoftwareStatus } from '../../api/software'
 import { startupApi, type AutorunState } from '../../api/startup'
+import { appApi } from '../../api/app'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { SettingsCard } from './SettingsCard'
 import HardwareSensorSectionsModal from './HardwareSensorSectionsModal'
@@ -18,6 +18,23 @@ const AUTORUN_OPTIONS: { value: AutorunState; labelKey: string }[] = [
   { value: 'EnabledDelayed', labelKey: 'settings.application.autorunOptions.enabledDelayed' },
   { value: 'Disabled', labelKey: 'settings.application.autorunOptions.disabled' }
 ]
+
+function runtimePlatform(): string {
+  return window.bridge?.platform ?? 'web'
+}
+
+function usesHostAutorun(platform: string): boolean {
+  return platform === 'win32'
+}
+
+function usesLoginItemAutorun(platform: string): boolean {
+  return platform === 'darwin' || platform === 'linux'
+}
+
+function autorunOptionsFor(platform: string): { value: AutorunState; labelKey: string }[] {
+  if (usesHostAutorun(platform)) return AUTORUN_OPTIONS
+  return AUTORUN_OPTIONS.filter((option) => option.value !== 'EnabledDelayed')
+}
 
 interface ToggleItem {
   field: string
@@ -35,11 +52,6 @@ const TOGGLE_ITEMS: ToggleItem[] = [
     field: 'MinimizeOnClose',
     labelKey: 'settings.application.minimizeOnClose',
     descKey: 'settings.application.minimizeOnCloseDesc'
-  },
-  {
-    field: 'DisableUnsupportedHardwareWarning',
-    labelKey: 'settings.application.disableUnsupportedWarning',
-    descKey: 'settings.application.disableUnsupportedWarningDesc'
   },
   {
     field: 'EnableHardwareSensors',
@@ -154,25 +166,27 @@ export default function ApplicationSection(): React.JSX.Element {
       .set('application', next)
       .then(() => settingsApi.save(['application']))
       .catch(() => message.error(t('settings.saveFailed')))
-    // Electron Autorun writes the registry Run key; Electron applies the login item.
-    if (field === 'Autorun') {
-      appApi
-        .setAutorun(checked)
-        .catch(() => message.error(t('settings.saveFailed')))
-    }
   }
 
   const hardwareSensorsEnabled = readBoolean(app, 'EnableHardwareSensors')
+  const platform = runtimePlatform()
+  const hostAutorun = usesHostAutorun(platform)
+  const loginItemAutorun = usesLoginItemAutorun(platform)
+  const autorunAvailable = hostAutorun || loginItemAutorun
   const [autorunState, setAutorunState] = useState<AutorunState>('Disabled')
   const [autorunLoaded, setAutorunLoaded] = useState(false)
 
   useEffect(() => {
     let cancelled = false
-    startupApi
-      .getAutorun()
-      .then((result) => {
+    const load = hostAutorun
+      ? startupApi.getAutorun().then((result) => result.state)
+      : loginItemAutorun
+        ? appApi.getAutorun().then((result) => (result.enabled ? 'Enabled' : 'Disabled'))
+        : Promise.resolve<AutorunState>('Disabled')
+    load
+      .then((state) => {
         if (cancelled) return
-        setAutorunState(result.state)
+        setAutorunState(state)
       })
       .catch(() => undefined)
       .finally(() => {
@@ -181,21 +195,24 @@ export default function ApplicationSection(): React.JSX.Element {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [hostAutorun, loginItemAutorun])
 
   const handleAutorunChange = (state: AutorunState): void => {
+    if (!autorunAvailable) return
     const previous = autorunState
     setAutorunState(state)
-    startupApi
-      .setAutorun(state)
-      .then((result) => {
-        setAutorunState(result.state)
-        setScope('application', { ...app, Autorun: result.state })
-      })
-      .catch(() => {
-        setAutorunState(previous)
-        message.error(t('settings.saveFailed'))
-      })
+    const persist = hostAutorun
+      ? startupApi.setAutorun(state).then((result) => {
+          setAutorunState(result.state)
+          setScope('application', { ...app, Autorun: result.state })
+        })
+      : appApi.setAutorun(state !== 'Disabled').then((result) => {
+          setAutorunState(result.enabled ? 'Enabled' : 'Disabled')
+        })
+    persist.catch(() => {
+      setAutorunState(previous)
+      message.error(t('settings.saveFailed'))
+    })
   }
   const dashboardScope =
     typeof scopes.dashboard === 'object' && scopes.dashboard !== null
@@ -222,7 +239,7 @@ export default function ApplicationSection(): React.JSX.Element {
   )
   const sensorFields = TOGGLE_ITEMS.filter((item) => item.field === 'EnableHardwareSensors')
   const noticeFields = TOGGLE_ITEMS.filter((item) =>
-    ['DisableUnsupportedHardwareWarning', 'DontShowNotifications', 'ExtensionsEnabled'].includes(item.field)
+    ['DontShowNotifications', 'ExtensionsEnabled'].includes(item.field)
   )
 
   return (
@@ -230,14 +247,21 @@ export default function ApplicationSection(): React.JSX.Element {
       <div className="udt-settings-group-title">{t('settings.application.groupStartup')}</div>
       <SettingsCard
         title={t('settings.application.autorun')}
-        description={t('settings.application.autorunDesc')}
+        description={
+          !autorunAvailable
+            ? t('settings.application.autorunUnavailable')
+            : hostAutorun
+              ? t('settings.application.autorunDesc')
+              : t('settings.application.autorunDescLoginItem')
+        }
         action={
           <Select<AutorunState>
             className="udt-settings-select"
             value={autorunLoaded ? autorunState : undefined}
             loading={!autorunLoaded}
+            disabled={!autorunAvailable}
             onChange={handleAutorunChange}
-            options={AUTORUN_OPTIONS.map((option) => ({
+            options={autorunOptionsFor(platform).map((option) => ({
               value: option.value,
               label: t(option.labelKey)
             }))}

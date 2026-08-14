@@ -38,7 +38,8 @@ const NAV_WIDTH_COLLAPSED_CSS = '--udt-nav-width-collapsed'
 const NAV_WIDTH_EXPANDED_CSS = '--udt-nav-width-expanded'
 const DESIGN_WINDOW_WIDTH = 1300
 const ABSOLUTE_MAX_EXPANDED = 420
-const MIN_CONTENT_WIDTH = 700
+const MIN_CONTENT_WIDTH = 480
+const AUTO_COLLAPSE_BELOW = 900
 const NAV_COLLAPSED_STORAGE_KEY = 'udt.navCollapsed'
 
 function readCssNumber(name: string, fallback: number): number {
@@ -120,12 +121,15 @@ export default function AppLayout(): React.JSX.Element {
   const loadSettings = useSettingsStore((s) => s.load)
   const [collapsed, setCollapsed] = useState(() => {
     try {
+      if (window.innerWidth < AUTO_COLLAPSE_BELOW) return true
       return localStorage.getItem(NAV_COLLAPSED_STORAGE_KEY) === '1'
     } catch {
       return false
     }
   })
   const [windowWidth, setWindowWidth] = useState(() => window.innerWidth)
+  // Primary modifier is Ctrl on Windows/Linux and Cmd (metaKey) on macOS.
+  const isMac = window.bridge?.platform === 'darwin'
 
   // Load the application scope once so navigation visibility settings apply.
   useEffect(() => {
@@ -169,7 +173,9 @@ export default function AppLayout(): React.JSX.Element {
     : getExpandedWidth(windowWidth)
 
   const handleResize = useCallback((): void => {
-    setWindowWidth(window.innerWidth)
+    const width = window.innerWidth
+    setWindowWidth(width)
+    if (width < AUTO_COLLAPSE_BELOW) setCollapsed(true)
   }, [])
 
   useEffect(() => {
@@ -206,7 +212,11 @@ export default function AppLayout(): React.JSX.Element {
   // Alt+ArrowLeft/ArrowRight page switching — port of Electron
   // NavigationStoreExtensions.NavigateToPrevious/NavigateToNext: cycles through
   // MAIN_ITEMS followed by FOOTER_ITEMS, wrapping around at both ends.
+  // Windows/Linux only: on macOS the Cmd+Option+Arrow binding in the handler
+  // below covers page cycling, so this Alt-based group stays disabled there
+  // (avoiding two overlapping Arrow handlers on the same platform).
   useEffect(() => {
+    if (isMac) return
     const handleKeyDown = (event: KeyboardEvent): void => {
       if (!event.altKey) return
       if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
@@ -223,13 +233,43 @@ export default function AppLayout(): React.JSX.Element {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [location.pathname, navigate])
+  }, [isMac, location.pathname, navigate])
 
-  // Ctrl+Tab / Ctrl+Shift+Tab page switching + Ctrl+1..9 direct jump — port of
-  // Electron MainWindow key bindings (NavigationStore.NavigateToNext/Previous and
-  // the numbered nav-item shortcuts).
+  // Page switching + numbered direct jump — port of Electron MainWindow key
+  // bindings (NavigationStore.NavigateToNext/Previous and the numbered nav-item
+  // shortcuts).
+  // - Windows/Linux: Ctrl+Tab / Ctrl+Shift+Tab cycling + Ctrl+1..9 jump.
+  // - macOS: Cmd+Tab is captured by the OS app switcher, so cycling uses the
+  //   browser-style Cmd+Option+ArrowLeft/ArrowRight; direct jump uses Cmd+1..9.
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent): void => {
+      if (isMac) {
+        // Cmd+Option+ArrowLeft/ArrowRight cycles pages (same wrap semantics as
+        // the Windows/Linux Alt+Arrow group above).
+        if (event.metaKey && event.altKey && !event.ctrlKey && (event.key === 'ArrowRight' || event.key === 'ArrowLeft')) {
+          event.preventDefault()
+          const currentIndex = ALL_NAV_ITEMS.findIndex((item) => isRouteActive(location.pathname, item.key))
+          let nextIndex: number
+          if (event.key === 'ArrowRight') {
+            nextIndex = (currentIndex + 1 + ALL_NAV_ITEMS.length) % ALL_NAV_ITEMS.length
+          } else {
+            const index = currentIndex < 0 ? 0 : currentIndex - 1
+            nextIndex = index < 0 ? ALL_NAV_ITEMS.length - 1 : index
+          }
+          navigate(ALL_NAV_ITEMS[nextIndex].key)
+          return
+        }
+        if (!event.metaKey || event.altKey || event.ctrlKey) return
+        const digit = Number(event.key)
+        if (Number.isInteger(digit) && digit >= 1 && digit <= ALL_NAV_ITEMS.length) {
+          const target = ALL_NAV_ITEMS[digit - 1]
+          if (target && !isRouteActive(location.pathname, target.key)) {
+            event.preventDefault()
+            navigate(target.key)
+          }
+        }
+        return
+      }
       if (!event.ctrlKey || event.altKey || event.metaKey) return
       if (event.key === 'Tab') {
         event.preventDefault()
@@ -251,7 +291,7 @@ export default function AppLayout(): React.JSX.Element {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [location.pathname, navigate])
+  }, [isMac, location.pathname, navigate])
 
   const renderItem = (item: NavItemDef): React.JSX.Element => (
     <NavItem

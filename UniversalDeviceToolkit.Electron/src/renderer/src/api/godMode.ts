@@ -1,10 +1,18 @@
-import { settingsApi } from './settings'
+import { invoke } from './bridge'
 
 /**
- * God Mode settings bridge — mirror of Lib.Settings.GodModeSettings
- * (godmode.json). The host serializes the store with PascalCase property
- * names (LltJson compact options), so both cases are accepted when reading.
+ * God Mode settings bridge — mirrors GodModeController / GodModeSettingsWindow.
+ * Prefer godMode.getState / setState / apply over raw settings.godMode so the
+ * Host can enrich FanTableInfo sensor data and apply values to hardware.
  */
+
+export type GodModeFanSensorType = 'CPU' | 'CPUSensor' | 'GPU' | 'GPU2'
+
+export interface GodModeFanSensor {
+  type: GodModeFanSensorType
+  fanSpeeds: number[]
+  temps: number[]
+}
 
 export interface GodModeStepperValue {
   value: number
@@ -34,6 +42,8 @@ export interface GodModePreset {
   gpuToCPUDynamicBoost: GodModeStepperValue | null
   /** FanTable.GetTable() — 10 fan speed steps (0-10). */
   fanTable: number[] | null
+  /** FanTableInfo.Data — per-sensor temps / RPM for the curve axis + tooltip. */
+  fanSensors: GodModeFanSensor[]
   fanFullSpeed: boolean | null
   minValueOffset: number | null
   maxValueOffset: number | null
@@ -42,6 +52,33 @@ export interface GodModePreset {
 export interface GodModeStore {
   activePresetId: string
   presets: Record<string, GodModePreset>
+}
+
+/** Defaults loaded from Quiet / Balance / Performance (Load menu). */
+export interface GodModeDefaults {
+  cpuLongTermPowerLimit: number | null
+  cpuShortTermPowerLimit: number | null
+  cpuPeakPowerLimit: number | null
+  cpuCrossLoadingPowerLimit: number | null
+  cpuPL1Tau: number | null
+  apUsPPTPowerLimit: number | null
+  cpuTemperatureLimit: number | null
+  gpuPowerBoost: number | null
+  gpuConfigurableTGP: number | null
+  gpuTemperatureLimit: number | null
+  gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline: number | null
+  gpuToCPUDynamicBoost: number | null
+  fanTable: number[] | null
+  fanFullSpeed: boolean | null
+}
+
+export interface GodModeLoadResult {
+  store: GodModeStore
+  minimumFanTable: number[] | null
+  defaultFanTable: number[] | null
+  defaults: Record<string, GodModeDefaults>
+  warnVantage: boolean
+  warnLegionZone: boolean
 }
 
 export type GodModeStepperFieldName =
@@ -109,6 +146,14 @@ function readArray(value: unknown): unknown[] | null {
   return Array.isArray(value) ? value : null
 }
 
+function readIntArray(value: unknown): number[] | null {
+  const arr = readArray(value)
+  if (arr == null) return null
+  const numbers = arr.map((item) => readNumber(item))
+  if (numbers.some((n) => n == null)) return null
+  return numbers as number[]
+}
+
 function readStepper(value: unknown): GodModeStepperValue | null {
   const obj = readObject(value)
   if (obj == null) return null
@@ -127,6 +172,9 @@ function readStepper(value: unknown): GodModeStepperValue | null {
 }
 
 function readFanTable(value: unknown): number[] | null {
+  const fromArray = readIntArray(value)
+  if (fromArray != null && fromArray.length === 10) return fromArray
+
   const obj = readObject(value)
   if (obj == null) return null
   const speeds: number[] = []
@@ -138,15 +186,35 @@ function readFanTable(value: unknown): number[] | null {
   return speeds
 }
 
-function readPreset(value: unknown): GodModePreset | null {
-  const obj = readObject(value)
-  if (obj == null) return null
-  const name = readString(getKey(obj, 'Name', 'name')) ?? ''
-  const preset: GodModePreset = {
+const FAN_SENSOR_TYPES: GodModeFanSensorType[] = ['CPU', 'CPUSensor', 'GPU', 'GPU2']
+
+function isFanSensorType(value: string): value is GodModeFanSensorType {
+  return (FAN_SENSOR_TYPES as string[]).includes(value)
+}
+
+function readFanSensors(value: unknown): GodModeFanSensor[] {
+  const arr = readArray(value)
+  if (arr == null) return []
+  const sensors: GodModeFanSensor[] = []
+  for (const item of arr) {
+    const obj = readObject(item)
+    if (obj == null) continue
+    const typeRaw = readString(getKey(obj, 'Type', 'type'))
+    if (typeRaw == null || !isFanSensorType(typeRaw)) continue
+    const fanSpeeds = readIntArray(getKey(obj, 'FanSpeeds', 'fanSpeeds'))
+    const temps = readIntArray(getKey(obj, 'Temps', 'temps'))
+    if (fanSpeeds == null || temps == null) continue
+    sensors.push({ type: typeRaw, fanSpeeds, temps })
+  }
+  return sensors
+}
+
+function emptyPreset(name = ''): GodModePreset {
+  return {
     name,
-    powerPlanGuid: readString(getKey(obj, 'PowerPlanGuid', 'powerPlanGuid')),
-    powerMode: readString(getKey(obj, 'PowerMode', 'powerMode')),
-    sourcePowerMode: readString(getKey(obj, 'SourcePowerMode', 'sourcePowerMode')),
+    powerPlanGuid: null,
+    powerMode: null,
+    sourcePowerMode: null,
     cpuLongTermPowerLimit: null,
     cpuShortTermPowerLimit: null,
     cpuPeakPowerLimit: null,
@@ -159,11 +227,26 @@ function readPreset(value: unknown): GodModePreset | null {
     gpuTemperatureLimit: null,
     gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline: null,
     gpuToCPUDynamicBoost: null,
-    fanTable: readFanTable(getKey(obj, 'FanTable', 'fanTable')),
-    fanFullSpeed: readBool(getKey(obj, 'FanFullSpeed', 'fanFullSpeed')),
-    minValueOffset: readNumber(getKey(obj, 'MinValueOffset', 'minValueOffset')),
-    maxValueOffset: readNumber(getKey(obj, 'MaxValueOffset', 'maxValueOffset'))
+    fanTable: null,
+    fanSensors: [],
+    fanFullSpeed: null,
+    minValueOffset: null,
+    maxValueOffset: null
   }
+}
+
+function readPreset(value: unknown): GodModePreset | null {
+  const obj = readObject(value)
+  if (obj == null) return null
+  const preset = emptyPreset(readString(getKey(obj, 'Name', 'name')) ?? '')
+  preset.powerPlanGuid = readString(getKey(obj, 'PowerPlanGuid', 'powerPlanGuid'))
+  preset.powerMode = readString(getKey(obj, 'PowerMode', 'powerMode'))
+  preset.sourcePowerMode = readString(getKey(obj, 'SourcePowerMode', 'sourcePowerMode'))
+  preset.fanTable = readFanTable(getKey(obj, 'FanTable', 'fanTable'))
+  preset.fanSensors = readFanSensors(getKey(obj, 'FanSensors', 'fanSensors'))
+  preset.fanFullSpeed = readBool(getKey(obj, 'FanFullSpeed', 'fanFullSpeed'))
+  preset.minValueOffset = readNumber(getKey(obj, 'MinValueOffset', 'minValueOffset'))
+  preset.maxValueOffset = readNumber(getKey(obj, 'MaxValueOffset', 'maxValueOffset'))
   for (const field of GOD_MODE_STEPPER_FIELDS) {
     preset[field] = readStepper(getKey(obj, stepperWireName(field), field))
   }
@@ -183,6 +266,29 @@ export function parseGodModeStore(value: unknown): GodModeStore | null {
     }
   }
   return { activePresetId, presets }
+}
+
+function readDefaults(value: unknown): GodModeDefaults {
+  const obj = readObject(value)
+  return {
+    cpuLongTermPowerLimit: readNumber(getKey(obj, 'CPULongTermPowerLimit', 'cpuLongTermPowerLimit')),
+    cpuShortTermPowerLimit: readNumber(getKey(obj, 'CPUShortTermPowerLimit', 'cpuShortTermPowerLimit')),
+    cpuPeakPowerLimit: readNumber(getKey(obj, 'CPUPeakPowerLimit', 'cpuPeakPowerLimit')),
+    cpuCrossLoadingPowerLimit: readNumber(getKey(obj, 'CPUCrossLoadingPowerLimit', 'cpuCrossLoadingPowerLimit')),
+    cpuPL1Tau: readNumber(getKey(obj, 'CPUPL1Tau', 'cpuPL1Tau')),
+    apUsPPTPowerLimit: readNumber(getKey(obj, 'APUsPPTPowerLimit', 'apUsPPTPowerLimit')),
+    cpuTemperatureLimit: readNumber(getKey(obj, 'CPUTemperatureLimit', 'cpuTemperatureLimit')),
+    gpuPowerBoost: readNumber(getKey(obj, 'GPUPowerBoost', 'gpuPowerBoost')),
+    gpuConfigurableTGP: readNumber(getKey(obj, 'GPUConfigurableTGP', 'gpuConfigurableTGP')),
+    gpuTemperatureLimit: readNumber(getKey(obj, 'GPUTemperatureLimit', 'gpuTemperatureLimit')),
+    gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline: readNumber(
+      getKey(obj, 'GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline',
+        'gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline')
+    ),
+    gpuToCPUDynamicBoost: readNumber(getKey(obj, 'GPUToCPUDynamicBoost', 'gpuToCPUDynamicBoost')),
+    fanTable: readFanTable(getKey(obj, 'FanTable', 'fanTable')),
+    fanFullSpeed: readBool(getKey(obj, 'FanFullSpeed', 'fanFullSpeed'))
+  }
 }
 
 function serializeStepper(stepper: GodModeStepperValue): Record<string, unknown> {
@@ -214,7 +320,8 @@ function serializePreset(preset: GodModePreset): Record<string, unknown> {
     MaxValueOffset: preset.maxValueOffset
   }
   for (const field of GOD_MODE_STEPPER_FIELDS) {
-    result[stepperWireName(field)] = preset[field] != null ? serializeStepper(preset[field]!) : null
+    const stepper = preset[field]
+    result[stepperWireName(field)] = stepper != null ? serializeStepper(stepper) : null
   }
   return result
 }
@@ -230,14 +337,44 @@ export function serializeGodModeStore(store: GodModeStore): Record<string, unkno
   }
 }
 
+function parseLoadResult(raw: unknown): GodModeLoadResult | null {
+  const obj = readObject(raw)
+  if (obj == null) return null
+  const store = parseGodModeStore(getKey(obj, 'state', 'State'))
+  if (store == null) return null
+  const defaultsObj = readObject(getKey(obj, 'defaults', 'Defaults'))
+  const defaults: Record<string, GodModeDefaults> = {}
+  if (defaultsObj != null) {
+    for (const [key, value] of Object.entries(defaultsObj)) {
+      defaults[key] = readDefaults(value)
+    }
+  }
+  return {
+    store,
+    minimumFanTable: readIntArray(getKey(obj, 'minimumFanTable', 'MinimumFanTable')),
+    defaultFanTable: readIntArray(getKey(obj, 'defaultFanTable', 'DefaultFanTable')),
+    defaults,
+    warnVantage: readBool(getKey(obj, 'warnVantage', 'WarnVantage')) === true,
+    warnLegionZone: readBool(getKey(obj, 'warnLegionZone', 'WarnLegionZone')) === true
+  }
+}
+
 export const godModeApi = {
-  async load(): Promise<GodModeStore | null> {
-    const result = await settingsApi.get('godMode')
-    return parseGodModeStore(result.value)
+  async load(): Promise<GodModeLoadResult | null> {
+    const result = await invoke<unknown>('godMode.getState')
+    return parseLoadResult(result)
   },
-  async save(store: GodModeStore): Promise<void> {
-    await settingsApi.set('godMode', serializeGodModeStore(store))
-    await settingsApi.save(['godMode'])
+  async save(store: GodModeStore, apply = false): Promise<GodModeStore> {
+    const result = await invoke<unknown>('godMode.setState', {
+      state: serializeGodModeStore(store),
+      apply
+    })
+    const obj = readObject(result)
+    const next = parseGodModeStore(getKey(obj, 'state', 'State'))
+    return next ?? store
+  },
+  async apply(): Promise<void> {
+    await invoke('godMode.apply')
   }
 }
 

@@ -1,16 +1,19 @@
-/* FanCurveEditor (Electron FanCurveControl): y-axis labels + rounded chart surface
- * with draggable fan speed thumbs, temperature labels and sensor tooltip. */
+/* FanCurveEditor (WPF FanCurveControl): y-axis labels + rounded chart surface
+ * with 10 equal vertical slider columns, polyline through thumb centers, and
+ * temperature labels positioned under each thumb (PositionTemperatureAxisLabels). */
 
 .udt-fan-curve {
   margin: 8px 0;
+  min-width: 0;
+  overflow: visible;
 }
 
 .udt-fan-curve__body {
   display: grid;
-  grid-template-columns: 58px minmax(320px, 1fr);
-  grid-template-rows: 1fr auto;
+  grid-template-columns: 64px minmax(280px, 1fr);
+  grid-template-rows: minmax(230px, auto);
   column-gap: 12px;
-  row-gap: 8px;
+  row-gap: 0;
   min-width: 0;
 }
 
@@ -18,15 +21,19 @@
   grid-row: 1;
   display: grid;
   grid-template-rows: repeat(6, 1fr);
-  min-width: 58px;
+  align-self: stretch;
+  min-width: 64px;
+  padding: 0;
   text-align: right;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-caption);
+  line-height: 1.2;
   user-select: none;
 }
 
 .udt-fan-curve__y-label {
   align-self: center;
+  padding-right: 2px;
 }
 
 .udt-fan-curve__y-label--top {
@@ -41,39 +48,64 @@
   position: relative;
   grid-row: 1;
   min-width: 0;
+  overflow: visible;
 }
 
 .udt-fan-curve__plot {
   position: relative;
   height: 230px;
-  padding: 12px 14px 14px;
+  padding: 12px 14px 0;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-small);
   background: var(--udt-surface-chart);
   overflow: hidden;
 }
 
+.udt-fan-curve__plot-inner {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+  touch-action: none;
+}
+
 .udt-fan-curve__graph {
   display: block;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
 }
 
-.udt-fan-curve__sliders {
-  position: absolute;
-  inset: 12px 14px 14px;
+.udt-fan-curve__grid-line {
+  stroke: var(--udt-chart-gridline);
+  stroke-width: 0.75;
+  opacity: 0.7;
 }
 
-.udt-fan-curve__column {
+.udt-fan-curve__grid-line--column {
+  opacity: 0.35;
+}
+
+.udt-fan-curve__line {
+  stroke: var(--udt-chart-utilization);
+}
+
+.udt-fan-curve__thumb-hit {
   position: absolute;
-  top: 0;
-  bottom: 0;
+  z-index: 2;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
   cursor: pointer;
   touch-action: none;
 }
 
 .udt-fan-curve__thumb {
   position: absolute;
+  left: 50%;
+  top: 50%;
   width: 18px;
   height: 18px;
+  margin: -9px 0 0 -9px;
   border-radius: 50%;
   border: 2px solid var(--udt-surface-card);
   background: var(--udt-chart-utilization);
@@ -81,11 +113,12 @@
   pointer-events: none;
 }
 
-.udt-fan-curve__column:hover .udt-fan-curve__thumb {
+.udt-fan-curve__thumb-hit:hover .udt-fan-curve__thumb,
+.udt-fan-curve__thumb-hit--hover .udt-fan-curve__thumb {
   border-color: var(--udt-accent);
 }
 
-.udt-fan-curve__thumb--dragging {
+.udt-fan-curve__thumb-hit--dragging .udt-fan-curve__thumb {
   border-width: 2.5px;
   border-color: var(--udt-accent);
 }
@@ -122,23 +155,23 @@
 }
 
 .udt-fan-curve__x-labels {
-  grid-row: 2;
-  grid-column: 2;
-  display: flex;
+  position: relative;
   height: 28px;
-  padding: 0 14px;
+  margin: 8px auto 0;
   min-width: 0;
 }
 
 .udt-fan-curve__x-label {
-  flex: 1;
-  min-width: 0;
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  max-width: 72px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   text-align: center;
-  color: var(--udt-text-tertiary);
-  font-size: var(--udt-font-dense-caption);
+  color: var(--udt-text-secondary);
+  font-size: 11px;
   line-height: 28px;
 }
 
@@ -146,10 +179,7 @@
   opacity: 0.55;
 }
 
-.udt-fan-curve--disabled .udt-fan-curve__sliders {
+.udt-fan-curve--disabled .udt-fan-curve__thumb-hit {
   pointer-events: none;
-}
-
-.udt-fan-curve--disabled .udt-fan-curve__column {
   cursor: default;
 }

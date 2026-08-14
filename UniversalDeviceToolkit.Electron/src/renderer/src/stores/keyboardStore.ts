@@ -7,15 +7,16 @@ import type {
   SpectrumEffect,
   SpectrumLayoutResult
 } from '../api/keyboard'
-import { SPECTRUM_KEYBOARD_LAYOUTS } from '../components/keyboard/spectrum/keyboardLayouts'
+import {
+  SPECTRUM_KEYBOARD_LAYOUTS,
+  getSpectrumLayoutKeyCodes
+} from '../components/keyboard/spectrum/keyboardLayouts'
 
 /**
  * All key codes of the ANSI keyboard zone table, used to simulate a full
  * keyboard when no physical device is present (dev-only demo mode).
  */
-const ANSI_KEY_CODES: number[] = SPECTRUM_KEYBOARD_LAYOUTS.Ansi.flatMap((row) =>
-  row.map((zone) => zone.code).filter((code): code is number => code !== null)
-)
+const ANSI_KEY_CODES: number[] = getSpectrumLayoutKeyCodes(SPECTRUM_KEYBOARD_LAYOUTS.Ansi)
 
 const SIMULATED_LAYOUT: SpectrumLayoutResult = {
   spectrumLayout: 'KeyboardOnly',

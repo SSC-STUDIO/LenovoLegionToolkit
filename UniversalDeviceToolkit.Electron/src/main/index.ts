@@ -1,6 +1,6 @@
-import { app, BrowserWindow, clipboard, dialog, ipcMain, nativeTheme, powerMonitor, shell } from 'electron'
-import { join, dirname } from 'path'
-import { existsSync, mkdirSync, unlinkSync, writeFileSync } from 'fs'
+import { app, BrowserWindow, clipboard, ipcMain, nativeTheme, powerMonitor, screen, shell, webContents } from 'electron'
+import { join } from 'path'
+import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
 import { hostClient } from './host-client'
 import {
@@ -11,15 +11,27 @@ import {
   writeRendererLog
 } from './logger'
 import { initSingleInstance, setMainWindowRef } from './single-instance'
+import { effectiveZoom, installZoomAutoApply, setUiScale } from './ui-scale'
+import { readWindowState, updateWindowState } from './window-state'
+import { applyAutorun, readAutorun } from './autorun'
+import { getDeviceInfo } from './device-info'
+import { invokeDialogBridgeMethod, isDialogBridgeMethod, registerFileDialogIpc } from './dialogs'
+import { logMemoryUsage, reportMemoryUsage } from './memory-report'
 import { initTray, destroyTray, refreshTrayMenu, updateTrayLanguage } from './tray'
 import { initOsdWindow, destroyOsdWindow } from './osd-window'
 import { initStatusWindow, destroyStatusWindow, showStatusWindow } from './status-window'
 import { flags, describeFlags, toHostArgs } from './flags'
-import { attachResizeStability, attachMaximizeWorkAreaClamp } from './window-helpers'
+import { attachResizeStability, attachMaximizeWorkAreaClamp, constrainToWorkArea } from './window-helpers'
 import { listPowerPlans, setActivePowerPlan } from './power-plans'
 import { restartSystem, shutdownSystem, sleepSystem } from './system-power'
 import { downloadLatestUpdate, getLatestRelease, launchInstaller, type DownloadProgress } from './update-downloader'
 import { installApplicationMenu } from './menu'
+import {
+  cancelAllIdleDestroys,
+  isUiActive,
+  setSurfaceVisible,
+  setUiActivityHandler
+} from './ui-activity'
 
 // The Windows AppUserModelId (taskbar grouping, notifications) is meaningless
 // on macOS/Linux; setting it there is a no-op, so keep the call Windows-only.
@@ -42,11 +54,18 @@ if (flags.singleProcess) {
   app.commandLine.appendSwitch('single-process')
 }
 
-// Electron renders in DIPs while Chromium applies the Windows display scale to CSS.
-// This keeps the Electron renderer at the original client's physical density.
-// The 5/6 correction is Windows-only (Windows display scale vs. client DPI);
-// Linux/macOS map one CSS px to one DIP, so the zoom factor stays 1 there.
-const RENDERER_ZOOM_FACTOR = process.platform === 'win32' ? 5 / 6 : 1
+// Renderer zoom is owned by ui-scale.ts (platform base density x user scale);
+// every window and plugin webview created from here on picks it up.
+installZoomAutoApply()
+
+/**
+ * Design minimum content size in CSS px. The DIP minimum is derived from the
+ * effective zoom so every platform (and every "Interface scale" level) shows
+ * the same minimum amount of UI; container queries handle narrower layouts.
+ */
+const DESIGN_MIN_CONTENT_WIDTH = 1024
+const DESIGN_MIN_CONTENT_HEIGHT = 640
+
 const PROJECT_ROOT = join(__dirname, '..', '..')
 
 if (!initSingleInstance()) {
@@ -55,12 +74,38 @@ if (!initSingleInstance()) {
 
 let mainWindow: BrowserWindow | null = null
 let isQuitting = false
+type WindowsBackgroundMaterial = 'none' | 'mica' | 'acrylic'
+let currentBackgroundMaterial: WindowsBackgroundMaterial = 'none'
+
+function applyMainWindowBackgroundMaterial(material: WindowsBackgroundMaterial): void {
+  if (process.platform !== 'win32' || !mainWindow || mainWindow.isDestroyed()) return
+  try {
+    mainWindow.setBackgroundMaterial(material)
+  } catch (error) {
+    console.error('[main] failed to apply window background material:', error)
+  }
+}
+
+function reapplyMainWindowBackgroundMaterial(): void {
+  if (process.platform !== 'win32') return
+  // DWM can clear the backdrop while nativeTheme.themeSource is changing.
+  setTimeout(() => applyMainWindowBackgroundMaterial(currentBackgroundMaterial), 0)
+}
+
+if (process.platform === 'win32') {
+  nativeTheme.on('updated', reapplyMainWindowBackgroundMaterial)
+}
 
 function resolveHostPath(): string {
   const fromEnv = process.env['UDT_HOST_PATH']
   if (fromEnv) {
     if (!existsSync(fromEnv)) {
       throw new Error(`UDT_HOST_PATH does not exist: ${fromEnv}`)
+    }
+    if (!isFrameworkDependentHost(fromEnv)) {
+      throw new Error(
+        `UDT_HOST_PATH is an incomplete Host (missing runtimeconfig.json/deps.json): ${fromEnv}`
+      )
     }
     return fromEnv
   }
@@ -110,13 +155,37 @@ function resolveHostPath(): string {
     join(PROJECT_ROOT, 'host', hostExeName)
   )
 
+  const incomplete: string[] = []
   for (const candidate of candidates) {
-    if (existsSync(candidate)) return candidate
+    if (!existsSync(candidate)) continue
+    if (isFrameworkDependentHost(candidate)) return candidate
+    incomplete.push(candidate)
   }
+
+  const incompleteHint =
+    incomplete.length === 0
+      ? ''
+      : `\nIncomplete Host (exe without runtimeconfig.json/deps.json; rebuild UniversalDeviceToolkit.Host -c Debug):\n` +
+        incomplete.map((path) => `  - ${path}`).join('\n')
 
   throw new Error(
     `Host executable not found. Build UniversalDeviceToolkit.Host or set UDT_HOST_PATH.\n` +
-      candidates.map((path) => `  - ${path}`).join('\n')
+      candidates.map((path) => `  - ${path}`).join('\n') +
+      incompleteHint
+  )
+}
+
+function hostSidecarPath(hostPath: string, extension: string): string {
+  if (process.platform === 'win32' && hostPath.toLowerCase().endsWith('.exe')) {
+    return `${hostPath.slice(0, -4)}.${extension}`
+  }
+  return `${hostPath}.${extension}`
+}
+
+function isFrameworkDependentHost(hostPath: string): boolean {
+  return (
+    existsSync(hostSidecarPath(hostPath, 'runtimeconfig.json')) &&
+    existsSync(hostSidecarPath(hostPath, 'deps.json'))
   )
 }
 
@@ -127,7 +196,6 @@ let hostEventsAttached = false
 
 function sendHostEventToWebviewGuests(event: string, data: unknown): void {
   if (!mainWindow || mainWindow.isDestroyed()) return
-  const { webContents } = require('electron') as typeof import('electron')
   for (const webContentsItem of webContents.getAllWebContents()) {
     if (webContentsItem === mainWindow.webContents) continue
     if (webContentsItem.getType() === 'webview' && !webContentsItem.isDestroyed()) {
@@ -148,6 +216,72 @@ function bufferOrSendHostEvent(event: string, data: unknown): void {
   }
 }
 
+async function invokeBridgeMethod(method: string, params?: unknown): Promise<unknown> {
+  if (method === 'log.open-folder') return openLogFolder()
+  if (method === 'device.info') return getDeviceInfo()
+  if (method === 'status-window.show') {
+    void showStatusWindow()
+    return { shown: true }
+  }
+
+  if (isDialogBridgeMethod(method)) {
+    return invokeDialogBridgeMethod(method, params, mainWindow ?? BrowserWindow.getFocusedWindow())
+  }
+  if (flags.disableUpdateChecker) {
+    if (method === 'app.update.check') {
+      return { available: false, version: null, error: '--disable-update-checker' }
+    }
+    if (method === 'app.update.status') {
+      return { status: 'Disabled', disable: true }
+    }
+  }
+  if (method === 'powerPlans.getList') {
+    if (process.platform !== 'win32') return { plans: [] }
+    return listPowerPlans().then(
+      (plans) => ({ plans }),
+      () => ({ plans: [] })
+    )
+  }
+  if (method === 'powerPlans.setActive') {
+    if (process.platform !== 'win32') {
+      throw new Error('Windows only')
+    }
+    const guid = (params as { guid?: unknown } | null)?.guid
+    if (typeof guid !== 'string' || guid.length === 0) {
+      throw new Error('A power plan GUID is required.')
+    }
+    return setActivePowerPlan(guid).then(() => ({ ok: true }))
+  }
+  if (method === 'power.restart') return restartSystem()
+  if (method === 'power.shutdown') return shutdownSystem()
+  if (method === 'power.sleep') return sleepSystem()
+  if (method === 'update.getRelease') {
+    return getLatestRelease().then((release) => ({ release }))
+  }
+  if (method === 'update.download') {
+    const started = Date.now()
+    return downloadLatestUpdate((progress: DownloadProgress) => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        mainWindow.webContents.send('bridge:event', 'update.download-progress', {
+          ...progress,
+          elapsedMs: Date.now() - started
+        })
+      }
+    }).then(
+      (path) => ({ ok: true, path }),
+      (error: Error) => ({ ok: false, error: error.message })
+    )
+  }
+  if (method === 'update.launchInstaller') {
+    const path = (params as { path?: unknown } | null)?.path
+    if (typeof path !== 'string' || path.length === 0) {
+      throw new Error('An installer path is required.')
+    }
+    return launchInstaller(path)
+  }
+  return hostClient.invoke(method, params)
+}
+
 /**
  * Bridges plugin web pages (hosted in <webview> guests) to the host JSON-RPC
  * backend. The guest preload (plugin-host.ts) sends `plugin-host:invoke`
@@ -158,12 +292,10 @@ function attachPluginHostBridge(): void {
   mainWindow.webContents.on('ipc-message', (event, channel, ...args) => {
     if (channel !== 'plugin-host:invoke') return
     const [id, method, params] = args as [number, string, unknown]
-    hostClient
-      .invoke(method, params)
-      .then(
-        (result) => event.senderFrame?.send('plugin-host:response', id, result, null),
-        (error: Error) => event.senderFrame?.send('plugin-host:response', id, null, error.message)
-      )
+    void invokeBridgeMethod(method, params).then(
+      (result) => event.senderFrame?.send('plugin-host:response', id, result, null),
+      (error: Error) => event.senderFrame?.send('plugin-host:response', id, null, error.message)
+    )
   })
 }
 
@@ -207,6 +339,22 @@ function forwardHostEvents(window: BrowserWindow): void {
 
 type MinimizeSetting = 'MinimizeOnClose' | 'MinimizeToTray'
 
+function notifyHostUiActivity(active: boolean): void {
+  if (!hostClient.isReady) return
+  void hostClient
+    .invoke('app.setUiActive', { active, pid: process.pid })
+    .catch((error) => {
+      console.error('[main] failed to apply UI activity scheduling:', error)
+    })
+}
+
+function broadcastUiVisibility(active: boolean): void {
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    mainWindow.webContents.send('bridge:event', 'app:ui-visibility', { active })
+  }
+  notifyHostUiActivity(active)
+}
+
 async function shouldMinimizeToTray(keys: MinimizeSetting[]): Promise<boolean> {
   try {
     const result = (await hostClient.invoke('settings.get', { scope: 'application' })) as
@@ -237,138 +385,6 @@ function resolveWindowIcon(): string | undefined {
   return candidates.find((candidate) => existsSync(candidate))
 }
 
-/** Device info shape — mirrors Electron MachineCompatibility.MachineInformation. */
-interface DeviceInfo {
-  vendor: string
-  model: string
-  machineType: string
-  serialNumber: string
-  biosVersion: string
-  processor?: DeviceInfoProcessor | null
-  videoController?: DeviceInfoVideoController | null
-  memory?: DeviceInfoMemory | null
-  warranty?: DeviceInfoWarranty | null
-}
-
-interface DeviceInfoProcessor {
-  name?: string | null
-  numberOfCores?: number | null
-  numberOfLogicalProcessors?: number | null
-  maxClockSpeedMHz?: number | null
-}
-
-interface DeviceInfoVideoController {
-  name?: string | null
-  adapterCompatibility?: string | null
-  adapterRamBytes?: number | null
-}
-
-interface DeviceInfoMemory {
-  totalCapacityBytes?: number | null
-  moduleCount?: number | null
-  configuredClockSpeedMHz?: number | null
-  speedMHz?: number | null
-}
-
-interface DeviceInfoWarranty {
-  startDate?: string | null
-  endDate?: string | null
-  link?: string | null
-}
-
-interface DeviceInfoHardware {
-  processor?: DeviceInfoProcessor | null
-  videoController?: DeviceInfoVideoController | null
-  memory?: DeviceInfoMemory | null
-}
-
-const FALLBACK_DEVICE_INFO: DeviceInfo = {
-  vendor: '',
-  model: 'Universal Device Toolkit',
-  machineType: '',
-  serialNumber: '',
-  biosVersion: ''
-}
-
-function sanitizeProcessor(value: unknown): DeviceInfoProcessor | null {
-  if (!value || typeof value !== 'object') return null
-  const source = value as Record<string, unknown>
-  const processor: DeviceInfoProcessor = {}
-  if (typeof source.name === 'string' && source.name.length > 0) processor.name = source.name
-  if (typeof source.numberOfCores === 'number') processor.numberOfCores = source.numberOfCores
-  if (typeof source.numberOfLogicalProcessors === 'number') {
-    processor.numberOfLogicalProcessors = source.numberOfLogicalProcessors
-  }
-  if (typeof source.maxClockSpeedMHz === 'number') processor.maxClockSpeedMHz = source.maxClockSpeedMHz
-  return processor.name ? processor : null
-}
-
-function sanitizeVideoController(value: unknown): DeviceInfoVideoController | null {
-  if (!value || typeof value !== 'object') return null
-  const source = value as Record<string, unknown>
-  const videoController: DeviceInfoVideoController = {}
-  if (typeof source.name === 'string' && source.name.length > 0) videoController.name = source.name
-  if (typeof source.adapterCompatibility === 'string') {
-    videoController.adapterCompatibility = source.adapterCompatibility
-  }
-  if (typeof source.adapterRamBytes === 'number') videoController.adapterRamBytes = source.adapterRamBytes
-  return videoController.name ? videoController : null
-}
-
-function sanitizeMemory(value: unknown): DeviceInfoMemory | null {
-  if (!value || typeof value !== 'object') return null
-  const source = value as Record<string, unknown>
-  const memory: DeviceInfoMemory = {}
-  if (typeof source.totalCapacityBytes === 'number') memory.totalCapacityBytes = source.totalCapacityBytes
-  if (typeof source.moduleCount === 'number') memory.moduleCount = source.moduleCount
-  if (typeof source.configuredClockSpeedMHz === 'number') {
-    memory.configuredClockSpeedMHz = source.configuredClockSpeedMHz
-  }
-  if (typeof source.speedMHz === 'number') memory.speedMHz = source.speedMHz
-  return memory.totalCapacityBytes || memory.moduleCount || memory.configuredClockSpeedMHz || memory.speedMHz
-    ? memory
-    : null
-}
-
-function sanitizeWarranty(value: unknown): DeviceInfoWarranty | null {
-  if (!value || typeof value !== 'object') return null
-  const source = value as Record<string, unknown>
-  const warranty: DeviceInfoWarranty = {}
-  if (typeof source.startDate === 'string') warranty.startDate = source.startDate
-  if (typeof source.endDate === 'string') warranty.endDate = source.endDate
-  if (typeof source.link === 'string') warranty.link = source.link
-  return warranty.startDate || warranty.endDate || warranty.link ? warranty : null
-}
-
-/** Best-effort device info via the host's system.info; never throws. */
-async function getDeviceInfo(): Promise<DeviceInfo> {
-  try {
-    const result = (await hostClient.invoke('system.info', {})) as
-      | (Partial<DeviceInfo> & { hardware?: DeviceInfoHardware | null })
-      | null
-      | undefined
-    if (!result || typeof result !== 'object') return { ...FALLBACK_DEVICE_INFO }
-    const hardware = result.hardware && typeof result.hardware === 'object' ? result.hardware : null
-    return {
-      vendor: typeof result.vendor === 'string' ? result.vendor : '',
-      model:
-        typeof result.model === 'string' && result.model.length > 0
-          ? result.model
-          : FALLBACK_DEVICE_INFO.model,
-      machineType: typeof result.machineType === 'string' ? result.machineType : '',
-      serialNumber: typeof result.serialNumber === 'string' ? result.serialNumber : '',
-      biosVersion: typeof result.biosVersion === 'string' ? result.biosVersion : '',
-      processor: sanitizeProcessor(hardware?.processor),
-      videoController: sanitizeVideoController(hardware?.videoController),
-      memory: sanitizeMemory(hardware?.memory),
-      warranty: sanitizeWarranty(result.warranty)
-    }
-  } catch (error) {
-    console.error('[main] failed to load device info:', error)
-    return { ...FALLBACK_DEVICE_INFO }
-  }
-}
-
 /**
  * Mirrors Electron MainWindow.OpenLog: reveal the logs folder in Explorer. Electron's
  * "logs" path is created on demand so the folder exists before the host has
@@ -376,7 +392,7 @@ async function getDeviceInfo(): Promise<DeviceInfo> {
  */
 async function openLogFolder(): Promise<{ ok: boolean }> {
   try {
-    const dir = app.getPath('logs')
+    const dir = logsDirectory()
     if (!existsSync(dir)) mkdirSync(dir, { recursive: true })
     const error = await shell.openPath(dir)
     return { ok: error.length === 0 }
@@ -386,50 +402,7 @@ async function openLogFolder(): Promise<{ ok: boolean }> {
   }
 }
 
-/**
- * Linux autostart entry — mirrors the Windows registry Run key / macOS login
- * item. XDG autostart .desktop file under ~/.config/autostart; "Enabled" is
- * the file's existence.
- */
-const AUTOSTART_FILE_NAME = 'universal-device-toolkit.desktop'
-
-function linuxAutostartFilePath(): string {
-  return join(app.getPath('home'), '.config', 'autostart', AUTOSTART_FILE_NAME)
-}
-
-function applyAutorun(enabled: boolean): void {
-  if (process.platform === 'linux') {
-    const filePath = linuxAutostartFilePath()
-    if (enabled) {
-      mkdirSync(dirname(filePath), { recursive: true })
-      // Exec quotes the path (spaces in install locations). X-GNOME-Autostart
-      // is understood by GNOME; other DEs fall back to the generic Desktop Entry.
-      writeFileSync(
-        filePath,
-        [
-          '[Desktop Entry]',
-          'Type=Application',
-          'Name=Universal Device Toolkit',
-          `Exec="${process.execPath}"`,
-          'X-GNOME-Autostart-enabled=true'
-        ].join('\n') + '\n',
-        'utf8'
-      )
-    } else if (existsSync(filePath)) {
-      unlinkSync(filePath)
-    }
-    return
-  }
-  // Windows registry Run key / macOS login item via Electron.
-  app.setLoginItemSettings({ openAtLogin: enabled })
-}
-
-function readAutorun(): boolean {
-  if (process.platform === 'linux') {
-    return existsSync(linuxAutostartFilePath())
-  }
-  return app.getLoginItemSettings().openAtLogin
-}
+// macOS login item / Linux XDG autostart live in autorun.ts.
 
 /**
  * Windows DWM backdrop: mica needs Windows 11 (build 22000+); older Windows
@@ -444,19 +417,69 @@ function windowsBackgroundMaterial(): 'mica' | 'acrylic' {
   return 'acrylic'
 }
 
+/**
+ * Applies the content minimum derived from the design CSS minimum and the
+ * effective zoom, and grows the window if it dropped below the new minimum.
+ * The main window is frameless (and macOS uses hiddenInset), so window size
+ * equals content size and setMinimumSize can carry content semantics.
+ */
+function applyMainWindowMinSize(): void {
+  if (!mainWindow || mainWindow.isDestroyed()) return
+  const zoom = effectiveZoom()
+  const minWidth = Math.ceil(DESIGN_MIN_CONTENT_WIDTH * zoom)
+  const minHeight = Math.ceil(DESIGN_MIN_CONTENT_HEIGHT * zoom)
+  mainWindow.setMinimumSize(minWidth, minHeight)
+  if (mainWindow.isMaximized() || mainWindow.isFullScreen()) return
+  const [width, height] = mainWindow.getContentSize()
+  if (width < minWidth || height < minHeight) {
+    mainWindow.setContentSize(Math.max(width, minWidth), Math.max(height, minHeight))
+  }
+}
+
+/** Saves the normal bounds + maximized flag for the next launch. */
+function persistMainWindowBounds(): void {
+  if (!mainWindow || mainWindow.isDestroyed()) return
+  const bounds = mainWindow.getNormalBounds()
+  updateWindowState({
+    x: bounds.x,
+    y: bounds.y,
+    width: bounds.width,
+    height: bounds.height,
+    isMaximized: mainWindow.isMaximized()
+  })
+}
+
 function createWindow(): void {
   const icon = resolveWindowIcon()
   const isMac = process.platform === 'darwin'
+  const zoom = effectiveZoom()
+  const minWidth = Math.ceil(DESIGN_MIN_CONTENT_WIDTH * zoom)
+  const minHeight = Math.ceil(DESIGN_MIN_CONTENT_HEIGHT * zoom)
+
+  // Restore the previous session's bounds clamped into a visible work area
+  // (the saved display may be gone or its DPI/resolution may have changed).
+  const persisted = readWindowState()
+  const restoredSize = {
+    width: Math.max(persisted.width ?? 1024, minWidth),
+    height: Math.max(persisted.height ?? 640, minHeight)
+  }
+  const restoredBounds =
+    persisted.x !== undefined && persisted.y !== undefined
+      ? constrainToWorkArea({ x: persisted.x, y: persisted.y, ...restoredSize })
+      : null
 
   mainWindow = new BrowserWindow({
-    // Electron MainWindow: Width=1024 Height=640 MinWidth=1024 MinHeight=640. The
-    // minimum keeps the optimization/cleanup two-column layout stable (Electron
-    // never collapses it; the old 1000px default allowed the 1100px CSS-viewport
-    // breakpoint to flip the grid to a single column mid-resize).
-    width: 1024,
-    height: 640,
-    minWidth: 1024,
-    minHeight: 640,
+    // Default 1024x640 DIP matches the original client. Sizes are content
+    // sizes (useContentSize); the minimum is the design CSS minimum converted
+    // through the effective zoom so all platforms and scale levels bottom out
+    // at the same visible content, with container queries handling narrower
+    // layouts below the optimization/cleanup two-column threshold.
+    width: restoredBounds?.width ?? restoredSize.width,
+    height: restoredBounds?.height ?? restoredSize.height,
+    ...(restoredBounds ? { x: restoredBounds.x, y: restoredBounds.y } : {}),
+    useContentSize: true,
+    minWidth,
+    minHeight,
     show: false,
     title: 'Universal Device Toolkit',
     // macOS: native title bar with the traffic lights (red/yellow/green) at the
@@ -492,15 +515,16 @@ function createWindow(): void {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
+      // First paint already at the effective zoom (installZoomAutoApply keeps
+      // later navigations in sync).
+      zoomFactor: zoom,
       // Plugin web pages (contributes.webPage) are hosted in <webview> elements.
       webviewTag: true
     }
   })
 
-  // The 5/6 correction compensates the Windows display scale vs. client DPI;
-  // Linux/macOS map one CSS px to one DIP, so the zoom factor stays 1 there.
   if (process.platform === 'win32') {
-    mainWindow.webContents.setZoomFactor(RENDERER_ZOOM_FACTOR)
+    currentBackgroundMaterial = windowsBackgroundMaterial()
   }
 
   // Port of Electron WindowResizeStabilityHelper: track live move/size loops so
@@ -513,6 +537,9 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     if (!mainWindow || mainWindow.isDestroyed()) return
+    if (persisted.isMaximized) {
+      mainWindow.maximize()
+    }
     if (flags.minimized) {
       // Mirrors Electron --minimized: start hidden in the tray instead of showing.
       mainWindow.hide()
@@ -520,6 +547,19 @@ function createWindow(): void {
       mainWindow.show()
     }
   })
+
+  // Renderer-observable window state (port of Electron FullscreenHelper).
+  // Must attach here: before createWindow mainWindow is null and the
+  // listeners would silently never register.
+  mainWindow.on('enter-full-screen', () => {
+    mainWindow?.webContents.send('window:fullscreen-changed', true)
+  })
+  mainWindow.on('leave-full-screen', () => {
+    mainWindow?.webContents.send('window:fullscreen-changed', false)
+  })
+
+  // Persist geometry for the next launch (close fires before destruction).
+  mainWindow.on('close', persistMainWindowBounds)
 
   mainWindow.on('close', (event) => {
     if (isQuitting) return
@@ -563,11 +603,25 @@ function createWindow(): void {
   })
 
   mainWindow.on('closed', () => {
+    setSurfaceVisible('main', false)
     mainWindow = null
     destroyTray()
     destroyOsdWindow()
     destroyStatusWindow()
   })
+
+  const syncMainVisibility = (): void => {
+    const win = mainWindow
+    if (!win || win.isDestroyed()) {
+      setSurfaceVisible('main', false)
+      return
+    }
+    setSurfaceVisible('main', win.isVisible() && !win.isMinimized())
+  }
+  mainWindow.on('show', syncMainVisibility)
+  mainWindow.on('hide', syncMainVisibility)
+  mainWindow.on('minimize', syncMainVisibility)
+  mainWindow.on('restore', syncMainVisibility)
 
   if (!app.isPackaged && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
@@ -578,6 +632,7 @@ function createWindow(): void {
 
 function startHost(): void {
   attachHostEventForwarding()
+  applyShellLaunchEnvironment()
   try {
     const hostPath = resolveHostPath()
     const hostArgs = toHostArgs(flags)
@@ -590,8 +645,29 @@ function startHost(): void {
   }
 }
 
+/**
+ * Host Autorun.Set creates a logon task from the current process. When Electron
+ * spawned Host, that would be Host.exe. Point the task at the UI instead.
+ */
+function applyShellLaunchEnvironment(): void {
+  process.env['UDT_SHELL_PATH'] = process.execPath
+  if (app.isPackaged) {
+    process.env['UDT_SHELL_ARGS'] = '--minimized'
+    return
+  }
+  const extra = process.argv.slice(1).filter((arg) => arg !== '--minimized')
+  const quoted = extra
+    .map((arg) => (arg.includes(' ') ? `"${arg}"` : arg))
+    .join(' ')
+  process.env['UDT_SHELL_ARGS'] = `${quoted} --minimized`.trim()
+}
+
 app.whenReady().then(() => {
   initMainLogger()
+  // Apply the last persisted interface scale before the window exists so the
+  // first paint (and the derived minimum size) already match; the renderer
+  // re-pushes its localStorage value over IPC right after boot.
+  setUiScale(readWindowState().uiScale ?? 1)
   // Notifications: the renderer uses the in-app notification center (no OS
   // Notification API), so no permission wiring is needed here. Should native
   // notifications ever be added: macOS requires the Notification permission
@@ -611,125 +687,7 @@ app.whenReady().then(() => {
   }))
 
   ipcMain.handle('bridge:invoke', async (_event, method: string, params?: unknown) => {
-    // Main-side methods reachable through the generic renderer bridge without
-    // preload changes (Electron MainWindow.OpenLog / LoadDeviceInfo equivalents).
-    if (method === 'log.open-folder') return openLogFolder()
-    if (method === 'device.info') return getDeviceInfo()
-    if (method === 'status-window.show') {
-      void showStatusWindow()
-      return { shown: true }
-    }
-    // Native dialogs and system openers (renderer cleanup/automation UIs): the
-    // headless host cannot show UI, so the main process answers these.
-    if (method === 'dialog:select-json-file') {
-      const options = {
-        title: 'Import keyboard backlight profile',
-        properties: ['openFile'] as ('openFile')[],
-        filters: [{ name: 'Json Files', extensions: ['json'] }]
-      }
-      const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
-      const result = owner == null
-        ? await dialog.showOpenDialog(options)
-        : await dialog.showOpenDialog(owner, options)
-      return result.canceled ? null : (result.filePaths[0] ?? null)
-    }
-    if (method === 'dialog:select-folder') {
-      const options = {
-        title: 'Select folder',
-        properties: ['openDirectory'] as ('openDirectory')[]
-      }
-      const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
-      const result = owner == null
-        ? await dialog.showOpenDialog(options)
-        : await dialog.showOpenDialog(owner, options)
-      return result.canceled ? null : (result.filePaths[0] ?? null)
-    }
-    if (method === 'dialog:open-path') {
-      const path = (params as { path?: unknown } | null)?.path
-      if (typeof path !== 'string' || path.length === 0) {
-        throw new Error('A file path is required.')
-      }
-      const error = await shell.openPath(path)
-      return { ok: error.length === 0 }
-    }
-    if (method === 'dialog:open-url') {
-      const url = (params as { url?: unknown } | null)?.url
-      if (typeof url !== 'string' || url.length === 0) {
-        throw new Error('A URL is required.')
-      }
-      let parsed: URL
-      try {
-        parsed = new URL(url)
-      } catch {
-        throw new Error('Invalid URL.')
-      }
-      if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') {
-        throw new Error('Only http(s) URLs can be opened.')
-      }
-      await shell.openExternal(parsed.toString())
-      return { ok: true }
-    }
-    // Mirrors Electron --disable-update-checker (UpdateChecker.Disable): the host
-    // does not know this switch, so short-circuit update requests here.
-    if (flags.disableUpdateChecker) {
-      if (method === 'app.update.check') {
-        return { available: false, version: null, error: '--disable-update-checker' }
-      }
-      if (method === 'app.update.status') {
-        return { status: 'Disabled', disable: true }
-      }
-    }
-    // Windows power-plan bridge (Electron WindowsPowerPlanController): the host has
-    // no powercfg/WMI channel, so the main process answers from `powercfg`.
-    // powercfg does not exist on macOS/Linux — short-circuit instead of running it.
-    if (method === 'powerPlans.getList') {
-      if (process.platform !== 'win32') return { plans: [] }
-      return listPowerPlans().then(
-        (plans) => ({ plans }),
-        () => ({ plans: [] })
-      )
-    }
-    if (method === 'powerPlans.setActive') {
-      if (process.platform !== 'win32') {
-        throw new Error('Windows only')
-      }
-      const guid = (params as { guid?: unknown } | null)?.guid
-      if (typeof guid !== 'string' || guid.length === 0) {
-        throw new Error('A power plan GUID is required.')
-      }
-      return setActivePowerPlan(guid).then(() => ({ ok: true }))
-    }
-    // System power actions (Electron Lib PowerActions): restart/shutdown/sleep.
-    if (method === 'power.restart') return restartSystem()
-    if (method === 'power.shutdown') return shutdownSystem()
-    if (method === 'power.sleep') return sleepSystem()
-    // Update download/install (Electron UpdateWindow flow): resolve the GitHub
-    // release asset, download it with progress events, launch the installer.
-    if (method === 'update.getRelease') {
-      return getLatestRelease().then((release) => ({ release }))
-    }
-    if (method === 'update.download') {
-      const started = Date.now()
-      return downloadLatestUpdate((progress: DownloadProgress) => {
-        if (mainWindow && !mainWindow.isDestroyed()) {
-          mainWindow.webContents.send('bridge:event', 'update.download-progress', {
-            ...progress,
-            elapsedMs: Date.now() - started
-          })
-        }
-      }).then(
-        (path) => ({ ok: true, path }),
-        (error: Error) => ({ ok: false, error: error.message })
-      )
-    }
-    if (method === 'update.launchInstaller') {
-      const path = (params as { path?: unknown } | null)?.path
-      if (typeof path !== 'string' || path.length === 0) {
-        throw new Error('An installer path is required.')
-      }
-      return launchInstaller(path)
-    }
-    return hostClient.invoke(method, params)
+    return invokeBridgeMethod(method, params)
   })
 
   ipcMain.on('window:minimize', () => mainWindow?.minimize())
@@ -770,14 +728,20 @@ app.whenReady().then(() => {
   ipcMain.handle('plugin:preload-path', () => join(__dirname, '../preload/plugin-host.js'))
 
   // Port of Electron FullscreenHelper (renderer-observable window state).
+  // The enter/leave-full-screen push listeners are attached in createWindow.
   ipcMain.handle('window:is-fullscreen', () => mainWindow?.isFullScreen() ?? false)
 
-  mainWindow?.on('enter-full-screen', () => {
-    mainWindow?.webContents.send('window:fullscreen-changed', true)
-  })
-
-  mainWindow?.on('leave-full-screen', () => {
-    mainWindow?.webContents.send('window:fullscreen-changed', false)
+  // Single source of truth for renderer zoom: the renderer pushes its persisted
+  // "Interface scale" here; main applies platformBase x uiScale to every surface
+  // and re-derives the content minimum.
+  ipcMain.handle('window:set-ui-scale', (_event, scale: unknown) => {
+    if (typeof scale !== 'number' || !Number.isFinite(scale) || scale <= 0) {
+      throw new Error('A positive finite UI scale is required.')
+    }
+    const applied = setUiScale(scale)
+    updateWindowState({ uiScale: applied })
+    applyMainWindowMinSize()
+    return { ok: true, scale: applied }
   })
 
   ipcMain.handle('window:set-background-material', (_event, material: unknown) => {
@@ -789,7 +753,8 @@ app.whenReady().then(() => {
     }
     // Windows-only API (DWM backdrop); no-op elsewhere.
     if (process.platform === 'win32') {
-      mainWindow?.setBackgroundMaterial(material)
+      currentBackgroundMaterial = material
+      applyMainWindowBackgroundMaterial(material)
     }
   })
 
@@ -909,82 +874,26 @@ app.whenReady().then(() => {
     app.quit()
   })
 
-  // Mirrors Electron SettingsApplicationBehaviorControl Autorun (registry Run key):
-  // Windows uses setLoginItemSettings (registry), macOS the login item, Linux an
-  // XDG autostart .desktop file.
+  // macOS / Linux: login item / XDG autostart. Windows uses Host app.setAutorun
+  // (scheduled task) and must not also write a registry login item.
   ipcMain.handle('app:set-autorun', (_event, enabled: unknown) => {
+    if (process.platform === 'win32') {
+      return { ok: true, enabled: enabled === true }
+    }
     const openAtLogin = enabled === true
     applyAutorun(openAtLogin)
     return { ok: true, enabled: openAtLogin }
   })
 
   ipcMain.handle('app:get-autorun', () => {
+    if (process.platform === 'win32') {
+      return { enabled: false }
+    }
     return { enabled: readAutorun() }
   })
 
-  ipcMain.handle('dialog:select-plugin-files', async () => {
-    const options = {
-      title: 'Import plugin packages',
-      properties: ['openFile', 'multiSelections'] as ('openFile' | 'multiSelections')[],
-      filters: [{ name: 'Plugin packages', extensions: ['zip'] }]
-    }
-    const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
-    const result = owner == null
-      ? await dialog.showOpenDialog(options)
-      : await dialog.showOpenDialog(owner, options)
-    return result.canceled ? [] : result.filePaths
-  })
-
-  ipcMain.handle('dialog:select-json-file', async () => {
-    const options = {
-      title: 'Import keyboard backlight profile',
-      properties: ['openFile'] as ('openFile')[],
-      filters: [{ name: 'Json Files', extensions: ['json'] }]
-    }
-    const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
-    const result = owner == null
-      ? await dialog.showOpenDialog(options)
-      : await dialog.showOpenDialog(owner, options)
-    return result.canceled ? null : (result.filePaths[0] ?? null)
-  })
-
-  // Mirrors Electron ProcessAutomationPipelineTriggerTabItemControl AddButton_Click
-  // (OpenFileDialog with the exe filter). Windows filters .exe; macOS/Linux
-  // leave the dialog unfiltered (an .app bundle or ELF/Mach-O binary is picked
-  // by the user).
-  ipcMain.handle('dialog:select-exe-file', async () => {
-    const options = {
-      title: 'Open',
-      properties: ['openFile'] as ('openFile')[],
-      ...(process.platform === 'win32'
-        ? { filters: [{ name: 'Exe Files (.exe)', extensions: ['exe'] }] }
-        : {})
-    }
-    const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
-    const result = owner == null
-      ? await dialog.showOpenDialog(options)
-      : await dialog.showOpenDialog(owner, options)
-    return result.canceled ? null : (result.filePaths[0] ?? null)
-  })
-
-  // Mirrors Electron PlaySoundAutomationStepControl file picker (audio files).
-  // C:\Windows\Media is a Windows-only default location.
-  ipcMain.handle('dialog:select-audio-file', async () => {
-    const options = {
-      title: 'Import',
-      ...(process.platform === 'win32' ? { defaultPath: 'C:\\Windows\\Media' } : {}),
-      properties: ['openFile'] as ('openFile')[],
-      filters: [
-        { name: 'Audio Files', extensions: ['wav', 'mp3', 'ogg', 'flac', 'aac', 'm4a', 'wma'] },
-        { name: 'All Files', extensions: ['*'] }
-      ]
-    }
-    const owner = mainWindow ?? BrowserWindow.getFocusedWindow()
-    const result = owner == null
-      ? await dialog.showOpenDialog(options)
-      : await dialog.showOpenDialog(owner, options)
-    return result.canceled ? null : (result.filePaths[0] ?? null)
-  })
+  // File pickers (dialog:select-*) are registered in dialogs.ts.
+  registerFileDialogIpc(() => mainWindow)
 
   // Tray menu: language + quick-action refresh (Electron TrayHelper PipelinesChanged).
   ipcMain.on('tray:set-language', (_event, lang: unknown) => {
@@ -996,38 +905,55 @@ app.whenReady().then(() => {
 
   // Attach forwarding before spawn so a fast host.ready is buffered rather than dropped.
   startHost()
-  // Apply the persisted Autorun setting once the host is up (login item may
-  // have drifted out of sync; the renderer toggle keeps it current afterwards).
   hostClient.on('host.ready', () => {
-    void (async () => {
-      try {
-        const result = (await hostClient.invoke('settings.get', { scope: 'application' })) as
-          | { value?: Record<string, unknown> }
-          | null
-          | undefined
-        applyAutorun(result?.value?.Autorun === true)
-      } catch (error) {
-        console.error('[main] failed to apply persisted Autorun setting:', error)
-      }
-    })()
+    notifyHostUiActivity(isUiActive())
   })
   createWindow()
   setMainWindowRef(() => mainWindow)
+  setUiActivityHandler(broadcastUiVisibility)
   // macOS: install the native system menu bar (App/File/Edit/View/Window/Help).
   installApplicationMenu()
+  // Real memory footprint after all processes settle (5s). Logged to stdout so
+  // the VS Output window shows the true total across every Electron process.
+  ipcMain.handle('app:memory-usage', () => reportMemoryUsage())
+  setTimeout(() => void logMemoryUsage('after startup'), 5000)
   const trayOpts = {
     disableTooltip: flags.disableTrayTooltip,
     invokeHost: (method: string, params?: unknown) => hostClient.invoke(method, params)
   }
   initTray(() => mainWindow, trayOpts)
-  // Rebuild once host has loaded automation.json (default "停用 GPU" quick action).
+  // Rebuild the tray after automation.json loads (default Deactivate GPU quick action).
   hostClient.on('host.initialized', () => refreshTrayMenu())
   hostClient.on('host.ready', () => refreshTrayMenu())
   // Navigation item visibility lives in application settings.
   hostClient.on('settings.changed', () => refreshTrayMenu())
+  // OSD and the tray status popup are created lazily on first use (each costs
+  // a renderer process ~60-90MB); initOsdWindow only registers subscriptions,
+  // the window is built when the showOsd setting or an osd.changed event needs it.
   initOsdWindow()
   initStatusWindow()
   if (mainWindow) forwardHostEvents(mainWindow)
+
+  // Keep the main window inside a visible work area when display metrics
+  // change (monitor unplug, resolution or DPI switch). The OSD window has its
+  // own equivalent handler in osd-window.ts.
+  const clampMainWindowToWorkArea = (): void => {
+    const win = mainWindow
+    if (!win || win.isDestroyed() || !win.isVisible()) return
+    if (win.isMaximized() || win.isFullScreen()) return
+    const bounds = win.getBounds()
+    const clamped = constrainToWorkArea(bounds)
+    if (
+      clamped.x !== bounds.x ||
+      clamped.y !== bounds.y ||
+      clamped.width !== bounds.width ||
+      clamped.height !== bounds.height
+    ) {
+      win.setBounds(clamped)
+    }
+  }
+  screen.on('display-metrics-changed', clampMainWindowToWorkArea)
+  screen.on('display-removed', clampMainWindowToWorkArea)
 
   // Forward OS power/session events to the renderer (Electron MainWindow listened
   // to the same transitions for OSD/status behavior).
@@ -1076,6 +1002,7 @@ app.on('window-all-closed', () => {
 app.on('before-quit', (event) => {
   console.log('[main] before-quit, host running:', hostClient.isRunning)
   isQuitting = true
+  cancelAllIdleDestroys()
   if (!hostClient.isRunning) return
   event.preventDefault()
   void hostClient.stop().finally(() => {
@@ -1091,9 +1018,8 @@ app.on('before-quit', (event) => {
  */
 function writeCrashReport(error: Error, kind: 'uncaughtException' | 'unhandledRejection'): void {
   try {
-    const fs = require('fs') as typeof import('fs')
     const dir = join(app.getPath('userData'), 'crash-reports')
-    fs.mkdirSync(dir, { recursive: true })
+    mkdirSync(dir, { recursive: true })
     const stamp = new Date().toISOString().replace(/[:.]/g, '-')
     const filePath = join(dir, `udt-crash-${stamp}.txt`)
     const lines = [
@@ -1104,7 +1030,7 @@ function writeCrashReport(error: Error, kind: 'uncaughtException' | 'unhandledRe
       `message: ${error.message ?? ''}`,
       `stack: ${error.stack ?? ''}`
     ]
-    fs.writeFileSync(filePath, lines.join('\n') + '\n', 'utf8')
+    writeFileSync(filePath, lines.join('\n') + '\n', 'utf8')
     const report = {
       path: filePath,
       timestamp: new Date().toLocaleString(),
@@ -1131,4 +1057,3 @@ process.on('unhandledRejection', (reason) => {
   console.error('[main] unhandledRejection:', error)
   writeCrashReport(error, 'unhandledRejection')
 })
-

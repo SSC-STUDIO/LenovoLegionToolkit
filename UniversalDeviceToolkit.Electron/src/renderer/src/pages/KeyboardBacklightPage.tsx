@@ -1,13 +1,13 @@
-﻿import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
-  BgColorsOutlined,
-  BulbOutlined,
-  ExportOutlined,
-  ImportOutlined,
-  KeyOutlined,
-  PlusOutlined,
-  RedoOutlined
-} from '@ant-design/icons'
+  ArrowCounterclockwise24Regular,
+  ArrowExport24Regular,
+  ArrowImport24Regular,
+  Color24Regular,
+  Keyboard24Regular,
+  Lightbulb24Regular,
+  Add24Regular
+} from '../components/icons/fluent'
 import {
   Button,
   ColorPicker,
@@ -47,6 +47,7 @@ import { normalizeSpectrumLayout } from '../components/keyboard/spectrum/deviceL
 import SpectrumKeyboard from '../components/keyboard/spectrum/SpectrumKeyboard'
 import SpectrumDevicePanel from '../components/keyboard/spectrum/SpectrumDevicePanel'
 import SpectrumEffectModal from '../components/keyboard/spectrum/SpectrumEffectModal'
+import { SkeletonBone } from '../components/Skeleton'
 import '../components/keyboard/keyboard.css'
 
 const RGB_PRESETS: RgbPreset[] = ['Off', 'One', 'Two', 'Three', 'Four']
@@ -176,7 +177,7 @@ function RgbSection(): React.JSX.Element {
     void updateDesc({ [zone]: { R: rgb.r, G: rgb.g, B: rgb.b } })
   }
 
-  // Electron SynchroniseZonesMenuItem_Click: right-click a zone 鈫?all zones take its color.
+  // Electron SynchroniseZonesMenuItem_Click: right-click a zone copies its color to all zones.
   const handleSynchroniseZones = (zone: 'Zone1' | 'Zone2' | 'Zone3' | 'Zone4'): void => {
     const color = desc[zone]
     void updateDesc({ Zone1: color, Zone2: color, Zone3: color, Zone4: color })
@@ -219,7 +220,7 @@ function RgbSection(): React.JSX.Element {
       <div
         className={`udt-kb-card udt-kb-combo-card${presetOff ? ' udt-kb-card--disabled' : ''}`}
       >
-        <span className="udt-kb-card__icon"><KeyOutlined /></span>
+        <span className="udt-kb-card__icon"><Keyboard24Regular /></span>
         <div className="udt-kb-card__copy">
           <div className="udt-kb-card__title">{t('keyboard.rgb.brightness')}</div>
           <div className="udt-kb-card__subtitle">{brightnessLabel}</div>
@@ -239,7 +240,7 @@ function RgbSection(): React.JSX.Element {
       <div
         className={`udt-kb-card udt-kb-combo-card${presetOff ? ' udt-kb-card--disabled' : ''}`}
       >
-        <span className="udt-kb-card__icon"><KeyOutlined /></span>
+        <span className="udt-kb-card__icon"><Keyboard24Regular /></span>
         <div className="udt-kb-card__copy">
           <div className="udt-kb-card__title">{t('keyboard.rgb.effect')}</div>
           <div className="udt-kb-card__subtitle">{effectLabel}</div>
@@ -259,7 +260,7 @@ function RgbSection(): React.JSX.Element {
       <div
         className={`udt-kb-card udt-kb-combo-card${!speedEnabled ? ' udt-kb-card--disabled' : ''}`}
       >
-        <span className="udt-kb-card__icon"><KeyOutlined /></span>
+        <span className="udt-kb-card__icon"><Keyboard24Regular /></span>
         <div className="udt-kb-card__copy">
           <div className="udt-kb-card__title">{t('keyboard.rgb.speed')}</div>
           <div className="udt-kb-card__subtitle">{speedLabel}</div>
@@ -283,7 +284,7 @@ function RgbSection(): React.JSX.Element {
             className={`udt-kb-card udt-kb-card--stack udt-kb-zone-card${!zonesEnabled ? ' udt-kb-card--disabled' : ''}`}
           >
             <div className="udt-kb-card__header">
-              <span className="udt-kb-card__icon"><BgColorsOutlined /></span>
+              <span className="udt-kb-card__icon"><Color24Regular /></span>
               <div className="udt-kb-card__copy">
                 <div className="udt-kb-card__title">Zone {index + 1}</div>
               </div>
@@ -493,9 +494,10 @@ function SpectrumSection(): React.JSX.Element {
 
   return (
     <div className="udt-kb-spectrum">
+      <aside className="udt-kb-spectrum-sidebar">
       <div className="udt-kb-card udt-kb-card--stack udt-kb-spectrum-brightness-card">
         <div className="udt-kb-card__header">
-          <span className="udt-kb-card__icon"><BulbOutlined /></span>
+          <span className="udt-kb-card__icon"><Lightbulb24Regular /></span>
           <div className="udt-kb-card__copy">
             <div className="udt-kb-card__title">{t('keyboard.spectrum.brightness')}</div>
           </div>
@@ -531,7 +533,7 @@ function SpectrumSection(): React.JSX.Element {
       </Radio.Group>
 
       <div className="udt-kb-card udt-kb-logo-card">
-        <span className="udt-kb-card__icon"><BulbOutlined /></span>
+        <span className="udt-kb-card__icon"><Lightbulb24Regular /></span>
         <div className="udt-kb-card__copy">
           <div className="udt-kb-card__title">{t('keyboard.spectrum.logo')}</div>
         </div>
@@ -544,6 +546,99 @@ function SpectrumSection(): React.JSX.Element {
           }}
         />
       </div>
+
+      <div className="udt-kb-card udt-kb-card--stack udt-kb-effects-card">
+        <div className="udt-kb-effects-card__toolbar">
+          <h2 className="udt-kb-effects-card__title">{t('keyboard.spectrum.effects')}</h2>
+          <Button className="udt-kb-icon-btn" icon={<ArrowCounterclockwise24Regular />} onClick={handleReset} />
+          <Button className="udt-kb-icon-btn" icon={<ArrowExport24Regular />} onClick={handleExport} />
+          <Button
+            className="udt-kb-icon-btn"
+            icon={<ArrowImport24Regular />}
+            onClick={() => importRef.current?.click()}
+          />
+          <Button
+            type="primary"
+            className="udt-kb-add-effect"
+            icon={<Add24Regular />}
+            onClick={handleAddEffect}
+          >
+            {t('keyboard.spectrum.addEffect')}
+          </Button>
+          <input
+            ref={importRef}
+            type="file"
+            accept=".json,application/json"
+            style={{ display: 'none' }}
+            onChange={(e) => {
+              void handleImportFile(e.target.files?.[0] ?? null)
+              e.target.value = ''
+            }}
+          />
+        </div>
+        <div className="udt-kb-card__body udt-kb-effects-card__body">
+          {spectrum.effects.length === 0 ? (
+            <Empty description={t('keyboard.spectrum.noEffects')} />
+          ) : (
+            <List
+              className="udt-kb-effects-list"
+              dataSource={spectrum.effects}
+              renderItem={(effect, index) => {
+                const allKeys = effect.Keys.length === deviceKeys.length
+                const subtitle = allKeys
+                  ? t('keyboard.spectrum.allKeys')
+                  : t('keyboard.spectrum.zonesCount', { count: effect.Keys.length })
+                return (
+                  <List.Item
+                    className={`udt-kb-effect-row${index === selectedEffect ? ' udt-kb-effect-row--active' : ''}`}
+                    onClick={() => setSelectedEffect(index)}
+                    actions={[
+                      <Button
+                        key="edit"
+                        size="small"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setEditingEffect(index)
+                        }}
+                      >
+                        {t('keyboard.spectrum.editEffect')}
+                      </Button>,
+                      <Popconfirm
+                        key="delete"
+                        title={t('keyboard.spectrum.deleteEffect')}
+                        onConfirm={() => handleRemoveEffect(index)}
+                      >
+                        <Button danger size="small">
+                          {t('keyboard.spectrum.deleteEffect')}
+                        </Button>
+                      </Popconfirm>
+                    ]}
+                  >
+                    <div className="udt-kb-effect-row__main">
+                      {effect.Colors.length > 0 && (
+                        <span className="udt-kb-effect-row__swatch" aria-hidden="true">
+                          {effect.Colors.slice(0, 3).map((color, colorIndex) => (
+                            <i key={colorIndex} style={{ backgroundColor: rgbToHex(color) }} />
+                          ))}
+                        </span>
+                      )}
+                      <div className="udt-kb-effect-row__copy">
+                        <span className="udt-kb-effect-row__name">
+                          <Tag>{t(`keyboard.spectrum.effectTypes.${EFFECT_TYPE_LABEL_KEYS[effect.Type]}`)}</Tag>
+                        </span>
+                        <Typography.Text className="udt-kb-effect-row__scope" type="secondary">
+                          {subtitle}
+                        </Typography.Text>
+                      </div>
+                    </div>
+                  </List.Item>
+                )
+              }}
+            />
+          )}
+        </div>
+      </div>
+      </aside>
 
       <div className="udt-kb-spectrum-device">
         <div className="udt-kb-spectrum-device__toolbar">
@@ -615,98 +710,6 @@ function SpectrumSection(): React.JSX.Element {
         )}
       </div>
 
-      <div className="udt-kb-card udt-kb-card--stack udt-kb-effects-card">
-        <div className="udt-kb-effects-card__toolbar">
-          <h2 className="udt-kb-effects-card__title">{t('keyboard.spectrum.effects')}</h2>
-          <Button className="udt-kb-icon-btn" icon={<RedoOutlined />} onClick={handleReset} />
-          <Button className="udt-kb-icon-btn" icon={<ExportOutlined />} onClick={handleExport} />
-          <Button
-            className="udt-kb-icon-btn"
-            icon={<ImportOutlined />}
-            onClick={() => importRef.current?.click()}
-          />
-          <Button
-            type="primary"
-            className="udt-kb-add-effect"
-            icon={<PlusOutlined />}
-            onClick={handleAddEffect}
-          >
-            {t('keyboard.spectrum.addEffect')}
-          </Button>
-          <input
-            ref={importRef}
-            type="file"
-            accept=".json,application/json"
-            style={{ display: 'none' }}
-            onChange={(e) => {
-              void handleImportFile(e.target.files?.[0] ?? null)
-              e.target.value = ''
-            }}
-          />
-        </div>
-        <div className="udt-kb-card__body">
-          {spectrum.effects.length === 0 ? (
-            <Empty description={t('keyboard.spectrum.noEffects')} />
-          ) : (
-            <List
-              className="udt-kb-effects-list"
-              dataSource={spectrum.effects}
-              renderItem={(effect, index) => {
-                const allKeys = effect.Keys.length === deviceKeys.length
-                const subtitle = allKeys
-                  ? t('keyboard.spectrum.allKeys')
-                  : t('keyboard.spectrum.zonesCount', { count: effect.Keys.length })
-                return (
-                  <List.Item
-                    className={`udt-kb-effect-row${index === selectedEffect ? ' udt-kb-effect-row--active' : ''}`}
-                    onClick={() => setSelectedEffect(index)}
-                    actions={[
-                      <Button
-                        key="edit"
-                        size="small"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          setEditingEffect(index)
-                        }}
-                      >
-                        {t('keyboard.spectrum.editEffect')}
-                      </Button>,
-                      <Popconfirm
-                        key="delete"
-                        title={t('keyboard.spectrum.deleteEffect')}
-                        onConfirm={() => handleRemoveEffect(index)}
-                      >
-                        <Button danger size="small">
-                          {t('keyboard.spectrum.deleteEffect')}
-                        </Button>
-                      </Popconfirm>
-                    ]}
-                  >
-                    <div className="udt-kb-effect-row__main">
-                      {effect.Colors.length > 0 && (
-                        <span className="udt-kb-effect-row__swatch" aria-hidden="true">
-                          {effect.Colors.slice(0, 3).map((color, colorIndex) => (
-                            <i key={colorIndex} style={{ backgroundColor: rgbToHex(color) }} />
-                          ))}
-                        </span>
-                      )}
-                      <div className="udt-kb-effect-row__copy">
-                        <span className="udt-kb-effect-row__name">
-                          <Tag>{t(`keyboard.spectrum.effectTypes.${EFFECT_TYPE_LABEL_KEYS[effect.Type]}`)}</Tag>
-                        </span>
-                        <Typography.Text className="udt-kb-effect-row__scope" type="secondary">
-                          {subtitle}
-                        </Typography.Text>
-                      </div>
-                    </div>
-                  </List.Item>
-                )
-              }}
-            />
-          )}
-        </div>
-      </div>
-
       {editingEffect !== null && (
         <SpectrumEffectModal
           effect={
@@ -725,18 +728,59 @@ function SpectrumSection(): React.JSX.Element {
   )
 }
 
+/**
+ * Loading skeleton mirroring the RGB section (the layout shown on supported
+ * keyboards): preset button row, three combo cards (icon + copy + select) and
+ * the four-zone grid. Live layout classes are reused, so the page container
+ * query collapses the zone grid for the skeleton exactly like the real UI.
+ * The page title is rendered by the page itself and is not repeated here.
+ */
 function LoadingSkeleton(): React.JSX.Element {
   return (
     <div className="udt-kb-loading" aria-busy="true">
-      <div className="udt-kb-card udt-kb-loading__card">
-        <div className="udt-skeleton" style={{ width: 220, height: 18 }} />
-        <div className="udt-skeleton" style={{ width: 260, height: 8, marginTop: 28 }} />
-        <div className="udt-skeleton" style={{ width: 300, height: 8, marginTop: 16 }} />
-        <div className="udt-skeleton" style={{ width: 220, height: 32, marginTop: 24 }} />
+      <div className="udt-kb-presets">
+        {RGB_PRESETS.map((preset, index) => (
+          <SkeletonBone key={preset} delay={index} className="udt-kb-loading__preset" radius="control" />
+        ))}
       </div>
-      <div className="udt-kb-card udt-kb-loading__row">
-        <div className="udt-skeleton" style={{ width: 36, height: 36, borderRadius: 999 }} />
-        <div className="udt-skeleton" style={{ width: 220, height: 16 }} />
+
+      {[112, 96, 80].map((titleWidth, index) => (
+        <div key={index} className="udt-kb-card udt-kb-combo-card udt-kb-loading__card-gap">
+          <SkeletonBone delay={5 + index * 3} variant="on-card" width={24} height={24} radius="small" />
+          <div className="udt-kb-card__copy">
+            <SkeletonBone delay={6 + index * 3} variant="on-card" width={titleWidth} height={15} radius="small" />
+            <SkeletonBone
+              delay={7 + index * 3}
+              variant="on-card"
+              width={titleWidth - 24}
+              height={12}
+              radius="small"
+              style={{ marginTop: 6 }}
+            />
+          </div>
+          <SkeletonBone
+            delay={8 + index * 3}
+            variant="on-card"
+            className="udt-skeleton-select"
+            radius="control"
+          />
+        </div>
+      ))}
+
+      <div className="udt-kb-zones">
+        {ZONES.map((zone, index) => (
+          <div key={zone} className="udt-kb-card udt-kb-card--stack udt-kb-zone-card">
+            <div className="udt-kb-card__header">
+              <SkeletonBone delay={14 + index * 2} variant="on-card" width={24} height={24} radius="small" />
+              <div className="udt-kb-card__copy">
+                <SkeletonBone delay={14 + index * 2} variant="on-card" width={56} height={15} radius="small" />
+              </div>
+            </div>
+            <div className="udt-kb-card__body">
+              <SkeletonBone delay={15 + index * 2} variant="on-card" width={38} height={38} radius="round" />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -752,7 +796,7 @@ export default function KeyboardBacklightPage(): React.JSX.Element {
 
   if (error) {
     return (
-      <div className="udt-kb-page">
+      <div className="udt-kb-page udt-content-wide udt-content-fill">
         <h1 className="udt-kb-page__title">{t('keyboard.title')}</h1>
         <Result status="error" title={t('common.error')} subTitle={error} />
       </div>
@@ -761,7 +805,7 @@ export default function KeyboardBacklightPage(): React.JSX.Element {
 
   if (loading || mode === null) {
     return (
-      <div className="udt-kb-page">
+      <div className="udt-kb-page udt-content-wide udt-content-fill">
         <h1 className="udt-kb-page__title">{t('keyboard.title')}</h1>
         <LoadingSkeleton />
       </div>
@@ -769,7 +813,7 @@ export default function KeyboardBacklightPage(): React.JSX.Element {
   }
 
   return (
-    <div className="udt-kb-page">
+    <div className="udt-kb-page udt-content-wide udt-content-fill">
       <h1 className="udt-kb-page__title">{t('keyboard.title')}</h1>
       {mode === 'rgb' ? (
         <RgbSection />
@@ -788,7 +832,7 @@ export default function KeyboardBacklightPage(): React.JSX.Element {
         </>
       ) : (
         <div className="udt-kb-unsupported">
-          <KeyOutlined className="udt-kb-unsupported__icon" />
+          <Keyboard24Regular className="udt-kb-unsupported__icon" />
           <div className="udt-kb-unsupported__text">{t('keyboard.unsupported')}</div>
         </div>
       )}

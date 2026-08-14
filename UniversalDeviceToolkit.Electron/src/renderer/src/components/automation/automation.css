@@ -21,6 +21,36 @@
 
 .udt-automation-page {
   padding-bottom: 24px;
+  container-type: inline-size;
+  container-name: udt-automation;
+}
+
+.udt-automation-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--udt-content-gap);
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  align-items: start;
+}
+
+.udt-automation-col {
+  min-width: 0;
+}
+
+.udt-automation-col.udt-automation-section {
+  margin-top: 8px;
+}
+
+@container udt-automation (min-width: 960px) {
+  .udt-automation-columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .udt-automation-col.udt-automation-section {
+    margin-top: 0;
+  }
 }
 
 .udt-card--row.udt-automation-enable {
@@ -154,11 +184,11 @@
   justify-content: center;
   gap: 6px;
   min-width: 80px;
-  height: 32px;
+  height: var(--udt-control-height);
   padding: 0 14px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
-  background: transparent;
+  background: var(--udt-control-fill-default);
   color: var(--udt-text-primary);
   font: inherit;
   font-size: var(--udt-font-caption);
@@ -177,7 +207,7 @@
 
 .udt-btn--primary {
   min-width: 120px;
-  height: 36px;
+  height: var(--udt-control-height);
   border-color: var(--udt-accent-secondary);
   background: var(--udt-accent-secondary);
   color: var(--udt-accent-text);
@@ -189,7 +219,7 @@
 
 .udt-btn--sm {
   min-width: 100px;
-  height: 32px;
+  height: var(--udt-control-height);
 }
 
 .udt-btn--danger {
@@ -202,13 +232,13 @@
 
 /* Icon buttons */
 .udt-icon-btn {
-  width: 34px;
-  height: 34px;
-  border: none;
+  width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
+  border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-small);
-  background: transparent;
+  background: var(--udt-control-fill-default);
   color: var(--udt-text-secondary);
-  font-size: 16px;
+  font-size: var(--udt-icon-tool-glyph);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -244,11 +274,39 @@
   margin-bottom: 0;
 }
 
+.udt-pipeline .udt-card-expander__header-row {
+  min-height: 56px;
+  padding: 8px 12px;
+}
+
+.udt-pipeline .udt-card-expander__icon {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+.udt-pipeline .udt-card-expander__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.udt-pipeline .udt-card-expander__header {
+  min-height: 40px;
+  min-width: 0;
+}
+
+.udt-pipeline .udt-card-expander__copy {
+  min-width: 0;
+  overflow: hidden;
+}
+
 .udt-pipeline .udt-card-expander__title,
 .udt-pipeline .udt-card-expander__desc {
-  white-space: normal;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .udt-pipeline__steps {
@@ -532,14 +590,14 @@
 
 .udt-select {
   width: 100%;
-  height: 36px;
-  padding: 8px 12px;
+  height: var(--udt-control-height);
+  padding: 0 12px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
   background: var(--udt-control-fill-default);
   color: var(--udt-text-primary);
   font: inherit;
-  font-size: var(--udt-font-body);
+  font-size: var(--udt-font-caption);
   outline: none;
   cursor: pointer;
 }

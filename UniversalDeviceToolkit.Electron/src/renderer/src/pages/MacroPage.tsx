@@ -1,22 +1,29 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
-  ArrowDownOutlined,
-  ArrowUpOutlined,
-  ClockCircleOutlined,
-  CloseOutlined,
-  DragOutlined,
-  EnterOutlined,
-  RetweetOutlined,
-  RotateRightOutlined,
-  SettingOutlined
-} from '@ant-design/icons'
+  ArrowDown24Regular,
+  ArrowUp24Regular,
+  Clock24Regular,
+  Dismiss24Regular,
+  ArrowEnterLeft24Regular,
+  ArrowRepeatAll24Regular,
+  ArrowRotateClockwise24Regular,
+  ReOrder24Regular,
+  Settings24Regular
+} from '../components/icons/fluent'
 import { Button, Select, Switch, Tooltip, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type { MacroEvent, MacroRecordingMode, MacroSlot } from '../api/macro'
 import { useMacroStore } from '../stores/macroStore'
 import { useMacroRecorder } from '../hooks/useMacroRecorder'
 import MacroRecordingModal from '../components/macro/MacroRecordingModal'
-import { SkeletonList } from '../components/Skeleton'
+import {
+  appendCapturedEvents,
+  createMacroEditorDraft,
+  hasMacroEvents,
+  macroVirtualKeyName,
+  NUMPAD_LAYOUT
+} from '../components/macro/macroHelpers'
+import { SkeletonBone } from '../components/Skeleton'
 import '../components/macro/macro.css'
 
 interface MacroTexts {
@@ -46,14 +53,75 @@ interface MacroTexts {
   button: string
 }
 
-const NUMPAD_LAYOUT: (number | null)[][] = [
-  [0x67, 0x68, 0x69],
-  [0x64, 0x65, 0x66],
-  [0x61, 0x62, 0x63],
-  [null, 0x60, null]
-]
-
 const REPEAT_OPTIONS = Array.from({ length: 10 }, (_, i) => ({ value: i + 1, label: `${i + 1}` }))
+
+/**
+ * Loading skeleton mirroring the live layout: enable card (title/subtitle +
+ * switch), then the workspace split of numpad key grid and sequence-side
+ * cards. Reuses the live layout classes so the container breakpoints apply.
+ */
+function MacroSkeleton(): React.JSX.Element {
+  return (
+    <>
+      <div className="udt-macro-card udt-macro-card--enable">
+        <div className="udt-macro-card__body udt-macro-card__body--row">
+          <div className="udt-macro-card__copy">
+            <SkeletonBone delay={0} width={96} height={16} radius="small" />
+            <SkeletonBone delay={1} width={240} height={12} radius="small" style={{ marginTop: 6 }} />
+          </div>
+          <SkeletonBone delay={2} className="udt-skeleton-switch" radius="round" />
+        </div>
+      </div>
+
+      <div className="udt-macro-main">
+        <aside className="udt-macro-numpad-panel">
+          <div className="udt-macro-numpad">
+            {NUMPAD_LAYOUT.flat().map((code, index) =>
+              code === null ? (
+                <span key={`sk-pad-${index}`} />
+              ) : (
+                <SkeletonBone
+                  key={`sk-key-${index}`}
+                  delay={3 + index}
+                  className="udt-macro-skeleton__key"
+                  radius="small"
+                />
+              )
+            )}
+          </div>
+        </aside>
+
+        <div className="udt-macro-sequence">
+          <div className="udt-macro-card udt-macro-card--gap">
+            <div className="udt-macro-card__header">
+              <SkeletonBone delay={4} width={24} height={24} radius="small" />
+              <div className="udt-macro-card__copy">
+                <SkeletonBone delay={5} width={72} height={15} radius="small" />
+              </div>
+            </div>
+            <div className="udt-macro-card__body">
+              <SkeletonBone delay={6} className="udt-skeleton-select" style={{ marginLeft: 0 }} radius="control" />
+            </div>
+          </div>
+
+          <div className="udt-macro-row">
+            {Array.from({ length: 2 }, (_, card) => (
+              <div key={card} className="udt-macro-card udt-macro-card--gap-lg">
+                <div className="udt-macro-card__header">
+                  <SkeletonBone delay={7 + card * 3} width={24} height={24} radius="small" />
+                </div>
+                <div className="udt-macro-card__body udt-macro-card__body--row">
+                  <SkeletonBone delay={8 + card * 3} width={128} height={15} radius="small" />
+                  <SkeletonBone delay={9 + card * 3} className="udt-skeleton-switch" radius="round" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
 
 const RECORDING_OPTIONS: {
   value: MacroRecordingMode
@@ -64,62 +132,13 @@ const RECORDING_OPTIONS: {
   { value: 'KeyboardMouseMovement', labelKey: 'allInputs' }
 ]
 
-const VK_NAMES: Record<number, string> = {
-  0x08: 'Backspace',
-  0x09: 'Tab',
-  0x0d: 'Enter',
-  0x10: 'Shift',
-  0x11: 'Ctrl',
-  0x12: 'Alt',
-  0x13: 'Pause',
-  0x14: 'CapsLock',
-  0x1b: 'Esc',
-  0x20: 'Space',
-  0x21: 'PageUp',
-  0x22: 'PageDown',
-  0x23: 'End',
-  0x24: 'Home',
-  0x25: 'Left',
-  0x26: 'Up',
-  0x27: 'Right',
-  0x28: 'Down',
-  0x2d: 'Insert',
-  0x2e: 'Delete',
-  0x5b: 'LWin',
-  0x5c: 'RWin',
-  0x5d: 'Menu',
-  0x90: 'NumLock',
-  0x91: 'ScrollLock',
-  0xba: ';',
-  0xbb: '=',
-  0xbc: ',',
-  0xbd: '-',
-  0xbe: '.',
-  0xbf: '/',
-  0xc0: '`',
-  0xdb: '[',
-  0xdc: '\\',
-  0xdd: ']',
-  0xde: "'"
-}
-
-function vkKeyName(code: number): string {
-  const named = VK_NAMES[code]
-  if (named) return named
-  if (code >= 0x41 && code <= 0x5a) return String.fromCharCode(code)
-  if (code >= 0x30 && code <= 0x39) return String.fromCharCode(code)
-  if (code >= 0x60 && code <= 0x69) return `NumPad ${code - 0x60}`
-  if (code >= 0x70 && code <= 0x7b) return `F${code - 0x6f}`
-  return `Key ${code}`
-}
-
 function formatDelay(delayMs: number): string {
   if (delayMs < 1000) return `${Math.round(delayMs)} ms`
   return `${(delayMs / 1000).toFixed(1)} s`
 }
 
 function eventTitle(ev: MacroEvent, tx: MacroTexts): string {
-  if (ev.source === 'Keyboard') return vkKeyName(ev.key)
+  if (ev.source === 'Keyboard') return macroVirtualKeyName(ev.key)
   if (ev.direction === 'Move') return tx.move
   if (ev.direction === 'Wheel') return ev.key < 0 ? tx.wheelDown : tx.wheelUp
   if (ev.direction === 'HorizontalWheel') return ev.key < 0 ? tx.wheelLeft : tx.wheelRight
@@ -138,14 +157,14 @@ function eventSubtitle(ev: MacroEvent, tx: MacroTexts): string {
 function eventIcon(ev: MacroEvent): React.JSX.Element | null {
   switch (ev.direction) {
     case 'Up':
-      return <ArrowUpOutlined />
+      return <ArrowUp24Regular />
     case 'Down':
-      return <ArrowDownOutlined />
+      return <ArrowDown24Regular />
     case 'Wheel':
     case 'HorizontalWheel':
-      return <RotateRightOutlined />
+      return <ArrowRotateClockwise24Regular />
     case 'Move':
-      return <DragOutlined />
+      return <ReOrder24Regular />
     default:
       return null
   }
@@ -153,7 +172,7 @@ function eventIcon(ev: MacroEvent): React.JSX.Element | null {
 
 export default function MacroPage(): React.JSX.Element {
   const { t } = useTranslation()
-  const { state, loading: macroLoading, load, setEnabled, play, saveSequence, clearSequence } = useMacroStore()
+  const { state, loaded, loading: macroLoading, load, setEnabled, play, saveSequence, clearSequence } = useMacroStore()
   const tx = useMemo<MacroTexts>(
     () => ({
       subtitle: t('macro.subtitle'),
@@ -196,22 +215,23 @@ export default function MacroPage(): React.JSX.Element {
       message.info(tx.recordingInterrupted)
       return
     }
-    if (captured.length > 0) setEvents((prev) => [...prev, ...captured])
+    setEvents((current) => appendCapturedEvents(current, captured, interrupted))
   })
   const recording = recorder.state !== 'idle'
 
   const slot = (state?.slots ?? []).find((s) => s.key === selectedKey)
-  const savedEvents = (slot?.events as MacroEvent[]) ?? []
-  const list = events.length > 0 ? events : savedEvents
-  const hasEvents = list.length > 0
+  const list = events
+  const hasEvents = hasMacroEvents(list)
 
-  // Sync the editable sequence settings whenever the selected slot changes.
+  // Sync the full editable sequence whenever the selected or reloaded slot changes.
   const [syncedSlot, setSyncedSlot] = useState<MacroSlot | undefined>(undefined)
   if (syncedSlot !== slot) {
+    const draft = createMacroEditorDraft(selectedKey, state.slots)
     setSyncedSlot(slot)
-    setRepeatCount(slot?.repeatCount ?? 1)
-    setIgnoreDelays(slot?.ignoreDelays ?? false)
-    setInterruptOnOtherKey(slot?.interruptOnOtherKey ?? false)
+    setRepeatCount(draft.repeatCount)
+    setIgnoreDelays(draft.ignoreDelays)
+    setInterruptOnOtherKey(draft.interruptOnOtherKey)
+    setEvents(draft.events)
   }
 
   useEffect(() => {
@@ -220,20 +240,29 @@ export default function MacroPage(): React.JSX.Element {
 
   const selectKey = (code: number): void => {
     if (recorder.state !== 'idle') recorder.stop()
-    setSelectedKey(code)
+    const draft = createMacroEditorDraft(code, state.slots)
+    const nextSlot = state.slots.find((candidate) => candidate.key === code)
+    setSelectedKey(draft.key)
+    setSyncedSlot(nextSlot)
+    setRepeatCount(draft.repeatCount)
+    setIgnoreDelays(draft.ignoreDelays)
+    setInterruptOnOtherKey(draft.interruptOnOtherKey)
+    setEvents(draft.events)
   }
 
   const handleSave = async (): Promise<void> => {
     try {
-      await saveSequence({
+      const saved = await saveSequence({
         key: selectedKey,
         repeatCount,
         ignoreDelays,
         interruptOnOtherKey,
         events
       })
-      setEvents([])
-      void load()
+      if (!saved) {
+        message.error(useMacroStore.getState().error ?? t('settings.saveFailed'))
+        return
+      }
       message.success(t('settings.saved'))
     } catch (error) {
       message.error((error as Error).message)
@@ -242,11 +271,25 @@ export default function MacroPage(): React.JSX.Element {
 
   const handleClear = async (): Promise<void> => {
     try {
-      await clearSequence(selectedKey)
+      const cleared = await clearSequence(selectedKey)
+      if (!cleared) {
+        message.error(useMacroStore.getState().error ?? t('settings.saveFailed'))
+        return
+      }
       setEvents([])
     } catch (error) {
       message.error((error as Error).message)
     }
+  }
+
+  const handleEnabledChange = async (enabled: boolean): Promise<void> => {
+    if (await setEnabled(enabled)) return
+    message.error(useMacroStore.getState().error ?? t('settings.saveFailed'))
+  }
+
+  const handlePlay = async (): Promise<void> => {
+    if (await play(selectedKey)) return
+    message.error(useMacroStore.getState().error ?? t('settings.saveFailed'))
   }
 
   const handleRecord = (): void => {
@@ -257,15 +300,17 @@ export default function MacroPage(): React.JSX.Element {
     recorder.start(recordingMode)
   }
 
-  const showSkeleton = macroLoading && state?.slots == null
+  // First load only: the store state starts as a non-null default ({ slots: [] }),
+  // so gate on the loaded flag instead of a never-null slots check.
+  const showSkeleton = macroLoading && !loaded
 
   return (
-    <div className="udt-macro-page">
+    <div className="udt-macro-page udt-content-wide udt-content-fill">
       <h1 className="udt-macro-page__title">{t('macro.title')}</h1>
       <p className="udt-macro-page__subtitle">{tx.subtitle}</p>
 
       {showSkeleton ? (
-        <SkeletonList rows={3} />
+        <MacroSkeleton />
       ) : (
         <>
       <div className="udt-macro-card udt-macro-card--enable">
@@ -277,13 +322,15 @@ export default function MacroPage(): React.JSX.Element {
           <span className="udt-macro-switch">
             <Switch
               checked={state?.isEnabled ?? false}
-              onChange={(checked) => void setEnabled(checked)}
+              onChange={(checked) => void handleEnabledChange(checked)}
             />
           </span>
         </div>
       </div>
 
+      <div className="udt-macro-workspace">
       <div className="udt-macro-main">
+        <aside className="udt-macro-numpad-panel">
         <div className="udt-macro-numpad">
           {NUMPAD_LAYOUT.flat().map((code, index) =>
             code === null ? (
@@ -302,8 +349,10 @@ export default function MacroPage(): React.JSX.Element {
             )
           )}
         </div>
+        </aside>
 
         <div className="udt-macro-sequence">
+          <div className="udt-macro-sequence__controls">
           <div
             className={`udt-macro-card udt-macro-card--gap${
               hasEvents ? '' : ' udt-macro-card--disabled'
@@ -311,7 +360,7 @@ export default function MacroPage(): React.JSX.Element {
           >
             <div className="udt-macro-card__header">
               <span className="udt-macro-card__icon">
-                <RetweetOutlined />
+                <ArrowRepeatAll24Regular />
               </span>
               <div className="udt-macro-card__copy">
                 <div className="udt-macro-card__title">{t('macro.repeat')}</div>
@@ -339,7 +388,7 @@ export default function MacroPage(): React.JSX.Element {
             >
               <div className="udt-macro-card__header">
                 <span className="udt-macro-card__icon">
-                  <ClockCircleOutlined />
+                  <Clock24Regular />
                 </span>
               </div>
               <div className="udt-macro-card__body udt-macro-card__body--row">
@@ -356,7 +405,7 @@ export default function MacroPage(): React.JSX.Element {
             >
               <div className="udt-macro-card__header">
                 <span className="udt-macro-card__icon">
-                  <EnterOutlined />
+                  <ArrowEnterLeft24Regular />
                 </span>
               </div>
               <div className="udt-macro-card__body udt-macro-card__body--row">
@@ -375,7 +424,7 @@ export default function MacroPage(): React.JSX.Element {
           <div className="udt-macro-card udt-macro-card--gap-lg">
             <div className="udt-macro-card__header">
               <span className="udt-macro-card__icon">
-                <SettingOutlined />
+                <Settings24Regular />
               </span>
               <div className="udt-macro-card__copy">
                 <div className="udt-macro-card__title">{tx.recordingOptions}</div>
@@ -393,10 +442,10 @@ export default function MacroPage(): React.JSX.Element {
 
           <div className="udt-macro-actions">
             <Button onClick={() => void handleSave()}>{t('macro.save')}</Button>
-            <Button onClick={() => void play(selectedKey)}>{t('macro.play')}</Button>
+            <Button onClick={() => void handlePlay()}>{t('macro.play')}</Button>
             <Tooltip title={t('macro.clear')}>
               <Button
-                icon={<CloseOutlined />}
+                icon={<Dismiss24Regular />}
                 onClick={() => void handleClear()}
               />
             </Tooltip>
@@ -407,6 +456,7 @@ export default function MacroPage(): React.JSX.Element {
             >
               {recording ? tx.recording : tx.record}
             </Button>
+          </div>
           </div>
 
           <div className="udt-macro-events">
@@ -425,6 +475,7 @@ export default function MacroPage(): React.JSX.Element {
             )}
           </div>
         </div>
+      </div>
       </div>
 
       {recorder.state !== 'idle' && (

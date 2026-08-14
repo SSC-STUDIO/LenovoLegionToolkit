@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
-import { ExclamationCircleFilled, LinkOutlined } from '@ant-design/icons'
+import { ErrorCircle24Filled, Link24Regular } from '../icons/fluent'
 import './utils.css'
 
 /**
@@ -86,13 +86,13 @@ export default function UnsupportedDeviceModalHost(): React.JSX.Element {
     <div className="udt-utils-backdrop">
       <div
         className="udt-utils-modal"
-        style={{ width: 650, maxWidth: 650, maxHeight: 420 }}
+        style={{ width: 650, maxWidth: 'min(92vw, 650px)', maxHeight: 'min(88vh, 420px)' }}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="udt-utils-modal__title">{t('wpf.unsupportedWindowtitle')}</div>
         <div className="udt-utils-modal__body">
           <div style={{ display: 'flex', gap: 16 }}>
-            <ExclamationCircleFilled style={{ fontSize: 44, color: '#e05656', flexShrink: 0 }} />
+            <ErrorCircle24Filled style={{ fontSize: 44, color: '#e05656', flexShrink: 0 }} />
             <div style={{ flex: 1 }}>
               <p style={{ fontWeight: 600, marginTop: 0, marginBottom: 12 }}>
                 {t('wpf.unsupportedWindowmessage')}
@@ -120,7 +120,7 @@ export default function UnsupportedDeviceModalHost(): React.JSX.Element {
                 className="udt-utils-link"
                 onClick={() => void window.bridge?.openExternal?.(CONTRIBUTION_URL).catch(() => undefined)}
               >
-                <LinkOutlined /> {t('wpf.unsupportedWindowdisclaimergitHub')}
+                <Link24Regular /> {t('wpf.unsupportedWindowdisclaimergitHub')}
               </button>
             </div>
           </div>

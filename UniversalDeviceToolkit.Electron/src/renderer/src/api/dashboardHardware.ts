@@ -44,6 +44,9 @@ export const dashboardHardwareApi = {
   setOverclock(coreDeltaMhz: number, memoryDeltaMhz: number): Promise<{ ok: boolean }> {
     return invoke<{ ok: boolean }>('dashboardHardware.setOverclock', { coreDeltaMhz, memoryDeltaMhz })
   },
+  setMonitoring(enabled: boolean): Promise<{ ok: boolean; monitoring: boolean }> {
+    return invoke<{ ok: boolean; monitoring: boolean }>('dashboardHardware.setMonitoring', { enabled })
+  },
   turnOffMonitors(): Promise<{ ok: boolean }> {
     return invoke<{ ok: boolean }>('dashboardHardware.turnOffMonitors', {})
   }

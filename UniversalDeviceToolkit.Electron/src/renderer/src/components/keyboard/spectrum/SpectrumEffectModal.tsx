@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons'
+import { Delete24Regular, Add24Regular } from '../../icons/fluent'
 import { Button, Select, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type {
@@ -107,6 +107,16 @@ function clockwiseDirectionVisible(type: SpectrumEffectType): boolean {
   return type === 'RainbowScrew'
 }
 
+function withEffectDefaults(source: SpectrumEffect): SpectrumEffect {
+  const patch: Partial<SpectrumEffect> = {}
+  if (speedVisible(source.Type) && source.Speed === 'None') patch.Speed = DEFAULT_SPEED
+  if (directionVisible(source.Type) && source.Direction === 'None') patch.Direction = DEFAULT_DIRECTION
+  if (clockwiseDirectionVisible(source.Type) && source.ClockwiseDirection === 'None') {
+    patch.ClockwiseDirection = DEFAULT_CLOCKWISE
+  }
+  return Object.keys(patch).length > 0 ? { ...source, ...patch } : source
+}
+
 function speedVisible(type: SpectrumEffectType): boolean {
   return SPEED_VISIBLE_TYPES.includes(type)
 }
@@ -169,17 +179,20 @@ export default function SpectrumEffectModal({
   onCancel
 }: SpectrumEffectModalProps): React.JSX.Element | null {
   const { t } = useTranslation()
-  const [draft, setDraft] = useState<SpectrumEffect>(effect ?? NEW_EFFECT)
+  const [draft, setDraft] = useState<SpectrumEffect>(() => withEffectDefaults(effect ?? NEW_EFFECT))
+  const [syncedEffect, setSyncedEffect] = useState(effect)
+  if (effect !== syncedEffect) {
+    setSyncedEffect(effect)
+    setDraft(withEffectDefaults(effect ?? NEW_EFFECT))
+  }
   // Live backlight preview — Electron SpectrumKeyboardBacklightEditEffectWindow
   // polls GetStateAsync every 50ms and repaints the keycaps.
   const [previewColors, setPreviewColors] = useState<Map<number, string> | undefined>(undefined)
   const previewInFlightRef = useRef(false)
+  const shownPreview = previewEnabled ? previewColors : undefined
 
   useEffect(() => {
-    if (!previewEnabled) {
-      setPreviewColors(undefined)
-      return
-    }
+    if (!previewEnabled) return
     let cancelled = false
     const timer = window.setInterval(() => {
       if (previewInFlightRef.current) return
@@ -197,7 +210,21 @@ export default function SpectrumEffectModal({
           for (const keyColor of keys) {
             map.set(keyColor.key, `#${toByteHex(keyColor.r)}${toByteHex(keyColor.g)}${toByteHex(keyColor.b)}`)
           }
-          setPreviewColors(map)
+          // 20 Hz poll: keep the previous map (and skip the keycap repaint)
+          // when the palette did not actually change between ticks.
+          setPreviewColors((previous) => {
+            if (previous && previous.size === map.size) {
+              let unchanged = true
+              for (const [key, color] of map) {
+                if (previous.get(key) !== color) {
+                  unchanged = false
+                  break
+                }
+              }
+              if (unchanged) return previous
+            }
+            return map
+          })
         })
         .catch(() => {
           if (!cancelled) setPreviewColors(undefined)
@@ -212,23 +239,6 @@ export default function SpectrumEffectModal({
       previewInFlightRef.current = false
     }
   }, [previewEnabled])
-
-  useEffect(() => {
-    setDraft(effect ?? NEW_EFFECT)
-  }, [effect])
-
-  useEffect(() => {
-    // Electron SetItems: when the stored value is not in the combo list (a "None"
-    // default written while the card was hidden), the default wins.
-    const patch: Partial<SpectrumEffect> = {}
-    if (speedVisible(draft.Type) && draft.Speed === 'None') patch.Speed = DEFAULT_SPEED
-    if (directionVisible(draft.Type) && draft.Direction === 'None') patch.Direction = DEFAULT_DIRECTION
-    if (clockwiseDirectionVisible(draft.Type) && draft.ClockwiseDirection === 'None') {
-      patch.ClockwiseDirection = DEFAULT_CLOCKWISE
-    }
-    if (Object.keys(patch).length > 0) setDraft({ ...draft, ...patch })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [effect])
 
   const allLights = isAllLights(draft.Type)
   const wholeKeyboard = isWholeKeyboard(draft.Type)
@@ -356,7 +366,7 @@ export default function SpectrumEffectModal({
                         <Button
                           size="small"
                           className="udt-spectrum-effect-modal__color-remove"
-                          icon={<DeleteOutlined />}
+                          icon={<Delete24Regular />}
                           onClick={() => removeColor(index)}
                         />
                       </Tooltip>
@@ -365,7 +375,7 @@ export default function SpectrumEffectModal({
                 ))}
                 {multiColorsVisible(draft.Type) && (
                   <Tooltip title={t('keyboard.spectrum.effectEdit.addColor')}>
-                    <Button size="small" icon={<PlusOutlined />} onClick={addColor} />
+                    <Button size="small" icon={<Add24Regular />} onClick={addColor} />
                   </Tooltip>
                 )}
               </div>
@@ -390,7 +400,7 @@ export default function SpectrumEffectModal({
             deviceKeys={deviceKeys}
             selected={selected}
             onToggleKey={handleToggleKey}
-            keyColors={previewColors}
+            keyColors={shownPreview}
           />
         </div>
 

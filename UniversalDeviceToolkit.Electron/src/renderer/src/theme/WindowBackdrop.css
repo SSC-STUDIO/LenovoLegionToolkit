@@ -1,10 +1,14 @@
 :root[data-backdrop='mica'] body,
 :root[data-backdrop='mica'] #root,
-:root[data-backdrop='mica'] .udt-app-shell,
 :root[data-backdrop='acrylic'] body,
-:root[data-backdrop='acrylic'] #root,
-:root[data-backdrop='acrylic'] .udt-app-shell {
+:root[data-backdrop='acrylic'] #root {
   background: transparent;
+}
+
+/* Navigation rail stays opaque — only the content surface is translucent. */
+:root[data-backdrop='mica'] .udt-app-shell,
+:root[data-backdrop='acrylic'] .udt-app-shell {
+  background: var(--udt-surface-navigation);
 }
 
 .udt-backdrop-setting {
@@ -44,9 +48,7 @@
   flex: 0 1 180px;
 }
 
-/* With Mica/Acrylic the content surface becomes translucent so the window
-   material (and what is behind it) shows through — this is what the
-   notification/status glass panes blur into a frosted look. */
+/* Content surface becomes translucent so native mica/acrylic shows through. */
 :root[data-backdrop='mica'] .udt-app-shell__content,
 :root[data-backdrop='mica'] .udt-app-shell__main,
 :root[data-backdrop='acrylic'] .udt-app-shell__content,

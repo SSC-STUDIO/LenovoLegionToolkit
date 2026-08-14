@@ -95,10 +95,11 @@ export function createAccentPalette(accentHex: string, isDark: boolean): AccentP
   }
 }
 
-/** CSS custom properties the palette tints (removed to restore global.css defaults). */
+/** CSS custom properties the palette tints (removed to restore global.css defaults).
+ *  The navigation surface stays neutral on purpose: the nav pane must remain
+ *  visually distinct from the accent-tinted content area in both themes. */
 const SURFACE_VARIABLES: ReadonlyArray<{ slot: keyof AccentPalette; variable: string }> = [
   { slot: 'applicationBackground', variable: '--udt-surface-window' },
-  { slot: 'applicationBackground', variable: '--udt-surface-navigation' },
   { slot: 'controlFillDefault', variable: '--udt-surface-card' },
   { slot: 'controlFillDefault', variable: '--udt-control-fill-default' },
   { slot: 'controlFillSecondary', variable: '--udt-control-fill-secondary' },

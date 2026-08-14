@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { message } from 'antd'
 import { invoke } from '../api/bridge'
 import { systemApi, type SystemInfo } from '../api/system'
 import { sensorsApi } from '../api/sensors'
+import { resolveStaggerDelay } from '../utils/skeleton'
 import './TitleBar.css'
 
 /**
@@ -15,6 +16,10 @@ import './TitleBar.css'
  * warranty). When `device.info` is unavailable it falls back to the existing
  * `system.info` + `sensors.getStatus` APIs so identity rows and CPU/GPU names
  * still render; the warranty section stays hidden without data.
+ *
+ * Loading UX: modal opens immediately; value cells show shimmer skeletons until
+ * the first payload arrives, then opacity-reveal. A module cache skips the
+ * skeleton on reopen (and soft-refreshes in the background).
  */
 
 export interface DeviceInfoProcessor {
@@ -62,6 +67,32 @@ interface DeviceInfoModalProps {
 }
 
 const DASH = '-'
+
+interface FallbackInfo {
+  identity: SystemInfo | null
+  cpuName: string | null
+  gpuName: string | null
+}
+
+interface DeviceInfoCache {
+  device: DeviceInfo | null
+  fallback: FallbackInfo | null
+}
+
+/** Survives TitleBar remounts so reopen never flashes skeletons. */
+let deviceInfoCache: DeviceInfoCache | null = null
+
+const IDENTITY_SKELETON_WIDTHS = [118, 168, 104, 148, 96] as const
+const HARDWARE_SKELETON_WIDTHS = [196, 176, 112] as const
+
+type ShimmerDelayStyle = React.CSSProperties & { '--udt-shimmer-delay': string }
+
+function skeletonStyle(width: number, staggerIndex: number): ShimmerDelayStyle {
+  return {
+    width,
+    ['--udt-shimmer-delay']: `${-resolveStaggerDelay(staggerIndex)}s`
+  }
+}
 
 function formatCapacity(bytes?: number | null): string | null {
   if (typeof bytes !== 'number' || !Number.isFinite(bytes) || bytes <= 0) return null
@@ -129,24 +160,65 @@ function buildLenovoSupportUri(serialNumber: string | null, machineType: string 
   return 'https://pcsupport.lenovo.com/'
 }
 
-interface FallbackInfo {
-  identity: SystemInfo | null
-  cpuName: string | null
-  gpuName: string | null
+interface InfoRow {
+  key: string
+  label: string
+  value: string
+  skeletonWidth: number
+  staggerIndex: number
+}
+
+function RowValue({
+  loading,
+  value,
+  skeletonWidth,
+  staggerIndex
+}: {
+  loading: boolean
+  value: string
+  skeletonWidth: number
+  staggerIndex: number
+}): React.JSX.Element {
+  if (loading) {
+    return (
+      <span
+        className="udt-skeleton udt-device-info-row__skeleton"
+        style={skeletonStyle(skeletonWidth, staggerIndex)}
+        aria-hidden="true"
+      />
+    )
+  }
+  return <span className="udt-device-info-row__value">{value}</span>
 }
 
 export default function DeviceInfoModal({ open, onClose }: DeviceInfoModalProps): React.JSX.Element | null {
   const { t } = useTranslation()
-  const [device, setDevice] = useState<DeviceInfo | null>(null)
-  const [fallback, setFallback] = useState<FallbackInfo | null>(null)
+  const startedWithCache = useRef(deviceInfoCache != null)
+  const [device, setDevice] = useState<DeviceInfo | null>(() => deviceInfoCache?.device ?? null)
+  const [fallback, setFallback] = useState<FallbackInfo | null>(() => deviceInfoCache?.fallback ?? null)
+  const [ready, setReady] = useState(() => deviceInfoCache != null)
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
+
+    const applyCache = (entry: DeviceInfoCache): void => {
+      setDevice(entry.device)
+      setFallback(entry.fallback)
+      setReady(true)
+    }
+
+    if (deviceInfoCache) {
+      applyCache(deviceInfoCache)
+    }
+
     const load = async (): Promise<void> => {
       try {
         const result = await invoke<DeviceInfo>('device.info')
-        if (!cancelled) setDevice(result)
+        if (cancelled) return
+        const entry: DeviceInfoCache = { device: result, fallback: null }
+        deviceInfoCache = entry
+        applyCache(entry)
       } catch (error) {
         console.warn('[device-info] device.info failed, falling back to system.info:', error)
         try {
@@ -154,15 +226,28 @@ export default function DeviceInfoModal({ open, onClose }: DeviceInfoModalProps)
             systemApi.info().catch(() => null),
             sensorsApi.getStatus().catch(() => null)
           ])
-          if (!cancelled) {
-            setFallback({ identity, cpuName: sensors?.cpuName ?? null, gpuName: sensors?.gpuName ?? null })
+          if (cancelled) return
+          const nextFallback: FallbackInfo = {
+            identity,
+            cpuName: sensors?.cpuName ?? null,
+            gpuName: sensors?.gpuName ?? null
           }
+          const entry: DeviceInfoCache = { device: null, fallback: nextFallback }
+          deviceInfoCache = entry
+          applyCache(entry)
         } catch (fallbackError) {
           console.warn('[device-info] fallback info failed:', fallbackError)
-          if (!cancelled) setFallback({ identity: null, cpuName: null, gpuName: null })
+          if (cancelled) return
+          const entry: DeviceInfoCache = {
+            device: null,
+            fallback: { identity: null, cpuName: null, gpuName: null }
+          }
+          deviceInfoCache = entry
+          applyCache(entry)
         }
       }
     }
+
     void load()
     return () => {
       cancelled = true
@@ -178,45 +263,59 @@ export default function DeviceInfoModal({ open, onClose }: DeviceInfoModalProps)
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [open, onClose])
 
-  const identityRows = useMemo(() => {
+  const loading = !ready
+
+  const identityRows: InfoRow[] = useMemo(() => {
     const identity = fallback?.identity
     return [
       {
         key: 'manufacturer',
         label: t('wpf.deviceInformationWindowmanufacturertitle'),
-        value: device?.vendor ?? identity?.vendor ?? DASH
+        value: device?.vendor ?? identity?.vendor ?? DASH,
+        skeletonWidth: IDENTITY_SKELETON_WIDTHS[0],
+        staggerIndex: 0
       },
       {
         key: 'model',
         label: t('wpf.deviceInformationWindowmodeltitle'),
-        value: device?.model ?? identity?.model ?? DASH
+        value: device?.model ?? identity?.model ?? DASH,
+        skeletonWidth: IDENTITY_SKELETON_WIDTHS[1],
+        staggerIndex: 1
       },
       {
         key: 'machineType',
         label: t('wpf.deviceInformationWindowmachineTypetitle'),
-        value: device?.machineType ?? identity?.machineType ?? DASH
+        value: device?.machineType ?? identity?.machineType ?? DASH,
+        skeletonWidth: IDENTITY_SKELETON_WIDTHS[2],
+        staggerIndex: 2
       },
       {
         key: 'serialNumber',
         label: t('wpf.deviceInformationWindowserialNumbertitle'),
-        value: device?.serialNumber ?? DASH
+        value: device?.serialNumber ?? DASH,
+        skeletonWidth: IDENTITY_SKELETON_WIDTHS[3],
+        staggerIndex: 3
       },
       {
         key: 'biosVersion',
         label: t('wpf.deviceInformationWindowbiosVersiontitle'),
-        value: device?.biosVersion ?? identity?.biosVersion ?? DASH
+        value: device?.biosVersion ?? identity?.biosVersion ?? DASH,
+        skeletonWidth: IDENTITY_SKELETON_WIDTHS[4],
+        staggerIndex: 4
       }
     ]
   }, [device, fallback, t])
 
-  const hardwareRows = useMemo(() => {
+  const hardwareRows: InfoRow[] = useMemo(() => {
     const cpuName = device?.processor?.name || fallback?.cpuName
     const gpuName = device?.videoController?.name || fallback?.gpuName
     return [
       {
         key: 'cpu',
         label: t('wpf.sensorsControlcputitle'),
-        value: cpuName ? (device?.processor ? formatProcessor(device.processor) : cpuName) : DASH
+        value: cpuName ? (device?.processor ? formatProcessor(device.processor) : cpuName) : DASH,
+        skeletonWidth: HARDWARE_SKELETON_WIDTHS[0],
+        staggerIndex: 5
       },
       {
         key: 'gpu',
@@ -225,12 +324,16 @@ export default function DeviceInfoModal({ open, onClose }: DeviceInfoModalProps)
           ? device?.videoController
             ? formatVideoController(device.videoController)
             : gpuName
-          : DASH
+          : DASH,
+        skeletonWidth: HARDWARE_SKELETON_WIDTHS[1],
+        staggerIndex: 6
       },
       {
         key: 'memory',
         label: t('wpf.deviceInformationWindowmemorytitle'),
-        value: formatMemory(device?.memory)
+        value: formatMemory(device?.memory),
+        skeletonWidth: HARDWARE_SKELETON_WIDTHS[2],
+        staggerIndex: 7
       }
     ]
   }, [device, fallback, t])
@@ -242,7 +345,7 @@ export default function DeviceInfoModal({ open, onClose }: DeviceInfoModalProps)
     buildLenovoSupportUri(device?.serialNumber ?? null, device?.machineType ?? null)
 
   const copyRow = async (value: string): Promise<void> => {
-    if (!value || value === DASH) return
+    if (loading || !value || value === DASH) return
     try {
       await navigator.clipboard.writeText(value)
       void message.success({
@@ -256,23 +359,38 @@ export default function DeviceInfoModal({ open, onClose }: DeviceInfoModalProps)
 
   if (!open) return null
 
+  const revealClass =
+    ready && !startedWithCache.current ? 'udt-device-info-modal__body--reveal' : undefined
+
   return (
     <div className="udt-device-info-backdrop" onClick={onClose}>
       <div
         className="udt-device-info-modal"
         role="dialog"
         aria-modal="true"
+        aria-busy={loading || undefined}
         aria-label={t('wpf.deviceInformationWindowtitle')}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="udt-device-info-modal__title">{t('wpf.deviceInformationWindowtitle')}</div>
-        <div className="udt-device-info-modal__body">
+        <div className={['udt-device-info-modal__body', revealClass].filter(Boolean).join(' ')}>
           <div className="udt-device-info-section">
             <div className="udt-device-info-card">
               {identityRows.map((row) => (
-                <div key={row.key} className="udt-device-info-row" onClick={() => void copyRow(row.value)}>
+                <div
+                  key={row.key}
+                  className={
+                    loading ? 'udt-device-info-row udt-device-info-row--loading' : 'udt-device-info-row'
+                  }
+                  onClick={() => void copyRow(row.value)}
+                >
                   <span className="udt-device-info-row__label">{row.label}</span>
-                  <span className="udt-device-info-row__value">{row.value}</span>
+                  <RowValue
+                    loading={loading}
+                    value={row.value}
+                    skeletonWidth={row.skeletonWidth}
+                    staggerIndex={row.staggerIndex}
+                  />
                 </div>
               ))}
             </div>
@@ -284,15 +402,26 @@ export default function DeviceInfoModal({ open, onClose }: DeviceInfoModalProps)
             </div>
             <div className="udt-device-info-card">
               {hardwareRows.map((row) => (
-                <div key={row.key} className="udt-device-info-row" onClick={() => void copyRow(row.value)}>
+                <div
+                  key={row.key}
+                  className={
+                    loading ? 'udt-device-info-row udt-device-info-row--loading' : 'udt-device-info-row'
+                  }
+                  onClick={() => void copyRow(row.value)}
+                >
                   <span className="udt-device-info-row__label">{row.label}</span>
-                  <span className="udt-device-info-row__value">{row.value}</span>
+                  <RowValue
+                    loading={loading}
+                    value={row.value}
+                    skeletonWidth={row.skeletonWidth}
+                    staggerIndex={row.staggerIndex}
+                  />
                 </div>
               ))}
             </div>
           </div>
 
-          {hasWarranty && (
+          {hasWarranty && !loading && (
             <div className="udt-device-info-section">
               <div className="udt-device-info-section__title">
                 {t('wpf.deviceInformationWindowwarrantytitle')}

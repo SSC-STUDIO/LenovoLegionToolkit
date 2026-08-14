@@ -1,25 +1,25 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Modal, Progress, message } from 'antd'
+import { Modal, Progress, Select, message } from 'antd'
 import {
-  ArrowDownOutlined,
-  CheckCircleFilled,
-  ClockCircleOutlined,
-  DeleteOutlined,
-  DownOutlined,
-  DownloadOutlined,
-  EyeInvisibleOutlined,
-  EyeOutlined,
-  FolderOpenOutlined,
-  MoreOutlined,
-  PauseCircleOutlined,
-  PlayCircleOutlined,
-  ReadOutlined,
-  SearchOutlined,
-  StarFilled,
-  StopOutlined,
-  WarningOutlined
-} from '@ant-design/icons'
+  ArrowDown24Regular,
+  CheckmarkCircle24Filled,
+  Clock24Regular,
+  Delete24Regular,
+  ChevronDown24Regular,
+  ArrowDownload24Regular,
+  EyeOff24Regular,
+  Eye24Regular,
+  FolderOpen24Regular,
+  MoreVertical24Regular,
+  PauseCircle24Regular,
+  PlayCircle24Regular,
+  BookOpen24Regular,
+  Search24Regular,
+  Star24Filled,
+  Stop24Regular,
+  Warning24Regular
+} from '../icons/fluent'
 import {
   optimizationApi,
   type DriverPackageDefinition,
@@ -54,7 +54,38 @@ function isRunning(packageItem: DriverPackageDefinition): boolean {
   return packageItem.status === 'Downloading' || packageItem.status === 'Installing'
 }
 
-function PackageCard({
+// Row actions resolve the store at call time, so they stay referentially
+// stable across renders and memoized PackageCard rows skip re-renders while
+// the 2s download poll ticks.
+function toggleSelectedPackage(id: string): void {
+  useDriverStore.getState().toggleSelected(id)
+}
+
+function downloadPackage(id: string): void {
+  void useDriverStore.getState().startPackage(id)
+}
+
+function installPackage(id: string): void {
+  void useDriverStore.getState().installPackage(id)
+}
+
+function uninstallPackage(id: string): void {
+  void useDriverStore.getState().uninstallPackage(id)
+}
+
+function pausePackage(id: string): void {
+  void useDriverStore.getState().pausePackage(id)
+}
+
+function hidePackage(id: string): void {
+  void useDriverStore.getState().hidePackages([id])
+}
+
+function openPackageReadme(url: string): void {
+  void optimizationApi.openUrl(url)
+}
+
+const PackageCard = memo(function PackageCard({
   packageItem,
   selected,
   onToggle,
@@ -109,7 +140,7 @@ function PackageCard({
       <label className="udt-checkbox udt-driver-card__checkbox">
         <input type="checkbox" checked={selected} onChange={() => onToggle(packageItem.id)} />
         <span className="udt-checkbox__box">
-          <CheckCircleFilled />
+          <CheckmarkCircle24Filled />
         </span>
       </label>
 
@@ -128,16 +159,16 @@ function PackageCard({
           </span>
           {showRecommended && (
             <span className="udt-badge udt-badge--success">
-              <StarFilled /> {t('optimization.driver.recommended')}
+              <Star24Filled /> {t('optimization.driver.recommended')}
             </span>
           )}
           {statusText && (
             <span className={`udt-driver-card__status udt-driver-card__status--${status}`}>
-              {status === 'Completed' && <CheckCircleFilled />}
-              {status === 'Queued' && <ClockCircleOutlined />}
-              {status === 'Downloading' && <DownloadOutlined />}
-              {status === 'Installing' && <PlayCircleOutlined />}
-              {status === 'Error' && <WarningOutlined />}
+              {status === 'Completed' && <CheckmarkCircle24Filled />}
+              {status === 'Queued' && <Clock24Regular />}
+              {status === 'Downloading' && <ArrowDownload24Regular />}
+              {status === 'Installing' && <PlayCircle24Regular />}
+              {status === 'Error' && <Warning24Regular />}
               {statusText}
             </span>
           )}
@@ -163,12 +194,12 @@ function PackageCard({
           <div className="udt-driver-card__flags">
             {packageItem.isUpdate && (
               <span className="udt-driver-card__flag udt-driver-card__flag--update">
-                <ArrowDownOutlined /> {t('optimization.driver.isUpdate')}
+                <ArrowDown24Regular /> {t('optimization.driver.isUpdate')}
               </span>
             )}
             {rebootKey[packageItem.reboot] && (
               <span className="udt-driver-card__flag udt-driver-card__flag--warning">
-                <WarningOutlined /> {t(rebootKey[packageItem.reboot]!)}
+                <Warning24Regular /> {t(rebootKey[packageItem.reboot]!)}
               </span>
             )}
           </div>
@@ -176,7 +207,7 @@ function PackageCard({
 
         {isOld && (
           <div className="udt-driver-card__warning">
-            <WarningOutlined /> {t('optimization.driver.oldPackageWarning')}
+            <Warning24Regular /> {t('optimization.driver.oldPackageWarning')}
           </div>
         )}
 
@@ -204,7 +235,7 @@ function PackageCard({
               title={t('optimization.driver.pause')}
               onClick={() => onPause(packageItem.id)}
             >
-              <StopOutlined />
+              <Stop24Regular />
             </button>
           </>
         ) : completed ? (
@@ -214,7 +245,7 @@ function PackageCard({
             title={t('optimization.driver.uninstall')}
             onClick={() => onUninstall(packageItem.id)}
           >
-            <DeleteOutlined />
+            <Delete24Regular />
           </button>
         ) : (
           <>
@@ -225,7 +256,7 @@ function PackageCard({
                 title={t('optimization.driver.openReadme')}
                 onClick={() => onOpenReadme(packageItem.readmeUrl!)}
               >
-                <ReadOutlined />
+                <BookOpen24Regular />
               </button>
             )}
             <button
@@ -234,7 +265,7 @@ function PackageCard({
               title={t('optimization.driver.download')}
               onClick={() => onDownload(packageItem.id)}
             >
-              <DownloadOutlined />
+              <ArrowDownload24Regular />
             </button>
           </>
         )}
@@ -246,7 +277,7 @@ function PackageCard({
             title={t('common.moreActions')}
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            <MoreOutlined />
+            <MoreVertical24Regular />
           </button>
           {menuOpen && (
             <>
@@ -260,7 +291,7 @@ function PackageCard({
                       onInstall(packageItem.id)
                     }}
                   >
-                    <PlayCircleOutlined /> {t('optimization.driver.install')}
+                    <PlayCircle24Regular /> {t('optimization.driver.install')}
                   </button>
                 )}
                 <button
@@ -270,7 +301,7 @@ function PackageCard({
                     onHide(packageItem.id)
                   }}
                 >
-                  <EyeInvisibleOutlined /> {t('optimization.driver.hide')}
+                  <EyeOff24Regular /> {t('optimization.driver.hide')}
                 </button>
                 <button
                   type="button"
@@ -279,7 +310,7 @@ function PackageCard({
                     onHideAll()
                   }}
                 >
-                  <EyeInvisibleOutlined /> {t('optimization.driver.hideAll')}
+                  <EyeOff24Regular /> {t('optimization.driver.hideAll')}
                 </button>
               </div>
             </>
@@ -288,7 +319,7 @@ function PackageCard({
       </div>
     </div>
   )
-}
+})
 
 function DriverFilterBar({
   filterText,
@@ -309,7 +340,7 @@ function DriverFilterBar({
   return (
     <div className="udt-driver-toolbar">
       <div className="udt-driver-toolbar__search">
-        <SearchOutlined />
+        <Search24Regular />
         <input
           type="text"
           placeholder={t('optimization.driver.filter')}
@@ -324,21 +355,19 @@ function DriverFilterBar({
           onChange={(e) => onOnlyShowUpdatesChange(e.target.checked)}
         />
         <span className="udt-checkbox__box">
-          <CheckCircleFilled />
+          <CheckmarkCircle24Filled />
         </span>
         <span>{t('optimization.driver.onlyShowUpdates')}</span>
       </label>
-      <select
-        className="udt-select"
+      <Select<DriverSortMode>
+        className="udt-driver-select"
         value={sortMode}
-        onChange={(e) => onSortModeChange(e.target.value as DriverSortMode)}
-      >
-        {SORT_OPTIONS.map((option) => (
-          <option key={option.value} value={option.value}>
-            {t(option.i18nKey)}
-          </option>
-        ))}
-      </select>
+        onChange={onSortModeChange}
+        options={SORT_OPTIONS.map((option) => ({
+          value: option.value,
+          label: t(option.i18nKey)
+        }))}
+      />
     </div>
   )
 }
@@ -446,29 +475,17 @@ export default function DriverDownloadPanel(): React.JSX.Element {
     if (downloadPath) await optimizationApi.openPath(downloadPath)
   }
 
-  const handleToggleSelected = (id: string): void => {
-    useDriverStore.getState().toggleSelected(id)
-  }
-
   const handleStartAll = async (): Promise<void> => {
     if (isAnyRunning) await useDriverStore.getState().pauseSelected()
     else await useDriverStore.getState().startSelected()
   }
 
-  const handleHide = (id: string): void => {
-    void useDriverStore.getState().hidePackages([id])
-  }
-
-  const handleHideAll = (): void => {
+  const handleHideAll = useCallback((): void => {
     void useDriverStore.getState().hidePackages(visiblePackages.map((p) => p.id))
-  }
+  }, [visiblePackages])
 
   const handleShowHidden = (): void => {
     void useDriverStore.getState().showHiddenPackages()
-  }
-
-  const handleOpenReadme = (url: string): void => {
-    void optimizationApi.openUrl(url)
   }
 
   const emptyState = (() => {
@@ -504,14 +521,17 @@ export default function DriverDownloadPanel(): React.JSX.Element {
           </div>
           <div className="udt-driver-field">
             <label>{t('optimization.driver.os')}</label>
-            <select className="udt-select" value={os} onChange={(e) => setOs(e.target.value)}>
-              {!os && <option value="">—</option>}
-              {(settings?.osOptions ?? []).map((option) => (
-                <option key={option} value={option}>
-                  {OS_DISPLAY_KEYS[option] ? t(OS_DISPLAY_KEYS[option]) : option}
-                </option>
-              ))}
-            </select>
+            <Select
+              aria-label={t('optimization.driver.os')}
+              className="udt-driver-select"
+              value={os || undefined}
+              placeholder="—"
+              onChange={(value) => setOs(value ?? '')}
+              options={(settings?.osOptions ?? []).map((option) => ({
+                value: option,
+                label: OS_DISPLAY_KEYS[option] ? t(OS_DISPLAY_KEYS[option]) : option
+              }))}
+            />
           </div>
           <div className="udt-driver-field">
             <label>{t('optimization.driver.downloadTo')}</label>
@@ -528,7 +548,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
                 title={t('optimization.driver.browse')}
                 onClick={() => void handleBrowsePath()}
               >
-                <FolderOpenOutlined />
+                <FolderOpen24Regular />
               </button>
               <button
                 type="button"
@@ -536,7 +556,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
                 title={t('optimization.driver.openDownloadTo')}
                 onClick={() => void handleOpenPath()}
               >
-                <EyeOutlined />
+                <Eye24Regular />
               </button>
             </div>
           </div>
@@ -569,7 +589,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
             </span>
           </label>
           <button type="button" className="udt-btn udt-btn--primary" disabled={scanning} onClick={handleScanClicked}>
-            <SearchOutlined /> {scanning ? t('optimization.driver.scanning') : t('optimization.driver.scan')}
+            <Search24Regular /> {scanning ? t('optimization.driver.scanning') : t('optimization.driver.scan')}
           </button>
         </div>
       </div>
@@ -667,7 +687,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
               className="udt-btn udt-btn--secondary"
               onClick={() => void useDriverStore.getState().selectRecommended()}
             >
-              <StarFilled /> {t('optimization.driver.selectRecommended')}
+              <Star24Filled /> {t('optimization.driver.selectRecommended')}
             </button>
             <button
               type="button"
@@ -675,7 +695,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
               disabled={selectedIds.length === 0}
               onClick={() => void handleStartAll()}
             >
-              {isAnyRunning ? <PauseCircleOutlined /> : <PlayCircleOutlined />}
+              {isAnyRunning ? <PauseCircle24Regular /> : <PlayCircle24Regular />}
               {isAnyRunning ? t('optimization.driver.pauseAll') : t('optimization.driver.startAll')}
             </button>
             <button
@@ -692,7 +712,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
 
       {!scanning && emptyState && (
         <div className="udt-empty udt-driver-empty">
-          <SearchOutlined className="udt-empty__icon" />
+          <Search24Regular className="udt-empty__icon" />
           <div className="udt-empty__title">{emptyState.title}</div>
           <div className="udt-empty__description">{emptyState.message}</div>
         </div>
@@ -700,7 +720,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
 
       {!scanning && hasHidden && (
         <button type="button" className="udt-link-button udt-driver-show-hidden" onClick={handleShowHidden}>
-          <EyeOutlined /> {t('optimization.driver.showHiddenDownloads')}
+          <Eye24Regular /> {t('optimization.driver.showHiddenDownloads')}
         </button>
       )}
 
@@ -711,14 +731,14 @@ export default function DriverDownloadPanel(): React.JSX.Element {
               key={packageItem.id}
               packageItem={packageItem}
               selected={selectedIds.includes(packageItem.id)}
-              onToggle={handleToggleSelected}
-              onDownload={(id) => void useDriverStore.getState().startPackage(id)}
-              onInstall={(id) => void useDriverStore.getState().installPackage(id)}
-              onUninstall={(id) => void useDriverStore.getState().uninstallPackage(id)}
-              onPause={(id) => void useDriverStore.getState().pausePackage(id)}
-              onHide={handleHide}
+              onToggle={toggleSelectedPackage}
+              onDownload={downloadPackage}
+              onInstall={installPackage}
+              onUninstall={uninstallPackage}
+              onPause={pausePackage}
+              onHide={hidePackage}
               onHideAll={handleHideAll}
-              onOpenReadme={handleOpenReadme}
+              onOpenReadme={openPackageReadme}
             />
           ))}
         </div>
@@ -738,7 +758,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
         onCancel={() => setConfirmScanOpen(false)}
       >
         <div className="udt-driver-modal-body">
-          <DownOutlined className="udt-driver-modal-body__icon" />
+          <ChevronDown24Regular className="udt-driver-modal-body__icon" />
           <span>{t('optimization.driver.downloadInProgress.message')}</span>
         </div>
       </Modal>

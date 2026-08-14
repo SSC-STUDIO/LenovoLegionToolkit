@@ -64,7 +64,10 @@ export default function TrendChart({
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
-    const chart = init(el)
+    // devicePixelRatio keeps output crisp on HiDPI displays and under the
+    // main-process zoom factor (SVG today, but harmless and future-proof if
+    // the renderer switches to canvas).
+    const chart = init(el, undefined, { devicePixelRatio: window.devicePixelRatio })
     chartRef.current = chart
     baseOptionRef.current = null
     const handleResize = (): void => {

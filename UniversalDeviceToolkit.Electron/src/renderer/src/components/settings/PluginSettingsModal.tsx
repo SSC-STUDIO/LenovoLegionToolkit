@@ -1,16 +1,14 @@
 import { useEffect, useState } from 'react'
 import { Alert, Modal, Spin } from 'antd'
-import { CheckCircleFilled, DownloadOutlined, UpCircleOutlined } from '@ant-design/icons'
+import { CheckmarkCircle24Filled, ArrowDownload24Regular, ArrowCircleUp24Regular } from '../icons/fluent'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import type { PluginView } from '../../api/plugins'
 import { usePluginsStore } from '../../stores/pluginsStore'
 
 /**
- * Parity modal for Electron Windows/Settings/PluginSettingsWindow: shows the full
- * plugin metadata (identity, state, dependencies, usage guide, update info).
- * The Electron window hosts the plugin's Electron settings page via reflection; the
- * Electron renderer has no equivalent hosting mechanism, so the plugin's
- * own settings UI is not embeddable — the metadata view stands in for it.
+ * Plugin metadata modal. When the plugin ships contributes.webPage, Settings
+ * navigates to the embedded web page instead of showing a native-page warning.
  */
 
 interface PluginSettingsModalProps {
@@ -50,6 +48,7 @@ export default function PluginSettingsModal({
   onClose
 }: PluginSettingsModalProps): React.JSX.Element {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const plugins = usePluginsStore((state) => state.plugins)
   const [plugin, setPlugin] = useState<PluginView | null>(null)
   const [notFound, setNotFound] = useState(false)
@@ -60,6 +59,14 @@ export default function PluginSettingsModal({
     setPlugin(found)
     setNotFound(found == null)
   }, [open, pluginId, plugins])
+
+  useEffect(() => {
+    if (!open || plugin == null) return
+    if (plugin.webPage && plugin.directory) {
+      onClose()
+      navigate(`/plugins/${encodeURIComponent(plugin.id)}`)
+    }
+  }, [open, plugin, navigate, onClose])
 
   return (
     <Modal
@@ -156,7 +163,7 @@ export default function PluginSettingsModal({
 
           {plugin.installedVersion ? (
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 12 }}>
-              <CheckCircleFilled style={{ color: '#6fbf73' }} />
+              <CheckmarkCircle24Filled style={{ color: '#6fbf73' }} />
               <span style={{ fontSize: 13 }}>
                 {t('plugins.settings.installedState', '已安装（v{{version}}）').replace(
                   '{{version}}',
@@ -165,13 +172,13 @@ export default function PluginSettingsModal({
               </span>
               {plugin.updateAvailable && (
                 <span style={{ display: 'inline-flex', gap: 4, alignItems: 'center', fontSize: 12, color: '#e0a92e' }}>
-                  <UpCircleOutlined /> {t('plugins.updateAvailable')} v{plugin.availableVersion}
+                  <ArrowCircleUp24Regular /> {t('plugins.updateAvailable')} v{plugin.availableVersion}
                 </span>
               )}
             </div>
           ) : (
             <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: 12 }}>
-              <DownloadOutlined style={{ color: 'var(--udt-text-secondary, rgba(255,255,255,0.6))' }} />
+              <ArrowDownload24Regular style={{ color: 'var(--udt-text-secondary, rgba(255,255,255,0.6))' }} />
               <span style={{ fontSize: 13 }}>{t('plugins.settings.notInstalledState', '未安装')}</span>
             </div>
           )}
@@ -180,7 +187,14 @@ export default function PluginSettingsModal({
             {t('wpf.pluginSettingsWindownoConfigMessage')}
           </div>
 
-          {plugin.capabilities.settingsPage || plugin.capabilities.featurePage ? (
+          {plugin.webPage ? (
+            <Alert
+              type="info"
+              showIcon
+              style={{ marginTop: 12 }}
+              message={t('plugins.settings.openWebPage', 'Opening plugin page…')}
+            />
+          ) : plugin.capabilities.settingsPage || plugin.capabilities.featurePage ? (
             <Alert
               type="warning"
               showIcon
@@ -196,6 +210,10 @@ export default function PluginSettingsModal({
               {
                 on: plugin.capabilities.optimizationCategory,
                 label: t('plugins.settings.capability.optimizationCategory')
+              },
+              {
+                on: plugin.capabilities.webPage === true || Boolean(plugin.webPage),
+                label: t('plugins.settings.capability.webPage', 'Web page')
               },
               {
                 on: plugin.capabilities.executableEntryPoint,

@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { ChevronRight24Regular } from '@fluentui/react-icons'
 import { Empty, Input, Modal, Tooltip } from 'antd'
-import { SearchOutlined } from '@ant-design/icons'
+import { Search24Regular } from '../icons/fluent'
 import { useTranslation } from 'react-i18next'
 import type { DashboardItem } from '../../api/dashboard'
 import { ALL_DASHBOARD_ITEMS, dashboardItemLabel } from './dashboardItems'
@@ -54,7 +54,7 @@ export default function AddDashboardItemModal({
       <Input
         allowClear
         autoFocus
-        prefix={<SearchOutlined />}
+        prefix={<Search24Regular />}
         placeholder={t('dashboard.addItem.searchPlaceholder')}
         value={query}
         onChange={(event) => setQuery(event.target.value)}

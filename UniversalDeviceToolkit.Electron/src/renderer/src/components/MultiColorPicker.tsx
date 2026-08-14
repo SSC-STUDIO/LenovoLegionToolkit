@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import './colorPicker.css'
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
+import { Add24Regular, Dismiss24Regular } from './icons/fluent'
 import { Button } from 'antd'
 import ColorPicker from './ColorPicker'
 
@@ -69,14 +69,14 @@ export default function MultiColorPicker({
             disabled={disabled}
             onClick={() => handleDelete(index)}
           >
-            <CloseOutlined />
+            <Dismiss24Regular />
           </button>
         </div>
       ))}
       <Button
         type="primary"
         className="udt-multi-color-picker__add"
-        icon={<PlusOutlined />}
+        icon={<Add24Regular />}
         disabled={disabled || !canAdd}
         onClick={handleAdd}
       />

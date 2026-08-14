@@ -1,13 +1,14 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  CheckOutlined,
-  InfoCircleOutlined,
-  PlayCircleOutlined,
-  StarFilled,
-  StarOutlined,
-  StopOutlined
-} from '@ant-design/icons'
-import { Tooltip } from 'antd'
+  Checkmark24Regular,
+  Info24Regular,
+  Play24Regular,
+  PlayCircle24Regular,
+  Star24Filled,
+  Star24Regular,
+  Stop24Regular
+} from '../components/icons/fluent'
+import { Select, Tooltip, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
 import i18n from '../i18n'
@@ -18,6 +19,7 @@ import type {
   OptimizationCategoryDefinition
 } from '../api/optimization'
 import { useDriverStore } from '../stores/driverStore'
+import { localizeHostError } from '../api/bridge'
 import { useOptimizationStore } from '../stores/optimizationStore'
 import { SkeletonCard, SkeletonList } from '../components/Skeleton'
 import CardExpander from '../components/CardExpander'
@@ -25,39 +27,18 @@ import CleanupRulesPanel from '../components/optimization/CleanupRulesPanel'
 import DriverDownloadPanel from '../components/optimization/DriverDownloadPanel'
 import { NetworkPanels } from '../components/optimization/NetworkPanels'
 import { presentCategoryActions } from '../utils/optimizationToggle'
+import {
+  NETWORK_ACCELERATION_MODES,
+  collectRecommendedActionKeys,
+  getActionSelectionPresentation,
+  getNetworkSelectedTargetCount,
+  isOptimizationPlayDisabled,
+  type OptimizationTabKey
+} from '../utils/optimizationPresentation'
 import { openActionDetails } from '../components/utils/ActionDetailsModal'
 import '../components/optimization/optimization.css'
 
 const NETWORK_RECOMMENDED_GROUP_IDS = new Set(['steam', 'github', 'public-cdn', 'twitch', 'roblox'])
-
-function PlayOutlineIcon(): React.JSX.Element {
-  return (
-    <svg
-      className="udt-opt-chrome__play-icon"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.75"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <path d="M8 6.5v11l10-5.5-10-5.5z" />
-    </svg>
-  )
-}
-
-function collectRecommendedKeys(
-  categories: OptimizationCategoryDefinition[],
-  predicate: (categoryKey: string) => boolean
-): string[] {
-  return categories
-    .filter((category) => predicate(category.key))
-    .flatMap((category) => category.actions)
-    .filter((action) => action.recommended && action.applied !== true)
-    .map((action) => action.key)
-}
 
 function formatBytes(bytes: number): string {
   if (!Number.isFinite(bytes) || bytes <= 0) return '0 B'
@@ -93,7 +74,7 @@ function localizeText(t: TFunction, text: string): string {
   return text
 }
 
-type TabKey = 'optimization' | 'cleanup' | 'driverDownload' | 'networkAcceleration'
+type TabKey = OptimizationTabKey
 
 function ActionRow({
   action,
@@ -107,6 +88,7 @@ function ActionRow({
   onToggle: (key: string) => void
 }): React.JSX.Element {
   const { t } = useTranslation()
+  const selection = getActionSelectionPresentation(action, selected)
   const showDetails = (): void => {
     void openActionDetails({
       actionKey: action.key,
@@ -119,46 +101,42 @@ function ActionRow({
       <label className="udt-checkbox">
         <input
           type="checkbox"
-          checked={action.applied === true || selected}
+          checked={selection.checked}
           disabled={disabled}
           ref={(el) => {
-            if (el) el.indeterminate = action.applied === null
+            if (el) el.indeterminate = selection.indeterminate
           }}
           onChange={() => onToggle(action.key)}
         />
         <span className="udt-checkbox__box">
-          <CheckOutlined />
+          <Checkmark24Regular />
         </span>
       </label>
       <span className={`udt-action-row__title${disabled ? ' udt-action-row__title--muted' : ''}`}>
         {localizeText(t, action.title)}
       </span>
-      {action.recommended && (
-        <span className="udt-badge">
-          <StarFilled /> {t('optimization.recommended')}
-        </span>
-      )}
-      <Tooltip title={t('wpf.actionDetailsWindowtitle')}>
-        <button
-          type="button"
-          style={{
-            marginLeft: 8,
-            border: 'none',
-            background: 'transparent',
-            color: 'var(--udt-text-secondary, rgba(255,255,255,0.6))',
-            cursor: 'pointer',
-            fontSize: 14,
-            padding: '4px 6px',
-            borderRadius: 6
-          }}
-          onClick={(event) => {
-            event.stopPropagation()
-            showDetails()
-          }}
-        >
-          <InfoCircleOutlined />
-        </button>
-      </Tooltip>
+      <span className="udt-action-row__badge">
+        {action.recommended ? (
+          <span className="udt-badge">
+            <Star24Filled /> {t('optimization.recommended')}
+          </span>
+        ) : null}
+      </span>
+      <span className="udt-action-row__info">
+        <Tooltip title={t('wpf.actionDetailsWindowtitle')}>
+          <button
+            type="button"
+            className="udt-icon-btn"
+            aria-label={t('wpf.actionDetailsWindowtitle')}
+            onClick={(event) => {
+              event.stopPropagation()
+              showDetails()
+            }}
+          >
+            <Info24Regular />
+          </button>
+        </Tooltip>
+      </span>
     </div>
   )
 }
@@ -312,7 +290,7 @@ function CleanupTab({
               header={localizeText(t, category.title)}
               description={localizeText(t, category.description)}
               accessory={<span className="udt-category__summary">{summary}</span>}
-              defaultExpanded={false}
+              defaultExpanded={true}
             >
               {presentation.visible.map(({ action, editable }) => (
                 <ActionRow
@@ -349,23 +327,11 @@ function CleanupTab({
   )
 }
 
-const NETWORK_MODES: NetworkAccelerationMode[] = ['Off', 'SystemProxy', 'Hosts', 'DiagnosticsOnly']
-
 const NETWORK_MODE_I18N_KEYS: Record<NetworkAccelerationMode, string> = {
   Off: 'optimization.network.modes.off',
   SystemProxy: 'optimization.network.modes.systemProxy',
   Hosts: 'optimization.network.modes.hosts',
   DiagnosticsOnly: 'optimization.network.modes.diagnosticsOnly'
-}
-
-function getNetworkSelectedTargetCount(config: NetworkAccelerationConfig | null): number {
-  if (!config) return 0
-  return config.domainGroups.reduce((sum, group) => {
-    if (!group.enabled) return sum
-    const direct = (group.domains ?? []).filter((domain) => domain.trim().length > 0).length
-    const subItems = (group.subItems ?? []).filter((sub) => sub.enabled).length
-    return sum + direct + subItems
-  }, 0)
 }
 
 function NetworkTab(): React.JSX.Element {
@@ -416,7 +382,11 @@ function NetworkTab(): React.JSX.Element {
 
   const handleStart = async (): Promise<void> => {
     setStarting(true)
-    await startNetwork()
+    const ok = await startNetwork()
+    if (!ok) {
+      const err = useOptimizationStore.getState().error
+      if (err) void message.error(localizeHostError(err, t))
+    }
     setStarting(false)
   }
 
@@ -463,44 +433,50 @@ function NetworkTab(): React.JSX.Element {
         </div>
       </div>
 
-      <div className="udt-card">
+      <div className="udt-card udt-network-config">
         <div className="udt-card__title">{t('optimization.network.config')}</div>
-        <div className="udt-network-row">
-          <span>{t('optimization.network.accelerationEnabled')}</span>
-          <label className="udt-switch">
-            <input
-              type="checkbox"
-              checked={editableConfig.accelerationEnabled}
-              onChange={(e) => updateConfig({ accelerationEnabled: e.target.checked })}
+        <div className="udt-network-config__fields">
+          <div className="udt-network-field udt-network-field--switch">
+            <span className="udt-network-field__label">{t('optimization.network.accelerationEnabled')}</span>
+            <label className="udt-switch">
+              <input
+                type="checkbox"
+                checked={editableConfig.accelerationEnabled}
+                onChange={(e) => updateConfig({ accelerationEnabled: e.target.checked })}
+              />
+              <span className="udt-switch__track" />
+            </label>
+          </div>
+          <div className="udt-network-field">
+            <span className="udt-network-field__label">{t('optimization.network.mode')}</span>
+            <Select<NetworkAccelerationMode>
+              aria-label={t('optimization.network.mode')}
+              className="udt-network-select"
+              popupMatchSelectWidth={false}
+              value={editableConfig.mode}
+              onChange={(mode) => updateConfig({ mode })}
+              options={NETWORK_ACCELERATION_MODES.map((mode) => ({
+                value: mode,
+                label: t(NETWORK_MODE_I18N_KEYS[mode])
+              }))}
             />
-            <span className="udt-switch__track" />
-          </label>
+          </div>
         </div>
-        <div className="udt-network-row">
-          <span>{t('optimization.network.mode')}</span>
-          <select
-            className="udt-select"
-            value={editableConfig.mode}
-            onChange={(e) => updateConfig({ mode: e.target.value as NetworkAccelerationMode })}
-          >
-            {NETWORK_MODES.map((mode) => (
-              <option key={mode} value={mode}>
-                {t(NETWORK_MODE_I18N_KEYS[mode])}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="udt-side-card__actions">
+        <div className="udt-network-config__actions">
           <button type="button" className="udt-btn udt-btn--primary" disabled={saving} onClick={() => void handleSave()}>
             {t('optimization.network.save')}
           </button>
           <button
             type="button"
             className="udt-btn udt-btn--secondary"
-            disabled={!networkStatus.isBackendReady || starting}
+            disabled={
+              !networkStatus.isBackendReady ||
+              editableConfig.mode === 'Hosts' ||
+              starting
+            }
             onClick={() => void handleStart()}
           >
-            <PlayCircleOutlined /> {t('optimization.network.start')}
+            <PlayCircle24Regular /> {t('optimization.network.start')}
           </button>
           <button
             type="button"
@@ -508,7 +484,7 @@ function NetworkTab(): React.JSX.Element {
             disabled={stopping}
             onClick={() => void handleStop()}
           >
-            <StopOutlined /> {t('optimization.network.stop')}
+            <Stop24Regular /> {t('optimization.network.stop')}
           </button>
         </div>
       </div>
@@ -545,16 +521,24 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
   const startNetwork = useOptimizationStore((s) => s.startNetwork)
   const setNetworkGroupEnabled = useOptimizationStore((s) => s.setNetworkGroupEnabled)
   const networkStatus = useOptimizationStore((s) => s.networkStatus)
+  const error = useOptimizationStore((s) => s.error)
   const driverSelectedCount = useDriverStore((s) => s.selectedIds.length)
   const [tab, setTab] = useState<TabKey>('optimization')
   const [optSelectedKeys, setOptSelectedKeys] = useState<string[]>([])
   const [cleanupSelectedKeys, setCleanupSelectedKeys] = useState<string[]>([])
   const [chromeBusy, setChromeBusy] = useState(false)
+  const cleanupDefaultsApplied = useRef(false)
 
   useEffect(() => {
     void load()
     void loadNetwork()
   }, [load, loadNetwork])
+
+  useEffect(() => {
+    if (cleanupDefaultsApplied.current || categories.length === 0) return
+    cleanupDefaultsApplied.current = true
+    setCleanupSelectedKeys(collectRecommendedActionKeys(categories, (key) => key.startsWith('cleanup.')))
+  }, [categories])
 
   const toggleOptSelection = (key: string): void => {
     setOptSelectedKeys((prev) => (prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]))
@@ -603,10 +587,10 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
       return
     }
     if (tab === 'cleanup') {
-      setCleanupSelectedKeys(collectRecommendedKeys(categories, (key) => key.startsWith('cleanup.')))
+      setCleanupSelectedKeys(collectRecommendedActionKeys(categories, (key) => key.startsWith('cleanup.')))
       return
     }
-    setOptSelectedKeys(collectRecommendedKeys(categories, (key) => !key.startsWith('cleanup.')))
+    setOptSelectedKeys(collectRecommendedActionKeys(categories, (key) => !key.startsWith('cleanup.')))
   }
 
   const handlePlay = async (): Promise<void> => {
@@ -614,7 +598,11 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
     setChromeBusy(true)
     try {
       if (tab === 'networkAcceleration') {
-        await startNetwork()
+        const ok = await startNetwork()
+        if (!ok) {
+          const err = useOptimizationStore.getState().error
+          if (err) void message.error(localizeHostError(err, t))
+        }
         return
       }
       if (tab === 'driverDownload') {
@@ -624,12 +612,23 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
       if (tab === 'cleanup') {
         if (cleanupSelectedKeys.length === 0) return
         const ok = await runCleanup(cleanupSelectedKeys)
-        if (ok) setCleanupSelectedKeys([])
+        if (ok) {
+          setCleanupSelectedKeys(
+            collectRecommendedActionKeys(
+              useOptimizationStore.getState().categories,
+              (key) => key.startsWith('cleanup.')
+            )
+          )
+        }
         return
       }
       if (optSelectedKeys.length > 0) {
         const ok = await apply(optSelectedKeys)
         if (ok) setOptSelectedKeys([])
+        else {
+          const err = useOptimizationStore.getState().error
+          if (err) void message.error(localizeHostError(err, t))
+        }
         return
       }
       await applyRecommended()
@@ -638,15 +637,23 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
     }
   }
 
-  const playDisabled =
-    chromeBusy ||
-    (tab === 'cleanup' && cleanupSelectedKeys.length === 0) ||
-    (tab === 'driverDownload' && driverSelectedCount === 0)
+  const playDisabled = isOptimizationPlayDisabled({
+    tab,
+    busy: chromeBusy,
+    cleanupSelectedCount: cleanupSelectedKeys.length,
+    driverSelectedCount,
+    networkStatus
+  })
 
   return (
-    <div className="udt-page udt-optimization-page">
+    <div className="udt-page udt-optimization-page udt-content-column udt-content-fill">
       <h1 className="udt-page__title">{t('optimization.title')}</h1>
       <p className="udt-page__subtitle">{t('optimization.info')}</p>
+      {error != null && error !== '' && (
+        <div className="udt-card udt-card--row" role="alert">
+          <div className="udt-card__desc">{localizeHostError(error, t)}</div>
+        </div>
+      )}
 
       <div className="udt-opt-chrome">
         <div className="udt-segmented-nav" role="tablist" aria-label={t('optimization.title')}>
@@ -673,7 +680,7 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
             disabled={chromeBusy}
             onClick={handleStar}
           >
-            <StarOutlined />
+            <Star24Regular />
           </button>
           <button
             type="button"
@@ -683,7 +690,7 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
             disabled={playDisabled}
             onClick={() => void handlePlay()}
           >
-            <PlayOutlineIcon />
+            <Play24Regular />
           </button>
         </div>
       </div>

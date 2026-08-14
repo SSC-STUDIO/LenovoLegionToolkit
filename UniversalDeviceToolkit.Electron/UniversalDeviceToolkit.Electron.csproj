@@ -19,4 +19,15 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <!-- F5 builds Host (and its NetworkProxy worker) before `npm run dev` so bin
+       contains runtimeconfig.json/deps.json. Without those sidecars the apphost
+       is treated as self-contained and fails looking for hostpolicy.dll.
+       Do not copy Host into this project's output. -->
+  <ItemGroup>
+    <ProjectReference Include="..\UniversalDeviceToolkit.Host\UniversalDeviceToolkit.Host.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>false</Private>
+    </ProjectReference>
+  </ItemGroup>
+
 </Project>
