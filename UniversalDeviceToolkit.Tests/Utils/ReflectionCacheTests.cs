@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Utils;
 
-[Trait("Category", TestCategories.Utils)]
+[Trait("Category", TestCategories.Unit)]
 public class ReflectionCacheTests : UnitTestBase
 {
     private class TestClass
@@ -115,7 +115,7 @@ public class ReflectionCacheTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Utils)]
+[Trait("Category", TestCategories.Unit)]
 public class GPUPowerInfoCacheTests : UnitTestBase
 {
     [Fact]

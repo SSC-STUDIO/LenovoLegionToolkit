@@ -11,7 +11,7 @@ using Moq;
 
 namespace UniversalDeviceToolkit.Tests.Features;
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class PowerModeFeatureTests : UnitTestBase
 {
     [Fact]
@@ -498,7 +498,7 @@ public class PowerModeFeatureTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class BatteryFeatureTests : UnitTestBase
 {
     [Fact]
@@ -522,7 +522,7 @@ public class BatteryFeatureTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class IFeatureInterfaceTests : UnitTestBase
 {
     [Fact]
@@ -570,7 +570,7 @@ public class IFeatureInterfaceTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class PowerModeStateExtensionsTests : UnitTestBase
 {
     [Fact]

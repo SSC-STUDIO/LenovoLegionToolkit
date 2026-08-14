@@ -11,7 +11,6 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Settings;
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class PluginManifestAdapterTests
 {
@@ -39,7 +38,6 @@ public class PluginManifestAdapterTests
     }
 }
 
-[Trait("Category", TestCategories.Utils)]
 [Trait("Category", TestCategories.Unit)]
 public class TestDataGeneratorTests
 {
@@ -108,7 +106,6 @@ public class TestDataGeneratorTests
     }
 }
 
-[Trait("Category", TestCategories.Utils)]
 [Trait("Category", TestCategories.Unit)]
 public class AsyncTestHelpersTests
 {
@@ -149,7 +146,6 @@ public class AsyncTestHelpersTests
     }
 }
 
-[Trait("Category", TestCategories.Utils)]
 [Trait("Category", TestCategories.Unit)]
 public class TestAssertionsTests
 {
@@ -222,7 +218,6 @@ public class TestAssertionsTests
     }
 }
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class MockFactoryTests
 {

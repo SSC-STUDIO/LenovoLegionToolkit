@@ -360,6 +360,35 @@ public class CompatibilityTests
         result.SupportsGodMode.Should().BeFalse();
     }
 
+    [Fact]
+    public void FeatureDataIndicatesIgpuMode_WhenCapabilityDataListsIgpuMode_ShouldReturnTrue()
+    {
+        var features = new MachineInformation.FeatureData(
+            MachineInformation.FeatureData.SourceType.CapabilityData,
+            [CapabilityID.IGPUMode]);
+
+        Compatibility.FeatureDataIndicatesIgpuMode(features).Should().BeTrue();
+        Compatibility.FeatureDataIndicatesGSync(features).Should().BeFalse();
+    }
+
+    [Fact]
+    public void FeatureDataIndicatesGSync_WhenCapabilityDataListsNvidiaDynamicDisplaySwitching_ShouldReturnTrue()
+    {
+        var features = new MachineInformation.FeatureData(
+            MachineInformation.FeatureData.SourceType.CapabilityData,
+            [CapabilityID.NvidiaGPUDynamicDisplaySwitching]);
+
+        Compatibility.FeatureDataIndicatesGSync(features).Should().BeTrue();
+        Compatibility.FeatureDataIndicatesIgpuMode(features).Should().BeFalse();
+    }
+
+    [Fact]
+    public void FeatureDataIndicatesHybridGpu_WhenFeatureDataIsUnknown_ShouldReturnFalse()
+    {
+        Compatibility.FeatureDataIndicatesIgpuMode(MachineInformation.FeatureData.Unknown).Should().BeFalse();
+        Compatibility.FeatureDataIndicatesGSync(MachineInformation.FeatureData.Unknown).Should().BeFalse();
+    }
+
     private static MachineInformation CreateMachineInformation(string model, string vendor = "LENOVO") => new()
     {
         Vendor = vendor,

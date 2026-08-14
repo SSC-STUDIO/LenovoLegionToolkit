@@ -8,7 +8,7 @@ using Moq;
 
 namespace UniversalDeviceToolkit.Tests.Features;
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class IFeatureTests : UnitTestBase
 {
     [Fact]
@@ -56,7 +56,7 @@ public class IFeatureTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class BatteryStateTests : UnitTestBase
 {
     [Fact]
@@ -80,7 +80,7 @@ public class BatteryStateTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class PowerModeStateTests : UnitTestBase
 {
     [Fact]
@@ -112,7 +112,7 @@ public class PowerModeStateTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class HybridModeStateTests : UnitTestBase
 {
     [Fact]
@@ -129,7 +129,7 @@ public class HybridModeStateTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class GPUStateTests : UnitTestBase
 {
     [Fact]
@@ -154,7 +154,7 @@ public class GPUStateTests : UnitTestBase
 }
 
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class FanTableTypeTests : UnitTestBase
 {
     [Fact]

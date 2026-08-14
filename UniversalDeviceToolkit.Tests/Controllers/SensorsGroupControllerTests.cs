@@ -6,7 +6,7 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class SensorsGroupControllerTests
 {
     [Fact]

@@ -26,22 +26,22 @@ public class UpdateCheckerTests : TemporaryFileTestBase
     {
         // Arrange
         var catalogRelease = CreateRelease("plugin-catalog", string.Empty, prerelease: false);
+        var previewCatalogRelease = CreateRelease("plugin-catalog-preview", string.Empty, prerelease: true);
         var applicationRelease = CreateRelease("v5.0.1", string.Empty, prerelease: false);
         var previewRelease = CreateRelease("v5.1.0-rc.1", string.Empty, prerelease: true);
 
         // Act
         var stableReleases = UpdateChecker.FilterPublicApplicationReleases(
-            [catalogRelease, applicationRelease, previewRelease],
+            [catalogRelease, previewCatalogRelease, applicationRelease, previewRelease],
             includePrerelease: false);
         var previewReleases = UpdateChecker.FilterPublicApplicationReleases(
-            [catalogRelease, applicationRelease, previewRelease],
+            [catalogRelease, previewCatalogRelease, applicationRelease, previewRelease],
             includePrerelease: true);
 
         // Assert
         stableReleases.Should().ContainSingle().Which.TagName.Should().Be("v5.0.1");
         previewReleases.Should().HaveCount(2);
-        previewReleases.Should().NotContain(release =>
-            string.Equals(release.TagName, "plugin-catalog", StringComparison.OrdinalIgnoreCase));
+        previewReleases.Should().NotContain(release => PluginCatalogTags.IsCatalogTag(release.TagName));
     }
 
     [Fact]

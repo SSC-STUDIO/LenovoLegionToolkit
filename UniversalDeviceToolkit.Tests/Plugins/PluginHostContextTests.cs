@@ -5,7 +5,6 @@ using Xunit;
 
 namespace UniversalDeviceToolkit.Tests.Plugins;
 
-[Trait("Category", TestCategories.Plugin)]
 [Trait("Category", TestCategories.Unit)]
 public class PluginHostContextTests : IDisposable
 {

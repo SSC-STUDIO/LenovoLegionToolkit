@@ -17,6 +17,10 @@
           </Include>
           <Exclude>
             [UniversalDeviceToolkit.Tests]*
+            [UniversalDeviceToolkit.Tests.Contracts]*
+            [UniversalDeviceToolkit.Tests.Stateful]*
+            [UniversalDeviceToolkit.Tests.Infrastructure]*
+            [UniversalDeviceToolkit.Fast.Tests]*
             [UniversalDeviceToolkit.CrossPlatform.Tests]*
             [*.Tests]*
           </Exclude>

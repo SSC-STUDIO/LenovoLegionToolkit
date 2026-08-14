@@ -10,7 +10,6 @@ namespace UniversalDeviceToolkit.Tests.Utils;
 /// (LogoInfoFormat zero-flags coverage lives under Extensions/.)
 /// </summary>
 [Trait("Category", TestCategories.Unit)]
-[Trait("Category", TestCategories.Utils)]
 public sealed class ExtensionEdgeCaseTests
 {
     [Fact]

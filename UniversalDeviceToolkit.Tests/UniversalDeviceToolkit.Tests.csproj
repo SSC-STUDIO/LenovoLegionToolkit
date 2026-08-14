@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UniversalDeviceToolkit.Tests.Infrastructure\UniversalDeviceToolkit.Tests.Infrastructure.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.ViewModels\UniversalDeviceToolkit.ViewModels.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" AdditionalProperties="EnableUdtTestHooks=true" />

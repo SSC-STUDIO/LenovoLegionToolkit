@@ -14,7 +14,7 @@ using UniversalDeviceToolkit.Tests.Infrastructure;
 
 namespace UniversalDeviceToolkit.Tests.Controllers;
 
-[Trait("Category", TestCategories.Controller)]
+[Trait("Category", TestCategories.Unit)]
 public class GPUControllerTests : UnitTestBase
 {
     private Mock<IGPUProcessManager> _processManagerMock = null!;

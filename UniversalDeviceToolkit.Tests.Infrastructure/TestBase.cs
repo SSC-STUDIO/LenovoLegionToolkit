@@ -10,22 +10,19 @@ using FluentAssertions;
 namespace UniversalDeviceToolkit.Tests;
 
 /// <summary>
-/// Test categories for organizing tests and CI fail-fast filters.
+/// Test categories. After the Host test split, CI selects by project
+/// (Contracts / Fast / Unit / Stateful). A class should carry at most one
+/// Category trait: Security or Guard in Contracts, Unit elsewhere.
 /// </summary>
 public static class TestCategories
 {
     public const string Unit = "Unit";
-    public const string Plugin = "Plugin";
-    public const string Utils = "Utils";
-    public const string Controller = "Controller";
-    public const string Smoke = "Smoke";
 
     /// <summary>Security-sensitive paths (injection, signatures, path traversal).</summary>
     public const string Security = "Security";
 
-    /// <summary>Repository/architecture contract guards (CI YAML, design tokens, payloads).</summary>
+    /// <summary>Repository/architecture contract guards (CI YAML, payloads, layout).</summary>
     public const string Guard = "Guard";
-
 }
 
 /// <summary>
