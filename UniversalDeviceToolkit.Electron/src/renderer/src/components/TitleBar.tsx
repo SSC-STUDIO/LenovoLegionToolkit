@@ -22,15 +22,16 @@ const PAGE_LABELS: Record<string, string> = {
   '/about': 'nav.about'
 }
 
-type WindowButtonKind = 'minimize' | 'maximize' | 'close'
-
 export default function TitleBar(): React.JSX.Element {
   const { t } = useTranslation()
   const location = useLocation()
   const [isMaximized, setIsMaximized] = useState(false)
-  const [hover, setHover] = useState<WindowButtonKind | null>(null)
   const [deviceModel, setDeviceModel] = useState<string | null>(null)
   const [deviceInfoOpen, setDeviceInfoOpen] = useState(false)
+
+  // macOS uses the native traffic lights (red/yellow/green) instead of the
+  // custom right-aligned caption buttons; leave room for them on the left.
+  const isMac = window.bridge?.platform === 'darwin'
 
   useEffect(() => {
     let disposed = false
@@ -82,9 +83,6 @@ export default function TitleBar(): React.JSX.Element {
     })
   }
 
-  const buttonClassName = (kind: WindowButtonKind): string =>
-    kind === 'close' && hover === 'close' ? 'udt-titlebar__close' : ''
-
   const pageKey = PAGE_LABELS[location.pathname] ?? 'nav.dashboard'
   const windowTitle = `${APP_DISPLAY_NAME} - ${t(pageKey)}`
 
@@ -94,7 +92,7 @@ export default function TitleBar(): React.JSX.Element {
 
   return (
     <>
-      <div className="udt-titlebar udt-titlebar--original">
+      <div className={`udt-titlebar udt-titlebar--original${isMac ? ' udt-titlebar--mac' : ''}`}>
         <span className="udt-titlebar__title" style={DRAG_STYLE} onDoubleClick={toggleMaximize}>
           <span className="udt-titlebar__title-text">{windowTitle}</span>
         </span>
@@ -121,13 +119,11 @@ export default function TitleBar(): React.JSX.Element {
               </button>
             </Tooltip>
           </div>
+          {!isMac && (
           <div className="udt-titlebar__window-controls">
             <button
               type="button"
               aria-label={t('common.minimize')}
-              className={buttonClassName('minimize')}
-              onMouseEnter={() => setHover('minimize')}
-              onMouseLeave={() => setHover(null)}
               onClick={() => window.bridge?.minimize()}
             >
               <svg width="11" height="11" viewBox="0 0 11 11">
@@ -137,9 +133,6 @@ export default function TitleBar(): React.JSX.Element {
             <button
               type="button"
               aria-label={isMaximized ? t('common.restore') : t('common.maximize')}
-              className={buttonClassName('maximize')}
-              onMouseEnter={() => setHover('maximize')}
-              onMouseLeave={() => setHover(null)}
               onClick={toggleMaximize}
             >
               {isMaximized ? (
@@ -156,9 +149,7 @@ export default function TitleBar(): React.JSX.Element {
             <button
               type="button"
               aria-label={t('common.windowClose')}
-              className={buttonClassName('close')}
-              onMouseEnter={() => setHover('close')}
-              onMouseLeave={() => setHover(null)}
+              className="udt-titlebar__close"
               onClick={() => window.bridge?.closeWindow()}
             >
               <svg width="11" height="11" viewBox="0 0 11 11">
@@ -166,6 +157,7 @@ export default function TitleBar(): React.JSX.Element {
               </svg>
             </button>
           </div>
+          )}
         </div>
       </div>
       <DeviceInfoModal

@@ -1,12 +1,33 @@
 import { create } from 'zustand'
+import {
+  isUiScaleOption,
+  parseUiScalePreference,
+  resolveUiScale,
+  UI_SCALE_AUTO,
+  type UiScalePreference
+} from '../theme/uiScale'
 
 export type ThemeMode = 'light' | 'dark'
+export type ThemePreference = 'system' | 'light' | 'dark'
+export {
+  UI_SCALE_AUTO,
+  UI_SCALE_OPTIONS,
+  type UiScale,
+  type UiScalePreference
+} from '../theme/uiScale'
 
 export interface ThemeStore {
   themeMode: ThemeMode
+  /** The user's theme preference ('system' follows the OS light/dark). */
+  themePreference: ThemePreference
   colorPrimary?: string
-  /** UI scale factor (1.0 = default). Independent of Windows display scaling. */
+  /** Currently applied UI scale factor (1.0 = default). */
   uiScale: number
+  /**
+   * Persisted scale choice. 'auto' follows the window size; a number locks
+   * the matching settings step.
+   */
+  uiScalePreference: UiScalePreference
   /**
    * ApplyAccentColorToTheme gate: when true the accent tints the surface
    * palette (surfaces/controls/strokes/secondary text); when false the
@@ -14,42 +35,62 @@ export interface ThemeStore {
    */
   accentTintsSurfaces: boolean
   setThemeMode: (mode: ThemeMode) => void
+  setThemePreference: (preference: ThemePreference) => void
   setAccent: (color?: string) => void
   setUiScale: (scale: number) => void
+  setUiScalePreference: (preference: UiScalePreference) => void
+  applyComputedUiScale: (scale: number) => void
   setAccentTintsSurfaces: (enabled: boolean) => void
 }
 
-/**
- * Selectable UI scale levels, aligned with the Electron app
- * (Compact 0.90 / Standard 1.0 / Large 1.10 / ExtraLarge 1.25).
- */
-export const UI_SCALE_OPTIONS = [0.9, 1, 1.1, 1.25] as const
-export type UiScale = (typeof UI_SCALE_OPTIONS)[number]
-
 const UI_SCALE_STORAGE_KEY = 'udt-ui-scale'
+const THEME_STORAGE_KEY = 'udt.theme'
 
-function readStoredUiScale(): number {
+function readStoredThemePreference(): ThemePreference {
   try {
-    const stored = localStorage.getItem(UI_SCALE_STORAGE_KEY)
-    const parsed = stored != null ? Number(stored) : NaN
-    if (Number.isFinite(parsed) && (UI_SCALE_OPTIONS as readonly number[]).includes(parsed)) {
-      return parsed
-    }
+    const stored = localStorage.getItem(THEME_STORAGE_KEY)
+    if (stored === 'light' || stored === 'dark' || stored === 'system') return stored
   } catch {
     /* ignore quota / private mode */
   }
-  return 1
+  return 'system'
+}
+
+function persistUiScalePreference(preference: UiScalePreference): void {
+  try {
+    localStorage.setItem(UI_SCALE_STORAGE_KEY, String(preference))
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
+function readStoredUiScalePreference(): UiScalePreference {
+  try {
+    return parseUiScalePreference(localStorage.getItem(UI_SCALE_STORAGE_KEY)) ?? UI_SCALE_AUTO
+  } catch {
+    /* ignore quota / private mode */
+  }
+  return UI_SCALE_AUTO
 }
 
 /**
  * Applies the UI scale to the whole interface.
  *
- * The app stylesheet is px-based, so changing the root font-size alone would
- * not scale anything; CSS `zoom` (Chromium / Electron) scales layout and text
- * together and is the layout-adaptive equivalent of the Electron AppScale.
- * Scale 1.0 resets the document to its default rendering.
+ * In Electron the scale is pushed to the main process, which multiplies it
+ * into webContents.setZoomFactor for every surface. Zoom factor (unlike CSS
+ * zoom) keeps @media breakpoints, @container queries and devicePixelRatio
+ * consistent with each other, and satellite windows share the same density.
+ *
+ * In browser dev (dev:web, platform 'web') there is no main process, so CSS
+ * `zoom` on <html> remains the fallback.
  */
 export function applyUiScale(scale: number): void {
+  const bridge = window.bridge
+  if (bridge && bridge.platform !== 'web') {
+    document.documentElement.style.removeProperty('zoom')
+    void bridge.setUiScale?.(scale)?.catch(() => undefined)
+    return
+  }
   const html = document.documentElement
   if (scale === 1) {
     html.style.removeProperty('zoom')
@@ -58,20 +99,38 @@ export function applyUiScale(scale: number): void {
   }
 }
 
-export const useThemeStore = create<ThemeStore>()((set) => ({
+const initialUiScalePreference = readStoredUiScalePreference()
+const initialUiScale = resolveUiScale(initialUiScalePreference)
+
+export const useThemeStore = create<ThemeStore>()((set, get) => ({
   themeMode: 'dark',
+  themePreference: readStoredThemePreference(),
   colorPrimary: undefined,
-  uiScale: readStoredUiScale(),
+  uiScale: initialUiScale,
+  uiScalePreference: initialUiScalePreference,
   accentTintsSurfaces: true,
   setThemeMode: (themeMode) => set({ themeMode }),
-  setAccent: (colorPrimary) => set({ colorPrimary }),
-  setUiScale: (uiScale) => {
-    set({ uiScale })
+  setThemePreference: (themePreference) => {
+    set({ themePreference })
     try {
-      localStorage.setItem(UI_SCALE_STORAGE_KEY, String(uiScale))
+      localStorage.setItem(THEME_STORAGE_KEY, themePreference)
     } catch {
       /* ignore quota / private mode */
     }
+  },
+  setAccent: (colorPrimary) => set({ colorPrimary }),
+  setUiScalePreference: (uiScalePreference) => {
+    const uiScale = resolveUiScale(uiScalePreference)
+    set({ uiScalePreference, uiScale })
+    persistUiScalePreference(uiScalePreference)
+    applyUiScale(uiScale)
+  },
+  setUiScale: (scale) => {
+    get().setUiScalePreference(isUiScaleOption(scale) ? scale : 1)
+  },
+  applyComputedUiScale: (uiScale) => {
+    if (uiScale === get().uiScale) return
+    set({ uiScale })
     applyUiScale(uiScale)
   },
   setAccentTintsSurfaces: (accentTintsSurfaces) => set({ accentTintsSurfaces })

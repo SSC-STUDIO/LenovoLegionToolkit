@@ -114,6 +114,8 @@
         powerRange: 'Power Range',
         details: 'Details',
         doubleClickHint: 'Double-click for all sensor data',
+        showDetails: 'Show details',
+        hideDetails: 'Hide details',
         chartEmpty: 'Waiting for sensor data',
         refreshInterval: 'Refresh Interval',
         detail: {
@@ -144,7 +146,8 @@
       card: {
         error: 'Failed to apply setting',
         config: 'Advanced settings',
-        configComingSoon: 'Advanced settings will be available in a future version'
+        configComingSoon: 'Advanced settings will be available in a future version',
+        notSupported: 'Not supported on this device'
       }
     },
     balanceMode: {
@@ -341,7 +344,9 @@
       delete: 'Delete',
       ok: 'OK',
       confirm: 'Confirm',
-      resetDefault: 'Reset to default'
+      resetDefault: 'Reset to default',
+      load: 'Load',
+      notSupportedOnPlatform: 'Not supported on this platform.'
     },
     colorPicker: {
       hex: 'Hex',
@@ -388,7 +393,9 @@
           custom: 'Custom'
         },
         appScale: 'UI Scale',
-        appScaleDesc: 'Uniformly scale text and the entire interface, independent of the Windows display scaling.',
+        appScaleDesc:
+          'Uniformly scale text and the entire interface, independent of the Windows display scaling. Auto follows the window size.',
+        appScaleAuto: 'Auto',
         themeOptions: {
           system: 'System',
           light: 'Light',
@@ -407,7 +414,9 @@
         dontShowNotifications: "Don't Show Notifications",
         dontShowNotificationsDesc: 'Disable in-app and system notifications',
         autorun: 'Start on Login',
-        autorunDesc: 'Start the application when you sign in to Windows.',
+        autorunDesc: 'Start the application when you sign in to Windows (scheduled task).',
+        autorunDescLoginItem: 'Start the application when you sign in to this computer.',
+        autorunUnavailable: 'Start on login is not available in the browser preview.',
         autorunOptions: {
           enabled: 'Enabled',
           enabledDelayed: 'Enabled (Delayed)',
@@ -538,6 +547,9 @@
       },
       display: {
         navigationItems: 'Navigation Items Visibility',
+        groupNotifications: 'Notifications',
+        groupWindow: 'Window & display',
+        notificationCategories: 'Notification categories and behavior',
         navigationKeys: {
           keyboard: 'Keyboard Backlight',
           battery: 'Battery',
@@ -1163,6 +1175,7 @@
       summaryInstalled: 'Installed',
       summaryUpdates: 'Updates available',
       importFromFiles: 'Import from files',
+      importDesktopOnly: 'Importing plugin files requires the desktop app.',
 
 
       notFound: 'Plugin not found',
@@ -1195,6 +1208,8 @@
       clear: 'Clear (Revert)',
       applied: 'Applied',
       applyFailed: 'Failed to apply (administrator rights may be required)',
+      elevationRequired:
+        'Administrator approval is required. Confirm the UAC prompt, or start the app elevated.',
       reverted: 'Reverted',
       revertFailed: 'Failed to revert (administrator rights may be required)',
       estimate: 'Estimate Size',
@@ -1298,6 +1313,12 @@
           off: 'Idle'
         },
         backendMissingHint: 'Proxy worker is unavailable',
+        proxyMissing:
+          'Network acceleration cannot start because NetworkProxy.exe is missing from the install.',
+        hostsModeRefused:
+          'Hosts mode is not started from this page. Use System Proxy or Diagnostics.',
+        startRefused:
+          'Acceleration did not start. Check that it is enabled and at least one target is selected.',
         selectGroupsFirstHint: 'Select at least one target',
         advancedHeading: 'Advanced',
         advancedBody: 'Advanced settings and network recovery.',

@@ -1,14 +1,14 @@
 ﻿import { useEffect, useState } from 'react'
 import {
-  ApiOutlined,
-  AppstoreOutlined,
-  BgColorsOutlined,
-  DesktopOutlined,
-  EyeOutlined,
-  KeyOutlined,
-  PoweroffOutlined,
-  SyncOutlined
-} from '@ant-design/icons'
+  Apps24Regular,
+  ArrowSync24Regular,
+  Desktop24Regular,
+  Eye24Regular,
+  Key24Regular,
+  PaintBrush24Regular,
+  PlugConnected24Regular,
+  Power24Regular
+} from '../components/icons/fluent'
 import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { featuresApi, type FeatureKey } from '../api/features'
@@ -62,14 +62,14 @@ const LENOVO_FEATURE_KEYS: readonly FeatureKey[] = [
 ]
 
 const NAV_ITEMS: { key: SectionKey; labelKey: string; icon: React.JSX.Element }[] = [
-  { key: 'appearance', labelKey: 'settings.nav.appearance', icon: <BgColorsOutlined /> },
-  { key: 'application', labelKey: 'settings.nav.application', icon: <AppstoreOutlined /> },
-  { key: 'power', labelKey: 'settings.nav.power', icon: <PoweroffOutlined /> },
-  { key: 'display', labelKey: 'settings.nav.display', icon: <DesktopOutlined /> },
-  { key: 'smartKeys', labelKey: 'settings.nav.smartKeys', icon: <KeyOutlined /> },
-  { key: 'update', labelKey: 'settings.nav.update', icon: <SyncOutlined /> },
-  { key: 'integrations', labelKey: 'settings.nav.integrations', icon: <ApiOutlined /> },
-  { key: 'osd', labelKey: 'settings.nav.osd', icon: <EyeOutlined /> }
+  { key: 'appearance', labelKey: 'settings.nav.appearance', icon: <PaintBrush24Regular /> },
+  { key: 'application', labelKey: 'settings.nav.application', icon: <Apps24Regular /> },
+  { key: 'power', labelKey: 'settings.nav.power', icon: <Power24Regular /> },
+  { key: 'display', labelKey: 'settings.nav.display', icon: <Desktop24Regular /> },
+  { key: 'smartKeys', labelKey: 'settings.nav.smartKeys', icon: <Key24Regular /> },
+  { key: 'update', labelKey: 'settings.nav.update', icon: <ArrowSync24Regular /> },
+  { key: 'integrations', labelKey: 'settings.nav.integrations', icon: <PlugConnected24Regular /> },
+  { key: 'osd', labelKey: 'settings.nav.osd', icon: <Eye24Regular /> }
 ]
 
 const HARDWARE_GATED_KEYS: readonly SectionKey[] = ['smartKeys', 'display', 'power']
@@ -100,9 +100,11 @@ export default function SettingsPage(): React.JSX.Element {
 
   useEffect(() => {
     let cancelled = false
+    // SettingsPage owns its loading chrome: SkeletonList already mirrors the
+    // section cards, so keep this session silent and skip the global overlay.
     const loadingId = useLoadingStore.getState().start(
       t('loading.settings', { defaultValue: 'Loading settings…' }),
-      { canCancel: false }
+      { canCancel: false, silent: true }
     )
     Promise.all([featuresApi.list(), useSettingsStore.getState().load()])
       .then(([infos]) => {
@@ -199,7 +201,7 @@ export default function SettingsPage(): React.JSX.Element {
           <header className="udt-settings-page__section-header">
             <h2 className="udt-settings-page__section-title">{t(`settings.nav.${active}`)}</h2>
           </header>
-          {pageLoading ? <SkeletonList rows={4} /> : renderSection(active)}
+          {pageLoading ? <SkeletonList rows={4} withIcon={false} accessory="select" /> : renderSection(active)}
         </section>
       </div>
     </div>

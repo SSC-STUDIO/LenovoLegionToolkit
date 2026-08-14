@@ -3,6 +3,7 @@ import { settingsApi } from '../api/settings'
 import { systemApi } from '../api/system'
 import { applyUiScale, useThemeStore } from '../stores/themeStore'
 import type { ThemeMode } from '../stores/themeStore'
+import { computeAutoUiScale, readLayoutWidth, UI_SCALE_AUTO } from './uiScale'
 import {
   applyAccentSurfacePalette,
   clearAccentSurfacePalette,
@@ -19,7 +20,6 @@ interface ApplicationSettings {
   ApplyAccentColorToTheme?: boolean
 }
 
-const THEME_STORAGE_KEY = 'udt.theme'
 const ACCENT_SOURCE_STORAGE_KEY = 'udt.accent-source'
 const ACCENT_COLOR_STORAGE_KEY = 'udt.accent'
 const DEFAULT_SYSTEM_ACCENT_HEX = '#0078d4'
@@ -42,7 +42,7 @@ export function storeAccentPreference(source: 'System' | 'Custom', hex?: string)
       localStorage.removeItem(ACCENT_COLOR_STORAGE_KEY)
     }
   } catch {
-    // localStorage unavailable — the host scope remains the only source.
+    // localStorage is unavailable; Host settings remain the only source.
   }
 }
 
@@ -70,30 +70,29 @@ function rgbToHex(color: { R: number; G: number; B: number }): string {
   return `#${toHex(color.R)}${toHex(color.G)}${toHex(color.B)}`
 }
 
-function storedThemePreference(): ThemePreference | null {
-  const stored = localStorage.getItem(THEME_STORAGE_KEY)
-  if (stored === 'light' || stored === 'dark') return stored === 'light' ? 'Light' : 'Dark'
-  if (stored === 'system') return 'System'
-  return null
-}
-
 export interface ThemeController {
   themeMode: ThemeMode
+  themePreference: 'system' | 'light' | 'dark'
   colorPrimary?: string
   uiScale: number
   setThemeMode: (mode: ThemeMode) => void
+  setThemePreference: (preference: 'system' | 'light' | 'dark') => void
   setAccent: (color?: string) => void
   setUiScale: (scale: number) => void
 }
 
 export function useTheme(): ThemeController {
   const themeMode = useThemeStore((s) => s.themeMode)
+  const themePreference = useThemeStore((s) => s.themePreference)
   const colorPrimary = useThemeStore((s) => s.colorPrimary)
   const uiScale = useThemeStore((s) => s.uiScale)
+  const uiScalePreference = useThemeStore((s) => s.uiScalePreference)
   const accentTintsSurfaces = useThemeStore((s) => s.accentTintsSurfaces)
   const setThemeMode = useThemeStore((s) => s.setThemeMode)
+  const setThemePreference = useThemeStore((s) => s.setThemePreference)
   const setAccent = useThemeStore((s) => s.setAccent)
   const setUiScale = useThemeStore((s) => s.setUiScale)
+  const applyComputedUiScale = useThemeStore((s) => s.applyComputedUiScale)
   const setAccentTintsSurfaces = useThemeStore((s) => s.setAccentTintsSurfaces)
 
   // Keep the document scaling in sync with the store (the store also applies
@@ -119,14 +118,22 @@ export function useTheme(): ThemeController {
 
   useEffect(() => {
     let disposed = false
-    let preference: ThemePreference = 'System'
     let media: MediaQueryList | null = null
     let systemAccentHex = DEFAULT_SYSTEM_ACCENT_HEX
 
+    // Follow the OS light/dark while the preference is 'system'.
     const onSystemChange = (): void => {
-      if (disposed || preference !== 'System') return
-      // The palette effect above retints surfaces for the new mode.
+      if (disposed || themePreference !== 'system') return
       setThemeMode(systemPrefersDark() ? 'dark' : 'light')
+    }
+
+    const syncSystemListener = (): void => {
+      media?.removeEventListener('change', onSystemChange)
+      media = null
+      if (themePreference === 'system') {
+        media = window.matchMedia('(prefers-color-scheme: dark)')
+        media.addEventListener('change', onSystemChange)
+      }
     }
 
     // Electron ThemeManager.SetColor always applies the resolved accent.
@@ -146,34 +153,18 @@ export function useTheme(): ThemeController {
     }
 
     const apply = (settings?: ApplicationSettings): void => {
-      const stored = storedThemePreference()
-      media?.removeEventListener('change', onSystemChange)
-      let mode: ThemeMode
-      if (stored === 'System') {
-        // Renderer-authoritative "follow system" (host value may be stale).
-        preference = 'System'
-        media = window.matchMedia('(prefers-color-scheme: dark)')
-        media.addEventListener('change', onSystemChange)
-        mode = systemPrefersDark() ? 'dark' : 'light'
-        setThemeMode(mode)
-      } else if (stored) {
-        preference = 'System'
-        media = null
-        mode = stored === 'Dark' ? 'dark' : 'light'
-        setThemeMode(mode)
-      } else {
-        preference = settings?.Theme ?? 'System'
-        if (preference === 'System') {
-          media = window.matchMedia('(prefers-color-scheme: dark)')
-          media.addEventListener('change', onSystemChange)
-          mode = systemPrefersDark() ? 'dark' : 'light'
-          setThemeMode(mode)
-        } else {
-          media = null
-          mode = preference === 'Dark' ? 'dark' : 'light'
-          setThemeMode(mode)
-        }
-      }
+      // themePreference is the renderer-authoritative source (Settings page
+      // writes it to the store + localStorage; host value may be stale).
+      syncSystemListener()
+      const mode: ThemeMode =
+        themePreference === 'dark'
+          ? 'dark'
+          : themePreference === 'light'
+            ? 'light'
+            : systemPrefersDark()
+              ? 'dark'
+              : 'light'
+      setThemeMode(mode)
       const accentHex = resolveAccent(settings)
       setAccent(accentHex)
       // Electron ThemeManager: the accent itself always applies; the palette
@@ -212,7 +203,26 @@ export function useTheme(): ThemeController {
       media?.removeEventListener('change', onSystemChange)
       offChanged()
     }
-  }, [setAccent, setThemeMode, setAccentTintsSurfaces])
+  }, [themePreference, setAccent, setThemeMode, setAccentTintsSurfaces])
 
-  return { themeMode, colorPrimary, uiScale, setThemeMode, setAccent, setUiScale }
+  useEffect(() => {
+    if (uiScalePreference !== UI_SCALE_AUTO) return undefined
+    const applyAuto = (): void => {
+      applyComputedUiScale(computeAutoUiScale(readLayoutWidth()))
+    }
+    applyAuto()
+    let debounceId: ReturnType<typeof setTimeout> | undefined
+    const onResize = (): void => {
+      if (debounceId !== undefined) clearTimeout(debounceId)
+      debounceId = setTimeout(applyAuto, 100)
+    }
+    window.addEventListener('resize', onResize)
+    return () => {
+      if (debounceId !== undefined) clearTimeout(debounceId)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [uiScalePreference, applyComputedUiScale])
+
+  return { themeMode, themePreference, colorPrimary, uiScale, setThemeMode, setThemePreference, setAccent, setUiScale }
 }
+

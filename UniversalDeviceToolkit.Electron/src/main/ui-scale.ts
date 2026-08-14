@@ -18,7 +18,7 @@ import { app, webContents, type WebContents } from 'electron'
  */
 export const PLATFORM_BASE_ZOOM = process.platform === 'win32' ? 5 / 6 : 1
 
-/** Selectable range guard; the settings UI offers 0.9 / 1 / 1.1 / 1.25. */
+/** Selectable range guard; the settings UI offers 0.9 / 1 / 1.1 / 1.25 / 1.5. */
 const MIN_UI_SCALE = 0.75
 const MAX_UI_SCALE = 1.5
 

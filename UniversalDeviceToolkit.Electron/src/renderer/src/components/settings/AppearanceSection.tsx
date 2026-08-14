@@ -6,7 +6,12 @@ import { settingsApi } from '../../api/settings'
 import { systemApi } from '../../api/system'
 import { LANGUAGES, changeLanguage } from '../../i18n'
 import { useSettingsStore } from '../../stores/settingsStore'
-import { UI_SCALE_OPTIONS, useThemeStore } from '../../stores/themeStore'
+import {
+  UI_SCALE_AUTO,
+  UI_SCALE_OPTIONS,
+  useThemeStore,
+  type UiScalePreference
+} from '../../stores/themeStore'
 import { storeAccentPreference } from '../../theme/useTheme'
 import { SettingsCard } from './SettingsCard'
 
@@ -62,14 +67,15 @@ const TEMPERATURE_UNIT_OPTIONS: { value: TemperatureUnit; label: string }[] = [
   { value: 'F', label: '°F' }
 ]
 
-/**
- * UI scale levels aligned with the Electron app
- * (Compact 0.90 / Standard 1.0 / Large 1.10 / ExtraLarge 1.25).
- */
-const UI_SCALE_OPTIONS_LABELED = UI_SCALE_OPTIONS.map((value) => ({
-  value,
-  label: `${Math.round(value * 100)}%`
-}))
+function uiScaleOptions(autoLabel: string): { value: UiScalePreference; label: string }[] {
+  return [
+    { value: UI_SCALE_AUTO, label: autoLabel },
+    ...UI_SCALE_OPTIONS.map((value) => ({
+      value,
+      label: `${Math.round(value * 100)}%`
+    }))
+  ]
+}
 
 /**
  * Solid accent presets from Lib Theme/AccentColorPresets.cs (system rainbow is separate).
@@ -159,6 +165,73 @@ function EyedropperIcon(): React.JSX.Element {
   )
 }
 
+function ThemePreviewTrafficLights(): React.JSX.Element {
+  return (
+    <>
+      <span className="udt-theme-option__dot udt-theme-option__dot--red" />
+      <span className="udt-theme-option__dot udt-theme-option__dot--yellow" />
+      <span className="udt-theme-option__dot udt-theme-option__dot--green" />
+    </>
+  )
+}
+
+function ThemePreviewBar({ system = false }: { system?: boolean }): React.JSX.Element {
+  return (
+    <span className={`udt-theme-option__bar${system ? ' udt-theme-option__bar--system' : ''}`}>
+      <ThemePreviewTrafficLights />
+      <span className="udt-theme-option__caption" />
+    </span>
+  )
+}
+
+function ThemePreviewNavItem({ active = false }: { active?: boolean }): React.JSX.Element {
+  return (
+    <span className={`udt-theme-option__nav-item${active ? ' udt-theme-option__nav-item--active' : ''}`}>
+      {active ? <span className="udt-theme-option__nav-accent" /> : null}
+      <span className="udt-theme-option__nav-icon" />
+      <span className="udt-theme-option__nav-label" />
+    </span>
+  )
+}
+
+function ThemePreviewNav(): React.JSX.Element {
+  return (
+    <span className="udt-theme-option__sidebar">
+      <span className="udt-theme-option__nav-group">
+        <ThemePreviewNavItem active />
+        <ThemePreviewNavItem />
+        <ThemePreviewNavItem />
+      </span>
+      <span className="udt-theme-option__nav-group udt-theme-option__nav-group--footer">
+        <ThemePreviewNavItem />
+        <ThemePreviewNavItem />
+      </span>
+    </span>
+  )
+}
+
+function ThemePreviewRow({ variant }: { variant: 'primary' | 'secondary' | 'tertiary' }): React.JSX.Element {
+  return (
+    <span className={`udt-theme-option__row udt-theme-option__row--${variant}`}>
+      <span className="udt-theme-option__copy">
+        <span className="udt-theme-option__line udt-theme-option__line--title" />
+        <span className="udt-theme-option__line udt-theme-option__line--desc" />
+      </span>
+      <span className="udt-theme-option__control" />
+    </span>
+  )
+}
+
+function ThemePreviewContent(): React.JSX.Element {
+  return (
+    <span className="udt-theme-option__content">
+      <ThemePreviewRow variant="primary" />
+      <ThemePreviewRow variant="secondary" />
+      <ThemePreviewRow variant="tertiary" />
+    </span>
+  )
+}
+
 function ThemePreviewCard({
   option,
   selected,
@@ -170,44 +243,8 @@ function ThemePreviewCard({
   label: string
   onClick: () => void
 }): React.JSX.Element {
-  // Electron theme preview: Light/Dark cards render two identical panes; the System
-  // card is split - one light half and one dark half.
   const isSystem = option.value === 'System'
-  const singleMode: 'light' | 'dark' = option.value === 'Light' ? 'light' : 'dark'
-  const panes: ('light' | 'dark')[] = isSystem ? ['light', 'dark'] : [singleMode, singleMode]
-
-  const renderPane = (mode: 'light' | 'dark', index: number): React.JSX.Element => (
-    <span key={index} className={`udt-theme-option__pane udt-theme-option__pane--${mode}`}>
-      <span className="udt-theme-option__bar">
-        {index === 0 ? (
-          <>
-            <span className="udt-theme-option__dot udt-theme-option__dot--red" />
-            <span className="udt-theme-option__dot udt-theme-option__dot--yellow" />
-            <span className="udt-theme-option__dot udt-theme-option__dot--green" />
-          </>
-        ) : (
-          <span className="udt-theme-option__bar-blank" />
-        )}
-      </span>
-      <span className="udt-theme-option__body">
-        <span className="udt-theme-option__sidebar">
-          <span className="udt-theme-option__sline" />
-          <span className="udt-theme-option__sline" />
-          <span className="udt-theme-option__sline" />
-        </span>
-        <span className="udt-theme-option__content">
-          <span className="udt-theme-option__cline udt-theme-option__cline--search" />
-          <span className="udt-theme-option__cline" />
-          <span className="udt-theme-option__cline" />
-        </span>
-      </span>
-      <span className="udt-theme-option__dock">
-        <span className="udt-theme-option__swatch" />
-        <span className="udt-theme-option__swatch" />
-        <span className="udt-theme-option__swatch" />
-      </span>
-    </span>
-  )
+  const mode: 'light' | 'dark' = option.value === 'Light' ? 'light' : 'dark'
 
   return (
     <button
@@ -217,7 +254,33 @@ function ThemePreviewCard({
       aria-pressed={selected}
     >
       <span className="udt-theme-option__preview">
-        <span className="udt-theme-option__split">{panes.map(renderPane)}</span>
+        {isSystem ? (
+          <>
+            <ThemePreviewBar system />
+            <span className="udt-theme-option__split">
+              <span className="udt-theme-option__pane udt-theme-option__pane--light">
+                <span className="udt-theme-option__body">
+                  <ThemePreviewNav />
+                  <ThemePreviewContent />
+                </span>
+              </span>
+              <span className="udt-theme-option__pane udt-theme-option__pane--dark">
+                <span className="udt-theme-option__body">
+                  <ThemePreviewNav />
+                  <ThemePreviewContent />
+                </span>
+              </span>
+            </span>
+          </>
+        ) : (
+          <span className={`udt-theme-option__pane udt-theme-option__pane--${mode}`}>
+            <ThemePreviewBar />
+            <span className="udt-theme-option__body">
+              <ThemePreviewNav />
+              <ThemePreviewContent />
+            </span>
+          </span>
+        )}
       </span>
       <span className="udt-theme-option__label">{label}</span>
     </button>
@@ -226,11 +289,11 @@ function ThemePreviewCard({
 
 export default function AppearanceSection(): React.JSX.Element {
   const { t, i18n } = useTranslation()
-  const setThemeMode = useThemeStore((s) => s.setThemeMode)
+  const setThemePreference = useThemeStore((s) => s.setThemePreference)
   const setAccent = useThemeStore((s) => s.setAccent)
   const setAccentTintsSurfaces = useThemeStore((s) => s.setAccentTintsSurfaces)
-  const uiScale = useThemeStore((s) => s.uiScale)
-  const setUiScale = useThemeStore((s) => s.setUiScale)
+  const uiScalePreference = useThemeStore((s) => s.uiScalePreference)
+  const setUiScalePreference = useThemeStore((s) => s.setUiScalePreference)
   const scopes = useSettingsStore((s) => s.scopes)
   const load = useSettingsStore((s) => s.load)
   const setScope = useSettingsStore((s) => s.setScope)
@@ -328,18 +391,11 @@ export default function AppearanceSection(): React.JSX.Element {
   }
 
   const handleThemeChange = (value: ThemePreference): void => {
-    // Persist the renderer-side choice (useTheme.storedThemePreference() reads
-    // it and wins over the async host value - same protection as the accent).
-    try {
-      localStorage.setItem('udt.theme', value === 'System' ? 'system' : value === 'Dark' ? 'dark' : 'light')
-    } catch {
-      // ignore
-    }
-    if (value === 'System') {
-      setThemeMode(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-    } else {
-      setThemeMode(value === 'Dark' ? 'dark' : 'light')
-    }
+    // Persist the renderer-side choice and update the store — useTheme watches
+    // themePreference and re-runs, (re)attaching the OS light/dark listener
+    // when "follow system" is selected so switching the OS theme updates the
+    // app immediately.
+    setThemePreference(value === 'System' ? 'system' : value === 'Dark' ? 'dark' : 'light')
     persistApplication({ ...app, Theme: value })
   }
 
@@ -407,8 +463,8 @@ export default function AppearanceSection(): React.JSX.Element {
     applyAccentToWindowsIfEnabled(rgb, applyAccentToSystem)
   }
 
-  const handleUiScaleChange = (value: number): void => {
-    setUiScale(value)
+  const handleUiScaleChange = (value: UiScalePreference): void => {
+    setUiScalePreference(value)
   }
 
   const selectedTheme = readThemePreference(app)
@@ -523,10 +579,12 @@ export default function AppearanceSection(): React.JSX.Element {
         title={t('settings.appearance.appScale')}
         description={t('settings.appearance.appScaleDesc')}
         action={
-          <Select<number>
+          <Select<UiScalePreference>
             className="udt-settings-select udt-settings-select--scale"
-            value={uiScale}
-            options={UI_SCALE_OPTIONS_LABELED}
+            value={uiScalePreference}
+            options={uiScaleOptions(
+              t('settings.appearance.appScaleAuto', { defaultValue: 'Auto' })
+            )}
             onChange={handleUiScaleChange}
           />
         }

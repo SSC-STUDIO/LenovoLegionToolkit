@@ -113,6 +113,8 @@ export default {
         powerRange: '功率范围',
         details: '详情',
         doubleClickHint: '双击查看全部传感器数据',
+        showDetails: '显示详情',
+        hideDetails: '隐藏详情',
         chartEmpty: '等待传感器数据',
         refreshInterval: '刷新间隔',
         detail: {
@@ -143,7 +145,8 @@ export default {
       card: {
         error: '设置失败',
         config: '高级配置',
-        configComingSoon: '高级配置将在后续版本中提供'
+        configComingSoon: '高级配置将在后续版本中提供',
+        notSupported: '此设备不支持该功能'
       }
     },
     balanceMode: {
@@ -340,7 +343,9 @@ export default {
       delete: '删除',
       ok: '确定',
       confirm: '确认',
-      resetDefault: '重置为默认值'
+      resetDefault: '重置为默认值',
+      load: '重置',
+      notSupportedOnPlatform: '当前平台不支持此功能。'
     },
     colorPicker: {
       hex: '十六进制',
@@ -387,7 +392,9 @@ export default {
           custom: '自定义'
         },
         appScale: '界面缩放',
-        appScaleDesc: '统一放大或缩小应用内的文本与整个界面，独立于 Windows 显示缩放。',
+        appScaleDesc:
+          '统一放大或缩小应用内的文本与整个界面，独立于 Windows 显示缩放。选择“自动”时随窗口大小调整。',
+        appScaleAuto: '自动',
         themeOptions: {
           system: '跟随系统',
           light: '亮色',
@@ -406,7 +413,9 @@ export default {
         dontShowNotifications: '不显示通知',
         dontShowNotificationsDesc: '关闭应用内与系统通知',
         autorun: '开机启动',
-        autorunDesc: '登录 Windows 后自动启动本应用。',
+        autorunDesc: '登录 Windows 后通过计划任务自动启动本应用。',
+        autorunDescLoginItem: '登录本机后自动启动本应用。',
+        autorunUnavailable: '浏览器预览中无法设置开机启动。',
         autorunOptions: {
           enabled: '启用',
           enabledDelayed: '启用（延迟启动）',
@@ -537,6 +546,9 @@ export default {
       },
       display: {
         navigationItems: '导航项可见性',
+        groupNotifications: '通知',
+        groupWindow: '窗口与显示',
+        notificationCategories: '通知类别与行为',
         navigationKeys: {
           keyboard: '键盘背光',
           battery: '电池',
@@ -1162,6 +1174,7 @@ export default {
       summaryInstalled: '已安装',
       summaryUpdates: '可更新',
       importFromFiles: '从文件导入',
+      importDesktopOnly: '从文件导入插件需要使用桌面应用。',
 
 
       notFound: '未找到插件',
@@ -1194,6 +1207,7 @@ export default {
       clear: '清除（还原）',
       applied: '已应用',
       applyFailed: '应用失败（可能需要管理员权限）',
+      elevationRequired: '需要管理员权限。请在 UAC 提示中确认，或以提升权限启动本应用。',
       reverted: '已还原',
       revertFailed: '还原失败（可能需要管理员权限）',
       estimate: '估算大小',
@@ -1297,6 +1311,9 @@ export default {
           off: '空闲'
         },
         backendMissingHint: '代理后端不可用',
+        proxyMissing: '无法启动网络加速：安装目录中缺少 NetworkProxy.exe。',
+        hostsModeRefused: 'Hosts 模式不会从此页启动。请改用系统代理或诊断模式。',
+        startRefused: '加速未启动。请确认已启用加速，并至少选择一个目标。',
         selectGroupsFirstHint: '请至少选择一个加速目标',
         advancedHeading: '高级',
         advancedBody: '高级设置与网络恢复。',

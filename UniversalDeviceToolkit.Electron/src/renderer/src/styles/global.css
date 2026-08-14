@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Design tokens mirroring the original Electron client (DesignTokens.xaml +
  * ElevationTokens.xaml + AnimationTokens.xaml + Electron-UI Dark theme values).
  */
@@ -49,10 +49,12 @@
   --udt-accent-text: #000000;
 
   /* Corner radius tokens */
-  --udt-radius-progress: 2px;
+  --udt-radius-progress: 3px;
   --udt-radius-micro: 3px;
   --udt-radius-small: 8px;
+  --udt-radius-sm: 8px;
   --udt-radius-control: 12px;
+  --udt-radius-md: 12px;
   --udt-radius-card: 18px;
   --udt-radius-surface: 20px;
   --udt-radius-round: 999px;
@@ -85,11 +87,19 @@
   --udt-nav-width-collapsed: 70px;
   --udt-nav-width-expanded: 220px;
 
+  /* Content-first breakpoints. @media / @container still need literal px;
+     keep those literals in sync with these tokens.
+     sm = dense pages, md = 3-col sensors, lg = design window, nav = auto-collapse. */
+  --udt-bp-sm: 760px;
+  --udt-bp-md: 1000px;
+  --udt-bp-lg: 1300px;
+  --udt-bp-nav: 900px;
+
   /* Animation durations */
   --udt-anim-fast: 100ms;
   --udt-anim-medium: 200ms;
   --udt-anim-slow: 300ms;
-  --udt-anim-shimmer: 1.65s;
+  --udt-anim-shimmer: 1.7s;
   --udt-anim-crossfade: 200ms;
   --udt-ease-cubic-out: cubic-bezier(0.33, 1, 0.68, 1);
   --udt-ease-expo-out: cubic-bezier(0.02, 1, 0.35, 1);
@@ -99,7 +109,8 @@
   --udt-shadow-medium: 0 3px 12px rgba(0, 0, 0, 0.15);
   --udt-shadow-glass: 0 3px 14px rgba(0, 0, 0, 0.18);
 
-  /* Typography (Typography.xaml: AppFontFamily) */
+  /* Typography (Typography.xaml: AppFontFamily). Windows-first default;
+     overridden per-OS at the bottom (see "Platform adaptations"). */
   --udt-font-family: 'Segoe UI', 'Microsoft YaHei UI', 'Microsoft YaHei', 'Noto Sans CJK SC', 'SimSun';
 
   /* Icon sizes (DesignTokens.xaml) */
@@ -125,6 +136,19 @@
   --udt-button-height-compact: 32px;
   --udt-button-height-standard: 36px;
   --udt-button-height-large: 40px;
+
+  /* Toolbar / form control row: Select, Input, and adjacent buttons share this. */
+  --udt-control-height: 32px;
+
+  /* Linear progress — one height, radius, track, and default fill. */
+  --udt-progress-height: 6px;
+  --udt-progress-radius: var(--udt-radius-progress);
+  --udt-progress-track: var(--udt-chart-track);
+  --udt-progress-fill: var(--udt-accent);
+
+  /* Square tool buttons (star / play / overflow): one chrome + glyph size. */
+  --udt-icon-tool-size: 32px;
+  --udt-icon-tool-glyph: 18px;
 
   /* Corner radius aliases (DesignTokens.xaml) */
   --udt-radius-none: 0px;
@@ -169,6 +193,13 @@
 
   /* Layout (DesignTokens.xaml: ContentPaddingPage) */
   --udt-content-padding-page: 24px;
+
+  /* Content pane width: pages fill the main area. Controls stay grouped
+     (--udt-content-control-width) instead of stretching with the pane. */
+  --udt-content-max: none;
+  --udt-content-max-wide: none;
+  --udt-content-control-width: 280px;
+  --udt-content-gap: 20px;
 
   /* Navigation items (NavigationStore.xaml: NavigationStoreItem) */
   --udt-nav-item-min-width: 64px;
@@ -265,7 +296,7 @@ body {
   background: rgba(0, 0, 0, 0.20);
 }
 
-/* 鈹€鈹€ Application shell (MainWindow layout) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* --- Application shell (MainWindow layout) --- */
 
 .udt-app-shell {
   display: flex;
@@ -298,9 +329,23 @@ body {
 
 .udt-app-shell__main {
   flex: 1;
+  min-width: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   padding-left: 24px;
   background: var(--udt-surface-window);
+}
+
+@media (max-width: 900px) {
+  .udt-app-shell__body {
+    margin-left: 0;
+    gap: 0;
+  }
+
+  .udt-app-shell__main {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
 }
 
 /* Page switch animation (PageEntranceAnimator: 200ms opacity + 6px rise,
@@ -320,7 +365,39 @@ body {
   }
 }
 
-/* 鈹€鈹€ Title bar (38px, Electron-UI TitleBar) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+@media (prefers-reduced-motion: reduce) {
+  .udt-page-enter {
+    animation: none;
+  }
+}
+
+.udt-app-shell__main > .udt-page-enter:has(.udt-content-fill) {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Pages fill the main pane. Controls stay grouped, not stretched. */
+.udt-content-column {
+  width: 100%;
+  max-width: var(--udt-content-max);
+  box-sizing: border-box;
+}
+
+.udt-content-wide {
+  width: 100%;
+  max-width: var(--udt-content-max-wide);
+  box-sizing: border-box;
+}
+
+.udt-content-fill {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Title bar (38px, Electron-UI TitleBar) --- */
 
 .udt-titlebar {
   position: relative;
@@ -362,7 +439,7 @@ body {
   position: relative;
   z-index: 1;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -370,21 +447,28 @@ body {
 .udt-titlebar__trailing {
   display: flex;
   align-items: center;
+  align-self: center;
   gap: 8px;
   margin-right: 4px;
   flex-shrink: 0;
 }
 
 .udt-titlebar__log-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   height: 24px;
   min-width: 48px;
-  padding: 2px 8px;
+  padding: 0 8px;
   border: none;
   border-radius: var(--udt-radius-control);
   color: #241b0c;
   background: #ff9d00;
   font: inherit;
   font-size: var(--udt-font-titlebar);
+  line-height: 1;
+  text-align: center;
   cursor: pointer;
   transition: background-color var(--udt-anim-fast) ease-out;
 }
@@ -417,13 +501,15 @@ body {
 .udt-titlebar__window-controls {
   display: flex;
   flex-shrink: 0;
+  align-self: stretch;
+  height: 100%;
 }
 
 .udt-titlebar__window-controls button {
-  width: 44px;
-  height: 30px;
-  align-self: center;
+  width: 46px;
+  height: 100%;
   border: none;
+  border-radius: 0;
   padding: 0;
   display: inline-flex;
   align-items: center;
@@ -439,16 +525,17 @@ body {
   background: rgba(255, 255, 255, 0.09);
 }
 
-.udt-titlebar__window-controls button.udt-titlebar__close:hover {
-  background: #f44336;
-  color: #fff;
-}
-
 :root[data-theme='light'] .udt-titlebar__window-controls button:hover {
   background: rgba(0, 0, 0, 0.10);
 }
 
-/* 鈹€鈹€ Navigation rail (NavigationStore) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+.udt-titlebar__window-controls button.udt-titlebar__close:hover,
+:root[data-theme='light'] .udt-titlebar__window-controls button.udt-titlebar__close:hover {
+  background: #c42b1c;
+  color: #fff;
+}
+
+/* --- Navigation rail (NavigationStore) --- */
 
 .udt-nav {
   display: flex;
@@ -464,6 +551,7 @@ body {
 .udt-nav__scroll {
   flex: 1;
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   padding: 0;
 }
@@ -603,135 +691,7 @@ body {
   margin: 4px 0 8px 0;
 }
 
-/* 鈹€鈹€ Skeleton blocks (Loading.xaml) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
-
-.udt-skeleton {
-  border-radius: var(--udt-radius-small);
-  background: var(--udt-control-fill-secondary);
-  opacity: 0.85;
-  position: relative;
-  overflow: hidden;
-  /* Breathing 1.0 鈫?0.85 (Electron BreathingFloorOpacity), same 1.65s cycle as the
-     shimmer sweep, SineEase EaseInOut via auto-reverse + ease-in-out. */
-  animation: udt-breathe var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite alternate ease-in-out;
-}
-
-.udt-skeleton::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  /* 7-stop sweep matching SkeletonShimmer.CreateShimmerBrush:
-     base 0.00 / base 0.14 / edge 0.30 / peak 0.48 / edge 0.66 / base 0.84 / base 1.00.
-     Tinted from the text color so the sweep stays visible in both themes
-     (white tint on dark, dark tint on light) — matches Electron's luminance
-     resolution (edge ~11%, peak ~27.5%). */
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--udt-text-primary) 0%, transparent) 0%,
-    color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 14%,
-    color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 30%,
-    color-mix(in srgb, var(--udt-text-primary) 18%, transparent) 48%,
-    color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 66%,
-    color-mix(in srgb, var(--udt-text-primary) 7%, transparent) 84%,
-    color-mix(in srgb, var(--udt-text-primary) 0%, transparent) 100%
-  );
-  /* Electron SkeletonShimmer: a relative bounding-box brush (100% of the block)
-     translated -1.25 鈫?+1.25 of the block width (SweepFrom/SweepTo), so the
-     soft-shoulder band re-enters from off-screen exactly like the Electron gradient. */
-  transform: translateX(-125%);
-  /* --udt-shimmer-delay (default 0): negative staggered values set by Skeleton.tsx
-     keep the sweep permanently de-phased per element (0.055s/step, cap 0.32s).
-     SineEase EaseInOut — cubic-bezier(0.445, 0.05, 0.55, 0.95) is the standard
-     sine ease-in-out approximation. */
-  animation: udt-shimmer var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite ease-in-out;
-}
-
-@keyframes udt-shimmer {
-  from {
-    transform: translateX(-125%);
-  }
-  to {
-    transform: translateX(125%);
-  }
-}
-
-@keyframes udt-breathe {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0.85;
-  }
-}
-
-/* Motion / high-contrast: Electron SkeletonShimmer.IsMotionDisabled kills the sweep
-   under prefers-reduced-motion and high-contrast themes; keep the static block. */
-@media (prefers-reduced-motion: reduce) {
-  .udt-skeleton::after {
-    animation: none;
-    display: none;
-  }
-
-  .udt-skeleton {
-    animation: none;
-  }
-}
-
-.udt-skeleton-card {
-  display: flex;
-  align-items: center;
-  min-height: 72px;
-  padding: 16px 14px;
-  border: 1px solid var(--udt-control-stroke-default);
-  border-radius: var(--udt-radius-card);
-  /* Electron AppSkeletonCardStyle: ControlFillColorDefaultBrush fill (card chrome
-     sits on the page surface), not the opaque card surface. */
-  background: var(--udt-control-fill-default);
-}
-
-.udt-skeleton-card__copy {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-.udt-skeleton-icon {
-  flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
-  margin-right: 12px;
-  border-radius: var(--udt-radius-small);
-}
-
-.udt-skeleton-line {
-  height: 16px;
-  min-width: 120px;
-  border-radius: var(--udt-radius-small);
-}
-
-.udt-skeleton-line--secondary {
-  height: 12px;
-  min-width: 96px;
-  margin: 6px 0 0;
-  border-radius: var(--udt-radius-small);
-}
-
-.udt-skeleton-switch {
-  flex: 0 0 auto;
-  width: 44px;
-  height: 24px;
-  margin-left: 16px;
-  border-radius: var(--udt-radius-round);
-}
-
-.udt-skeleton-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* 鈹€鈹€ Dashboard page 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* ── Dashboard page ─────────────────────────────────────────── */
 
 .udt-dashboard-page {
   padding: 16px 0 28px;
@@ -761,7 +721,7 @@ body {
   font-size: var(--udt-font-body);
 }
 
-/* 鈹€鈹€ Sensors board (SensorsControl) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* --- Sensors board (SensorsControl) --- */
 
 .udt-sensors {
   margin-bottom: 0;
@@ -853,10 +813,9 @@ body {
   width: 100%;
   max-width: 120px;
   min-width: 40px;
-  height: 6px;
-  border-radius: var(--udt-radius-progress);
-  background: var(--udt-control-fill-tertiary);
-  border: 1px solid var(--udt-control-stroke-default);
+  height: var(--udt-progress-height);
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-track);
   position: relative;
   overflow: hidden;
 }
@@ -864,9 +823,9 @@ body {
 .udt-sensor-panel__metric-bar::before {
   content: '';
   position: absolute;
-  inset: 1px;
-  border-radius: 1px;
-  background: var(--udt-accent);
+  inset: 0;
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-fill);
 }
 
 .udt-sensor-panel__metric dd {
@@ -928,149 +887,181 @@ body {
   font-weight: 500;
 }
 
-/* 鈹€鈹€ Feature groups (DashboardGroupControl) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* Legacy .udt-feature-* dashboard card styles removed: the live dashboard
+   renders .udt-parity-* classes (dashboardParity.css container queries). */
 
-.udt-feature-groups {
-  display: flex;
-  flex-direction: column;
+/* Ant Design overrides to match Electron-UI dark chrome.
+   Height/fill/radius only — do not reapply native .udt-select chrome
+   (CSS chevron, appearance, extra padding) onto antd Select. */
+.ant-select-selector {
+  min-height: var(--udt-control-height) !important;
+  padding-inline: 11px !important;
+  border: 1px solid var(--udt-control-stroke-default) !important;
+  border-radius: var(--udt-radius-control) !important;
+  background: var(--udt-control-fill-default) !important;
 }
 
-.udt-feature-group + .udt-feature-group {
-  margin-top: 24px;
+.ant-select-single .ant-select-selector {
+  height: var(--udt-control-height) !important;
 }
 
-.udt-feature-group h3 {
-  margin: 16px 0 24px;
+.ant-select-selection-item,
+.ant-select-selection-placeholder {
+  font-size: var(--udt-font-caption) !important;
+}
+
+.ant-select-single .ant-select-selection-item,
+.ant-select-single .ant-select-selection-placeholder {
+  line-height: calc(var(--udt-control-height) - 2px) !important;
+}
+
+/* Enabled value text: antd colorText is 85% white, which reads as grey /
+   placeholder-ish next to --udt-text-primary labels. Disabled Selects keep
+   antd's dimmed text. */
+.ant-select:not(.ant-select-disabled) .ant-select-selection-item {
   color: var(--udt-text-primary);
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 1.3;
 }
 
-.udt-feature-group__items {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr));
-  gap: 0 16px;
-  align-items: start;
+/* Focused/open chrome: without a user accent, antd falls back to its own blue
+   colorPrimary (border + outline ring), clashing with the UDT accent tokens.
+   Align every Select with the .udt-driver-select / .udt-plugins-page__filter
+   states: accent border, no outline ring. */
+.ant-select:not(.ant-select-disabled).ant-select-focused .ant-select-selector,
+.ant-select:not(.ant-select-disabled).ant-select-open .ant-select-selector {
+  border-color: var(--udt-accent) !important;
+  box-shadow: none !important;
 }
 
-.udt-feature-card {
-  min-width: 0;
-  margin: 0 0 8px 0;
-  border: 1px solid var(--udt-control-stroke-default);
-  border-radius: var(--udt-radius-card);
-  background: var(--udt-surface-card);
+/* Linear progress: Ant line, native meter, and custom tracks share geometry. */
+.udt-progress,
+.udt-progress-track,
+.udt-sensor-panel__metric-track,
+.udt-sensor-panel__vram-clock-track,
+.udt-sensor-panel__battery-stat-track,
+.udt-cleanup-progress,
+.udt-utils-progress-track,
+.udt-loading-overlay__progress,
+.udt-notification-item__progress,
+meter {
+  height: var(--udt-progress-height);
+  border: none;
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-track);
   overflow: hidden;
 }
 
-.udt-feature-card__content {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 14px;
+.udt-progress-fill,
+.udt-progress-bar,
+.udt-sensor-panel__metric-fill,
+.udt-sensor-panel__vram-clock-fill,
+.udt-sensor-panel__battery-stat-fill,
+.udt-cleanup-progress__fill,
+.udt-utils-progress-fill,
+.udt-loading-overlay__progress-bar,
+.udt-notification-item__progress-fill {
+  height: 100%;
+  border-radius: var(--udt-progress-radius);
+  background: var(--udt-progress-fill);
 }
 
-.udt-feature-card__icon {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: var(--udt-text-primary);
-  line-height: 1;
+.ant-progress-line .ant-progress-outer,
+.ant-progress-line .ant-progress-inner {
+  height: var(--udt-progress-height) !important;
+  border-radius: var(--udt-progress-radius) !important;
+  background: var(--udt-progress-track) !important;
+  overflow: hidden;
 }
 
-.udt-feature-card__copy {
-  flex: 1;
-  min-width: 0;
+.ant-progress-line .ant-progress-bg {
+  height: var(--udt-progress-height) !important;
+  border-radius: var(--udt-progress-radius) !important;
+  background: var(--udt-progress-fill) !important;
 }
 
-.udt-feature-card__title {
-  color: var(--udt-text-primary);
-  font-size: var(--udt-font-page-desc);
-  font-weight: 500;
-  line-height: 1.4;
+.ant-progress-line.ant-progress-status-success .ant-progress-bg {
+  background: var(--udt-status-success) !important;
 }
 
-.udt-feature-card__description {
-  margin-top: 4px;
-  color: var(--udt-text-secondary);
-  font-size: var(--udt-font-caption);
-  line-height: 1.4;
-  white-space: pre-line;
+.ant-btn.udt-btn,
+.ant-btn.udt-btn--secondary,
+.ant-btn.udt-btn--primary,
+.ant-btn.udt-btn-secondary,
+.ant-btn.udt-btn-primary {
+  height: var(--udt-control-height);
+  min-height: var(--udt-control-height);
+  border-radius: var(--udt-radius-control);
 }
 
-.udt-feature-card__hint {
-  margin-top: 4px;
-  color: var(--udt-text-secondary);
-  font-size: var(--udt-font-caption);
-  line-height: 1.4;
+.ant-btn.udt-btn-icon {
+  width: var(--udt-icon-tool-size);
+  min-width: var(--udt-icon-tool-size);
+  padding: 0;
 }
 
-.udt-feature-card__accessory {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 8px;
-}
-
-.udt-feature-card__toggle {
-  flex: 0 0 auto;
-}
-
-.udt-feature-card__select {
-  min-width: 165px;
-  margin-left: 8px;
-}
-
-.udt-feature-card__config-btn {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: var(--udt-radius-small);
-  background: transparent;
-  color: var(--udt-text-secondary);
-  font-size: 18px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
-}
-
-.udt-feature-card__config-btn:hover {
-  background: var(--udt-control-fill-secondary);
-  color: var(--udt-text-primary);
-}
-
-.udt-feature-card__error.ant-alert {
-  margin: 0 14px 14px;
-}
-
-/* Responsive: match DashboardPage 1/2/3 columns */
-@media (max-width: 1500px) {
-  .udt-feature-group__items {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 1000px) {
-  .udt-feature-group__items {
-    grid-template-columns: 1fr;
-  }
-
-  /* Sensor grid / gauge layout is owned by sensor.css container queries
-     (content width, not viewport). Do not force 1-col or 88px here. */
-}
-
-/* Ant Design overrides to match Electron-UI dark chrome */
-.ant-select-selector {
+/* Fluent overlay flyouts: native <select> popups cannot be rounded (OS chrome).
+   Ant Design Select / Dropdown / picker menus inherit these radii instead. */
+.ant-select-dropdown,
+.ant-cascader-dropdown,
+.ant-mentions-dropdown,
+.ant-dropdown .ant-dropdown-menu,
+.ant-dropdown-menu-submenu .ant-dropdown-menu,
+.ant-dropdown-menu-submenu-popup .ant-dropdown-menu {
+  padding: 4px;
+  overflow: auto;
+  border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control) !important;
-  min-height: 32px !important;
+  background: var(--udt-surface-card);
+  box-shadow: var(--udt-shadow-medium);
 }
 
-.ant-select-selection-item {
+.ant-picker-dropdown .ant-picker-panel-container,
+.ant-color-picker .ant-popover-inner,
+.ant-color-picker-inner {
+  overflow: hidden;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-control) !important;
+  box-shadow: var(--udt-shadow-medium);
+}
+
+.ant-select-item,
+.ant-select-item-option-active,
+.ant-select-item-option-selected,
+.ant-cascader-menu-item,
+.ant-mentions-dropdown-menu-item,
+.ant-dropdown-menu-item,
+.ant-dropdown-menu-submenu-title,
+.ant-dropdown-menu-item-active,
+.ant-dropdown-menu-item-selected {
+  border-radius: var(--udt-radius-small) !important;
+}
+
+/* Select popup options use the same caption size as the closed control value
+   (the antd fontSize token is 13px, one step smaller). */
+.ant-select-dropdown .ant-select-item {
   font-size: var(--udt-font-caption) !important;
+}
+
+/* Native .udt-select chrome (arrow image, padding, border) must not leak onto antd Select. */
+.udt-select.ant-select {
+  appearance: none;
+  padding: 0;
+  height: auto;
+  min-height: var(--udt-control-height);
+  min-width: 0;
+  background: none;
+  border: none;
+  box-shadow: none;
+}
+
+.udt-select.ant-select-focused .ant-select-selector,
+.udt-select.ant-select-open .ant-select-selector {
+  border-color: var(--udt-accent-secondary) !important;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--udt-accent-secondary) 25%, transparent);
+}
+
+.udt-step-editor__select.ant-select {
+  width: 100%;
+  min-width: 150px;
 }
 
 .ant-switch {
@@ -1081,8 +1072,7 @@ body {
   background: var(--udt-accent-secondary) !important;
 }
 
-:root[data-theme='light'] .udt-sensor-board,
-:root[data-theme='light'] .udt-feature-card {
+:root[data-theme='light'] .udt-sensor-board {
   border-color: var(--udt-control-stroke-default);
 }
 
@@ -1094,10 +1084,10 @@ body {
 }
 
 
-/* 鈹€鈹€ Shared component chrome (CardControl / Button / ToggleSwitch) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€
-   Global copies of the classes historically scoped to automation.css so every
-   page (optimization, settings, 鈥? renders cards/buttons without importing a
-   module stylesheet. Values mirror automation.css exactly. */
+/* Shared component chrome (CardControl / Button / ToggleSwitch).
+   Copies of classes historically scoped to automation.css so every page
+   (optimization, settings, and others) can render cards and buttons without
+   importing a module stylesheet. Values match automation.css. */
 
 .udt-card {
   border: 1px solid var(--udt-control-stroke-default);
@@ -1185,18 +1175,19 @@ body {
   background: var(--udt-accent-text);
 }
 
-/* Buttons */
+/* Buttons — same height/radius/fill as adjacent Selects in toolbar rows. */
 .udt-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+  box-sizing: border-box;
   min-width: 80px;
-  height: 32px;
+  height: var(--udt-control-height);
   padding: 0 14px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
-  background: transparent;
+  background: var(--udt-control-fill-default);
   color: var(--udt-text-primary);
   font: inherit;
   font-size: var(--udt-font-caption);
@@ -1215,7 +1206,7 @@ body {
 
 .udt-btn--primary {
   min-width: 120px;
-  height: 36px;
+  height: var(--udt-control-height);
   border-color: var(--udt-accent-secondary);
   background: var(--udt-accent-secondary);
   color: var(--udt-accent-text);
@@ -1227,12 +1218,61 @@ body {
 
 .udt-btn--secondary {
   min-width: 120px;
-  height: 36px;
+  height: var(--udt-control-height);
 }
 
 .udt-btn--sm {
   min-width: 100px;
-  height: 32px;
+  height: var(--udt-control-height);
+}
+
+.udt-btn > svg,
+.udt-btn .ant-btn-icon svg {
+  width: var(--udt-icon-compact);
+  height: var(--udt-icon-compact);
+  flex: 0 0 auto;
+}
+
+/* Square tool buttons: equal chrome and glyph weight (star vs play). */
+.udt-icon-btn,
+.udt-action-btn {
+  box-sizing: border-box;
+  width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
+  min-width: var(--udt-icon-tool-size);
+  padding: 0;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-icon-tool-glyph);
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
+}
+
+.udt-icon-btn:hover,
+.udt-action-btn:hover {
+  background: var(--udt-control-fill-secondary);
+  color: var(--udt-text-primary);
+}
+
+.udt-icon-btn svg,
+.udt-action-btn svg,
+.udt-opt-chrome__icon-btn svg,
+.udt-parity-icon-button.ant-btn svg,
+.udt-kb-icon-btn.ant-btn svg,
+.udt-btn-icon.ant-btn svg,
+.ant-btn.udt-btn-icon .ant-btn-icon svg,
+.udt-god-mode__icon-btn svg,
+.udt-god-mode-modal__icon-btn svg {
+  width: var(--udt-icon-tool-glyph);
+  height: var(--udt-icon-tool-glyph);
+  flex: 0 0 auto;
+  display: block;
 }
 
 .udt-btn--danger {
@@ -1242,20 +1282,6 @@ body {
 .udt-btn--danger:hover {
   background: var(--udt-status-critical-bg);
 }
-
-/* ── Skeleton reduced-motion (accessibility) ──────────────────── */
-
-@media (prefers-reduced-motion: reduce) {
-  .udt-skeleton,
-  .udt-skeleton::after {
-    animation: none;
-  }
-
-  .udt-skeleton::after {
-    display: none;
-  }
-}
-
 
 /* ── Modal / dialog entrance animations ───────────────────────────
    Electron window/dialog chrome animates via AnimationDurationMedium (200ms)
@@ -1448,18 +1474,6 @@ body {
   box-shadow: 0 0 8px color-mix(in srgb, var(--udt-accent) 40%, transparent);
 }
 
-/* Feature cards: border highlight on hover */
-.udt-feature-card {
-  transition: border-color var(--udt-anim-fast) ease-out, transform var(--udt-anim-fast) ease-out,
-    box-shadow var(--udt-anim-fast) ease-out;
-}
-
-.udt-feature-card:hover {
-  border-color: var(--udt-accent);
-  transform: translateY(-1px);
-  box-shadow: var(--udt-shadow-low);
-}
-
 /* Sensor panels: gentle heading highlight */
 .udt-sensor-panel__heading h2 {
   transition: color var(--udt-anim-fast) ease-out;
@@ -1476,7 +1490,7 @@ body {
 .udt-number,
 .udt-textarea {
   appearance: none;
-  min-height: 32px;
+  min-height: var(--udt-control-height);
   padding: 0 10px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
@@ -1727,4 +1741,110 @@ body {
   .udt-empty__icon {
     animation: none;
   }
+
+  .udt-icon-btn:not(:disabled):hover,
+  .udt-opt-chrome__icon-btn:not(:disabled):hover {
+    transform: none;
+  }
+
+  .udt-progress-fill,
+  .udt-sensor-panel__metric-fill,
+  .udt-sensor-panel__vram-clock-fill,
+  .udt-sensor-panel__battery-stat-fill,
+  .udt-cleanup-progress__fill,
+  .udt-utils-progress-fill,
+  .udt-loading-overlay__progress-bar,
+  .udt-notification-item__progress-fill,
+  .udt-plugin-card__progress-fill,
+  .ant-progress-line .ant-progress-bg {
+    transition: none;
+  }
+}
+
+/* ── Platform adaptations ──────────────────────────────────────────
+   [data-platform] is set on <html> by main.tsx from bridge.platform
+   (main-process process.platform). Defaults (win32 and anything unlisted)
+   keep the Windows-first appearance; macOS and Linux only override what
+   must differ. */
+
+/* Font stacks: system-native faces per OS. The base token above stays
+   Windows-first (Segoe UI / Microsoft YaHei UI); body inherits through
+   var(--udt-font-family). */
+:root[data-platform='darwin'] {
+  --udt-font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+:root[data-platform='linux'] {
+  --udt-font-family: 'Noto Sans CJK SC', 'Noto Sans', 'DejaVu Sans', sans-serif;
+}
+
+/* macOS scrollbars: the platform convention is translucent overlay scrollbars.
+   The custom thumb fill above would force a permanent Windows-style track, so
+   fade it to transparent at rest and only reveal on hover. Geometry (6px +
+   round) is kept so the hover affordance still lines up. Linux keeps the
+   custom styling (custom scrollbars are the norm there). */
+:root[data-platform='darwin'] ::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+:root[data-platform='darwin'] ::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--udt-text-tertiary) 55%, transparent);
+}
+
+/* Navigation stays neutral under accent surface tinting: the nav pane uses
+   its own text colors, never the accent-blended --udt-text-secondary. */
+:root {
+  --udt-nav-text: rgba(255, 255, 255, 0.92);
+  --udt-nav-text-secondary: rgba(255, 255, 255, 0.62);
+}
+
+:root[data-theme='light'] {
+  --udt-nav-text: rgba(0, 0, 0, 0.88);
+  --udt-nav-text-secondary: rgba(0, 0, 0, 0.58);
+}
+
+.udt-nav-item {
+  color: var(--udt-nav-text-secondary);
+}
+
+.udt-nav-item:hover,
+.udt-nav-item--active {
+  color: var(--udt-nav-text);
+}
+
+.udt-nav-icon {
+  color: var(--udt-nav-text-secondary);
+}
+
+.udt-nav-item--active .udt-nav-icon,
+.udt-nav-item:hover .udt-nav-icon {
+  color: var(--udt-accent);
+}
+
+.udt-nav-label {
+  color: inherit;
+}
+
+/* ── Ant Design message glass (follows the window backdrop setting) ── */
+.ant-message .ant-message-notice-content {
+  background: var(--udt-surface-card);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card, 18px);
+  box-shadow: var(--udt-shadow-glass);
+}
+
+:root[data-backdrop='mica'] .ant-message .ant-message-notice-content,
+:root[data-backdrop='acrylic'] .ant-message .ant-message-notice-content {
+  background: color-mix(in srgb, var(--udt-surface-card) 78%, transparent);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-color: color-mix(in srgb, var(--udt-text-primary) 14%, transparent);
+}
+
+[data-platform='darwin'] .ant-message .ant-message-notice-content {
+  background: color-mix(in srgb, var(--udt-surface-card) 72%, transparent);
+  backdrop-filter: blur(30px) saturate(1.5);
+  -webkit-backdrop-filter: blur(30px) saturate(1.5);
 }

@@ -1,14 +1,17 @@
-﻿/*
- * Macro page (MacroPage.tsx) 鈥?1:1 with Electron MacroPage.xaml + MacroSequenceControl.xaml.
+/*
+ * Macro page (MacroPage.tsx) - 1:1 with Electron MacroPage.xaml + MacroSequenceControl.xaml.
  */
 
 .udt-macro-page {
-  max-width: 1520px;
-  margin: 0 auto;
   padding: 16px 16px 12px 0;
+  /* Layout breakpoints below query this container (content width, not viewport)
+     so nav collapse and interface scale behave consistently. */
+  container-type: inline-size;
+  container-name: udt-macro;
 }
 
 .udt-macro-page__title {
+  flex-shrink: 0;
   margin: 0 0 8px;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-page-title);
@@ -17,13 +20,14 @@
 }
 
 .udt-macro-page__subtitle {
+  flex-shrink: 0;
   margin: 0 0 24px;
   color: var(--udt-text-secondary);
   font-size: var(--udt-font-page-desc);
   line-height: 1.4;
 }
 
-/* 鈹€鈹€ Card chrome (Styles/CardControl.xaml: radius 18, #303030, 1px stroke) 鈹€鈹€ */
+/* --- Card chrome (Styles/CardControl.xaml: radius 18, #303030, 1px stroke) --- */
 
 .udt-macro-card {
   min-width: 0;
@@ -34,7 +38,8 @@
 }
 
 .udt-macro-card--enable {
-  margin-bottom: 32px;
+  flex-shrink: 0;
+  margin-bottom: 24px;
 }
 
 .udt-macro-card--gap {
@@ -49,7 +54,7 @@
   opacity: 0.5;
 }
 
-/* 鈹€鈹€ Card header (CardHeaderControl.cs) 鈹€鈹€ */
+/* --- Card header (CardHeaderControl.cs) --- */
 
 .udt-macro-card__header {
   display: flex;
@@ -96,22 +101,65 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  min-height: 44px;
+  min-height: var(--udt-control-height);
   margin-top: 0;
 }
 
-/* 鈹€鈹€ Number pad (MacroPage.xaml: 3脳4 grid, 56px cells, 48px buttons) 鈹€鈹€ */
+.udt-macro-select {
+  width: 100%;
+  max-width: 100%;
+}
+
+.udt-macro-select.ant-select {
+  display: block;
+  width: 100%;
+}
+
+/* --- Number pad + sequence workspace --- */
+
+.udt-macro-workspace {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.udt-macro-numpad-panel {
+  display: flex;
+  flex: 0 1 280px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  align-self: flex-start;
+  box-sizing: border-box;
+  width: auto;
+  min-width: 156px;
+  max-width: 320px;
+  padding: 16px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+}
 
 .udt-macro-numpad {
   display: grid;
-  grid-template-columns: repeat(3, 56px);
-  align-content: start;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+}
+
+/* Skeleton key bone: same footprint as .udt-macro-numpad__key. */
+.udt-macro-skeleton__key {
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
 }
 
 .udt-macro-numpad__key {
-  width: 48px;
-  height: 48px;
-  margin: 0 8px 8px 0;
+  width: 100%;
+  aspect-ratio: 1;
+  height: auto;
+  margin: 0;
   padding: 0;
   border: 1px solid transparent;
   border-radius: var(--udt-radius-small);
@@ -143,17 +191,28 @@
   color: var(--udt-accent-text);
 }
 
-/* 鈹€鈹€ Sequence panel (MacroSequenceControl.xaml, left offset 32) 鈹€鈹€ */
+/* --- Sequence panel (MacroSequenceControl.xaml, left offset 32) --- */
 
 .udt-macro-main {
   display: flex;
-  align-items: flex-start;
-  gap: 32px;
+  flex: 1 1 auto;
+  flex-direction: row;
+  align-items: stretch;
+  gap: var(--udt-content-gap);
+  min-width: 0;
+  min-height: 0;
 }
 
 .udt-macro-sequence {
-  flex: 1;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
   min-width: 0;
+  min-height: 0;
+}
+
+.udt-macro-sequence__controls {
+  flex: 0 0 auto;
 }
 
 .udt-macro-row {
@@ -165,10 +224,6 @@
 .udt-macro-row .udt-macro-card {
   flex: 1;
   margin-bottom: 0;
-}
-
-.udt-macro-select {
-  width: 150px;
 }
 
 /* Action row: right aligned */
@@ -192,13 +247,20 @@
   color: var(--udt-accent-text);
 }
 
-/* 鈹€鈹€ Event cards (AbstractMacroEventControl.xaml) 鈹€鈹€ */
+/* --- Event cards (AbstractMacroEventControl.xaml) --- */
 
 .udt-macro-events {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 8px;
+  min-height: 200px;
   margin-bottom: 8px;
+  padding: 12px 14px;
+  overflow: auto;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
 }
 
 .udt-macro-event {
@@ -208,7 +270,7 @@
   padding: 14px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-card);
-  background: var(--udt-surface-card);
+  background: var(--udt-control-fill-default);
 }
 
 .udt-macro-event__icon {
@@ -236,12 +298,18 @@
 }
 
 .udt-macro-events__empty {
-  padding: 4px 2px;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  padding: 24px 12px;
   color: var(--udt-text-secondary);
-  font-size: var(--udt-font-caption);
+  font-size: var(--udt-font-page-desc);
+  text-align: center;
 }
 
-/* Toggle switch sized 40脳20 (Electron ToggleSwitch) */
+/* Toggle switch sized 40x20 (Electron ToggleSwitch) */
 .udt-macro-switch {
   display: inline-flex;
   width: 40px;
@@ -255,7 +323,7 @@
   transform: scale(0.90909);
 }
 
-/* 鈹€鈹€ Recording status window (MacroRecordingWindow.cs) 鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€鈹€ */
+/* --- Recording status window (MacroRecordingWindow.cs) --- */
 
 .udt-macro-recording {
   position: fixed;
@@ -340,19 +408,27 @@
   line-height: 1.4;
 }
 
-@media (max-width: 960px) {
-  .udt-macro-main {
-    flex-direction: column;
-  }
-
-  .udt-macro-numpad {
-    margin-bottom: 16px;
+@container udt-macro (max-width: 960px) {
+  /* Keep the numpad | sequence split. Shrink the keypad first. */
+  .udt-macro-numpad-panel {
+    flex-basis: 200px;
+    max-width: 240px;
+    padding: 12px;
   }
 }
 
-@media (max-width: 720px) {
+@container udt-macro (max-width: 720px) {
   .udt-macro-row {
     flex-direction: column;
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .udt-macro-recording__dot {
+    animation: none;
+  }
+}
+
+.udt-animations-off .udt-macro-recording__dot {
+  animation: none;
+}

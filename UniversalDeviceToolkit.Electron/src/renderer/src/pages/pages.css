@@ -11,8 +11,8 @@
 
 /* ── Page scaffolding ─────────────────────────────────────────── */
 
-/* Shared page root used by Automation / Optimization / Settings pages.
-   Full-bleed like the Electron content area (no max-width cap). */
+/* Shared page root. Pages fill the main pane (.udt-content-column /
+   .udt-content-wide); workspaces also take .udt-content-fill. */
 .udt-page {
   padding: 16px 16px 12px 0;
 }
@@ -91,66 +91,285 @@
 /* ── About page ───────────────────────────────────────────────── */
 
 .udt-about-page {
-  padding: 16px 16px 12px 0;
+  position: relative;
+  padding: 16px 16px 20px 0;
+  container-type: inline-size;
+  container-name: udt-about;
+  background-image: radial-gradient(
+    circle at 1px 1px,
+    var(--udt-control-stroke-default) 1px,
+    transparent 0
+  );
+  background-size: 22px 22px;
+}
+
+.udt-about-page__hero {
+  position: relative;
+  overflow: hidden;
+  margin: 0 0 14px;
+  padding: 28px 24px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+}
+
+.udt-about-page__hero::before {
+  content: '';
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  left: -90px;
+  top: -120px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--udt-accent) 26%, transparent) 0%,
+    transparent 70%
+  );
+}
+
+.udt-about-page__pattern {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: var(--udt-accent);
+  opacity: 0.55;
+  pointer-events: none;
+  transform: translateZ(0);
+  animation: udt-about-drift 28s var(--udt-ease-cubic-out, ease-in-out) infinite alternate;
+}
+
+:root[data-theme='light'] .udt-about-page__pattern {
+  opacity: 0.42;
+}
+
+@keyframes udt-about-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-14px, 8px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .udt-about-page__pattern {
+    animation: none;
+  }
+}
+
+.udt-animations-off .udt-about-page__pattern {
+  animation: none;
+}
+
+.udt-about-page__brand {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-width: 0;
+}
+
+.udt-about-page__mark {
+  width: 96px;
+  height: 96px;
+  flex: 0 0 96px;
+  border-radius: var(--udt-radius-surface);
+  border: 1px solid var(--udt-control-stroke-secondary);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+  object-fit: cover;
+  background: #000;
+}
+
+.udt-about-page__identity {
+  min-width: 0;
+}
+
+.udt-about-page__hero .udt-page-title {
+  margin-bottom: 4px;
 }
 
 .udt-about-page__app-name {
-  padding-bottom: 8px;
-}
-
-.udt-about-page__text {
-  margin: 0;
-  padding: 0 0 8px;
+  margin: 0 0 12px;
   color: var(--udt-text-primary);
-  font-size: var(--udt-font-body);
-  line-height: 1.45;
-  white-space: pre-line;
+  font-size: var(--udt-font-display-section);
+  font-weight: 600;
+  line-height: 1.25;
 }
 
-.udt-about-page__text--wrap {
-  padding-bottom: 0;
-  white-space: normal;
+.udt-about-page__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+
+.udt-about-page__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: var(--udt-radius-round);
+  border: 1px solid color-mix(in srgb, var(--udt-accent) 35%, var(--udt-control-stroke-default));
+  background: color-mix(in srgb, var(--udt-accent) 12%, transparent);
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.3;
+}
+
+.udt-about-page__copyright,
+.udt-about-page__credit {
+  margin: 0;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.45;
 }
 
 .udt-about-page__credit {
-  margin: 0;
-  padding: 8px 0 0;
-  color: var(--udt-text-primary);
-  font-size: var(--udt-font-body);
-  line-height: 1.45;
-  white-space: normal;
+  margin-top: 6px;
 }
 
-.udt-about-page__section {
-  padding: 24px 0 8px;
-}
-
-.udt-about-page__libs {
+.udt-about-page__grid {
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: start;
-  column-gap: 32px;
-  row-gap: 0;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
   align-items: start;
 }
 
-.udt-about-page__libs-column {
-  display: flex;
-  flex-direction: column;
+.udt-about-page__card {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
 }
 
-@media (max-width: 900px) {
-  .udt-about-page__libs {
-    grid-template-columns: 1fr;
-    row-gap: 4px;
+.udt-about-page__card .udt-subsection-title {
+  margin: 0 0 12px;
+}
+
+.udt-about-page__tile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0 0 8px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-primary);
+  font: inherit;
+  font-size: var(--udt-font-body);
+  line-height: 1.35;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--udt-anim-fast) ease-out,
+    border-color var(--udt-anim-fast) ease-out;
+}
+
+.udt-about-page__tile:last-child {
+  margin-bottom: 0;
+}
+
+.udt-about-page__tile:hover {
+  background: var(--udt-control-fill-secondary);
+  border-color: var(--udt-control-stroke-secondary);
+  text-decoration: none;
+  color: var(--udt-text-primary);
+}
+
+.udt-about-page__tile-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border-radius: var(--udt-radius-small);
+  background: color-mix(in srgb, var(--udt-accent) 16%, transparent);
+  color: var(--udt-accent);
+}
+
+.udt-about-page__tile-icon svg {
+  width: var(--udt-icon-tool-glyph, 18px);
+  height: var(--udt-icon-tool-glyph, 18px);
+}
+
+.udt-about-page__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.udt-about-page__chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-round);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.3;
+  text-decoration: none;
+  transition:
+    border-color var(--udt-anim-fast) ease-out,
+    color var(--udt-anim-fast) ease-out,
+    background-color var(--udt-anim-fast) ease-out;
+}
+
+.udt-about-page__chip:hover {
+  border-color: color-mix(in srgb, var(--udt-accent) 55%, var(--udt-control-stroke-default));
+  background: color-mix(in srgb, var(--udt-accent) 10%, transparent);
+  color: var(--udt-text-primary);
+  text-decoration: none;
+}
+
+@container udt-about (max-width: 720px) {
+  .udt-about-page__brand {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .udt-about-page__hero {
+    padding: 22px 18px;
+  }
+}
+
+@container udt-about (min-width: 800px) {
+  .udt-about-page__grid {
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.2fr);
+    grid-template-areas:
+      'links libs'
+      'folders libs';
+  }
+
+  .udt-about-page__card--links {
+    grid-area: links;
+  }
+
+  .udt-about-page__card--libs {
+    grid-area: libs;
+    min-height: 100%;
+  }
+
+  .udt-about-page__card--folders {
+    grid-area: folders;
   }
 }
 
 /* ── Secondary / primary buttons (toolbar, offline banner) ────── */
 
 .udt-btn-secondary.ant-btn,
-.udt-btn-primary.ant-btn {
-  height: 36px;
+.udt-btn-primary.ant-btn,
+.udt-btn--secondary.ant-btn,
+.udt-btn--primary.ant-btn {
+  height: var(--udt-control-height);
+  min-height: var(--udt-control-height);
   display: inline-flex;
   align-items: center;
   border-radius: var(--udt-radius-control);
@@ -158,31 +377,37 @@
   box-shadow: none;
 }
 
-.udt-btn-secondary.ant-btn {
-  background: var(--udt-control-fill-secondary);
+.udt-btn-secondary.ant-btn,
+.udt-btn--secondary.ant-btn {
+  background: var(--udt-control-fill-default);
   border: 1px solid var(--udt-control-stroke-default);
   color: var(--udt-text-primary);
 }
 
-.udt-btn-secondary.ant-btn:not(:disabled):hover {
+.udt-btn-secondary.ant-btn:not(:disabled):hover,
+.udt-btn--secondary.ant-btn:not(:disabled):hover {
   background: var(--udt-subtle-fill-secondary) !important;
   border-color: var(--udt-control-stroke-secondary) !important;
   color: var(--udt-text-primary) !important;
 }
 
-.udt-btn-primary.ant-btn {
+.udt-btn-primary.ant-btn,
+.udt-btn--primary.ant-btn {
   background: var(--udt-accent) !important;
   border: 1px solid transparent;
   color: var(--udt-accent-text) !important;
 }
 
-.udt-btn-primary.ant-btn:not(:disabled):hover {
+.udt-btn-primary.ant-btn:not(:disabled):hover,
+.udt-btn--primary.ant-btn:not(:disabled):hover {
   background: var(--udt-accent-secondary) !important;
   color: var(--udt-accent-text) !important;
 }
 
 .udt-btn-icon.ant-btn {
-  width: 36px;
+  width: var(--udt-icon-tool-size);
+  min-width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
   padding: 0;
 }
 
@@ -190,6 +415,9 @@
 
 .udt-plugins-page {
   padding: 16px 16px 12px 0;
+  /* Summary/card wrap points query this container (content width, not viewport). */
+  container-type: inline-size;
+  container-name: udt-plugins;
 }
 
 .udt-plugins-page__header {
@@ -294,13 +522,19 @@
   align-items: center;
   gap: 8px;
   margin: 0 0 10px;
+  min-height: var(--udt-control-height);
 }
 
 .udt-plugins-page__toolbar .ant-input-affix-wrapper {
-  flex: 1;
-  height: 36px;
-  min-height: 36px;
+  box-sizing: border-box;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  height: var(--udt-control-height) !important;
+  min-height: var(--udt-control-height) !important;
+  max-height: var(--udt-control-height) !important;
   min-width: 240px;
+  padding-block: 0 !important;
   border-color: var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-control);
   background: var(--udt-control-fill-default);
@@ -317,9 +551,11 @@
 }
 
 .udt-plugins-page__toolbar .ant-input {
+  height: auto;
   background: transparent;
   color: var(--udt-text-primary);
   font-size: var(--udt-font-caption);
+  line-height: calc(var(--udt-control-height) - 2px);
 }
 
 .udt-plugins-page__toolbar .ant-input::placeholder {
@@ -331,6 +567,12 @@
   color: var(--udt-text-secondary);
 }
 
+.udt-plugins-page__toolbar .ant-input-prefix svg,
+.udt-plugins-page__toolbar > .ant-btn .ant-btn-icon svg {
+  width: var(--udt-icon-compact);
+  height: var(--udt-icon-compact);
+}
+
 .udt-plugins-page__toolbar .ant-input-clear-icon {
   color: var(--udt-text-tertiary);
 }
@@ -338,10 +580,14 @@
 .udt-plugins-page__filter {
   min-width: 142px;
   flex: 0 0 auto;
+  height: var(--udt-control-height);
 }
 
 .udt-plugins-page__filter .ant-select-selector {
-  height: 36px !important;
+  box-sizing: border-box;
+  height: var(--udt-control-height) !important;
+  min-height: var(--udt-control-height) !important;
+  padding-block: 0 !important;
   border-color: var(--udt-control-stroke-default) !important;
   border-radius: var(--udt-radius-control) !important;
   background: var(--udt-control-fill-default) !important;
@@ -356,11 +602,26 @@
 .udt-plugins-page__filter .ant-select-selection-placeholder {
   font-size: var(--udt-font-caption);
   color: var(--udt-text-primary);
-  line-height: 34px !important;
+  line-height: calc(var(--udt-control-height) - 2px) !important;
 }
 
-.udt-plugins-page__toolbar > .ant-btn {
+.udt-plugins-page__toolbar .ant-btn {
+  box-sizing: border-box;
+  display: inline-flex;
   flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  height: var(--udt-control-height) !important;
+  min-height: var(--udt-control-height) !important;
+  max-height: var(--udt-control-height);
+  padding-block: 0;
+  border-radius: var(--udt-radius-control);
+  line-height: calc(var(--udt-control-height) - 2px);
+}
+
+.udt-plugins-page__toolbar .ant-btn.udt-btn--primary,
+.udt-plugins-page__toolbar .ant-btn.udt-btn-primary {
+  height: var(--udt-control-height) !important;
 }
 
 /* Plugin card list */
@@ -607,15 +868,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 34px;
-  height: 32px;
+  width: var(--udt-icon-tool-size);
+  height: var(--udt-icon-tool-size);
   margin: 0 6px 0 0;
   padding: 0;
   border: 1px solid var(--udt-control-stroke-default);
-  border-radius: var(--udt-radius-control);
-  background: var(--udt-control-fill-secondary);
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-fill-default);
   color: var(--udt-text-primary);
-  font-size: 18px;
+  font-size: var(--udt-icon-tool-glyph);
   line-height: 1;
   cursor: pointer;
   transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out, opacity var(--udt-anim-fast) ease-out;
@@ -652,15 +913,16 @@
   white-space: nowrap;
 }
 
-/* Bottom determinate install fill (2px accent bar) */
+/* Bottom determinate install fill (shared progress height) */
 
 .udt-plugin-card__progress-fill {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-  height: 2px;
-  background: var(--udt-accent);
+  height: var(--udt-progress-height);
+  background: var(--udt-progress-fill);
+  border-radius: 0 0 var(--udt-progress-radius) var(--udt-progress-radius);
   opacity: 0.85;
   transform-origin: 0 50%;
   transition: transform var(--udt-anim-fast) ease-out;
@@ -698,21 +960,15 @@
   white-space: normal;
 }
 
-/* Skeleton rows (3 shimmer rows, 44×44 icon + text blocks) */
-
-.udt-plugins-page__skeleton-row {
-  display: flex;
-  align-items: center;
-  min-height: 84px;
-  margin: 0 0 6px;
-  padding: 12px 14px;
-}
+/* Skeleton rows reuse the live .udt-plugin-card shell; these classes only
+   shape the bones inside (44x44 icon, name+version row, text lines). */
 
 .udt-plugins-page__skeleton-icon {
   flex: 0 0 auto;
   width: 44px;
   height: 44px;
-  border-radius: var(--udt-radius-small);
+  /* Live icon tile radius (see .udt-plugin-card__icon). */
+  border-radius: var(--udt-radius-card);
 }
 
 .udt-plugins-page__skeleton-copy {
@@ -721,19 +977,18 @@
   margin: 2px 0 0 12px;
 }
 
-.udt-plugins-page__skeleton-copy > .udt-skeleton {
-  display: block;
-}
-
-.udt-plugins-page__skeleton-copy > .udt-skeleton + .udt-skeleton {
-  margin-top: 10px;
+.udt-plugins-page__skeleton-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .udt-plugins-page__skeleton-line {
-  margin-top: 12px !important;
+  display: block;
+  margin-top: 8px;
 }
 
-@media (max-width: 820px) {
+@container udt-plugins (max-width: 820px) {
   .udt-plugins-page__summary {
     flex-wrap: wrap;
   }
