@@ -16,5 +16,5 @@
     ]
   },
   "source": "vendored-host-build",
-  "notes": "Phase 3 ABI hard cutover: host Lib/Lib.Plugins assembly identities are UniversalDeviceToolkit.Lib / UniversalDeviceToolkit.Lib.Plugins. Refresh these host references from a matching UniversalDeviceToolkit build before shipping plugin changes that depend on new host APIs. Serilog is a transitive dependency of UniversalDeviceToolkit.Lib and must be vendored alongside the host binaries."
+  "notes": "Phase 3 ABI hard cutover: host Lib/Lib.Plugins assembly identities are UniversalDeviceToolkit.Lib / UniversalDeviceToolkit.Lib.Plugins. The artifacts.wpf filename is a historical alias from the retired WPF host ZIP; shipping UI is Electron + UniversalDeviceToolkit.Host. Keep this 5.0.2 baseline until the first v6.0.0-preview.1 application ZIP is published, then refresh. Official 2.x plugins declare minHostVersion 6.0.0 so a 5.x Host will refuse them at runtime. Serilog is a transitive dependency of UniversalDeviceToolkit.Lib and must be vendored alongside the host binaries."
 }

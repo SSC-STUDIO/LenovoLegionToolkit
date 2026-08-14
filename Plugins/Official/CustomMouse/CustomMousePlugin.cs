@@ -21,10 +21,10 @@ namespace UniversalDeviceToolkit.Plugins.CustomMouse;
 [Plugin(
     id: "custom-mouse",
     name: "Cursor & Pointer",
-    version: "1.0.18",
+    version: "2.0.0-preview.1",
     description: "Customize mouse cursor style behavior and mouse settings",
     author: "SSC-STUDIO",
-    MinimumHostVersion = "5.0.0",
+    MinimumHostVersion = "6.0.0",
     Icon = "Pen24"
 )]
 public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, IAppStartupPlugin
@@ -86,6 +86,34 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
     private readonly ThemeWatcherRuntime _themeWatcher = new();
 
     public MouseSettings Settings => _settings;
+
+    public object GetBridgeState()
+    {
+        return new
+        {
+            pointerSpeed = _settings.WindowsPointerSpeed,
+            swapButtons = _settings.SwapButtons,
+            cursorThemeMode = (int)_settings.CursorThemeMode,
+            autoThemeCursorStyle = _settings.AutoThemeCursorStyle,
+            lastAppliedTheme = _settings.LastAppliedTheme,
+        };
+    }
+
+    public async Task<bool> ApplyWindowsAsync(int speed, bool swapButtons)
+    {
+        if (!SetWindowsPointerSpeed(speed))
+        {
+            return false;
+        }
+
+        if (!SetSwapButtons(swapButtons))
+        {
+            return false;
+        }
+
+        await SaveSettingsAsync().ConfigureAwait(false);
+        return true;
+    }
 
     public CustomMousePlugin()
     {

@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.2.4</Version>
-    <FileVersion>1.2.4</FileVersion>
-    <AssemblyVersion>1.2.4</AssemblyVersion>
+    <Version>2.0.0-preview.1</Version>
+    <FileVersion>2.0.0</FileVersion>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
     <AssemblyName>UniversalDeviceToolkit.Plugins.ViveTool</AssemblyName>
   </PropertyGroup>
 
@@ -40,6 +40,9 @@
     <None Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="web\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Bundled\**\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <TargetPath>Bundled\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>

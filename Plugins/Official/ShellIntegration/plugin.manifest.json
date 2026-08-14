@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "id": "shell-integration",
   "name": "Nilesoft Shell Manager",
-  "version": "1.0.14",
-  "minHostVersion": "5.0.0",
+  "version": "2.0.0-preview.1",
+  "minHostVersion": "6.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": true,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
   "issues": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/issues",
   "contributes": {
     "featurePage": null,
-    "settingsPage": {
-      "class": "UniversalDeviceToolkit.Plugins.ShellIntegration.ShellIntegrationSettingsControl",
-      "title": "Nilesoft Shell Manager"
+    "settingsPage": null,
+    "webPage": {
+      "entry": "web/index.html"
     },
     "runtime": null,
     "optimizationActions": [
@@ -23,13 +23,15 @@
     ]
   },
   "package": {
-    "assetName": "shell-integration-v1.0.14.zip",
+    "assetName": "shell-integration-v2.0.0-preview.1.zip",
     "requiredFiles": [
       "UniversalDeviceToolkit.Plugins.ShellIntegration.dll",
       "UniversalDeviceToolkit.Plugins.Shared.Core.dll",
       "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
-      "plugin.manifest.json"
+      "plugin.manifest.json",
+      "web/index.html",
+      "web/plugin-ui.css"
     ]
   },
   "store": {

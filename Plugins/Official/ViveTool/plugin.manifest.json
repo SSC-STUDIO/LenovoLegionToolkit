@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "vive-tool",
   "name": "ViVeTool",
-  "version": "1.2.4",
-  "minHostVersion": "5.0.0",
+  "version": "2.0.0-preview.1",
+  "minHostVersion": "6.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": false,
   "repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
@@ -11,17 +11,22 @@
   "contributes": {
     "featurePage": null,
     "settingsPage": null,
+    "webPage": {
+      "entry": "web/index.html"
+    },
     "runtime": null,
     "optimizationActions": []
   },
   "package": {
-    "assetName": "vive-tool-v1.2.4.zip",
+    "assetName": "vive-tool-v2.0.0-preview.1.zip",
     "requiredFiles": [
       "UniversalDeviceToolkit.Plugins.ViveTool.dll",
       "UniversalDeviceToolkit.Plugins.Shared.Core.dll",
       "UniversalDeviceToolkit.Plugins.SDK.dll",
       "plugin.json",
-      "plugin.manifest.json"
+      "plugin.manifest.json",
+      "web/index.html",
+      "web/plugin-ui.css"
     ]
   },
   "store": {

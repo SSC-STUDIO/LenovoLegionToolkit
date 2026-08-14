@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.14</Version>
-    <FileVersion>1.0.14</FileVersion>
-    <AssemblyVersion>1.0.14</AssemblyVersion>
+    <Version>2.0.0-preview.1</Version>
+    <FileVersion>2.0.0</FileVersion>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
     <AssemblyName>UniversalDeviceToolkit.Plugins.ShellIntegration</AssemblyName>
   </PropertyGroup>
 
@@ -38,6 +38,12 @@
     <None Include="plugin.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="web\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <!-- Shell binary source paths: local repo (priority) and cached download (fallback) -->

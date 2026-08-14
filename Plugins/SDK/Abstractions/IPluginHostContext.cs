@@ -30,7 +30,7 @@ public interface IPluginHostContext
 
     /// <summary>
     /// Shows a host-managed modal dialog for the supplied dialog object.
-    /// For WPF hosts this is typically a window instance.
+    /// Electron does not host WPF windows; this is a no-op in the shipping shell.
     /// </summary>
     /// <param name="dialogOrContent">Host-specific dialog object or content.</param>
     /// <param name="title">Optional host dialog title.</param>

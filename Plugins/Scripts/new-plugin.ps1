@@ -10,7 +10,7 @@ param(
     [string]$DisplayName,
     [string]$Author = $env:USERNAME,
     [string]$Description = "",
-    [string]$MinimumHostVersion = "3.6.14",
+    [string]$MinimumHostVersion = "6.0.0",
     [switch]$Official
 )
 

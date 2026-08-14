@@ -21,7 +21,7 @@ public class PluginAttribute : Attribute
         Id = id;
         Name = name;
 
-        if (!System.Version.TryParse(version, out _))
+        if (!IsPluginVersion(version))
         {
             throw new ArgumentException($"'{version}' is not a valid version string.", nameof(version));
         }
@@ -30,5 +30,19 @@ public class PluginAttribute : Attribute
 
         Description = description;
         Author = author;
+    }
+
+    private static bool IsPluginVersion(string version)
+    {
+        if (string.IsNullOrWhiteSpace(version))
+            return false;
+
+        if (System.Version.TryParse(version, out _))
+            return true;
+
+        var hyphen = version.IndexOf('-');
+        return hyphen > 0 &&
+            hyphen < version.Length - 1 &&
+            System.Version.TryParse(version[..hyphen], out _);
     }
 }

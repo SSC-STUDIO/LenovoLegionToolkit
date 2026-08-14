@@ -19,12 +19,15 @@ if ([string]::IsNullOrWhiteSpace($hostVersion)) {
 $targetDir = Join-Path $repoRoot (Join-Path ".host" $hostVersion)
 $refreshScript = Join-Path $PSScriptRoot "refresh-host-references.ps1"
 
+# Keep this list in sync with refresh-host-references.ps1 (see
+# Plugins/KNOWLEDGE_BASE.md). The retired WPF assembly
+# "Universal Device Toolkit.dll" is not part of the host reference set:
+# plugins compile against Lib/Lib.Plugins, shipped by UniversalDeviceToolkit.Host.
 $requiredFiles = @(
     "UniversalDeviceToolkit.Lib.dll",
     "UniversalDeviceToolkit.Lib.Plugins.dll",
     "UniversalDeviceToolkit.Lib.Abstractions.dll",
     "UniversalDeviceToolkit.Lib.Shared.dll",
-    "Universal Device Toolkit.dll",
     "Serilog.dll",
     "Serilog.Sinks.Async.dll",
     "Serilog.Sinks.File.dll"

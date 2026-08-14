@@ -31,6 +31,9 @@ public class PluginVersionSynchronizerTests : IDisposable
     [InlineData("1.2.2", VersionBumpPart.Minor, "1.3.0")]
     [InlineData("1.2.2", VersionBumpPart.Patch, "1.2.3")]
     [InlineData("2.4.9", VersionBumpPart.Major, "3.0.0")]
+    [InlineData("1.2.3-alpha", VersionBumpPart.Patch, "1.2.4")]
+    [InlineData("2.0.0-preview.1", VersionBumpPart.Major, "3.0.0")]
+    [InlineData("2.0.0-preview.1", VersionBumpPart.Patch, "2.0.1")]
     public void BumpSemVer_UsesExpectedPart(string current, VersionBumpPart part, string expected)
     {
         Assert.Equal(expected, PluginVersionSynchronizer.BumpSemVer(current, part));
@@ -39,7 +42,6 @@ public class PluginVersionSynchronizerTests : IDisposable
     [Theory]
     [InlineData("1.2", VersionBumpPart.Patch)]      // 2-part: not valid SemVer
     [InlineData("1.2.3.4", VersionBumpPart.Patch)]   // 4-part: silently drops Revision (data loss)
-    [InlineData("1.2.3-alpha", VersionBumpPart.Patch)] // pre-release suffix: not numeric-only
     [InlineData("", VersionBumpPart.Patch)]           // empty
     [InlineData("   ", VersionBumpPart.Patch)]        // whitespace-only
     public void BumpSemVer_RejectsNonThreePartSemVer(string current, VersionBumpPart part)
@@ -81,6 +83,31 @@ public class PluginVersionSynchronizerTests : IDisposable
         Assert.False(report.IsAligned);
         Assert.Contains(report.DriftMessages, message => message.Contains("csproj Version", StringComparison.OrdinalIgnoreCase));
         Assert.Equal("1.0.0", report.ProjectVersion);
+    }
+
+    [Fact]
+    public void Bump_WritesPreviewVersionAndNumericAssemblyVersion()
+    {
+        WritePluginFixture(manifestVersion: "1.0.0", csprojVersion: "1.0.0", attributeVersion: "1.0.0");
+
+        var repository = new PluginRepository();
+        var context = repository.Load(_tempRoot).Plugins["sample-plugin"];
+        var synchronizer = new PluginVersionSynchronizer();
+
+        var report = synchronizer.Bump(context, explicitVersion: "2.0.0-preview.1", writeChanges: true);
+
+        Assert.Equal("2.0.0-preview.1", report.ManifestVersion);
+        Assert.Equal("2.0.0-preview.1", report.ProjectVersion);
+        Assert.Equal("2.0.0-preview.1", report.PluginAttributeVersion);
+
+        var manifest = File.ReadAllText(Path.Combine(_pluginDirectory, "plugin.manifest.json"));
+        Assert.Contains("\"version\": \"2.0.0-preview.1\"", manifest, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("sample-plugin-v2.0.0-preview.1.zip", manifest, StringComparison.OrdinalIgnoreCase);
+
+        var csproj = File.ReadAllText(Path.Combine(_pluginDirectory, "UniversalDeviceToolkit.Plugins.Sample.csproj"));
+        Assert.Contains("<Version>2.0.0-preview.1</Version>", csproj, StringComparison.Ordinal);
+        Assert.Contains("<FileVersion>2.0.0</FileVersion>", csproj, StringComparison.Ordinal);
+        Assert.Contains("<AssemblyVersion>2.0.0</AssemblyVersion>", csproj, StringComparison.Ordinal);
     }
 
     private void WritePluginFixture(string manifestVersion, string csprojVersion, string attributeVersion)

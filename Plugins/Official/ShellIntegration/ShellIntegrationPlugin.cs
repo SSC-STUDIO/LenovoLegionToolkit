@@ -17,10 +17,10 @@ namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 [Plugin(
     id: "shell-integration",
     name: "Nilesoft Shell Manager",
-    version: "1.0.14",
+    version: "2.0.0-preview.1",
     description: "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
     author: "SSC-STUDIO",
-    MinimumHostVersion = "5.0.0",
+    MinimumHostVersion = "6.0.0",
     Icon = "Folder24"
 )]
 public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase
@@ -651,6 +651,51 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
         {
             // Ignore missing keys when enabling.
         }
+    }
+
+    public object GetBridgeStatus()
+    {
+        return new
+        {
+            installed = IsShellInstalled(),
+            registered = IsShellRegistered(),
+            installPath = GetShellInstallPath(),
+            folderPath = GetShellFolderPath(),
+            configPath = GetShellConfigPath(),
+            version = GetShellVersion(),
+            exePath = GetShellExePath(),
+        };
+    }
+
+    public ShellIntegrationProfile GetProfile()
+    {
+        return _configService.LoadProfile();
+    }
+
+    public async Task<bool> SetProfileFromJsonAsync(string json)
+    {
+        var profile = System.Text.Json.JsonSerializer.Deserialize<ShellIntegrationProfile>(
+            json,
+            new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        if (profile is null)
+        {
+            return false;
+        }
+
+        _configService.SaveProfile(profile);
+        return await SyncManagedConfigurationAsync().ConfigureAwait(false);
+    }
+
+    public object ExportProfileToFile(string filePath)
+    {
+        var ok = ExportProfile(filePath, out var error);
+        return new { ok, error };
+    }
+
+    public async Task<object> ImportProfileFromFileAsync(string filePath)
+    {
+        var (success, error) = await ImportProfileAsync(filePath).ConfigureAwait(false);
+        return new { ok = success, error };
     }
 
     public async Task<bool> SyncManagedConfigurationAsync()

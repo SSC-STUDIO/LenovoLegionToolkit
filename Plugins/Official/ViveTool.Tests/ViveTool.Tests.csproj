@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ViveTool\UniversalDeviceToolkit.Plugins.ViveTool.csproj" />
     <ProjectReference Include="..\..\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj" />
+    <Compile Include="..\..\Testing\TestCommon\OfficialPluginWebPageAssertions.cs" Link="TestCommon\OfficialPluginWebPageAssertions.cs" />
     <Reference Include="UniversalDeviceToolkit.Lib">
       <HintPath>$(HostLibPath)</HintPath>
       <Private>true</Private>

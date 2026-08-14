@@ -1,8 +1,8 @@
 {
   "Id": "vive-tool",
   "Name": "ViVeTool",
-  "Version": "1.2.4",
-  "MinLltVersion": "5.0.0",
+  "Version": "2.0.0-preview.1",
+  "MinLltVersion": "6.0.0",
   "Author": "SSC-STUDIO",
   "IsSystemPlugin": false,
   "Repository": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",

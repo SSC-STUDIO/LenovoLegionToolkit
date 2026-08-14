@@ -33,7 +33,7 @@ public class ProcessRunner
     /// <param name="result">Standard output from the process</param>
     /// <param name="timeoutSeconds">Timeout in seconds (default: 30)</param>
     /// <returns>True if process exited successfully, false otherwise</returns>
-    [Obsolete("Use RunProcessAsync instead 鈥?this synchronous overload lacks CancellationToken support and blocks the calling thread. " +
+    [Obsolete("Use RunProcessAsync instead - this synchronous overload lacks CancellationToken support and blocks the calling thread. " +
               "Callers that depend on TryRunProcess should migrate to RunProcessAsync(filePath, arguments, cancellationToken, timeoutSeconds) " +
               "for proper async cancellation and timeout handling.")]
     public bool TryRunProcess(string filePath, string arguments, out string result, int timeoutSeconds = Constants.DefaultTimeoutSeconds)
@@ -193,7 +193,7 @@ public class ProcessRunner
 
                 // Preserve partial output captured before the timeout/cancellation.
                 // A process that hangs often emits diagnostic messages (error text,
-                // progress info) before becoming unresponsive 鈥?discarding that data
+                // progress info) before becoming unresponsive. Discarding that data
                 // makes the failure impossible to diagnose from logs alone.
                 var partialOutput = outputBuilder.ToString();
                 var partialError = errorBuilder.ToString();

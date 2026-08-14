@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Version>1.0.18</Version>
-    <FileVersion>1.0.18</FileVersion>
-    <AssemblyVersion>1.0.18</AssemblyVersion>
+    <Version>2.0.0-preview.1</Version>
+    <FileVersion>2.0.0</FileVersion>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
     <AssemblyName>UniversalDeviceToolkit.Plugins.CustomMouse</AssemblyName>
   </PropertyGroup>
 

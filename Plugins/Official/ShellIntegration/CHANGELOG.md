@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0-preview.1] - 2026-08-13
+
+### Changed / 变更
+- Major bump onto the 6.0 preview train: `minHostVersion` is **6.0.0**, and the package publishes to `plugin-catalog-preview` rather than the stable `plugin-catalog` 1.x feed / 进入 6.0 预览列车：`minHostVersion` 为 **6.0.0**，包发布到 `plugin-catalog-preview`，不覆盖稳定 `plugin-catalog` 的 1.x
+
 ## [1.0.12] - 2026-05-20
 
 ### Added / 新增

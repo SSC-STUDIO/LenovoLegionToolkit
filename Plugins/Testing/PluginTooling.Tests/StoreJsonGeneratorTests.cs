@@ -232,7 +232,8 @@ public class StoreJsonGeneratorTests : IDisposable
         string description,
         bool includeStoreBlock = true,
         bool includeLocalization = false,
-        string author = "SSC-STUDIO")
+        string author = "SSC-STUDIO",
+        string version = "1.0.0")
     {
         var pluginDir = Path.Combine(_tempRoot, "Official", folderName);
         Directory.CreateDirectory(pluginDir);
@@ -241,7 +242,7 @@ public class StoreJsonGeneratorTests : IDisposable
         {
             Id = folderName,
             Name = manifestName,
-            Version = "1.0.0",
+            Version = version,
             MinLltVersion = "4.2.1",
             Author = author,
             IsSystemPlugin = false,
@@ -288,7 +289,7 @@ public class StoreJsonGeneratorTests : IDisposable
     ""schemaVersion"": 1,
     ""id"": ""{folderName}"",
     ""name"": ""{manifestName}"",
-    ""version"": ""1.0.0"",
+    ""version"": ""{version}"",
     ""minHostVersion"": ""4.2.1"",
     ""author"": ""{author}"",
     ""isSystemPlugin"": false,
@@ -659,16 +660,137 @@ public class StoreJsonGeneratorTests : IDisposable
         Assert.Equal("dup-nomerge", entry.Id);
     }
 
-    private StoreDocument InvokeGenerate(bool mergeExisting = false, IReadOnlyList<string>? pluginIds = null)
+    [Fact]
+    public void Generate_StableChannel_RejectsPrereleasePluginVersion()
+    {
+        CreatePluginFolder(
+            "custom-mouse",
+            manifestLifecycle: "Active",
+            manifestName: "Cursor & Pointer",
+            description: "Mouse customization plugin.",
+            version: "2.0.0-preview.1");
+
+        var error = Assert.Throws<InvalidOperationException>(() =>
+            InvokeGenerate(pluginIds: ["custom-mouse"]));
+
+        Assert.Contains("Stable catalog cannot publish prerelease", error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Generate_PreviewChannel_DoesNotMergeStableCatalogEntries()
+    {
+        CreatePluginFolder(
+            "custom-mouse",
+            manifestLifecycle: "Active",
+            manifestName: "Cursor & Pointer",
+            description: "Mouse customization plugin.",
+            version: "2.0.0-preview.1");
+
+        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
+        Directory.CreateDirectory(Path.GetDirectoryName(storePath)!);
+        File.WriteAllText(
+            storePath,
+            """
+            {
+              "lastUpdated": "2026-08-05T00:00:00.0000000+00:00",
+              "storeVersion": "1.0.0",
+              "plugins": [
+                {
+                  "id": "custom-mouse",
+                  "name": "Cursor & Pointer",
+                  "version": "1.0.18",
+                  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/custom-mouse-v1.0.18.zip",
+                  "status": "Active"
+                },
+                {
+                  "id": "shell-integration",
+                  "name": "Nilesoft Shell Manager",
+                  "version": "1.0.14",
+                  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/shell-integration-v1.0.14.zip",
+                  "status": "Active"
+                }
+              ]
+            }
+            """);
+
+        var store = InvokeGenerate(
+            mergeExisting: true,
+            pluginIds: ["custom-mouse"],
+            catalogChannel: PluginCatalogChannel.Preview,
+            releaseRepositoryUrl: "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog-preview");
+
+        var entry = Assert.Single(store.Plugins);
+        Assert.Equal("custom-mouse", entry.Id);
+        Assert.Equal("2.0.0-preview.1", entry.Version);
+        Assert.Contains("plugin-catalog-preview", entry.DownloadUrl, StringComparison.Ordinal);
+        Assert.DoesNotContain("plugin-catalog/custom-mouse", entry.DownloadUrl, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Generate_StableChannel_DoesNotMergePreviewCatalogEntries()
+    {
+        CreatePluginFolder(
+            "custom-mouse",
+            manifestLifecycle: "Active",
+            manifestName: "Cursor & Pointer",
+            description: "Mouse customization plugin.",
+            version: "1.0.0");
+
+        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
+        Directory.CreateDirectory(Path.GetDirectoryName(storePath)!);
+        File.WriteAllText(
+            storePath,
+            """
+            {
+              "lastUpdated": "2026-08-13T00:00:00.0000000+00:00",
+              "storeVersion": "1.0.0",
+              "plugins": [
+                {
+                  "id": "custom-mouse",
+                  "name": "Cursor & Pointer",
+                  "version": "2.0.0-preview.1",
+                  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog-preview/custom-mouse-v2.0.0-preview.1.zip",
+                  "status": "Active"
+                },
+                {
+                  "id": "shell-integration",
+                  "name": "Nilesoft Shell Manager",
+                  "version": "2.0.0-preview.1",
+                  "downloadUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog-preview/shell-integration-v2.0.0-preview.1.zip",
+                  "status": "Active"
+                }
+              ]
+            }
+            """);
+
+        var store = InvokeGenerate(
+            mergeExisting: true,
+            pluginIds: ["custom-mouse"],
+            catalogChannel: PluginCatalogChannel.Stable,
+            releaseRepositoryUrl: "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog");
+
+        var entry = Assert.Single(store.Plugins);
+        Assert.Equal("custom-mouse", entry.Id);
+        Assert.Equal("1.0.0", entry.Version);
+        Assert.Contains("/download/plugin-catalog/", entry.DownloadUrl, StringComparison.Ordinal);
+        Assert.DoesNotContain("plugin-catalog-preview", entry.DownloadUrl, StringComparison.Ordinal);
+    }
+
+    private StoreDocument InvokeGenerate(
+        bool mergeExisting = false,
+        IReadOnlyList<string>? pluginIds = null,
+        PluginCatalogChannel catalogChannel = PluginCatalogChannel.Stable,
+        string releaseRepositoryUrl = "https://example.com/releases")
     {
         var request = new StoreGenerationRequest
         {
             RepositoryRoot = _tempRoot,
             AssetRoot = Path.Combine(_tempRoot, ".build", "release-assets"),
-            ReleaseRepositoryUrl = "https://example.com/releases",
+            ReleaseRepositoryUrl = releaseRepositoryUrl,
             MergeExisting = mergeExisting,
             RequireAssets = false,
             PluginIds = pluginIds ?? Array.Empty<string>(),
+            CatalogChannel = catalogChannel,
         };
 
         return new StoreJsonGenerator().Generate(request);

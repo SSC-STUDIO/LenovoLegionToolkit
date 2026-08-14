@@ -125,7 +125,7 @@ static async Task<int> ProgramMainAsync(string[] args)
             DisplayName = RequireValue(argv, "--name"),
             Author = OptionalValue(argv, "--author") ?? Environment.UserName,
             Description = OptionalValue(argv, "--description") ?? string.Empty,
-            MinimumHostVersion = OptionalValue(argv, "--min-llt-version") ?? "5.0.0",
+            MinimumHostVersion = OptionalValue(argv, "--min-llt-version") ?? "6.0.0",
             Official = HasFlag(argv, "--official"),
         };
 
@@ -365,16 +365,23 @@ static async Task<int> ProgramMainAsync(string[] args)
             .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             ?? (OptionalValue(argv, "--plugin") is { } pluginId ? [pluginId] : Array.Empty<string>());
 
+        var channel = ParseCatalogChannel(OptionalValue(argv, "--catalog-channel"));
+        var releaseUrl = OptionalValue(argv, "--release-repository-url")
+            ?? (channel == PluginCatalogChannel.Preview
+                ? "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog-preview"
+                : "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog");
+
         var request = new StoreGenerationRequest
         {
             RepositoryRoot = repositoryRoot,
             OutputPath = OptionalValue(argv, "--output"),
-            ReleaseRepositoryUrl = OptionalValue(argv, "--release-repository-url") ?? "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog",
+            ReleaseRepositoryUrl = releaseUrl,
             AssetRoot = OptionalValue(argv, "--asset-root"),
             PluginIds = pluginIds,
             ReleaseDate = ParseReleaseDate(OptionalValue(argv, "--release-date")),
             MergeExisting = HasFlag(argv, "--merge-existing"),
             RequireAssets = HasFlag(argv, "--require-assets"),
+            CatalogChannel = channel,
         };
 
         if (HasFlag(argv, "--check"))
@@ -411,6 +418,22 @@ static PluginValidationProfile ParseProfile(string rawValue)
         "official-release" => PluginValidationProfile.OfficialRelease,
         _ => throw new InvalidOperationException($"Unknown validation profile '{rawValue}'."),
     };
+}
+
+static PluginCatalogChannel ParseCatalogChannel(string? rawValue)
+{
+    if (string.IsNullOrWhiteSpace(rawValue) ||
+        string.Equals(rawValue, "stable", StringComparison.OrdinalIgnoreCase))
+    {
+        return PluginCatalogChannel.Stable;
+    }
+
+    if (string.Equals(rawValue, "preview", StringComparison.OrdinalIgnoreCase))
+    {
+        return PluginCatalogChannel.Preview;
+    }
+
+    throw new InvalidOperationException($"Unknown catalog channel '{rawValue}'. Use stable or preview.");
 }
 
 static IReadOnlyList<string> ParsePluginSelection(string[] args)
@@ -493,8 +516,8 @@ plugin-tooling validate [--plugin <plugin-id>|--plugin-ids <id,id>] [--profile c
 plugin-tooling package --plugin <plugin-id> [--configuration Release] [--output-dir <path>] [--build-first]
 plugin-tooling migrate [--plugin <plugin-id>|--plugin-ids <id,id>] [--check]
 plugin-tooling sync-version [--plugin <plugin-id>|--plugin-ids <id,id>] [--check]
-plugin-tooling bump-version --plugin <plugin-id> [--part patch|minor|major] [--version <x.y.z>] [--check]
+plugin-tooling bump-version --plugin <plugin-id> [--part patch|minor|major] [--version <x.y.z[-prerelease]>] [--check]
 plugin-tooling promote --plugin <plugin-id> [--overwrite]
-plugin-tooling generate-store [--output <path>] [--asset-root <path>] [--release-repository-url <url>] [--release-date <iso-8601>] [--plugin <plugin-id>|--plugin-ids <id,id>] [--merge-existing] [--require-assets] [--check]
+plugin-tooling generate-store [--output <path>] [--asset-root <path>] [--release-repository-url <url>] [--catalog-channel stable|preview] [--release-date <iso-8601>] [--plugin <plugin-id>|--plugin-ids <id,id>] [--merge-existing] [--require-assets] [--check]
 """);
 }

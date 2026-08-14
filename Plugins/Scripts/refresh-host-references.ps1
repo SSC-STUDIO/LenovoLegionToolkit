@@ -12,13 +12,17 @@ $targetDir = if ([string]::IsNullOrWhiteSpace($TargetDir)) {
     $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($TargetDir)
 }
 
+# Plugins compile against the Lib/Lib.Plugins assembly graph shipped by
+# UniversalDeviceToolkit.Host (see Plugins/Directory.Build.props). The retired
+# WPF assembly "Universal Device Toolkit.dll" is no longer published anywhere
+# and must not be required here. Keep this list in sync with
+# ensure-host-dependencies.ps1 (see Plugins/KNOWLEDGE_BASE.md).
 $requiredFiles = @(
     "UniversalDeviceToolkit.Lib.dll",
     "UniversalDeviceToolkit.Lib.Plugins.dll",
     "UniversalDeviceToolkit.Lib.Abstractions.dll",
     "UniversalDeviceToolkit.Lib.Shared.dll",
     "UniversalDeviceToolkit.Plugins.Abstractions.dll",
-    "Universal Device Toolkit.dll",
     "Serilog.dll",
     "Serilog.Sinks.Async.dll",
     "Serilog.Sinks.File.dll"

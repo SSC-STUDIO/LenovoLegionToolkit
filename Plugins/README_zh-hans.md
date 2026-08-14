@@ -3,7 +3,7 @@
 <p align="center">
   <b><a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit">Universal Device Toolkit</a> 官方插件生态</b><br/>
   Free. Open-source. No ads. No telemetry. Just better Windows.<br/>
-  需要宿主 <b>v5.0.0+</b> · .NET 10 · WPF-UI 4.3.0
+  需要宿主 <b>v6.0.0+</b> 才能安装 2.x 预览包 · 已发布稳定宿主仍为 <b>v5.0.2</b> · .NET 10 · Electron web UI
 </p>
 
 [English README](README.md)
@@ -12,7 +12,7 @@
 
 ## 快速安装
 
-1. 打开 **Universal Device Toolkit**（v5.0.0 或更高）
+1. 打开 **Universal Device Toolkit**（2.x 预览包需要 v6.0.0-preview 或更高；v5.0.2 仍从 `plugin-catalog` 安装 1.x）
 2. 进入 **插件 → 浏览商店**
 3. 点击 **安装**
 4. 按提示重启应用
@@ -25,11 +25,11 @@
 
 | 状态 | 插件 | 版本 | 说明 | 安装 ID |
 |------|------|------|------|---------|
-| 上架 | **光标与指针** | v1.0.18 | 主题感知光标、指针速度、主按键交换、安全备份/还原 | `custom-mouse` |
-| 上架 | **ViVeTool** | v1.2.4 | 可视化浏览/开关 Windows 隐藏功能标志 | `vive-tool` |
-| 上架 | **Nilesoft Shell 管理器** | v1.0.14 | 管理 Nilesoft Shell 注册与 UDT 配置（需单独安装 Shell） | `shell-integration` |
+| 上架 | **光标与指针** | v2.0.0-preview.1 | 主题感知光标、指针速度、主按键交换、安全备份/还原 | `custom-mouse` |
+| 上架 | **ViVeTool** | v2.0.0-preview.1 | 可视化浏览/开关 Windows 隐藏功能标志 | `vive-tool` |
+| 上架 | **Nilesoft Shell 管理器** | v2.0.0-preview.1 | 管理 Nilesoft Shell 注册与 UDT 配置（需单独安装 Shell） | `shell-integration` |
 
-> 版本以各插件 `plugin.manifest.json` 为准；上架清单见 [`Plugins/.build/catalog/store.json`](./.build/catalog/store.json)（发布生成物，Release 资产名也是 `store.json`）。
+> 版本以各插件 `plugin.manifest.json` 为准。已发布的 **v5.0.2** 继续读 `plugin-catalog`（1.x）；**v6.0.0-preview.N** 读 `plugin-catalog-preview`（2.x）。`generate-store --catalog-channel stable|preview` 不要把 2.x 合进稳定目录。
 
 ---
 
@@ -39,7 +39,7 @@
 MIT 许可，无广告、无付费墙、无遥测。
 
 ### 原生 Windows 11 体验
-**.NET 10** + **WPF-UI 4.3.0** Fluent 设计标记，浅色/深色主题一等公民。
+**.NET 10**。插件设置页是 Electron `contributes.webPage`（`web/index.html` + `plugin-ui.css`）。
 
 ### 可扩展
 SDK、脚手架与 **PluginWorkbench** 支持不启动完整宿主即可预览。
@@ -122,10 +122,10 @@ UniversalDeviceToolkit/
 
 | 层级 | 真相源 | 当前基线 |
 |------|--------|----------|
-| 宿主 | `host-release.json` / 主仓 | **5.0.0** |
-| 插件 SemVer | `plugin.manifest.json` → `version` | 见上表 |
-| 最低宿主 | `minHostVersion`；运行时 `plugin.json` 的 `MinLltVersion` 为宿主 ABI 字段名 | **5.0.0** |
-| 商店目录 | 生成的 `Plugins/.build/catalog/store.json` | 勿手改作为日常入口 |
+| 宿主（编译用 vendored 基线） | `host-release.json` / 主仓 | **5.0.2**（打出首个 `v6.0.0-preview.1` ZIP 后再刷新） |
+| 插件 SemVer | `plugin.manifest.json` → `version` | **2.0.0-preview.1** |
+| 最低宿主 | `minHostVersion`；运行时 `plugin.json` 的 `MinLltVersion` 为宿主 ABI 字段名 | **6.0.0** |
+| 商店目录 | 生成的 `Plugins/.build/catalog/store.json` | 稳定 `plugin-catalog`（1.x）或预览 `plugin-catalog-preview` |
 
 ---
 

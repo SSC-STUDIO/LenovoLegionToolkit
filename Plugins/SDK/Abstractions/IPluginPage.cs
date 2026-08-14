@@ -11,7 +11,7 @@ public interface IPluginPage
     string PageTitle { get; }
 
     /// <summary>
-    /// Page icon (WPF UI Symbol)
+    /// Page icon (Fluent icon name; historical WPF-UI Symbol alias)
     /// </summary>
     string? PageIcon { get; }
 

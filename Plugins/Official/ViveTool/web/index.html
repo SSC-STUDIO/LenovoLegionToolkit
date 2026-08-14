@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>ViVeTool</title>
+  <link rel="stylesheet" href="plugin-ui.css" />
+</head>
+<body>
+  <h1 class="up-title" data-i18n="title">ViVeTool</h1>
+  <p class="up-subtitle" data-i18n="subtitle">Browse and toggle Windows feature flags.</p>
+
+  <div class="up-banner" data-i18n="warning">
+    Feature flags can break Windows. Change only what you understand, and keep a restore point.
+  </div>
+
+  <div class="up-card">
+    <div class="up-card__title" data-i18n="tool">ViVeTool binary</div>
+    <div class="up-row">
+      <span class="up-row__label" data-i18n="available">Available</span>
+      <span id="available" class="up-badge">—</span>
+    </div>
+    <div class="up-row">
+      <span class="up-row__label" data-i18n="version">Version</span>
+      <span id="version" class="up-mono">—</span>
+    </div>
+    <div class="up-row">
+      <span class="up-row__label" data-i18n="path">Path</span>
+      <input id="path" class="up-input" style="flex:1;min-width:160px" />
+      <button id="browse" class="up-btn" data-i18n="browse">Browse</button>
+      <button id="set-path" class="up-btn" data-i18n="setPath">Set path</button>
+    </div>
+    <div class="up-row">
+      <span class="up-row__label" data-i18n="download">Download ViVeTool</span>
+      <button id="download" class="up-btn up-btn--primary" data-i18n="downloadBtn">Download</button>
+    </div>
+    <p id="download-progress" class="up-hint"></p>
+  </div>
+
+  <div class="up-card">
+    <div class="up-card__title" data-i18n="features">Features</div>
+    <div class="up-row">
+      <input id="search" class="up-input" style="flex:1" data-i18n-placeholder="searchPh" />
+      <button id="search-btn" class="up-btn" data-i18n="search">Search</button>
+      <button id="refresh" class="up-btn" data-i18n="refresh">Refresh</button>
+    </div>
+    <div class="up-row">
+      <span class="up-row__label" data-i18n="io">Import / export</span>
+      <div class="up-actions">
+        <button id="import-file" class="up-btn" data-i18n="importFile">Import file</button>
+        <button id="import-url" class="up-btn" data-i18n="importUrl">Import URL</button>
+        <button id="export" class="up-btn" data-i18n="export">Export</button>
+      </div>
+    </div>
+    <div class="up-table-wrap">
+      <table class="up-table">
+        <thead>
+          <tr>
+            <th data-i18n="colId">ID</th>
+            <th data-i18n="colName">Name</th>
+            <th data-i18n="colStatus">Status</th>
+            <th data-i18n="colActions">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <p id="status" class="up-status">—</p>
+
+  <script>
+    const zh = (navigator.language || '').toLowerCase().startsWith('zh')
+    const copy = {
+      title: ['ViVeTool', 'ViVeTool'],
+      subtitle: ['Browse and toggle Windows feature flags.', '浏览并开关 Windows 功能标志。'],
+      warning: [
+        'Feature flags can break Windows. Change only what you understand, and keep a restore point.',
+        '功能标志可能破坏 Windows。只改你理解的项，并保留还原点。'
+      ],
+      tool: ['ViVeTool binary', 'ViVeTool 程序'],
+      available: ['Available', '可用'],
+      version: ['Version', '版本'],
+      path: ['Path', '路径'],
+      browse: ['Browse', '浏览'],
+      setPath: ['Set path', '设置路径'],
+      download: ['Download ViVeTool', '下载 ViVeTool'],
+      downloadBtn: ['Download', '下载'],
+      features: ['Features', '功能标志'],
+      search: ['Search', '搜索'],
+      refresh: ['Refresh', '刷新'],
+      io: ['Import / export', '导入 / 导出'],
+      importFile: ['Import file', '导入文件'],
+      importUrl: ['Import URL', '导入 URL'],
+      export: ['Export', '导出'],
+      colId: ['ID', 'ID'],
+      colName: ['Name', '名称'],
+      colStatus: ['Status', '状态'],
+      colActions: ['Actions', '操作']
+    }
+    for (const node of document.querySelectorAll('[data-i18n]')) {
+      const key = node.getAttribute('data-i18n')
+      const pair = copy[key]
+      if (pair) node.textContent = zh ? pair[1] : pair[0]
+    }
+    const search = document.getElementById('search')
+    search.placeholder = zh ? '按名称或 ID 过滤' : 'Filter by name or ID'
+
+    const bridge = window.pluginHost
+    const status = document.getElementById('status')
+    const rows = document.getElementById('rows')
+    const yes = zh ? '是' : 'Yes'
+    const no = zh ? '否' : 'No'
+
+    function setStatus(text, isError) {
+      status.textContent = text
+      status.style.color = isError ? 'var(--up-danger)' : ''
+    }
+
+    async function loadStatus() {
+      const data = await bridge.invoke('plugin.vive.getStatus', {})
+      document.getElementById('available').textContent = data.available ? yes : no
+      document.getElementById('version').textContent = data.version || '—'
+      document.getElementById('path').value = data.path || ''
+    }
+
+    function renderFeatures(features) {
+      rows.replaceChildren()
+      const list = Array.isArray(features) ? features : []
+      for (const feature of list) {
+        const tr = document.createElement('tr')
+        const id = feature.id
+        const name = feature.name || ''
+        const featureStatus = feature.status || ''
+        tr.innerHTML = '<td class="up-mono"></td><td></td><td></td><td class="up-actions"></td>'
+        tr.children[0].textContent = String(id)
+        tr.children[1].textContent = name
+        tr.children[2].textContent = featureStatus
+        const enable = document.createElement('button')
+        enable.className = 'up-btn'
+        enable.textContent = zh ? '启用' : 'Enable'
+        enable.addEventListener('click', () => void toggle(id, true))
+        const disable = document.createElement('button')
+        disable.className = 'up-btn up-btn--danger'
+        disable.textContent = zh ? '禁用' : 'Disable'
+        disable.addEventListener('click', () => void toggle(id, false))
+        tr.children[3].append(enable, disable)
+        rows.append(tr)
+      }
+    }
+
+    async function loadFeatures() {
+      const keyword = search.value.trim()
+      const result = keyword
+        ? await bridge.invoke('plugin.vive.searchFeatures', { keyword })
+        : await bridge.invoke('plugin.vive.listFeatures', {})
+      renderFeatures(result.features || result)
+    }
+
+    async function toggle(featureId, enable) {
+      try {
+        const method = enable ? 'plugin.vive.enableFeature' : 'plugin.vive.disableFeature'
+        await bridge.invoke(method, { featureId })
+        await loadFeatures()
+        setStatus(zh ? '已更新' : 'Updated')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    }
+
+    document.getElementById('search-btn').addEventListener('click', () => {
+      loadFeatures().then(() => setStatus(zh ? '已搜索' : 'Searched')).catch((error) => setStatus(error.message, true))
+    })
+    document.getElementById('refresh').addEventListener('click', async () => {
+      try {
+        await bridge.invoke('plugin.vive.refresh', {})
+        await loadFeatures()
+        setStatus(zh ? '已刷新' : 'Refreshed')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+    document.getElementById('browse').addEventListener('click', async () => {
+      try {
+        const path = await bridge.invoke('dialog:open-file', {
+          title: 'vivetool.exe',
+          filters: [{ name: 'Executable', extensions: ['exe'] }]
+        })
+        if (path) document.getElementById('path').value = path
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+    document.getElementById('set-path').addEventListener('click', async () => {
+      try {
+        await bridge.invoke('plugin.vive.setPath', { path: document.getElementById('path').value })
+        await loadStatus()
+        setStatus(zh ? '路径已设置' : 'Path set')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+    document.getElementById('download').addEventListener('click', async () => {
+      try {
+        setStatus(zh ? '正在下载…' : 'Downloading…')
+        await bridge.invoke('plugin.vive.download', {})
+        await loadStatus()
+        setStatus(zh ? '下载完成' : 'Download finished')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+    document.getElementById('import-file').addEventListener('click', async () => {
+      try {
+        const path = await bridge.invoke('dialog:open-file', {
+          title: zh ? '导入功能标志' : 'Import features',
+          filters: [{ name: 'JSON', extensions: ['json'] }]
+        })
+        if (!path) return
+        const result = await bridge.invoke('plugin.vive.importFile', { path })
+        renderFeatures(result.features || result)
+        setStatus(zh ? '已导入' : 'Imported')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+    document.getElementById('import-url').addEventListener('click', async () => {
+      const url = window.prompt(zh ? '功能列表 URL' : 'Feature list URL')
+      if (!url) return
+      try {
+        const result = await bridge.invoke('plugin.vive.importUrl', { url })
+        renderFeatures(result.features || result)
+        setStatus(zh ? '已导入' : 'Imported')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+    document.getElementById('export').addEventListener('click', async () => {
+      try {
+        const path = await bridge.invoke('dialog:save-file', {
+          title: zh ? '导出功能标志' : 'Export features',
+          filters: [{ name: 'JSON', extensions: ['json'] }]
+        })
+        if (!path) return
+        await bridge.invoke('plugin.vive.exportFeatures', { path })
+        setStatus(zh ? '已导出' : 'Exported')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+
+    bridge.on('plugin.vive.downloadProgress', (data) => {
+      const bytes = data && data.bytes
+      document.getElementById('download-progress').textContent =
+        typeof bytes === 'number' ? (zh ? '已下载 ' : 'Downloaded ') + bytes + ' bytes' : ''
+    })
+
+    Promise.all([loadStatus(), loadFeatures()])
+      .then(() => setStatus(zh ? '已加载' : 'Loaded'))
+      .catch((error) => setStatus(error.message, true))
+  </script>
+</body>
+</html>

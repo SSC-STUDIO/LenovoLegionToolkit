@@ -2,84 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Cursor &amp; Pointer — Web UI</title>
-  <style>
-    :root {
-      color-scheme: light dark;
-      font-family: 'Segoe UI', 'Microsoft YaHei UI', sans-serif;
-    }
-    body {
-      margin: 0;
-      padding: 24px;
-      background: transparent;
-      color: #e6e6e6;
-      box-sizing: border-box;
-    }
-    h1 { font-size: 20px; margin: 0 0 6px; }
-    p  { font-size: 13px; opacity: 0.75; margin: 0 0 16px; }
-    .card {
-      border: 1px solid rgba(128, 128, 128, 0.35);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 12px;
-      background: rgba(255, 255, 255, 0.04);
-    }
-    .row { display: flex; align-items: center; gap: 10px; margin: 8px 0; }
-    button {
-      padding: 8px 16px;
-      border: none;
-      border-radius: 8px;
-      background: #2f7dff;
-      color: #fff;
-      font-size: 13px;
-      cursor: pointer;
-    }
-    button:disabled { opacity: 0.5; cursor: not-allowed; }
-    code {
-      font-size: 12px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 6px;
-      padding: 4px 8px;
-    }
-  </style>
+  <title>Cursor &amp; Pointer</title>
+  <link rel="stylesheet" href="plugin-ui.css" />
 </head>
 <body>
-  <h1>Cursor &amp; Pointer</h1>
-  <p>Demo web UI hosted by Universal Device Toolkit (contributes.webPage).</p>
+  <h1 class="up-title" data-i18n="title">Cursor &amp; Pointer</h1>
+  <p class="up-subtitle" data-i18n="subtitle">Pointer speed, button swap, and theme-aware cursor styles.</p>
 
-  <div class="card">
-    <div class="row"><code>window.pluginHost</code> bridge:</div>
-    <div class="row">
-      <button id="probe">Probe backend (feature.getStates)</button>
-      <span id="result">—</span>
+  <div class="up-card">
+    <div class="up-card__title" data-i18n="windows">Windows pointer</div>
+    <div class="up-row">
+      <span class="up-row__label">
+        <span data-i18n="speed">Pointer speed</span>
+        <span class="up-row__desc" data-i18n="speedDesc">Range 1–20 (Windows SPI)</span>
+      </span>
+      <input id="speed" class="up-range" type="range" min="1" max="20" value="10" />
+      <span id="speed-value" class="up-mono">10</span>
+    </div>
+    <div class="up-row">
+      <span class="up-row__label">
+        <span data-i18n="swap">Swap primary buttons</span>
+        <span class="up-row__desc" data-i18n="swapDesc">Left-handed mouse layout</span>
+      </span>
+      <label class="up-switch"><input id="swap" type="checkbox" /><span class="up-switch__track"></span></label>
+    </div>
+    <div class="up-row">
+      <span class="up-row__label" data-i18n="applyWindows">Apply pointer settings</span>
+      <button id="apply-windows" class="up-btn up-btn--primary" data-i18n="apply">Apply</button>
     </div>
   </div>
 
-  <div class="card">
-    <div class="row"><code>pluginHost.on('settings.changed')</code> live events:</div>
-    <div id="events" style="font-size:12px;opacity:0.8;">(waiting)</div>
+  <div class="up-card">
+    <div class="up-card__title" data-i18n="cursor">Cursor theme</div>
+    <div class="up-row">
+      <span class="up-row__label">
+        <span data-i18n="mode">Theme mode</span>
+        <span class="up-row__desc" data-i18n="modeDesc">Auto follows Windows light/dark</span>
+      </span>
+      <select id="mode" class="up-select">
+        <option value="0" data-i18n="modeAuto">Auto</option>
+        <option value="1" data-i18n="modeLight">Light</option>
+        <option value="2" data-i18n="modeDark">Dark</option>
+        <option value="3" data-i18n="modeDefault">Windows default</option>
+      </select>
+    </div>
+    <div class="up-row">
+      <span class="up-row__label" data-i18n="actions">Actions</span>
+      <div class="up-actions">
+        <button id="apply-theme" class="up-btn" data-i18n="applyNow">Apply now</button>
+        <button id="sync" class="up-btn" data-i18n="sync">Sync from Windows</button>
+        <button id="restore" class="up-btn up-btn--danger" data-i18n="restore">Restore default</button>
+      </div>
+    </div>
   </div>
 
+  <p id="status" class="up-status">—</p>
+
   <script>
-    const result = document.getElementById('result')
-    const events = document.getElementById('events')
+    const zh = (navigator.language || '').toLowerCase().startsWith('zh')
+    const copy = {
+      title: ['Cursor & Pointer', '光标与指针'],
+      subtitle: ['Pointer speed, button swap, and theme-aware cursor styles.', '指针速度、主按键交换与主题感知光标。'],
+      windows: ['Windows pointer', 'Windows 指针'],
+      speed: ['Pointer speed', '指针速度'],
+      speedDesc: ['Range 1–20 (Windows SPI)', '范围 1–20（Windows SPI）'],
+      swap: ['Swap primary buttons', '交换主按键'],
+      swapDesc: ['Left-handed mouse layout', '左手鼠标布局'],
+      applyWindows: ['Apply pointer settings', '应用指针设置'],
+      apply: ['Apply', '应用'],
+      cursor: ['Cursor theme', '光标主题'],
+      mode: ['Theme mode', '主题模式'],
+      modeDesc: ['Auto follows Windows light/dark', '自动跟随 Windows 浅色/深色'],
+      modeAuto: ['Auto', '自动'],
+      modeLight: ['Light', '浅色'],
+      modeDark: ['Dark', '深色'],
+      modeDefault: ['Windows default', 'Windows 默认'],
+      actions: ['Actions', '操作'],
+      applyNow: ['Apply now', '立即应用'],
+      sync: ['Sync from Windows', '从 Windows 同步'],
+      restore: ['Restore default', '还原默认']
+    }
+    for (const node of document.querySelectorAll('[data-i18n]')) {
+      const key = node.getAttribute('data-i18n')
+      const pair = copy[key]
+      if (pair) node.textContent = zh ? pair[1] : pair[0]
+    }
 
     const bridge = window.pluginHost
+    const status = document.getElementById('status')
+    const speed = document.getElementById('speed')
+    const speedValue = document.getElementById('speed-value')
+    const swap = document.getElementById('swap')
+    const mode = document.getElementById('mode')
 
-    document.getElementById('probe').addEventListener('click', async () => {
+    function setStatus(text, isError) {
+      status.textContent = text
+      status.style.color = isError ? 'var(--up-danger)' : ''
+    }
+
+    function applyState(state) {
+      if (!state) return
+      speed.value = String(state.pointerSpeed ?? 10)
+      speedValue.textContent = speed.value
+      swap.checked = Boolean(state.swapButtons)
+      mode.value = String(state.cursorThemeMode ?? 0)
+    }
+
+    speed.addEventListener('input', () => { speedValue.textContent = speed.value })
+
+    async function load() {
       try {
-        const data = await bridge.invoke('feature.getStates', { feature: 'powerMode' })
-        result.textContent = 'ok: ' + JSON.stringify(data.states || data).slice(0, 80)
+        const state = await bridge.invoke('plugin.customMouse.getState', {})
+        applyState(state)
+        setStatus(zh ? '已加载' : 'Loaded')
       } catch (error) {
-        result.textContent = 'error: ' + error.message
+        setStatus((zh ? '加载失败：' : 'Load failed: ') + error.message, true)
+      }
+    }
+
+    document.getElementById('apply-windows').addEventListener('click', async () => {
+      try {
+        const result = await bridge.invoke('plugin.customMouse.applyWindows', {
+          speed: Number(speed.value),
+          swapButtons: swap.checked
+        })
+        setStatus(result && result.ok === false ? (zh ? '应用失败' : 'Apply failed') : (zh ? '已应用' : 'Applied'), result && result.ok === false)
+      } catch (error) {
+        setStatus(error.message, true)
       }
     })
 
-    bridge.on('settings.changed', (data) => {
-      const line = document.createElement('div')
-      line.textContent = 'settings.changed: ' + JSON.stringify(data).slice(0, 80)
-      events.prepend(line)
+    mode.addEventListener('change', async () => {
+      try {
+        const result = await bridge.invoke('plugin.customMouse.setCursorThemeMode', { mode: Number(mode.value) })
+        setStatus(result && result.ok === false ? (zh ? '主题失败' : 'Theme failed') : (zh ? '主题已更新' : 'Theme updated'), result && result.ok === false)
+      } catch (error) {
+        setStatus(error.message, true)
+      }
     })
+
+    document.getElementById('apply-theme').addEventListener('click', async () => {
+      try {
+        await bridge.invoke('plugin.customMouse.applyCursorThemeNow', {})
+        setStatus(zh ? '已应用当前主题' : 'Applied current theme')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+
+    document.getElementById('sync').addEventListener('click', async () => {
+      try {
+        const state = await bridge.invoke('plugin.customMouse.syncFromWindows', {})
+        applyState(state)
+        setStatus(zh ? '已从 Windows 同步' : 'Synced from Windows')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+
+    document.getElementById('restore').addEventListener('click', async () => {
+      try {
+        await bridge.invoke('plugin.customMouse.restoreWindowsDefault', {})
+        await load()
+        setStatus(zh ? '已还原 Windows 默认光标' : 'Restored Windows default cursor')
+      } catch (error) {
+        setStatus(error.message, true)
+      }
+    })
+
+    void load()
   </script>
 </body>
 </html>

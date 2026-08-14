@@ -48,11 +48,11 @@ public sealed partial class PluginVersionSynchronizer
             throw new FormatException("Version string is null or empty.");
         }
 
-        var match = SemVerRegex().Match(version);
+        var match = PluginVersionRegex().Match(version.Trim());
         if (!match.Success)
         {
             throw new FormatException(
-                $"Version '{version}' is not a valid 3-part SemVer string (expected: major.minor.patch).");
+                $"Version '{version}' is not a valid plugin SemVer string (expected: major.minor.patch or major.minor.patch-prerelease).");
         }
 
         var major = int.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
@@ -68,8 +68,28 @@ public sealed partial class PluginVersionSynchronizer
         };
     }
 
-    [GeneratedRegex(@"^(\d+)\.(\d+)\.(\d+)$", RegexOptions.CultureInvariant)]
-    private static partial Regex SemVerRegex();
+    public static bool IsPluginVersion(string? version) =>
+        !string.IsNullOrWhiteSpace(version) && PluginVersionRegex().IsMatch(version.Trim());
+
+    public static bool IsPrereleasePluginVersion(string? version) =>
+        IsPluginVersion(version) && version!.Trim().Contains('-', StringComparison.Ordinal);
+
+    public static string ToNumericVersion(string version)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(version);
+
+        var match = PluginVersionRegex().Match(version.Trim());
+        if (!match.Success)
+        {
+            throw new FormatException(
+                $"Version '{version}' is not a valid plugin SemVer string (expected: major.minor.patch or major.minor.patch-prerelease).");
+        }
+
+        return $"{match.Groups[1].Value}.{match.Groups[2].Value}.{match.Groups[3].Value}";
+    }
+
+    [GeneratedRegex(@"^(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$", RegexOptions.CultureInvariant)]
+    private static partial Regex PluginVersionRegex();
 
     public IReadOnlyList<VersionSyncReport> SyncRepository(
         string repositoryRoot,
@@ -101,6 +121,12 @@ public sealed partial class PluginVersionSynchronizer
         if (explicitVersion is not null && part is not null)
         {
             throw new InvalidOperationException("Use either --version or --part, not both.");
+        }
+
+        if (explicitVersion is not null && !IsPluginVersion(explicitVersion))
+        {
+            throw new FormatException(
+                $"Version '{explicitVersion}' is not a valid plugin SemVer string (expected: major.minor.patch or major.minor.patch-prerelease).");
         }
 
         var currentVersion = plugin.UnifiedManifest.Version;
@@ -304,9 +330,10 @@ public sealed partial class PluginVersionSynchronizer
             ?? propertyGroups.FirstOrDefault()
             ?? throw new InvalidOperationException($"No PropertyGroup found in '{projectPath}'.");
 
+        var numericVersion = ToNumericVersion(version);
         SetOrAddProperty(targetGroup, "Version", version);
-        SetOrAddProperty(targetGroup, "FileVersion", version);
-        SetOrAddProperty(targetGroup, "AssemblyVersion", version);
+        SetOrAddProperty(targetGroup, "FileVersion", numericVersion);
+        SetOrAddProperty(targetGroup, "AssemblyVersion", numericVersion);
 
         File.WriteAllText(projectPath, PluginRepository.NormalizeLineEndings(document.ToString(SaveOptions.DisableFormatting)));
     }

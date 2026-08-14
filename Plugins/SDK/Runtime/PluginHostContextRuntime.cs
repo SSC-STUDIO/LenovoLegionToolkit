@@ -148,13 +148,13 @@ public class PluginHostContextRuntime : IPluginHostContext
         }
         catch (Exception ex) when (ex is FileNotFoundException or BadImageFormatException)
         {
-            // Expected: assembly DLL is absent or not a valid managed assembly 鈥?silent return.
+            // Expected: missing or invalid assembly DLL; return null.
             return null;
         }
         catch (Exception ex)
         {
-            // Unexpected: FileLoadException (version mismatch / policy), SecurityException, ArgumentException鈥?            // Surface these via Debug.WriteLine so the failure is observable by a developer rather than
-            // silently degrading to "Preview mode". See BUGS.md H-007.
+            // Unexpected load failures (version policy, SecurityException, ArgumentException).
+            // Log them so a developer can see the failure instead of a silent Preview-mode fallback.
             Debug.WriteLine($"[SDK] ResolveType(\"{fullTypeName}\", \"{assemblyName}\") failed: {ex.GetType().Name}: {ex.Message}");
             return null;
         }
@@ -201,7 +201,7 @@ public class PluginHostContextRuntime : IPluginHostContext
     }
 
     // -----------------------------------------------------------------------
-    // Instance members 鈥?default IPluginHostContext implementation (preview mode)
+    // Instance members - default IPluginHostContext implementation (preview mode)
     // -----------------------------------------------------------------------
 
     /// <inheritdoc />

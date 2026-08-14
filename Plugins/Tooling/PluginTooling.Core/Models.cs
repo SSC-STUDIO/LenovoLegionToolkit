@@ -537,7 +537,7 @@ public sealed class ScaffoldRequest
     public string DisplayName { get; init; } = string.Empty;
     public string Author { get; init; } = Environment.UserName;
     public string Description { get; init; } = string.Empty;
-    public string MinimumHostVersion { get; init; } = "5.0.0";
+    public string MinimumHostVersion { get; init; } = "6.0.0";
     public string? NamespaceSegment { get; init; }
     public string? ClassPrefix { get; init; }
     public bool Official { get; init; }
@@ -565,6 +565,12 @@ public sealed class PromoteRequest
 
 public sealed record PromoteResult(string StoreEntryPath, bool Created);
 
+public enum PluginCatalogChannel
+{
+    Stable,
+    Preview,
+}
+
 public sealed class StoreGenerationRequest
 {
     public string RepositoryRoot { get; init; } = string.Empty;
@@ -575,6 +581,7 @@ public sealed class StoreGenerationRequest
     public DateTimeOffset? ReleaseDate { get; init; }
     public bool MergeExisting { get; init; }
     public bool RequireAssets { get; init; }
+    public PluginCatalogChannel CatalogChannel { get; init; } = PluginCatalogChannel.Stable;
 }
 
 public sealed record StoreCheckResult(string StorePath, bool Matches, string Message);

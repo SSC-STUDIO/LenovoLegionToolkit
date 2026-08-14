@@ -1,0 +1,43 @@
+{
+  "methods": {
+    "customMouse": [
+      "plugin.customMouse.getState",
+      "plugin.customMouse.applyWindows",
+      "plugin.customMouse.setCursorThemeMode",
+      "plugin.customMouse.applyCursorThemeNow",
+      "plugin.customMouse.syncFromWindows",
+      "plugin.customMouse.restoreWindowsDefault"
+    ],
+    "shell": [
+      "plugin.shell.getStatus",
+      "plugin.shell.enable",
+      "plugin.shell.disable",
+      "plugin.shell.openFolder",
+      "plugin.shell.openConfig",
+      "plugin.shell.openManagedConfig",
+      "plugin.shell.syncManagedConfig",
+      "plugin.shell.resetManagedConfig",
+      "plugin.shell.applyPreset",
+      "plugin.shell.getProfile",
+      "plugin.shell.setProfile",
+      "plugin.shell.exportProfile",
+      "plugin.shell.importProfile"
+    ],
+    "vive": [
+      "plugin.vive.getStatus",
+      "plugin.vive.listFeatures",
+      "plugin.vive.searchFeatures",
+      "plugin.vive.enableFeature",
+      "plugin.vive.disableFeature",
+      "plugin.vive.refresh",
+      "plugin.vive.setPath",
+      "plugin.vive.download",
+      "plugin.vive.importFile",
+      "plugin.vive.importUrl",
+      "plugin.vive.exportFeatures"
+    ]
+  },
+  "events": [
+    "plugin.vive.downloadProgress"
+  ]
+}

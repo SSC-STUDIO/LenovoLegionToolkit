@@ -3,7 +3,7 @@ using System;
 namespace UniversalDeviceToolkit.Plugins.Core;
 
 /// <summary>
-/// Plugin-side logging fa莽ade. Plugins call <see cref="Trace"/> and <see cref="Error"/>
+/// Plugin-side logging facade. Plugins call <see cref="Trace"/> and <see cref="Error"/>
 /// without depending on any concrete host logger. The hosting plugin must call
 /// <see cref="Configure"/> once at startup to bridge to the real logger
 /// (e.g. UniversalDeviceToolkit.Lib.Utils.Log.Instance).
@@ -21,7 +21,7 @@ public static class PluginLog
     public static bool IsTraceEnabled => _isTraceEnabled();
 
     /// <summary>
-    /// Configures the logging fa莽ade by providing a trace-enable predicate, a trace-level
+    /// Configures the logging facade by providing a trace-enable predicate, a trace-level
     /// log-writing action, and an error-level log-writing action.
     /// Must be called once at startup before any log messages are produced.
     /// </summary>
@@ -39,7 +39,7 @@ public static class PluginLog
     }
 
     /// <summary>
-    /// Resets the logging fa莽ade to its unconfigured state.
+    /// Resets the logging facade to its unconfigured state.
     /// After calling this method, <see cref="IsTraceEnabled"/> returns false
     /// and log calls become no-ops until <see cref="Configure"/> is called again.
     /// </summary>
@@ -52,7 +52,7 @@ public static class PluginLog
 
     /// <summary>
     /// Logs a trace message only when <see cref="IsTraceEnabled"/> is true.
-    /// Safe to call before <see cref="Configure"/> 鈥?becomes a no-op.
+    /// Safe to call before <see cref="Configure"/>; becomes a no-op.
     /// </summary>
     public static void Trace(string message, Exception? exception = null)
     {

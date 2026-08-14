@@ -173,7 +173,7 @@ public class SettingsManager<T> : IDisposable where T : class, new()
 
             if (_useMessagePack)
             {
-                // Serialize once 鈥?reuse for both comparison and writing
+                // Serialize once - reuse for both comparison and writing
                 var bytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
 
                 // Memory transaction: skip save if settings unchanged
@@ -359,7 +359,7 @@ public class SettingsManager<T> : IDisposable where T : class, new()
             }
         }
 
-        // Phase 2: file write under _semaphore 鈥?mutually exclusive with SaveAsync
+        // Phase 2: file write under _semaphore - mutually exclusive with SaveAsync
         _semaphore.Wait();
         try
         {
@@ -518,8 +518,8 @@ public class SettingsManager<T> : IDisposable where T : class, new()
         }
 
         // Save outside _lock to avoid lock-order inversion with SaveAsync:
-        // Timer holds _lock 鈫?Save() acquires _semaphore (Phase 2),
-        // while SaveAsync holds _semaphore 鈫?tries _lock at line 234.
+        // the timer holds _lock then Save() takes _semaphore (phase 2),
+        // while SaveAsync holds _semaphore then tries _lock at line 234.
         Save(settingsToSave);
     }
 
@@ -592,7 +592,7 @@ public class SettingsManager<T> : IDisposable where T : class, new()
         }
         catch (Exception)
         {
-            // Best-effort cleanup 鈥?file may be locked by another reader.
+            // Best-effort cleanup - file may be locked by another reader.
         }
     }
 

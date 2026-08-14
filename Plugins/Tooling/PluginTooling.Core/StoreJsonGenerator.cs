@@ -10,6 +10,7 @@ public sealed class StoreJsonGenerator
     public StoreDocument Generate(StoreGenerationRequest request)
     {
         ArgumentNullException.ThrowIfNull(request);
+        ValidateChannelUrl(request);
 
         var repository = _repository.Load(request.RepositoryRoot);
         var selectedPluginIds = request.PluginIds.Count == 0
@@ -44,7 +45,10 @@ public sealed class StoreJsonGenerator
                 ? store.StoreVersion
                 : repository.StoreDocument.StoreVersion;
             // Deduplicate by entry ID before merge — last-wins, matching ReplaceOrAdd semantics.
+            // Keep only entries that belong to this catalog channel so 2.x preview
+            // packages never land in the stable store.json and vice versa.
             foreach (var cloned in repository.StoreDocument.Plugins
+                         .Where(entry => EntryMatchesChannel(entry, request.CatalogChannel))
                          .GroupBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
                          .Select(group => Clone(group.Last())))
             {
@@ -60,6 +64,13 @@ public sealed class StoreJsonGenerator
             if (!HasStoreMetadata(plugin))
             {
                 continue;
+            }
+
+            if (request.CatalogChannel == PluginCatalogChannel.Stable &&
+                PluginVersionSynchronizer.IsPrereleasePluginVersion(plugin.Manifest.Version))
+            {
+                throw new InvalidOperationException(
+                    $"Stable catalog cannot publish prerelease plugin '{plugin.Manifest.Id}' version '{plugin.Manifest.Version}'.");
             }
 
             var storeMetadata = plugin.UnifiedManifest.Store;
@@ -501,5 +512,37 @@ public sealed class StoreJsonGenerator
         }
 
         return PluginLifecycleStatus.Active;
+    }
+
+    private static void ValidateChannelUrl(StoreGenerationRequest request)
+    {
+        var url = request.ReleaseRepositoryUrl ?? string.Empty;
+        var isPreviewUrl = url.Contains("plugin-catalog-preview", StringComparison.OrdinalIgnoreCase);
+        var isStableUrl = url.Contains("/download/plugin-catalog/", StringComparison.OrdinalIgnoreCase) ||
+            url.EndsWith("/plugin-catalog", StringComparison.OrdinalIgnoreCase);
+
+        if (request.CatalogChannel == PluginCatalogChannel.Preview && isStableUrl && !isPreviewUrl)
+        {
+            throw new InvalidOperationException(
+                "Preview catalog channel requires a plugin-catalog-preview release URL.");
+        }
+
+        if (request.CatalogChannel == PluginCatalogChannel.Stable && isPreviewUrl)
+        {
+            throw new InvalidOperationException(
+                "Stable catalog channel cannot use the plugin-catalog-preview release URL.");
+        }
+    }
+
+    private static bool EntryMatchesChannel(StorePluginEntry entry, PluginCatalogChannel channel)
+    {
+        var url = entry.DownloadUrl ?? string.Empty;
+        var isPreview = url.Contains("/download/plugin-catalog-preview/", StringComparison.OrdinalIgnoreCase);
+        var isStable = url.Contains("/download/plugin-catalog/", StringComparison.OrdinalIgnoreCase) && !isPreview;
+
+        if (!isPreview && !isStable)
+            return true;
+
+        return channel == PluginCatalogChannel.Preview ? isPreview : isStable;
     }
 }
