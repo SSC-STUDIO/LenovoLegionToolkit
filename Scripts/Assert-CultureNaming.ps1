@@ -131,8 +131,7 @@ if (Test-Path -LiteralPath $packScript) {
 
 # 5. catalog.json "culture" fields and language zip URLs
 $catalogFiles = @(
-    (Join-Path $repo 'resources\stable\catalog.json'),
-    (Join-Path $repo 'Tools\LanguagePackMockBackend\_serve\catalog.json')
+    (Join-Path $repo 'resources\stable\catalog.json')
 )
 foreach ($catalogPath in $catalogFiles) {
     if (-not (Test-Path -LiteralPath $catalogPath)) { continue }

@@ -51,3 +51,22 @@ jobs:
             validate `
             --repository-root .\Plugins `
             --profile contributor
+
+      - name: Restore plugin solution
+        run: dotnet restore Plugins/UniversalDeviceToolkit.Plugins.sln --locked-mode
+
+      - name: Test plugin solution
+        run: dotnet test Plugins/UniversalDeviceToolkit.Plugins.sln --configuration Release --no-restore --logger "trx;LogFileName=UniversalDeviceToolkit.Plugins.Tests.trx"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: UniversalDeviceToolkit.Electron/package-lock.json
+
+      - name: Test Electron plugin RPC contract
+        working-directory: UniversalDeviceToolkit.Electron
+        run: |
+          npm ci
+          npm test

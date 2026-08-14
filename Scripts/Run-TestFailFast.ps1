@@ -4,8 +4,8 @@
   Runs the same fast test layers as Ci-tests.yml (Windows).
 
 .DESCRIPTION
-  Order: Security|Guard -> Fast unit tests.
-  The Windows stateful suite is intentionally left to the full CI command.
+  Order: Contracts (Guard/Security) -> Fast unit tests.
+  The parallel unit and stateful suites are intentionally left to the full CI command.
 ##>
 [CmdletBinding()]
 param(
@@ -20,7 +20,7 @@ $repoRoot = Resolve-Path (Join-Path $PSScriptRoot '..')
 Set-Location $repoRoot
 
 $tfm = 'net10.0-windows10.0.26100.0'
-$windowsProject = 'UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj'
+$contractsProject = 'UniversalDeviceToolkit.Tests.Contracts/UniversalDeviceToolkit.Tests.Contracts.csproj'
 $fastProject = 'UniversalDeviceToolkit.Fast.Tests/UniversalDeviceToolkit.Fast.Tests.csproj'
 $common = @('--framework', $tfm, '--configuration', $Configuration)
 if ($NoBuild) { $common += '--no-build' }
@@ -48,7 +48,7 @@ if (-not $NoBuild) {
     $common = @('--framework', $tfm, '--configuration', $Configuration, '--no-build')
 }
 
-Invoke-TestLayer -Name 'Security + Guard' -Project $windowsProject -Arguments ($common + @('--filter', 'Category=Security|Category=Guard')) -Trx 'UniversalDeviceToolkit.Tests.SecurityGuard.trx'
+Invoke-TestLayer -Name 'Contracts' -Project $contractsProject -Arguments $common -Trx 'UniversalDeviceToolkit.Tests.Contracts.trx'
 Invoke-TestLayer -Name 'Fast unit tests' -Project $fastProject -Arguments $common -Trx 'UniversalDeviceToolkit.Fast.Tests.trx'
 
 Write-Host 'Fast test layers passed.' -ForegroundColor Green

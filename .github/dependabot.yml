@@ -20,7 +20,6 @@ updates:
           - "Microsoft.NET.Test.Sdk"
       ui-dependencies:
         patterns:
-          - "WPF-UI"
           - "PixiEditor.ColorPicker*"
           - "Markdig*"
       test-dependencies:

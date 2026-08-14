@@ -10,7 +10,6 @@ on:
     paths:
       - 'UniversalDeviceToolkit.CrossPlatform/**'
       - 'UniversalDeviceToolkit.CrossPlatform.Tests/**'
-      - 'UniversalDeviceToolkit.Avalonia/**'
       - 'UniversalDeviceToolkit.Lib.Abstractions/**'
       - 'UniversalDeviceToolkit.Platform.MacOS/**'
       - 'UniversalDeviceToolkit.Platform.Windows.Core/**'
@@ -22,7 +21,6 @@ on:
     paths:
       - 'UniversalDeviceToolkit.CrossPlatform/**'
       - 'UniversalDeviceToolkit.CrossPlatform.Tests/**'
-      - 'UniversalDeviceToolkit.Avalonia/**'
       - 'UniversalDeviceToolkit.Lib.Abstractions/**'
       - 'UniversalDeviceToolkit.Platform.MacOS/**'
       - 'UniversalDeviceToolkit.Platform.Windows.Core/**'

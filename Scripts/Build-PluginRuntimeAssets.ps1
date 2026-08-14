@@ -41,12 +41,21 @@ function Resolve-HostSourceDirectory {
         return (Resolve-Path -LiteralPath $ExplicitSource -ErrorAction Stop).Path
     }
 
-    $buildOutput = Join-Path $CoreRepositoryRoot "Build"
-    if (Test-Path -LiteralPath (Join-Path $buildOutput "UniversalDeviceToolkit.Lib.dll")) {
-        return $buildOutput
+    # The release pipeline publishes the .NET Host (the assembly graph plugins
+    # compile against) to UniversalDeviceToolkit.Host/publish/<rid>; the legacy
+    # Build folder is only checked for old local layouts.
+    $candidates = @(
+        (Join-Path $CoreRepositoryRoot "UniversalDeviceToolkit.Host\publish\win-x64"),
+        (Join-Path $CoreRepositoryRoot "Build")
+    )
+
+    foreach ($candidate in $candidates) {
+        if (Test-Path -LiteralPath (Join-Path $candidate "UniversalDeviceToolkit.Lib.dll")) {
+            return $candidate
+        }
     }
 
-    throw "Host build output not found. Publish the host first or pass -HostSourceDir."
+    throw "Host build output not found. Publish UniversalDeviceToolkit.Host first or pass -HostSourceDir."
 }
 
 $coreRepositoryRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path

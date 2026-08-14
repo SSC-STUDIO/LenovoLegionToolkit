@@ -5,11 +5,11 @@ on:
   push:
     branches: [ master ]
     paths-ignore:
-      - 'plugins/**'
+      - 'Plugins/**'
   pull_request:
     branches: [ master ]
     paths-ignore:
-      - 'plugins/**'
+      - 'Plugins/**'
 
 jobs:
   build-test-and-smoke:
@@ -47,20 +47,22 @@ jobs:
         shell: pwsh
         run: ./Scripts/Test-WindowsTestEnvironment.ps1
 
-      # Run security/guard once, then the parallel fast layer and the remaining
-      # Windows stateful suite once. Dedicated UI runs on a desktop runner.
+      # Contracts (Guard/Security) fail-fast, then Fast, parallel unit, then stateful.
       - name: Assert culture naming convention (fail fast)
         shell: pwsh
         run: ./Scripts/Assert-CultureNaming.ps1
 
-      - name: Test (Security + Guard - fail fast)
-        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category=Security|Category=Guard" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.SecurityGuard.trx"
+      - name: Test (Contracts - fail fast)
+        run: dotnet test UniversalDeviceToolkit.Tests.Contracts/UniversalDeviceToolkit.Tests.Contracts.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Contracts.trx"
 
       - name: Test (Fast unit tests)
         run: dotnet test UniversalDeviceToolkit.Fast.Tests/UniversalDeviceToolkit.Fast.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Fast.Tests.trx"
 
-      - name: Test (Windows stateful suite)
-        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --filter "Category!=Security&Category!=Guard" --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Stateful.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
+      - name: Test (Unit)
+        run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
+
+      - name: Test (Stateful)
+        run: dotnet test UniversalDeviceToolkit.Tests.Stateful/UniversalDeviceToolkit.Tests.Stateful.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Tests.Stateful.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
       - name: Upload code coverage
         uses: actions/upload-artifact@v7
@@ -78,8 +80,9 @@ jobs:
         with:
           name: windows-test-results-${{ github.run_id }}
           path: |
-            **/UniversalDeviceToolkit.Tests.SecurityGuard.trx
+            **/UniversalDeviceToolkit.Tests.Contracts.trx
             **/UniversalDeviceToolkit.Fast.Tests.trx
+            **/UniversalDeviceToolkit.Tests.trx
             **/UniversalDeviceToolkit.Tests.Stateful.trx
             **/TestResults/**/*.png
             **/TestResults/**/*.dmp
@@ -227,6 +230,33 @@ jobs:
           }
 
           Write-Host "CLI smoke passed for version $version"
+
+  electron-ui-tests:
+    runs-on: windows-2022
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: UniversalDeviceToolkit.Electron/package-lock.json
+
+      - name: Install Electron dependencies
+        working-directory: UniversalDeviceToolkit.Electron
+        run: npm ci
+
+      - name: Typecheck Electron UI
+        working-directory: UniversalDeviceToolkit.Electron
+        run: npm run typecheck
+
+      - name: Test Electron UI
+        working-directory: UniversalDeviceToolkit.Electron
+        run: npm test
 
   cross-platform-cli:
     strategy:

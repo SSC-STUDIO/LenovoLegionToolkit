@@ -7,9 +7,17 @@ on:
         description: 'Comma-separated plugin ids to publish'
         required: true
         default: 'custom-mouse,shell-integration,vive-tool'
+      catalog_channel:
+        description: 'Catalog channel: stable (plugin-catalog, no prerelease versions) or preview (plugin-catalog-preview)'
+        required: true
+        default: 'stable'
+        type: choice
+        options:
+          - stable
+          - preview
 
 concurrency:
-  group: plugin-catalog-release
+  group: plugin-catalog-release-${{ github.event.inputs.catalog_channel || 'stable' }}
   cancel-in-progress: false
 
 permissions:
@@ -39,6 +47,33 @@ jobs:
         shell: pwsh
         run: |
           Set-StrictMode -Version Latest
+          $channel = '${{ github.event.inputs.catalog_channel }}'
+          if ([string]::IsNullOrWhiteSpace($channel)) {
+            $channel = 'stable'
+          }
+          $channel = $channel.Trim().ToLowerInvariant()
+          if ($channel -notin @('stable', 'preview')) {
+            throw "catalog_channel must be stable or preview, got '$channel'."
+          }
+
+          if ($channel -eq 'preview') {
+            $tag = 'plugin-catalog-preview'
+            $title = 'Official Plugin Catalog (preview)'
+            $notes = 'Rolling prerelease catalog for 6.0 preview hosts. Do not publish these packages to plugin-catalog.'
+          }
+          else {
+            $tag = 'plugin-catalog'
+            $title = 'Official Plugin Catalog (managed)'
+            $notes = 'Rolling release containing the current official plugin catalog and packages.'
+          }
+
+          $releaseUrl = "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/$tag"
+          Add-Content -Path $env:GITHUB_ENV -Value "CATALOG_CHANNEL=$channel"
+          Add-Content -Path $env:GITHUB_ENV -Value "CATALOG_RELEASE_TAG=$tag"
+          Add-Content -Path $env:GITHUB_ENV -Value "CATALOG_RELEASE_TITLE=$title"
+          Add-Content -Path $env:GITHUB_ENV -Value "CATALOG_RELEASE_NOTES=$notes"
+          Add-Content -Path $env:GITHUB_ENV -Value "CATALOG_RELEASE_URL=$releaseUrl"
+
           $stageRoot = Join-Path $env:RUNNER_TEMP "udt-plugin-catalog-$env:GITHUB_RUN_ID"
           $seedRoot = Join-Path $stageRoot 'catalog-seed'
           $assetRoot = Join-Path $stageRoot 'assets'
@@ -48,18 +83,21 @@ jobs:
 
           New-Item -ItemType Directory -Path $seedRoot, $assetRoot, $catalogRoot, (Split-Path $workingCatalog) -Force | Out-Null
 
-          $releaseView = gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --json assets,isDraft,isPrerelease 2>&1
+          $releaseView = gh release view $tag --repo "${{ github.repository }}" --json assets,isDraft,isPrerelease 2>&1
           $releaseExitCode = $LASTEXITCODE
           $releaseOutput = $releaseView -join [Environment]::NewLine
           if ($releaseExitCode -eq 0) {
             $release = $releaseOutput | ConvertFrom-Json
-            if ($release.isDraft -or $release.isPrerelease) {
+            if ($release.isDraft) {
+              throw "The rolling plugin catalog release must not be a draft."
+            }
+            if ($channel -ne 'preview' -and $release.isPrerelease) {
               throw "The rolling plugin catalog release must not be a draft or prerelease."
             }
 
             $catalogAsset = @($release.assets | Where-Object { $_.name -eq 'store.json' })
             if ($catalogAsset.Count -eq 1) {
-              gh release download $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --pattern store.json --dir $seedRoot --clobber
+              gh release download $tag --repo "${{ github.repository }}" --pattern store.json --dir $seedRoot --clobber
               if ($LASTEXITCODE -ne 0) {
                 throw 'The existing plugin catalog asset could not be downloaded.'
               }
@@ -114,7 +152,7 @@ jobs:
       - name: Generate staged plugin catalog
         shell: pwsh
         run: |
-          .\Plugins\Scripts\Invoke-PluginTooling.ps1 generate-store --repository-root .\Plugins --plugin-ids "${{ github.event.inputs.plugin_ids }}" --asset-root $env:CATALOG_ASSET_ROOT --output $env:CATALOG_OUTPUT_PATH --release-repository-url $env:CATALOG_RELEASE_URL --merge-existing --require-assets
+          .\Plugins\Scripts\Invoke-PluginTooling.ps1 generate-store --repository-root .\Plugins --plugin-ids "${{ github.event.inputs.plugin_ids }}" --asset-root $env:CATALOG_ASSET_ROOT --output $env:CATALOG_OUTPUT_PATH --release-repository-url $env:CATALOG_RELEASE_URL --catalog-channel $env:CATALOG_CHANNEL --merge-existing --require-assets
           if ($LASTEXITCODE -ne 0) {
             throw 'Plugin catalog generation failed.'
           }
@@ -162,6 +200,9 @@ jobs:
             $downloadAssetName = ([string]$entry.downloadUrl).TrimEnd('/').Split('/')[-1]
             if ($downloadAssetName -ne $expectedPackageName) {
               throw "Active plugin '$entryId' must point to its current package '$expectedPackageName'."
+            }
+            if ($env:CATALOG_CHANNEL -ne 'preview' -and $entryVersion -match '-') {
+              throw "Stable catalog cannot publish prerelease plugin version '$entryVersion' for '$entryId'."
             }
             [void]$expectedAssetNames.Add($expectedPackageName)
           }
@@ -234,17 +275,45 @@ jobs:
           Set-StrictMode -Version Latest
           gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" *> $null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --title "$env:CATALOG_RELEASE_TITLE" --notes "$env:CATALOG_RELEASE_NOTES" --latest=false
+            $createArgs = @(
+              'release', 'create', $env:CATALOG_RELEASE_TAG,
+              '--repo', "${{ github.repository }}",
+              '--title', $env:CATALOG_RELEASE_TITLE,
+              '--notes', $env:CATALOG_RELEASE_NOTES,
+              '--latest=false'
+            )
+            if ($env:CATALOG_CHANNEL -eq 'preview') {
+              $createArgs += '--prerelease'
+            }
+            gh @createArgs
           }
           else {
-            gh release edit $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --title "$env:CATALOG_RELEASE_TITLE" --notes "$env:CATALOG_RELEASE_NOTES" --latest=false
+            $editArgs = @(
+              'release', 'edit', $env:CATALOG_RELEASE_TAG,
+              '--repo', "${{ github.repository }}",
+              '--title', $env:CATALOG_RELEASE_TITLE,
+              '--notes', $env:CATALOG_RELEASE_NOTES,
+              '--latest=false'
+            )
+            if ($env:CATALOG_CHANNEL -eq 'preview') {
+              $editArgs += '--prerelease'
+            }
+            gh @editArgs
           }
           if ($LASTEXITCODE -ne 0) {
             throw 'Unable to create or update the managed rolling plugin catalog release.'
           }
 
           $release = gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --json name,assets,isDraft,isPrerelease | ConvertFrom-Json
-          if ($release.isDraft -or $release.isPrerelease) {
+          if ($release.isDraft) {
+            throw 'The managed rolling plugin catalog release must not be a draft.'
+          }
+          if ($env:CATALOG_CHANNEL -eq 'preview') {
+            if (-not $release.isPrerelease) {
+              throw 'The preview plugin catalog release must be marked as a prerelease.'
+            }
+          }
+          elseif ($release.isPrerelease) {
             throw 'The managed rolling plugin catalog release must not be a draft or prerelease.'
           }
           $release | ConvertTo-Json -Depth 10 | Set-Content -LiteralPath (Join-Path $env:CATALOG_STAGE_ROOT 'release-before.json') -Encoding utf8
@@ -325,7 +394,15 @@ jobs:
             }
           }
           $finalRelease = gh release view $env:CATALOG_RELEASE_TAG --repo "${{ github.repository }}" --json name,assets,isDraft,isPrerelease | ConvertFrom-Json
-          if ($finalRelease.name -ne $env:CATALOG_RELEASE_TITLE -or $finalRelease.isDraft -or $finalRelease.isPrerelease) {
+          if ($finalRelease.name -ne $env:CATALOG_RELEASE_TITLE -or $finalRelease.isDraft) {
+            throw 'The final rolling plugin catalog release metadata is invalid.'
+          }
+          if ($env:CATALOG_CHANNEL -eq 'preview') {
+            if (-not $finalRelease.isPrerelease) {
+              throw 'The final preview plugin catalog release must be marked as a prerelease.'
+            }
+          }
+          elseif ($finalRelease.isPrerelease) {
             throw 'The final rolling plugin catalog release metadata is invalid.'
           }
 
@@ -355,6 +432,9 @@ jobs:
             $downloadAssetName = ([string]$entry.downloadUrl).TrimEnd('/').Split('/')[-1]
             if ($downloadAssetName -ne $expectedPackageName) {
               throw "Active plugin '$entryId' must point to its current package '$expectedPackageName'."
+            }
+            if ($env:CATALOG_CHANNEL -ne 'preview' -and $entryVersion -match '-') {
+              throw "Stable catalog cannot publish prerelease plugin version '$entryVersion' for '$entryId'."
             }
             [void]$expectedAssetNames.Add($expectedPackageName)
           }

@@ -148,13 +148,21 @@ jobs:
       shell: pwsh
       run: Write-Warning 'Azure signing was explicitly skipped for this manual migration recovery run because signing secrets are not configured.'
 
-    - name: Build release test project
+    - name: Test (Contracts)
       if: ${{ env.RELEASE_SKIP_TESTS != 'true' }}
-      run: dotnet build UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-restore
+      run: dotnet test UniversalDeviceToolkit.Tests.Contracts/UniversalDeviceToolkit.Tests.Contracts.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Contracts.trx"
 
-    - name: Test solution
+    - name: Test (Fast unit tests)
+      if: ${{ env.RELEASE_SKIP_TESTS != 'true' }}
+      run: dotnet test UniversalDeviceToolkit.Fast.Tests/UniversalDeviceToolkit.Fast.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Fast.trx"
+
+    - name: Test (Unit)
       if: ${{ env.RELEASE_SKIP_TESTS != 'true' }}
       run: dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
+
+    - name: Test (Stateful)
+      if: ${{ env.RELEASE_SKIP_TESTS != 'true' }}
+      run: dotnet test UniversalDeviceToolkit.Tests.Stateful/UniversalDeviceToolkit.Tests.Stateful.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Stateful.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 
     - name: Upload release test coverage
       uses: actions/upload-artifact@v7
