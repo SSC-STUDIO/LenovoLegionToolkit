@@ -21,7 +21,7 @@ UniversalDeviceToolkit/
 +- Plugins/Shared/            # Shared plugin helpers
 +- Plugins/Shared.Tests/       # Shared helper tests
 +- Plugins/Testing/            # Tooling and performance tests
-+- Plugins/Tooling/            # CLI, PluginWorkbench, and smoke tools
++- Plugins/Tooling/            # CLI and remaining author tools
 +- Plugins/HostBaseline/        # Tracked host release manifest; downloaded cache is .host/
 +- Plugins/Templates/          # Authoring archetypes
 +- Plugins/.build/             # Ignored build, package, and catalog output
@@ -39,7 +39,7 @@ UniversalDeviceToolkit/
 
 ### 2. SDK抽象层
 - 提供 `PluginBase` 作为所有插件的基类
-- 定义 `IPluginPage` 接口规范UI页面实现
+- 定义 `IPluginPage` 接口（冻结 ABI；现行 UI 是 `contributes.webPage`）
 - `PluginAttribute` 标记插件元数据
 - `PluginHostContext` 为插件提供宿主无关的设置页打开、对话框承载与运行模式能力
 
@@ -52,21 +52,19 @@ UniversalDeviceToolkit/
 - `store-entry.json`: 为旧发布脚本保留的官方元数据兼容输出
 - 生成的 `Plugins/.build/catalog/store.json`: 发布输出，不再作为新插件作者的日常编辑入口
 
-### 2.1 独立宿主模式
-- `PluginWorkbench` 直接加载 `Plugins/.build/plugins/...` 输出或本地 ZIP 包
-- 默认 `Preview` 模式只承载 UI，不执行系统变更
-- 切换到 `Real Runtime` 后才运行插件启动钩子和优化动作
-- 支持 `System / Light / Dark`，并桥接主程序的宿主样式资源
-- 插件配置隔离在 `Plugins/.build/PluginWorkbenchState/<Mode>/...`
-- `PluginWorkbench.Smoke` 使用 Windows UI Automation 验证主题切换、宿主壳和 `Preview -> Real Runtime` 交互
+### 2.1 Electron 宿主模式
+- 插件 UI 是 `web/index.html`，由 Electron `<webview>` 加载
+- `window.pluginHost.invoke` 走与主窗口相同的 JSON-RPC（含 `dialog:*`）
+- Host 通过 `IPluginManager.TryGetPlugin` 调用已加载的 C# 插件实例
+- `plugins.list` 提供 `directory` + `webPage`；不要用 `plugins.getConfig` 驱动官方三插件
 
 ### 3. 共享工具库 (Shared)
 消除跨插件代码重复，提供：
 - **HttpClientManager**: 单例模式，避免socket耗尽
-- **WpfFallbackHelper**: 统一的XAML回退UI模式
 - **ProcessRunner**: 命令注入防护的进程执行
 - **SettingsManager**: 统一设置持久化策略
 - **Constants**: 魔法数字集中管理
+- 插件页样式：各插件 `web/plugin-ui.css`（`up-*` 类）
 
 ### 4. 作者工具链
 
@@ -191,42 +189,28 @@ Load → Start → [Runtime Loop] → Stop → Unload
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   Universal Device Toolkit                   │
-│                       (Host App)                             │
+│  Electron shell  +  UniversalDeviceToolkit.Host (JSON-RPC)  │
 └─────────────────────────┬───────────────────────────────────┘
-                          │ PluginBase, IPluginPage (SDK)
+                          │ PluginBase, contributes.webPage
 ┌─────────────────────────┴───────────────────────────────────┐
 │                      SDK Layer                               │
-│  ┌─────────────────────────────────────────────────────────┐ │
-│  │ PluginBase | PluginAttribute | IPluginPage | Interfaces │ │
-│  └─────────────────────────────────────────────────────────┘ │
+│  PluginBase | PluginAttribute | IPluginPage (frozen ABI)     │
 └─────────────────────────┬───────────────────────────────────┘
                           │
-          ┌───────────────┼───────────────┬───────────────┐
-          │               │               │               │
-          ▼               ▼               ▼               ▼
-┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-│   ViveTool      │ │ CustomMouse     │ │ShellIntegration │ │NetworkAcceler.  │
-│   Services/     │ │                 │ │                 │ │                 │
-│                 │ │                 │ │                 │ │                 │
-│ ─────────────── │ │ ─────────────── │ │ ─────────────── │ │ ─────────────── │
-│ FeatureService  │ │ CustomMouseText │ │ThemeWatcher     │ │NetworkAccel.    │
-│ DownloadService │ │ SettingsControl │ │SettingsControl │ │ Runtime         │
-│ PathService     │ │                 │ │                 │ │ SettingsControl │
-│ ProcessService  │ │                 │ │                 │ │                 │
-└────────┬────────┘ └────────┬────────┘ └────────┬────────┘ └────────┬────────┘
-         │                    │                    │                    │
-         └────────────────────┴────────┬───────────┴────────────────────┘
-                                      │
+          ┌───────────────┼───────────────┐
+          ▼               ▼               ▼
+┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+│   ViveTool      │ │ CustomMouse     │ │ShellIntegration │
+│   web/index.html│ │ web/index.html  │ │ web/index.html  │
+│   ViveToolService│ │ SPI / cursors  │ │ ConfigService   │
+└────────┬────────┘ └────────┬────────┘ └────────┬────────┘
+         └────────────────────┴────────┬───────────┘
                           ┌───────────┴───────────┐
-                          │   Shared Library     │
-                          │                      │
-                          │ HttpClientManager    │
-                          │ WpfFallbackHelper    │
-                          │ ProcessRunner        │
-                          │ SettingsManager      │
-                          │ Constants            │
-                          └──────────────────────┘
+                          │   Shared Library      │
+                          │ HttpClientManager     │
+                          │ ProcessRunner         │
+                          │ SettingsManager       │
+                          └───────────────────────┘
 ```
 
 ## 未来改进方向

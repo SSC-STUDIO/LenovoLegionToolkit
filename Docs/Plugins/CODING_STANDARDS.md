@@ -257,113 +257,33 @@ var process = new Process
 };
 ```
 
-## WPF UI 模式
+## Plugin web UI
 
-### InitializeComponent 回退
+Do not add WPF `UserControl` pages. Official plugins ship `web/index.html` + `plugin-ui.css` (`up-*` classes) and call `window.pluginHost.invoke`.
 
-所有 UI 控件必须使用 `WpfFallbackHelper`：
+Visual values should follow the shared kit in `plugin-ui.css` (card radius 18px, control radius 12px, accent `#2f7dff`). Page copy is English + Chinese in the HTML (or plugin resx), not a parallel i18n tree.
 
-```csharp
-public class ViveToolPage : Page, IPluginPage
-{
-    public ViveToolPage()
-    {
-        WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
-    }
+`IPluginPage` / historical XAML helpers remain in the SDK only as frozen ABI. New UI goes through `contributes.webPage`.
 
-    private void BuildFallbackUi()
-    {
-        var panel = new StackPanel();
-        // 构建回退UI
-        this.Content = panel;
-    }
-}
-```
+## Visual vocabulary (plugin web)
 
-## 视觉词汇（Visual vocabulary）
+Use `web/plugin-ui.css` (`up-*` classes, `--up-*` tokens). Do not add a second token set, WPF ResourceDictionaries, or `DesignTokens.xaml`.
 
-插件 UI 的视觉值只能取自 `Plugins/Shared/DesignTokens.xaml` 与宿主画刷，XAML 与 C# `BuildFallbackUi` 同等约束。本节未列出的值一律不允许出现。
+- Cards: `.up-card` (18px radius). Controls: `.up-btn` / `.up-select` / `.up-input` (12px).
+- Accent: `#2f7dff` via `--up-accent`. Status: `.up-status`, `.up-banner`, `.up-badge`.
+- Prefer `transform`/`opacity` if you animate; honor `prefers-reduced-motion`.
+- Long work: disable the action button and show `.up-status` or a progress hint. Empty tables: a short title + description in the page.
 
-### 圆角刻度
-
-只允许以下 7 个值（XAML 与 C# 回退 UI 同等约束）：
-
-| 值 | 令牌 | 用途 |
-|----|------|------|
-| 0 | `CornerRadiusNone` | 直角 |
-| 3 | `CornerRadiusProgressBar` | 进度条 |
-| 8 | `CornerRadiusCompact` / `PluginCornerRadiusCompact` | 小贴片（chips） |
-| 12 | `CornerRadiusControl` / `PluginCornerRadiusControl` | 按钮、输入框 |
-| 18 | `CornerRadiusCard` / `PluginCornerRadiusCard` | 卡片容器 |
-| 20 | `CornerRadiusSurface` / `PluginCornerRadiusSurface` | 页面级表面 |
-| 999 | `CornerRadiusRound` | 圆形/胶囊 |
-
-```xml
-<!-- ✅ 正确 -->
-<Border CornerRadius="{StaticResource CornerRadiusCard}" />
-
-<!-- ❌ 错误：词汇外数值（4/6/9/10/24 等），XAML 与 C# 中均禁止 -->
-<Border CornerRadius="10" />
-```
-
-### 间距刻度
-
-- 间距只允许 4/8/12/16/24，对应令牌 `PluginSpacingXXS` / `PluginSpacingXS` / `PluginSpacingSM` / `PluginSpacingMD` / `PluginSpacingLG`
-- 卡片内边距统一 `PluginCardPadding`（16,14）
-- 卡片之间的外边距用 `PluginSectionMargin`（0,0,0,16）
-
-### 字号刻度
-
-只允许四档：`PluginFontSizeCaption`（12）、`PluginFontSizeBody`（14）、`PluginFontSizeSection`（15）、`PluginFontSizeMetric`（28），插件内不得出现其他 `FontSize` 值。唯一例外是 SymbolIcon 图标字号，走 `PluginIconSizeMD`（18）/ `PluginIconSizeLG`（24）。
-
-### 颜色
-
-- **禁止**在插件 UI 中硬编码 hex 颜色；颜色一律以 `DynamicResource` 引用宿主画刷
-- 文本用三级 TextFill 刷：`TextFillColorPrimaryBrush` / `TextFillColorSecondaryBrush` / `TextFillColorTertiaryBrush`
-- 状态用语义刷：`SystemFillColorSuccessBrush` / `SystemFillColorCautionBrush` / `SystemFillColorCriticalBrush`，需要底色时用对应的 `*BackgroundBrush` 变体
-
-### 阴影与动画
-
-插件默认不加阴影、不加动画/Storyboard。确有需求时只能引用宿主令牌，不得自造值。
-
-### 加载与空态
-
-- 长操作必须有进度反馈并禁用动作按钮：耗时可预期的用 `ProgressBar` 确定性进度，不可预期的用 `ProgressRing`（`IsIndeterminate`）；操作期间动作按钮 `IsEnabled=false`
-- 空列表必须提供三段式空态：图标 + 标题 + 描述
-- 参考实现：`Plugins/ViveTool/ViveToolPage.xaml` 的 `_loadingPanel`（:269）与 `_emptyStatePanel`（:392）
-
-### Fallback 一致性
-
-`BuildFallbackUi` 可以简化布局，但视觉值必须与 XAML 同源：通过 `TryFindResource` 取令牌并给出字面回退值（模式见 `Plugins/Shared/WpfFallbackHelper.cs:84-87`），禁止魔法数字：
-
-```csharp
-// ✅ 正确
-Foreground = Application.Current?.TryFindResource("TextFillColorPrimaryBrush") as Brush
-             ?? Brushes.Black;
-
-// ❌ 错误：魔法数字与硬编码画刷
-FontSize = 16;
-Foreground = Brushes.Green;
-```
-
-### 资源字典合并
-
-每个插件 UI 根元素必须合并 Shared 两个字典，且不得在本地重定义其中的键：
-
-```xml
-<ResourceDictionary.MergedDictionaries>
-    <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/DesignTokens.xaml" />
-    <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/PluginUiStyles.xaml" />
-</ResourceDictionary.MergedDictionaries>
-```
+Historical WPF token names (`PluginCornerRadiusCard`, `WpfFallbackHelper`, Shared XAML dictionaries) are frozen SDK ABI only. Shipping UI is `contributes.webPage`.
 
 ## 本地化
 
 ### 资源字符串
 
-- 所有用户可见字符串必须通过资源文件
+- 所有用户可见的 C# 字符串必须通过资源文件
 - 英文回退值作为默认值
-- 禁止硬编码中文字符串
+- 禁止在 C# 里硬编码中文字符串
+- 官方插件 web 页可以在 HTML 内嵌英文 + 中文（`navigator.language`），不新开平行 i18n 树
 
 ```csharp
 // ✅ 正确
@@ -526,12 +446,10 @@ ViveToolService // 1026行，包含所有功能
 消除重复代码，提取共享工具：
 
 ```csharp
-// ✅ 正确 - 使用共享库
-WpfFallbackHelper.TryInitializeComponent(this, BuildFallbackUi);
+// Correct: reuse Shared helpers (ProcessRunner, SettingsManager, plugin-ui.css)
+ProcessRunner.Run(fileName, arguments);
 
-// ❌ 错误 - 6处重复代码
-try { InitializeComponent(); }
-catch { BuildFallbackUi(); }
+// Avoid: copy-paste the same process-start block in every plugin
 ```
 
 ### SOLID 原则

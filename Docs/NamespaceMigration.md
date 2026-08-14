@@ -10,7 +10,7 @@ Related: [Plugins/ARCHITECTURE.md](./Plugins/ARCHITECTURE.md), [Plugins/PLUGIN_D
 
 | Phase | Scope | Status |
 | --- | --- | --- |
-| **0** | User-facing brand (product name, WPF process, installer, AppData path migration) | **Done** |
+| **0** | User-facing brand (product name, Electron process, installer, AppData path migration) | **Done** |
 | **1** | Conventions for new non-ABI host code → `UniversalDeviceToolkit.*` | **Done** |
 | **2** | Non-breaking dual surfaces (IPC pipes, `BrandCompatibility`, automation env aliases) | **Done** |
 | **3** | Hard cutover: Lib / Lib.Plugins `AssemblyName` + C# namespaces + Windows CLI exe name | **Done** |
@@ -36,7 +36,8 @@ C# types under these projects live in `UniversalDeviceToolkit.Lib*` namespaces (
 
 | Project folder | RootNamespace | AssemblyName (if set) | Notes |
 | --- | --- | --- | --- |
-| `UniversalDeviceToolkit.WPF` | `UniversalDeviceToolkit.WPF` | `Universal Device Toolkit` | Shipping UI; process name is the brand |
+| `UniversalDeviceToolkit.Electron` | (Node) | Electron UI shell | Shipping UI |
+| `UniversalDeviceToolkit.Host` | `UniversalDeviceToolkit.Host` | `UniversalDeviceToolkit.Host` | Headless JSON-RPC backend |
 | `UniversalDeviceToolkit.Lib.Automation` | `UniversalDeviceToolkit.Lib.Automation` | *(project default)* | Not a public plugin ABI assembly |
 | `UniversalDeviceToolkit.Lib.Macro` | `UniversalDeviceToolkit.Lib.Macro` | *(project default)* | Not a public plugin ABI assembly |
 | `UniversalDeviceToolkit.CLI` | `UniversalDeviceToolkit.CLI` | **`udt-cli`** | Windows CLI executable → `udt-cli.exe` (was `llt`) |
@@ -46,7 +47,6 @@ C# types under these projects live in `UniversalDeviceToolkit.Lib*` namespaces (
 | `UniversalDeviceToolkit.Tests` | `UniversalDeviceToolkit.Tests` | *(project default)* | Tests |
 | `UniversalDeviceToolkit.CrossPlatform.Tests` | `UniversalDeviceToolkit.CrossPlatform.Tests` | *(project default)* | Tests |
 | `UniversalDeviceToolkit.SpectrumTester` | `UniversalDeviceToolkit.SpectrumTester` | `SpectrumTester` | Dev tool |
-| `UniversalDeviceToolkit.PerformanceTest` | `UniversalDeviceToolkit.PerformanceTest` | *(project default)* | Dev tool |
 
 Tools under `Tools/` use their own small RootNamespaces (`HardwareValidation`, smoke tools, etc.) and are out of the public ABI surface.
 
@@ -147,7 +147,7 @@ New plugins and packaging should ship under `UniversalDeviceToolkit.Plugins.*`.
 | `LLT_WIFI_CONNECTED` | `UDT_WIFI_CONNECTED` | Automation trigger env |
 | `LLT_WIFI_SSID` | `UDT_WIFI_SSID` | Automation trigger env |
 | `LLT_SESSION_LOCKED` | `UDT_SESSION_LOCKED` | Automation trigger env |
-| `LLT_LOG_PATH` | *(legacy-only today)* | Set by WPF startup (`StartupOrchestrator`); not dual-aliased |
+| `LLT_LOG_PATH` | `UDT_LOG_PATH` | Log folder (`%LOCALAPPDATA%\UniversalDeviceToolkit\logs`). Host sets both at startup. `LLT_LOG_PATH` is the compatibility alias. |
 | `LLT_PLUGIN_SIGNATURE_MODE` | *(docs / smoke tooling)* | Plugin signature policy override; not an automation env key |
 
 Do **not** remove `LLT_*` keys without a dedicated script-migration notice.
@@ -168,7 +168,7 @@ Device-support catalogs, hardware series enums (e.g. Legion families), driver/pa
 
 ### Phase 0 — Done: user-facing brand UDT
 
-Product name, WPF `AssemblyName` (`Universal Device Toolkit`), assets, packaging Full/Online names, AppData path migration, env/docs brand copy.
+Product name, Electron shell, Host process, assets, packaging Full/Online names, AppData path migration, env/docs brand copy.
 
 ### Phase 1 — Done: conventions for new code
 
@@ -221,7 +221,8 @@ TypeForwardedTo dual-package packaging for **external** consumers of the old ass
 
 ```
 Repo / solution:       UniversalDeviceToolkit.*
-WPF process:           "Universal Device Toolkit"
+Electron UI:           UniversalDeviceToolkit.Electron
+Host process:          UniversalDeviceToolkit.Host
 Core Lib DLL:          UniversalDeviceToolkit.Lib.dll          (was LenovoLegionToolkit.Lib.dll)
 Plugins host DLL:      UniversalDeviceToolkit.Lib.Plugins.dll  (was LenovoLegionToolkit.Lib.Plugins.dll)
 Plugin prefixes:       UniversalDeviceToolkit.Plugins.* (preferred)

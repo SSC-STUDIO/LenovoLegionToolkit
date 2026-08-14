@@ -2,7 +2,7 @@
 
 Shortest path for creating a plugin in this repository.
 
-**Minimum supported host:** Universal Device Toolkit **v5.0.0+**; current published baseline **v5.0.2**<br>
+**Minimum supported host for 2.x official plugins:** Universal Device Toolkit **v6.0.0+** (preview tags `v6.0.0-preview.N`). Shipped stable host **v5.0.2** still loads 1.x from `plugin-catalog`. Vendored compile baseline **v5.0.2** until a v6 ZIP exists.<br>
 **CLI:** `udt-plugin.cmd` (`udt-plugin.cmd` is a compatibility alias)
 
 ## 1. Check the environment
@@ -51,19 +51,11 @@ Generates:
 .\udt-plugin.cmd build --plugin my-plugin
 ```
 
-## 4. Preview
+## 4. Preview in the Electron shell
 
-```powershell
-.\udt-plugin.cmd preview --plugin my-plugin --theme system --view feature
-```
+Add `contributes.webPage.entry` (`web/index.html`), copy `web/` into the plugin output, then run the Electron app (`npm run dev` / `npm run dev:web`) and open the plugin from Plugins. The page calls `window.pluginHost.invoke`.
 
-Inner loop:
-
-```powershell
-.\udt-plugin.cmd dev --plugin my-plugin --theme system --view feature
-```
-
-PluginWorkbench supports System / Light / Dark, host-style shells, and Preview vs Real Runtime.
+Workbench / WPF preview hosts are retired.
 
 ## 5. Validate (contributor)
 

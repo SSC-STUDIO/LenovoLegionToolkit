@@ -31,18 +31,29 @@ The migration boundary is recorded against these immutable source refs:
 
 ## GitHub Releases
 
-The Releases page has two deliberately separate roles:
+The Releases page has three deliberately separate roles:
 
-1. Versioned application releases use tags such as `v5.0.0` and contain host installers, application archives, and checksums.
-2. The fixed `plugin-catalog` release is a managed rolling release with `latest=false`. It contains only:
-   - `store.json`, the single catalog asset consumed by the application;
+1. Versioned application releases use tags such as `v5.0.2` or `v6.0.0-preview.1` and contain host installers, application archives, and checksums. A hyphen in the tag (`Release.yml`) marks a GitHub prerelease and skips winget.
+2. The fixed `plugin-catalog` release is a managed rolling release with `latest=false` and **must not** be a GitHub prerelease. It contains only stable 1.x packages for **v5.0.2** clients:
+   - `store.json`, the catalog asset consumed by stable hosts;
    - one package ZIP per published plugin, named `<plugin-id>-v<version>.zip`.
+3. The fixed `plugin-catalog-preview` release is a managed rolling **prerelease** (`prerelease=true`, `latest=false`) for **v6.0.0-preview.N** hosts. Official 2.x packages (`2.0.0-preview.1`, `minHostVersion` 6.0.0) publish here only. Do not upload 2.x to `plugin-catalog`.
 
-The application reads the catalog from:
+Stable hosts read:
 
 `https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json`
 
-Do not publish plugin packages as separate release tags, upload generated logs or build folders, or mark `plugin-catalog` as the latest application release. The release workflow uploads package ZIPs first, publishes `store.json` last, and removes stale versions for the selected plugin. If catalog publication fails, it restores the previous catalog before failing the job.
+Preview hosts (InformationalVersion contains `-`, same rule as `Release.yml`) read:
+
+`https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog-preview/store.json`
+
+`IncludePrereleaseUpdates` in Settings only controls application updates. It does not switch the plugin catalog, so a v5.0.2 user cannot opt into 2.x.
+
+Dispatch `plugins-release.yml` with `catalog_channel=stable` or `catalog_channel=preview`. `generate-store --catalog-channel` refuses to mix the two stores.
+
+Do not publish plugin packages as separate release tags, upload generated logs or build folders, or mark either catalog tag as the latest application release. The release workflow uploads package ZIPs first, publishes `store.json` last, and removes stale versions for the selected plugin. If catalog publication fails, it restores the previous catalog before failing the job.
+
+Vendored plugin compile baseline (`Plugins/HostBaseline/host-release.json`) stays **5.0.2** until the first `v6.0.0-preview.1` application ZIP exists; then refresh the baseline in a follow-up change. Runtime `minHostVersion` 6.0.0 already blocks 5.x Hosts from loading 2.x plugins.
 
 ## Publish Sequence
 
@@ -56,7 +67,7 @@ Do not publish plugin packages as separate release tags, upload generated logs o
 
 ## Legacy Client Upgrade
 
-The catalog release must never be used as an application update. The main application's update checker excludes the `plugin-catalog` tag, so an old client can only upgrade through a normal versioned application release.
+The catalog releases must never be used as an application update. The main application's update checker excludes both `plugin-catalog` and `plugin-catalog-preview`, so an old client can only upgrade through a normal versioned application release.
 
 For a legacy client whose update feed still points at the old `LenovoLegionToolkit` repository, use this one-time bridge sequence:
 

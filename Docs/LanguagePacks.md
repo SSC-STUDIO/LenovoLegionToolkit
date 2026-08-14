@@ -2,7 +2,7 @@
 
 UDT Online ships an English-only host. Non-English UI is delivered as culture satellite packs from the online resource catalog. The Full portable package and Full installer retain all supported satellites for offline use.
 
-**Program plan (lifecycle + startup gate + acceptance):** `Docs/OnlineLanguageAndUpstreamAbsorptionPlan.md`
+**Historical program notes (WPF-era startup gate):** [archive/OnlineLanguageAndUpstreamAbsorptionPlan.md](./archive/OnlineLanguageAndUpstreamAbsorptionPlan.md)
 
 ## Catalog protocol
 
@@ -37,15 +37,17 @@ Resource lookup uses exact culture → parent chain → English. Never falls bac
 
 ## Startup language gate
 
-After single-instance + bootstrap logging, and **before** IoC plugin/hardware init and `MainWindow` creation:
+Electron shows the in-app language picker (settings / first-run) **before** the dashboard is usable when no language is saved. Host `.resx` satellites and the Electron `i18n/locales` trees are separate: UI chrome is Electron i18n; Host strings stay in `.resx`. Online packs still install from the catalog.
 
-1. Show `LanguageSelectorWindow` when no saved language or device-setup is incomplete
+1. Prompt when no saved language or device-setup is incomplete
 2. Download failure presents **Retry / Continue in English / Exit** (never silent auto-English close)
-3. Cancel/close cancels in-flight download, cleans temp dirs, returns `LanguageGateOutcome.Exit`
+3. Cancel/close cancels in-flight download and cleans temp dirs
 4. Safe-start / offline mode may continue in English without requiring a pack download
 
-Settings-page installs use in-page progress through `LanguagePackInstallCoordinator` (no orphan top-level install window).
+Settings-page installs use in-page progress (no orphan top-level install window).
 
 ## Shipping footprint
 
-Online packages must not ship non-English satellite assemblies. `Scripts/Build-LanguageAssets.ps1` first creates one archive per supported culture, including the main WPF satellite and dependency satellites, then removes all culture directories from the Online copy. The release workflow therefore does not prune cultures before language archives are created. `Scripts/Build-LanguageAssets.ps1` fails when a supported culture is missing the main WPF satellite instead of publishing an incomplete pack.
+Online packages must not ship non-English satellite assemblies. `Scripts/Build-LanguageAssets.ps1` first creates one archive per supported culture (Host `.resx` satellites plus Electron locale extras where packaged), then the Electron Online nsis-web payload is packed after `Scripts/Prune-ShippingFootprint.ps1` keeps only English Host satellites. Language packs still install from the in-app catalog. The release workflow does not prune cultures from the Full payload before language archives are created. `Scripts/Build-LanguageAssets.ps1` fails when a supported culture is missing the main Host satellite instead of publishing an incomplete pack.
+
+Logs for Host and Electron live in one folder: `%LOCALAPPDATA%\UniversalDeviceToolkit\logs` (`main.log`, `renderer.log`, `host.log`). Override with `UDT_LOG_PATH` (preferred) or the compatibility alias `LLT_LOG_PATH`.

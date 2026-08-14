@@ -14,7 +14,7 @@ curated list converts well because the visitor already wants a tool like this.
 | HelloGitHub | CN feature | Submitted | 2026-07-05 | see .github/outreach/hellogithub-issue.md |
 | winstall.app | winget mirror | Listed | - | winstall.app/apps/SSC-STUDIO.UniversalDeviceToolkit |
 | winget-pkgs | package manager | Not published | 2026-07-07 | id reserved (`SSC-STUDIO.UniversalDeviceToolkit`); `manifests/s/SSC-STUDIO/SSC-STUDIO.UniversalDeviceToolkit` returns 404 as of 2026-07-07 -- use Scoop or Releases installer until a clean PR lands |
-| Microsoft Store | store listing | Not planned | - | optional; GPL-3.0 WPF, big lift |
+| Microsoft Store | store listing | Not planned | - | optional; GPL-3.0, Electron + .NET Host, big lift |
 | Scoop bucket | package manager | Verify | - | confirm whether a manifest exists |
 
 ## Weekly star tracker
@@ -61,7 +61,7 @@ Entry copy:
 ```
 Universal Device Toolkit (UDT): open-source Lenovo hardware-control + device-plugin
 toolkit for Windows. Fn+Q, RGB, fan curves, dGPU, battery threshold -- without
-Vantage's background service, account, or telemetry. GPL-3.0, C#/WPF, winget.
+Vantage's background service, account, or telemetry. GPL-3.0, C# Host + Electron UI, winget.
 https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 ```
 

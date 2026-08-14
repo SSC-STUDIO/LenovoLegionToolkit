@@ -10,10 +10,11 @@ Public release copy should use Universal Device Toolkit. Repository paths, assem
 
 ### Development Environment
 
-- **Operating System**: Windows 10 (1809+) or Windows 11
-- **.NET SDK**: .NET 10.0 or later
-- **Runtime**: .NET 10.0 Desktop Runtime (x64)
-- **IDE**: Visual Studio 2022 or VS Code
+- **Operating System**: Windows 10 (1809+) or Windows 11 (full build); macOS or Linux (portable projects + Electron client)
+- **.NET SDK**: .NET 10.0 or later (all platforms)
+- **Runtime**: .NET 10.0 Desktop Runtime (x64, Windows)
+- **Node.js**: 20+ (Electron client)
+- **IDE**: Visual Studio 2022, VS Code, or Rider
 - **Git**: Latest version with Git LFS support
 
 ### Required Tools
@@ -25,6 +26,10 @@ winget install Microsoft.DotNet.SDK.10
 # Verify installation
 dotnet --list-sdks
 dotnet --info
+
+# Node.js 20+ (Electron client) — install from https://nodejs.org or:
+winget install OpenJS.NodeJS.LTS
+node --version
 ```
 
 ## Build Configuration
@@ -33,14 +38,21 @@ dotnet --info
 
 ```
 UniversalDeviceToolkit.sln
-├── UniversalDeviceToolkit.WPF/           # Main application
+├── UniversalDeviceToolkit.Electron/       # Electron client (UI shell; React + electron-vite)
+├── UniversalDeviceToolkit.Host/           # Headless .NET backend (JSON-RPC over stdio)
 ├── UniversalDeviceToolkit.Lib/            # Core library (assembly: UniversalDeviceToolkit.Lib)
 ├── UniversalDeviceToolkit.Lib.Automation/ # Automation features
 ├── UniversalDeviceToolkit.Lib.Macro/      # Macro system
-├── UniversalDeviceToolkit.CLI/            # Command-line tool
+├── UniversalDeviceToolkit.Lib.Plugins/    # Plugin host
+├── UniversalDeviceToolkit.Lib.Abstractions/ / Lib.Shared # Portable, net10.0
+├── UniversalDeviceToolkit.CrossPlatform/  # Cross-platform diagnostics CLI (net10.0)
+├── UniversalDeviceToolkit.CLI/            # Windows IPC CLI (udt-cli.exe)
 ├── UniversalDeviceToolkit.CLI.Lib/        # CLI core
-├── UniversalDeviceToolkit.Tests/          # Unit tests
-├── UniversalDeviceToolkit.PerformanceTest/ # Performance benchmarks
+├── UniversalDeviceToolkit.Tests.Contracts/ # Guard + Security
+├── UniversalDeviceToolkit.Tests/          # Parallel unit tests
+├── UniversalDeviceToolkit.Tests.Stateful/ # Collection-bound tests
+├── UniversalDeviceToolkit.Fast.Tests/     # Isolation-free unit tests
+├── UniversalDeviceToolkit.CrossPlatform.Tests/ # Cross-platform tests
 └── UniversalDeviceToolkit.SpectrumTester/ # Hardware testing
 ```
 
@@ -49,60 +61,210 @@ UniversalDeviceToolkit.sln
 Key configurations in `Directory.Build.props`:
 
 ```xml
-<TargetFramework>net10.0-windows</TargetFramework>
+<UDTTargetFramework>net10.0-windows10.0.26100.0</UDTTargetFramework>
 <ImplicitUsings>enable</ImplicitUsings>
 <Nullable>enable</Nullable>
-<OutputType>WinExe</OutputType>
-<AssemblyName>UniversalDeviceToolkit</AssemblyName>
-<Version>4.x.x</Version>
 ```
+
+Windows shipping projects (including `UniversalDeviceToolkit.Host` and
+`UniversalDeviceToolkit.Lib`) default to `Platforms=x64` and RID `win-x64`.
+Portable `net10.0` projects (CrossPlatform, Lib.Shared, Lib.Abstractions,
+Platform.Linux, Platform.MacOS, Platform.Windows.Core,
+Tests.Infrastructure) opt out via `DisableUdtForceX64` so they build on any
+platform.
 
 ## Build Commands
 
 ### Local Development Build
 
 ```bash
-# Debug build (development)
-dotnet build UniversalDeviceToolkit.sln --configuration Debug
+# Restore (CI-aligned; lock files committed per project)
+dotnet restore UniversalDeviceToolkit.sln --locked-mode
+
+# Debug build (development) — serial (-m:1) to avoid VBCSCompiler lock conflicts
+dotnet build UniversalDeviceToolkit.sln --configuration Debug -m:1
 
 # Release build (production)
-dotnet build UniversalDeviceToolkit.sln --configuration Release
+dotnet build UniversalDeviceToolkit.sln --configuration Release -m:1
 
 # Clean rebuild
 dotnet clean UniversalDeviceToolkit.sln
 dotnet build UniversalDeviceToolkit.sln --configuration Release --no-incremental
 ```
 
+> [!NOTE]
+> The solution contains Windows-only projects (Windows TFM `net10.0-windows10.0.26100.0`
+> with forced win-x64), so a full `UniversalDeviceToolkit.sln` build only runs on
+> Windows. On macOS/Linux, build the portable projects only (see
+> [Cross-platform builds](#cross-platform-builds) below).
+
 ### Specific Project Build
 
 ```bash
-# Build main application only
-dotnet build UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj \
+# Build the .NET Host backend only (headless JSON-RPC server spawned by Electron)
+dotnet build UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
     --configuration Release
 
-# Build CLI tool
-dotnet build UniversalDeviceToolkit.CLI/UniversalDeviceToolkit.CLI.csproj \
-    --configuration Release
-
-# Build and run tests
+# Build and run Host tests (see Docs/TEST_DIAGNOSTICS.md)
+dotnet test UniversalDeviceToolkit.Tests.Contracts/UniversalDeviceToolkit.Tests.Contracts.csproj
 dotnet test UniversalDeviceToolkit.Tests/UniversalDeviceToolkit.Tests.csproj
+
+# Cross-platform diagnostics CLI (builds on Windows, macOS, and Linux)
+dotnet build UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPlatform.csproj \
+    --configuration Release
 ```
 
 ### Release Build with Publish
 
-```bash
-# Framework-dependent deployment (requires .NET runtime)
-dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj \
-    --configuration Release \
-    --output ./Build/framework-dependent
+#### Host backend (.NET) — per-platform RID
 
-# Self-contained deployment (no runtime required)
-dotnet publish UniversalDeviceToolkit.WPF/UniversalDeviceToolkit.WPF.csproj \
+The Electron client spawns the Host as a child process, so the Host must be
+published **self-contained** for the target platform. The Windows installer
+embeds the win-x64 publish output from `UniversalDeviceToolkit.Host/publish/win-x64`
+via `extraResources` in `UniversalDeviceToolkit.Electron/electron-builder.yml`.
+
+```bash
+# Windows (x64) — embedded into the NSIS installer
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
     --configuration Release \
     --runtime win-x64 \
     --self-contained true \
-    --output ./Build/self-contained
+    --output UniversalDeviceToolkit.Host/publish/win-x64
+
+# Drop non-x64 natives and satellite cultures outside UdtSatelliteResourceLanguages
+./Scripts/Prune-ShippingFootprint.ps1 \
+    -PayloadPath UniversalDeviceToolkit.Host/publish/win-x64 \
+    -AllowedCultures 'ar;bg;cs;de;el;en;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;uz-latn-uz;vi;zh-hans;zh-hant'
+
+# macOS (Apple Silicon)
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    --configuration Release \
+    --runtime osx-arm64 \
+    --self-contained true \
+    --output UniversalDeviceToolkit.Host/publish/osx-arm64
+
+# macOS (Intel)
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    --configuration Release \
+    --runtime osx-x64 \
+    --self-contained true \
+    --output UniversalDeviceToolkit.Host/publish/osx-x64
+
+# Linux (x64)
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    --configuration Release \
+    --runtime linux-x64 \
+    --self-contained true \
+    --output UniversalDeviceToolkit.Host/publish/linux-x64
 ```
+
+> [!NOTE]
+> The Host project targets the Windows TFM `net10.0-windows10.0.26100.0` and
+> depends on Windows-only libraries (WMI, registry, vendor drivers). The
+> win-x64 RID is the currently shipping configuration; the osx-arm64/osx-x64/
+> linux-x64 RIDs are the cross-platform adaptation targets and require the Host
+> (or its Windows-only dependency graph) to be made portable first. Hardware
+> control remains meaningful on Windows only; macOS/Linux runs the UI in basic
+> mode.
+
+#### Electron client (UI)
+
+```bash
+cd UniversalDeviceToolkit.Electron
+npm ci            # first time only (uses package-lock.json)
+
+# Dev / validation
+npm run dev       # dev server + Electron window (hot reload)
+npm run typecheck # TS type check (web + main/preload)
+npm run lint      # ESLint
+npm run build     # electron-vite build (outputs out/)
+
+# Package (electron-builder; runs `npm run build` first)
+npm run dist:win    # Windows NSIS installer (x64)
+npm run dist:mac    # macOS DMG (arm64 + x64)
+npm run dist:linux  # Linux AppImage (x64)
+npm run dist        # current host platform default
+```
+
+The packaging targets are defined in `UniversalDeviceToolkit.Electron/electron-builder.yml`:
+
+| Platform | Target(s) | Notes |
+|---|---|---|
+| Windows | `nsis` (Full, x64) and `nsis-web` (Online stub, x64) | Full is a complete offline installer. Online is a small web installer (asserted <= 15MB) that downloads the `.nsis.7z` payload from the GitHub Release. Both embed the self-contained Host via `extraResources`. 23 installer languages on Full; Online stays English to keep the stub small. |
+| macOS | `dmg` (arm64 + x64) | Category `public.app-category.utilities`; **unsigned/notarized only if credentials are configured** (see below) |
+| Linux | `AppImage` (x64) | Category `Utility`; deb/rpm can be added by extending the `linux.target` list in `electron-builder.yml` |
+
+**Artifact naming** (`artifactName` / electron-builder defaults):
+
+| Platform | Artifact |
+|---|---|
+| Windows Full | `UniversalDeviceToolkitSetup-<version>.exe` (offline NSIS) |
+| Windows Online | `UniversalDeviceToolkitOnlineSetup-<version>.exe` (nsis-web stub, <= 15MB) plus `*.nsis.7z` payload |
+| macOS | `Universal Device Toolkit-<version>-arm64.dmg` / `-x64.dmg` |
+| Linux | `Universal Device Toolkit-<version>.AppImage` |
+
+**macOS signing & notarization:** `electron-builder.yml` defines **no**
+`mac.identity` / `notarize` configuration, so `npm run dist:mac` produces
+**unsigned** DMGs unless you provide signing credentials via
+`CSC_LINK`/`CSC_KEY_PASSWORD` (or `mac.identity`) and add a notarization step
+(`afterSign` hook with `APPLE_ID`/`APPLE_APP_SPECIFIC_PASSWORD`/`APPLE_TEAM_ID`
+or `APPLE_API_KEY`/`APPLE_API_ISSUER`). Unsigned builds run locally
+(right-click → Open) but will trigger Gatekeeper warnings for other users and
+cannot be distributed through official channels. Windows installer signing
+uses Azure Trusted Signing in `Release.yml` (see
+[Security Considerations](#security-considerations)); local builds are
+unsigned.
+
+**Linux packaging:** the configured Linux target is AppImage (x64). To also
+produce a `.deb` (or `.rpm`, `.snap`, …), add the target to `linux.target` in
+`electron-builder.yml`, e.g.:
+
+```yaml
+linux:
+  target:
+    - AppImage
+    - deb
+  category: Utility
+```
+
+### Known Platform Differences
+
+The Electron UI shell adapts to each platform (see
+[ARCHITECTURE.md](ARCHITECTURE.md#platform-notes) for the implementation map):
+
+| Surface | Windows | macOS | Linux |
+|---|---|---|---|
+| Title bar | Frameless custom title bar (right-aligned window buttons, Mica background) | Native title bar with traffic lights (hiddenInset) + vibrancy | Frameless custom title bar (right-aligned window buttons) |
+| Menu bar | Auto-hidden | Native system menu bar (App/File/Edit/View/Window/Help roles) | Auto-hidden |
+| Tray | Tray icon + custom flyout (nav, quick actions, open/close) | Tray icon + custom flyout | Tray icon + custom flyout |
+| OSD | Transparent always-on-top overlay (sensor data from Host) | Same window; no meaningful sensor data in basic mode | Same window; no meaningful sensor data in basic mode |
+| System power actions (restart/shutdown/sleep) | `shutdown.exe` | Unavailable | Unavailable |
+| Windows power plans | `powercfg` | Unavailable | Unavailable |
+| Window lifecycle | Quit on last window closed | Stays running (macOS convention); app menu stays available | Quit on last window closed |
+
+### Cross-platform builds
+
+On macOS/Linux the full `UniversalDeviceToolkit.sln` cannot build (it contains
+Windows-TFM projects), but the portable parts and the Electron client work
+natively:
+
+```bash
+# Portable .NET libraries + CrossPlatform CLI (macOS/Linux/Windows)
+./build.sh Release            # auto-detects linux-x64 / osx-arm64 / osx-x64 / win-x64
+./build.sh Release linux-x64  # explicit runtime
+
+# Cross-platform test suite (runs on Windows, Ubuntu, and macOS CI)
+dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj \
+    --configuration Release
+
+# Electron client dev on macOS/Linux
+cd UniversalDeviceToolkit.Electron
+npm ci
+npm run dev
+```
+
+See `.github/workflows/linux.yml` and `CrossPlatformCli.yml` for the CI
+coverage of the cross-platform surface.
 
 ## Testing
 
@@ -120,14 +282,6 @@ dotnet test --filter "TestCategory=Unit"
 dotnet test --filter "TestCategory=Integration"
 ```
 
-### Performance Testing
-
-```bash
-# Run performance benchmarks
-dotnet run --project UniversalDeviceToolkit.PerformanceTest/ \
-    --configuration Release
-```
-
 ### README Screenshot Refresh
 
 Regenerate repository README screenshots on an interactive Windows desktop session after major UI changes.
@@ -136,8 +290,8 @@ Regenerate repository README screenshots on an interactive Windows desktop sessi
 
 | Setting | Value |
 |---------|-------|
-| Main window (logical) | 1300×850 px — enforced by `Tools/VisualRegression.Smoke` (`WindowWidth` / `WindowHeight`) |
-| Capture method | Smoke-owned screen capture from the normalized app window |
+| Main window (logical) | 1300×850 px |
+| Capture method | Interactive desktop capture / smoke tooling when available |
 | Expected pixel size | Logical size × Windows display scale (1300×850 at 100% DPI; ~1625×1063 at 125% DPI) |
 | README display width | 700 px (`width="700"` in README markdown) |
 
@@ -146,29 +300,13 @@ Regenerate repository README screenshots on an interactive Windows desktop sessi
 All README screenshots must use the same window size and capture method so aspect ratio and UI density stay consistent.
 Brand binaries (icons/logos) live only under repo-root [`Assets/`](../Assets/README.md).
 
-```powershell
-# Build smoke tooling (also builds the app with EnableUdtTestHooks for sandboxed captures)
-dotnet build Tools/MainAppPluginUi.Smoke/MainAppPluginUi.Smoke.csproj -c Release -p:Platform=x64
+Capture the Electron main window at **1300×850** logical size on an interactive Windows desktop session (Dark theme), then replace:
 
-$smoke = "Tools/MainAppPluginUi.Smoke/bin/x64/Release/net10.0-windows10.0.26100.0/win-x64/MainAppPluginUi.Smoke.dll"
-$appDir = "UniversalDeviceToolkit.WPF/bin/x64/Release/net10.0-windows10.0.26100.0/win-x64"
-
-# English main shell
-dotnet exec $smoke --repo-root . --app-dir $appDir --scenario dashboard --theme dark `
-  --lang en --screenshots always --screenshot-dir Build/readme-screenshots-en --disable-animations
-Copy-Item Build/readme-screenshots-en/*main-shell-home*.png Assets/Screenshot_main.png -Force
-
-# Simplified Chinese main shell (sandbox lang + WindowSize 1300×850)
-dotnet exec $smoke --repo-root . --app-dir $appDir --scenario dashboard --theme dark `
-  --lang zh-Hans --screenshots always --screenshot-dir Build/readme-screenshots-zh --disable-animations
-Copy-Item Build/readme-screenshots-zh/*main-shell-home*.png Assets/Screenshot_zh-hans.png -Force
-
-# Alternate: VisualRegression.Smoke --readme-screenshots --lang zh-Hans
-# (expects bin/Release/.../win-x64; create a junction from bin/x64/Release if needed).
-```
+- `Assets/Screenshot_main.png` — English UI
+- `Assets/Screenshot_zh-hans.png` — Simplified Chinese UI
 
 Document the refresh in `CHANGELOG.md` when user-visible UI changes ship.
-Last refreshed: 2026-07-13 (`Screenshot_main.png` EN main-shell home; `Screenshot_zh-hans.png` zh-hans main-shell home via MainAppPluginUi.Smoke `--lang`). Target logical window 1300×850 (pixel size scales with display DPI).
+Last refreshed: 2026-07-13. Target logical window 1300×850 (pixel size scales with display DPI).
 
 ### Manual Testing Checklist
 
@@ -268,7 +406,7 @@ jobs:
           dotnet build --configuration Release
           dotnet publish -c Release -o ./publish
       - name: Create Installer
-        run: ./Scripts/Build-InstallerAssets.ps1 -Version $env:VERSION
+        run: ./Scripts/Build-ElectronInstaller.ps1 -Version $env:VERSION
       - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
@@ -279,29 +417,37 @@ jobs:
 
 ## Installer Creation
 
-### Self-built WPF installer (Inno Setup retired)
+### Electron NSIS installer (Inno Setup and WPF installer retired)
 
-The project ships its own WPF installer (`Tools/Installer`) — Inno Setup and
-`MakeInstaller.iss` are retired. Both flavors are produced by
-`Scripts/Build-InstallerAssets.ps1` (also wired into `Make.bat` and the Release
-workflow):
+The project ships an Electron (electron-builder) NSIS installer. Inno Setup
+(`MakeInstaller.iss`), `InnoDependencies`, the WPF installer (`Tools/Installer`)
+and `Scripts/Build-InstallerAssets.ps1` are retired. The installer is produced
+by `Scripts/Build-ElectronInstaller.ps1` (also wired into `Make.bat` and the
+Release workflow):
 
 ```bash
-# Build both installers (requires the payload zips in release-assets/)
-./Scripts/Build-InstallerAssets.ps1 -Version X.Y.Z
+# Build the NSIS installer (requires the self-contained .NET host published to
+# UniversalDeviceToolkit.Host/publish/win-x64, which the Release workflow does)
+./Scripts/Build-ElectronInstaller.ps1 -Version X.Y.Z
 
 # Output location
 BuildInstaller/
-├── UniversalDeviceToolkitSetup-Full.exe     # offline: payload zip embedded
-└── UniversalDeviceToolkitSetup-Online.exe   # ~0.3 MB: downloads payload at install time
+├── UniversalDeviceToolkitSetup.exe         # Full offline NSIS
+├── UniversalDeviceToolkitOnlineSetup.exe   # Online nsis-web stub (<= 15MB)
+└── *.nsis.7z                               # payload downloaded by the Online stub
 ```
 
-The installer follows the OS display language and Windows light/dark mode.
-Its wizard includes language and device-model pages whose answers are written
-to the app's first-run state (`lang` / `device-setup`), so the app does not
-ask again on first launch; non-bundled language packs are downloaded from the
-stable resource catalog during setup. It supports `--uninstall`, `--silent`,
-`--dir=<path>`, `--lang=<culture>`, `--device-pack=<id>` and `--delete-data`.
+The Full installer follows the OS display language (23 languages), requests
+administrator elevation (per-machine), allows changing the installation
+directory, creates desktop and Start Menu shortcuts, and unregisters Nilesoft
+Shell during uninstall to release file locks (mirroring the retired Inno
+Setup behavior). The self-contained .NET host is embedded via
+`UniversalDeviceToolkit.Electron/electron-builder.yml` `extraResources`.
+Packaging uses `compression: maximum`. Host publish output is pruned
+(`Scripts/Prune-ShippingFootprint.ps1`); the Online nsis-web payload keeps
+English Host satellites only (other languages install from the in-app catalog).
+In-app updates follow the install channel written at pack time: Full installs
+download `*_Full_Setup.exe`, Online installs download `*_Online_Setup.exe`.
 
 ### Installer Contents
 
@@ -353,8 +499,8 @@ crowdin download --config crowdin.yml
 ```
 
 After downloading translations:
-1. Run structural audit (`missing/extra/placeholder`) across all `Resource*.resx`.
-2. Build WPF project and full solution.
+1. Run structural audit (`missing/extra/placeholder`) across all `Resource*.resx` and the Electron i18n TS locale modules.
+2. Build the Host, the Electron client (`npm run typecheck`), and the full Windows solution.
 3. Update `CHANGELOG.md` under `[Unreleased]` for user-visible localization fixes.
 
 ## Distribution Channels
@@ -567,6 +713,7 @@ dotnet clean
 
 ### Installer Issues
 
-1. Verify Inno Setup is installed
-2. Check signtool availability
-3. Validate version number format
+1. Verify Node.js/npm and the Electron project dependencies are installed (`npm ci` in `UniversalDeviceToolkit.Electron`)
+2. Verify the self-contained .NET host is published to `UniversalDeviceToolkit.Host/publish/win-x64`
+3. Check signtool availability
+4. Validate version number format

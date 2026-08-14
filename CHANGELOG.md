@@ -10,6 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Official plugins (CustomMouse, ShellIntegration, ViveTool) ship real Electron `contributes.webPage` settings UIs, backed by Host `plugin.customMouse.*` / `plugin.shell.*` / `plugin.vive.*` RPC rather than plugin-directory `config.json`.
+- Unified log directory `%LOCALAPPDATA%\UniversalDeviceToolkit\logs` (`main.log`, `renderer.log`, `host.log`); Host forwards Serilog lines as `host.log` events and wires `SharedLog` to Serilog. `UDT_LOG_PATH` is the current env alias; `LLT_LOG_PATH` remains a compatibility alias.
+- Dual plugin catalogs: shipped **v5.0.2** still reads rolling `plugin-catalog` (1.x). **v6.0.0-preview.N** hosts (InformationalVersion contains `-`) read `plugin-catalog-preview`. `IncludePrereleaseUpdates` stays an application-update switch and does not change the plugin catalog.
+
+### Changed
+
+- Source version train is **6.0.0** (`Directory.Build.props`). First ship tag is `v6.0.0-preview.1` (hyphen = GitHub prerelease; winget skipped). Official plugins are **2.0.0-preview.1** with `minHostVersion` **6.0.0**. Vendored plugin host baseline stays **5.0.2** until a v6 ZIP exists.
+- Host tests are split into `Tests.Contracts` (Guard/Security), `Tests` (parallel unit), `Tests.Stateful` (collection-bound), and existing `Fast.Tests`. Plugin tests run in `plugins-validate.yml`; Electron `npm test` runs with typecheck.
+- `PluginManager.SynchronizeStateStore` persists Windows plugin state through `ApplicationSettings.SynchronizeStore` instead of recursing into itself.
+- `plugins.list` always includes `directory` and `webPage` for installed plugins so the Electron shell can load local plugin pages. Settings opens the web page when `webPage` is present.
+
+### Removed
+
+- `UniversalDeviceToolkit.ViewModels` and its tests (WPF-era ViewModels unused by Electron).
+- Orphan plugin XAML design tokens and unused `WPF-UI` package version. WPF-era tools already deleted from the tree stay deleted.
+
 ## [5.0.2] - 2026-08-05
 
 ### Added

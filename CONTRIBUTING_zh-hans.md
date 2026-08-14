@@ -13,18 +13,85 @@ _由于 Issues 总量的增加，不符合标准的 Issue 会在无预先警告�
 
 **开发环境准备**
 
-1. 安装 [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)（Windows）
-2. 克隆仓库：`git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git`
-3. 还原（与 CI 一致）：`dotnet restore UniversalDeviceToolkit.sln --locked-mode`
-4. 构建：`dotnet build -c Release -m:1 --no-restore`
-5. 运行测试：`dotnet test -c Release`  
+1. 安装 [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)（Windows、macOS 或 Linux）
+2. 安装 [Node.js 20+](https://nodejs.org/)（Electron 客户端）
+3. 克隆仓库：`git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git`
+4. 还原（与 CI 一致）：`dotnet restore UniversalDeviceToolkit.sln --locked-mode`
+5. 构建：`dotnet build -c Release -m:1 --no-restore`
+6. 运行测试：`dotnet test -c Release`  
    或仅跑 CI fail-fast 分层：`pwsh ./Scripts/Run-TestFailFast.ps1`
 
-**测试分类**（`TestCategories`）：为用例打上 `[Trait("Category", TestCategories.…)]`，以便 CI fail-fast 过滤生效。常用：`Security`、`Guard`、`Plugin`、`Unit`、`Smoke`。进程级可变状态（UI 文化、共享设置、插件临时目录）须使用对应 `[Collection(TestCollections.…)]`。当前套件仍为**串行**（`parallelizeTestCollections: false`），因插件路径仍共享进程状态；未隔离 `Folders.AppDataOverride` 前不要重新开启集合并行。
+> [!NOTE]
+> 完整解决方案构建**仅限 Windows**（Host 与 Lib 目标框架为
+> `net10.0-windows10.0.26100.0` 并强制 win-x64）。macOS/Linux 上请走可移植路径：
+> `./build.sh Release` 可在三平台构建跨平台库、
+> `UniversalDeviceToolkit.CrossPlatform` CLI 与插件 SDK 契约，
+> `UniversalDeviceToolkit.CrossPlatform.Tests` 亦可在三平台运行
+> （见 `Docs/DEPLOYMENT.md` → 「Cross-platform builds」）。
+
+**Electron 客户端（界面）**
+
+UI 是位于 `UniversalDeviceToolkit.Electron/` 的 Electron 应用（Node.js +
+electron-vite + React；不属于 .NET 解决方案）。首次安装依赖后即可启动：
+
+```bash
+cd UniversalDeviceToolkit.Electron
+npm ci            # 仅首次（使用 package-lock.json）
+npm run dev       # 开发服务器 + Electron 窗口（热重载）
+npm start         # 运行构建产物（先 `npm run build`）
+npm run typecheck # TS 类型检查（web + main/preload）
+```
+
+在 Visual Studio 中，解决方案里有一个精简的 `UniversalDeviceToolkit.Electron`
+启动器项目（无操作占位 exe）。把它设为**启动项目**并按 **F5** —— 它的
+"Electron (npm run dev)" 启动配置会自动执行 `npm run dev`。
+
+> **不要把 `UniversalDeviceToolkit.Host` 设为启动项目。** Host 是无头
+> JSON-RPC 后端（基于 stdio），由 Electron 启动时自动拉起，从不显示窗口。
+> 进程模型见 `Docs/ARCHITECTURE.md`。
+
+**跨平台开发（macOS / Linux）**
+
+Electron 客户端原生支持 Windows、macOS 与 Linux：
+
+```bash
+cd UniversalDeviceToolkit.Electron
+npm ci            # 仅首次
+npm run dev       # 开发服务器 + Electron 窗口（热重载）
+npm run typecheck # TS 类型检查
+```
+
+macOS/Linux 上应用以**基础模式**启动（完整界面、插件、系统优化；无联想硬件控制）。
+Host 后端以 Windows 为主，打包前需按目标平台发布：
+
+```bash
+# macOS（Apple Silicon / Intel）
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    -c Release -r osx-arm64 --self-contained -o UniversalDeviceToolkit.Host/publish/osx-arm64
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    -c Release -r osx-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/osx-x64
+
+# Linux（x64）
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    -c Release -r linux-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/linux-x64
+
+# Windows（x64）— 内嵌进 NSIS 安装包
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    -c Release -r win-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/win-x64
+```
+
+> [!NOTE]
+> Host 项目目标框架为 Windows TFM（`net10.0-windows10.0.26100.0`），因此跨平台
+> Host 发布目前需先将 Windows 专属依赖图可移植化；硬件控制仅在 Windows 上有实际
+> 意义。完整平台矩阵见 `Docs/DEPLOYMENT.md`，Electron 界面壳按平台适配方式
+> （标题栏、菜单栏、托盘、OSD、系统电源）见 `Docs/ARCHITECTURE.md` →
+> 「Platform Notes」。
+
+**测试分层**见 [Docs/TEST_DIAGNOSTICS.md](Docs/TEST_DIAGNOSTICS.md)。宿主测试按工程拆分：`Tests.Contracts`（Guard/Security，fail-fast）→ `Fast.Tests` → `Tests`（并行单元）→ `Tests.Stateful`（Localization/Settings/ProcessState/PowerMode，集合不并行）。`TestCategories` 仅保留 `Security` / `Guard` / `Unit`，每个类最多一个 Category；CI 按工程选择，不再使用 `Coverage` / `Plugin` / `Smoke` 过滤。插件本体测试在 `Plugins/Official/*.Tests`（独立 CI）；Electron 为 `npm test`。官方插件 RPC 名单：`Plugins/Official/plugin-rpc-contract.json`。
 
 NuGet 还原通过各项目已提交的 `packages.lock.json` 保证可复现（`Directory.Build.props` 中启用了 `RestorePackagesWithLockFile`）。CI 始终使用 `dotnet restore … --locked-mode`。本地对齐 CI 时请带上该参数；仅在有意更新包版本后刷新锁文件时省略，并将更新后的 `packages.lock.json` 一并提交。`Make.bat` 与多数本地脚本依赖构建/发布时的隐式还原，不会强制 `--locked-mode`，因此一般离线构建不会因锁文件严格校验而中断。
 
-解决方案共有 16 个项目。请顺序构建（`-m:1`），以避免 VBCSCompiler 锁冲突。完整项目结构见 [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)。
+解决方案共有 25 个项目（24 个 .NET + Electron 启动器）。请顺序构建（`-m:1`），以避免 VBCSCompiler 锁冲突。完整项目结构见 [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)。
 
 <br/>
 

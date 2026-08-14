@@ -59,45 +59,30 @@ dotnet run --project Tools\UiPerformance.Smoke\UiPerformance.Smoke.csproj -c Rel
 
 ## Analysis tools (use together)
 
-### 1. UiPerformance.Smoke (automated baseline)
+### 1. Visual Studio Performance Profiler
 
-- UI Automation navigation timing
-- Working set / private bytes / handles per surface
-- Approximate UIA tree size (complexity proxy)
-
-### 2. UniversalDeviceToolkit.PerformanceTest (backend)
-
-```powershell
-dotnet run --project UniversalDeviceToolkit.PerformanceTest -c Release
-```
-
-Measures logging, WMI, file IO, settings load, collections — useful when a page is slow due to service/init cost rather than XAML.
-
-### 3. Visual Studio Performance Profiler
-
-1. Open `UniversalDeviceToolkit.WPF`
-2. **Debug → Performance Profiler** (Alt+F2)
+1. Open the Electron / Host solution projects you are investigating
+2. **Debug → Performance Profiler** (Alt+F2) when profiling a .NET host process
 3. Enable:
-   - **CPU Usage** — find expensive page `OnNavigatedTo` / sensor refresh
+   - **CPU Usage** — find expensive page / sensor refresh paths
    - **.NET Object Allocation** — find allocation spikes on navigate
    - **UI Analysis** (when available) — layout/render stalls
 4. Navigate every sidebar item while recording
 5. Stop and inspect hottest stacks by page transition
 
-### 4. `dotnet-counters` (live runtime)
+### 2. `dotnet-counters` (live runtime)
 
 ```powershell
 dotnet tool install -g dotnet-counters   # once
 
-# While UDT is running:
+# While UDT Host is running:
 dotnet-counters monitor --process-id <pid> `
-  System.Runtime `
-  Microsoft.Windows.Desktop.App.WPF
+  System.Runtime
 ```
 
-Watch: `Time in GC`, `Allocation Rate`, `Working Set`, WPF frame / UI thread indicators.
+Watch: `Time in GC`, `Allocation Rate`, `Working Set`.
 
-### 5. `dotnet-trace` / PerfView (deep stacks)
+### 3. `dotnet-trace` / PerfView (deep stacks)
 
 ```powershell
 dotnet tool install -g dotnet-trace
@@ -111,24 +96,7 @@ PerfView /nogui collect /MaxCollectSec:60
 # flip every page, then open the .etl.zip in PerfView → CPU Stacks / GC Stats
 ```
 
-### 6. Visual Regression smoke (pixel + load path)
-
-```powershell
-dotnet run --project Tools\VisualRegression.Smoke -c Release -p:Platform=x64 -- `
-  --repo-root . --out _visual_smoke_out --configuration Release
-```
-
-Not a timer, but exercises the same navigation graph and catches visual jank from missing resources.
-
-### 7. FlaUI automated tests
-
-```powershell
-dotnet test UniversalDeviceToolkit.UiAutomation.Tests/UniversalDeviceToolkit.UiAutomation.Tests.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --filter "FullyQualifiedName~FlaUI"
-```
-
-See [FlaUI_Testing.md](./FlaUI_Testing.md).
-
-### 8. Windows-hosted Linux verification through WSL
+### 4. Windows-hosted Linux verification through WSL
 
 When a Windows developer needs to validate the real Linux TFM and host probes,
 run this from the repository root after installing a WSL distribution with the

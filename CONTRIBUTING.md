@@ -14,29 +14,103 @@ _Due to large number of issues created, those that do not meet the criteria will
 
 **Development setup**
 
-1. Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (Windows)
-2. Clone the repo: git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git
-3. Restore (CI-aligned): `dotnet restore UniversalDeviceToolkit.sln --locked-mode`
-4. Build: `dotnet build -c Release -m:1 --no-restore`
-5. Run tests: `dotnet test -c Release`  
+1. Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (Windows, macOS, or Linux)
+2. Install [Node.js 20+](https://nodejs.org/) (Electron client)
+3. Clone the repo: git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git
+4. Restore (CI-aligned): `dotnet restore UniversalDeviceToolkit.sln --locked-mode`
+5. Build: `dotnet build -c Release -m:1 --no-restore`
+6. Run tests: `dotnet test -c Release`  
    Or CI fail-fast layers only: `pwsh ./Scripts/Run-TestFailFast.ps1`
+
+> [!NOTE]
+> The full solution build is **Windows-only** (the Host and Lib target
+> `net10.0-windows10.0.26100.0` with forced win-x64). On macOS/Linux use the
+> portable path instead: `./build.sh Release` builds the cross-platform
+> libraries, the `UniversalDeviceToolkit.CrossPlatform` CLI, and
+> the plugin SDK contract on any of the three platforms, and
+> `UniversalDeviceToolkit.CrossPlatform.Tests` run there (see
+> `Docs/DEPLOYMENT.md` → "Cross-platform builds").
+
+**Electron client (UI)**
+
+The UI is an Electron app in `UniversalDeviceToolkit.Electron/` (Node.js +
+electron-vite + React; not part of the .NET solution). Install its
+dependencies once, then start it:
+
+```bash
+cd UniversalDeviceToolkit.Electron
+npm ci            # first time only (uses package-lock.json)
+npm run dev       # dev server + Electron window (hot reload)
+npm start         # run the built output (after `npm run build`)
+npm run typecheck # TS type check (web + main/preload)
+```
+
+In Visual Studio the solution contains a thin `UniversalDeviceToolkit.Electron`
+launcher project (no-op stub exe). Set it as the **startup project** and press
+**F5** — its "Electron (npm run dev)" launch profile runs `npm run dev` for you.
+
+> **Do not set `UniversalDeviceToolkit.Host` as the startup project.** The Host
+> is a headless JSON-RPC backend (stdio-based) that Electron spawns
+> automatically when the app starts; it never shows a window. See
+> `Docs/ARCHITECTURE.md` for the process model.
+
+**Cross-platform development (macOS / Linux)**
+
+The Electron client runs natively on Windows, macOS, and Linux:
+
+```bash
+cd UniversalDeviceToolkit.Electron
+npm ci            # first time only
+npm run dev       # dev server + Electron window (hot reload)
+npm run typecheck # TS type check
+```
+
+On macOS/Linux the app starts in **basic mode** (full UI, plugins, system
+optimization; no Lenovo hardware control). The Host backend is Windows-first
+and must be published for the target platform before packaging:
+
+```bash
+# macOS (Apple Silicon / Intel)
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    -c Release -r osx-arm64 --self-contained -o UniversalDeviceToolkit.Host/publish/osx-arm64
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    -c Release -r osx-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/osx-x64
+
+# Linux (x64)
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    -c Release -r linux-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/linux-x64
+
+# Windows (x64) — embedded into the NSIS installer
+dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
+    -c Release -r win-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/win-x64
+```
+
+> [!NOTE]
+> The Host project targets the Windows TFM (`net10.0-windows10.0.26100.0`),
+> so cross-platform Host publish currently requires making the Windows-only
+> dependency graph portable. Hardware control remains meaningful on Windows
+> only. See `Docs/DEPLOYMENT.md` for the full platform matrix and
+> `Docs/ARCHITECTURE.md` → "Platform Notes" for how the Electron shell adapts
+> per platform (title bar, menu bar, tray, OSD, system power).
 
 NuGet restores are reproducible via committed per-project `packages.lock.json` files (`RestorePackagesWithLockFile` in `Directory.Build.props`). CI always uses `dotnet restore … --locked-mode`. Use that flag locally when validating against CI; omit it only when you intentionally refresh lock files after package version changes, then commit the updated `packages.lock.json` files. `Make.bat` and most local scripts rely on implicit restore during build/publish and do not force `--locked-mode`, so casual offline builds are not blocked by a strict lock mismatch.
 
-The solution has 16 projects. Build sequentially (-m:1) to avoid VBCSCompiler lock conflicts. See Docs/ARCHITECTURE.md for the full project map.
+The solution has 25 projects (24 .NET + the Electron launcher). Build sequentially (`-m:1`) to avoid VBCSCompiler lock conflicts. See Docs/ARCHITECTURE.md for the full project map.
 
-**Test categories** (`TestCategories` in `UniversalDeviceToolkit.Tests`): use `[Trait("Category", TestCategories.…)]` so CI fail-fast filters stay meaningful.
+**Host tests** are split by project (see `Docs/TEST_DIAGNOSTICS.md`):
 
-| Category | Intent | CI fail-fast |
+| Project | Role | CI |
 |---|---|---|
-| `Security` | Injection, path traversal, signatures, integrity | Yes (first) |
-| `Guard` | Repo/CI/XAML/payload contracts | Yes (first) |
-| `Plugin` | Plugin host/lifecycle | Yes |
-| `Unit` | General unit tests | Yes (excludes pure Coverage) |
-| `Smoke` | Lightweight smoke contracts | Yes |
-| `Coverage` | Optional padding (avoid for new tests) | Full suite only |
+| `UniversalDeviceToolkit.Tests.Contracts` | Guard + Security | fail-fast, no category filter |
+| `UniversalDeviceToolkit.Fast.Tests` | Isolation-free unit | after Contracts |
+| `UniversalDeviceToolkit.Tests` | Parallel unit | main parallel layer |
+| `UniversalDeviceToolkit.Tests.Stateful` | Localization / Settings / ProcessState / PowerMode collections | last; collection parallelism off |
 
-Process-wide mutable tests (UI culture / shared settings / plugin temp roots) must use the matching `[Collection(TestCollections.…)]`. The suite currently runs **serially** (`parallelizeTestCollections: false`) because plugin path fixtures still share process state; do not re-enable collection parallelism without isolating `Folders.AppDataOverride` and plugin roots per test.
+`TestCategories` (`Security`, `Guard`, `Unit`): at most one Category trait per class. CI selects by project; Category is optional documentation. Do not add `Coverage`, `Plugin`, `Utils`, `Controller`, or `Smoke`.
+
+Process-wide mutable tests use `[Collection(TestCollections.…)]` and live in `Tests.Stateful` (`parallelizeTestCollections: false`). Contracts and Unit keep collection parallelism on.
+
+Plugin implementation tests: `Plugins/Official/*.Tests` via `Plugins/UniversalDeviceToolkit.Plugins.sln` (independent CI job). Electron UI contracts: `npm test` in `UniversalDeviceToolkit.Electron`. Official plugin RPC names: `Plugins/Official/plugin-rpc-contract.json`.
 
 <br/>
 **1. Before reporting an issue make yourself familiar with the README**
@@ -89,7 +163,7 @@ Culture names in UDT must be written in the **BCP 47 / RFC 5646 canonical form**
 | Script | TitleCase | `Hans` `Hant` `Latn` |
 | Region | UPPERCASE | `BR` `NL` `PT` `UZ` |
 
-The canonical culture set is the single source of truth in `LocalizationHelper.Languages` (WPF):
+The canonical culture set is the single source of truth in `LocalizationCatalog.SupportedCultures` (`UniversalDeviceToolkit.Lib.Abstractions/Localization/LocalizationCatalog.cs`):
 
 `ar bg cs de el en es fr hu it ja lv nl-NL pl pt pt-BR ro ru sk tr uk uz-Latn-UZ vi zh-Hans zh-Hant`
 
@@ -97,7 +171,7 @@ A culture name must be spelled **byte-for-byte identically** in every one of the
 
 1. Resource file names — `Resource.zh-Hans.resx` (never `zh-hans`)
 2. Generated satellite directories — `zh-Hans/*.resources.dll`
-3. `LocalizationHelper.Languages` and the installer's `AppLanguages`
+3. `LocalizationCatalog.SupportedCultures` and the installer's `AppLanguages`
 4. The persisted `lang` file
 5. `catalog.json` `culture` fields and pack URLs
 6. `crowdin.yml` locale mappings

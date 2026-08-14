@@ -6,14 +6,15 @@ Independent UDT implementation inspired by Watt Toolkit *behavior* only.
 ## Architecture
 
 ```
-WPF (Network & acceleration page)
-  └─ INetworkAccelerationService / INetworkDiagnosticsService / INetworkStateRecoveryService
+Electron (Network & acceleration page)
+  └─ Host NetworkAccelerationHandlers (JSON-RPC)
         └─ UniversalDeviceToolkit.NetworkProxy.exe (isolated worker)
               ├─ Named pipe IPC (current-user ACL + random session token)
               └─ Loopback-only HTTP + CONNECT proxy (127.0.0.1 / ::1)
 ```
 
 - **Default**: acceleration **OFF**. App launch never auto-starts proxy, Hosts edits, or certificates.
+- **Worker location**: Host looks for `UniversalDeviceToolkit.NetworkProxy.exe` plus `.runtimeconfig.json` / `.deps.json` beside Host (`Folders.Program` / `AppContext.BaseDirectory` — Debug copy-on-build, Release/Electron `resources/host`), then in the sibling `UniversalDeviceToolkit.NetworkProxy` `bin/` output. `npm run dev` / VS F5 does not need a full installer.
 - **Crash isolation**: the proxy runs as a separate worker; failures must not tear down the GUI.
 - **IPC**: named pipe, random session token per run, ACL limited to the current user (+ Administrators).
 - **Bind**: loopback only — never `0.0.0.0` / `::`.
@@ -82,8 +83,8 @@ No third-party accelerator SDKs, no remote script injection, no unreviewed onlin
 | Snapshot restore + startup heal + shutdown stop | Done |
 | System proxy / PAC apply on user Start (domains required; no full-loopback fallback) | Done |
 | Hosts mode Start | **Refused** until local TLS origin; helpers kept |
-| Hosts mode in WPF selector | **Omitted** (reserved); legacy config shows disabled note |
-| WPF page (enable, start/stop, restore, diagnostics) | Done |
+| Hosts mode in selector | **Omitted** (reserved); legacy config shows disabled note |
+| Electron page (enable, start/stop, restore, diagnostics) | Done |
 | Mode selector (SystemProxy / DiagnosticsOnly) | Done |
 | Domain group toggles (Steam / GitHub / Custom) | Done |
 | Multi-select bar (favorite pin + start selected) | Done |
@@ -95,7 +96,7 @@ No third-party accelerator SDKs, no remote script injection, no unreviewed onlin
 ## Plugin consolidation
 
 Official plugins live in this repository under `Plugins/Official/`.
-See `Docs/PluginConsolidation.md`.
+See `Docs/archive/PluginConsolidation.md`.
 
 - **Network Acceleration** plugin: **delisted** from store; migration source only.
 - **Battery Health** plugin: **delisted** from store; thresholds live in main battery/sensors.

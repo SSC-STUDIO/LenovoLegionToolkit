@@ -23,7 +23,7 @@ Use this when you are developing a plugin locally, in a fork, or for an early PR
 
 `udt-plugin.cmd` is the canonical entry (`llt-plugin.cmd` is a compatibility alias). It publishes the tooling CLI into `Plugins/.build/tooling` and reuses that executable. This avoids repeated `dotnet run` builds and the file-lock failures that can happen when multiple validation commands start together.
 
-**Published host baseline:** Universal Device Toolkit **v5.0.2** (`Plugins/HostBaseline/host-release.json`). Official plugins currently declare `minHostVersion: "5.0.0"` unless a manifest says otherwise.
+**Published host baseline:** Universal Device Toolkit **v5.0.2** (`Plugins/HostBaseline/host-release.json`) until a v6 ZIP exists. Official 2.x plugins declare `minHostVersion: "6.0.0"` and publish to `plugin-catalog-preview`. Shipped 1.x packages remain on `plugin-catalog` for v5.0.2.
 
 ### Validation Profile
 
@@ -83,36 +83,11 @@ Example:
   --profile official-candidate
 ```
 
-## PluginWorkbench
+## Plugin web UI (Electron)
 
-`PluginWorkbench` is the standard author preview host.
+Shipping UI is Electron. Declare `contributes.webPage` and implement `web/index.html` that calls `window.pluginHost.invoke` against Host `plugin.*` methods. Do not add WPF pages.
 
-### Why It Exists
-
-Authors should not need a live main-app source checkout just to preview plugin UI. The workbench provides:
-
-- host-style feature shell
-- host-style settings shell
-- optimization preview cards
-- dialog hosting through `PluginHostContext`
-- `System / Light / Dark`
-- safe `Preview` mode by default
-
-### Launch Options
-
-```powershell
-dotnet run --project .\Tooling\PluginWorkbench\PluginWorkbench.csproj -- `
-  --repository-root . `
-  --plugin-id custom-mouse `
-  --theme dark `
-  --view settings
-```
-
-Arguments:
-
-- `--plugin-id <id>`
-- `--theme system|light|dark`
-- `--view feature|settings|optimization`
+`udt-plugin.cmd dev` / `preview` historically opened PluginWorkbench; that host is retired. Use the Electron shell against a real Host.
 
 ## VS Code Extension Workflow Mapping
 
@@ -121,8 +96,8 @@ The tooling now follows the same shape as VS Code extension authoring:
 | VS Code extension flow | Universal Device Toolkit plugin flow |
 |---|---|
 | `package.json` is the authoring manifest | `plugin.manifest.json` is the authoring manifest |
-| `contributes` declares commands/views | `contributes` declares feature/settings/runtime/optimization entry points |
-| `npm run watch` or F5 starts the extension host | `dev` builds and opens `PluginWorkbench` |
+| `contributes` declares commands/views | `contributes` declares `webPage` / runtime / optimization entry points |
+| `npm run watch` or F5 starts the extension host | Electron `npm run dev` loads `contributes.webPage` |
 | `vsce package` creates `.vsix` | `package` creates `<plugin-id>-v<version>.zip` |
 | Marketplace metadata is derived from manifest/package fields | generated `Plugins/.build/catalog/store.json` is generated from manifest store metadata and release assets |
 
@@ -148,20 +123,22 @@ Version numbers are easy to drift because they appear in several files. Use one 
 
 | Layer | Source of truth | Example |
 |---|---|---|
-| Host app (UDT) | `UniversalDeviceToolkit/Directory.Build.props` (`MajorVersion` / `MinorVersion` / `PatchVersion`) | `5.0.2` |
-| Each plugin | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | `custom-mouse` → `1.0.18` |
-| Plugin store catalog | Generated `Plugins/.build/catalog/store.json` (release output, not hand-edited) | per-plugin `version` + `fileSize` |
+| Host app (UDT) | `Directory.Build.props` (`MajorVersion` / `MinorVersion` / `PatchVersion`) | `6.0.0` (shipped stable remains `5.0.2`) |
+| Each plugin | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | `custom-mouse` → `2.0.0-preview.1` |
+| Plugin store catalog | Generated `Plugins/.build/catalog/store.json` (`--catalog-channel stable\|preview`) | per-plugin `version` + `fileSize` |
 
 Do **not** treat `UniversalDeviceToolkit/Directory.Build.props` as a plugin version. Each plugin keeps its own SemVer.
 
 ### Bump a plugin (recommended)
 
 ```powershell
-.\udt-plugin.cmd bump-version --plugin custom-mouse --part patch
+.\udt-plugin.cmd bump-version --plugin custom-mouse --version 2.0.0-preview.1
 .\udt-plugin.cmd validate --plugin custom-mouse --profile official-candidate
 .\udt-plugin.cmd package --plugin custom-mouse --build-first --output-dir Plugins\.build\release-assets
-.\udt-plugin.cmd generate-store --plugin-ids custom-mouse --asset-root Plugins\.build\release-assets --merge-existing --require-assets
+.\udt-plugin.cmd generate-store --plugin-ids custom-mouse --asset-root Plugins\.build\release-assets --catalog-channel preview --merge-existing --require-assets
 ```
+
+`--part patch|minor|major` still yields a numeric `x.y.z` (prerelease suffix is dropped). Preview labels use explicit `--version`. `FileVersion` / `AssemblyVersion` stay numeric (`2.0.0`) when `Version` is `2.0.0-preview.1`. Publish 2.x with `plugins-release.yml` `catalog_channel=preview` only.
 
 `bump-version` updates `plugin.manifest.json`, then `sync-version` propagates to:
 

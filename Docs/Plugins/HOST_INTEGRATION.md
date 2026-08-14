@@ -6,7 +6,7 @@
 >
 > 贡献者直接在本仓库的 [Plugins/Official](../../Plugins/Official) 中创建或修改插件。作者工作流请参阅 [PLUGIN_QUICKSTART.md](./PLUGIN_QUICKSTART.md) 与 [PLUGIN_DEVELOPMENT.md](./PLUGIN_DEVELOPMENT.md)。
 >
-> **本文档**聚焦于宿主侧接口契约、插件生命周期、以及插件 UI 应与主程序对齐的视觉规范；供理解宿主如何加载插件，也供在 `Plugins/Official` 中实现页面时对照宿主期望。
+> **本文档**聚焦于宿主侧接口契约、插件生命周期、以及 Electron `contributes.webPage` + Host RPC。WPF UserControl 已不是现行 UI。
 
 ## 目录
 
@@ -26,10 +26,10 @@
 
 Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
 
-- 添加新的功能页面
+- 通过 `contributes.webPage` 提供 Electron 设置/功能页
 - 集成到 Windows 优化功能
-- 提供自定义设置界面
-- 访问主程序的服务
+- 经 Host JSON-RPC（`pluginHost.invoke`）调用插件 C# API
+- 访问主程序已暴露的 bridge 方法（含 `dialog:*`）
 
 ### 插件类型
 
@@ -131,13 +131,10 @@ public sealed class MyPluginSettingsPage : IPluginPage
   "repository": "https://github.com/yourname/my-plugin",
   "issues": "https://github.com/yourname/my-plugin/issues",
   "contributes": {
-    "featurePage": {
-      "class": "UniversalDeviceToolkit.Plugins.MyPlugin.MyPluginFeaturePage",
-      "title": "My Plugin"
-    },
-    "settingsPage": {
-      "class": "UniversalDeviceToolkit.Plugins.MyPlugin.MyPluginSettingsPage",
-      "title": "My Plugin Settings"
+    "featurePage": null,
+    "settingsPage": null,
+    "webPage": {
+      "entry": "web/index.html"
     },
     "runtime": null,
     "optimizationActions": []
@@ -227,8 +224,9 @@ public abstract class PluginBase : IPlugin
 │         └── OnInstalled() ← 在此初始化资源                   │
 │                                                             │
 │  4. 运行阶段                                                 │
-│     └── GetFeatureExtension() → 返回功能页面                │
-│     └── GetSettingsPage() → 返回设置页面                    │
+│     └── contributes.webPage → Electron <webview>            │
+│     └── pluginHost.invoke → Host plugin.* RPC               │
+│     └── GetOptimizationCategory() → 系统优化动作（可选）    │
 │                                                             │
 │  5. 卸载阶段                                                 │
 │     └── Stop() ← 停止后台服务                               │
@@ -244,107 +242,46 @@ public abstract class PluginBase : IPlugin
 
 ## UI 扩展
 
-### IPluginPage 接口
+Shipping UI 是 Electron。插件不要再提供 WPF `UserControl` / `IPluginPage.CreatePage()` 作为现行页面。`GetFeatureExtension()` / `GetSettingsPage()` 对官方插件返回 `null`。
 
-UI 页面需要实现 `IPluginPage` 接口：
+### contributes.webPage
 
-```csharp
-public interface IPluginPage
-{
-    string PageTitle { get; }
-    string? PageIcon { get; }
-    object CreatePage();
-}
+在 `plugin.manifest.json` 声明入口，并把 `web/` 复制进插件包（csproj `Content Include="web\**\*"`）：
+
+```json
+"webPage": { "entry": "web/index.html" }
 ```
 
-### 功能扩展页面
+`plugins.list` 对已安装插件返回 `directory`（包根目录）和 `webPage`（相对入口）。Electron `PluginPageView` 用 `file://` 加载该页，guest preload 注入 `window.pluginHost`。
 
-```csharp
-public class MyPluginFeaturePage : IPluginPage
-{
-    public string PageTitle => "My Feature";
-    public string? PageIcon => "Apps24";
-    
-    public object CreatePage()
-    {
-        return new MyFeatureControl();
-    }
-}
+### pluginHost.invoke
+
+```html
+<link rel="stylesheet" href="plugin-ui.css" />
+<script>
+  const bridge = window.pluginHost
+  const state = await bridge.invoke('plugin.customMouse.getState', {})
+  bridge.on('plugin.vive.downloadProgress', (data) => { /* ... */ })
+</script>
 ```
 
-### 设置页面
+- 与主窗口同一套 invoke 路径，包括 Electron 本地 `dialog:open-file` / `dialog:save-file` / `dialog:select-folder` / `dialog:open-path`。
+- 官方三插件不要用 `plugins.getConfig` / `plugins.setConfig`（那是插件目录 `config.json`，不是 live AppData store）。
+- 业务仍在插件 C#；Host 通过 `IPluginManager.TryGetPlugin` 调已加载实例。
 
-```csharp
-public class MyPluginSettingsPage : IPluginPage
-{
-    public string PageTitle => "My Plugin Settings";
-    public string? PageIcon => "Settings";
-    
-    public object CreatePage()
-    {
-        return new MySettingsControl();
-    }
-}
-```
+### 官方 RPC 域
 
-### WPF 控件示例
+| 插件 | 方法前缀 | 用途 |
+| --- | --- | --- |
+| CustomMouse | `plugin.customMouse.*` | 指针速度、交换键、光标主题 |
+| ShellIntegration | `plugin.shell.*` | Nilesoft Shell 启用/预设/导入导出 |
+| ViveTool | `plugin.vive.*` | 特性表、路径、下载 |
 
-```xml
-<!-- MyFeatureControl.xaml -->
-<UserControl x:Class="MyPlugin.MyFeatureControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid>
-        <TextBlock Text="Hello from My Plugin!" 
-                   HorizontalAlignment="Center" 
-                   VerticalAlignment="Center"/>
-    </Grid>
-</UserControl>
-```
+### 视觉规范
 
-### 插件 UI 视觉规范
+复用 `web/plugin-ui.css`（`up-*` 类：卡片、行、开关、按钮）。文案用插件 resx 或页面内英文+中文，不要另开一套 i18n。
 
-官方插件应合并 `[Plugins/Shared/PluginUiResources.xaml](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Plugins/Shared/PluginUiResources.xaml)`（由 `UniversalDeviceToolkit.Plugins.Shared` 提供），以保持与 Universal Device Toolkit 主程序一致的卡片布局、间距与 WPF-UI 按钮外观：
-
-```xml
-<UserControl.Resources>
-  <ResourceDictionary>
-    <ResourceDictionary.MergedDictionaries>
-      <ResourceDictionary Source="pack://application:,,,/UniversalDeviceToolkit.Plugins.Shared;component/PluginUiResources.xaml" />
-    </ResourceDictionary.MergedDictionaries>
-  </ResourceDictionary>
-</UserControl.Resources>
-```
-
-**布局与样式约定**
-
-
-| 资源键                                                                          | 用途                |
-| ---------------------------------------------------------------------------- | ----------------- |
-| `PluginPageRootMargin`                                                       | 页根边距（`0,0,16,12`） |
-| `PluginHeroSurfaceStyle`                                                     | Hero / 概览条        |
-| `PluginCardContentStyle`                                                     | 标准内容卡片            |
-| `PluginMetricCardStyle`                                                      | 紧凑指标卡             |
-| `PluginPrimaryButtonStyle` / `PluginSecondaryButtonStyle`                    | WPF-UI 主/次按钮      |
-| `PluginSectionTitleStyle` / `PluginBodyTextStyle` / `PluginCaptionTextStyle` | 标题与正文层级           |
-| `PluginIconBadgeStyle` + `PluginIconOnAccentStyle`                           | Accent 图标徽章       |
-
-
-**编写注意**
-
-- 卡片间距 8px、圆角 8px，与主程序 `DesignTokens` 对齐。
-- 宿主已通过 `IPluginPage.PageTitle` 展示标题时，页面 Hero 不要再重复同文案。
-- `DataGrid` 等密集控件外包 `PluginCardContentStyle` 边框。
-- 视觉打磨时保留全部 `AutomationId`（Workbench / 主程序 UI 烟测依赖）。
-- 不要在插件 `.csproj` 中重复 `<Page Include>` 引用 `PluginUiResources.xaml`（Shared 项目已编译，重复会导致 NETSDK1022）。
-
-**本地视觉回归**（主仓库插件目录）：
-
-```powershell
-make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
-```
-
-截图输出：`artifacts/workbench-visual/<plugin-id>-<theme>/`（`preview` / `settings` / `real-runtime`）。详见 [Plugins/Official — BUILD_SMOKE.md](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/blob/master/Docs/Plugins/BUILD_SMOKE.md#visual-smoke-pluginworkbench)。
+`IPluginPage` 仍留在 SDK 里（冻结 ABI / 历史别名），新插件不要实现它来承载 UI。
 
 ---
 
@@ -448,19 +385,15 @@ public override WindowsOptimizationCategoryDefinition? GetOptimizationCategory()
 }
 ```
 
-### 被 MainAppPluginUi.Smoke 覆盖时的入口约束
+### Electron 插件页验证
 
-如果插件希望被 `Tools/MainAppPluginUi.Smoke` 稳定覆盖，至少应满足以下之一：
+官方插件通过 `contributes.webPage` 提供设置 UI。Electron 用 `<webview>` 加载 `web/index.html`，页面经 `window.pluginHost.invoke` 调用 Host `plugin.*` RPC。WPF `GetSettingsPage` / `MainAppPluginUi.Smoke` 已退役。
 
-- **Feature page 路径**：`GetFeatureExtension()` 返回可被宿主加载的页面对象。
-- **Settings page 路径**：`GetSettingsPage()` 返回可被 `PluginSettingsWindow` 打开的页面对象。
-- **Windows Optimization 路径**：`GetOptimizationCategory()` 返回能在主程序中稳定出现的分类与动作。
+验证：
 
-当前 smoke 主要验证的是“宿主是否能真正打开入口”，不是只看插件声明了能力。因此：
-
-1. optimization-route 插件除了返回 `WindowsOptimizationCategoryDefinition`，还应确保分类在主程序实际页面中能被定位；若分类未出现，smoke 会按失败处理。
-2. settings page 与 feature page 应返回宿主可直接创建的 UI 对象，避免仅在插件内部声明但无法被 `PluginPageWrapper` 或 `PluginSettingsWindow` 实际承载。
-3. AutomationId、标题或分类结构若频繁漂移，会直接增加 UI smoke 失败率；新增或调整宿主入口时，最好同步验证现有 smoke 路径是否仍可定位。
+1. `plugins.list` 为已安装项返回 `directory` 与 `webPage`。
+2. 页面调用的方法已在 Host `PluginOfficialHandlers` 注册（CustomMouse / Shell / Vive 分别为 `plugin.customMouse.*` / `plugin.shell.*` / `plugin.vive.*`）。
+3. 契约测试：`UniversalDeviceToolkit.Electron/tests/pluginOfficialContract.test.mjs` 与 `UniversalDeviceToolkit.Tests.Contracts` 中的官方插件 RPC/manifest Guard（名单：`Plugins/Official/plugin-rpc-contract.json`）。
 
 ---
 
@@ -547,9 +480,9 @@ public class MyPlugin : PluginBase { }
 
 | 插件 ID                    | 页面模型             | 说明                                                 |
 | ------------------------ | ---------------- | -------------------------------------------------- |
-| **custom-mouse**         | 设置页 + Windows 优化 | 无功能页（`GetFeatureExtension()` 为 `null`）；提供鼠标光标与优化动作 |
-| **shell-integration**    | 仅设置页（系统插件）       | `isSystemPlugin: true`，不可卸载；无功能页                   |
-| **vive-tool**            | 功能页 + 设置页        | ViVeTool 功能管理与设置                                   |
+| **custom-mouse**         | `webPage` + Windows 优化 | `web/index.html`；Host `plugin.customMouse.*` |
+| **shell-integration**    | `webPage`（系统插件）  | `isSystemPlugin: true`；Host `plugin.shell.*` |
+| **vive-tool**            | `webPage`        | 特性表 + 路径/下载；Host `plugin.vive.*` |
 
 
 ---
@@ -558,19 +491,13 @@ public class MyPlugin : PluginBase { }
 
 ### 推荐：主仓库插件工具链
 
-日常开发与预览应在主仓库的 `Plugins/` 目录使用 `llt-plugin.cmd` 与 **PluginWorkbench**（支持 System/Light/Dark、Feature/Settings/Optimization 视图、Preview / Real Runtime）：
+日常开发应在主仓库的 `Plugins/` 目录使用 `udt-plugin.cmd` 构建，再用 Electron 打开插件 web 页：
 
 ```powershell
-.\llt-plugin.cmd build --plugin my-plugin
-.\llt-plugin.cmd preview --plugin my-plugin --theme system --view feature
-.\llt-plugin.cmd dev --plugin my-plugin --theme system --view settings
+.\udt-plugin.cmd build --plugin my-plugin
 ```
 
-视觉回归与 Workbench 烟测（主仓库插件目录）：
-
-```powershell
-make.bat workbench-smoke --plugin-id custom-mouse --theme Dark
-```
+然后 `npm run dev`（Electron）或 `npm run dev:web`，从插件列表进入带 `contributes.webPage` 的页面。`pluginHost.invoke` 调用 Host `plugin.*` RPC。
 
 ### 备选：复制到宿主 plugins 目录
 

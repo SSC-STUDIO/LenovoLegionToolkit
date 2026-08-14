@@ -48,8 +48,7 @@ mode switches, and each brand probes its register layout read-only first
    packs keep it in `HiddenFeatures`.
 4. **Regenerate the mirrors** after catalog edits:
    - `resources/device-packs.json` (packdump tool)
-   - `Tools/Installer/DevicePackSnapshot.cs` (gen-snapshot.py) —
-     `DevicePackSnapshotGuardTests` fails if they drift.
+   - `resources/device-packs.json` (packdump / catalog generator). Historical `Tools/Installer/DevicePackSnapshot.cs` is retired with the WPF installer.
 
 ## Step-by-step (new brand "ACME")
 
