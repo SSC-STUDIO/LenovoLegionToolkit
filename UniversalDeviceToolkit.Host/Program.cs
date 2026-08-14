@@ -5,24 +5,28 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using UniversalDeviceToolkit.Lib;
+#if WINDOWS
+using Autofac;
 using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Controllers;
-using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Lib.Network;
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Overclocking.Amd;
 using UniversalDeviceToolkit.Lib.Services;
 using UniversalDeviceToolkit.Lib.Settings;
+using UniversalDeviceToolkit.Lib.Features.Hybrid;
+using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
+#endif
+using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Host.Rpc;
 using UniversalDeviceToolkit.Host.Rpc.Handlers;
+using UniversalDeviceToolkit.Shared.Logging;
 
 namespace UniversalDeviceToolkit.Host;
 
@@ -30,6 +34,7 @@ public static class Program
 {
     public static async Task<int> Main(string[] args)
     {
+#if WINDOWS
         // Route an elevated optimization-worker invocation (--udt-elevated-optimization)
         // before any host startup: the worker only speaks the named-pipe protocol and
         // must not run the bridge/RPC lifecycle.
@@ -37,17 +42,21 @@ public static class Program
             .TryRunWorkerAsync(args).ConfigureAwait(false);
         if (elevatedWorkerExitCode.HasValue)
             return elevatedWorkerExitCode.Value;
+#endif
 
         var flags = HostFlags.Parse(args);
 
         Log.Instance.IsTraceEnabled = flags.Trace;
+        Environment.SetEnvironmentVariable("UDT_LOG_PATH", Log.Instance.LogPath);
         Environment.SetEnvironmentVariable("LLT_LOG_PATH", Log.Instance.LogPath);
+        SharedLog.SetSink(new SerilogSharedLogSink());
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Host flags: {flags}");
 
         try
         {
+#if WINDOWS
             var settings = new ApplicationSettings();
 
             IoCContainer.Initialize(
@@ -57,6 +66,15 @@ public static class Program
                 new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
                 new BridgeModule());
+#else
+            IoCContainer.Initialize(
+                preBuild: null,
+                new UniversalDeviceToolkit.Lib.IoCModule(),
+                new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
+                new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
+                new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
+                new BridgeModule());
+#endif
 
             PluginHostContext.SetCurrent(new HostPluginHostContext());
 
@@ -64,7 +82,23 @@ public static class Program
                 flags.ProxyUrl is null ? null : new Uri(flags.ProxyUrl),
                 flags.ProxyUsername, flags.ProxyPassword, flags.ProxyAllowAllCerts);
 
+#if WINDOWS
+            ApplyExperimentalGpuWorkingMode(flags);
+#endif
+
             using var rpc = new BridgeRpcServer();
+            Log.BridgeLineSink = line =>
+            {
+                try
+                {
+                    rpc.Publish("host.log", line);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Failed to publish host.log event: {ex.Message}", ex);
+                }
+            };
             RegisterBridgeHandlers(rpc, flags);
 
             var initializer = new HardwareInitializer(flags, rpc);
@@ -95,6 +129,17 @@ public static class Program
             return 1;
         }
     }
+
+#if WINDOWS
+    private static void ApplyExperimentalGpuWorkingMode(HostFlags flags)
+    {
+        var enabled = flags.ExperimentalGpuWorkingMode;
+        IoCContainer.Resolve<IGPUModeFeature>().ExperimentalGPUWorkingMode = enabled;
+        IoCContainer.Resolve<DGPUNotify>().ExperimentalGPUWorkingMode = enabled;
+        if (enabled && Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace("Experimental GPU working mode enabled (LegionZone capability/flags backends).");
+    }
+#endif
 
     private static void RegisterBridgeHandlers(BridgeRpcServer rpc, HostFlags flags)
     {
@@ -131,6 +176,7 @@ public static class Program
             return BridgeResult.Ok(new { quitting = true });
         });
 
+#if WINDOWS
         SystemHandlers.Register(rpc);
         WmiCapabilityHandlers.Register(rpc);
         SettingsHandlers.Register(rpc);
@@ -140,20 +186,109 @@ public static class Program
         DashboardHandlers.Register(rpc);
         DashboardHardwareHandlers.Register(rpc);
         AutomationHandlers.Register(rpc);
-        MacroHandlers.Register(rpc);
         KeyboardBacklightHandlers.Register(rpc);
         OptimizationHandlers.Register(rpc);
         AiHandlers.Register(rpc);
         DriverDownloadHandlers.Register(rpc);
         NetworkAccelerationHandlers.Register(rpc);
         CleanupRulesHandlers.Register(rpc);
-        PluginHandlers.Register(rpc);
         AppIntegrationHandlers.Register(rpc);
         SoftwareDisablerHandlers.Register(rpc);
         StartupHandlers.Register(rpc);
+        GodModeHandlers.Register(rpc);
+#else
+        // Windows-only domains keep their RPC surface (the Electron client calls
+        // them unconditionally) but answer "not supported on this platform".
+        // The method list lives in RpcMethodNames so it cannot drift from the
+        // Windows registrations above (see VerifyRpcSurface).
+        RegisterPlatformUnsupportedHandlers(rpc);
+#endif
+
+        // MacroHandlers compiles on every platform: real hooks on Windows, its
+        // own -32099 stubs elsewhere (previously only registered on Windows,
+        // which surfaced macro.* as -32601 unknown-method on portable hosts).
+        MacroHandlers.Register(rpc);
+
+        PluginHandlers.Register(rpc);
+        PluginOfficialHandlers.Register(rpc);
+
+        VerifyRpcSurface(rpc);
 
         _ = flags;
     }
+
+    /// <summary>
+    /// Startup guard for the RpcMethodNames registry: on Windows every listed
+    /// method must have a concrete handler; on portable builds the stubs are
+    /// registered from the same list, so a rename or removal in a handler file
+    /// shows up here instead of as a client-visible -32601.
+    /// </summary>
+    private static void VerifyRpcSurface(BridgeRpcServer rpc)
+    {
+#if WINDOWS
+        foreach (var method in RpcMethodNames.WindowsOnly)
+        {
+            if (!rpc.HasHandler(method))
+                Log.Instance.Warning($"RPC registry drift: '{method}' is listed in RpcMethodNames.WindowsOnly but no Windows handler registered it.");
+        }
+        foreach (var method in RpcMethodNames.EmptyOkOnNonWindows)
+        {
+            if (!rpc.HasHandler(method))
+                Log.Instance.Warning($"RPC registry drift: '{method}' is listed in RpcMethodNames.EmptyOkOnNonWindows but no Windows handler registered it.");
+        }
+
+        // Reverse direction: a Windows-only method registered by a handler but
+        // absent from the registry would be -32601 on portable hosts.
+        var listed = new HashSet<string>(RpcMethodNames.WindowsOnly, StringComparer.Ordinal);
+        listed.UnionWith(RpcMethodNames.EmptyOkOnNonWindows);
+        foreach (var method in rpc.RegisteredMethods)
+        {
+            if (listed.Contains(method))
+                continue;
+            if (method is "ping" or "app.getStatus" or "app.getLogPath" or "app.quit")
+                continue;
+            if (method.StartsWith("plugins.", StringComparison.Ordinal) ||
+                method.StartsWith("plugin.", StringComparison.Ordinal) ||
+                method.StartsWith("macro.", StringComparison.Ordinal))
+                continue;
+            Log.Instance.Warning($"RPC registry drift: '{method}' is registered on Windows but missing from RpcMethodNames (portable hosts would answer -32601).");
+        }
+#else
+        _ = rpc;
+#endif
+    }
+
+#if !WINDOWS
+    /// <summary>
+    /// Registers the Windows-only RPC domains as explicit "not supported"
+    /// responses so the Electron front end does not wait on unknown-method
+    /// errors. The method names come from RpcMethodNames - the same list the
+    /// Windows build is verified against - so the surfaces cannot drift.
+    /// </summary>
+    private static void RegisterPlatformUnsupportedHandlers(BridgeRpcServer rpc)
+    {
+        Task<BridgeResult> NotSupportedAsync(BridgeRequest request, CancellationToken cancellationToken)
+        {
+            _ = request;
+            _ = cancellationToken;
+            return Task.FromResult(BridgeResult.Error(
+                BridgeErrorCodes.PlatformNotSupported, "Not supported on this platform."));
+        }
+
+        foreach (var method in RpcMethodNames.WindowsOnly)
+            rpc.RegisterHandler(method, NotSupportedAsync);
+
+        // Telemetry polled unconditionally by the renderer: safe empty results.
+        foreach (var method in RpcMethodNames.EmptyOkOnNonWindows)
+        {
+            rpc.RegisterHandler(method, async (_, _) =>
+            {
+                await Task.CompletedTask;
+                return BridgeResult.Ok(new { });
+            });
+        }
+    }
+#endif
 
     private static async Task ShutdownAsync(HardwareInitializer initializer)
     {
@@ -166,6 +301,7 @@ public static class Program
         {
             await initializer.PersistOutcomeAndFinalizeAsync(success: true).ConfigureAwait(false);
 
+#if WINDOWS
             // Stop network acceleration worker and restore system proxy/hosts first.
             try
             {
@@ -228,6 +364,7 @@ public static class Program
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace($"Error stopping MacroController: {ex.Message}", ex);
             }
+#endif
 
             await StopPluginsAsync().ConfigureAwait(false);
 
@@ -299,6 +436,7 @@ public static class Program
         }
     }
 
+#if WINDOWS
     private static async Task FinalizeRuntimeProfilesAsync()
     {
         try
@@ -330,4 +468,5 @@ public static class Program
                 Log.Instance.Trace($"Runtime profile finalization failed: {ex.Message}", ex);
         }
     }
+#endif
 }

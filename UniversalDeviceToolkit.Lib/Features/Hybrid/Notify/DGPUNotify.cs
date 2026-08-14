@@ -62,8 +62,19 @@ public class DGPUNotify(DGPUGamezoneNotify gamezoneNotify, DGPUCapabilityNotify 
 
     private async Task<IDGPUNotify?> ResolveAsync()
     {
-        if (!ExperimentalGPUWorkingMode)
-            return await GamezoneNotify.IsSupportedAsync().ConfigureAwait(false) ? GamezoneNotify : null;
+        if (ExperimentalGPUWorkingMode)
+        {
+            if (await CapabilityNotify.IsSupportedAsync().ConfigureAwait(false))
+                return CapabilityNotify;
+
+            if (await FeatureFlagsNotify.IsSupportedAsync().ConfigureAwait(false))
+                return FeatureFlagsNotify;
+
+            return null;
+        }
+
+        if (await GamezoneNotify.IsSupportedAsync().ConfigureAwait(false))
+            return GamezoneNotify;
 
         if (await CapabilityNotify.IsSupportedAsync().ConfigureAwait(false))
             return CapabilityNotify;

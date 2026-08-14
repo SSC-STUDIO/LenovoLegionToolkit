@@ -22,8 +22,9 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// </summary>
 public static class MacroHandlers
 {
-    private const int RecordingNotAvailable = -1005;
+    private const int RecordingNotAvailable = BridgeErrorCodes.MacroHooksFailed;
 
+#if WINDOWS
     private static readonly object RecordingLock = new();
     private static readonly List<MacroEvent> RecordedEvents = [];
     private static GlobalInputHook? _recordingHook;
@@ -433,4 +434,31 @@ public static class MacroHandlers
             ? prop.GetBoolean()
             : fallback;
     }
+#else
+    public static void Register(BridgeRpcServer rpc)
+    {
+        // Global keyboard hooks are Windows-only; keep the RPC surface so the
+        // Electron client does not wait on unknown-method errors.
+        foreach (var method in new[]
+        {
+            "macro.getState",
+            "macro.setEnabled",
+            "macro.play",
+            "macro.startRecording",
+            "macro.stopRecording",
+            "macro.saveSequence",
+            "macro.clearSequence",
+        })
+        {
+            rpc.RegisterHandler(method, (_, _) => Task.FromResult(BridgeResult.Error(
+                BridgeErrorCodes.PlatformNotSupported,
+                "Macro recording/playback is not supported on this platform.")));
+        }
+    }
+
+    /// <summary>No-op: no global input hooks exist on non-Windows hosts.</summary>
+    public static void StopRecordingIfActive()
+    {
+    }
+#endif
 }

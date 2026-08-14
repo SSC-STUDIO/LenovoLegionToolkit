@@ -32,8 +32,6 @@ public class UpdateChecker
         "LenovoLegionToolkit"
     };
 
-    private const string PluginCatalogReleaseTag = "plugin-catalog";
-
     private DateTime _lastUpdate;
     private TimeSpan _minimumTimeSpanForRefresh;
     private Update[] _updates = [];
@@ -59,7 +57,7 @@ public class UpdateChecker
         return releases
             .Where(r => !r.Draft &&
                         (includePrerelease || !r.Prerelease) &&
-                        !string.Equals(r.TagName, PluginCatalogReleaseTag, StringComparison.OrdinalIgnoreCase))
+                        !PluginCatalogTags.IsCatalogTag(r.TagName))
             .ToArray();
     }
 

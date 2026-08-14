@@ -3,7 +3,7 @@ using UniversalDeviceToolkit.Abstractions.Hardware;
 
 namespace UniversalDeviceToolkit.Lib.Controllers;
 
-/// <summary>Adapts Windows keyboard controllers to the platform-neutral ViewModels layer.</summary>
+/// <summary>Adapts Windows keyboard controllers to the platform-neutral hardware abstractions.</summary>
 public sealed class KeyboardBacklightDetectionService(
     RGBKeyboardBacklightController rgbController,
     SpectrumKeyboardBacklightController spectrumController) : IKeyboardBacklightDetectionService

@@ -24,9 +24,9 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// </summary>
 public static class FeatureHandlers
 {
-    private const int NotSupported = -1001;
-    private const int AcRequired = -1002;
-    private const int UndefinedState = -1004;
+    private const int NotSupported = BridgeErrorCodes.FeatureNotSupported;
+    private const int AcRequired = BridgeErrorCodes.AcPowerRequired;
+    private const int UndefinedState = BridgeErrorCodes.UndefinedState;
 
     private static readonly Dictionary<string, IFeatureEntry> Features = new(StringComparer.Ordinal);
 
@@ -77,7 +77,7 @@ public static class FeatureHandlers
             var blocked = await hdr.IsHdrBlockedAsync().ConfigureAwait(false);
             return BridgeResult.Ok(new { blocked });
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             // WPF catches and re-enables the toggle — treat as not blocked.
             return BridgeResult.Ok(new { blocked = false });

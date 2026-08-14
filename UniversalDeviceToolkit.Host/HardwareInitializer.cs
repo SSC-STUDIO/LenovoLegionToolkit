@@ -5,22 +5,23 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Plugins;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Host.Rpc;
+#if WINDOWS
 using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Controllers;
-using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
 using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.Overclocking.Amd;
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Services;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
-using UniversalDeviceToolkit.Lib.Utils;
-using UniversalDeviceToolkit.Host.Rpc;
+#endif
 
 namespace UniversalDeviceToolkit.Host;
 
@@ -61,7 +62,9 @@ public sealed class HardwareInitializer
     {
         DetermineAndApplySafeStartMode();
         await LoadPluginsAsync().ConfigureAwait(false);
+#if WINDOWS
         await RunNetworkStartupRecoveryAsync().ConfigureAwait(false);
+#endif
         _backgroundTask = Task.Run(() => RunBackgroundInitializationAsync(_cts.Token), _cts.Token);
     }
 
@@ -135,12 +138,14 @@ public sealed class HardwareInitializer
             return;
         }
 
+#if WINDOWS
         var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
         if (!applicationSettings.Store.ExtensionsEnabled)
         {
             Log.Instance.Trace("Extensions disabled in settings; skipping plugin directory scan.");
             return;
         }
+#endif
 
         if (!HasInstalledPlugins())
         {
@@ -169,6 +174,7 @@ public sealed class HardwareInitializer
             .SelectMany(path => Directory.EnumerateDirectories(path))
             .Any(PluginPaths.ContainsPlugin);
 
+#if WINDOWS
     private static async Task RunNetworkStartupRecoveryAsync()
     {
         try
@@ -182,6 +188,7 @@ public sealed class HardwareInitializer
                 Log.Instance.Trace($"Network startup recovery failed: {ex.Message}", ex);
         }
     }
+#endif
 
     private async Task RunBackgroundInitializationAsync(CancellationToken cancellationToken)
     {
@@ -197,6 +204,7 @@ public sealed class HardwareInitializer
 
             if (!_flags.NoHardware)
             {
+#if WINDOWS
                 var runner = new StartupInitializationRunner(_guard ?? new StartupHealthGuard(), safeStart: _shouldEnterSafeMode);
                 for (var i = 0; i < initializationSteps.Length; i++)
                 {
@@ -213,6 +221,12 @@ public sealed class HardwareInitializer
                 }
 
                 await RunWithLimitedConcurrencyAsync(serviceStartSteps, ServiceStartConcurrency, cancellationToken).ConfigureAwait(false);
+#else
+                // Non-Windows: no hardware initialization steps are available.
+                // The CLI IpcServer (named-pipe bridge) is intentionally skipped
+                // here; the host talks to the front end over stdio (BridgeRpcServer).
+                _skippedSteps = NonWindowsSkippedSteps;
+#endif
             }
 
             completedCleanly = true;
@@ -250,13 +264,12 @@ public sealed class HardwareInitializer
         }
     }
 
+#if WINDOWS
     public (Func<Task>[] initializationSteps, Func<Task>[] serviceStartSteps) GetBackgroundInitializationSteps()
     {
         var vantageDisabler = IoCContainer.Resolve<VantageDisabler>();
         var legionZoneDisabler = IoCContainer.Resolve<LegionZoneDisabler>();
         var fnKeysDisabler = IoCContainer.Resolve<FnKeysDisabler>();
-        var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
-        var sensorsGroupController = IoCContainer.Resolve<SensorsGroupController>();
         var lampArrayController = IoCContainer.Resolve<LampArrayController>();
         var lampArraySettings = IoCContainer.Resolve<LampArraySettings>();
         var powerModeFeature = IoCContainer.Resolve<PowerModeFeature>();
@@ -279,7 +292,6 @@ public sealed class HardwareInitializer
             Func<Task>[] safeBg =
             [
                 () => LogSoftwareStatusAsync(vantageDisabler, legionZoneDisabler, fnKeysDisabler),
-                () => InitSensorsGroupControllerFeatureAsync(applicationSettings, sensorsGroupController),
             ];
             Func<Task>[] safePost =
             [
@@ -298,7 +310,6 @@ public sealed class HardwareInitializer
         [
             () => LogSoftwareStatusAsync(vantageDisabler, legionZoneDisabler, fnKeysDisabler),
             () => InitControllerAsync(lampArrayController, lampArraySettings),
-            () => InitSensorsGroupControllerFeatureAsync(applicationSettings, sensorsGroupController),
             () => InitPowerModeFeatureAsync(powerModeFeature),
             () => InitItsModeFeatureAsync(itsModeFeature),
             () => InitBatteryFeatureAsync(batteryFeature),
@@ -319,6 +330,24 @@ public sealed class HardwareInitializer
         ];
         return (bgSteps, postSteps);
     }
+#else
+    /// <summary>
+    /// Windows hardware/service step names reported as skipped on portable
+    /// hosts (host.initialized event, consumed by the Electron startup gates).
+    /// </summary>
+    private static readonly string[] NonWindowsSkippedSteps =
+    [
+        "lamp-array", "power-mode", "its-mode", "battery-feature", "rgb-keyboard",
+        "spectrum-keyboard", "gpu-overclock", "hybrid-mode", "fan-manager",
+        "amd-overclock", "automation-processor", "ai-controller", "hwinfo", "battery-monitor",
+    ];
+
+    public (Func<Task>[] initializationSteps, Func<Task>[] serviceStartSteps) GetBackgroundInitializationSteps()
+    {
+        _skippedSteps = NonWindowsSkippedSteps;
+        return ([], []);
+    }
+#endif
 
     private void PersistStartupHealthOutcome(Exception? failure = null)
     {
@@ -348,6 +377,7 @@ public sealed class HardwareInitializer
         await StopAsync().ConfigureAwait(false);
     }
 
+#if WINDOWS
     private static async Task RunWithLimitedConcurrencyAsync(
         IReadOnlyList<Func<Task>> steps,
         int maxConcurrency,
@@ -421,21 +451,6 @@ public sealed class HardwareInitializer
         await RunWithErrorHandlingAsync(
             () => controller.InitializeAsync(settings),
             "lamp array controller",
-            false
-        );
-    }
-
-    private static async Task InitSensorsGroupControllerFeatureAsync(ApplicationSettings settings, SensorsGroupController controller)
-    {
-        await RunWithErrorHandlingAsync(
-            async () =>
-            {
-                if (!settings.Store.EnableHardwareSensors)
-                    return;
-
-                _ = await controller.IsSupportedAsync();
-            },
-            "sensors group controller",
             false
         );
     }
@@ -650,4 +665,5 @@ public sealed class HardwareInitializer
             "automation processor"
         );
     }
+#endif
 }

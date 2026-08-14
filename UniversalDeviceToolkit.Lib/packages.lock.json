@@ -383,7 +383,7 @@
       "universaldevicetoolkit.lib.shared": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
         }
       },
       "Microsoft.Extensions.Logging.Abstractions": {

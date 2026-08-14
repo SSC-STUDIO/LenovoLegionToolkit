@@ -16,6 +16,12 @@
 	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
 		<_Parameter1>UniversalDeviceToolkit.Tests</_Parameter1>
 	</AssemblyAttribute>
+	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+		<_Parameter1>UniversalDeviceToolkit.Tests.Contracts</_Parameter1>
+	</AssemblyAttribute>
+	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+		<_Parameter1>UniversalDeviceToolkit.Tests.Stateful</_Parameter1>
+	</AssemblyAttribute>
 </ItemGroup>
 
 <ItemGroup>

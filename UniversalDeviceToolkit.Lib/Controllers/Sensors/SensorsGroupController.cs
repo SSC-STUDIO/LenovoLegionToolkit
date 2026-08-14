@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -50,7 +51,7 @@ public class SensorsGroupController : IDisposable
 
     #region Dependencies
 
-    private readonly GPUController _gpuController = IoCContainer.Resolve<GPUController>();
+    private readonly GPUController _gpuController;
     private readonly IDelayProvider _delayProvider;
 
     #endregion
@@ -65,8 +66,23 @@ public class SensorsGroupController : IDisposable
     #endregion
 
     public SensorsGroupController(IDelayProvider delayProvider)
+        : this(delayProvider, IoCContainer.Resolve<GPUController>())
+    {
+    }
+
+    internal SensorsGroupController(IDelayProvider delayProvider, GPUController gpuController)
     {
         _delayProvider = delayProvider;
+        _gpuController = gpuController;
+    }
+
+    internal int SubscriberCount
+    {
+        get
+        {
+            lock (_subscribers)
+                return _subscribers.Count;
+        }
     }
 
     #region Configuration Properties

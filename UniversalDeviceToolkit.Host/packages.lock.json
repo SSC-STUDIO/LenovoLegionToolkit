@@ -236,8 +236,8 @@
           "System.Management": "[10.0.10, )",
           "System.ServiceProcess.ServiceController": "[10.0.10, )",
           "TaskScheduler": "[2.12.2, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )",
-          "UniversalDeviceToolkit.Lib.Shared": "[5.0.2, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Shared": "[6.0.0, )",
           "UniversalFanControl.Lib": "[1.0.4, )",
           "WindowsDisplayAPI": "[1.3.0.13, )",
           "ZenStates-Core": "[1.0.1, )"
@@ -251,17 +251,17 @@
         "dependencies": {
           "Autofac": "[9.3.2, )",
           "NeoSmart.AsyncLock": "[3.2.1, )",
-          "UniversalDeviceToolkit.CLI.Lib": "[5.0.2, )",
-          "UniversalDeviceToolkit.Lib": "[5.0.2, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )",
-          "UniversalDeviceToolkit.Lib.Plugins": "[5.0.2, )"
+          "UniversalDeviceToolkit.CLI.Lib": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Plugins": "[6.0.0, )"
         }
       },
       "universaldevicetoolkit.lib.macro": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib": "[5.0.2, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
+          "UniversalDeviceToolkit.Lib": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
         }
       },
       "universaldevicetoolkit.lib.plugins": {
@@ -269,13 +269,13 @@
         "dependencies": {
           "Autofac": "[9.3.2, )",
           "System.Security.Cryptography.ProtectedData": "[10.0.10, )",
-          "UniversalDeviceToolkit.Lib": "[5.0.2, )"
+          "UniversalDeviceToolkit.Lib": "[6.0.0, )"
         }
       },
       "universaldevicetoolkit.lib.shared": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[5.0.2, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
         }
       },
       "Autofac": {

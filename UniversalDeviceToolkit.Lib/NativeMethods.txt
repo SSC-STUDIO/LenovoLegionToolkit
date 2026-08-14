@@ -108,6 +108,10 @@ PROCESS_POWER_THROTTLING_EXECUTION_SPEED
 GetCurrentProcess
 SetProcessInformation
 SetPriorityClass
+OpenProcess
+CloseHandle
+PROCESS_ACCESS_RIGHTS
+PROCESS_CREATION_FLAGS
 
 GetSystemInfo
 CallNtPowerInformation

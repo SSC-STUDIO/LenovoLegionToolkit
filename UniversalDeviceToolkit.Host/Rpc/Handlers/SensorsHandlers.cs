@@ -20,8 +20,14 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// </summary>
 public static class SensorsHandlers
 {
-    private sealed class SensorSubscriber { public static readonly SensorSubscriber Instance = new(); }
+    private sealed class SensorSubscriber
+    {
+        public static object Named(string id) => id;
+    }
 
+    private static readonly object SubscribeLock = new();
+    private static readonly HashSet<string> VendorSubscriberIds = new(StringComparer.Ordinal);
+    private static readonly Dictionary<string, double> VendorIntervals = new(StringComparer.Ordinal);
     private static readonly object FpsLock = new();
     private static int _fpsSubscriberCount;
     private static SensorsGroupController? _subscribedGroup;
@@ -132,6 +138,9 @@ public static class SensorsHandlers
 
         var ssdTemps = ssdTempsTask.Result;
         var battery = await BuildBatteryAsync().ConfigureAwait(false);
+        var (cpuName, gpuName) = await MergeHardwareNamesAsync(
+            NullIf(cpuNameTask.Result, "UNKNOWN"),
+            NullIf(gpuNameTask.Result, "UNKNOWN")).ConfigureAwait(false);
 
         // LibreHardwareMonitor may initialize without exposing any CPU/GPU
         // sensors (e.g. without administrator rights). Treat that as "no data"
@@ -151,8 +160,8 @@ public static class SensorsHandlers
             isHybrid = group.IsHybrid,
             info = new
             {
-                cpuName = NullIf(cpuNameTask.Result, "UNKNOWN"),
-                gpuName = NullIf(gpuNameTask.Result, "UNKNOWN"),
+                cpuName,
+                gpuName,
                 gpuIsIntegrated = gpuIsIntegratedTask.Result,
             },
             cpu = new
@@ -181,8 +190,9 @@ public static class SensorsHandlers
                 vramTemperature = NullIf(gpuVramTempTask.Result),
                 hotSpotTemperature = NullIf(gpuHotSpotTask.Result),
                 vramUtilization = NullIf(gpuVramUtilTask.Result),
-                vramUsedMb = NullIf(gpuVramUsedTask.Result),
-                vramTotalMb = gpuVramTotalTask.Result >= 0 ? (float?)(gpuVramTotalTask.Result * 1024f) : null,
+                // GetGpuVramUsed/TotalAsync return GiB; bridge fields are MiB.
+                vramUsedMb = GigabytesToMegabytes(gpuVramUsedTask.Result),
+                vramTotalMb = GigabytesToMegabytes(gpuVramTotalTask.Result),
                 pcieRxThroughput = NullIf(gpuPcieRxTask.Result),
                 pcieTxThroughput = NullIf(gpuPcieTxTask.Result),
                 fanSpeed = NullIf(gpuFanTask.Result),
@@ -190,8 +200,9 @@ public static class SensorsHandlers
             memory = new
             {
                 usage = NullIf(memUsageTask.Result),
-                usedMb = NullIf(memUsedTask.Result),
-                totalMb = NullIf(memTotalTask.Result),
+                // LHM SensorType.Data is GiB; bridge fields are MiB.
+                usedMb = GigabytesToMegabytes(memUsedTask.Result),
+                totalMb = GigabytesToMegabytes(memTotalTask.Result),
                 highestTemperature = NullIf(memMaxTempTask.Result),
             },
             battery,
@@ -220,13 +231,26 @@ public static class SensorsHandlers
         }
 
         var battery = await BuildBatteryAsync().ConfigureAwait(false);
+        var group = GetSensorsGroup();
+        var (cpuName, gpuName) = await MergeHardwareNamesAsync(null, null).ConfigureAwait(false);
+        var gpuIsIntegrated = false;
+        try
+        {
+            if (group.IsLibreHardwareMonitorInitialized())
+                gpuIsIntegrated = await group.IsCurrentGpuIntegratedAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            // Best-effort; vendor snapshot still returns sensor readings.
+        }
+
         return new
         {
             ts = DateTime.UtcNow,
             source = "vendor",
             initialized = true,
             isHybrid = false,
-            info = new { cpuName = (string?)null, gpuName = (string?)null, gpuIsIntegrated = false },
+            info = new { cpuName, gpuName, gpuIsIntegrated },
             cpu = new
             {
                 temperature = NullIf(data.CPU.Temperature),
@@ -300,22 +324,24 @@ public static class SensorsHandlers
         {
             var group = GetSensorsGroup();
             var initialized = group.IsLibreHardwareMonitorInitialized();
-            var cpuName = "UNKNOWN";
-            var gpuName = "UNKNOWN";
+            string? cpuName = null;
+            string? gpuName = null;
             var gpuIsIntegrated = false;
             if (initialized)
             {
-                cpuName = await group.GetCpuNameAsync().ConfigureAwait(false);
-                gpuName = await group.GetGpuNameAsync().ConfigureAwait(false);
+                cpuName = NullIf(await group.GetCpuNameAsync().ConfigureAwait(false), "UNKNOWN");
+                gpuName = NullIf(await group.GetGpuNameAsync().ConfigureAwait(false), "UNKNOWN");
                 gpuIsIntegrated = await group.IsCurrentGpuIntegratedAsync().ConfigureAwait(false);
             }
+
+            (cpuName, gpuName) = await MergeHardwareNamesAsync(cpuName, gpuName).ConfigureAwait(false);
 
             return BridgeResult.Ok(new
             {
                 initialized,
                 isHybrid = group.IsHybrid,
-                cpuName = NullIf(cpuName, "UNKNOWN"),
-                gpuName = NullIf(gpuName, "UNKNOWN"),
+                cpuName,
+                gpuName,
                 gpuIsIntegrated,
                 initialState = group.InitialState.ToString(),
             });
@@ -376,45 +402,64 @@ public static class SensorsHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleSubscribeAsync(BridgeRequest request, BridgeRpcServer rpc)
+    private static string ReadSubscriberId(BridgeRequest request)
     {
+        if (request.Parameters.ValueKind == JsonValueKind.Object &&
+            request.Parameters.TryGetProperty("subscriberId", out var prop) &&
+            prop.ValueKind == JsonValueKind.String)
+        {
+            var id = prop.GetString();
+            if (!string.IsNullOrWhiteSpace(id))
+                return id;
+        }
+
+        return "ui";
+    }
+
+    private static async Task EnsureLibreHardwareMonitorAsync()
+    {
+        var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
+        if (!applicationSettings.Store.EnableHardwareSensors)
+            return;
+
+        var group = GetSensorsGroup();
+        if (group.IsLibreHardwareMonitorInitialized())
+            return;
+
         try
         {
-            var intervalSec = 1.0;
-            if (request.Parameters.TryGetProperty("intervalSec", out var intervalProp) &&
-                intervalProp.ValueKind == JsonValueKind.Number)
+            _ = await group.IsSupportedAsync().ConfigureAwait(false);
+        }
+        catch
+        {
+            // Vendor fallback in HandleSubscribeAsync.
+        }
+    }
+
+    private static void StopVendorTimerIfIdle()
+    {
+        lock (SubscribeLock)
+        {
+            if (VendorSubscriberIds.Count > 0)
+                return;
+            _vendorPollTimer?.Dispose();
+            _vendorPollTimer = null;
+        }
+    }
+
+    private static void StartOrUpdateVendorTimer(BridgeRpcServer rpc)
+    {
+        lock (SubscribeLock)
+        {
+            if (VendorSubscriberIds.Count == 0)
             {
-                intervalSec = intervalProp.GetDouble();
+                _vendorPollTimer?.Dispose();
+                _vendorPollTimer = null;
+                return;
             }
 
-            intervalSec = Math.Clamp(intervalSec, 0.5, 30.0);
-
-            var group = GetSensorsGroup();
-
-            // LibreHardwareMonitor path: the group's producer loop raises
-            // SensorsUpdated only after LHM initialization succeeds.
-            // LHM may be marked initialized while exposing no readable sensors
-            // (e.g. NVAPI/performance counters unavailable) — in that case the
-            // vendor fallback below is stable, whereas the LHM loop would
-            // publish nothing but null frames.
-            if (group.IsLibreHardwareMonitorInitialized() && await LhmHasSensorDataAsync(group).ConfigureAwait(false))
-            {
-                _subscribedGroup = group;
-                _sensorsRpc = rpc;
-                group.SensorsUpdated -= OnSensorsUpdated;
-                group.SensorsUpdated += OnSensorsUpdated;
-                group.Start(SensorSubscriber.Instance, TimeSpan.FromSeconds(intervalSec));
-
-                await Task.CompletedTask;
-                return BridgeResult.Ok(new { subscribed = true, effectiveIntervalSec = intervalSec });
-            }
-
-            // Vendor fallback path (EnableHardwareSensors off / LHM unavailable):
-            // poll BuildSnapshotAsync on the interval and broadcast the same
-            // sensors.updated event the renderer subscribes to.
-            _subscribedGroup = null;
+            _vendorPollIntervalSec = VendorIntervals.Values.Min();
             _sensorsRpc = rpc;
-            _vendorPollIntervalSec = intervalSec;
             _vendorPollTimer?.Dispose();
             _vendorPollTimer = new System.Threading.Timer(
                 async _ =>
@@ -433,8 +478,62 @@ public static class SensorsHandlers
                     }
                 },
                 null,
-                TimeSpan.FromSeconds(intervalSec),
-                TimeSpan.FromSeconds(intervalSec));
+                TimeSpan.FromSeconds(_vendorPollIntervalSec),
+                TimeSpan.FromSeconds(_vendorPollIntervalSec));
+        }
+    }
+
+    private static async Task<BridgeResult> HandleSubscribeAsync(BridgeRequest request, BridgeRpcServer rpc)
+    {
+        try
+        {
+            var intervalSec = 1.0;
+            if (request.Parameters.TryGetProperty("intervalSec", out var intervalProp) &&
+                intervalProp.ValueKind == JsonValueKind.Number)
+            {
+                intervalSec = intervalProp.GetDouble();
+            }
+
+            intervalSec = Math.Clamp(intervalSec, 0.5, 30.0);
+            var subscriberId = ReadSubscriberId(request);
+            var subscriber = SensorSubscriber.Named(subscriberId);
+
+            await EnsureLibreHardwareMonitorAsync().ConfigureAwait(false);
+
+            var group = GetSensorsGroup();
+
+            // LibreHardwareMonitor path: the group's producer loop raises
+            // SensorsUpdated only after LHM initialization succeeds.
+            // LHM may be marked initialized while exposing no readable sensors
+            // (e.g. NVAPI/performance counters unavailable) — in that case the
+            // vendor fallback below is stable, whereas the LHM loop would
+            // publish nothing but null frames.
+            if (group.IsLibreHardwareMonitorInitialized() && await LhmHasSensorDataAsync(group).ConfigureAwait(false))
+            {
+                lock (SubscribeLock)
+                {
+                    VendorSubscriberIds.Remove(subscriberId);
+                    VendorIntervals.Remove(subscriberId);
+                }
+                StopVendorTimerIfIdle();
+
+                _subscribedGroup = group;
+                _sensorsRpc = rpc;
+                group.SensorsUpdated -= OnSensorsUpdated;
+                group.SensorsUpdated += OnSensorsUpdated;
+                group.Start(subscriber, TimeSpan.FromSeconds(intervalSec));
+
+                await Task.CompletedTask;
+                return BridgeResult.Ok(new { subscribed = true, effectiveIntervalSec = intervalSec });
+            }
+
+            lock (SubscribeLock)
+            {
+                VendorSubscriberIds.Add(subscriberId);
+                VendorIntervals[subscriberId] = intervalSec;
+            }
+            _subscribedGroup = null;
+            StartOrUpdateVendorTimer(rpc);
 
             await Task.CompletedTask;
             return BridgeResult.Ok(new { subscribed = true, effectiveIntervalSec = intervalSec });
@@ -449,13 +548,24 @@ public static class SensorsHandlers
     {
         try
         {
+            var subscriberId = ReadSubscriberId(request);
+            var subscriber = SensorSubscriber.Named(subscriberId);
             var group = GetSensorsGroup();
-            group.Stop(SensorSubscriber.Instance);
-            group.SensorsUpdated -= OnSensorsUpdated;
-            _subscribedGroup = null;
-            _vendorPollTimer?.Dispose();
-            _vendorPollTimer = null;
-            _sensorsRpc = null;
+            group.Stop(subscriber);
+            lock (SubscribeLock)
+            {
+                VendorSubscriberIds.Remove(subscriberId);
+                VendorIntervals.Remove(subscriberId);
+                if (VendorSubscriberIds.Count == 0 && !group.IsLibreHardwareMonitorInitialized())
+                {
+                    group.SensorsUpdated -= OnSensorsUpdated;
+                    _subscribedGroup = null;
+                    _sensorsRpc = null;
+                }
+            }
+            StopVendorTimerIfIdle();
+            if (VendorSubscriberIds.Count > 0 && _sensorsRpc is not null)
+                StartOrUpdateVendorTimer(_sensorsRpc);
             await Task.CompletedTask;
             return BridgeResult.Ok(new { unsubscribed = true });
         }
@@ -736,6 +846,36 @@ public static class SensorsHandlers
             return false;
         }
     }
+
+    private static async Task<(string? CpuName, string? GpuName)> MergeHardwareNamesAsync(
+        string? cpuName,
+        string? gpuName)
+    {
+        if (!string.IsNullOrWhiteSpace(cpuName) && !string.IsNullOrWhiteSpace(gpuName))
+            return (cpuName, gpuName);
+
+        try
+        {
+            var inventory = await HardwareInventoryProvider.ReadAsync().ConfigureAwait(false);
+            cpuName ??= NullIfBlank(inventory.PrimaryProcessorName);
+            gpuName ??= NullIfBlank(inventory.PrimaryVideoControllerName);
+        }
+        catch
+        {
+            // WMI inventory is optional; keep any names already resolved.
+        }
+
+        return (cpuName, gpuName);
+    }
+
+    private static string? NullIfBlank(string? value) => string.IsNullOrWhiteSpace(value) ? null : value;
+
+    /// <summary>
+    /// Converts LibreHardwareMonitor Data / GetGpuVram* gigabyte readings into
+    /// the MiB values expected by Electron <c>*Mb</c> snapshot fields.
+    /// </summary>
+    internal static float? GigabytesToMegabytes(float gigabytes)
+        => HasValue(gigabytes) ? gigabytes * 1024f : null;
 
     private static float? NullIf(float value) => HasValue(value) ? value : null;
     private static double? NullIf(double value) => value <= 0 ? null : value;

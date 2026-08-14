@@ -48,8 +48,20 @@ echo --- Building Platform.Windows ---
 dotnet build UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj --configuration Release --verbosity minimal
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
+REM The self-contained Host publish is the assembly graph plugins compile
+REM against (Lib/Lib.Plugins) and the source of the language pack satellites,
+REM so it must exist before plugin staging and Build-LanguageAssets.
+echo --- Publishing self-contained Host ---
+dotnet publish UniversalDeviceToolkit.Host\UniversalDeviceToolkit.Host.csproj -c Release --runtime win-x64 --self-contained true --output UniversalDeviceToolkit.Host\publish\win-x64 /p:DebugType=None /p:FileVersion=%VERSION% /p:Version=%VERSION%
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Prune-ShippingFootprint.ps1" -PayloadPath "UniversalDeviceToolkit.Host\publish\win-x64" -AllowedCultures "ar;bg;cs;de;el;en;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;uz-latn-uz;vi;zh-hans;zh-hant"
+IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
+
+IF %ERROR_COUNT% NEQ 0 GOTO END
+
 REM Stage plugin runtime DLLs (SDK/Shared) from the in-tree Plugins solution before the payload assert.
-powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-PluginRuntimeAssets.ps1" -DestinationPath "%BUILD_DIR%" -Configuration Release
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-PluginRuntimeAssets.ps1" -HostSourceDir "UniversalDeviceToolkit.Host\publish\win-x64" -DestinationPath "%BUILD_DIR%" -Configuration Release
 IF %ERRORLEVEL% NEQ 0 set ERROR_COUNT=1
 
 IF %ERROR_COUNT% NEQ 0 GOTO END
@@ -63,25 +75,27 @@ IF %ERROR_COUNT% NEQ 0 GOTO END
 CALL :PRUNE_RELEASE_OUTPUT "%BUILD_DIR%"
 IF %ERROR_COUNT% NEQ 0 GOTO END
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -BuildDir "%BUILD_DIR%" -OnlineBuildDir "%BUILD_ONLINE_DIR%" -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -BuildDir "%BUILD_DIR%" -HostBuildDir "UniversalDeviceToolkit.Host\publish\win-x64" -OnlineBuildDir "%BUILD_ONLINE_DIR%" -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%"
 IF %ERRORLEVEL% NEQ 0 (
     echo Release asset preparation failed.
     set ERROR_COUNT=1
 )
 
-REM Self-built WPF installer (Tools\Installer) — Inno Setup is retired.
-powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-InstallerAssets.ps1" -Version "%VERSION%" -ReleaseOutput "%RELEASE_ASSET_DIR%" -InstallerOutput "BuildInstaller"
+IF %ERROR_COUNT% NEQ 0 GOTO END
+
+REM Electron NSIS installer (replaces the retired WPF installer / Inno Setup).
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-ElectronInstaller.ps1" -Version "%VERSION%" -InstallerOutput "BuildInstaller"
 IF %ERRORLEVEL% NEQ 0 (
     echo Installer build failed.
     set ERROR_COUNT=1
 )
 
-if not exist "BuildInstaller\UniversalDeviceToolkitSetup-Full.exe" (
-    echo Expected full installer was not created.
+if not exist "BuildInstaller\UniversalDeviceToolkitSetup.exe" (
+    echo Expected Electron Full installer was not created.
     set ERROR_COUNT=1
 )
-if not exist "BuildInstaller\UniversalDeviceToolkitSetup-Online.exe" (
-    echo Expected online installer was not created.
+if not exist "BuildInstaller\UniversalDeviceToolkitOnlineSetup.exe" (
+    echo Expected Electron Online installer was not created.
     set ERROR_COUNT=1
 )
 
@@ -98,7 +112,7 @@ IF "%ENABLE_CROSS_PLATFORM_CLI%"=="1" (
 SET CROSS_PLATFORM_CLI_FINALIZE_ARG=
 IF "%ENABLE_CROSS_PLATFORM_CLI%"=="1" SET CROSS_PLATFORM_CLI_FINALIZE_ARG=-IncludeCrossPlatformCli
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -FinalizeOnly -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%" -FullInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup-Full.exe" -OnlineInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup-Online.exe" %CROSS_PLATFORM_CLI_FINALIZE_ARG%
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -FinalizeOnly -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%" -FullInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup.exe" -OnlineInstallerPath "BuildInstaller\UniversalDeviceToolkitOnlineSetup.exe" %CROSS_PLATFORM_CLI_FINALIZE_ARG%
 IF %ERRORLEVEL% NEQ 0 (
     echo Release asset finalization failed.
     set ERROR_COUNT=1
@@ -175,11 +189,9 @@ for %%p in (
     UniversalDeviceToolkit.Lib.Macro
     UniversalDeviceToolkit.Lib.Plugins
     UniversalDeviceToolkit.SpectrumTester
-    UniversalDeviceToolkit.PerformanceTest
     UniversalDeviceToolkit.Tests
     UniversalDeviceToolkit.CrossPlatform
     UniversalDeviceToolkit.Platform.Windows
-    UniversalDeviceToolkit.ViewModels
     UniversalDeviceToolkit.Lib.Abstractions
     UniversalDeviceToolkit.Lib.Shared
     Plugins\SDK\Abstractions

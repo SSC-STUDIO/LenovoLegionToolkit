@@ -83,44 +83,74 @@ public class Log : IDisposable
 
     public string LogPath => _folderPath;
 
-    internal Log(bool _forTesting)
+    /// <summary>
+    /// Optional sink used by the Host to forward each Serilog line as a
+    /// <c>host.log</c> bridge event for the Electron shell.
+    /// </summary>
+    public static Action<string>? BridgeLineSink { get; set; }
+
+    private static string ResolveLogFolder()
     {
-        _folderPath = Path.Combine(Folders.AppData, "logs");
-        Directory.CreateDirectory(_folderPath);
+        var fromEnv = Environment.GetEnvironmentVariable("UDT_LOG_PATH")
+            ?? Environment.GetEnvironmentVariable("LLT_LOG_PATH");
+        if (!string.IsNullOrWhiteSpace(fromEnv))
+        {
+            Directory.CreateDirectory(fromEnv);
+            return fromEnv;
+        }
 
-        _levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
+        var folderPath = Path.Combine(Folders.AppData, "logs");
+        Directory.CreateDirectory(folderPath);
+        return folderPath;
+    }
 
-        _logger = new LoggerConfiguration()
-            .MinimumLevel.ControlledBy(_levelSwitch)
+    private static Logger CreateSerilogLogger(string folderPath, LoggingLevelSwitch levelSwitch)
+    {
+        return new LoggerConfiguration()
+            .MinimumLevel.ControlledBy(levelSwitch)
             .Enrich.WithProperty("Application", AppIdentity.CompactName)
+            .WriteTo.Sink(new BridgeLogEventSink())
             .WriteTo.Async(wt => wt.File(
                 new Serilog.Formatting.Json.JsonFormatter(),
-                Path.Combine(_folderPath, "log-.json"),
+                Path.Combine(folderPath, "log-.json"),
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 10,
                 fileSizeLimitBytes: 50 * 1024 * 1024
+            ))
+            .WriteTo.Async(wt => wt.File(
+                Path.Combine(folderPath, "host.log"),
+                outputTemplate: "{Timestamp:o} [{Level:u3}] {Message:lj}{NewLine}{Exception}",
+                fileSizeLimitBytes: 10 * 1024 * 1024,
+                rollOnFileSizeLimit: true,
+                retainedFileCountLimit: 2
             ))
             .CreateLogger();
     }
 
+    private sealed class BridgeLogEventSink : ILogEventSink
+    {
+        public void Emit(LogEvent logEvent)
+        {
+            var sink = BridgeLineSink;
+            if (sink is null)
+                return;
+
+            sink($"{logEvent.Timestamp:o} [{logEvent.Level}] {logEvent.RenderMessage()}");
+        }
+    }
+
+    internal Log(bool _forTesting)
+    {
+        _folderPath = ResolveLogFolder();
+        _levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
+        _logger = CreateSerilogLogger(_folderPath, _levelSwitch);
+    }
+
     private Log()
     {
-        _folderPath = Path.Combine(Folders.AppData, "logs");
-        Directory.CreateDirectory(_folderPath);
-
+        _folderPath = ResolveLogFolder();
         _levelSwitch = new LoggingLevelSwitch(LogEventLevel.Verbose);
-
-        _logger = new LoggerConfiguration()
-            .MinimumLevel.ControlledBy(_levelSwitch)
-            .Enrich.WithProperty("Application", AppIdentity.CompactName)
-            .WriteTo.Async(wt => wt.File(
-                new Serilog.Formatting.Json.JsonFormatter(),
-                Path.Combine(_folderPath, "log-.json"),
-                rollingInterval: RollingInterval.Day,
-                retainedFileCountLimit: 10,
-                fileSizeLimitBytes: 50 * 1024 * 1024
-            ))
-            .CreateLogger();
+        _logger = CreateSerilogLogger(_folderPath, _levelSwitch);
     }
 
     public void ErrorReport(string header, Exception ex)

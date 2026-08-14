@@ -1,7 +1,9 @@
 using Autofac;
+#if WINDOWS
 using UniversalDeviceToolkit.Host.Settings;
 using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Controllers;
+#endif
 using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Host;
@@ -18,6 +20,7 @@ public class BridgeModule : Module
             .As<IMainThreadDispatcher>()
             .SingleInstance();
 
+#if WINDOWS
         builder.RegisterType<HostDashboardSettings>()
             .SingleInstance();
 
@@ -31,5 +34,6 @@ public class BridgeModule : Module
         builder.RegisterType<AIController>()
             .AsSelf()
             .SingleInstance();
+#endif
     }
 }

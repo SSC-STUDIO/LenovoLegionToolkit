@@ -9,8 +9,9 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 
 /// <summary>
 /// Startup behavior bridge — mirrors the WPF SettingsApplicationBehaviorControl
-/// autorun combo (AutorunState: Enabled / EnabledDelayed / Disabled) backed by
-/// the Lib Autorun helper (scheduled task based).
+/// autorun combo (AutorunState: Enabled / EnabledDelayed / Disabled).
+/// On Windows this is a logon scheduled task. Electron sets UDT_SHELL_PATH so
+/// the task launches the UI shell rather than Host.exe.
 /// </summary>
 public static class StartupHandlers
 {

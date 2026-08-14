@@ -41,6 +41,8 @@ Build-English/
 BuildInstaller/
 BuildPages/
 BuildRelease/
+# Electron packaging assets live in UniversalDeviceToolkit.Electron/buildResources/
+# (not build/) so this Visual Studio Build/ ignore does not drop icon.ico.
 release-assets/
 .avalonia-build-tasks/
 
@@ -682,9 +684,10 @@ agent-transcripts/
 _size_bench_publish/
 
 *.tmp
-# Local zip dumps only — force-track intentional fixtures (e.g. LanguagePackMockBackend/_serve/*.zip)
+**/TestResults/
+*.trx
+*.dmp
 *.zip
-!Tools/LanguagePackMockBackend/**/*.zip
 !resources/**/*.zip
 build_debug_log.txt
 
@@ -694,3 +697,10 @@ build_debug_log.txt
 /UniversalDeviceToolkit.Electron/out/
 
 /UniversalDeviceToolkit.Electron/*.tsbuildinfo
+/UniversalDeviceToolkit.Electron/resources/install-channel
+
+# Local Host inspect dumps
+.codex-host-inspect/
+
+# Local visual-regression / padding screenshots (do not commit)
+/UniversalDeviceToolkit.Electron/_pad_*.png

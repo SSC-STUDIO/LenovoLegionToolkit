@@ -23,12 +23,10 @@
     <PackageVersion Include="Serilog.Sinks.Async" Version="2.1.0" />
   </ItemGroup>
 
-  <!-- ==================== WPF/UI Dependencies ==================== -->
+  <!-- ==================== UI Dependencies ==================== -->
   <ItemGroup>
-    <PackageVersion Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <PackageVersion Include="Humanizer" Version="3.0.10" />
     <PackageVersion Include="Markdig" Version="1.3.2" />
-    <PackageVersion Include="WPF-UI" Version="4.3.0" />
   </ItemGroup>
 
   <!-- ==================== Lib Project Dependencies ==================== -->

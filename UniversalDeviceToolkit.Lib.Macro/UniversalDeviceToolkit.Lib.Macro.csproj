@@ -6,11 +6,19 @@
 		<Copyright>$(ProjectCopyright)</Copyright>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<NeutralLanguage>en</NeutralLanguage>
-		<UseWindowsForms>true</UseWindowsForms>
+		<UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">true</UseWindowsForms>
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
 		<ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
+	</ItemGroup>
+	<!-- MacroController/recorder/player install WH_KEYBOARD_LL hooks via CsWin32;
+	     only the portable models + type converters compile for net10.0. -->
+	<ItemGroup Condition="'$(TargetFramework)' != 'net10.0-windows10.0.26100.0'">
+	  <Compile Remove="MacroController.cs" />
+	  <Compile Remove="Utils\MacroPlayer.cs" />
+	  <Compile Remove="Utils\MacroRecorder.cs" />
+	  <Compile Remove="Utils\MacroSettings.cs" />
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Update="Resources\Resource.Designer.cs">

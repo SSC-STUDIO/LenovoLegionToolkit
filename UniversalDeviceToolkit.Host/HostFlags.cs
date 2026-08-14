@@ -14,6 +14,7 @@ public sealed class HostFlags
     public bool SafeStart { get; private init; }
     public bool NoPlugins { get; private init; }
     public bool NoHardware { get; private init; }
+    public bool ExperimentalGpuWorkingMode { get; private init; }
     public string? ProxyUrl { get; private init; }
     public string? ProxyUsername { get; private init; }
     public string? ProxyPassword { get; private init; }
@@ -26,6 +27,7 @@ public sealed class HostFlags
         var safeStart = false;
         var noPlugins = false;
         var noHardware = false;
+        var experimentalGpuWorkingMode = false;
         string? proxyUrl = null;
         string? proxyUsername = null;
         string? proxyPassword = null;
@@ -46,6 +48,9 @@ public sealed class HostFlags
                     break;
                 case "--no-hardware":
                     noHardware = true;
+                    break;
+                case "--experimental-gpu-working-mode":
+                    experimentalGpuWorkingMode = true;
                     break;
                 case "--proxy-url" when i + 1 < args.Count:
                     proxyUrl = args[++i];
@@ -68,6 +73,7 @@ public sealed class HostFlags
             SafeStart = safeStart,
             NoPlugins = noPlugins,
             NoHardware = noHardware,
+            ExperimentalGpuWorkingMode = experimentalGpuWorkingMode,
             ProxyUrl = proxyUrl,
             ProxyUsername = proxyUsername,
             ProxyPassword = proxyPassword,
@@ -82,6 +88,7 @@ public sealed class HostFlags
             SafeStart ? "--safe-start" : null,
             NoPlugins ? "--no-plugins" : null,
             NoHardware ? "--no-hardware" : null,
+            ExperimentalGpuWorkingMode ? "--experimental-gpu-working-mode" : null,
             ProxyUrl is not null ? $"--proxy-url={ProxyUrl}" : null,
         }.Where(s => s is not null));
 }

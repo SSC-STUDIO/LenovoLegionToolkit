@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Security.Principal;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -11,6 +12,8 @@ public static class Autorun
 {
     private const string TASK_NAME = AppIdentity.CompactName + "_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98";
     private const string LEGACY_TASK_NAME = AppIdentity.LegacyCompactName + "_Autorun_6efcc882-924c-4cbc-8fec-f45c25696f98";
+    private const string ShellPathVariable = "UDT_SHELL_PATH";
+    private const string ShellArgsVariable = "UDT_SHELL_ARGS";
 
     public static AutorunState State
     {
@@ -78,10 +81,29 @@ public static class Autorun
             Enable(state == AutorunState.EnabledDelayed);
     }
 
+    /// <summary>
+    /// Electron sets <c>UDT_SHELL_PATH</c> to the UI executable so login starts
+    /// the shell (which then spawns Host), not Host.exe by itself.
+    /// </summary>
+    private static string ResolveLaunchPath(string processPath)
+    {
+        var shell = Environment.GetEnvironmentVariable(ShellPathVariable);
+        if (!string.IsNullOrWhiteSpace(shell) && File.Exists(shell))
+            return shell;
+        return processPath;
+    }
+
+    private static string ResolveLaunchArguments()
+    {
+        var args = Environment.GetEnvironmentVariable(ShellArgsVariable);
+        return string.IsNullOrWhiteSpace(args) ? "--minimized" : args;
+    }
+
     private static void Enable(bool delayed)
     {
         var mainModule = Process.GetCurrentProcess().MainModule ?? throw ExceptionHelper.MainModuleNull();
-        var filename = mainModule.FileName ?? throw ExceptionHelper.CurrentProcessFileNameNull();
+        var processPath = mainModule.FileName ?? throw ExceptionHelper.CurrentProcessFileNameNull();
+        var filename = ResolveLaunchPath(processPath);
         var fileVersion = mainModule.FileVersionInfo.FileVersion ?? throw ExceptionHelper.CurrentProcessFileVersionNull();
         var currentUser = WindowsIdentity.GetCurrent().Name;
 
@@ -91,7 +113,7 @@ public static class Autorun
         td.Principal.UserId = currentUser;
         td.Principal.RunLevel = TaskRunLevel.LUA;
         td.Triggers.Add(new LogonTrigger { UserId = currentUser, Delay = new TimeSpan(0, 0, delayed ? 30 : 0) });
-        td.Actions.Add($"\"{filename}\"", "--minimized");
+        td.Actions.Add($"\"{filename}\"", ResolveLaunchArguments());
         td.Settings.DisallowStartIfOnBatteries = false;
         td.Settings.StopIfGoingOnBatteries = false;
         td.Settings.ExecutionTimeLimit = TimeSpan.Zero;

@@ -47,9 +47,11 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool ApplyAccentColorToSystem { get; set; } = true;
 
         /// <summary>
-        /// 控制是否将选定的强调色应用到整体主题风格。
-        /// 为 true 时强调色影响整个应用视觉风格；为 false 时强调色值仍被持久化保存，但界面改用系统/默认强调色。
-        /// 默认 true，与 MinimizeToTray 等字段同一模式；System.Text.Json 反序列化时对旧配置缺失的字段保留此初始化器默认值。
+        /// When true, the resolved accent also tints the theme-style surface palette
+        /// (backgrounds / fills / strokes via ThemeStylePreset). The accent itself
+        /// (selection rings, links, ApplicationAccentColorManager) always applies
+        /// regardless of this flag — see WPF ThemeManager.SetColor vs ApplyStylePreset.
+        /// Default true; missing legacy JSON fields keep this initializer value.
         /// </summary>
         public bool ApplyAccentColorToTheme { get; set; } = true;
         public WindowBackdropStyle WindowBackdropStyle { get; set; } = WindowBackdropStyle.Windows;

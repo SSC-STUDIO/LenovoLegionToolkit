@@ -9,9 +9,9 @@ The split mirrors the assembly configuration in
 `UniversalDeviceToolkit.Lib.Plugins.csproj`: the SDK source files were removed
 from this repository entirely (the host build no longer compiles them) and
 ship as pre-built binaries (`UniversalDeviceToolkit.Plugins.SDK.dll` /
-`UniversalDeviceToolkit.Plugins.Shared.dll`) produced by the external
-`Plugins/SDK/Runtime` and `Plugins/Shared`, copied into the app output by
-`UniversalDeviceToolkit.WPF.csproj`. Plugins only see the SDK surface.
+`UniversalDeviceToolkit.Plugins.Shared.dll`) produced by
+`Plugins/SDK/Runtime` and `Plugins/Shared`, copied into the Host/plugin
+output. Plugins only see the SDK surface.
 
 In addition, `UniversalDeviceToolkit.Lib\Plugins\LegacyPluginContracts.cs`
 carries an in-Lib legacy mirror of the same contracts (same namespace,
@@ -52,7 +52,7 @@ major host version.
 
 | Type | Kind | Purpose |
 | --- | --- | --- |
-| `IPluginPage` | interface | Plugins that need to inject a host-rendered page implement this and return it from `PluginBase.GetFeatureExtension` / `GetSettingsPage`. |
+| `IPluginPage` | interface | Frozen ABI. Shipping UI is `contributes.webPage` in Electron, not a host-rendered WPF page. |
 
 ### Service-locator contract
 

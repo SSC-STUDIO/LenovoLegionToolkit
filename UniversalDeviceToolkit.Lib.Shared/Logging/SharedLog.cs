@@ -15,7 +15,7 @@ public static class SharedLog
 
     /// <summary>
     /// Register a sink that receives all log calls from the Shared layer.
-    /// Typically set once at application startup by the host (WPF / CLI / tests).
+    /// Typically set once at application startup by the host (Electron/.NET Host / CLI / tests).
     /// </summary>
     public static void SetSink(ISharedLogSink? sink) => _sink = sink;
 

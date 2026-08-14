@@ -13,7 +13,8 @@ public class DGPUCapabilityNotify(IDelayProvider delayProvider) : AbstractDGPUNo
         try
         {
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
-            return mi is { Features.Source: MachineInformation.FeatureData.SourceType.CapabilityData, Properties.SupportsIGPUMode: true };
+            return mi.Features.Source == MachineInformation.FeatureData.SourceType.CapabilityData
+                   && mi.Features[CapabilityID.IGPUMode];
         }
         catch (Exception ex)
         {

@@ -19,10 +19,12 @@ public static class DashboardHardwareHandlers
     private static readonly object GpuStatusLock = new();
     private static GPUController? _subscribedGpuController;
     private static GPUStatus? _lastGpuStatus;
+    private static int _gpuMonitorCount;
 
     public static void Register(BridgeRpcServer rpc)
     {
         rpc.RegisterHandler("dashboardHardware.getState", (request, _) => HandleGetStateAsync());
+        rpc.RegisterHandler("dashboardHardware.setMonitoring", (request, _) => HandleSetMonitoringAsync(request));
         rpc.RegisterHandler("dashboardHardware.killGpuProcesses", (request, _) => HandleKillGpuProcessesAsync());
         rpc.RegisterHandler("dashboardHardware.restartGpu", (request, _) => HandleRestartGpuAsync());
         rpc.RegisterHandler("dashboardHardware.setOverclockEnabled", (request, _) => HandleSetOverclockEnabledAsync(request));
@@ -41,8 +43,25 @@ public static class DashboardHardwareHandlers
             if (discreteGpuSupported)
             {
                 EnsureGpuStatusSubscription(gpuController);
-                await gpuController.StartAsync(delay: 0, interval: 5_000).ConfigureAwait(false);
+                var startedForProbe = false;
+                if (!gpuController.IsStarted)
+                {
+                    await gpuController.StartAsync(delay: 0, interval: 5_000).ConfigureAwait(false);
+                    startedForProbe = true;
+                }
+
                 gpuStatus = await WaitForInitialGpuStatusAsync().ConfigureAwait(false);
+                lock (GpuStatusLock)
+                    gpuStatus ??= _lastGpuStatus;
+
+                if (startedForProbe)
+                {
+                    var shouldStop = false;
+                    lock (GpuStatusLock)
+                        shouldStop = _gpuMonitorCount <= 0;
+                    if (shouldStop)
+                        await gpuController.StopAsync(waitForFinish: false).ConfigureAwait(false);
+                }
             }
 
             var overclockController = IoCContainer.Resolve<GPUOverclockController>();
@@ -75,6 +94,49 @@ public static class DashboardHardwareHandlers
                 },
                 turnOffMonitors = new { supported = OperatingSystem.IsWindows() },
             });
+        }
+        catch (Exception ex)
+        {
+            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    private static async Task<BridgeResult> HandleSetMonitoringAsync(BridgeRequest request)
+    {
+        try
+        {
+            var enabled = GetRequiredBoolean(request, "enabled");
+            var gpuController = IoCContainer.Resolve<GPUController>();
+            var supported = await gpuController.IsSupportedAsync().ConfigureAwait(false);
+
+            int count;
+            lock (GpuStatusLock)
+            {
+                if (enabled)
+                    _gpuMonitorCount++;
+                else
+                    _gpuMonitorCount = Math.Max(0, _gpuMonitorCount - 1);
+                count = _gpuMonitorCount;
+            }
+
+            if (!supported)
+                return BridgeResult.Ok(new { ok = true, monitoring = count > 0 });
+
+            if (count > 0)
+            {
+                EnsureGpuStatusSubscription(gpuController);
+                await gpuController.StartAsync(delay: 0, interval: 5_000).ConfigureAwait(false);
+            }
+            else
+            {
+                await gpuController.StopAsync(waitForFinish: false).ConfigureAwait(false);
+            }
+
+            return BridgeResult.Ok(new { ok = true, monitoring = count > 0 });
+        }
+        catch (BridgeErrorException ex)
+        {
+            return BridgeResult.Error(ex.Code, ex.Message);
         }
         catch (Exception ex)
         {

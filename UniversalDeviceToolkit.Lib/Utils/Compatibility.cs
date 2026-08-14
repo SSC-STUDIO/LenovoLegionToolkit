@@ -168,8 +168,8 @@ public static partial class Compatibility
             SupportsGodModeV2 = GetSupportsGodModeV2(supportedPowerModes, smartFanVersion, legionZoneVersion, features),
             SupportsGodModeV3 = GetSupportsGodModeV3(supportedPowerModes, smartFanVersion, legionZoneVersion, generation, model, machineType),
             SupportsGodModeV4 = GetSupportsGodModeV4(supportedPowerModes, smartFanVersion, legionZoneVersion),
-            SupportsGSync = await GetSupportsGSyncAsync().ConfigureAwait(false),
-            SupportsIGPUMode = await GetSupportsIGPUModeAsync().ConfigureAwait(false),
+            SupportsGSync = await GetSupportsGSyncAsync(features).ConfigureAwait(false),
+            SupportsIGPUMode = await GetSupportsIGPUModeAsync(features).ConfigureAwait(false),
             SupportsAIMode = await GetSupportsAIModeAsync().ConfigureAwait(false),
             SupportBootLogoChange = GetSupportBootLogoChange(smartFanVersion),
             SupportsITSMode = GetSupportITSMode(model),
@@ -579,30 +579,63 @@ public static partial class Compatibility
         return smartFanVersion is 8 or 9 || legionZoneVersion is 5 or 6;
     }
 
-    private static async Task<bool> GetSupportsGSyncAsync()
+    internal static bool FeatureDataIndicatesGSync(MachineInformation.FeatureData features) =>
+        features.Source is MachineInformation.FeatureData.SourceType.CapabilityData
+            or MachineInformation.FeatureData.SourceType.Flags
+        && features[CapabilityID.NvidiaGPUDynamicDisplaySwitching];
+
+    internal static bool FeatureDataIndicatesIgpuMode(MachineInformation.FeatureData features) =>
+        features.Source is MachineInformation.FeatureData.SourceType.CapabilityData
+            or MachineInformation.FeatureData.SourceType.Flags
+        && features[CapabilityID.IGPUMode];
+
+    internal static bool ResolveHybridGpuCapabilitySupport(
+        int? gameZoneSupport,
+        MachineInformation.FeatureData features,
+        CapabilityID capabilityId)
+        => capabilityId switch
+        {
+            CapabilityID.NvidiaGPUDynamicDisplaySwitching =>
+                gameZoneSupport is > 0 || FeatureDataIndicatesGSync(features),
+            CapabilityID.IGPUMode =>
+                gameZoneSupport is > 0 || FeatureDataIndicatesIgpuMode(features),
+            _ => false,
+        };
+
+    private static async Task<bool> GetSupportsGSyncAsync(MachineInformation.FeatureData features)
     {
+        int? gameZoneSupport = null;
         try
         {
-            return await WMI.LenovoGameZoneData.IsSupportGSyncAsync().ConfigureAwait(false) > 0;
+            gameZoneSupport = await WMI.LenovoGameZoneData.IsSupportGSyncAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             Log.Instance.TraceOnce("compat-gsync", "G-Sync support WMI probe failed.", ex);
-            return false;
         }
+
+        return ResolveHybridGpuCapabilitySupport(
+            gameZoneSupport,
+            features,
+            CapabilityID.NvidiaGPUDynamicDisplaySwitching);
     }
 
-    private static async Task<bool> GetSupportsIGPUModeAsync()
+    private static async Task<bool> GetSupportsIGPUModeAsync(MachineInformation.FeatureData features)
     {
+        int? gameZoneSupport = null;
         try
         {
-            return await WMI.LenovoGameZoneData.IsSupportIGPUModeAsync().ConfigureAwait(false) > 0;
+            gameZoneSupport = await WMI.LenovoGameZoneData.IsSupportIGPUModeAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             Log.Instance.TraceOnce("compat-igpu-mode", "iGPU mode support WMI probe failed.", ex);
-            return false;
         }
+
+        return ResolveHybridGpuCapabilitySupport(
+            gameZoneSupport,
+            features,
+            CapabilityID.IGPUMode);
     }
 
     private static async Task<bool> GetSupportsAIModeAsync()

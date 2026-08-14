@@ -16,7 +16,7 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// </summary>
 public static class KeyboardBacklightHandlers
 {
-    private const int NotSupported = -1001;
+    private const int NotSupported = BridgeErrorCodes.FeatureNotSupported;
 
     private static JsonSerializerOptions? _options;
 

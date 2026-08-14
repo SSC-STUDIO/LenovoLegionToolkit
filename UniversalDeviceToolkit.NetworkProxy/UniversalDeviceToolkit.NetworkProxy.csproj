@@ -6,6 +6,11 @@
     <AssemblyName>UniversalDeviceToolkit.NetworkProxy</AssemblyName>
     <Copyright>$(ProjectCopyright)</Copyright>
     <IsUdtShippingApp>true</IsUdtShippingApp>
+    <!-- Framework-dependent apphost: without these sidecars the exe is treated as
+         self-contained and fails looking for hostpolicy.dll (same class of bug as Host). -->
+    <SelfContained>false</SelfContained>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <GenerateDependencyFile>true</GenerateDependencyFile>
     <NeutralLanguage>en</NeutralLanguage>
     <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
   </PropertyGroup>

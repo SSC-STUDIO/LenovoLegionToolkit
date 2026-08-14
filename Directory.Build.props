@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Project>
   <PropertyGroup>
-    <MajorVersion>5</MajorVersion>
+    <MajorVersion>6</MajorVersion>
     <MinorVersion>0</MinorVersion>
-    <PatchVersion>2</PatchVersion>
+    <PatchVersion>0</PatchVersion>
     <ReleaseVersion>$(MajorVersion).$(MinorVersion).$(PatchVersion)</ReleaseVersion>
     <WindowsVersion>$(ReleaseVersion).0</WindowsVersion>
     <GitCommitHash>unknown</GitCommitHash>
@@ -18,7 +18,24 @@
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
     <InformationalVersion>$(Version)+$(GitCommitHash)</InformationalVersion>
     <SkipGitInfoLookup>$([System.String]::Copy('$(MSBuildThisFileDirectory)').StartsWith('\\wsl.localhost\', System.StringComparison.OrdinalIgnoreCase))</SkipGitInfoLookup>
-    <UDTTargetFramework>net10.0-windows10.0.26100.0</UDTTargetFramework>
+
+    <!--
+      Platform selection for the UDT app graph (Lib, Host, Lib.Macro, ...).
+
+      UDTWindows=true  -> net10.0-windows10.0.26100.0 (Windows-only packages/APIs).
+      UDTWindows=false -> net10.0 (portable subset; Platform.Linux/MacOS backends).
+
+      Resolution order (first non-empty wins):
+        1. -p:UDTWindows=true|false (command line)
+        2. $env:UDT_PLATFORM (build.sh / CI): 'linux' or 'macos' forces portable,
+           'windows' (or unset) keeps the default for the host OS.
+        3. Host OS: Windows hosts default to UDTWindows=true, other hosts to false.
+    -->
+    <UDTWindows Condition="'$(UDTWindows)' == '' and '$(UDT_PLATFORM)' != '' and '$(UDT_PLATFORM)' != 'windows'">false</UDTWindows>
+    <UDTWindows Condition="'$(UDTWindows)' == '' and $([MSBuild]::IsOSPlatform('Windows'))">true</UDTWindows>
+    <UDTWindows Condition="'$(UDTWindows)' == ''">false</UDTWindows>
+    <UDTTargetFramework Condition="'$(UDTWindows)' == 'true'">net10.0-windows10.0.26100.0</UDTTargetFramework>
+    <UDTTargetFramework Condition="'$(UDTWindows)' != 'true'">net10.0</UDTTargetFramework>
     <LLTTargetFramework>$(UDTTargetFramework)</LLTTargetFramework>
     <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
     <RestoreConfigFile Condition="'$(RestoreConfigFile)' == '' and Exists('$(MSBuildThisFileDirectory)NuGet.Config')">$(MSBuildThisFileDirectory)NuGet.Config</RestoreConfigFile>
@@ -42,9 +59,9 @@
     Portable cross-platform projects must opt out before the Windows x64/win-x64 stamp.
     Project-level DisableUdtForceX64=true is too late (props evaluate first), so detect by name.
     Includes: CrossPlatform (CLI), Lib.Shared (extracted cross-platform business logic),
-    Lib.Abstractions (pure interfaces), ViewModels.
+    Lib.Abstractions (pure interfaces).
   -->
-  <PropertyGroup Condition="$(MSBuildProjectName.Contains('CrossPlatform')) or $(MSBuildProjectName.Contains('Shared')) or $(MSBuildProjectName.Contains('Abstractions')) or $(MSBuildProjectName.Contains('ViewModels')) or $(MSBuildProjectName.Contains('Platform.Linux')) or $(MSBuildProjectName.Contains('Platform.MacOS')) or $(MSBuildProjectName.Contains('Platform.Windows.Core')) or $(MSBuildProjectName.Contains('Tests.Infrastructure'))">
+  <PropertyGroup Condition="$(MSBuildProjectName.Contains('CrossPlatform')) or $(MSBuildProjectName.Contains('Shared')) or $(MSBuildProjectName.Contains('Abstractions')) or $(MSBuildProjectName.Contains('Platform.Linux')) or $(MSBuildProjectName.Contains('Platform.MacOS')) or $(MSBuildProjectName.Contains('Platform.Windows.Core')) or $(MSBuildProjectName.Contains('Tests.Infrastructure'))">
     <DisableUdtForceX64>true</DisableUdtForceX64>
   </PropertyGroup>
 

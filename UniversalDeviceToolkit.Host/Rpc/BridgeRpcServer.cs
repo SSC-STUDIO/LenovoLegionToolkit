@@ -202,6 +202,12 @@ public sealed class BridgeRpcServer : IDisposable
     public void RegisterHandler(string method, Func<BridgeRequest, Task<BridgeResult>> handler)
         => RegisterHandler(method, (request, _) => handler(request));
 
+    /// <summary>True when a handler is registered for the method.</summary>
+    public bool HasHandler(string method) => _handlers.ContainsKey(method);
+
+    /// <summary>Registered method names (startup surface verification).</summary>
+    public IReadOnlyCollection<string> RegisteredMethods => _handlers.Keys;
+
     /// <summary>
     /// Blocks reading stdin until EOF or <see cref="RequestShutdown"/>.
     /// </summary>
@@ -240,7 +246,7 @@ public sealed class BridgeRpcServer : IDisposable
         {
             if (!_handlers.TryGetValue(request.Method, out var handler))
             {
-                result = BridgeResult.Error(-32601, $"Unknown method: {request.Method}");
+                result = BridgeResult.Error(BridgeErrorCodes.UnknownMethod, $"Unknown method: {request.Method}");
             }
             else
             {
@@ -249,11 +255,11 @@ public sealed class BridgeRpcServer : IDisposable
         }
         catch (OperationCanceledException)
         {
-            result = BridgeResult.Error(-32800, "Request cancelled");
+            result = BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
         }
         catch (Exception ex)
         {
-            result = BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            result = BridgeResult.Error(BridgeErrorCodes.InternalError, $"{ex.GetType().Name}: {ex.Message}");
         }
 
         if (request.Id is not null)

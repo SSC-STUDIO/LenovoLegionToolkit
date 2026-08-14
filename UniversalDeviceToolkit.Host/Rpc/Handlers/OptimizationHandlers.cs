@@ -31,7 +31,13 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 public static class OptimizationHandlers
 {
     /// <summary>Elevation is required to mutate system state from the un-elevated bridge host.</summary>
-    private const int ElevationRequiredErrorCode = -1006;
+    private const int ElevationRequiredErrorCode = BridgeErrorCodes.ElevationRequired;
+    /// <summary>NetworkProxy.exe is missing from the Host output / install layout.</summary>
+    private const int NetworkProxyMissingErrorCode = BridgeErrorCodes.NetworkProxyMissing;
+    /// <summary>Hosts mode maps domains to 127.0.0.1 without a local TLS origin.</summary>
+    private const int NetworkHostsModeRefusedErrorCode = BridgeErrorCodes.NetworkHostsModeRefused;
+    /// <summary>Start refused for another config reason (disabled, Off, no domains, ...).</summary>
+    private const int NetworkStartRefusedErrorCode = BridgeErrorCodes.NetworkStartRefused;
 
     private static JsonSerializerOptions? _networkJsonOptions;
 
@@ -341,8 +347,31 @@ public static class OptimizationHandlers
     {
         try
         {
-            var started = await NetworkService.StartAsync(cancellationToken).ConfigureAwait(false);
-            return BridgeResult.Ok(new { ok = started });
+            var service = NetworkService;
+            if (service.Config.Mode == NetworkAccelerationMode.Hosts)
+            {
+                return BridgeResult.Error(
+                    NetworkHostsModeRefusedErrorCode,
+                    "Hosts mode is disabled until a local TLS origin exists. Use SystemProxy (PAC) or DiagnosticsOnly.");
+            }
+
+            if (!service.IsBackendReady)
+            {
+                return BridgeResult.Error(
+                    NetworkProxyMissingErrorCode,
+                    "NetworkProxy worker is not available.");
+            }
+
+            var started = await service.StartAsync(cancellationToken).ConfigureAwait(false);
+            if (!started)
+            {
+                var detail = string.IsNullOrWhiteSpace(service.StatusText)
+                    ? "Failed to start network acceleration."
+                    : service.StatusText;
+                return BridgeResult.Error(NetworkStartRefusedErrorCode, detail);
+            }
+
+            return BridgeResult.Ok(new { ok = true });
         }
         catch (Exception ex)
         {

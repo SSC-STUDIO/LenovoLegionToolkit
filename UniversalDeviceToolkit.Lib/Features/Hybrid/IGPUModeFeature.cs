@@ -3,23 +3,58 @@ using System.Threading.Tasks;
 
 namespace UniversalDeviceToolkit.Lib.Features.Hybrid;
 
-public class IGPUModeFeature(IGPUModeGamezoneFeature feature1, IGPUModeCapabilityFeature feature2, IGPUModeFeatureFlagsFeature feature3)
-    : AbstractCompositeFeature<IGPUModeState>(feature1, feature2, feature3), IIGPUModeFeature
+public class IGPUModeFeature : AbstractCompositeFeature<IGPUModeState>, IIGPUModeFeature
 {
+    private readonly IFeature<IGPUModeState> _gameZoneFeature;
+    private readonly IFeature<IGPUModeState> _capabilityFeature;
+    private readonly IFeature<IGPUModeState> _featureFlagsFeature;
+
+    public IGPUModeFeature(
+        IGPUModeGamezoneFeature gameZoneFeature,
+        IGPUModeCapabilityFeature capabilityFeature,
+        IGPUModeFeatureFlagsFeature featureFlagsFeature)
+        : this(
+            (IFeature<IGPUModeState>)gameZoneFeature,
+            capabilityFeature,
+            featureFlagsFeature)
+    {
+    }
+
+    internal IGPUModeFeature(
+        IFeature<IGPUModeState> gameZoneFeature,
+        IFeature<IGPUModeState> capabilityFeature,
+        IFeature<IGPUModeState> featureFlagsFeature)
+        : base(gameZoneFeature, capabilityFeature, featureFlagsFeature)
+    {
+        _gameZoneFeature = gameZoneFeature;
+        _capabilityFeature = capabilityFeature;
+        _featureFlagsFeature = featureFlagsFeature;
+    }
+
     public bool ExperimentalGPUWorkingMode { get; set; }
 
     protected override async Task<IFeature<IGPUModeState>?> ResolveAsync(CancellationToken cancellationToken = default)
     {
-        if (!ExperimentalGPUWorkingMode)
-            return await feature1.IsSupportedAsync(cancellationToken).ConfigureAwait(false) ? feature1 : null;
+        if (ExperimentalGPUWorkingMode)
+        {
+            if (await _capabilityFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _capabilityFeature;
 
-        if (await feature2.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return feature2;
+            if (await _featureFlagsFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _featureFlagsFeature;
 
-        if (await feature3.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return feature3;
+            return null;
+        }
+
+        if (await _gameZoneFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+            return _gameZoneFeature;
+
+        if (await _capabilityFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+            return _capabilityFeature;
+
+        if (await _featureFlagsFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+            return _featureFlagsFeature;
 
         return null;
-
     }
 }

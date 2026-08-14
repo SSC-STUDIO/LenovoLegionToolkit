@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -11,6 +12,8 @@ namespace UniversalDeviceToolkit.Lib.Network;
 public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable
 {
     public const string WorkerFileName = "UniversalDeviceToolkit.NetworkProxy.exe";
+    public const string HostProjectDirectoryName = "UniversalDeviceToolkit.Host";
+    public const string WorkerProjectDirectoryName = "UniversalDeviceToolkit.NetworkProxy";
 
     private readonly object _gate = new();
     private Process? _process;
@@ -56,23 +59,111 @@ public sealed class NetworkProxyWorkerLauncher : IAsyncDisposable
 
     public static string? ResolveWorkerPath()
     {
-        var candidates = new[]
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var candidate in EnumerateWorkerCandidates())
         {
-            Path.Combine(Folders.Program, WorkerFileName),
-            Path.Combine(AppContext.BaseDirectory, WorkerFileName),
-            Path.Combine(Environment.CurrentDirectory, WorkerFileName)
-        };
-
-        foreach (var path in candidates)
-        {
-            if (File.Exists(path))
-                return path;
+            var fullPath = TryGetFullPath(candidate);
+            if (fullPath is null || !seen.Add(fullPath))
+                continue;
+            if (IsRunnableWorker(fullPath))
+                return fullPath;
         }
 
         return null;
     }
 
     public static bool IsWorkerAvailable() => ResolveWorkerPath() is not null;
+
+    /// <summary>
+    /// Framework-dependent (and flattened self-contained) apphosts need the
+    /// <c>.runtimeconfig.json</c> / <c>.deps.json</c> sidecars next to the exe.
+    /// </summary>
+    internal static bool IsRunnableWorker(string workerPath)
+    {
+        if (string.IsNullOrWhiteSpace(workerPath) || !File.Exists(workerPath))
+            return false;
+
+        var stem = workerPath.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)
+            ? workerPath[..^4]
+            : workerPath;
+        return File.Exists(stem + ".runtimeconfig.json") && File.Exists(stem + ".deps.json");
+    }
+
+    internal static IEnumerable<string> EnumerateWorkerCandidates(
+        string? programDirectory = null,
+        string? baseDirectory = null,
+        string? currentDirectory = null)
+    {
+        programDirectory ??= Folders.Program;
+        baseDirectory ??= AppContext.BaseDirectory;
+        currentDirectory ??= Environment.CurrentDirectory;
+
+        if (!string.IsNullOrWhiteSpace(programDirectory))
+            yield return Path.Combine(programDirectory, WorkerFileName);
+        if (!string.IsNullOrWhiteSpace(baseDirectory))
+            yield return Path.Combine(baseDirectory, WorkerFileName);
+        if (!string.IsNullOrWhiteSpace(currentDirectory))
+            yield return Path.Combine(currentDirectory, WorkerFileName);
+
+        foreach (var directory in new[] { programDirectory, baseDirectory, currentDirectory })
+        {
+            var sibling = TryMapHostDirectoryToNetworkProxyDirectory(directory);
+            if (sibling is not null)
+                yield return Path.Combine(sibling, WorkerFileName);
+        }
+    }
+
+    /// <summary>
+    /// Maps <c>.../UniversalDeviceToolkit.Host/bin/x64/Debug/{tfm}/win-x64</c>
+    /// to the sibling NetworkProxy output with the same configuration layout.
+    /// </summary>
+    internal static string? TryMapHostDirectoryToNetworkProxyDirectory(string? directory)
+    {
+        if (string.IsNullOrWhiteSpace(directory))
+            return null;
+
+        var full = TryGetFullPath(directory);
+        if (full is null)
+            return null;
+
+        var current = full;
+        while (!string.IsNullOrEmpty(current))
+        {
+            var trimmed = current.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            if (Path.GetFileName(trimmed).Equals(HostProjectDirectoryName, StringComparison.OrdinalIgnoreCase))
+            {
+                var parent = Path.GetDirectoryName(trimmed);
+                if (string.IsNullOrEmpty(parent))
+                    return null;
+
+                var relative = Path.GetRelativePath(trimmed, full);
+                var proxyRoot = Path.Combine(parent, WorkerProjectDirectoryName);
+                var mapped = relative is "." or ""
+                    ? proxyRoot
+                    : Path.GetFullPath(Path.Combine(proxyRoot, relative));
+                return mapped.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            }
+
+            var next = Path.GetDirectoryName(trimmed);
+            if (string.IsNullOrEmpty(next) || next.Equals(trimmed, StringComparison.OrdinalIgnoreCase))
+                break;
+            current = next;
+        }
+
+        return null;
+    }
+
+    private static string? TryGetFullPath(string path)
+    {
+        try
+        {
+            return Path.GetFullPath(path);
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException or IOException)
+        {
+            return null;
+        }
+    }
 
     /// <summary>
     /// Best-effort kill of orphaned NetworkProxy processes (e.g. after GUI crash).
