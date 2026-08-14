@@ -1,5 +1,1549 @@
-﻿export default {
+import { withEnglishFallback } from './en-US'
+
+export default withEnglishFallback({
   translation: {
+    app: {
+      name: 'Universal Device Toolkit'
+    },
+    titlebar: {
+      log: 'Jurnal',
+      openLogs: 'Deschide folderul de jurnale',
+      deviceName: 'Legion Y9000P IRX9',
+      deviceInfo: 'Informații despre dispozitiv'
+    },
+    nav: {
+      dashboard: 'Consolă',
+      settings: 'Setări',
+      automation: 'Automatizare',
+      keyboard: 'Tastatură',
+      keyboardBacklight: 'Iluminare tastatură',
+      macro: 'Macro personalizat',
+      windowsOptimization: 'Optimizarea sistemului',
+      pluginExtensions: 'Pluginuri și extensii',
+      about: 'Despre'
+    },
+    home: {
+      title: 'Universal Device Toolkit',
+      subtitle: 'Bine ați venit! Alegeți o secțiune de mai jos pentru a începe',
+      hostReady: 'Backend conectat',
+      hostState: 'Stare backend',
+      hostVersion: 'Versiune backend',
+      hostUnavailable:
+        'Backend-ul nu rulează. Așteptați un moment și încercați din nou, sau reporniți aplicația.',
+      initComplete: 'Inițializare completă',
+      safeStart: 'Pornire sigură, omisă',
+      machine: 'Dispozitiv',
+      compatible: 'Compatibilitate',
+      status: 'Stare'
+    },
+    dashboard: {
+      title: 'Consolă',
+      customize: 'Personalizare',
+      edit: {
+        title: 'Editare bord',
+        description: 'Alegeți ce secțiuni și funcții sunt afișate pe pagina de pornire.',
+        showSensors: 'Senzori hardware',
+        groups: 'Grupuri de funcții',
+        save: 'Salvare',
+        cancel: 'Anulare',
+        saved: 'Aspectul bordului a fost salvat',
+        error: 'Nu s-a putut salva aspectul bordului',
+        disclaimer: 'Este posibil ca unele funcții să nu apară în bord, în funcție de starea și configurația laptopului.',
+        addGroup: 'Adăugare',
+        renameGroup: 'Editare nume grup',
+        deleteGroup: 'Ștergere',
+        moveUp: 'Mutare în sus',
+        moveDown: 'Mutare în jos',
+        deleteItem: 'Ștergere',
+        addItem: 'Adăugare',
+        groupNamePlaceholder: 'Nume',
+        default: 'Implicit',
+        items: {
+          discreteGpu: 'Mod GPU dedicat',
+          overclockGpu: 'Overclock GPU',
+          turnOffMonitors: 'Oprire monitoare'
+        }
+      },
+      addItem: {
+        title: 'Adăugare',
+        searchPlaceholder: 'Căutare',
+        empty: 'Toate elementele bordului au fost deja adăugate',
+        addHint: 'Adaugă element'
+      },
+      cpu: 'CPU',
+      gpu: 'GPU',
+      memory: 'Memorie',
+      temperature: 'Temperatură',
+      usage: 'Utilizare',
+      power: 'Consum',
+      fanSpeed: 'Ventilator',
+      vram: 'VRAM',
+      memoryUsed: 'Memorie utilizată',
+      memoryTotal: 'Memorie totală',
+      storageTemp: 'Temperatură stocare',
+      notAvailable: '--',
+      sensor: {
+        cpu: 'Procesor',
+        gpu: 'Placă grafică',
+        memory: 'Memorie',
+        temperature: 'Temperatură',
+        usage: 'Utilizare',
+        power: 'Consum',
+        fanSpeed: 'Ventilator',
+        vram: 'VRAM',
+        frequency: 'Ceas nucleu',
+        battery: 'Baterie',
+        charge: 'Încărcare',
+        health: 'Sănătate',
+        rate: 'Rată',
+        fan: 'Ventilator',
+        lowPowerAdapter: 'Alimentator de putere redusă conectat',
+        batteryLow: 'Baterie descărcată',
+        acCharging: 'Alimentator conectat, se încarcă...',
+        acNotCharging: 'Alimentator conectat, nu se încarcă...',
+        remainingTime: 'Timp rămas estimat: {0}',
+        memoryTemperature: 'Temperatura memoriei',
+        ssdTemperature: 'Temperatura SSD',
+        vramTemperature: 'Temperatura VRAM',
+        vramUsage: 'Utilizare VRAM',
+        cycles: 'Cicluri',
+        capacity: 'Capacitate',
+        fullCapacity: 'Capacitate încărcare completă',
+        designCapacity: 'Capacitate proiectată',
+        date: 'Dată',
+        voltage: 'Tensiune nucleu',
+        voltageRange: 'Interval de tensiune',
+        powerRange: 'Interval de consum',
+        details: 'Detalii',
+        doubleClickHint: 'Faceți dublu clic pentru toate datele senzorului',
+        showDetails: 'Afișați detalii',
+        hideDetails: 'Ascunde detaliile',
+        chartEmpty: 'Se așteaptă datele senzorilor',
+        refreshInterval: 'Interval de reîmprospătare',
+        detail: {
+          power: 'Consum',
+          powerCores: 'Nuclee',
+          powerMemory: 'Memorie',
+          powerPlatform: 'Platformă',
+          pCoreClock: 'Ceas P-Core',
+          eCoreClock: 'Ceas E-Core',
+          memoryUsage: 'Utilizare memorie',
+          sharedMemoryUsage: 'Utilizare memorie partajată',
+          vramUsage: 'Utilizare VRAM',
+          hotSpot: 'Hot Spot GPU',
+          pcieThroughput: 'Debit PCIe',
+          designCapacity: 'Capacitate proiectată',
+          fullChargeCapacity: 'Capacitate încărcare completă',
+          vramClock: 'Ceas VRAM',
+          currentPower: 'Consum curent'
+        }
+      },
+      group: {
+        power: 'Consum',
+        graphics: 'Grafică',
+        display: 'Afișaj',
+        other: 'Altele',
+        custom: 'Personalizat'
+      },
+      card: {
+        error: 'Nu s-a putut aplica setarea',
+        config: 'Setări avansate',
+        configComingSoon: 'Setările avansate vor fi disponibile într-o versiune viitoare',
+        notSupported: 'Nu este acceptat pe acest dispozitiv'
+      }
+    },
+    balanceMode: {
+      title: 'Setări mod Echilibrat',
+      aiEngine: 'Activare AI Engine',
+      aiEngineDesc: 'Detectează automat când rulează anumite jocuri și ajustează performanța CPU și GPU. Temperaturile și zgomotul ventilatorului pot crește.'
+    },
+    godMode: {
+      title: 'Setări mod Personalizat',
+      activePreset: 'Profil activ',
+      presetName: 'Nume profil',
+      name: 'Nume',
+      errorLoad: 'Nu s-a putut încărca setarea.',
+      errorApply: 'Nu s-au putut aplica setările',
+      applySuccess: 'Setările modului personalizat au fost aplicate cu succes.',
+      defaultPresetName: 'Profil',
+      cpu: {
+        title: 'CPU',
+        longTermPL: 'Limită de putere pe termen lung',
+        'longTermPL.desc': 'Consumul continuu de energie care poate fi atins de CPU.',
+        shortTermPL: 'Limită de putere pe termen scurt',
+        'shortTermPL.desc': 'Consumul maxim de energie care poate fi atins de CPU într-un timp scurt.',
+        peakPL: 'Limită putere de vârf',
+        'peakPL.desc': 'Consumul maxim instantaneu de energie care poate fi atins de CPU.',
+        crossLoading: 'Limită de putere pe termen lung (Cross Loading)',
+        'crossLoading.desc': 'Consumul maxim de energie care poate fi atins de CPU atunci când CPU și GPU sunt utilizate simultan la maxim.',
+        pl1Tau: 'Durată limită de putere pe termen scurt',
+        'pl1Tau.desc': 'Perioada de timp pentru care procesorului i se permite să facă boost și să utilizeze limita de putere pe termen scurt. Când Tau expiră, se utilizează limita de putere pe termen lung.',
+        apuSppt: 'Limită putere APU sPPT',
+        'apuSppt.desc': 'Consumul maxim de energie care poate fi atins de CPU cu o întârziere minoră.',
+        tempLimit: 'Limită temperatură CPU',
+        'tempLimit.desc': 'Temperatura maximă care poate fi atinsă de CPU înainte ca frecvența și puterea să fie reduse.'
+      },
+      gpu: {
+        title: 'GPU',
+        dynamicBoost: 'Boost dinamic',
+        'dynamicBoost.desc': 'Puterea maximă suplimentară care poate fi alocată GPU-ului în funcție de consumul de energie al CPU-ului.',
+        ctgp: 'TGP configurabil',
+        'ctgp.desc': 'Cantitatea suplimentară de putere care poate fi alocată GPU-ului pe lângă consumul de energie de bază.',
+        tempLimit: 'Limită temperatură GPU',
+        'tempLimit.desc': 'Temperatura maximă care poate fi atinsă de GPU înainte ca frecvența și puterea să fie reduse.',
+        totalProcessingPowerTarget: 'Puterea totală a procesorului pe alimentator',
+        'totalProcessingPowerTarget.desc': 'Punctul în care CPU declanșează ajustarea dinamică a consumului de energie pentru GPU.',
+        toCpuDynamicBoost: 'Boost dinamic GPU către CPU',
+        'toCpuDynamicBoost.desc': 'Aceasta este puterea maximă suplimentară care poate fi alocată CPU-ului din GPU, pe baza utilizării CPU-ului. Cu cât valoarea este mai mare, cu atât performanța aplicațiilor care folosesc CPU-ul este mai bună.'
+      },
+      fans: {
+        title: 'Ventilatoare',
+        curve: 'Curbă de viteză ventilator',
+        curveMessage: 'Viteza ventilatorului urmează cea mai mare valoare citită de senzorii CPU, GPU sau radiator. Treceți cu mouse-ul peste fiecare pas pentru a vedea valorile exacte.',
+        maxSpeed: 'Viteză maximă ventilator',
+        maxSpeedWarning: 'Utilizarea prelungită a acestei opțiuni va degrada ventilatoarele, scăzând longevitatea acestora.\nSerios, aveți grijă cu această opțiune!'
+      },
+      advanced: {
+        title: 'Avansat',
+        message: 'Nu modificați opțiunile de mai jos decât dacă știți cu adevărat ce faceți.',
+        maxOffset: 'Deplasare maximă',
+        maxOffsetWarning: 'Valorile mai mari pot cauza comportamente imprevizibile. Lăsați această valoare la 0 dacă nu sunteți sigur.',
+        minOffset: 'Deplasare minimă',
+        minOffsetWarning: 'Valorile mai mici pot cauza comportamente imprevizibile. Lăsați această valoare la 0 dacă nu sunteți sigur.',
+        invalidOffset: 'Introduceți un număr întreg înainte de a salva.'
+      },
+      vantageWarning: 'Setările modului personalizat nu se vor aplica corect atunci când Lenovo Vantage sau serviciile sale rulează.',
+      legionZoneWarning: 'Setările modului personalizat nu se vor aplica corect atunci când Legion Zone sau serviciile sale rulează.'
+    },
+    overclock: {
+      title: 'Setări GPU pentru overclock',
+      preset: 'Profil',
+      coreOffset: 'Offset al frecvenței nucleului',
+      memoryOffset: 'Offset de frecvență a memoriei',
+      namePlaceholder: 'Nume...',
+      newProfileName: 'Profil',
+      loadError: 'Nu s-au putut încărca setările de overclock.'
+    },
+    feature: {
+      powerMode: 'Mod putere',
+      'powerMode.desc': 'Schimbă modul de performanță.\nModul de performanță poate fi schimbat și cu Fn+Q.',
+      'powerMode.hint': 'Îl puteți schimba rapid cu comanda rapidă Fn+Q.',
+      'powerMode.warning': 'Este posibil ca modul de performanță să nu funcționeze corect când alimentatorul nu este conectat.',
+      battery: 'Mod de încărcare a bateriei',
+      'battery.desc': 'Alegeți un mod de încărcare a bateriei. Modul de conservare limitează nivelul de încărcare pentru a prelungi durata de viață a bateriei, iar modul de încărcare rapidă încarcă la putere mai mare.',
+      batteryNightCharge: 'Încărcare baterie peste noapte',
+      'batteryNightCharge.desc': 'Când este activat, se încarcă până la 80% peste noapte și se completează până la 100% până dimineața.',
+      alwaysOnUsb: 'USB mereu activ',
+      'alwaysOnUsb.desc': 'Menține porturile USB alimentate când computerul este oprit, în repaus sau în hibernare. De obicei, este afectat doar portul USB marcat cu o pictogramă de baterie pe lateralul laptopului.',
+      instantBoot: 'Boot instantanee',
+      'instantBoot.desc': 'Pornește computerul imediat ce este conectat la alimentare.',
+      flipToStart: 'Întoarce pentru a porni',
+      'flipToStart.desc': 'Deschiderea capacului pornește automat laptopul.',
+      fnLock: 'Blocare Fn',
+      'fnLock.desc': 'Când este activat, funcțiile pot fi declanșate fără a apăsa Fn. Apăsați Fn împreună cu tastele originale F1-F12 pentru a le declanșa.',
+      gSync: 'GSync',
+      'gSync.desc': 'Activează sau dezactivează rata de reîmprospătare variabilă G-Sync',
+      hdr: 'HDR',
+      'hdr.desc': 'Activează intervalul dinamic ridicat (HDR) pentru afișajul încorporat.',
+      'hdr.warning': 'Utilizarea HDR este blocată de setările Windows.',
+      hybridMode: 'Mod hibrid',
+      'hybridMode.desc': 'Modul hibrid vă permite să comutați între GPU-ul integrat și cel dedicat. Dezactivarea lui activează modul direct al GPU-ului dedicat; este necesară o repornire pentru ca schimbarea să aibă efect.',
+      igpuMode: 'Mod GPU dedicat',
+      'igpuMode.desc': 'Forțează ieșirea grafică integrată pentru a economisi energie',
+      refreshRate: 'Rată de reîmprospătare',
+      'refreshRate.desc': 'Comută rata de reîmprospătare a afișajului încorporat.',
+      itsMode: 'Mod ITS',
+      'itsMode.desc': 'Soluție termică inteligentă',
+      microphone: 'Microfon',
+      'microphone.desc': 'Dezactivarea acestei opțiuni pune pe mut toate microfoanele disponibile.',
+      overDrive: 'Over Drive',
+      'overDrive.desc': 'Când este activat, accelerează afișajul încorporat pentru a îmbunătăți timpul de răspuns. Poate cauza ghosting de depășire.',
+      panelLogo: 'Lumină logo Legion',
+      'panelLogo.desc': 'Pornește sau oprește lumina logo-ului Legion de pe spatele dispozitivului.',
+      portsBacklight: 'Iluminare porturi',
+      'portsBacklight.desc': 'Pornește sau oprește luminile porturilor de pe spatele dispozitivului.',
+      resolution: 'Rezoluție',
+      'resolution.desc': 'Comută rezoluția afișajului încorporat.',
+      dpiScale: 'Scalare DPI',
+      'dpiScale.desc': 'Comută scalarea afișajului încorporat.',
+      speaker: 'Difuzor',
+      touchpadLock: 'Blocare touchpad',
+      'touchpadLock.desc': 'Dezactivează touchpad-ul. Recomandat când folosiți un mouse pentru a evita atingerile accidentale.',
+      whiteKeyboard: 'Iluminare tastatură',
+      'whiteKeyboard.desc': 'Folosiți comanda rapidă Fn + Space pentru a comuta și regla luminozitatea iluminării tastaturii.',
+      winKey: 'Dezactivare tastă Win',
+      'winKey.desc': 'Se aplică doar tastaturii încorporate. Când este activat, tasta Win nu mai răspunde.',
+      oneLevelWhiteKeyboard: 'Iluminare tastatură',
+      'oneLevelWhiteKeyboard.desc': 'Folosiți comanda rapidă Fn + Space pentru a comuta iluminarea.',
+      'hybridMode.states.hybrid': 'Hibrid',
+      'hybridMode.states.hybridIGPUOnly': 'Hibrid-iGPU',
+      'hybridMode.states.hybridAuto': 'Hibrid-Auto',
+      'hybridMode.states.off': 'dGPU',
+      'hybridMode.info.title': 'Despre modurile de funcționare GPU',
+      'hybridMode.info.hybrid.title': 'Mod hibrid',
+      'hybridMode.info.hybrid.message': 'Sunt activate atât GPU-ul integrat, cât și cel dedicat. Sistemul va comuta automat între ele în funcție de nevoile sale.',
+      'hybridMode.info.hybridIgpu.title': 'Mod Hibrid-iGPU',
+      'hybridMode.info.hybridIgpu.message': 'Utilizați doar GPU-ul integrat. Acest mod minimizează consumul de energie și zgomotul.',
+      'hybridMode.info.hybridIgpu.disclaimer': 'Acest mod are efect numai atunci când GPU-ul dedicat nu funcționează.',
+      'hybridMode.info.hybridAuto.title': 'Mod Hibrid-Auto',
+      'hybridMode.info.hybridAuto.message': 'Utilizați doar GPU-ul integrat pe baterie și ambele GPU-uri când alimentatorul AC este conectat. Când este conectat un alimentator non-standard, sistemul comută la modul Hibrid-iGPU.',
+      'hybridMode.info.dgpu.title': 'Mod dGPU',
+      'hybridMode.info.dgpu.message': 'Utilizați doar GPU-ul dedicat. Acest mod oferă cea mai bună performanță grafică, dar crește consumul de energie.',
+      'hybridMode.info.dgpu.disclaimer': 'Comutarea la și de la acest mod necesită repornirea.',
+      'hybridMode.restartRequired.title': 'Repornire necesară',
+      'hybridMode.restartRequired.message': 'Schimbarea la {{mode}} necesită repornirea. Doriți să reporniți acum?',
+      'hybridMode.restartRequired.now': 'Reporniți acum',
+      'hybridMode.restartRequired.later': 'Voi reporni mai târziu',
+      'hybridMode.restartFailed': 'Nu s-a putut reporni computerul automat. Vă rugăm să îl reporniți manual pentru a finaliza schimbarea.',
+      'hybridMode.changeFailed.title': 'Nu s-a putut schimba Modul de funcționare al GPU-ului',
+      'hybridMode.changeFailed.message': 'Încercați să schimbați modul din nou peste câteva secunde, dacă nu vedeți rezultatul așteptat. Dacă dGPU nu răspunde deloc, vă rugăm să reporniți laptopul.',
+      batteryModes: {
+        conservation: 'Mod de conservare',
+        normal: 'Mod normal',
+        rapidCharge: 'Mod de încărcare rapidă'
+      },
+      powerModeOptions: {
+        quiet: 'Silențios',
+        balance: 'Echilibrat',
+        performance: 'Performanță',
+        extreme: 'Extrem',
+        godMode: 'Personalizat'
+      }
+    },
+    common: {
+
+      loading: 'Se încarcă…',
+
+      deleteColor: 'Delete color',
+
+      notifications: 'Notifications',
+
+      minimize: 'Minimize',
+
+      maximize: 'Maximize',
+
+      restore: 'Restore',
+
+      windowClose: 'Close',
+
+      navigation: 'Navigation',
+
+      expandNavigation: 'Expand navigation',
+
+      collapseNavigation: 'Collapse navigation',      error: 'Ceva nu a mers bine',
+      retry: 'Reîncercați',
+      close: 'Închidere',
+      cancel: 'Anulare',
+      moreActions: 'Mai multe acțiuni',
+      copied: 'Copiat în clipboard',
+      add: 'Adăugare',
+      save: 'Salvare',
+      saveAndClose: 'Salvare și închidere',
+      apply: 'Aplicare',
+      applyAndClose: 'Aplicare și închidere',
+      default: 'Implicit',
+      rename: 'Redenumiți',
+      delete: 'Ștergere',
+      ok: 'OK',
+      confirm: 'Confirmare',
+      resetDefault: 'Resetare la implicit',
+      load: 'Încărcare',
+      notSupportedOnPlatform: 'Nu este acceptat pe această platformă.'
+    },
+    colorPicker: {
+      hex: 'Hex',
+      red: 'Roșu',
+      green: 'Verde',
+      blue: 'Albastru',
+      ok: 'OK'
+    },
+    fanCurve: {
+      fanSpeed: 'Viteză ventilator',
+      fanSpeedMax: '100%',
+      cpu: 'CPU',
+      cpuSensor: 'Senzor CPU',
+      gpu: 'GPU',
+      gpu2: 'GPU #2',
+      rpm: 'RPM'
+    },
+    pages: {
+      placeholder: 'În curând'
+    },
+    settings: {
+      title: 'Setări',
+      description: 'Configurați opțiunile de aspect, comportament și funcționalitate ale aplicației.',
+      nav: {
+        appearance: 'Aspect',
+        application: 'Aplicație',
+        power: 'Putere',
+        display: 'Afișaj',
+        smartKeys: 'Taste inteligente',
+        update: 'Actualizare',
+        integrations: 'Integrări',
+        osd: 'OSD'
+      },
+      appearance: {
+        language: 'Limbă',
+        languageDesc: 'Alegeți limba',
+        temperature: 'Temperatură',
+        temperatureDesc: 'Alegeți unitatea folosită de senzorii de temperatură.',
+        theme: 'Mod global de culoare al interfeței',
+        accentColor: 'Culoare de accent globală a interfeței',
+        accentColorDesc: 'Schimbați culoarea de accent a aplicației.',
+        accentColorSource: {
+          system: 'Sistem',
+          custom: 'Personalizat'
+        },
+        appScale: 'Scalare interfață',
+        appScaleDesc:
+          'Scalați uniform textul și întreaga interfață, independent de scalarea afișajului Windows.',
+        appScaleAuto: 'Auto',
+        themeOptions: {
+          system: 'Sistem',
+          light: 'Luminos',
+          dark: 'Întunecat'
+        }
+      },
+      application: {
+        minimizeToTray: 'Minimizare în tăviță',
+        minimizeToTrayDesc: 'Minimizează întotdeauna în tăviță în loc de bara de activități.',
+        minimizeOnClose: 'Minimizare la închidere',
+        minimizeOnCloseDesc: 'Minimizează întotdeauna în tăviță. Când este activat, faceți clic dreapta pe pictograma din tăviță și apăsați Închidere pentru a ieși din aplicație.',
+        disableUnsupportedWarning: 'Nu avertiza despre dispozitive incompatibile',
+        disableUnsupportedWarningDesc: 'Ascunde promptul privind dispozitivul incompatibil afișat la pornire.',
+        enableHardwareSensors: 'Senzori hardware',
+        enableHardwareSensorsDesc: 'Activați sondarea avansată a hardware-ului pentru a monitoriza temperaturi, frecvențe și limite de putere detaliate.',
+        dontShowNotifications: 'Nu afișa notificări',
+        dontShowNotificationsDesc: 'Dezactivează notificările din aplicație și de sistem',
+        autorun: 'Pornire la autentificare',
+        autorunDesc: 'Pornește aplicația când vă autentificați în Windows.',
+        autorunDescLoginItem: 'Porniți aplicația când vă conectați la acest computer.',
+        autorunUnavailable: 'Începeți la conectare nu este disponibil în previzualizarea browserului.',
+        autorunOptions: {
+          enabled: 'Activat',
+          enabledDelayed: 'Activat (întârziat)',
+          disabled: 'Dezactivat'
+        },
+        groupStartup: 'Pornire și fereastră',
+        groupSensors: 'Senzori hardware',
+        groupNotifications: 'Notificări și avertismente',
+        groupSoftware: 'Conflicte software',
+        animationsEnabled: 'Animații interfață',
+        animationsEnabledDesc: 'Animează ferestre, dialoguri și alte elemente de interfață. Dezactivați pentru a reduce mișcarea.',
+        sensorRefreshInterval: 'Interval de reîmprospătare a senzorilor',
+        sensorRefreshIntervalDesc: 'Cât de des sunt reîmprospătate valorile senzorilor. De asemenea, puteți face clic dreapta pe cardul de senzori pentru a-l schimba temporar.',
+        extensionsEnabled: 'Activare extensii',
+        extensionsEnabledDesc: 'Activează încărcarea pluginurilor și extensiilor',
+        sensorSections: 'Secțiuni senzori',
+        sensorSectionsDesc: 'Alegeți ce secțiuni de senzori sunt afișate și în ce ordine.',
+        disableVantage: 'Dezactivare Lenovo Vantage',
+        disableVantageDesc: 'Dezactivează Lenovo Vantage și ImController fără a le dezinstala.\nSe recomandă repornirea după modificarea acestei opțiuni.',
+        disableLegionZone: 'Dezactivare Legion Zone',
+        disableLegionZoneDesc: 'Dezactivează Legion Zone și serviciul său fără a-l dezinstala.\nSe recomandă repornirea după modificarea acestei opțiuni.',
+        disableLenovoHotkeys: 'Dezactivare Lenovo Hotkeys',
+        disableLenovoHotkeysDesc: 'Dezactivează Lenovo Hotkeys și serviciul său fără a-l dezinstala.\nDacă este dezactivat, această aplicație va gestiona comenzile rapide Fn.\nSe recomandă repornirea după modificarea acestei opțiuni.',
+        valueOn: 'Activat',
+        valueOff: 'Dezactivat'
+      },
+      saved: 'Setări salvate',
+      saveFailed: 'Nu s-au putut salva setările',
+      osd: {
+        title: 'OSD',
+        showOsd: 'Afișare OSD',
+        showOsdDesc: 'Afișează imediat afișajul pe ecran.',
+        style: 'Stil suprapunere',
+        styles: {
+          panel: 'Panou',
+          bar: 'Bară'
+        },
+        refreshInterval: 'Interval de reîmprospătare',
+        snapThreshold: 'Prag de aliniere',
+        lockPosition: 'Blocare poziție',
+        resetPosition: 'Resetare poziție',
+        previewHint: 'Previzualizare',
+        tabs: {
+          general: 'General',
+          appearance: 'Aspect',
+          thresholds: 'Praguri',
+          sensors: 'Senzori'
+        },
+        opacity: 'Opacitate',
+        cornerRadius: 'Rază colț',
+        cornerRadiusTop: 'Sus',
+        cornerRadiusBottom: 'Jos',
+        fontSize: 'Dimensiune font',
+        background: 'Culoare fundal',
+        category: 'Culoare categorie',
+        label: 'Culoare etichetă',
+        value: 'Culoare valoare',
+        warning: 'Culoare avertisment',
+        critical: 'Culoare critică',
+        separator: 'Culoare separator',
+        thresholds: {
+          performance: 'Performanță',
+          fpsRedline: 'Limită FPS',
+          lowFpsDelta: 'Delta FPS scăzut',
+          temperature: 'Temperatură',
+          usage: 'Utilizare',
+          warning: 'Avertisment',
+          critical: 'Critic'
+        },
+        items: {
+          groups: {
+            game: 'Joc',
+            cpu: 'CPU',
+            gpu: 'GPU',
+            pch: 'PCH'
+          },
+          names: {
+            Fps: 'FPS',
+            LowFps: '1% Low',
+            FrameTime: 'Timp cadru',
+            CpuFrequency: 'Ceas nucleu',
+            CpuPCoreFrequency: 'Ceas P-Core',
+            CpuECoreFrequency: 'Ceas E-Core',
+            CpuUtilization: 'Utilizare',
+            CpuTemperature: 'Temperatură',
+            CpuPower: 'Consum',
+            CpuFan: 'Ventilator',
+            GpuFrequency: 'Ceas nucleu',
+            GpuUtilization: 'Utilizare',
+            GpuTemperature: 'Temp. nucleu',
+            GpuVramUtilization: 'Utilizare VRAM',
+            GpuVramTemperature: 'Temp. VRAM',
+            GpuPower: 'Consum',
+            GpuFan: 'Ventilator',
+            MemoryUtilization: 'Utilizare',
+            MemoryTemperature: 'Temperatură',
+            Disk1Temperature: 'Temperatura discului 1',
+            Disk2Temperature: 'Temperatura discului 2',
+            PchTemperature: 'Temperatura PCH',
+            PchFan: 'Ventilator'
+          }
+        }
+      },
+      power: {
+        powerModeMapping: 'Cartografiere mod putere',
+        powerModeMappingDesc: 'La comutarea modurilor de performanță, comută automat și planul de alimentare Windows sau modul de alimentare Windows.',
+        mappingModes: {
+          disabled: 'Dezactivat',
+          windowsPowerMode: 'Mod de alimentare Windows',
+          windowsPowerPlan: 'Plan de alimentare Windows'
+        },
+        windowsPowerModes: 'Mod de alimentare Windows',
+        windowsPowerModesDesc: 'Alegeți modul de alimentare Windows aplicat când se schimbă modul de putere.',
+        windowsPowerPlans: 'Plan de alimentare Windows',
+        windowsPowerPlansDesc: 'Alegeți planul de alimentare Windows aplicat când se schimbă modul de putere.',
+        synchronizeBrightness: 'Blocare luminozitate afișaj',
+        synchronizeBrightnessDesc: 'Când este activat, luminozitatea rămâne aceeași la comutarea între planurile de alimentare.',
+        smartFnLock: 'Taste modificatoare Smart Fn Lock',
+        modifierKeys: {
+          shift: 'Shift',
+          ctrl: 'Ctrl',
+          alt: 'Alt'
+        },
+        resetBatteryOnSince: 'Resetează „Pe baterie din" la pornire',
+        resetBatteryOnSinceDesc: 'Resetează contorul pentru „Pe baterie din" din secțiunea baterie când sistemul repornește.',
+        godModeFnQ: 'Comutare la Mod Personalizat cu Fn+Q',
+        godModeFnQDesc: 'Permite comutarea rapidă la Modul Personalizat cu Fn+Q.'
+      },
+      display: {
+        navigationItems: 'Vizibilitate elemente de navigare',
+        groupNotifications: 'Notificări',
+        groupWindow: 'Fereastră și afișaj',
+        notificationCategories: 'Categorii de notificare și comportament',
+        navigationKeys: {
+          keyboard: 'Iluminare tastatură',
+          battery: 'Baterie',
+          automation: 'Automatizare',
+          macro: 'Macro',
+          windowsOptimization: 'Optimizare Windows',
+          pluginExtensions: 'Pluginuri și extensii',
+          about: 'Despre'
+        },
+        notificationPosition: 'Poziție notificare',
+        notificationPositions: {
+          bottomRight: 'Dreapta jos',
+          bottomCenter: 'Jos centrat',
+          bottomLeft: 'Stânga jos',
+          centerLeft: 'Stânga centrat',
+          topLeft: 'Stânga sus',
+          topCenter: 'Sus centrat',
+          topRight: 'Dreapta sus',
+          centerRight: 'Dreapta centrat',
+          center: 'Centru'
+        },
+        notificationDuration: 'Durată notificare',
+        notificationDurations: {
+          short: 'Scurt (3s)',
+          normal: 'Normal (5s)',
+          long: 'Lung (10s)'
+        },
+        excludedRefreshRates: 'Rate de reîmprospătare excluse',
+        excludedRefreshRatesDesc: 'Excludeți rate de reîmprospătare pentru a face comutarea Fn+R mai rapidă.',
+        excludedRefreshRatesHint: 'Editarea avansată va fi disponibilă într-o versiune viitoare',
+        excludedRefreshRatesEmpty: 'Nicio rată de reîmprospătare exclusă',
+        excludedRefreshRatesManageHint: 'Clic pentru a gestiona ratele de reîmprospătare excluse',
+        notifications: 'Notificări',
+        notificationsDesc: 'Alegeți ce notificări sunt afișate.',
+        bootLogo: 'Logo de pornire',
+        bootLogoDesc: 'Personalizați logo-ul de pornire afișat când pornește computerul.'
+      },
+      smartKeys: {
+        smartFnLock: 'Smart Fn Lock',
+        smartFnLockDesc: 'Când Alt, Ctrl sau Shift este apăsat, Fn este deblocat temporar.',
+        off: 'Oprit',
+        hint: 'Tastele modificatoare Smart Fn Lock pot fi schimbate în setările de Putere.',
+        singlePressActionDesc: 'Atribuiți o acțiune rapidă la apăsarea simplă a Fn+F9.',
+        doublePressActionDesc: 'Atribuiți o acțiune rapidă la dubla apăsare a Fn+F9.'
+      },
+      update: {
+        frequency: 'Verificare automată a actualizărilor',
+        frequencies: {
+          perHour: 'În fiecare oră',
+          perThreeHours: 'La fiecare 3 ore',
+          perTwelveHours: 'La fiecare 12 ore',
+          perDay: 'În fiecare zi',
+          perWeek: 'În fiecare săptămână',
+          perMonth: 'În fiecare lună'
+        },
+        includePrerelease: 'Include versiunile de prerelease',
+        includePrereleaseDesc: 'Când este dezactivat, sunt livrate doar versiunile stabile; când este activat, sunt primite și actualizările de prerelease (beta).',
+        repository: 'Depozit de actualizări',
+        repositoryDesc: 'Configurați depozitul GitHub pentru verificarea actualizărilor. Lăsați gol pentru a folosi setarea implicită.',
+        repositoryOwner: 'Proprietar depozit',
+        repositoryOwnerPlaceholder: 'ex., SSC-STUDIO',
+        repositoryName: 'Nume depozit',
+        repositoryNamePlaceholder: 'ex., UniversalDeviceToolkit',
+        check: 'Verifică actualizări',
+        comingSoon: 'Verificarea actualizărilor va fi disponibilă într-o versiune viitoare'
+      },
+      checkResult: {
+        available: 'Versiune nouă disponibilă: v{{version}}',
+        latest: 'Aveți cea mai recentă versiune'
+      },
+      integrations: {
+        hwinfo: 'HWiNFO64',
+        hwinfoDesc: 'Partajați viteza ventilatorului, temperatura bateriei și alte date cu HWiNFO64. HWiNFO64 poate necesita o repornire după comutare.',
+        cli: 'Interfață de linie de comandă',
+        cliDesc: 'Activează interfața de linie de comandă pentru a permite controlul din linia de comandă.'
+      }
+    },
+    keyboard: {
+      title: 'Iluminare tastatură',
+      unsupported: 'Iluminarea tastaturii nu este suportată pe acest dispozitiv',
+      simulatedHint: 'Mod simulare: nu a fost detectată nicio tastatură, afișând o interfață demonstrativă',
+      rgb: {
+        preset: 'Profil',
+        settings: 'Setări iluminare',
+        effect: 'Efect',
+        speed: 'Viteză',
+        brightness: 'Luminozitate',
+        zones: 'Culori zone',
+        synchroniseZones: 'Sincronizare zone',
+        presets: {
+          off: 'Oprit',
+          one: 'Profil 1',
+          two: 'Profil 2',
+          three: 'Profil 3',
+          four: 'Profil 4'
+        },
+        effectOptions: {
+          static: 'Static',
+          breath: 'Respirație',
+          smooth: 'Neted',
+          waveRtl: 'Undă (RTL)',
+          waveLtr: 'Undă (LTR)'
+        },
+        speedOptions: {
+          slowest: 'Cea mai lentă',
+          slow: 'Lentă',
+          fast: 'Rapidă',
+          fastest: 'Cea mai rapidă'
+        },
+        brightnessOptions: {
+          low: 'Scăzută',
+          high: 'Ridicată'
+        }
+      },
+      spectrum: {
+        brightness: 'Luminozitate',
+        profile: 'Profil',
+        logo: 'Lumină logo',
+        effects: 'Efecte',
+        colors: 'Culori',
+        addEffect: 'Adăugare efect',
+        deleteEffect: 'Ștergere',
+        noEffects: 'Niciun efect',
+        selectAll: 'Selectează toate zonele',
+        deselectAll: 'Deselectează toate zonele',
+        switchLayout: 'Comută aranjamentul tastaturii',
+        editEffect: 'Editare',
+        allKeys: 'Toate tastele',
+        zonesCount: '{{count}} zone',
+        noLayoutHint: 'Nu s-a putut încărca aranjamentul tastaturii.',
+        selectEffectHint: 'Selectați un efect de mai jos pentru a previzualiza și edita tastele sale.',
+        frontPanelHint: 'Faceți clic sau trageți pentru a selecta zonele tastaturii și panoului frontal',
+        effectEdit: {
+          addTitle: 'Adăugare efect',
+          editTitle: 'Editare efect',
+          effect: 'Efect',
+          speed: 'Viteză',
+          direction: 'Direcție',
+          clockwiseDirection: 'Direcție',
+          color: 'Culoare',
+          colors: 'Culori',
+          addColor: 'Adăugare culoare',
+          keys: 'Taste',
+          alwaysWarning: 'Acest efect va fi aplicat întregii tastaturi și va înlocui toate celelalte efecte.'
+        },
+        effectTypes: {
+          always: 'Întotdeauna',
+          rainbowScrew: 'Curcubeu șurub',
+          rainbowWave: 'Undă curcubeu',
+          colorChange: 'Schimbare culoare',
+          colorWave: 'Undă de culoare',
+          colorPulse: 'Puls de culoare',
+          smooth: 'Neted',
+          rain: 'Ploaie',
+          ripple: 'Ripple',
+          type: 'Tip',
+          audioBounce: 'Salt audio',
+          audioRipple: 'Ripple audio',
+          auroraSync: 'Sincronizare Aurora'
+        }
+      }
+    },
+    automation: {
+      title: 'Automatizare',
+      enable: 'Activare automatizare',
+      enableDesc: 'Universal Device Toolkit trebuie să ruleze pentru ca acțiunile automate să aibă efect.',
+      subtitle: 'Când este activată, această aplicație verifică și rulează acțiunile potrivite în ordine atunci când starea dispozitivului se schimbă.',
+      actionsTitle: 'Acțiuni',
+      actionsEmpty: 'Nu există încă acțiuni automate',
+      quickActionsTitle: 'Acțiuni rapide',
+      quickActionsHint: 'Acțiunile rapide sunt disponibile în meniul clic dreapta al pictogramei tavă.',
+      quickActionsEmpty: 'Nu există încă acțiuni rapide. Faceți clic pe „Nou" pentru a crea una.',
+      deactivateGpu: 'Dezactivați GPU',
+      renamePipeline: 'Redenumiți pipeline-ul',
+      changeIcon: 'Schimbare iconiță',
+      renamePipelineTitle: 'Redenumiți pipeline-ul',
+      renamePipelinePlaceholder: 'Introduceți numele pipeline-ului',
+      empty: 'Nu există încă scripturi de automatizare. Faceți clic pe „Nou" pentru a crea unul.',
+      runNow: 'Rulează acum',
+      delete: 'Ștergere',
+      deleteStep: 'Șterge pasul',
+      addPipeline: 'Nou',
+      addStep: 'Adăugare pas',
+      configure: 'Configurare',
+      stepType: 'Tip pas',
+      steps: 'Pași',
+      save: 'Salvare',
+      revert: 'Revenire',
+      pipelineName: 'Nume pipeline',
+      pipelineNamePlaceholder: 'Introduceți numele pipeline-ului',
+      quickAction: 'Acțiune rapidă',
+      optionsLoading: 'Se încarcă opțiunile...',
+      stepLabels: {
+        rgbKeyboardBacklight: 'Iluminare tastatură',
+        run: 'Rulare',
+        showMainWindow: 'Afișează fereastra principală',
+        speaker: 'Difuzor',
+        spectrumKeyboardBacklightBrightness: 'Luminozitate iluminare tastatură',
+        spectrumKeyboardBacklightImportProfile: 'Importă profilul de iluminare pentru tastatură',
+        spectrumKeyboardBacklightProfile: 'Profil de iluminare al tastaturii',
+        touchpadLock: 'Blocare touchpad',
+        turnOffMonitors: 'Oprire afișaje',
+        turnOffWiFi: 'Dezactivare Wi-Fi',
+        turnOnWiFi: 'Activare Wi-Fi',
+        whiteKeyboardBacklight: 'Iluminare tastatură',
+        winKey: 'Blocare tastă Windows',
+        scriptPath: 'Cale executabil',
+        scriptArguments: 'Argumente',
+        runSilently: 'Rulează în mod silențios',
+        runSilentlyDesc: 'Execută aplicații de consolă, fără a crea o fereastră de consolă.',
+        runWaitUntilFinished: 'Așteaptă până se finalizează',
+        runWaitUntilFinishedDesc: 'Așteaptă până programul sau scriptul se termină de executat',
+        runHint: 'Rulați un script sau un program.\nAsigurați-vă mai întâi că scriptul rulează corect.',
+        importProfilePath: 'Cale',
+        browse: 'Răsfoiește',
+        off: 'Oprit',
+        on: 'Activat',
+        mute: 'Pe mut',
+        unmute: 'Sunet activ',
+        low: 'Scăzut',
+        high: 'Ridicat',
+        presetOne: 'Profil 1',
+        presetTwo: 'Profil 2',
+        presetThree: 'Profil 3',
+        presetFour: 'Profil 4',
+        values: {
+          off: 'Oprit',
+          on: 'Activat',
+          mute: 'Pe mut',
+          unmute: 'Sunet activ',
+          low: 'Scăzut',
+          high: 'Ridicat',
+          presetOne: 'Profil 1',
+          presetTwo: 'Profil 2',
+          presetThree: 'Profil 3',
+          presetFour: 'Profil 4'
+        }
+      },
+      state: {
+        on: 'Activat',
+        off: 'Oprit',
+        hidden: 'Ascunde',
+        show: 'Afișează',
+        toggle: 'Comută starea',
+        quiet: 'Silențios',
+        balance: 'Echilibrat',
+        performance: 'Performanță',
+        extreme: 'Extrem',
+        godMode: 'Personalizat',
+        hybrid: 'Hibrid',
+        hybridIgpu: 'Hibrid-iGPU',
+        hybridAuto: 'Hibrid-Auto',
+        dgpu: 'dGPU',
+        acAdapter: 'Alimentator AC',
+        usbPd: 'USB Power Delivery',
+        acAndUsbPd: 'AC și USB PD',
+        hz: '{{frequency}} Hz',
+        resolution: '{{width}} × {{height}}'
+      },
+      stepEditors: {
+        hybridMode: {
+          title: 'Mod de funcționare GPU',
+          desc: 'Selectați modul de operare GPU în funcție de utilizarea computerului și de condițiile de alimentare.\nSchimbarea modurilor poate necesita repornirea.'
+        },
+        instantBoot: {
+          title: 'Boot instantanee',
+          desc: 'Porniți laptopul când este conectat un încărcător.'
+        },
+        macro: {
+          title: 'Macro',
+          desc: 'Activează sau dezactivează macro-urile.'
+        },
+        microphone: {
+          title: 'Microfon',
+          desc: 'Când este dezactivat, microfoanele vor fi puse pe mut.'
+        },
+        notification: {
+          title: 'Afișează notificarea',
+          desc: 'Afișează o notificare cu textul introdus.',
+          placeholder: 'Text notificare'
+        },
+        oneLevelWhiteKeyboardBacklight: {
+          title: 'Iluminare tastatură',
+          desc: 'Pornește sau oprește iluminarea.'
+        },
+        osd: {
+          title: 'OSD',
+          desc: 'Afișează sau ascunde OSD'
+        },
+        overclockDiscreteGPU: {
+          title: 'Overclock GPU',
+          desc: 'Crește performanța prin overclocking pe GPU discret.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă GPU-ul discret nu este disponibil.'
+        },
+        overDrive: {
+          title: 'Over Drive',
+          desc: 'Îmbunătățește timpul de răspuns al afișajului încorporat.'
+        },
+        panelLogoBacklight: {
+          title: 'Iluminare logo panou',
+          desc: 'Pornește sau oprește iluminarea de pe capacul laptopului.'
+        },
+        playSound: {
+          title: 'Redă sunet',
+          desc: 'Sunt acceptate formate muzicale comune precum wav sau mp3.',
+          browse: 'Răsfoiți...',
+          none: 'Niciun fișier selectat'
+        },
+        portsBacklight: {
+          title: 'Iluminare porturi',
+          desc: 'Pornește sau oprește iluminarea porturilor de pe spatele laptopului.'
+        },
+        powerMode: {
+          title: 'Mod putere',
+          desc: 'Schimbă modul de performanță.'
+        },
+        quickAction: {
+          title: 'Acțiune rapidă',
+          desc: 'Rulează o acțiune rapidă salvată.',
+          placeholder: 'Selectați o acțiune rapidă',
+          empty: 'Nu există încă acțiuni rapide. Creați mai întâi un pipeline fără declanșator.'
+        },
+        refreshRate: {
+          title: 'Rată de reîmprospătare',
+          desc: 'Schimbă rata de reîmprospătare a afișajului încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.',
+          empty: 'Nicio rată de reîmprospătare disponibilă'
+        },
+        resolution: {
+          title: 'Rezoluție',
+          desc: 'Schimbă rezoluția afișajului încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.',
+          empty: 'Nicio rezoluție disponibilă'
+        },
+        alwaysOnUsb: {
+          title: 'USB mereu activ',
+          desc: 'Încarcă dispozitivele USB când laptopul este oprit, în repaus sau în hibernare.',
+          options: {
+            OnWhenSleeping: 'Activat, când este în repaus',
+            OnAlways: 'Activat, întotdeauna'
+          }
+        },
+        battery: {
+          title: 'Mod baterie',
+          desc: 'Alegeți cum este încărcată bateria.',
+          options: {
+            Conservation: 'Conservare',
+            Normal: 'Normal',
+            RapidCharge: 'Încărcare rapidă'
+          }
+        },
+        batteryNightCharge: {
+          title: 'Încărcare baterie peste noapte',
+          desc: 'Când este activat, acest dispozitiv se va încărca până la 80% când este conectat peste noapte și va termina încărcarea până la 100% până dimineața, când folosiți dispozitivul.'
+        },
+        deactivateGPU: {
+          title: 'Dezactivare GPU',
+          desc: 'Dezactivează GPU-ul dedicat dacă este activ inutil.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit sau modul hibrid nu este activ.',
+          options: {
+            KillApps: 'Închide aplicațiile',
+            RestartGPU: 'Repornește GPU'
+          }
+        },
+        delay: {
+          title: 'Întârziere',
+          desc: 'Adaugă o întârziere înainte de a rula următorul pas.',
+          second_one: '{{count}} secundă',
+          second_other: '{{count}} secunde'
+        },
+        displayBrightness: {
+          title: 'Luminozitate afișaj',
+          desc: 'Schimbă luminozitatea afișajului încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.',
+          percent: '{{value}}%'
+        },
+        dpiScale: {
+          title: 'DPI',
+          desc: 'Schimbă scalarea afișajului încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.',
+          percent: '{{value}}%'
+        },
+        flipToStart: {
+          title: 'Întoarce pentru a porni',
+          desc: 'Pornește laptopul când deschideți capacul.'
+        },
+        fnLock: {
+          title: 'Blocare Fn',
+          desc: 'Folosiți funcțiile secundare ale tastelor F1-F12 fără a ține apăsată tasta Fn.'
+        },
+        godModePreset: {
+          title: 'Profil Mod Personalizat',
+          desc: 'Activează profilul Modului Personalizat.\nAceastă setare are efect doar când Modul Personalizat este activat.'
+        },
+        hdr: {
+          title: 'HDR',
+          desc: 'Activează intervalul dinamic ridicat (HDR) pe afișajul încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.'
+        },
+        hideMainWindow: {
+          title: 'Ascunde fereastra principală'
+        },
+        rgbKeyboardBacklight: {
+          title: 'Iluminare tastatură',
+          desc: 'Reglează profilul de iluminare al tastaturii.'
+        },
+        run: {
+          title: 'Rulare',
+          desc: 'Rulează un script sau un program.\nAsigurați-vă mai întâi că scriptul rulează corect.'
+        },
+        showMainWindow: {
+          title: 'Afișează fereastra principală'
+        },
+        speaker: {
+          title: 'Difuzor',
+          desc: 'Când este pe mut, toate dispozitivele audio active vor fi puse pe mut.'
+        },
+        spectrumKeyboardBacklightBrightness: {
+          title: 'Luminozitate iluminare tastatură',
+          desc: 'Reglează luminozitatea iluminării tastaturii.'
+        },
+        spectrumKeyboardBacklightImportProfile: {
+          title: 'Importă profilul de iluminare pentru tastatură',
+          desc: 'Importă și aplică configurația de iluminare profilului curent.'
+        },
+        spectrumKeyboardBacklightProfile: {
+          title: 'Profil de iluminare al tastaturii',
+          desc: 'Reglează profilul de iluminare al tastaturii.'
+        },
+        touchpadLock: {
+          title: 'Blocare touchpad',
+          desc: 'Dezactivează touchpad-ul.'
+        },
+        turnOffMonitors: {
+          title: 'Oprire afișaje',
+          desc: 'Oprește toate afișajele disponibile.'
+        },
+        turnOffWiFi: {
+          title: 'Dezactivare Wi-Fi'
+        },
+        turnOnWiFi: {
+          title: 'Activare Wi-Fi'
+        },
+        whiteKeyboardBacklight: {
+          title: 'Iluminare tastatură',
+          desc: 'Reglează luminozitatea iluminării tastaturii.'
+        },
+        winKey: {
+          title: 'Blocare tastă Windows',
+          desc: 'Dezactivează tasta Windows pe tastatura încorporată.'
+        }
+      },
+      moveUp: 'Mutare în sus',
+      moveDown: 'Mutare în jos',
+      noEditableParameters: 'Acest pas nu are parametri editabili.',
+      addAutomaticPipeline: 'Acțiune nouă',
+      addQuickAction: 'Acțiune rapidă nouă',
+      quickActionName: 'Nume acțiune rapidă',
+      triggerPicker: {
+        title: 'Acțiune nouă — alegeți un declanșator'
+      },
+      triggerConfig: {
+        title: 'Configurare declanșator',
+        noEditableTriggers: 'Acest declanșator nu are parametri configurabili.'
+      },
+      triggerNames: {
+        aCAdapterConnected: 'Când alimentatorul AC este conectat',
+        lowWattageACAdapterConnected: 'Când este conectat un alimentator AC de putere redusă',
+        aCAdapterDisconnected: 'Când alimentatorul AC este deconectat',
+        powerMode: 'Când Modul de putere este schimbat',
+        godModePresetChanged: 'Când se schimbă profilul Modului Personalizat',
+        gamesAreRunning: 'Când rulează un joc',
+        gamesStop: 'Când jocul se închide',
+        processesAreRunning: 'Când pornește o aplicație',
+        processesStopRunning: 'Când se închide o aplicație',
+        userInactivity: 'Când utilizatorul devine inactiv',
+        userInactivityZero: 'Când utilizatorul devine activ',
+        sessionLock: 'Sesiune blocată',
+        sessionUnlock: 'Sesiune deblocată',
+        lidOpened: 'Capac deschis',
+        lidClosed: 'Capac închis',
+        displayOn: 'Când afișajele se pornesc',
+        displayOff: 'Când afișajele se opresc',
+        hdrOn: 'Când HDR se activează',
+        hdrOff: 'Când HDR se dezactivează',
+        deviceConnected: 'Când un dispozitiv este conectat',
+        deviceDisconnected: 'Când un dispozitiv este deconectat',
+        externalDisplayConnected: 'Când este conectat un afișaj extern',
+        externalDisplayDisconnected: 'Când este deconectat un afișaj extern',
+        wiFiConnected: 'Când Wi-Fi este conectat',
+        wiFiDisconnected: 'Când Wi-Fi este deconectat',
+        time: 'La o oră specificată',
+        periodic: 'Acțiune periodică',
+        hardwareSensor: 'Senzor hardware',
+        batteryPercentage: 'Procent baterie',
+        onStartup: 'La pornire',
+        onResume: 'La reluare'
+      },
+      triggerEditors: {
+        noProcesses: 'Niciun proces selectat.',
+        noDevices: 'Niciun dispozitiv selectat.',
+        inactivityTimeout: 'Timp de expirare',
+        seconds: '{{count}} secunde',
+        minutes: '{{count}} minute',
+        hours: '{{count}} ore',
+        ssidPlaceholder: 'Nume rețea (SSID)',
+        addSsid: 'Adăugare nume rețea',
+        atTime: 'La ora',
+        hour: 'Oră',
+        minute: 'Minut',
+        allDays: 'În fiecare zi',
+        day: {
+          0: 'Duminică',
+          1: 'Luni',
+          2: 'Marți',
+          3: 'Miercuri',
+          4: 'Joi',
+          5: 'Vineri',
+          6: 'Sâmbătă'
+        },
+        metric: 'Metrică',
+        comparison: 'Comparație',
+        threshold: 'Prag',
+        thresholdPercent: 'Prag (%)',
+        durationSeconds: 'Durată (secunde)',
+        cooldownSeconds: 'Pauză (secunde)',
+        chargeFilter: 'Filtru de încărcare',
+        deviceInstanceId: 'ID instanță dispozitiv'
+      }
+    },
+    macro: {
+      title: 'Macro tastatură',
+      enable: 'Activare macro-uri',
+      enableDesc: 'Universal Device Toolkit trebuie să ruleze pentru ca macro-urile să funcționeze.',
+      subtitle: 'Puteți înregistra serii de apăsări de taste și le puteți activa folosind tastatura numerică.',
+      numpad: 'Tastatură numerică',
+      sequence: 'Secvență',
+      repeat: 'Număr de repetări',
+      events: 'Evenimente',
+      save: 'Salvare',
+      clear: 'Șterge',
+      play: 'Redă',
+      record: 'Înregistrează',
+      recordingOptions: 'Opțiuni de înregistrare',
+      ignoreDelays: 'Ignoră întârzierile',
+      interruptOnOtherKey: 'Întrerupe la altă tastă',
+      dontRepeat: 'Nu repeta',
+      keyboardOnly: 'Doar tastatura',
+      keyboardMouse: 'Tastele tastaturii și butoanele mouse-ului',
+      allInputs: 'Toate intrările',
+      recordingInterrupted: 'Înregistrare întreruptă',
+      keyboard: 'Tastatură',
+      mouse: 'Mouse',
+      move: 'Mișcare mouse',
+      wheelUp: 'Rotire mouse în sus',
+      wheelDown: 'Rotire mouse în jos',
+      wheelLeft: 'Rotire mouse la stânga',
+      wheelRight: 'Rotire mouse la dreapta',
+      leftButton: 'Buton stânga',
+      rightButton: 'Buton dreapta',
+      middleButton: 'Buton mijloc',
+      xButton: 'Buton X',
+      button: 'Buton mouse',
+      empty: 'Nicio secvență macro pentru această tastă încă',
+      recording: {
+        preparing: 'Înregistrarea va începe în 3 secunde...',
+        title: 'Înregistrare...',
+        pressEscToStop: 'Apăsați ESC pentru a opri.',
+        focusHint: 'Mențineți această fereastră focalizată în timpul înregistrării.'
+      }
+    },
+    plugins: {
+      title: 'Pluginuri și extensii',
+      search: 'Căutare pluginuri',
+      filterAll: 'Toate',
+      filterInstalled: 'Instalate',
+      filterNotInstalled: 'Neinstalate',
+      refresh: 'Reîmprospătare',
+      total: '{{count}} în total',
+      summary: '{{count}} instalate',
+      updatable: '{{count}} actualizare(ări) disponibilă(e)',
+      install: 'Instalare',
+      update: 'Actualizare',
+      updateAvailable: 'Actualizare disponibilă',
+      uninstall: 'Dezinstalare',
+      uninstallConfirm: 'Dezinstalați acest plugin?',
+      uninstallFailed: 'Dezinstalarea a eșuat',
+      installed: 'Instalat',
+      online: 'Online',
+      settings: {
+        nativePageUnavailable: 'Acest plugin conține pagini native UI care nu sunt disponibile în versiunea Electron. Funcționalitatea sa de fundal continuă să funcționeze prin gazda backend.',
+        capability: {
+          settingsPage: 'Pagina de setări',
+          featurePage: 'Pagina de caracteristici',
+          optimizationCategory: 'Categoria de optimizare',
+          executableEntryPoint: 'Intrare executabilă'
+        }
+      },
+      installing: 'Se instalează…',
+      downloading: 'Se descarcă…',
+      preparingDownload: 'Se pregătește descărcarea...',
+      downloadCompleted: 'Descărcare finalizată',
+      offline: 'Magazinul online este indisponibil; se afișează doar pluginurile instalate local',
+      empty: 'Niciun plugin găsit',
+      noResults: 'Nu s-au găsit pluginuri care corespund căutării dumneavoastră.',
+      dependencies: 'Dependențe',
+      dependenciesBlocked: 'Acest plugin are dependențe nesatisfăcute și nu poate fi dezinstalat',
+      details: 'Detalii',
+      usageGuide: 'Ghid de utilizare',
+      changelog: 'Jurnal de modificări',
+      importProgress: 'Se importă pachete de pluginuri...',
+      importSuccess: 'Importate {{count}} pachete de plugin',
+      importFailed: 'Nu s-au putut importa {{count}} pachete de plugin',
+      installAll: 'Instalează tot',
+      installAllComplete: 'Instalate {{count}} plugin(uri)',
+      installAllPartial: '{{count}} din {{total}} operațiuni de plugin finalizate',
+      copyId: 'Copiază ID-ul pluginului',
+      copied: 'ID-ul pluginului a fost copiat în clipboard',
+      copyFailed: 'Nu s-a putut copia ID-ul pluginului',
+      local: 'Local',
+      collapseDetails: 'Ascunde detaliile',
+      showDetails: 'Afișează detaliile',
+      updateInfo: 'Informații actualizare',
+      versionLabel: 'Versiune:',
+      configure: 'Configurare',
+      open: 'Deschidere',
+      description: 'Instalați și gestionați pluginuri pentru a extinde funcționalitatea',
+      storeUnavailable: 'Magazinul de pluginuri este indisponibil',
+      summaryTotal: 'Total pluginuri',
+      summaryInstalled: 'Instalate',
+      summaryUpdates: 'Actualizări disponibile',
+      importFromFiles: 'Import din fișiere',
+      importDesktopOnly: 'Importarea fișierelor plugin necesită aplicația desktop.',
+
+
+      notFound: 'Pluginul nu a fost găsit',
+
+      back: 'Înapoi la pluginuri',
+
+      noWebPage: 'Acest plugin nu are interfață web.',
+
+      pageLoadFailed: 'Pagina de plugin nu a putut fi încărcată.',
+
+      openPage: 'Deschideți pagina de plugin',      updateAll: 'Actualizează tot',
+      emptyStore: 'Magazinul de pluginuri este momentan gol. Rămâneți la curent pentru viitoarele actualizări de pluginuri.'
+    },
+    optimization: {
+      title: 'Optimizarea sistemului',
+      info: 'Aceste acțiuni modifică serviciile și fișierele sistemului și pot necesita drepturi de administrator.',
+      tabs: {
+        optimization: 'Optimizare Windows',
+        cleanup: 'Curățare',
+        driverDownload: 'Descărcare drivere',
+        networkAcceleration: 'Rețea și accelerare'
+      },
+      recommended: 'Recomandat',
+      selected: 'Selectate',
+      selectedActions: 'Acțiuni selectate',
+      noSelection: 'Nicio acțiune selectată',
+      selectRecommended: 'Selectează recomandatele',
+      applyRecommended: 'Aplică toate recomandatele',
+      apply: 'Aplicare',
+      clear: 'Anulează (revert)',
+      applied: 'Aplicat',
+      applyFailed: 'Nu s-a putut aplica (pot fi necesare drepturi de administrator)',
+      elevationRequired:
+        'Este necesară aprobarea administratorului. Confirmați solicitarea UAC sau porniți aplicația la nivel ridicat.',
+      reverted: 'Anulat',
+      revertFailed: 'Nu s-a putut anula (pot fi necesare drepturi de administrator)',
+      estimate: 'Estimare dimensiune',
+      estimateResult: 'Spațiu recuperabil',
+      runCleanup: 'Rulează curățarea',
+      cleanupHint: 'Curățarea rulează regulile personalizate de curățare.',
+      cleanupConfirm: 'Rulez curățarea acum?',
+      cleanupDone: 'Curățare finalizată',
+      cleanupFailed: 'Curățarea a eșuat',
+      cleanup: {
+        items: 'Items',
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        custom: {
+          header: 'Reguli personalizate de curățare',
+          description: 'Foldere suplimentare care sunt curățate împreună cu acțiunile de curățare selectate.',
+          empty: 'Nicio regulă personalizată de curățare',
+          add: 'Adăugare folder',
+          edit: 'Editare folder',
+          remove: 'Îndepărtare',
+          clear: 'Șterge tot',
+          added: 'Regulă adăugată',
+          updated: 'Regulă actualizată',
+          recursive: 'Include subfolderele',
+          noExtensions: 'Nicio extensie specificată',
+          folderPickerFailed: 'Nu s-a putut deschide selectorul de foldere'
+        }
+      },
+      network: {
+        status: 'Stare',
+        running: 'Rulează',
+        stopped: 'Oprit',
+        backendReady: 'Backend pregătit',
+        backendNotReady: 'Backend nepregătit',
+        config: 'Configurație de bază',
+        accelerationEnabled: 'Activare accelerare',
+        mode: 'Mod',
+        modes: {
+          off: 'Oprit',
+          systemProxy: 'Proxy de sistem',
+          hosts: 'Hosts',
+          diagnosticsOnly: 'Doar diagnostice'
+        },
+        save: 'Salvare configurație',
+        saved: 'Configurație salvată',
+        saveFailed: 'Nu s-a putut salva configurația',
+        start: 'Pornire',
+        stop: 'Oprire',
+        startFailed: 'Pornirea a eșuat',
+        stopFailed: 'Oprirea a eșuat',
+        modeLabel: 'Mod',
+        targetsLabel: 'Ținte',
+        portLabel: 'Port',
+        targetsHeading: 'Ținte de accelerare',
+        domainGroupsHint: 'Selectați serviciile care trebuie accelerate prin proxy-ul local.',
+        domainGroupsEmptyTitle: 'Nicio țintă de accelerare',
+        domainGroupsEmptyDescription: 'Lista de ținte este goală sau nimic nu corespunde căutării.',
+        selectionHint: 'Țintele selectate sunt aplicate când pornește accelerarea.',
+        searchTargets: 'Căutare ținte',
+        recommendedMenu: 'Recomandat',
+        groupRuntime: '{{selected}}/{{total}} selectate  {{active}} active',
+        trafficHeading: 'Prezentare trafic',
+        metrics: {
+          upload: 'Încărcare',
+          download: 'Descărcare',
+          connections: 'Conexiuni',
+          total: 'Trafic total',
+          health: 'Sănătate'
+        },
+        trafficLive: 'Se colectează traficul proxy în direct',
+        trafficWaiting: 'Porniți accelerarea pentru a colecta traficul în direct',
+        trafficUnavailable: 'Datele de trafic sunt temporar indisponibile',
+        connectionsWaiting: 'Se așteaptă datele de conectare...',
+        destinationsWaiting: 'Se așteaptă datele despre destinație...',
+        connectionsHeading: 'Conexiuni curente și recente',
+        destinationsHeading: 'Statistici destinații',
+        connectionSummary: '{{active}} active / {{total}} în total',
+        destinationSummary: '{{count}} destinații',
+        connectionStates: {
+          active: 'Activă',
+          completed: 'Finalizată',
+          blocked: 'Blocată',
+          failed: 'Eșuată',
+          stopped: 'Oprită',
+          unknown: 'Necunoscută'
+        },
+        unknownHost: 'Gazdă necunoscută',
+        destinationRow: '{{count}} conexiuni  {{latency}}',
+        health: {
+          healthy: 'Sănătos',
+          degraded: 'Degradat',
+          stopped: 'Oprit',
+          unknown: 'Necunoscut'
+        },
+        modeFull: {
+          systemProxy: 'Proxy de sistem',
+          hosts: 'Fișier hosts',
+          diagnosticsOnly: 'Doar diagnostice',
+          off: 'Inactiv'
+        },
+        backendMissingHint: 'Worker-ul proxy este indisponibil',
+        proxyMissing:
+          'Accelerarea rețelei nu poate porni deoarece NetworkProxy.exe lipsește din instalare.',
+        hostsModeRefused:
+          'Modul gazde nu este pornit de pe această pagină. Utilizați proxy de sistem sau diagnosticare.',
+        startRefused:
+          'Accelerația nu a început. Verificați dacă este activat și dacă este selectată cel puțin o țintă.',
+        selectGroupsFirstHint: 'Selectați cel puțin o țintă',
+        advancedHeading: 'Avansat',
+        advancedBody: 'Setări avansate și recuperarea rețelei.',
+        portFormat: 'Port: {{port}}',
+        dangerZoneHeading: 'Zonă periculoasă',
+        restoreHint: 'Restaurați starea inițială a rețelei de sistem înregistrată înainte de accelerare.',
+        restoreNetwork: 'Restaurare rețea',
+        restoreConfirm: 'Restaurați acum starea rețelei de sistem?',
+        restored: 'Starea rețelei a fost restaurată',
+        diag: {
+          natTitle: 'NAT',
+          dnsTitle: 'DNS',
+          ipv6Title: 'IPv6',
+          detect: 'Detectare',
+          unknown: 'Necunoscut',
+          natTypes: {
+            OpenInternet: 'NAT deschis',
+            Nat: 'NAT',
+            UdpBlocked: 'UDP blocat',
+            Unknown: 'Necunoscut'
+          },
+          internetConnected: 'Conectat',
+          internetUnreachable: 'Inaccesibil',
+          natType: 'Tip NAT',
+          localIp: 'IP local',
+          publicIp: 'IP public',
+          internet: 'Internet',
+          dnsDomain: 'Domeniu',
+          customDns: 'DNS personalizat',
+          enableDoh: 'DoH',
+          dohUrl: 'URL DoH',
+          latency: 'Latență',
+          resolvedAddress: 'Adresă rezolvată',
+          latencyFormat: '{{ms}} ms',
+          failed: 'Eșuat',
+          ipv6Support: 'Suport IPv6',
+          ipv6Address: 'Adresă IPv6',
+          ipv6SupportedFull: 'Acces IPv6 suportat',
+          notSupported: 'Nesuportat'
+        }
+      },
+      driverDownload: {
+        comingSoon: 'Descărcarea driverelor va fi disponibilă într-o versiune viitoare'
+      },
+      driver: {
+        machineType: 'Tip sistem',
+        machineTypePlaceholder: 'ex., 82K3',
+        os: 'Sistem de operare',
+        downloadTo: 'Descărcare în',
+        downloadToPlaceholder: 'Alegeți un folder pentru descărcări',
+        browse: 'Răsfoiește',
+        openDownloadTo: 'Deschide folderul',
+        source: 'Sursă',
+        primarySource: 'Vantage',
+        primarySourceMessage: 'Baza de date oficială a dispozitivelor prin Vantage.',
+        secondarySource: 'PC Support',
+        secondarySourceMessage: 'Baza de date de compatibilitate de la PC Support.',
+        scan: 'Scanare',
+        scanning: 'Se scanează…',
+        scanValidation: 'Introduceți un tip de sistem valid de 4 caractere și alegeți un sistem de operare.',
+        disclaimer: 'Pachetele provin din sursa selectată. Instalați pe propriul risc.',
+        filter: 'Filtru',
+        onlyShowUpdates: 'Doar actualizările',
+        sort: {
+          name: 'Sortează după nume',
+          category: 'Sortează după categorie',
+          date: 'Sortează după dată'
+        },
+        selectRecommended: 'Selectează recomandatele',
+        startAll: 'Pornește tot',
+        pauseAll: 'Pauză pentru toate',
+        clearSelection: 'Șterge selecția',
+        packagesFound: '{{count}} pachete găsite.',
+        packagesFoundOne: '1 pachet găsit.',
+        status: {
+          NotStarted: '',
+          Queued: 'În așteptare',
+          Downloading: 'Se descarcă',
+          Installing: 'Se instalează',
+          Completed: 'Finalizat',
+          Error: 'Eroare'
+        },
+        recommended: 'Recomandat',
+        isUpdate: 'Actualizare',
+        reboot: {
+          recommended: 'Repornire recomandată',
+          required: 'Repornire necesară',
+          shutdown: 'Oprire necesară'
+        },
+        oldPackageWarning: 'Acest pachet este mai vechi de un an; driverul poate fi învechit.',
+        download: 'Descărcare',
+        install: 'Instalare',
+        uninstall: 'Dezinstalare',
+        pause: 'Pauză',
+        openReadme: 'Deschide README',
+        hide: 'Ascunde',
+        hideAll: 'Ascunde tot',
+        showHiddenDownloads: 'Afișează descărcările ascunse',
+        downloadInProgress: {
+          title: 'Descărcări în curs',
+          message: 'Descărcările încă rulează. Scanați din nou?',
+          confirm: 'Scanare'
+        },
+        empty: {
+          notScanned: {
+            title: 'Scanează pentru pachete de drivere',
+            message: 'Alegeți o sursă și scanați pentru a lista descărcările compatibile de drivere.'
+          },
+          noResults: {
+            title: 'Nu s-au găsit descărcări de drivere',
+            message: 'Încercați o altă sursă, sistem de operare sau tip de sistem.'
+          },
+          noFilterResults: {
+            title: 'Nu s-au găsit descărcări corespunzătoare',
+            message: 'Ajustați filtrul, opțiunea doar actualizări sau lista descărcărilor ascunse.'
+          },
+          error: {
+            title: 'Scanarea driverelor nu s-a finalizat',
+            message: 'Verificați sursa selectată și conexiunea la rețea, apoi scanați din nou.'
+          }
+        },
+        osOptions: {
+          windows7: 'Windows 7',
+          windows8: 'Windows 8',
+          windows10: 'Windows 10',
+          windows11: 'Windows 11'
+        }
+      }
+    },
+    about: {
+      title: 'Despre',
+      appName: 'Aplicație',
+      version: 'Versiune',
+      build: 'Compilare',
+      links: 'Linkuri proiect',
+      projectWebsite: 'Website-ul proiectului pe GitHub',
+      latestRelease: 'Ultima versiune pe GitHub',
+      applicationFolders: 'Folderele aplicației',
+      data: 'Date',
+      temp: 'Temporar',
+      pid: 'ID proces',
+      machine: 'Model dispozitiv',
+      bios: 'Versiune BIOS',
+      compatible: 'Compatibilitate',
+      yes: 'Compatibil',
+      no: 'Necompatibil',
+      dataFolder: 'Folder date',
+      thirdParty: 'Biblioteci terțe',
+      translationCredit: 'Traduceri furnizate de comunitate.',
+      copyright: 'Drepturi de autor'
+    },
+    statusBanner: {
+      updateAvailable: 'Actualizare disponibilă!',
+      updateAvailableWithVersion: 'Actualizarea {{version}} disponibilă!',
+      pluginExtensionsDisabled: 'Navigarea cu extensii de plugin este ascunsă. Activați-l în Setări → Elemente de navigare.',
+      vantageRunning: 'Lenovo Vantage și/sau ImController rulează în fundal.',
+      legionZoneRunning: 'Legion Zone rulează în fundal.',
+      fnKeysRunning: 'Lenovo Hotkeys rulează în fundal.'
+    },
+    clipboard: {
+      copyProcesses: 'Copiază lista de procese',
+      copySuccess: 'Lista de procese a fost copiată în clipboard',
+      copyFailed: 'Nu s-a putut copia lista de procese'
+    },
+    notifications: {
+      mergedCount: '×{{count}}'
+    },
+    loading: {
+      automation: 'Se încarcă automatizarea...',
+      dashboard: 'Se încarcă tabloul de bord...',
+      settings: 'Se încarcă setările…'
+    },
+    update: {
+      checkResult: {
+        available: 'Versiune nouă disponibilă: v{{version}}',
+        latest: 'Aveți cea mai recentă versiune'
+      }
+    },
+    bootLogoWindowcustomize: 'Personalizare',
+    bootLogoWindowcustomLogoSet: 'Logo-ul de pornire personalizat este setat',
+    bootLogoWindowdefaultLogoSet: 'Logo-ul de pornire implicit este setat',
+    bootLogoWindowdescription: 'Logo-ul de pornire personalizat trebuie să aibă exact {0} pixeli. \n Formatele acceptate sunt: {1}.',
+    bootLogoWindowsetCustomFailed: 'Logo personalizat nu a putut fi setat: {0}',
+    bootLogoWindowsetCustomSuccess: 'Logo-ul de pornire personalizat a fost setat.',
+    bootLogoWindowsetDefaultFailed: 'Logo implicit nu a putut fi setat: {0}',
+    bootLogoWindowsetDefaultSuccess: 'Logo-ul de pornire implicit a fost setat.',
+    bootLogoWindowstatus: 'Stare',
+    bootLogoWindowtitle: 'Logo de pornire',
+    excludeRefreshRatesWindowdescription: 'Debifați ratele de reîmprospătare pe care nu doriți să le utilizați pentru comanda rapidă Fn+R.',
+    excludeRefreshRatesWindownoRefreshRatesFoundmessage: 'Asigurați-vă că afișajul laptopului este pornit. Universal Device Toolkit nu poate încărca rate de reîmprospătare pentru un afișaj care nu este pornit.',
+    excludeRefreshRatesWindowtitle: 'Excludere rată de reîmprospătare',
+    hardwareSensorSectionsWindowtitle: 'Secțiuni senzori',
+    keyboardvantageEnabledWarningmessage: 'Iluminarea tastaturii nu poate fi controlată aici atunci când Lenovo Vantage sau serviciile sale rulează.',
+    keyboardvantageEnabledWarningtitle: 'Lenovo Vantage sau serviciile sale rulează',
+    navigationItemsSettingsWindowdescription: 'Configurează care elemente de navigare sunt afișate în bara laterală. Panoul de control și Setările vor fi întotdeauna vizibile.',
+    navigationItemsSettingsWindowtitle: 'Setări elemente de navigare',
+    notificationsSettingsWindowdontShowNotificationsmessage: 'Dezactivează notificarea pentru acțiunile tastelor Fn, cum ar fi dezactivarea sunetului microfonului.\nActivați această opțiune dacă aveți conflicte cu aplicațiile pe ecran complet.',
+    notificationsSettingsWindowdontShowNotificationstitle: 'Nu afișa notificări',
+    notificationsSettingsWindownotificationDurationtitle: 'Durată',
+    notificationsSettingsWindownotificationPositiontitle: 'Poziție',
+    notificationsSettingsWindowtitle: 'Notificări',
+    pluginSettingsWindowauthor: 'Autor: {0}',
+    pluginSettingsWindownoConfigMessage: 'Acest plugin nu are setări configurabile.',
+    pluginSettingsWindowpluginNotFound: 'Plugin negăsit: {0}',
+    pluginSettingsWindowsettings: 'Setări',
+    pluginSettingsWindowtitle: 'Setări plugin',
+    powerPlansWindowloadError: 'Planurile de alimentare Windows nu au putut fi încărcate. Este disponibil doar planul de alimentare implicit.',
+    revertToDefault: 'Revenire la implicit',
+    saveButton: 'Salvează',
+    selectSmartKeyPipelinesWindowlistdescription: 'Alegeți una sau mai multe acțiuni rapide de parcurs',
+    selectSmartKeyPipelinesWindowlistempty: 'Nicio Acțiune Rapidă definită.',
+    selectSmartKeyPipelinesWindowshowThisApp: 'Arată această aplicație',
+    sensorsControlmemoryClocktitle: 'Ceas de memorie',
+    sensorSectionsmoveDown: 'Mută în jos',
+    sensorSectionsmoveUp: 'Mută în sus',
+    sensorSectionsordertitle: 'Ordinea secțiunilor',
+    sensorSectionsvisibletitle: 'Secțiuni vizibile',
+    settingsPagesmartKeyDoublePressActiontitle: 'Acțiune secundară pentru tasta inteligentă',
+    settingsPagesmartKeySinglePressActiontitle: 'Acțiune tastă inteligentă',
+    tryAgain: 'Încercați din nou',
+    windowsPowerModesWindowtitle: 'Moduri de alimentare Windows',
+    windowsPowerPlansWindowdefaultPowerPlan: 'Implicit',
+    windowsPowerPlansWindowtitle: 'Planuri de alimentare Windows',
   wpf: {
     'WindowsOptimization_Category_Explorer_Title': 'Explorator și interfață',
     'WindowsOptimization_Category_Explorer_Description': 'Reglați bara de activități, Exploratorul de fișiere și comportamentul interfeței.',
@@ -22,11 +1566,6 @@
     'WindowsOptimization_Action_ServicesSearch_Title': 'Dezactivați indexarea căutării Windows',
     'WindowsOptimization_Action_ServicesRemoteRegistry_Title': 'Dezactivați Registrul de la distanță',
     'WindowsOptimization_Action_ServicesErrorReporting_Title': 'Dezactivați raportarea erorilor',
-    browse: 'Răsfoiește…',
-    commonExecutableFileDialogFilter: 'Nume proces sau cale executabil',
-    deleteAll: 'Ștergeți tot',
-    updateWindowdownloadComplete: 'Descărcare finalizată.',
-    updateWindowrestartToInstall: 'Instalare și repornire',
     aboutPageapplicationFolders: 'Folderele aplicației',
     aboutPagebuild: 'Compilare',
     aboutPagedata: 'Date',
@@ -175,7 +1714,7 @@
     compact: 'Vizualizare compactă',
     compatibilityCheckErrorWindowdescription: 'Aplicația nu a reușit să citească informațiile despre dispozitiv la pornire. Vă rugăm să verificați detaliile erorii de mai jos și să încercați pașii de depanare, dacă este necesar.',
     compatibilityCheckErrorWindowopenLog: 'Deschideți Fișierul Jurnal',
-    compatibilityCheckErrorWindowtip1: 'Asigurați-vă că serviciul Windows Management Instrumentation (WMI) este activ: Deschideți Servicii (services.msc) și verificați dacă „Instrumentația de Administrare Windows…?este activ.',
+    compatibilityCheckErrorWindowtip1: 'Asigurați-vă că serviciul Windows Management Instrumentation (WMI) rulează: Deschideți Servicii (services.msc) și verificați dacă „Windows Management Instrumentation” rulează.',
     compatibilityCheckErrorWindowtip2: 'Rulați aplicația ca Administrator pentru a vă asigura că aveți permisiuni suficiente pentru a accesa registrul sistemului și WMI.',
     compatibilityCheckErrorWindowtip3: 'Verificați resursele sistemului: Închideți alte aplicații care consumă multe resurse și încercați din nou.',
     compatibilityCheckErrorWindowtip4: 'Consultați fișierul jurnal pentru informații detaliate despre eroare făcând clic pe "Deschideți Jurnalul" mai jos.',
@@ -260,15 +1799,15 @@
     deviceSetupWindowbasicModePackName: 'Mod de bază (doar pluginuri și optimizare)',
     deviceSetupWindowbasicModeSummary: 'Acest dispozitiv va porni în modul de bază. Comenzile specifice hardware-ului sunt ascunse până când este disponibil un pachet de dispozitiv compatibil.',
     deviceSetupWindowbasicPackDetail: 'Profil de bază: pluginuri, optimizare sistem, limbă și temă. Comenzile hardware rămân ascunse.',
-    deviceSetupWindowbasicPackFormat: '{0} …?de bază',
+    deviceSetupWindowbasicPackFormat: '{0} — de bază',
     deviceSetupWindowconfirmButton: 'Confirmă',
     deviceSetupWindowdevicePackFormat: 'Pachet dispozitiv: {0}',
-    deviceSetupWindowdownloadingPack: 'Se descarcă pachetul de asistență pentru dispozitiv…?',
+    deviceSetupWindowdownloadingPack: 'Se descarcă pachetul de asistență pentru dispozitiv...',
     deviceSetupWindowhardwarePackDetail: 'Hardware complet: moduri de alimentare, senzori, ventilatoare și comenzi Lenovo când firmware-ul le expune.',
-    deviceSetupWindowhardwarePackFormat: '{0} …?hardware complet',
+    deviceSetupWindowhardwarePackFormat: '{0} — hardware complet',
     deviceSetupWindowmatchingPackHint: 'Confirmarea salvează acest profil și continuă. Omite pentru acum păstrează setarea implicită și poate întreba din nou la următoarea pornire. Windows nu repornește.',
     deviceSetupWindowmatchingPackSummary: 'Universal Device Toolkit a detectat un pachet de dispozitiv corespunzător. Confirmați-l acum pentru ca aplicația să poată pregăti funcțiile specifice hardware-ului.',
-    deviceSetupWindowpackDownloadFailed: 'Pachetul de asistență pentru dispozitiv nu a putut fi descărcat. Verificați conexiunea și confirmați pentru a reîncerca, sau omiteți …?vom întreba din nou la următoarea pornire.',
+    deviceSetupWindowpackDownloadFailed: 'Nu s-a putut descărca pachetul de asistență pentru dispozitiv. Verificați-vă conexiunea și confirmați pentru a reîncerca sau omiteți și vă vom întreba din nou următoarea lansare.',
     deviceSetupWindowpreparing: 'Se pregătește configurarea dispozitivului...',
     deviceSetupWindowrecommendedPackFormat: '{0} (recomandat)',
     deviceSetupWindowselectPackLabel: 'Profil dispozitiv (pachet)',
@@ -471,7 +2010,7 @@
     mainWindownavigationItemsettings: 'Setări',
     mainWindownavigationItemwindowsOptimization: 'Optimizarea sistemului',
     mainWindowopenLogsTooltip: 'Deschide folderul de jurnale',
-    mainWindowpluginExtensionsDisabledNotice: 'Extensiile plugin sunt dezactivate implicit. Activați-le la Setări …?Elemente de navigare.',
+    mainWindowpluginExtensionsDisabledNotice: 'Navigarea cu extensii de plugin este ascunsă. Activați-l în Setări → Elemente de navigare.',
     mainWindowstopFnKeyserrormessage: 'Failed to stop Lenovo Hotkeys: {0}',
     mainWindowstopLegionZoneerrormessage: 'Failed to stop Legion Zone: {0}',
     mainWindowstopSoftwareerrortitle: 'Operation failed',
@@ -528,7 +2067,7 @@
     networkAccelerationPageadvancedHeading: 'Avansat',
     networkAccelerationPagebackendMissinghint: 'Componenta backend de accelerare lipsește, deci pornirea nu este disponibilă.',
     networkAccelerationPagecontrolHeading: 'Control',
-    networkAccelerationPagecontrolSubtitle: 'Accelerare locală opțională. Dezactivată implicit …?nu pornește niciodată automat la lansare.',
+    networkAccelerationPagecontrolSubtitle: 'Accelerație locală opțională. Dezactivat în mod implicit — nu se pornește niciodată automat la lansare.',
     networkAccelerationPagedangerZoneHeading: 'Zonă periculoasă',
     networkAccelerationPagediagbackend: 'Worker proxy',
     networkAccelerationPagediagbackendMissing: 'Negăsit',
@@ -551,21 +2090,21 @@
     networkAccelerationPagedomainEnabled: 'Activat',
     networkAccelerationPagedomainGroupsEmptyDescription: 'Nu este configurată nicio țintă de accelerare. Grupurile implicite integrate sunt adăugate automat la lansare.',
     networkAccelerationPagedomainGroupsEmptyTitle: 'Niciun grup de domenii',
-    networkAccelerationPagedomainGroupsFootnote: 'Doar liste statice auditate …?fără descărcare de reguli la distanță. Reporniți accelerarea după modificarea grupurilor.',
+    networkAccelerationPagedomainGroupsFootnote: 'Numai listele auditate statice — fără descărcare de reguli de la distanță. Reporniți accelerația după schimbarea grupelor.',
     networkAccelerationPagedomainGroupsHint: 'Doar grupurile activate sunt aplicate de PAC (proxy de sistem). Toate grupurile rămân oprite implicit.',
     networkAccelerationPagedomainGroupsLabel: 'Grupuri de domenii',
-    networkAccelerationPagedomainGroupsSummary: '{0}/{1} grupuri activate, {2} domenii (Steam/GitHub integrate, dezactivate implicit …?editați configurația avansată dacă e nevoie).',
+    networkAccelerationPagedomainGroupsSummary: 'Grupuri {0}/{1} activate · Domenii {2} (Steam/GitHub încorporat, dezactivat în mod implicit).',
     networkAccelerationPageenableHint: 'Deblochează selectarea modului și pornirea manuală. Nu modifică proxy-ul de sistem până la pornire.',
     networkAccelerationPageenableLabel: 'Permite accelerarea (doar pornire manuală)',
-    networkAccelerationPagehostsDisabledDetail: 'Hosts…?27.0.0.1 este indisponibil până există un origin TLS local. Alegeți System proxy sau doar diagnostice.',
-    networkAccelerationPagehostsDisabledNote: 'Mod Hosts dezactivat …?folosiți System proxy',
+    networkAccelerationPagehostsDisabledDetail: 'Gazde→127.0.0.1 nu este disponibilă până când există o origine TLS locală. Alegeți proxy de sistem sau numai diagnosticare.',
+    networkAccelerationPagehostsDisabledNote: 'Modul gazde dezactivat — utilizați proxy de sistem',
     networkAccelerationPagemetricUnitms: 'ms',
     networkAccelerationPagemetricUnitrate: 'KB/s',
     networkAccelerationPagemetricconnections: 'Conexiuni',
     networkAccelerationPagemetricdownload: 'Descărcare',
     networkAccelerationPagemetriclatency: 'Latență',
     networkAccelerationPagemetricrules: 'Reguli active',
-    networkAccelerationPagemetricunavailable: '…?',
+    networkAccelerationPagemetricunavailable: '—',
     networkAccelerationPagemetricupload: 'Încărcare',
     networkAccelerationPagemetricsHeading: 'Prezentare generală',
     networkAccelerationPagemodeHint: 'Alegeți System proxy (PAC) sau doar diagnostice. Rescrierea Hosts este rezervată până există un origin TLS local.',
@@ -583,7 +2122,7 @@
     networkAccelerationPagerestorePartial: 'Restaurarea s-a încheiat cu avertismente:',
     networkAccelerationPageretry: 'Reîncearcă',
     networkAccelerationPagerunDiagnostics: 'Rulează diagnostice',
-    networkAccelerationPagerunningDiagnostics: 'Se rulează diagnosticele…?',
+    networkAccelerationPagerunningDiagnostics: 'Se execută diagnosticarea...',
     networkAccelerationPageselectGroupsFirsthint: 'Selectați mai întâi una sau mai multe grupuri de domenii de mai jos.',
     networkAccelerationPageselectionBar: 'Acțiuni de selectare a grupurilor de domenii',
     networkAccelerationPageselectionCountFormat: '{0} elemente selectate',
@@ -598,17 +2137,17 @@
     networkAccelerationPagestateconnected: 'Conectat',
     networkAccelerationPagestatefailed: 'Pornire eșuată',
     networkAccelerationPagestateidle: 'Nepornit',
-    networkAccelerationPagestaterestoring: 'Se restaurează…?',
-    networkAccelerationPagestatestarting: 'Se pornește…?',
-    networkAccelerationPagestatestopping: 'Se oprește…?',
+    networkAccelerationPagestaterestoring: 'Se restabilește…',
+    networkAccelerationPagestatestarting: 'Începând…',
+    networkAccelerationPagestatestopping: 'Oprirea…',
     networkAccelerationPagestatusDiagnosticsOnly: 'Doar diagnostice (fără modificări ale rețelei de sistem)',
     networkAccelerationPagestatusHeading: 'Stare',
     networkAccelerationPagestatusOff: 'Oprit (implicit)',
     networkAccelerationPagestatusRunning: 'Rulează ({0}) loopback:{1}',
     networkAccelerationPagestatusStopped: 'Oprit ({0})',
-    networkAccelerationPagestatusWorkerMissing: 'Binarul worker nu a fost găsit …?construiți/instalați UniversalDeviceToolkit.NetworkProxy.exe',
+    networkAccelerationPagestatusWorkerMissing: 'Binarul de lucru nu a fost găsit - construiți/instalați UniversalDeviceToolkit.NetworkProxy.exe',
     networkAccelerationPagestop: 'Oprește',
-    networkAccelerationPagesubtitle: 'Accelerare locală opțională. Oprită implicit …?proxy-ul, hosts și certificatele nu pornesc niciodată automat la lansare.',
+    networkAccelerationPagesubtitle: 'Accelerație locală opțională. Dezactivat în mod implicit — nu pornește niciodată automat proxy-ul, gazdele sau certificatele la lansare.',
     networkAccelerationPagetargetsHeading: 'Ținte de accelerare',
     networkAccelerationPagetitle: 'Rețea și accelerare',
     no: 'Nu',
@@ -990,7 +2529,7 @@
     sensorsControldate: 'Dată',
     sensorsControldesignCapacity: 'design',
     sensorsControldetails: 'Detalii senzor',
-sensorsControldetailsToggleToolTip: 'Dublu clic pentru a afișa sau ascunde informațiile detaliate ale senzorilor.',
+    sensorsControldetailsToggleToolTip: 'Dublu clic pentru a afișa sau ascunde informațiile detaliate ale senzorilor.',
     sensorsControleCoreClocktitle: 'Frecvență E-Core',
     sensorsControlfantitle: 'Ventilator',
     sensorsControlfullCapacity: 'Capitală completă',
@@ -1084,8 +2623,8 @@ sensorsControldetailsToggleToolTip: 'Dublu clic pentru a afișa sau ascunde info
     settingsPagelanguageinstall: 'Instalează limba',
     settingsPagelanguageinstallFailed: 'Instalarea limbii a eșuat',
     settingsPagelanguageinstalling: 'Se instalează limba',
-    settingsPagelanguageinstallingapplying: 'Se extrage și se instalează…?',
-    settingsPagelanguageinstallingdownload: 'Se descarcă pachetul de limbă…?',
+    settingsPagelanguageinstallingapplying: 'Se extrage și se instalează...',
+    settingsPagelanguageinstallingdownload: 'Se descarcă pachetul lingvistic...',
     settingsPagelanguageinstallingpercent: '{0}%',
     settingsPagelanguagemessage: 'Selectați limba',
     settingsPagelanguagenotInstalledmessage: 'Folosiți butonul de descărcare pentru a instala acest pachet de limbă.',
@@ -1106,7 +2645,7 @@ sensorsControldetailsToggleToolTip: 'Dublu clic pentru a afișa sau ascunde info
     settingsPagenavigationsmartKeys: 'Taste inteligente',
     settingsPagenotificationsmessage: 'Configurați care notificări sunt afișate.',
     settingsPagenotificationstitle: 'Notificări',
-    settingsPageonBatterySinceResetmessage: 'Resetează contorul pentru „Pe baterie din…?în secțiunea baterie când sistemul repornește.',
+    settingsPageonBatterySinceResetmessage: 'Resetează contorul pentru „Pe baterie de când” din secțiunea baterie când sistemul repornește.',
     settingsPageonBatterySinceResettitle: 'Resetează "Pe baterie din" la pornire',
     settingsPageosdmessage: 'Suprapunere flotantă care afișează datele live ale senzorilor.',
     settingsPageosdtitle: 'Activare OSD',
@@ -1254,6 +2793,12 @@ sensorsControldetailsToggleToolTip: 'Dublu clic pentru a afișa sau ascunde info
     update: 'Actualizare',
     updateWindowtitle: 'Actualizare disponibilă',
     updateWindowwhatsNew: 'Ce-i nou?',
+    updateWindowreleaseNotesUnavailable: 'Notele de versiune nu sunt disponibile. Deschideți pagina proiectului pentru a vedea ce s-a schimbat.',
+    languageSelectorWindowsafeModeHint: 'Mod sigur/offline: puteți continua în engleză fără a descărca un pachet de limbă.',
+    languageSelectorWindowcancelled: 'Descărcare anulată.',
+    languageSelectorWindowhashMismatch: 'Verificarea integrității pachetului a eșuat.',
+    languageSelectorWindowcorruptPackage: 'Pachetul de limbă este corupt.',
+    symbolRegularPickerempty: 'Nicio iconiță corespunzătoare',
     watt: 'W',
     whiteKeyboardBacklightAutomationStepControlmessage: 'Reglați luminozitatea iluminării tastaturii.',
     whiteKeyboardBacklightAutomationStepControltitle: 'Iluminare tastatură',
@@ -1403,1518 +2948,24 @@ sensorsControldetailsToggleToolTip: 'Dublu clic pentru a afișa sau ascunde info
     windowsPowerModesWindowtitle: 'Moduri de alimentare Windows',
     windowsPowerPlansWindowdefaultPowerPlan: 'Implicit',
     windowsPowerPlansWindowtitle: 'Planuri de alimentare Windows',
-    languageSelectorWindowcancelled: 'Descărcare anulată.',
-    languageSelectorWindowcorruptPackage: 'Pachetul de limbă este corupt.',
-    languageSelectorWindowhashMismatch: 'Verificarea integrității pachetului a eșuat.',
-    languageSelectorWindowsafeModeHint: 'Mod sigur/offline: puteți continua în engleză fără a descărca un pachet de limbă.',
+    powerModeStateQuiet: 'Silențios',
     powerModeStateBalance: 'Echilibrat',
+    powerModeStatePerformance: 'Performanță',
     powerModeStateExtreme: 'Extrem',
     powerModeStateGodMode: 'Personalizat',
-    powerModeStatePerformance: 'Performanță',
-    powerModeStateQuiet: 'Silențios',
-    powerPlansWindowloadError: 'Planurile de alimentare Windows nu au putut fi încărcate. Este disponibil doar planul de alimentare implicit.',
-    sensorSectionBattery: 'Baterie',
-    sensorSectionCpu: 'CPU',
-    sensorSectionGpu: 'GPU',
-    symbolRegularPickerempty: 'Nicio iconiță corespunzătoare',
-    updateWindowreleaseNotesUnavailable: 'Notele de versiune nu sunt disponibile. Deschideți pagina proiectului pentru a vedea ce s-a schimbat.',
+    windowsPowerModeBestPowerEfficiency: 'Cea mai bună eficiență energetică',
     windowsPowerModeBalanced: 'Echilibrat',
     windowsPowerModeBestPerformance: 'Cea mai bună performanță',
-    windowsPowerModeBestPowerEfficiency: 'Cea mai bună eficiență energetică',
+    sensorSectionCpu: 'CPU',
+    sensorSectionBattery: 'Baterie',
+    sensorSectionGpu: 'GPU',
+    powerPlansWindowloadError: 'Planurile de alimentare Windows nu au putut fi încărcate. Este disponibil doar planul de alimentare implicit.',
     yes: 'Da',
-  },
-  app: {
-    name: 'Universal Device Toolkit'
-  },
-  titlebar: {
-    log: 'Jurnal',
-    openLogs: 'Deschide folderul de jurnale',
-    deviceName: 'Legion Y9000P IRX9',
-    deviceInfo: 'Informații despre dispozitiv'
-  },
-  nav: {
-    dashboard: 'Consolă',
-    settings: 'Setări',
-    automation: 'Automatizare',
-    keyboard: 'Tastatură',
-    keyboardBacklight: 'Iluminare tastatură',
-    macro: 'Macro personalizat',
-    windowsOptimization: 'Optimizarea sistemului',
-    pluginExtensions: 'Pluginuri și extensii',
-    about: 'Despre'
-  },
-  home: {
-    title: 'Universal Device Toolkit',
-    subtitle: 'Bine ați venit! Alegeți o secțiune de mai jos pentru a începe',
-    hostReady: 'Backend conectat',
-    hostState: 'Stare backend',
-    hostVersion: 'Versiune backend',
-    hostUnavailable:
-      'Backend-ul nu rulează. Așteptați un moment și încercați din nou, sau reporniți aplicația.',
-    initComplete: 'Inițializare completă',
-    safeStart: 'Pornire sigură, omisă',
-    machine: 'Dispozitiv',
-    compatible: 'Compatibilitate',
-    status: 'Stare'
-  },
-  dashboard: {
-    title: 'Consolă',
-    customize: 'Personalizare',
-    edit: {
-      title: 'Editare bord',
-      description: 'Alegeți ce secțiuni și funcții sunt afișate pe pagina de pornire.',
-      showSensors: 'Senzori hardware',
-      groups: 'Grupuri de funcții',
-      save: 'Salvare',
-      cancel: 'Anulare',
-      saved: 'Aspectul bordului a fost salvat',
-      error: 'Nu s-a putut salva aspectul bordului',
-      disclaimer: 'Este posibil ca unele funcții să nu apară în bord, în funcție de starea și configurația laptopului.',
-      addGroup: 'Adăugare',
-      renameGroup: 'Editare nume grup',
-      deleteGroup: 'Ștergere',
-      moveUp: 'Mutare în sus',
-      moveDown: 'Mutare în jos',
-      deleteItem: 'Ștergere',
-      addItem: 'Adăugare',
-      groupNamePlaceholder: 'Nume',
-      default: 'Implicit',
-      items: {
-        discreteGpu: 'Mod GPU dedicat',
-        overclockGpu: 'Overclock GPU',
-        turnOffMonitors: 'Oprire monitoare'
-      }
-    },
-    addItem: {
-      title: 'Adăugare',
-      searchPlaceholder: 'Căutare',
-      empty: 'Toate elementele bordului au fost deja adăugate',
-      addHint: 'Adaugă element'
-    },
-    cpu: 'CPU',
-    gpu: 'GPU',
-    memory: 'Memorie',
-    temperature: 'Temperatură',
-    usage: 'Utilizare',
-    power: 'Consum',
-    fanSpeed: 'Ventilator',
-    vram: 'VRAM',
-    memoryUsed: 'Memorie utilizată',
-    memoryTotal: 'Memorie totală',
-    storageTemp: 'Temperatură stocare',
-    notAvailable: '--',
-    sensor: {
-      cpu: 'Procesor',
-      gpu: 'Placă grafică',
-      memory: 'Memorie',
-      temperature: 'Temperatură',
-      usage: 'Utilizare',
-      power: 'Consum',
-      fanSpeed: 'Ventilator',
-      vram: 'VRAM',
-      frequency: 'Ceas nucleu',
-      battery: 'Baterie',
-      charge: 'Încărcare',
-      health: 'Sănătate',
-      rate: 'Rată',
-      fan: 'Ventilator',
-      lowPowerAdapter: 'Alimentator de putere redusă conectat',
-      batteryLow: 'Baterie descărcată',
-      acCharging: 'Alimentator conectat, se încarcă...',
-      acNotCharging: 'Alimentator conectat, nu se încarcă...',
-      remainingTime: 'Timp rămas estimat: {0}',
-      memoryTemperature: 'Temperatura memoriei',
-      ssdTemperature: 'Temperatura SSD',
-      vramTemperature: 'Temperatura VRAM',
-      vramUsage: 'Utilizare VRAM',
-      cycles: 'Cicluri',
-      capacity: 'Capacitate',
-      fullCapacity: 'Capacitate încărcare completă',
-      designCapacity: 'Capacitate proiectată',
-      date: 'Dată',
-      voltage: 'Tensiune nucleu',
-      voltageRange: 'Interval de tensiune',
-      powerRange: 'Interval de consum',
-      details: 'Detalii',
-      chartEmpty: 'Se așteaptă datele senzorilor',
-      refreshInterval: 'Interval de reîmprospătare',
-      detail: {
-        power: 'Consum',
-        powerCores: 'Nuclee',
-        powerMemory: 'Memorie',
-        powerPlatform: 'Platformă',
-        pCoreClock: 'Ceas P-Core',
-        eCoreClock: 'Ceas E-Core',
-        memoryUsage: 'Utilizare memorie',
-        sharedMemoryUsage: 'Utilizare memorie partajată',
-        vramUsage: 'Utilizare VRAM',
-        hotSpot: 'Hot Spot GPU',
-        pcieThroughput: 'Debit PCIe',
-        designCapacity: 'Capacitate proiectată',
-        fullChargeCapacity: 'Capacitate încărcare completă',
-        vramClock: 'Ceas VRAM',
-        currentPower: 'Consum curent'
-      }
-    },
-    group: {
-      power: 'Consum',
-      graphics: 'Grafică',
-      display: 'Afișaj',
-      other: 'Altele',
-      custom: 'Personalizat'
-    },
-    card: {
-      error: 'Nu s-a putut aplica setarea',
-      config: 'Setări avansate',
-      configComingSoon: 'Setările avansate vor fi disponibile într-o versiune viitoare'
-    }
-  },
-  balanceMode: {
-    title: 'Setări mod Echilibrat',
-    aiEngine: 'Activare AI Engine',
-    aiEngineDesc: 'Detectează automat când rulează anumite jocuri și ajustează performanța CPU și GPU. Temperaturile și zgomotul ventilatorului pot crește.'
-  },
-  godMode: {
-    title: 'Setări mod Personalizat',
-    activePreset: 'Profil activ',
-    presetName: 'Nume profil',
-    name: 'Nume',
-    errorLoad: 'Nu s-a putut încărca setarea.',
-    errorApply: 'Nu s-au putut aplica setările',
-    applySuccess: 'Setările modului personalizat au fost aplicate cu succes.',
-    defaultPresetName: 'Profil',
-    cpu: {
-      title: 'CPU',
-      longTermPL: 'Limită de putere pe termen lung',
-      'longTermPL.desc': 'Consumul continuu de energie care poate fi atins de CPU.',
-      shortTermPL: 'Limită de putere pe termen scurt',
-      'shortTermPL.desc': 'Consumul maxim de energie care poate fi atins de CPU într-un timp scurt.',
-      peakPL: 'Limită putere de vârf',
-      'peakPL.desc': 'Consumul maxim instantaneu de energie care poate fi atins de CPU.',
-      crossLoading: 'Limită de putere pe termen lung (Cross Loading)',
-      'crossLoading.desc': 'Consumul maxim de energie care poate fi atins de CPU atunci când CPU și GPU sunt utilizate simultan la maxim.',
-      pl1Tau: 'Durată limită de putere pe termen scurt',
-      'pl1Tau.desc': 'Perioada de timp pentru care procesorului i se permite să facă boost și să utilizeze limita de putere pe termen scurt. Când Tau expiră, se utilizează limita de putere pe termen lung.',
-      apuSppt: 'Limită putere APU sPPT',
-      'apuSppt.desc': 'Consumul maxim de energie care poate fi atins de CPU cu o întârziere minoră.',
-      tempLimit: 'Limită temperatură CPU',
-      'tempLimit.desc': 'Temperatura maximă care poate fi atinsă de CPU înainte ca frecvența și puterea să fie reduse.'
-    },
-    gpu: {
-      title: 'GPU',
-      dynamicBoost: 'Boost dinamic',
-      'dynamicBoost.desc': 'Puterea maximă suplimentară care poate fi alocată GPU-ului în funcție de consumul de energie al CPU-ului.',
-      ctgp: 'TGP configurabil',
-      'ctgp.desc': 'Cantitatea suplimentară de putere care poate fi alocată GPU-ului pe lângă consumul de energie de bază.',
-      tempLimit: 'Limită temperatură GPU',
-      'tempLimit.desc': 'Temperatura maximă care poate fi atinsă de GPU înainte ca frecvența și puterea să fie reduse.',
-      totalProcessingPowerTarget: 'Puterea totală a procesorului pe alimentator',
-      'totalProcessingPowerTarget.desc': 'Punctul în care CPU declanșează ajustarea dinamică a consumului de energie pentru GPU.',
-      toCpuDynamicBoost: 'Boost dinamic GPU către CPU',
-      'toCpuDynamicBoost.desc': 'Aceasta este puterea maximă suplimentară care poate fi alocată CPU-ului din GPU, pe baza utilizării CPU-ului. Cu cât valoarea este mai mare, cu atât performanța aplicațiilor care folosesc CPU-ul este mai bună.'
-    },
-    fans: {
-      title: 'Ventilatoare',
-      curve: 'Curbă de viteză ventilator',
-      curveMessage: 'Viteza ventilatorului urmează cea mai mare valoare citită de senzorii CPU, GPU sau radiator. Treceți cu mouse-ul peste fiecare pas pentru a vedea valorile exacte.',
-      maxSpeed: 'Viteză maximă ventilator',
-      maxSpeedWarning: 'Utilizarea prelungită a acestei opțiuni va degrada ventilatoarele, scăzând longevitatea acestora.\nSerios, aveți grijă cu această opțiune!'
-    },
-    advanced: {
-      title: 'Avansat',
-      message: 'Nu modificați opțiunile de mai jos decât dacă știți cu adevărat ce faceți.',
-      maxOffset: 'Deplasare maximă',
-      maxOffsetWarning: 'Valorile mai mari pot cauza comportamente imprevizibile. Lăsați această valoare la 0 dacă nu sunteți sigur.',
-      minOffset: 'Deplasare minimă',
-      minOffsetWarning: 'Valorile mai mici pot cauza comportamente imprevizibile. Lăsați această valoare la 0 dacă nu sunteți sigur.',
-      invalidOffset: 'Introduceți un număr întreg înainte de a salva.'
-    },
-    vantageWarning: 'Setările modului personalizat nu se vor aplica corect atunci când Lenovo Vantage sau serviciile sale rulează.',
-    legionZoneWarning: 'Setările modului personalizat nu se vor aplica corect atunci când Legion Zone sau serviciile sale rulează.'
-  },
-  overclock: {
-    title: 'Setări GPU pentru overclock',
-    preset: 'Profil',
-    coreOffset: 'Offset al frecvenței nucleului',
-    memoryOffset: 'Offset de frecvență a memoriei',
-    namePlaceholder: 'Nume...',
-    newProfileName: 'Profil',
-    loadError: 'Nu s-au putut încărca setările de overclock.'
-  },
-  feature: {
-    powerMode: 'Mod putere',
-    'powerMode.desc': 'Schimbă modul de performanță.\nModul de performanță poate fi schimbat și cu Fn+Q.',
-    'powerMode.hint': 'Îl puteți schimba rapid cu comanda rapidă Fn+Q.',
-    'powerMode.warning': 'Este posibil ca modul de performanță să nu funcționeze corect când alimentatorul nu este conectat.',
-    battery: 'Mod de încărcare a bateriei',
-    'battery.desc': 'Alegeți un mod de încărcare a bateriei. Modul de conservare limitează nivelul de încărcare pentru a prelungi durata de viață a bateriei, iar modul de încărcare rapidă încarcă la putere mai mare.',
-    batteryNightCharge: 'Încărcare baterie peste noapte',
-    'batteryNightCharge.desc': 'Când este activat, se încarcă până la 80% peste noapte și se completează până la 100% până dimineața.',
-    alwaysOnUsb: 'USB mereu activ',
-    'alwaysOnUsb.desc': 'Menține porturile USB alimentate când computerul este oprit, în repaus sau în hibernare. De obicei, este afectat doar portul USB marcat cu o pictogramă de baterie pe lateralul laptopului.',
-    instantBoot: 'Boot instantanee',
-    'instantBoot.desc': 'Pornește computerul imediat ce este conectat la alimentare.',
-    flipToStart: 'Întoarce pentru a porni',
-    'flipToStart.desc': 'Deschiderea capacului pornește automat laptopul.',
-    fnLock: 'Blocare Fn',
-    'fnLock.desc': 'Când este activat, funcțiile pot fi declanșate fără a apăsa Fn. Apăsați Fn împreună cu tastele originale F1-F12 pentru a le declanșa.',
-    gSync: 'GSync',
-    'gSync.desc': 'Activează sau dezactivează rata de reîmprospătare variabilă G-Sync',
-    hdr: 'HDR',
-    'hdr.desc': 'Activează intervalul dinamic ridicat (HDR) pentru afișajul încorporat.',
-    'hdr.warning': 'Utilizarea HDR este blocată de setările Windows.',
-    hybridMode: 'Mod hibrid',
-    'hybridMode.desc': 'Modul hibrid vă permite să comutați între GPU-ul integrat și cel dedicat. Dezactivarea lui activează modul direct al GPU-ului dedicat; este necesară o repornire pentru ca schimbarea să aibă efect.',
-    igpuMode: 'Mod GPU dedicat',
-    'igpuMode.desc': 'Forțează ieșirea grafică integrată pentru a economisi energie',
-    refreshRate: 'Rată de reîmprospătare',
-    'refreshRate.desc': 'Comută rata de reîmprospătare a afișajului încorporat.',
-    itsMode: 'Mod ITS',
-    'itsMode.desc': 'Soluție termică inteligentă',
-    microphone: 'Microfon',
-    'microphone.desc': 'Dezactivarea acestei opțiuni pune pe mut toate microfoanele disponibile.',
-    overDrive: 'Over Drive',
-    'overDrive.desc': 'Când este activat, accelerează afișajul încorporat pentru a îmbunătăți timpul de răspuns. Poate cauza ghosting de depășire.',
-    panelLogo: 'Lumină logo Legion',
-    'panelLogo.desc': 'Pornește sau oprește lumina logo-ului Legion de pe spatele dispozitivului.',
-    portsBacklight: 'Iluminare porturi',
-    'portsBacklight.desc': 'Pornește sau oprește luminile porturilor de pe spatele dispozitivului.',
-    resolution: 'Rezoluție',
-    'resolution.desc': 'Comută rezoluția afișajului încorporat.',
-    dpiScale: 'Scalare DPI',
-    'dpiScale.desc': 'Comută scalarea afișajului încorporat.',
-    speaker: 'Difuzor',
-    touchpadLock: 'Blocare touchpad',
-    'touchpadLock.desc': 'Dezactivează touchpad-ul. Recomandat când folosiți un mouse pentru a evita atingerile accidentale.',
-    whiteKeyboard: 'Iluminare tastatură',
-    'whiteKeyboard.desc': 'Folosiți comanda rapidă Fn + Space pentru a comuta și regla luminozitatea iluminării tastaturii.',
-    winKey: 'Dezactivare tastă Win',
-    'winKey.desc': 'Se aplică doar tastaturii încorporate. Când este activat, tasta Win nu mai răspunde.',
-    oneLevelWhiteKeyboard: 'Iluminare tastatură',
-    'oneLevelWhiteKeyboard.desc': 'Folosiți comanda rapidă Fn + Space pentru a comuta iluminarea.',
-    'hybridMode.states.hybrid': 'Hibrid',
-    'hybridMode.states.hybridIGPUOnly': 'Hibrid-iGPU',
-    'hybridMode.states.hybridAuto': 'Hibrid-Auto',
-    'hybridMode.states.off': 'dGPU',
-    'hybridMode.info.title': 'Despre modurile de funcționare GPU',
-    'hybridMode.info.hybrid.title': 'Mod hibrid',
-    'hybridMode.info.hybrid.message': 'Sunt activate atât GPU-ul integrat, cât și cel dedicat. Sistemul va comuta automat între ele în funcție de nevoile sale.',
-    'hybridMode.info.hybridIgpu.title': 'Mod Hibrid-iGPU',
-    'hybridMode.info.hybridIgpu.message': 'Utilizați doar GPU-ul integrat. Acest mod minimizează consumul de energie și zgomotul.',
-    'hybridMode.info.hybridIgpu.disclaimer': 'Acest mod are efect numai atunci când GPU-ul dedicat nu funcționează.',
-    'hybridMode.info.hybridAuto.title': 'Mod Hibrid-Auto',
-    'hybridMode.info.hybridAuto.message': 'Utilizați doar GPU-ul integrat pe baterie și ambele GPU-uri când alimentatorul AC este conectat. Când este conectat un alimentator non-standard, sistemul comută la modul Hibrid-iGPU.',
-    'hybridMode.info.dgpu.title': 'Mod dGPU',
-    'hybridMode.info.dgpu.message': 'Utilizați doar GPU-ul dedicat. Acest mod oferă cea mai bună performanță grafică, dar crește consumul de energie.',
-    'hybridMode.info.dgpu.disclaimer': 'Comutarea la și de la acest mod necesită repornirea.',
-    'hybridMode.restartRequired.title': 'Repornire necesară',
-    'hybridMode.restartRequired.message': 'Schimbarea la {{mode}} necesită repornirea. Doriți să reporniți acum?',
-    'hybridMode.restartRequired.now': 'Reporniți acum',
-    'hybridMode.restartRequired.later': 'Voi reporni mai târziu',
-    'hybridMode.restartFailed': 'Nu s-a putut reporni computerul automat. Vă rugăm să îl reporniți manual pentru a finaliza schimbarea.',
-    'hybridMode.changeFailed.title': 'Nu s-a putut schimba Modul de funcționare al GPU-ului',
-    'hybridMode.changeFailed.message': 'Încercați să schimbați modul din nou peste câteva secunde, dacă nu vedeți rezultatul așteptat. Dacă dGPU nu răspunde deloc, vă rugăm să reporniți laptopul.',
-    batteryModes: {
-      conservation: 'Mod de conservare',
-      normal: 'Mod normal',
-      rapidCharge: 'Mod de încărcare rapidă'
-    },
-    powerModeOptions: {
-      quiet: 'Silențios',
-      balance: 'Echilibrat',
-      performance: 'Performanță',
-      extreme: 'Extrem',
-      godMode: 'Personalizat'
-    }
-  },
-  common: {
-    loading: 'Se încarcă…?',
-    deleteColor: 'Delete color',
-    notifications: 'Notifications',
-    minimize: 'Minimize',
-    maximize: 'Maximize',
-    restore: 'Restore',
-    windowClose: 'Close',
-    navigation: 'Navigation',
-    expandNavigation: 'Expand navigation',
-    collapseNavigation: 'Collapse navigation',
-    error: 'Ceva nu a mers bine',
-    retry: 'Reîncercați',
-    close: 'Închidere',
-    cancel: 'Anulare',
-    moreActions: 'Mai multe acțiuni',
-    copied: 'Copiat în clipboard',
-    add: 'Adăugare',
-    save: 'Salvare',
-    saveAndClose: 'Salvare și închidere',
-    apply: 'Aplicare',
-    applyAndClose: 'Aplicare și închidere',
-    default: 'Implicit',
-    rename: 'Redenumiți',
-    delete: 'Ștergere',
-    ok: 'OK',
-    confirm: 'Confirmare',
-    resetDefault: 'Resetare la implicit'
-  },
-  colorPicker: {
-    hex: 'Hex',
-    red: 'Roșu',
-    green: 'Verde',
-    blue: 'Albastru',
-    ok: 'OK'
-  },
-  fanCurve: {
-    fanSpeed: 'Viteză ventilator',
-    fanSpeedMax: '100%',
-    cpu: 'CPU',
-    cpuSensor: 'Senzor CPU',
-    gpu: 'GPU',
-    gpu2: 'GPU #2',
-    rpm: 'RPM'
-  },
-  pages: {
-    placeholder: 'În curând'
-  },
-  settings: {
-    title: 'Setări',
-    description: 'Configurați opțiunile de aspect, comportament și funcționalitate ale aplicației.',
-    nav: {
-      appearance: 'Aspect',
-      application: 'Aplicație',
-      power: 'Putere',
-      display: 'Afișaj',
-      smartKeys: 'Taste inteligente',
-      update: 'Actualizare',
-      integrations: 'Integrări',
-      osd: 'OSD'
-    },
-    appearance: {
-      language: 'Limbă',
-      languageDesc: 'Alegeți limba',
-      temperature: 'Temperatură',
-      temperatureDesc: 'Alegeți unitatea folosită de senzorii de temperatură.',
-      theme: 'Mod global de culoare al interfeței',
-      accentColor: 'Culoare de accent globală a interfeței',
-      accentColorDesc: 'Schimbați culoarea de accent a aplicației.',
-      accentColorSource: {
-        system: 'Sistem',
-        custom: 'Personalizat'
-      },
-      appScale: 'Scalare interfață',
-      appScaleDesc: 'Scalați uniform textul și întreaga interfață, independent de scalarea afișajului Windows.',
-      themeOptions: {
-        system: 'Sistem',
-        light: 'Luminos',
-        dark: 'Întunecat'
-      }
-    },
-    application: {
-      minimizeToTray: 'Minimizare în tăviță',
-      minimizeToTrayDesc: 'Minimizează întotdeauna în tăviță în loc de bara de activități.',
-      minimizeOnClose: 'Minimizare la închidere',
-      minimizeOnCloseDesc: 'Minimizează întotdeauna în tăviță. Când este activat, faceți clic dreapta pe pictograma din tăviță și apăsați Închidere pentru a ieși din aplicație.',
-      disableUnsupportedWarning: 'Nu avertiza despre dispozitive incompatibile',
-      disableUnsupportedWarningDesc: 'Ascunde promptul privind dispozitivul incompatibil afișat la pornire.',
-      enableHardwareSensors: 'Senzori hardware',
-      enableHardwareSensorsDesc: 'Activați sondarea avansată a hardware-ului pentru a monitoriza temperaturi, frecvențe și limite de putere detaliate.',
-      dontShowNotifications: 'Nu afișa notificări',
-      dontShowNotificationsDesc: 'Dezactivează notificările din aplicație și de sistem',
-      autorun: 'Pornire la autentificare',
-      autorunDesc: 'Pornește aplicația când vă autentificați în Windows.',
-      autorunOptions: {
-        enabled: 'Activat',
-        enabledDelayed: 'Activat (întârziat)',
-        disabled: 'Dezactivat'
-      },
-      groupStartup: 'Pornire și fereastră',
-      groupSensors: 'Senzori hardware',
-      groupNotifications: 'Notificări și avertismente',
-      groupSoftware: 'Conflicte software',
-
-
-      animationsEnabled: 'Animații interfață',
-
-      animationsEnabledDesc: 'Animează ferestre, dialoguri și alte elemente de interfață. Dezactivați pentru a reduce mișcarea.',      sensorRefreshInterval: 'Interval de reîmprospătare a senzorilor',
-      sensorRefreshIntervalDesc: 'Cât de des sunt reîmprospătate valorile senzorilor. De asemenea, puteți face clic dreapta pe cardul de senzori pentru a-l schimba temporar.',
-      extensionsEnabled: 'Activare extensii',
-      extensionsEnabledDesc: 'Activează încărcarea pluginurilor și extensiilor',
-      sensorSections: 'Secțiuni senzori',
-      sensorSectionsDesc: 'Alegeți ce secțiuni de senzori sunt afișate și în ce ordine.',
-      disableVantage: 'Dezactivare Lenovo Vantage',
-      disableVantageDesc: 'Dezactivează Lenovo Vantage și ImController fără a le dezinstala.\nSe recomandă repornirea după modificarea acestei opțiuni.',
-      disableLegionZone: 'Dezactivare Legion Zone',
-      disableLegionZoneDesc: 'Dezactivează Legion Zone și serviciul său fără a-l dezinstala.\nSe recomandă repornirea după modificarea acestei opțiuni.',
-      disableLenovoHotkeys: 'Dezactivare Lenovo Hotkeys',
-      disableLenovoHotkeysDesc: 'Dezactivează Lenovo Hotkeys și serviciul său fără a-l dezinstala.\nDacă este dezactivat, această aplicație va gestiona comenzile rapide Fn.\nSe recomandă repornirea după modificarea acestei opțiuni.',
-      valueOn: 'Activat',
-      valueOff: 'Dezactivat'
-    },
-    saved: 'Setări salvate',
-    saveFailed: 'Nu s-au putut salva setările',
-    osd: {
-      title: 'OSD',
-      showOsd: 'Afișare OSD',
-      showOsdDesc: 'Afișează imediat afișajul pe ecran.',
-      style: 'Stil suprapunere',
-      styles: {
-        panel: 'Panou',
-        bar: 'Bară'
-      },
-      refreshInterval: 'Interval de reîmprospătare',
-      snapThreshold: 'Prag de aliniere',
-      lockPosition: 'Blocare poziție',
-      resetPosition: 'Resetare poziție',
-      previewHint: 'Previzualizare',
-      tabs: {
-        general: 'General',
-        appearance: 'Aspect',
-        thresholds: 'Praguri',
-        sensors: 'Senzori'
-      },
-      opacity: 'Opacitate',
-      cornerRadius: 'Rază colț',
-      cornerRadiusTop: 'Sus',
-      cornerRadiusBottom: 'Jos',
-      fontSize: 'Dimensiune font',
-      background: 'Culoare fundal',
-      category: 'Culoare categorie',
-      label: 'Culoare etichetă',
-      value: 'Culoare valoare',
-      warning: 'Culoare avertisment',
-      critical: 'Culoare critică',
-      separator: 'Culoare separator',
-      thresholds: {
-        performance: 'Performanță',
-        fpsRedline: 'Limită FPS',
-        lowFpsDelta: 'Delta FPS scăzut',
-        temperature: 'Temperatură',
-        usage: 'Utilizare',
-        warning: 'Avertisment',
-        critical: 'Critic'
-      },
-      items: {
-        groups: {
-          game: 'Joc',
-          cpu: 'CPU',
-          gpu: 'GPU',
-          pch: 'PCH'
-        },
-        names: {
-          Fps: 'FPS',
-          LowFps: '1% Low',
-          FrameTime: 'Timp cadru',
-          CpuFrequency: 'Ceas nucleu',
-          CpuPCoreFrequency: 'Ceas P-Core',
-          CpuECoreFrequency: 'Ceas E-Core',
-          CpuUtilization: 'Utilizare',
-          CpuTemperature: 'Temperatură',
-          CpuPower: 'Consum',
-          CpuFan: 'Ventilator',
-          GpuFrequency: 'Ceas nucleu',
-          GpuUtilization: 'Utilizare',
-          GpuTemperature: 'Temp. nucleu',
-          GpuVramUtilization: 'Utilizare VRAM',
-          GpuVramTemperature: 'Temp. VRAM',
-          GpuPower: 'Consum',
-          GpuFan: 'Ventilator',
-          MemoryUtilization: 'Utilizare',
-          MemoryTemperature: 'Temperatură',
-          Disk1Temperature: 'Temperatura discului 1',
-          Disk2Temperature: 'Temperatura discului 2',
-          PchTemperature: 'Temperatura PCH',
-          PchFan: 'Ventilator'
-        }
-      }
-    },
-    power: {
-      powerModeMapping: 'Cartografiere mod putere',
-      powerModeMappingDesc: 'La comutarea modurilor de performanță, comută automat și planul de alimentare Windows sau modul de alimentare Windows.',
-      mappingModes: {
-        disabled: 'Dezactivat',
-        windowsPowerMode: 'Mod de alimentare Windows',
-        windowsPowerPlan: 'Plan de alimentare Windows'
-      },
-      windowsPowerModes: 'Mod de alimentare Windows',
-      windowsPowerModesDesc: 'Alegeți modul de alimentare Windows aplicat când se schimbă modul de putere.',
-      windowsPowerPlans: 'Plan de alimentare Windows',
-      windowsPowerPlansDesc: 'Alegeți planul de alimentare Windows aplicat când se schimbă modul de putere.',
-      synchronizeBrightness: 'Blocare luminozitate afișaj',
-      synchronizeBrightnessDesc: 'Când este activat, luminozitatea rămâne aceeași la comutarea între planurile de alimentare.',
-      smartFnLock: 'Taste modificatoare Smart Fn Lock',
-      modifierKeys: {
-        shift: 'Shift',
-        ctrl: 'Ctrl',
-        alt: 'Alt'
-      },
-      resetBatteryOnSince: 'Resetează „Pe baterie din" la pornire',
-      resetBatteryOnSinceDesc: 'Resetează contorul pentru „Pe baterie din" din secțiunea baterie când sistemul repornește.',
-      godModeFnQ: 'Comutare la Mod Personalizat cu Fn+Q',
-      godModeFnQDesc: 'Permite comutarea rapidă la Modul Personalizat cu Fn+Q.'
-    },
-    display: {
-      navigationItems: 'Vizibilitate elemente de navigare',
-      navigationKeys: {
-        keyboard: 'Iluminare tastatură',
-        battery: 'Baterie',
-        automation: 'Automatizare',
-        macro: 'Macro',
-        windowsOptimization: 'Optimizare Windows',
-        pluginExtensions: 'Pluginuri și extensii',
-        about: 'Despre'
-      },
-      notificationPosition: 'Poziție notificare',
-      notificationPositions: {
-        bottomRight: 'Dreapta jos',
-        bottomCenter: 'Jos centrat',
-        bottomLeft: 'Stânga jos',
-        centerLeft: 'Stânga centrat',
-        topLeft: 'Stânga sus',
-        topCenter: 'Sus centrat',
-        topRight: 'Dreapta sus',
-        centerRight: 'Dreapta centrat',
-        center: 'Centru'
-      },
-      notificationDuration: 'Durată notificare',
-      notificationDurations: {
-        short: 'Scurt (3s)',
-        normal: 'Normal (5s)',
-        long: 'Lung (10s)'
-      },
-      excludedRefreshRates: 'Rate de reîmprospătare excluse',
-      excludedRefreshRatesDesc: 'Excludeți rate de reîmprospătare pentru a face comutarea Fn+R mai rapidă.',
-      excludedRefreshRatesHint: 'Editarea avansată va fi disponibilă într-o versiune viitoare',
-      excludedRefreshRatesEmpty: 'Nicio rată de reîmprospătare exclusă',
-      excludedRefreshRatesManageHint: 'Clic pentru a gestiona ratele de reîmprospătare excluse',
-      notifications: 'Notificări',
-      notificationsDesc: 'Alegeți ce notificări sunt afișate.',
-      bootLogo: 'Logo de pornire',
-      bootLogoDesc: 'Personalizați logo-ul de pornire afișat când pornește computerul.'
-    },
-    smartKeys: {
-      smartFnLock: 'Smart Fn Lock',
-      smartFnLockDesc: 'Când Alt, Ctrl sau Shift este apăsat, Fn este deblocat temporar.',
-      off: 'Oprit',
-      hint: 'Tastele modificatoare Smart Fn Lock pot fi schimbate în setările de Putere.',
-      singlePressActionDesc: 'Atribuiți o acțiune rapidă la apăsarea simplă a Fn+F9.',
-      doublePressActionDesc: 'Atribuiți o acțiune rapidă la dubla apăsare a Fn+F9.'
-    },
-    update: {
-      frequency: 'Verificare automată a actualizărilor',
-      frequencies: {
-        perHour: 'În fiecare oră',
-        perThreeHours: 'La fiecare 3 ore',
-        perTwelveHours: 'La fiecare 12 ore',
-        perDay: 'În fiecare zi',
-        perWeek: 'În fiecare săptămână',
-        perMonth: 'În fiecare lună'
-      },
-      includePrerelease: 'Include versiunile de prerelease',
-      includePrereleaseDesc: 'Când este dezactivat, sunt livrate doar versiunile stabile; când este activat, sunt primite și actualizările de prerelease (beta).',
-      repository: 'Depozit de actualizări',
-      repositoryDesc: 'Configurați depozitul GitHub pentru verificarea actualizărilor. Lăsați gol pentru a folosi setarea implicită.',
-      repositoryOwner: 'Proprietar depozit',
-      repositoryOwnerPlaceholder: 'ex., SSC-STUDIO',
-      repositoryName: 'Nume depozit',
-      repositoryNamePlaceholder: 'ex., UniversalDeviceToolkit',
-      check: 'Verifică actualizări',
-      comingSoon: 'Verificarea actualizărilor va fi disponibilă într-o versiune viitoare'
-    },
-    checkResult: {
-      available: 'Versiune nouă disponibilă: v{{version}}',
-      latest: 'Aveți cea mai recentă versiune'
-    },
-    integrations: {
-      hwinfo: 'HWiNFO64',
-      hwinfoDesc: 'Partajați viteza ventilatorului, temperatura bateriei și alte date cu HWiNFO64. HWiNFO64 poate necesita o repornire după comutare.',
-      cli: 'Interfață de linie de comandă',
-      cliDesc: 'Activează interfața de linie de comandă pentru a permite controlul din linia de comandă.'
-    }
-  },
-  keyboard: {
-    title: 'Iluminare tastatură',
-    unsupported: 'Iluminarea tastaturii nu este suportată pe acest dispozitiv',
-    rgb: {
-      preset: 'Profil',
-      settings: 'Setări iluminare',
-      effect: 'Efect',
-      speed: 'Viteză',
-      brightness: 'Luminozitate',
-      zones: 'Culori zone',
-      synchroniseZones: 'Sincronizare zone',
-      presets: {
-        off: 'Oprit',
-        one: 'Profil 1',
-        two: 'Profil 2',
-        three: 'Profil 3',
-        four: 'Profil 4'
-      },
-      effectOptions: {
-        static: 'Static',
-        breath: 'Respirație',
-        smooth: 'Neted',
-        waveRtl: 'Undă (RTL)',
-        waveLtr: 'Undă (LTR)'
-      },
-      speedOptions: {
-        slowest: 'Cea mai lentă',
-        slow: 'Lentă',
-        fast: 'Rapidă',
-        fastest: 'Cea mai rapidă'
-      },
-      brightnessOptions: {
-        low: 'Scăzută',
-        high: 'Ridicată'
-      }
-    },
-    spectrum: {
-      brightness: 'Luminozitate',
-      profile: 'Profil',
-      logo: 'Lumină logo',
-      effects: 'Efecte',
-      colors: 'Culori',
-      addEffect: 'Adăugare efect',
-      deleteEffect: 'Ștergere',
-      noEffects: 'Niciun efect',
-      selectAll: 'Selectează toate zonele',
-      deselectAll: 'Deselectează toate zonele',
-      switchLayout: 'Comută aranjamentul tastaturii',
-      editEffect: 'Editare',
-      allKeys: 'Toate tastele',
-      zonesCount: '{{count}} zone',
-      noLayoutHint: 'Nu s-a putut încărca aranjamentul tastaturii.',
-      selectEffectHint: 'Selectați un efect de mai jos pentru a previzualiza și edita tastele sale.',
-      frontPanelHint: 'Faceți clic sau trageți pentru a selecta zonele tastaturii și panoului frontal',
-      effectEdit: {
-        addTitle: 'Adăugare efect',
-        editTitle: 'Editare efect',
-        effect: 'Efect',
-        speed: 'Viteză',
-        direction: 'Direcție',
-        clockwiseDirection: 'Direcție',
-        color: 'Culoare',
-        colors: 'Culori',
-        addColor: 'Adăugare culoare',
-        keys: 'Taste',
-        alwaysWarning: 'Acest efect va fi aplicat întregii tastaturi și va înlocui toate celelalte efecte.'
-      },
-      effectTypes: {
-        always: 'Întotdeauna',
-        rainbowScrew: 'Curcubeu șurub',
-        rainbowWave: 'Undă curcubeu',
-        colorChange: 'Schimbare culoare',
-        colorWave: 'Undă de culoare',
-        colorPulse: 'Puls de culoare',
-        smooth: 'Neted',
-        rain: 'Ploaie',
-        ripple: 'Ripple',
-        type: 'Tip',
-        audioBounce: 'Salt audio',
-        audioRipple: 'Ripple audio',
-        auroraSync: 'Sincronizare Aurora'
-      }
-    }
-  },
-  macro: {
-    title: 'Macro tastatură',
-    enable: 'Activare macro-uri',
-    enableDesc: 'Universal Device Toolkit trebuie să ruleze pentru ca macro-urile să funcționeze.',
-    subtitle: 'Puteți înregistra serii de apăsări de taste și le puteți activa folosind tastatura numerică.',
-    numpad: 'Tastatură numerică',
-    sequence: 'Secvență',
-    repeat: 'Număr de repetări',
-    events: 'Evenimente',
-    save: 'Salvare',
-    clear: 'Șterge',
-    play: 'Redă',
-    record: 'Înregistrează',
-    recordingOptions: 'Opțiuni de înregistrare',
-    ignoreDelays: 'Ignoră întârzierile',
-    interruptOnOtherKey: 'Întrerupe la altă tastă',
-    dontRepeat: 'Nu repeta',
-    keyboardOnly: 'Doar tastatura',
-    keyboardMouse: 'Tastele tastaturii și butoanele mouse-ului',
-    allInputs: 'Toate intrările',
-    recordingInterrupted: 'Înregistrare întreruptă',
-    keyboard: 'Tastatură',
-    mouse: 'Mouse',
-    move: 'Mișcare mouse',
-    wheelUp: 'Rotire mouse în sus',
-    wheelDown: 'Rotire mouse în jos',
-    wheelLeft: 'Rotire mouse la stânga',
-    wheelRight: 'Rotire mouse la dreapta',
-    leftButton: 'Buton stânga',
-    rightButton: 'Buton dreapta',
-    middleButton: 'Buton mijloc',
-    xButton: 'Buton X',
-    button: 'Buton mouse',
-    empty: 'Nicio secvență macro pentru această tastă încă',
-    recording: {
-      preparing: 'Înregistrarea va începe în 3 secunde...',
-      title: 'Înregistrare...',
-      pressEscToStop: 'Apăsați ESC pentru a opri.',
-      focusHint: 'Mențineți această fereastră focalizată în timpul înregistrării.'
-    }
-  },
-  plugins: {
-    title: 'Pluginuri și extensii',
-    search: 'Căutare pluginuri',
-    filterAll: 'Toate',
-    filterInstalled: 'Instalate',
-    filterNotInstalled: 'Neinstalate',
-    refresh: 'Reîmprospătare',
-    total: '{{count}} în total',
-    summary: '{{count}} instalate',
-    updatable: '{{count}} actualizare(ări) disponibilă(e)',
-    install: 'Instalare',
-    update: 'Actualizare',
-    updateAvailable: 'Actualizare disponibilă',
-    uninstall: 'Dezinstalare',
-    uninstallConfirm: 'Dezinstalați acest plugin?',
-    uninstallFailed: 'Dezinstalarea a eșuat',
-    installed: 'Instalat',
-    online: 'Online',
-    installing: 'Se instalează…?',
-    downloading: 'Se descarcă…?',
-    preparingDownload: 'Se pregătește descărcarea…?',
-    downloadCompleted: 'Descărcare finalizată',
-    offline: 'Magazinul online este indisponibil; se afișează doar pluginurile instalate local',
-    empty: 'Niciun plugin găsit',
-    noResults: 'Nu s-au găsit pluginuri care corespund căutării dumneavoastră.',
-    dependencies: 'Dependențe',
-    dependenciesBlocked: 'Acest plugin are dependențe nesatisfăcute și nu poate fi dezinstalat',
-    details: 'Detalii',
-    usageGuide: 'Ghid de utilizare',
-    changelog: 'Jurnal de modificări',
-    importProgress: 'Se importă pachetele de plugin…?',
-    importSuccess: 'Importate {{count}} pachete de plugin',
-    importFailed: 'Nu s-au putut importa {{count}} pachete de plugin',
-    installAll: 'Instalează tot',
-    installAllComplete: 'Instalate {{count}} plugin(uri)',
-    installAllPartial: '{{count}} din {{total}} operațiuni de plugin finalizate',
-    copyId: 'Copiază ID-ul pluginului',
-    copied: 'ID-ul pluginului a fost copiat în clipboard',
-    copyFailed: 'Nu s-a putut copia ID-ul pluginului',
-    local: 'Local',
-    collapseDetails: 'Ascunde detaliile',
-    showDetails: 'Afișează detaliile',
-    updateInfo: 'Informații actualizare',
-    versionLabel: 'Versiune:',
-    configure: 'Configurare',
-    open: 'Deschidere',
-    description: 'Instalați și gestionați pluginuri pentru a extinde funcționalitatea',
-    storeUnavailable: 'Magazinul de pluginuri este indisponibil',
-    summaryTotal: 'Total pluginuri',
-    summaryInstalled: 'Instalate',
-    summaryUpdates: 'Actualizări disponibile',
-    importFromFiles: 'Import din fișiere',
-    updateAll: 'Actualizează tot',
-    emptyStore: 'Magazinul de pluginuri este momentan gol. Rămâneți la curent pentru viitoarele actualizări de pluginuri.'
-  },
-  automation: {
-    title: 'Automatizare',
-    enable: 'Activare automatizare',
-    enableDesc: 'Universal Device Toolkit trebuie să ruleze pentru ca acțiunile automate să aibă efect.',
-    subtitle: 'Când este activată, această aplicație verifică și rulează acțiunile potrivite în ordine atunci când starea dispozitivului se schimbă.',
-    actionsTitle: 'Acțiuni',
-    actionsEmpty: 'Nu există încă acțiuni automate',
-    quickActionsTitle: 'Acțiuni rapide',
-    quickActionsEmpty: 'Nu există încă acțiuni rapide. Faceți clic pe „Nou" pentru a crea una.',
-    renamePipeline: 'Redenumiți pipeline-ul',
-    changeIcon: 'Schimbare iconiță',
-    renamePipelineTitle: 'Redenumiți pipeline-ul',
-    renamePipelinePlaceholder: 'Introduceți numele pipeline-ului',
-    empty: 'Nu există încă scripturi de automatizare. Faceți clic pe „Nou" pentru a crea unul.',
-    runNow: 'Rulează acum',
-    delete: 'Ștergere',
-    deleteStep: 'Șterge pasul',
-    addPipeline: 'Nou',
-    addStep: 'Adăugare pas',
-    configure: 'Configurare',
-    stepType: 'Tip pas',
-    steps: 'Pași',
-    save: 'Salvare',
-    revert: 'Revenire',
-    pipelineName: 'Nume pipeline',
-    pipelineNamePlaceholder: 'Introduceți numele pipeline-ului',
-    quickAction: 'Acțiune rapidă',
-    optionsLoading: 'Se încarcă opțiunile…?',
-    stepLabels: {
-      rgbKeyboardBacklight: 'Iluminare tastatură',
-      run: 'Rulare',
-      showMainWindow: 'Afișează fereastra principală',
-      speaker: 'Difuzor',
-      spectrumKeyboardBacklightBrightness: 'Luminozitate iluminare tastatură',
-      spectrumKeyboardBacklightImportProfile: 'Importă profilul de iluminare pentru tastatură',
-      spectrumKeyboardBacklightProfile: 'Profil de iluminare al tastaturii',
-      touchpadLock: 'Blocare touchpad',
-      turnOffMonitors: 'Oprire afișaje',
-      turnOffWiFi: 'Dezactivare Wi-Fi',
-      turnOnWiFi: 'Activare Wi-Fi',
-      whiteKeyboardBacklight: 'Iluminare tastatură',
-      winKey: 'Blocare tastă Windows',
-      scriptPath: 'Cale executabil',
-      scriptArguments: 'Argumente',
-      runSilently: 'Rulează în mod silențios',
-      runSilentlyDesc: 'Execută aplicații de consolă, fără a crea o fereastră de consolă.',
-      runWaitUntilFinished: 'Așteaptă până se finalizează',
-      runWaitUntilFinishedDesc: 'Așteaptă până programul sau scriptul se termină de executat',
-      runHint: 'Rulați un script sau un program.\nAsigurați-vă mai întâi că scriptul rulează corect.',
-      importProfilePath: 'Cale',
-      browse: 'Răsfoiește',
-      off: 'Oprit',
-      on: 'Activat',
-      mute: 'Pe mut',
-      unmute: 'Sunet activ',
-      low: 'Scăzut',
-      high: 'Ridicat',
-      presetOne: 'Profil 1',
-      presetTwo: 'Profil 2',
-      presetThree: 'Profil 3',
-      presetFour: 'Profil 4',
-      values: {
-        off: 'Oprit',
-        on: 'Activat',
-        mute: 'Pe mut',
-        unmute: 'Sunet activ',
-        low: 'Scăzut',
-        high: 'Ridicat',
-        presetOne: 'Profil 1',
-        presetTwo: 'Profil 2',
-        presetThree: 'Profil 3',
-        presetFour: 'Profil 4'
-      }
-    },
-    state: {
-      on: 'Activat',
-      off: 'Oprit',
-      hidden: 'Ascunde',
-      show: 'Afișează',
-      toggle: 'Comută starea',
-      quiet: 'Silențios',
-      balance: 'Echilibrat',
-      performance: 'Performanță',
-      extreme: 'Extrem',
-      godMode: 'Personalizat',
-      hybrid: 'Hibrid',
-      hybridIgpu: 'Hibrid-iGPU',
-      hybridAuto: 'Hibrid-Auto',
-      dgpu: 'dGPU',
-      acAdapter: 'Alimentator AC',
-      usbPd: 'USB Power Delivery',
-      acAndUsbPd: 'AC și USB PD',
-      hz: '{{frequency}} Hz',
-      resolution: '{{width}} × {{height}}'
-    },
-    stepEditors: {
-      hybridMode: {
-        title: 'Mod de funcționare GPU',
-        desc: 'Selectați modul de operare GPU în funcție de utilizarea computerului și de condițiile de alimentare.\nSchimbarea modurilor poate necesita repornirea.'
-      },
-      instantBoot: {
-        title: 'Boot instantanee',
-        desc: 'Porniți laptopul când este conectat un încărcător.'
-      },
-      macro: {
-        title: 'Macro',
-        desc: 'Activează sau dezactivează macro-urile.'
-      },
-      microphone: {
-        title: 'Microfon',
-        desc: 'Când este dezactivat, microfoanele vor fi puse pe mut.'
-      },
-      notification: {
-        title: 'Afișează notificarea',
-        desc: 'Afișează o notificare cu textul introdus.',
-        placeholder: 'Text notificare'
-      },
-      oneLevelWhiteKeyboardBacklight: {
-        title: 'Iluminare tastatură',
-        desc: 'Pornește sau oprește iluminarea.'
-      },
-      osd: {
-        title: 'OSD',
-        desc: 'Afișează sau ascunde OSD'
-      },
-      overclockDiscreteGPU: {
-        title: 'Overclock GPU',
-        desc: 'Crește performanța prin overclocking pe GPU discret.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă GPU-ul discret nu este disponibil.'
-      },
-      overDrive: {
-        title: 'Over Drive',
-        desc: 'Îmbunătățește timpul de răspuns al afișajului încorporat.'
-      },
-      panelLogoBacklight: {
-        title: 'Iluminare logo panou',
-        desc: 'Pornește sau oprește iluminarea de pe capacul laptopului.'
-      },
-      playSound: {
-        title: 'Redă sunet',
-        desc: 'Sunt acceptate formate muzicale comune precum wav sau mp3.',
-        browse: 'Răsfoiește…?',
-        none: 'Niciun fișier selectat'
-      },
-      portsBacklight: {
-        title: 'Iluminare porturi',
-        desc: 'Pornește sau oprește iluminarea porturilor de pe spatele laptopului.'
-      },
-      powerMode: {
-        title: 'Mod putere',
-        desc: 'Schimbă modul de performanță.'
-      },
-      quickAction: {
-        title: 'Acțiune rapidă',
-        desc: 'Rulează o acțiune rapidă salvată.',
-        placeholder: 'Selectați o acțiune rapidă',
-        empty: 'Nu există încă acțiuni rapide. Creați mai întâi un pipeline fără declanșator.'
-      },
-      refreshRate: {
-        title: 'Rată de reîmprospătare',
-        desc: 'Schimbă rata de reîmprospătare a afișajului încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.',
-        empty: 'Nicio rată de reîmprospătare disponibilă'
-      },
-      resolution: {
-        title: 'Rezoluție',
-        desc: 'Schimbă rezoluția afișajului încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.',
-        empty: 'Nicio rezoluție disponibilă'
-      },
-      alwaysOnUsb: {
-        title: 'USB mereu activ',
-        desc: 'Încarcă dispozitivele USB când laptopul este oprit, în repaus sau în hibernare.',
-        options: {
-          OnWhenSleeping: 'Activat, când este în repaus',
-          OnAlways: 'Activat, întotdeauna'
-        }
-      },
-      battery: {
-        title: 'Mod baterie',
-        desc: 'Alegeți cum este încărcată bateria.',
-        options: {
-          Conservation: 'Conservare',
-          Normal: 'Normal',
-          RapidCharge: 'Încărcare rapidă'
-        }
-      },
-      batteryNightCharge: {
-        title: 'Încărcare baterie peste noapte',
-        desc: 'Când este activat, acest dispozitiv se va încărca până la 80% când este conectat peste noapte și va termina încărcarea până la 100% până dimineața, când folosiți dispozitivul.'
-      },
-      deactivateGPU: {
-        title: 'Dezactivare GPU',
-        desc: 'Dezactivează GPU-ul dedicat dacă este activ inutil.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit sau modul hibrid nu este activ.',
-        options: {
-          KillApps: 'Închide aplicațiile',
-          RestartGPU: 'Repornește GPU'
-        }
-      },
-      delay: {
-        title: 'Întârziere',
-        desc: 'Adaugă o întârziere înainte de a rula următorul pas.',
-        second_one: '{{count}} secundă',
-        second_other: '{{count}} secunde'
-      },
-      displayBrightness: {
-        title: 'Luminozitate afișaj',
-        desc: 'Schimbă luminozitatea afișajului încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.',
-        percent: '{{value}}%'
-      },
-      dpiScale: {
-        title: 'DPI',
-        desc: 'Schimbă scalarea afișajului încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.',
-        percent: '{{value}}%'
-      },
-      flipToStart: {
-        title: 'Întoarce pentru a porni',
-        desc: 'Pornește laptopul când deschideți capacul.'
-      },
-      fnLock: {
-        title: 'Blocare Fn',
-        desc: 'Folosiți funcțiile secundare ale tastelor F1-F12 fără a ține apăsată tasta Fn.'
-      },
-      godModePreset: {
-        title: 'Profil Mod Personalizat',
-        desc: 'Activează profilul Modului Personalizat.\nAceastă setare are efect doar când Modul Personalizat este activat.'
-      },
-      hdr: {
-        title: 'HDR',
-        desc: 'Activează intervalul dinamic ridicat (HDR) pe afișajul încorporat.\n\nAVERTISMENT: Această acțiune nu va rula corect dacă afișajul intern este oprit.'
-      },
-      hideMainWindow: {
-        title: 'Ascunde fereastra principală'
-      },
-      rgbKeyboardBacklight: {
-        title: 'Iluminare tastatură',
-        desc: 'Reglează profilul de iluminare al tastaturii.'
-      },
-      run: {
-        title: 'Rulare',
-        desc: 'Rulează un script sau un program.\nAsigurați-vă mai întâi că scriptul rulează corect.'
-      },
-      showMainWindow: {
-        title: 'Afișează fereastra principală'
-      },
-      speaker: {
-        title: 'Difuzor',
-        desc: 'Când este pe mut, toate dispozitivele audio active vor fi puse pe mut.'
-      },
-      spectrumKeyboardBacklightBrightness: {
-        title: 'Luminozitate iluminare tastatură',
-        desc: 'Reglează luminozitatea iluminării tastaturii.'
-      },
-      spectrumKeyboardBacklightImportProfile: {
-        title: 'Importă profilul de iluminare pentru tastatură',
-        desc: 'Importă și aplică configurația de iluminare profilului curent.'
-      },
-      spectrumKeyboardBacklightProfile: {
-        title: 'Profil de iluminare al tastaturii',
-        desc: 'Reglează profilul de iluminare al tastaturii.'
-      },
-      touchpadLock: {
-        title: 'Blocare touchpad',
-        desc: 'Dezactivează touchpad-ul.'
-      },
-      turnOffMonitors: {
-        title: 'Oprire afișaje',
-        desc: 'Oprește toate afișajele disponibile.'
-      },
-      turnOffWiFi: {
-        title: 'Dezactivare Wi-Fi'
-      },
-      turnOnWiFi: {
-        title: 'Activare Wi-Fi'
-      },
-      whiteKeyboardBacklight: {
-        title: 'Iluminare tastatură',
-        desc: 'Reglează luminozitatea iluminării tastaturii.'
-      },
-      winKey: {
-        title: 'Blocare tastă Windows',
-        desc: 'Dezactivează tasta Windows pe tastatura încorporată.'
-      }
-    },
-    moveUp: 'Mutare în sus',
-    moveDown: 'Mutare în jos',
-    noEditableParameters: 'Acest pas nu are parametri editabili.',
-    addAutomaticPipeline: 'Acțiune nouă',
-    addQuickAction: 'Acțiune rapidă nouă',
-    quickActionName: 'Nume acțiune rapidă',
-    triggerPicker: {
-      title: 'Acțiune nouă …?alegeți un declanșator'
-    },
-    triggerConfig: {
-      title: 'Configurare declanșator',
-      noEditableTriggers: 'Acest declanșator nu are parametri configurabili.'
-    },
-    triggerNames: {
-      aCAdapterConnected: 'Când alimentatorul AC este conectat',
-      lowWattageACAdapterConnected: 'Când este conectat un alimentator AC de putere redusă',
-      aCAdapterDisconnected: 'Când alimentatorul AC este deconectat',
-      powerMode: 'Când Modul de putere este schimbat',
-      godModePresetChanged: 'Când se schimbă profilul Modului Personalizat',
-      gamesAreRunning: 'Când rulează un joc',
-      gamesStop: 'Când jocul se închide',
-      processesAreRunning: 'Când pornește o aplicație',
-      processesStopRunning: 'Când se închide o aplicație',
-      userInactivity: 'Când utilizatorul devine inactiv',
-      userInactivityZero: 'Când utilizatorul devine activ',
-      sessionLock: 'Sesiune blocată',
-      sessionUnlock: 'Sesiune deblocată',
-      lidOpened: 'Capac deschis',
-      lidClosed: 'Capac închis',
-      displayOn: 'Când afișajele se pornesc',
-      displayOff: 'Când afișajele se opresc',
-      hdrOn: 'Când HDR se activează',
-      hdrOff: 'Când HDR se dezactivează',
-      deviceConnected: 'Când un dispozitiv este conectat',
-      deviceDisconnected: 'Când un dispozitiv este deconectat',
-      externalDisplayConnected: 'Când este conectat un afișaj extern',
-      externalDisplayDisconnected: 'Când este deconectat un afișaj extern',
-      wiFiConnected: 'Când Wi-Fi este conectat',
-      wiFiDisconnected: 'Când Wi-Fi este deconectat',
-      time: 'La o oră specificată',
-      periodic: 'Acțiune periodică',
-      hardwareSensor: 'Senzor hardware',
-      batteryPercentage: 'Procent baterie',
-      onStartup: 'La pornire',
-      onResume: 'La reluare'
-    },
-    triggerEditors: {
-      noProcesses: 'Niciun proces selectat.',
-      noDevices: 'Niciun dispozitiv selectat.',
-      inactivityTimeout: 'Timp de expirare',
-      seconds: '{{count}} secunde',
-      minutes: '{{count}} minute',
-      hours: '{{count}} ore',
-      ssidPlaceholder: 'Nume rețea (SSID)',
-      addSsid: 'Adăugare nume rețea',
-      atTime: 'La ora',
-      hour: 'Oră',
-      minute: 'Minut',
-      allDays: 'În fiecare zi',
-      day: {
-        0: 'Duminică',
-        1: 'Luni',
-        2: 'Marți',
-        3: 'Miercuri',
-        4: 'Joi',
-        5: 'Vineri',
-        6: 'Sâmbătă'
-      },
-      metric: 'Metrică',
-      comparison: 'Comparație',
-      threshold: 'Prag',
-      thresholdPercent: 'Prag (%)',
-      durationSeconds: 'Durată (secunde)',
-      cooldownSeconds: 'Pauză (secunde)',
-      chargeFilter: 'Filtru de încărcare',
-      deviceInstanceId: 'ID instanță dispozitiv'
-    }
-  },
-  optimization: {
-    title: 'Optimizarea sistemului',
-    info: 'Aceste acțiuni modifică serviciile și fișierele sistemului și pot necesita drepturi de administrator.',
-    tabs: {
-      optimization: 'Optimizare Windows',
-      cleanup: 'Curățare',
-      driverDownload: 'Descărcare drivere',
-      networkAcceleration: 'Rețea și accelerare'
-    },
-    recommended: 'Recomandat',
-    selected: 'Selectate',
-    selectedActions: 'Acțiuni selectate',
-    noSelection: 'Nicio acțiune selectată',
-    selectRecommended: 'Selectează recomandatele',
-    applyRecommended: 'Aplică toate recomandatele',
-    apply: 'Aplicare',
-    clear: 'Anulează (revert)',
-    applied: 'Aplicat',
-    applyFailed: 'Nu s-a putut aplica (pot fi necesare drepturi de administrator)',
-    reverted: 'Anulat',
-    revertFailed: 'Nu s-a putut anula (pot fi necesare drepturi de administrator)',
-    estimate: 'Estimare dimensiune',
-    estimateResult: 'Spațiu recuperabil',
-    runCleanup: 'Rulează curățarea',
-    cleanupHint: 'Curățarea rulează regulile personalizate de curățare.',
-    cleanupConfirm: 'Rulez curățarea acum?',
-    cleanupDone: 'Curățare finalizată',
-    cleanupFailed: 'Curățarea a eșuat',
-    cleanup: {
-      scanning: 'Scanning',
-      running: 'Cleaning…',
-      done: 'Cleanup complete',
-      moreItems: 'more',
-      items: 'Items',
-      custom: {
-
-        header: 'Reguli personalizate de curățare',
-        description: 'Foldere suplimentare care sunt curățate împreună cu acțiunile de curățare selectate.',
-        empty: 'Nicio regulă personalizată de curățare',
-        add: 'Adăugare folder',
-        edit: 'Editare folder',
-        remove: 'Îndepărtare',
-        clear: 'Șterge tot',
-        added: 'Regulă adăugată',
-        updated: 'Regulă actualizată',
-        recursive: 'Include subfolderele',
-        noExtensions: 'Nicio extensie specificată',
-        folderPickerFailed: 'Nu s-a putut deschide selectorul de foldere'
-      }
-    },
-    network: {
-      status: 'Stare',
-      running: 'Rulează',
-      stopped: 'Oprit',
-      backendReady: 'Backend pregătit',
-      backendNotReady: 'Backend nepregătit',
-      config: 'Configurație de bază',
-      accelerationEnabled: 'Activare accelerare',
-      mode: 'Mod',
-      modes: {
-        off: 'Oprit',
-        systemProxy: 'Proxy de sistem',
-        hosts: 'Hosts',
-        diagnosticsOnly: 'Doar diagnostice'
-      },
-      save: 'Salvare configurație',
-      saved: 'Configurație salvată',
-      saveFailed: 'Nu s-a putut salva configurația',
-      start: 'Pornire',
-      stop: 'Oprire',
-      startFailed: 'Pornirea a eșuat',
-      stopFailed: 'Oprirea a eșuat',
-      modeLabel: 'Mod',
-      targetsLabel: 'Ținte',
-      portLabel: 'Port',
-      targetsHeading: 'Ținte de accelerare',
-      domainGroupsHint: 'Selectați serviciile care trebuie accelerate prin proxy-ul local.',
-      domainGroupsEmptyTitle: 'Nicio țintă de accelerare',
-      domainGroupsEmptyDescription: 'Lista de ținte este goală sau nimic nu corespunde căutării.',
-      selectionHint: 'Țintele selectate sunt aplicate când pornește accelerarea.',
-      searchTargets: 'Căutare ținte',
-      recommendedMenu: 'Recomandat',
-      groupRuntime: '{{selected}}/{{total}} selectate  {{active}} active',
-      trafficHeading: 'Prezentare trafic',
-      metrics: {
-        upload: 'Încărcare',
-        download: 'Descărcare',
-        connections: 'Conexiuni',
-        total: 'Trafic total',
-        health: 'Sănătate'
-      },
-      trafficLive: 'Se colectează traficul proxy în direct',
-      trafficWaiting: 'Porniți accelerarea pentru a colecta traficul în direct',
-      trafficUnavailable: 'Datele de trafic sunt temporar indisponibile',
-      connectionsWaiting: 'Se așteaptă datele conexiunilor…?',
-      destinationsWaiting: 'Se așteaptă datele destinațiilor…?',
-      connectionsHeading: 'Conexiuni curente și recente',
-      destinationsHeading: 'Statistici destinații',
-      connectionSummary: '{{active}} active / {{total}} în total',
-      destinationSummary: '{{count}} destinații',
-      connectionStates: {
-        active: 'Activă',
-        completed: 'Finalizată',
-        blocked: 'Blocată',
-        failed: 'Eșuată',
-        stopped: 'Oprită',
-        unknown: 'Necunoscută'
-      },
-      unknownHost: 'Gazdă necunoscută',
-      destinationRow: '{{count}} conexiuni  {{latency}}',
-      health: {
-        healthy: 'Sănătos',
-        degraded: 'Degradat',
-        stopped: 'Oprit',
-        unknown: 'Necunoscut'
-      },
-      modeFull: {
-        systemProxy: 'Proxy de sistem',
-        hosts: 'Fișier hosts',
-        diagnosticsOnly: 'Doar diagnostice',
-        off: 'Inactiv'
-      },
-      backendMissingHint: 'Worker-ul proxy este indisponibil',
-      selectGroupsFirstHint: 'Selectați cel puțin o țintă',
-      advancedHeading: 'Avansat',
-      advancedBody: 'Setări avansate și recuperarea rețelei.',
-      portFormat: 'Port: {{port}}',
-      dangerZoneHeading: 'Zonă periculoasă',
-      restoreHint: 'Restaurați starea inițială a rețelei de sistem înregistrată înainte de accelerare.',
-      restoreNetwork: 'Restaurare rețea',
-      restoreConfirm: 'Restaurați acum starea rețelei de sistem?',
-      restored: 'Starea rețelei a fost restaurată',
-      diag: {
-        natTitle: 'NAT',
-        dnsTitle: 'DNS',
-        ipv6Title: 'IPv6',
-        detect: 'Detectare',
-        unknown: 'Necunoscut',
-        natTypes: {
-          OpenInternet: 'NAT deschis',
-          Nat: 'NAT',
-          UdpBlocked: 'UDP blocat',
-          Unknown: 'Necunoscut'
-        },
-        internetConnected: 'Conectat',
-        internetUnreachable: 'Inaccesibil',
-        natType: 'Tip NAT',
-        localIp: 'IP local',
-        publicIp: 'IP public',
-        internet: 'Internet',
-        dnsDomain: 'Domeniu',
-        customDns: 'DNS personalizat',
-        enableDoh: 'DoH',
-        dohUrl: 'URL DoH',
-        latency: 'Latență',
-        resolvedAddress: 'Adresă rezolvată',
-        latencyFormat: '{{ms}} ms',
-        failed: 'Eșuat',
-        ipv6Support: 'Suport IPv6',
-        ipv6Address: 'Adresă IPv6',
-        ipv6SupportedFull: 'Acces IPv6 suportat',
-        notSupported: 'Nesuportat'
-      }
-    },
-    driverDownload: {
-      comingSoon: 'Descărcarea driverelor va fi disponibilă într-o versiune viitoare'
-    },
-    driver: {
-      machineType: 'Tip sistem',
-      machineTypePlaceholder: 'ex., 82K3',
-      os: 'Sistem de operare',
-      downloadTo: 'Descărcare în',
-      downloadToPlaceholder: 'Alegeți un folder pentru descărcări',
-      browse: 'Răsfoiește',
-      openDownloadTo: 'Deschide folderul',
-      source: 'Sursă',
-      primarySource: 'Vantage',
-      primarySourceMessage: 'Baza de date oficială a dispozitivelor prin Vantage.',
-      secondarySource: 'PC Support',
-      secondarySourceMessage: 'Baza de date de compatibilitate de la PC Support.',
-      scan: 'Scanare',
-      scanning: 'Se scanează…?',
-      scanValidation: 'Introduceți un tip de sistem valid de 4 caractere și alegeți un sistem de operare.',
-      disclaimer: 'Pachetele provin din sursa selectată. Instalați pe propriul risc.',
-      filter: 'Filtru',
-      onlyShowUpdates: 'Doar actualizările',
-      sort: {
-        name: 'Sortează după nume',
-        category: 'Sortează după categorie',
-        date: 'Sortează după dată'
-      },
-      selectRecommended: 'Selectează recomandatele',
-      startAll: 'Pornește tot',
-      pauseAll: 'Pauză pentru toate',
-      clearSelection: 'Șterge selecția',
-      packagesFound: '{{count}} pachete găsite.',
-      packagesFoundOne: '1 pachet găsit.',
-      status: {
-        NotStarted: '',
-        Queued: 'În așteptare',
-        Downloading: 'Se descarcă',
-        Installing: 'Se instalează',
-        Completed: 'Finalizat',
-        Error: 'Eroare'
-      },
-      recommended: 'Recomandat',
-      isUpdate: 'Actualizare',
-      reboot: {
-        recommended: 'Repornire recomandată',
-        required: 'Repornire necesară',
-        shutdown: 'Oprire necesară'
-      },
-      oldPackageWarning: 'Acest pachet este mai vechi de un an; driverul poate fi învechit.',
-      download: 'Descărcare',
-      install: 'Instalare',
-      uninstall: 'Dezinstalare',
-      pause: 'Pauză',
-      openReadme: 'Deschide README',
-      hide: 'Ascunde',
-      hideAll: 'Ascunde tot',
-      showHiddenDownloads: 'Afișează descărcările ascunse',
-      downloadInProgress: {
-        title: 'Descărcări în curs',
-        message: 'Descărcările încă rulează. Scanați din nou?',
-        confirm: 'Scanare'
-      },
-      empty: {
-        notScanned: {
-          title: 'Scanează pentru pachete de drivere',
-          message: 'Alegeți o sursă și scanați pentru a lista descărcările compatibile de drivere.'
-        },
-        noResults: {
-          title: 'Nu s-au găsit descărcări de drivere',
-          message: 'Încercați o altă sursă, sistem de operare sau tip de sistem.'
-        },
-        noFilterResults: {
-          title: 'Nu s-au găsit descărcări corespunzătoare',
-          message: 'Ajustați filtrul, opțiunea doar actualizări sau lista descărcărilor ascunse.'
-        },
-        error: {
-          title: 'Scanarea driverelor nu s-a finalizat',
-          message: 'Verificați sursa selectată și conexiunea la rețea, apoi scanați din nou.'
-        }
-      },
-      osOptions: {
-        windows7: 'Windows 7',
-        windows8: 'Windows 8',
-        windows10: 'Windows 10',
-        windows11: 'Windows 11'
-      }
-    }
-  },
-  about: {
-    title: 'Despre',
-    appName: 'Aplicație',
-    version: 'Versiune',
-    build: 'Compilare',
-    links: 'Linkuri proiect',
-    projectWebsite: 'Website-ul proiectului pe GitHub',
-    latestRelease: 'Ultima versiune pe GitHub',
-    applicationFolders: 'Folderele aplicației',
-    data: 'Date',
-    temp: 'Temporar',
-    pid: 'ID proces',
-    machine: 'Model dispozitiv',
-    bios: 'Versiune BIOS',
-    compatible: 'Compatibilitate',
-    yes: 'Compatibil',
-    no: 'Necompatibil',
-    dataFolder: 'Folder date',
-    thirdParty: 'Biblioteci terțe',
-    translationCredit: 'Traduceri furnizate de comunitate.',
-    copyright: 'Drepturi de autor'
-  },
-  statusBanner: {
-    updateAvailable: 'Actualizare disponibilă!',
-    updateAvailableWithVersion: 'Actualizarea {{version}} disponibilă!',
-    pluginExtensionsDisabled: 'Navigarea Extensii plugin este ascunsă. Activați-o la Setări …?Elemente de navigare.',
-    vantageRunning: 'Lenovo Vantage și/sau ImController rulează în fundal.',
-    legionZoneRunning: 'Legion Zone rulează în fundal.',
-    fnKeysRunning: 'Lenovo Hotkeys rulează în fundal.'
-  },
-  clipboard: {
-    copyProcesses: 'Copiază lista de procese',
-    copySuccess: 'Lista de procese a fost copiată în clipboard',
-    copyFailed: 'Nu s-a putut copia lista de procese'
-  },
-  notifications: {
-    mergedCount: '×{{count}}'
-  },
-  loading: {
-    automation: 'Se încarcă automatizarea…?',
-    dashboard: 'Se încarcă panoul de bord…?',
-    settings: 'Se încarcă setările…?'
-  },
-  update: {
-    checkResult: {
-      available: 'Versiune nouă disponibilă: v{{version}}',
-      latest: 'Aveți cea mai recentă versiune'
-    }
-  },
-  bootLogoWindowcustomize: 'Personalizare',
-  bootLogoWindowcustomLogoSet: 'Logo-ul de pornire personalizat este setat',
-  bootLogoWindowdefaultLogoSet: 'Logo-ul de pornire implicit este setat',
-  bootLogoWindowdescription: 'Logo-ul de pornire personalizat trebuie să aibă exact {0} pixeli. \n Formatele acceptate sunt: {1}.',
-  bootLogoWindowsetCustomFailed: 'Logo personalizat nu a putut fi setat: {0}',
-  bootLogoWindowsetCustomSuccess: 'Logo-ul de pornire personalizat a fost setat.',
-  bootLogoWindowsetDefaultFailed: 'Logo implicit nu a putut fi setat: {0}',
-  bootLogoWindowsetDefaultSuccess: 'Logo-ul de pornire implicit a fost setat.',
-  bootLogoWindowstatus: 'Stare',
-  bootLogoWindowtitle: 'Logo de pornire',
-  excludeRefreshRatesWindowdescription: 'Debifați ratele de reîmprospătare pe care nu doriți să le utilizați pentru comanda rapidă Fn+R.',
-  excludeRefreshRatesWindownoRefreshRatesFoundmessage: 'Asigurați-vă că afișajul laptopului este pornit. Universal Device Toolkit nu poate încărca rate de reîmprospătare pentru un afișaj care nu este pornit.',
-  excludeRefreshRatesWindowtitle: 'Excludere rată de reîmprospătare',
-  hardwareSensorSectionsWindowtitle: 'Secțiuni senzori',
-  keyboardvantageEnabledWarningmessage: 'Iluminarea tastaturii nu poate fi controlată aici atunci când Lenovo Vantage sau serviciile sale rulează.',
-  keyboardvantageEnabledWarningtitle: 'Lenovo Vantage sau serviciile sale rulează',
-  navigationItemsSettingsWindowdescription: 'Configurează care elemente de navigare sunt afișate în bara laterală. Panoul de control și Setările vor fi întotdeauna vizibile.',
-  navigationItemsSettingsWindowtitle: 'Setări elemente de navigare',
-  notificationsSettingsWindowdontShowNotificationsmessage: 'Dezactivează notificarea pentru acțiunile tastelor Fn, cum ar fi dezactivarea sunetului microfonului.\nActivați această opțiune dacă aveți conflicte cu aplicațiile pe ecran complet.',
-  notificationsSettingsWindowdontShowNotificationstitle: 'Nu afișa notificări',
-  notificationsSettingsWindownotificationDurationtitle: 'Durată',
-  notificationsSettingsWindownotificationPositiontitle: 'Poziție',
-  notificationsSettingsWindowtitle: 'Notificări',
-  pluginSettingsWindowauthor: 'Autor: {0}',
-  pluginSettingsWindownoConfigMessage: 'Acest plugin nu are setări configurabile.',
-  pluginSettingsWindowpluginNotFound: 'Plugin negăsit: {0}',
-  pluginSettingsWindowsettings: 'Setări',
-  pluginSettingsWindowtitle: 'Setări plugin',
-  powerPlansWindowloadError: 'Planurile de alimentare Windows nu au putut fi încărcate. Este disponibil doar planul de alimentare implicit.',
-  revertToDefault: 'Revenire la implicit',
-  saveButton: 'Salvează',
-  selectSmartKeyPipelinesWindowlistdescription: 'Alegeți una sau mai multe acțiuni rapide de parcurs',
-  selectSmartKeyPipelinesWindowlistempty: 'Nicio Acțiune Rapidă definită.',
-  selectSmartKeyPipelinesWindowshowThisApp: 'Arată această aplicație',
-  sensorsControlmemoryClocktitle: 'Ceas de memorie',
-  sensorSectionsmoveDown: 'Mută în jos',
-  sensorSectionsmoveUp: 'Mută în sus',
-  sensorSectionsordertitle: 'Ordinea secțiunilor',
-  sensorSectionsvisibletitle: 'Secțiuni vizibile',
-  settingsPagesmartKeyDoublePressActiontitle: 'Acțiune secundară pentru tasta inteligentă',
-  settingsPagesmartKeySinglePressActiontitle: 'Acțiune tastă inteligentă',
-  tryAgain: 'Încercați din nou',
-  windowsPowerModesWindowtitle: 'Moduri de alimentare Windows',
-  windowsPowerPlansWindowdefaultPowerPlan: 'Implicit',
-  windowsPowerPlansWindowtitle: 'Planuri de alimentare Windows'
+    browse: 'Răsfoiește…',
+    commonExecutableFileDialogFilter: 'Nume proces sau cale executabil',
+    deleteAll: 'Ștergeți tot',
+    updateWindowdownloadComplete: 'Descărcare finalizată.',
+    updateWindowrestartToInstall: 'Instalare și repornire',
   }
-}
-
+  }
+})

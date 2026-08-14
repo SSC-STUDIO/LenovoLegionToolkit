@@ -1,16 +1,1504 @@
-﻿export default {
+import { withEnglishFallback } from './en-US'
+
+export default withEnglishFallback({
   translation: {
-  loading: {
-    automation: 'Načítání automatizace',
-    dashboard: 'Načítání přehledu…',
-    settings: 'Načítání nastavení…?'
-  },
-  update: {
-    checkResult: {
-      available: 'Nová verze k dispozici: v{{version}}',
-      latest: 'Máte nejnovější verzi'
-    }
-  },
+    app: {
+      name: 'Universal Device Toolkit'
+    },
+    titlebar: {
+      log: 'Protokol',
+      openLogs: 'Otevřít složku protokolů',
+      deviceName: 'Legion Y9000P IRX9',
+      deviceInfo: 'Informace o zařízení'
+    },
+    nav: {
+      dashboard: 'Konzole',
+      settings: 'Nastavení',
+      automation: 'Automatizace',
+      keyboard: 'Klávesnice',
+      keyboardBacklight: 'Podsvícení klávesnice',
+      macro: 'Vlastní makro',
+      windowsOptimization: 'Optimalizace systému',
+      pluginExtensions: 'Pluginy a rozšíření',
+      about: 'O aplikaci'
+    },
+    home: {
+      title: 'Universal Device Toolkit',
+      subtitle: 'Vítejte! Vyberte si sekci níže a začněte',
+      hostReady: 'Backend připojen',
+      hostState: 'Stav backendu',
+      hostVersion: 'Verze backendu',
+      hostUnavailable:
+        'Backend host neběží. Počkejte chvíli a zkuste to znovu, nebo restartujte aplikaci.',
+      initComplete: 'Inicializace dokončena',
+      safeStart: 'Bezpečný start, přeskočeno',
+      machine: 'Zařízení',
+      compatible: 'Kompatibilita',
+      status: 'Stav'
+    },
+    dashboard: {
+      title: 'Konzole',
+      customize: 'Přizpůsobit',
+      edit: {
+        title: 'Upravit přehled',
+        description: 'Vyberte, které sekce a funkce se zobrazí na domovské stránce.',
+        showSensors: 'Hardwarové senzory',
+        groups: 'Skupiny funkcí',
+        save: 'Uložit',
+        cancel: 'Zrušit',
+        saved: 'Rozložení přehledu uloženo',
+        error: 'Rozložení přehledu se nepodařilo uložit',
+        disclaimer: 'Některé funkce se nemusí objevit na přehledu v závislosti na stavu a konfiguraci vašeho notebooku.',
+        addGroup: 'Přidat',
+        renameGroup: 'Upravit název skupiny',
+        deleteGroup: 'Smazat',
+        moveUp: 'Posunout nahoru',
+        moveDown: 'Posunout dolů',
+        deleteItem: 'Smazat',
+        addItem: 'Přidat',
+        groupNamePlaceholder: 'Název',
+        default: 'Výchozí',
+        items: {
+          discreteGpu: 'Režim dedikované GPU',
+          overclockGpu: 'Přetaktování GPU',
+          turnOffMonitors: 'Vypnout monitory'
+        }
+      },
+      addItem: {
+        title: 'Přidat',
+        searchPlaceholder: 'Hledat',
+        empty: 'Všechny položky přehledu jsou již přidány',
+        addHint: 'Přidat položku'
+      },
+      cpu: 'CPU',
+      gpu: 'GPU',
+      memory: 'Paměť',
+      temperature: 'Teplota',
+      usage: 'Využití',
+      power: 'Příkon',
+      fanSpeed: 'Ventilátor',
+      vram: 'VRAM',
+      memoryUsed: 'Využitá paměť',
+      memoryTotal: 'Celková paměť',
+      storageTemp: 'Teplota úložiště',
+      notAvailable: '--',
+      sensor: {
+        cpu: 'Procesor',
+        gpu: 'Grafická karta',
+        memory: 'Paměť',
+        temperature: 'Teplota',
+        usage: 'Využití',
+        power: 'Příkon',
+        fanSpeed: 'Ventilátor',
+        vram: 'VRAM',
+        frequency: 'Takt jádra',
+        battery: 'Baterie',
+        charge: 'Nabíjení',
+        health: 'Stav',
+        rate: 'Rychlost',
+        fan: 'Ventilátor',
+        lowPowerAdapter: 'Připojen adaptér s nízkým výkonem',
+        batteryLow: 'Nízký stav baterie',
+        acCharging: 'Připojen napájecí adaptér, nabíjení...',
+        acNotCharging: 'Připojen napájecí adaptér, nenabíjí se...',
+        remainingTime: 'Odhadovaný zbývající čas: {0}',
+        memoryTemperature: 'Teplota paměti',
+        ssdTemperature: 'Teplota SSD',
+        vramTemperature: 'Teplota VRAM',
+        vramUsage: 'Využití VRAM',
+        cycles: 'Cyklů',
+        capacity: 'Kapacita',
+        fullCapacity: 'Plná kapacita nabití',
+        designCapacity: 'Konstrukční kapacita',
+        date: 'Datum',
+        voltage: 'Napětí jádra',
+        voltageRange: 'Rozsah napětí',
+        powerRange: 'Rozsah příkonu',
+        details: 'Podrobnosti',
+        doubleClickHint: 'Dvojitým kliknutím zobrazíte všechna data senzoru',
+        showDetails: 'Zobrazit podrobnosti',
+        hideDetails: 'Skrýt podrobnosti',
+        chartEmpty: 'Čekání na data senzorů',
+        refreshInterval: 'Interval obnovování',
+        detail: {
+          power: 'Příkon',
+          powerCores: 'Jádra',
+          powerMemory: 'Paměť',
+          powerPlatform: 'Platforma',
+          pCoreClock: 'Takt P-Core',
+          eCoreClock: 'Takt E-Core',
+          memoryUsage: 'Využití paměti',
+          sharedMemoryUsage: 'Využití sdílené paměti',
+          vramUsage: 'Využití VRAM',
+          hotSpot: 'Hot spot GPU',
+          pcieThroughput: 'Propustnost PCIe',
+          designCapacity: 'Konstrukční kapacita',
+          fullChargeCapacity: 'Plná kapacita nabití',
+          vramClock: 'Takt paměti VRAM',
+          currentPower: 'Aktuální příkon'
+        }
+      },
+      group: {
+        power: 'Napájení',
+        graphics: 'Grafika',
+        display: 'Displej',
+        other: 'Jiné',
+        custom: 'Vlastní'
+      },
+      card: {
+        error: 'Nastavení se nepodařilo použít',
+        config: 'Pokročilá nastavení',
+        configComingSoon: 'Pokročilá nastavení budou dostupná v budoucí verzi',
+        notSupported: 'Na tomto zařízení není podporováno'
+      }
+    },
+    balanceMode: {
+      title: 'Nastavení vyváženého módu',
+      aiEngine: 'Povolit AI',
+      aiEngineDesc: 'Automaticky detekuje, kdy běží určité hry, a upravuje výkon CPU a GPU. Mohou se zvýšit teploty a hluk ventilátoru.'
+    },
+    godMode: {
+      title: 'Nastavení vlastního režimu',
+      activePreset: 'Aktivní předvolba',
+      presetName: 'Název předvolby',
+      name: 'Název',
+      errorLoad: 'Nastavení se nepodařilo načíst.',
+      errorApply: 'Nastavení se nepodařilo použít',
+      applySuccess: 'Nastavení vlastního režimu bylo úspěšně použito.',
+      defaultPresetName: 'Předvolba',
+      cpu: {
+        title: 'CPU',
+        longTermPL: 'Dlouhodobý limit výkonu',
+        'longTermPL.desc': 'Nepřetržitá spotřeba, které může CPU dosáhnout.',
+        shortTermPL: 'Krátkodobý limit výkonu',
+        'shortTermPL.desc': 'Špičková spotřeba, které může CPU dosáhnout v krátkém čase.',
+        peakPL: 'Limit špičkového výkonu',
+        'peakPL.desc': 'Maximální okamžitá spotřeba, které může CPU dosáhnout.',
+        crossLoading: 'Dlouhodobý limit výkonu (křížové zatížení)',
+        'crossLoading.desc': 'Maximální spotřeba, které může CPU dosáhnout při plném využití CPU i GPU.',
+        pl1Tau: 'Doba krátkodobého limitu výkonu',
+        'pl1Tau.desc': 'Čas, po který může CPU využívat krátkodobý limit výkonu. Po vypršení času Tau se použije dlouhodobý limit výkonu.',
+        apuSppt: 'Limit výkonu APU sPPT',
+        'apuSppt.desc': 'Špičková spotřeba, které může CPU dosáhnout s menším zpožděním.',
+        tempLimit: 'Teplotní limit CPU',
+        'tempLimit.desc': 'Maximální teplota CPU, než se sníží frekvence a výkon.'
+      },
+      gpu: {
+        title: 'GPU',
+        dynamicBoost: 'Dynamický Boost',
+        'dynamicBoost.desc': 'Dodatečný maximální výkon, který může být GPU přidělen na základě spotřeby CPU.',
+        ctgp: 'Nastavitelný TGP',
+        'ctgp.desc': 'Dodatečný výkon, který může být GPU přidělen nad rámec základní spotřeby.',
+        tempLimit: 'Teplotní limit GPU',
+        'tempLimit.desc': 'Maximální teplota GPU, než se sníží frekvence a výkon.',
+        totalProcessingPowerTarget: 'Cíl celkového výkonu procesoru v AC',
+        'totalProcessingPowerTarget.desc': 'Bod, ve kterém CPU spouští dynamickou úpravu spotřeby pro GPU.',
+        toCpuDynamicBoost: 'Dynamické posílení GPU na CPU',
+        'toCpuDynamicBoost.desc': 'Maximální dodatečný výkon, který může být CPU přidělen z GPU na základě využití CPU. Čím vyšší hodnota, tím lepší výkon aplikací využívajících CPU.'
+      },
+      fans: {
+        title: 'Ventilátory',
+        curve: 'Křivka ventilátorů',
+        curveMessage: 'Rychlost ventilátoru sleduje nejvyšší hodnotu senzoru CPU, GPU nebo chladiče. Najeďte myší na každý krok a zobrazí se přesné hodnoty.',
+        maxSpeed: 'Maximální rychlost ventilátorů',
+        maxSpeedWarning: 'Dlouhodobé používání této možnosti ventilátory opotřebí a zkrátí jejich životnost.\nVážně, buďte s touto možností opatrní!'
+      },
+      advanced: {
+        title: 'Pokročilé',
+        message: 'Neměňte níže uvedené možnosti, pokud opravdu nevíte, co děláte.',
+        maxOffset: 'Maximální posun',
+        maxOffsetWarning: 'Vyšší hodnoty mohou způsobit nepředvídatelné chování. Pokud si nejste jistí, nechte hodnotu na 0.',
+        minOffset: 'Minimální posun',
+        minOffsetWarning: 'Nižší hodnoty mohou způsobit nepředvídatelné chování. Pokud si nejste jistí, nechte hodnotu na 0.',
+        invalidOffset: 'Před uložením zadejte celé číslo.'
+      },
+      vantageWarning: 'Nastavení vlastního režimu nebude správně použito, když běží Lenovo Vantage nebo jeho služby.',
+      legionZoneWarning: 'Nastavení vlastního režimu nebude správně použito, když běží Legion Zone nebo její služby.'
+    },
+    overclock: {
+      title: 'Nastavení přetaktování GPU',
+      preset: 'Předvolba',
+      coreOffset: 'Posun frekvence jádra',
+      memoryOffset: 'Posun frekvence paměti',
+      namePlaceholder: 'Název...',
+      newProfileName: 'Předvolba',
+      loadError: 'Nastavení přetaktování se nepodařilo načíst.'
+    },
+    feature: {
+      powerMode: 'Režim výkonu',
+      'powerMode.desc': 'Změnit režim výkonu.\nRežim výkonu lze také změnit pomocí Fn+Q.',
+      'powerMode.hint': 'Rychle jej změníte zkratkou Fn+Q.',
+      'powerMode.warning': 'Režim výkonu nemusí fungovat správně, když není připojen napájecí adaptér.',
+      battery: 'Režim nabíjení baterie',
+      'battery.desc': 'Vyberte režim nabíjení baterie. Konzervační režim omezuje úroveň nabití pro delší životnost baterie, zatímco režim rychlého nabíjení nabíjí vyšším výkonem.',
+      batteryNightCharge: 'Noční nabíjení baterie',
+      'batteryNightCharge.desc': 'Když je povoleno, přes noc nabije na 80 % a do rána dobije na 100 %.',
+      alwaysOnUsb: 'Vždy napájené USB',
+      'alwaysOnUsb.desc': 'Udržuje porty USB napájené, když je počítač vypnutý, spí nebo hibernuje. Obvykle se to týká pouze portu USB označeného ikonou baterie na boku notebooku.',
+      instantBoot: 'Okamžité spuštění',
+      'instantBoot.desc': 'Zapne počítač, jakmile je připojeno napájení.',
+      flipToStart: 'Zapnout otevřením víka',
+      'flipToStart.desc': 'Otevření víka automaticky zapne notebook.',
+      fnLock: 'Fn Lock',
+      'fnLock.desc': 'Když je povoleno, funkce lze spouštět bez stisknutí Fn. Stiskněte Fn společně s původními klávesami F1 až F12 pro jejich spuštění.',
+      gSync: 'GSync',
+      'gSync.desc': 'Povolit nebo zakázat variabilní obnovovací frekvenci G-Sync',
+      hdr: 'HDR',
+      'hdr.desc': 'Povolí vysoký dynamický rozsah (HDR) pro vestavěný displej.',
+      'hdr.warning': 'Použití HDR je blokováno nastavením systému Windows.',
+      hybridMode: 'Hybridní režim',
+      'hybridMode.desc': 'Hybridní režim umožňuje přepínat mezi integrovanou a dedikovanou GPU. Vypnutí zapne přímý režim dedikované GPU; pro provedení přepnutí je nutný restart.',
+      igpuMode: 'Režim dedikované GPU',
+      'igpuMode.desc': 'Vynutit výstup integrované grafiky pro úsporu energie',
+      refreshRate: 'Obnovovací frekvence',
+      'refreshRate.desc': 'Přepnout obnovovací frekvenci vestavěného displeje.',
+      itsMode: 'Režim ITS',
+      'itsMode.desc': 'Inteligentní tepelné řešení',
+      microphone: 'Mikrofon',
+      'microphone.desc': 'Vypnutí ztlumí všechny dostupné mikrofony.',
+      overDrive: 'Over Drive',
+      'overDrive.desc': 'Když je povoleno, přeřadí vestavěný displej pro lepší dobu odezvy. Může způsobit přestřel na přechodech (ghosting).',
+      panelLogo: 'Světlo loga Legion',
+      'panelLogo.desc': 'Zapíná nebo vypíná světlo loga Legion na zadní straně zařízení.',
+      portsBacklight: 'Podsvícení portů',
+      'portsBacklight.desc': 'Zapíná nebo vypíná světla portů na zadní straně zařízení.',
+      resolution: 'Rozlišení',
+      'resolution.desc': 'Přepnout rozlišení vestavěného displeje.',
+      dpiScale: 'Měřítko DPI',
+      'dpiScale.desc': 'Přepnout měřítko vestavěného displeje.',
+      speaker: 'Reproduktor',
+      touchpadLock: 'Zámek touchpadu',
+      'touchpadLock.desc': 'Vypne touchpad. Doporučeno při použití myši, aby nedošlo k náhodnému dotyku.',
+      whiteKeyboard: 'Podsvícení klávesnice',
+      'whiteKeyboard.desc': 'Pomocí zkratky Fn + Mezerník přepínejte a upravujte jas podsvícení klávesnice.',
+      winKey: 'Zakázat klávesu Win',
+      'winKey.desc': 'Týká se pouze vestavěné klávesnice. Když je povoleno, klávesa Win přestane reagovat.',
+      oneLevelWhiteKeyboard: 'Podsvícení klávesnice',
+      'oneLevelWhiteKeyboard.desc': 'Pomocí zkratky Fn + Mezerník přepínejte podsvícení.',
+      'hybridMode.states.hybrid': 'Hybridní',
+      'hybridMode.states.hybridIGPUOnly': 'Hybrid-iGPU',
+      'hybridMode.states.hybridAuto': 'Hybrid-Auto',
+      'hybridMode.states.off': 'dGPU',
+      'hybridMode.info.title': 'O pracovních režimech GPU',
+      'hybridMode.info.hybrid.title': 'Hybridní režim',
+      'hybridMode.info.hybrid.message': 'Integrovaná i dedikovaná GPU jsou povoleny. Systém mezi nimi bude automaticky přepínat podle svých potřeb.',
+      'hybridMode.info.hybridIgpu.title': 'Režim pouze Hybrid-iGPU',
+      'hybridMode.info.hybridIgpu.message': 'Používat pouze integrovanou GPU. Tento režim minimalizuje spotřebu energie a hluk.',
+      'hybridMode.info.hybridIgpu.disclaimer': 'Tento režim se projeví pouze tehdy, když dedikovaná GPU nepracuje.',
+      'hybridMode.info.hybridAuto.title': 'Režim Hybrid-Auto',
+      'hybridMode.info.hybridAuto.message': 'Na baterii používejte pouze integrovanou GPU, při připojeném adaptéru integrovanou i dedikovanou GPU. Když je připojen nestandardní adaptér, systém přepne na režim pouze Hybrid-iGPU.',
+      'hybridMode.info.dgpu.title': 'Režim dGPU',
+      'hybridMode.info.dgpu.message': 'Používat pouze dedikovanou GPU. Tento režim poskytuje nejlepší grafický výkon, ale zvyšuje spotřebu energie.',
+      'hybridMode.info.dgpu.disclaimer': 'Přepnutí do a z tohoto režimu vyžaduje restart.',
+      'hybridMode.restartRequired.title': 'Je vyžadován restart',
+      'hybridMode.restartRequired.message': 'Přepnutí na {{mode}} vyžaduje restart. Chcete restartovat nyní?',
+      'hybridMode.restartRequired.now': 'Restartovat nyní',
+      'hybridMode.restartRequired.later': 'Restartuji později',
+      'hybridMode.restartFailed': 'Počítač se nepodařilo automaticky restartovat. Pro dokončení změny jej restartujte ručně.',
+      'hybridMode.changeFailed.title': 'Nepodařilo se změnit pracovní režim GPU',
+      'hybridMode.changeFailed.message': 'Zkuste režim znovu za pár sekund, pokud nevidíte očekávaný výsledek. Pokud dGPU vůbec nereaguje, restartujte prosím notebook.',
+      batteryModes: {
+        conservation: 'Konzervační režim',
+        normal: 'Normální režim',
+        rapidCharge: 'Režim rychlého nabíjení'
+      },
+      powerModeOptions: {
+        quiet: 'Tichý',
+        balance: 'Vyvážený',
+        performance: 'Výkon',
+        extreme: 'Extrémní',
+        godMode: 'Vlastní'
+      }
+    },
+    common: {
+
+      loading: 'Načítání…',
+
+      deleteColor: 'Delete color',
+
+      notifications: 'Notifications',
+
+      minimize: 'Minimize',
+
+      maximize: 'Maximize',
+
+      restore: 'Restore',
+
+      windowClose: 'Close',
+
+      navigation: 'Navigation',
+
+      expandNavigation: 'Expand navigation',
+
+      collapseNavigation: 'Collapse navigation',      error: 'Něco se pokazilo',
+      retry: 'Zkusit znovu',
+      close: 'Zavřít',
+      cancel: 'Zrušit',
+      moreActions: 'Další akce',
+      copied: 'Zkopírováno do schránky',
+      add: 'Přidat',
+      save: 'Uložit',
+      saveAndClose: 'Uložit a zavřít',
+      apply: 'Použít',
+      applyAndClose: 'Použít a zavřít',
+      default: 'Výchozí',
+      rename: 'Přejmenovat',
+      delete: 'Smazat',
+      ok: 'OK',
+      confirm: 'Potvrdit',
+      resetDefault: 'Obnovit výchozí',
+      load: 'Načíst',
+      notSupportedOnPlatform: 'Na této platformě není podporováno.'
+    },
+    colorPicker: {
+      hex: 'Hex',
+      red: 'Červená',
+      green: 'Zelená',
+      blue: 'Modrá',
+      ok: 'OK'
+    },
+    fanCurve: {
+      fanSpeed: 'Rychlost ventilátoru',
+      fanSpeedMax: '100%',
+      cpu: 'CPU',
+      cpuSensor: 'Senzor CPU',
+      gpu: 'GPU',
+      gpu2: 'GPU #2',
+      rpm: 'ot./min'
+    },
+    pages: {
+      placeholder: 'Již brzy'
+    },
+    settings: {
+      title: 'Nastavení',
+      description: 'Nakonfigurujte možnosti vzhledu, chování a funkcí aplikace.',
+      nav: {
+        appearance: 'Vzhled',
+        application: 'Aplikace',
+        power: 'Napájení',
+        display: 'Displej',
+        smartKeys: 'Chytré klávesy',
+        update: 'Aktualizace',
+        integrations: 'Integrace',
+        osd: 'OSD'
+      },
+      appearance: {
+        language: 'Jazyk',
+        languageDesc: 'Vyberte jazyk',
+        temperature: 'Teplota',
+        temperatureDesc: 'Vyberte jednotky používané teplotními senzory.',
+        theme: 'Globální barevný režim rozhraní',
+        accentColor: 'Globální barva zvýraznění rozhraní',
+        accentColorDesc: 'Změňte barvu zvýraznění aplikace.',
+        accentColorSource: {
+          system: 'Systém',
+          custom: 'Vlastní'
+        },
+        appScale: 'Měřítko UI',
+        appScaleDesc:
+          'Rovnoměrně zvětšit text i celé rozhraní, nezávisle na škálování zobrazení Windows.',
+        appScaleAuto: 'Auto',
+        themeOptions: {
+          system: 'Systém',
+          light: 'Světlý',
+          dark: 'Tmavý'
+        }
+      },
+      application: {
+        minimizeToTray: 'Minimalizovat do oznamovací oblasti',
+        minimizeToTrayDesc: 'Vždy minimalizovat do oznamovací oblasti místo hlavního panelu.',
+        minimizeOnClose: 'Minimalizovat při zavření',
+        minimizeOnCloseDesc: 'Vždy minimalizovat do oznamovací oblasti. Když je povoleno, klikněte pravým tlačítkem na ikonu v oznamovací oblasti a zvolte Zavřít pro ukončení aplikace.',
+        disableUnsupportedWarning: 'Nevarovat u nekompatibilních zařízení',
+        disableUnsupportedWarningDesc: 'Skrýt upozornění na nekompatibilní zařízení zobrazené při spuštění.',
+        enableHardwareSensors: 'Hardwarové senzory',
+        enableHardwareSensorsDesc: 'Povolit pokročilé dotazování hardwaru pro sledování podrobných teplot, frekvencí a limitů výkonu.',
+        dontShowNotifications: 'Nezobrazovat oznámení',
+        dontShowNotificationsDesc: 'Zakázat oznámení v aplikaci a systému',
+        autorun: 'Spustit při přihlášení',
+        autorunDesc: 'Spustit aplikaci při přihlášení do Windows.',
+        autorunDescLoginItem: 'Spusťte aplikaci, když se přihlásíte k tomuto počítači.',
+        autorunUnavailable: 'Spustit při přihlášení není v náhledu prohlížeče k dispozici.',
+        autorunOptions: {
+          enabled: 'Povoleno',
+          enabledDelayed: 'Povoleno (se zpožděním)',
+          disabled: 'Zakázáno'
+        },
+        groupStartup: 'Spuštění a okno',
+        groupSensors: 'Hardwarové senzory',
+        groupNotifications: 'Oznámení a upozornění',
+        groupSoftware: 'Softwarové konflikty',
+        animationsEnabled: 'UI animace',
+        animationsEnabledDesc: 'Animuje okna, dialogy a další prvky rozhraní. Vypněte pro omezení pohybu.',
+        sensorRefreshInterval: 'Interval obnovování senzorů',
+        sensorRefreshIntervalDesc: 'Jak často se hodnoty senzorů obnovují. Kartu senzorů můžete také dočasně změnit kliknutím pravým tlačítkem.',
+        extensionsEnabled: 'Povolit rozšíření',
+        extensionsEnabledDesc: 'Povolit načítání pluginů a rozšíření',
+        sensorSections: 'Sekce senzorů',
+        sensorSectionsDesc: 'Vyberte, které sekce senzorů se zobrazí a v jakém pořadí.',
+        disableVantage: 'Zakázat Lenovo Vantage',
+        disableVantageDesc: 'Zakázat Lenovo Vantage a ImController bez jejich odinstalace.\nPo změně této možnosti se doporučuje restart.',
+        disableLegionZone: 'Zakázat Legion Zone',
+        disableLegionZoneDesc: 'Zakázat Legion Zone a její službu bez odinstalace.\nPo změně této možnosti se doporučuje restart.',
+        disableLenovoHotkeys: 'Zakázat Lenovo Hotkeys',
+        disableLenovoHotkeysDesc: 'Zakázat Lenovo Hotkeys a jejich službu bez odinstalace.\nPokud je zakázáno, tato aplikace bude zpracovávat zkratky Fn.\nPo změně této možnosti se doporučuje restart.',
+        valueOn: 'Zapnuto',
+        valueOff: 'Vypnuto'
+      },
+      saved: 'Nastavení uloženo',
+      saveFailed: 'Nastavení se nepodařilo uložit',
+      osd: {
+        title: 'OSD',
+        showOsd: 'Zobrazit OSD',
+        showOsdDesc: 'Okamžitě zobrazit překryvné zobrazení.',
+        style: 'Styl překrytí',
+        styles: {
+          panel: 'Panel',
+          bar: 'Lišta'
+        },
+        refreshInterval: 'Interval obnovování',
+        snapThreshold: 'Práh přichycení',
+        lockPosition: 'Zamknout pozici',
+        resetPosition: 'Obnovit pozici',
+        previewHint: 'Náhled',
+        tabs: {
+          general: 'Obecné',
+          appearance: 'Vzhled',
+          thresholds: 'Prahy',
+          sensors: 'Senzory'
+        },
+        opacity: 'Průhlednost',
+        cornerRadius: 'Poloměr rohů',
+        cornerRadiusTop: 'Nahoře',
+        cornerRadiusBottom: 'Dole',
+        fontSize: 'Velikost písma',
+        background: 'Barva pozadí',
+        category: 'Barva kategorie',
+        label: 'Barva popisku',
+        value: 'Barva hodnoty',
+        warning: 'Barva varování',
+        critical: 'Barva kritického stavu',
+        separator: 'Barva oddělovače',
+        thresholds: {
+          performance: 'Výkon',
+          fpsRedline: 'Limit FPS',
+          lowFpsDelta: 'Delta nízkých FPS',
+          temperature: 'Teplota',
+          usage: 'Využití',
+          warning: 'Varování',
+          critical: 'Kritické'
+        },
+        items: {
+          groups: {
+            game: 'Hra',
+            cpu: 'CPU',
+            gpu: 'GPU',
+            pch: 'PCH'
+          },
+          names: {
+            Fps: 'FPS',
+            LowFps: '1% Low',
+            FrameTime: 'Doba snímku',
+            CpuFrequency: 'Takt jádra',
+            CpuPCoreFrequency: 'Takt P-Core',
+            CpuECoreFrequency: 'Takt E-Core',
+            CpuUtilization: 'Využití',
+            CpuTemperature: 'Teplota',
+            CpuPower: 'Příkon',
+            CpuFan: 'Ventilátor',
+            GpuFrequency: 'Takt jádra',
+            GpuUtilization: 'Využití',
+            GpuTemperature: 'Teplota jádra',
+            GpuVramUtilization: 'Využití VRAM',
+            GpuVramTemperature: 'Teplota VRAM',
+            GpuPower: 'Příkon',
+            GpuFan: 'Ventilátor',
+            MemoryUtilization: 'Využití',
+            MemoryTemperature: 'Teplota',
+            Disk1Temperature: 'Teplota disku 1',
+            Disk2Temperature: 'Teplota disku 2',
+            PchTemperature: 'Teplota PCH',
+            PchFan: 'Ventilátor'
+          }
+        }
+      },
+      power: {
+        powerModeMapping: 'Mapování režimu výkonu',
+        powerModeMappingDesc: 'Při přepínání režimů výkonu automaticky synchronizovaně přepněte plán napájení Windows nebo režim napájení Windows.',
+        mappingModes: {
+          disabled: 'Zakázáno',
+          windowsPowerMode: 'Režim napájení Windows',
+          windowsPowerPlan: 'Plán napájení Windows'
+        },
+        windowsPowerModes: 'Režim napájení Windows',
+        windowsPowerModesDesc: 'Vyberte režim napájení Windows, který se použije při změně režimu výkonu.',
+        windowsPowerPlans: 'Plán napájení Windows',
+        windowsPowerPlansDesc: 'Vyberte plán napájení Windows, který se použije při změně režimu výkonu.',
+        synchronizeBrightness: 'Zamknout jas displeje',
+        synchronizeBrightnessDesc: 'Když je povoleno, jas zůstává stejný při přepínání plánů napájení.',
+        smartFnLock: 'Modifikační klávesy chytrého Fn Locku',
+        modifierKeys: {
+          shift: 'Shift',
+          ctrl: 'Ctrl',
+          alt: 'Alt'
+        },
+        resetBatteryOnSince: 'Při spuštění resetujte „Na baterii od“.',
+        resetBatteryOnSinceDesc: 'Resetuje počítadlo pro „Na baterii od“ v sekci baterie, když se systém restartuje.',
+        godModeFnQ: 'Přepnout do vlastního režimu pomocí Fn+Q',
+        godModeFnQDesc: 'Povolit rychlé přepnutí do vlastního režimu pomocí Fn+Q.'
+      },
+      display: {
+        navigationItems: 'Viditelnost položek navigace',
+        groupNotifications: 'Oznámení',
+        groupWindow: 'Okno a displej',
+        notificationCategories: 'Kategorie oznámení a chování',
+        navigationKeys: {
+          keyboard: 'Podsvícení klávesnice',
+          battery: 'Baterie',
+          automation: 'Automatizace',
+          macro: 'Makro',
+          windowsOptimization: 'Optimalizace systému',
+          pluginExtensions: 'Pluginy a rozšíření',
+          about: 'O aplikaci'
+        },
+        notificationPosition: 'Pozice oznámení',
+        notificationPositions: {
+          bottomRight: 'Vpravo dole',
+          bottomCenter: 'Dole uprostřed',
+          bottomLeft: 'Vlevo dole',
+          centerLeft: 'Vlevo uprostřed',
+          topLeft: 'Vlevo nahoře',
+          topCenter: 'Nahoře uprostřed',
+          topRight: 'Vpravo nahoře',
+          centerRight: 'Vpravo uprostřed',
+          center: 'Uprostřed'
+        },
+        notificationDuration: 'Doba zobrazení oznámení',
+        notificationDurations: {
+          short: 'Krátká (3 s)',
+          normal: 'Normální (5 s)',
+          long: 'Dlouhá (10 s)'
+        },
+        excludedRefreshRates: 'Vyloučené obnovovací frekvence',
+        excludedRefreshRatesDesc: 'Vyloučte obnovovací frekvence, aby bylo přepínání Fn+R rychlejší.',
+        excludedRefreshRatesHint: 'Pokročilá úprava bude dostupná v budoucí verzi',
+        excludedRefreshRatesEmpty: 'Žádné vyloučené obnovovací frekvence',
+        excludedRefreshRatesManageHint: 'Klikněte pro správu vyloučených obnovovacích frekvencí',
+        notifications: 'Oznámení',
+        notificationsDesc: 'Vyberte, která oznámení se zobrazují.',
+        bootLogo: 'Logo při spouštění',
+        bootLogoDesc: 'Přizpůsobte logo spouštění zobrazené při startu počítače.'
+      },
+      smartKeys: {
+        smartFnLock: 'Chytrý Fn Lock',
+        smartFnLockDesc: 'Když je stisknuto Alt, Ctrl nebo Shift, Fn je dočasně odemčen.',
+        off: 'Vypnuto',
+        hint: 'Modifikační klávesy chytrého Fn Locku lze změnit v nastavení Napájení.',
+        singlePressActionDesc: 'Přiřaďte rychlou akci k jednoduchému stisku Fn+F9.',
+        doublePressActionDesc: 'Přiřaďte rychlou akci k dvojitému stisku Fn+F9.'
+      },
+      update: {
+        frequency: 'Automaticky kontrolovat aktualizace',
+        frequencies: {
+          perHour: 'Každou hodinu',
+          perThreeHours: 'Každé 3 hodiny',
+          perTwelveHours: 'Každých 12 hodin',
+          perDay: 'Každý den',
+          perWeek: 'Každý týden',
+          perMonth: 'Každý měsíc'
+        },
+        includePrerelease: 'Zahrnout předběžné verze',
+        includePrereleaseDesc: 'Když je vypnuto, nabízejí se pouze stabilní verze; když je zapnuto, přijímají se také předběžné (beta) aktualizace.',
+        repository: 'Repozitář aktualizací',
+        repositoryDesc: 'Nakonfigurujte GitHub repozitář pro kontrolu aktualizací. Nechte prázdné pro použití výchozího.',
+        repositoryOwner: 'Vlastník repozitáře',
+        repositoryOwnerPlaceholder: 'např. SSC-STUDIO',
+        repositoryName: 'Název repozitáře',
+        repositoryNamePlaceholder: 'např. UniversalDeviceToolkit',
+        check: 'Zkontrolovat aktualizace',
+        comingSoon: 'Kontrola aktualizací bude dostupná v budoucí verzi'
+      },
+      checkResult: {
+        available: 'Nová verze k dispozici: v{{version}}',
+        latest: 'Máte nejnovější verzi'
+      },
+      integrations: {
+        hwinfo: 'HWiNFO64',
+        hwinfoDesc: 'Sdílejte rychlost ventilátorů, teplotu baterie a další data s HWiNFO64. Po přepnutí může být nutné HWiNFO64 restartovat.',
+        cli: 'Rozhraní příkazového řádku',
+        cliDesc: 'Povolit rozhraní příkazového řádku pro ovládání z příkazového řádku.'
+      }
+    },
+    keyboard: {
+      title: 'Podsvícení klávesnice',
+      unsupported: 'Podsvícení klávesnice není na tomto zařízení podporováno',
+      simulatedHint: 'Režim simulace: nebyla zjištěna žádná klávesnice, zobrazuje se demo rozhraní',
+      rgb: {
+        preset: 'Předvolba',
+        settings: 'Nastavení podsvícení',
+        effect: 'Efekt',
+        speed: 'Rychlost',
+        brightness: 'Jas',
+        zones: 'Barvy zón',
+        synchroniseZones: 'Synchronizovat zóny',
+        presets: {
+          off: 'Vypnuto',
+          one: 'Předvolba 1',
+          two: 'Předvolba 2',
+          three: 'Předvolba 3',
+          four: 'Předvolba 4'
+        },
+        effectOptions: {
+          static: 'Statické',
+          breath: 'Dýchání',
+          smooth: 'Plynulé',
+          waveRtl: 'Vlna (RTL)',
+          waveLtr: 'Vlna (LTR)'
+        },
+        speedOptions: {
+          slowest: 'Nejpomalejší',
+          slow: 'Pomalá',
+          fast: 'Rychlá',
+          fastest: 'Nejrychlejší'
+        },
+        brightnessOptions: {
+          low: 'Nízký',
+          high: 'Vysoký'
+        }
+      },
+      spectrum: {
+        brightness: 'Jas',
+        profile: 'Profil',
+        logo: 'Světlo loga',
+        effects: 'Efekty',
+        colors: 'Barvy',
+        addEffect: 'Přidat efekt',
+        deleteEffect: 'Smazat',
+        noEffects: 'Žádné efekty',
+        selectAll: 'Vybrat všechny zóny',
+        deselectAll: 'Zrušit výběr všech zón',
+        switchLayout: 'Přepnout rozložení klávesnice',
+        editEffect: 'Upravit',
+        allKeys: 'Všechny klávesy',
+        zonesCount: '{{count}} zón',
+        noLayoutHint: 'Rozložení klávesnice se nepodařilo načíst.',
+        selectEffectHint: 'Vyberte níže efekt pro náhled a úpravu jeho kláves.',
+        frontPanelHint: 'Kliknutím nebo tažením vyberte zóny klávesnice a předního panelu',
+        effectEdit: {
+          addTitle: 'Přidat efekt',
+          editTitle: 'Upravit efekt',
+          effect: 'Efekt',
+          speed: 'Rychlost',
+          direction: 'Směr',
+          clockwiseDirection: 'Směr',
+          color: 'Barva',
+          colors: 'Barvy',
+          addColor: 'Přidat barvu',
+          keys: 'Klávesy',
+          alwaysWarning: 'Tento efekt bude použit na celou klávesnici a nahradí všechny ostatní efekty.'
+        },
+        effectTypes: {
+          always: 'Vždy',
+          rainbowScrew: 'Rainbow Screw',
+          rainbowWave: 'Rainbow Wave',
+          colorChange: 'Změna barvy',
+          colorWave: 'Barevná vlna',
+          colorPulse: 'Barevný puls',
+          smooth: 'Plynulé',
+          rain: 'Déšť',
+          ripple: 'Vlnění',
+          type: 'Typ',
+          audioBounce: 'Audio Bounce',
+          audioRipple: 'Audio Ripple',
+          auroraSync: 'Aurora Sync'
+        }
+      }
+    },
+    automation: {
+      title: 'Automatizace',
+      enable: 'Povolit automatizaci',
+      enableDesc: 'Aby automatické akce fungovaly, musí běžet Universal Device Toolkit.',
+      subtitle: 'Když je povoleno, aplikace při změně stavu zařízení zkontroluje a spustí odpovídající akce v pořadí.',
+      actionsTitle: 'Akce',
+      actionsEmpty: 'Zatím žádné automatické akce',
+      quickActionsTitle: 'Rychlé akce',
+      quickActionsHint: 'Rychlé akce jsou dostupné v nabídce po kliknutí pravým tlačítkem na ikonu na hlavním panelu.',
+      quickActionsEmpty: 'Nejsou definovány žádné rychlé akce. Kliknutím na „Přidat nový“ vytvoříte novou rychlou akci.',
+      deactivateGpu: 'Deaktivujte GPU',
+      renamePipeline: 'Přejmenovat pipeline',
+      changeIcon: 'Změnit ikonu',
+      renamePipelineTitle: 'Přejmenovat pipeline',
+      renamePipelinePlaceholder: 'Zadejte název pipeline',
+      empty: 'Zatím neexistují žádné automatizační skripty. Kliknutím na „Nový“ jej vytvoříte.',
+      runNow: 'Spustit nyní',
+      delete: 'Smazat',
+      deleteStep: 'Smazat krok',
+      addPipeline: 'Nová',
+      addStep: 'Přidat krok',
+      configure: 'Nastavit',
+      stepType: 'Typ kroku',
+      steps: 'Kroky',
+      save: 'Uložit',
+      revert: 'Vrátit zpět',
+      pipelineName: 'Název pipeline',
+      pipelineNamePlaceholder: 'Zadejte název pipeline',
+      quickAction: 'Rychlá akce',
+      optionsLoading: 'Načítání možností…',
+      stepLabels: {
+        rgbKeyboardBacklight: 'Podsvícení klávesnice',
+        run: 'Spustit',
+        showMainWindow: 'Zobrazit hlavní okno',
+        speaker: 'Reproduktor',
+        spectrumKeyboardBacklightBrightness: 'Jas podsvícení klávesnice',
+        spectrumKeyboardBacklightImportProfile: 'Importovat profil podsvícení klávesnice',
+        spectrumKeyboardBacklightProfile: 'Profil podsvícení klávesnice',
+        touchpadLock: 'Zámek touchpadu',
+        turnOffMonitors: 'Vypnout displeje',
+        turnOffWiFi: 'Vypnout Wi-Fi',
+        turnOnWiFi: 'Zapnout Wi-Fi',
+        whiteKeyboardBacklight: 'Podsvícení klávesnice',
+        winKey: 'Zámek klávesy Windows',
+        scriptPath: 'Cesta ke spustitelnému souboru',
+        scriptArguments: 'Parametry',
+        runSilently: 'Spustit tiše',
+        runSilentlyDesc: 'Spustit konzolové aplikace bez vytvoření okna konzole.',
+        runWaitUntilFinished: 'Počkat na dokončení',
+        runWaitUntilFinishedDesc: 'Počkat, dokud program nebo skript nedokončí provádění',
+        runHint: 'Spustit skript nebo program.\nNejprve se ujistěte, že váš skript běží správně.',
+        importProfilePath: 'Cesta',
+        browse: 'Procházet',
+        off: 'Vypnuto',
+        on: 'Zapnuto',
+        mute: 'Ztlumit',
+        unmute: 'Zrušit ztlumení',
+        low: 'Nízká',
+        high: 'Vysoká',
+        presetOne: 'Předvolba 1',
+        presetTwo: 'Předvolba 2',
+        presetThree: 'Předvolba 3',
+        presetFour: 'Předvolba 4',
+        values: {
+          off: 'Vypnuto',
+          on: 'Zapnuto',
+          mute: 'Ztlumit',
+          unmute: 'Zrušit ztlumení',
+          low: 'Nízká',
+          high: 'Vysoká',
+          presetOne: 'Předvolba 1',
+          presetTwo: 'Předvolba 2',
+          presetThree: 'Předvolba 3',
+          presetFour: 'Předvolba 4'
+        }
+      },
+      state: {
+        on: 'Zapnuto',
+        off: 'Vypnuto',
+        hidden: 'Skrýt',
+        show: 'Zobrazit',
+        toggle: 'Přepnout stav',
+        quiet: 'Tichý',
+        balance: 'Vyvážený',
+        performance: 'Výkon',
+        extreme: 'Extrémní',
+        godMode: 'Vlastní',
+        hybrid: 'Hybridní',
+        hybridIgpu: 'Hybrid-iGPU',
+        hybridAuto: 'Hybrid-Auto',
+        dgpu: 'dGPU',
+        acAdapter: 'AC adaptér',
+        usbPd: 'USB Power Delivery',
+        acAndUsbPd: 'AC a USB PD',
+        hz: '{{frequency}} Hz',
+        resolution: '{{width}} × {{height}}'
+      },
+      stepEditors: {
+        hybridMode: {
+          title: 'Pracovní režim GPU',
+          desc: 'Vyberte provozní režim GPU na základě využití počítače a podmínek napájení.\nPřepínání režimů může vyžadovat restart.'
+        },
+        instantBoot: {
+          title: 'Okamžité spuštění',
+          desc: 'Zapne notebook, když je připojena nabíječka.'
+        },
+        macro: {
+          title: 'Makro',
+          desc: 'Povolit nebo zakázat makra.'
+        },
+        microphone: {
+          title: 'Mikrofon',
+          desc: 'Když je vypnuto, mikrofony budou ztlumeny.'
+        },
+        notification: {
+          title: 'Zobrazit oznámení',
+          desc: 'Zobrazit oznámení se zadaným textem.',
+          placeholder: 'Text oznámení'
+        },
+        oneLevelWhiteKeyboardBacklight: {
+          title: 'Podsvícení klávesnice',
+          desc: 'Zapnout nebo vypnout podsvícení.'
+        },
+        osd: {
+          title: 'OSD',
+          desc: 'Zobrazit nebo skrýt OSD'
+        },
+        overclockDiscreteGPU: {
+          title: 'Přetaktovat GPU',
+          desc: 'Zvýšit výkon přetaktováním dedikované GPU.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud dedikovaná GPU není k dispozici.'
+        },
+        overDrive: {
+          title: 'Over Drive',
+          desc: 'Zlepšit dobu odezvy vestavěného displeje.'
+        },
+        panelLogoBacklight: {
+          title: 'Podsvícení loga na panelu',
+          desc: 'Zapnout nebo vypnout podsvícení na víku notebooku.'
+        },
+        playSound: {
+          title: 'Přehrát zvuk',
+          desc: 'Jsou podporovány běžné hudební formáty jako wav nebo mp3.',
+          browse: 'Procházet…',
+          none: 'Není vybrán žádný soubor'
+        },
+        portsBacklight: {
+          title: 'Podsvícení portů',
+          desc: 'Zapnout nebo vypnout podsvícení portů na zadní straně notebooku.'
+        },
+        powerMode: {
+          title: 'Režim výkonu',
+          desc: 'Změnit režim výkonu.'
+        },
+        quickAction: {
+          title: 'Rychlá akce',
+          desc: 'Spustit uloženou rychlou akci.',
+          placeholder: 'Vyberte rychlou akci',
+          empty: 'Zatím žádné rychlé akce. Nejprve vytvořte pipeline bez spouštěče.'
+        },
+        refreshRate: {
+          title: 'Obnovovací frekvence',
+          desc: 'Změnit obnovovací frekvenci vestavěného displeje.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.',
+          empty: 'Žádné dostupné obnovovací frekvence'
+        },
+        resolution: {
+          title: 'Rozlišení',
+          desc: 'Změnit rozlišení vestavěného displeje.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.',
+          empty: 'Žádná dostupná rozlišení'
+        },
+        alwaysOnUsb: {
+          title: 'Vždy napájené USB',
+          desc: 'Nabíjet zařízení USB, když je notebook vypnutý, spí nebo hibernuje.',
+          options: {
+            OnWhenSleeping: 'Zapnuto při spánku',
+            OnAlways: 'Zapnuto vždy'
+          }
+        },
+        battery: {
+          title: 'Režim baterie',
+          desc: 'Vyberte, jak se bude baterie nabíjet.',
+          options: {
+            Conservation: 'Konzervace',
+            Normal: 'Normální',
+            RapidCharge: 'Rychlé nabíjení'
+          }
+        },
+        batteryNightCharge: {
+          title: 'Noční nabíjení baterie',
+          desc: 'Když je povoleno, toto zařízení se přes noc při připojení nabije na 80 % a do rána, než zařízení použijete, dokončí nabíjení na 100 %.'
+        },
+        deactivateGPU: {
+          title: 'Deaktivovat GPU',
+          desc: 'Vypnout dedikovanou GPU, pokud je zbytečně aktivní.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý nebo není aktivní hybridní režim.',
+          options: {
+            KillApps: 'Ukončit aplikace',
+            RestartGPU: 'Restartovat GPU'
+          }
+        },
+        delay: {
+          title: 'Zpoždění',
+          desc: 'Přidat zpoždění před spuštěním dalšího kroku.',
+          second_one: '{{count}} sekunda',
+          second_other: '{{count}} sekund'
+        },
+        displayBrightness: {
+          title: 'Jas displeje',
+          desc: 'Změnit jas displeje vestavěného displeje.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.',
+          percent: '{{value}}%'
+        },
+        dpiScale: {
+          title: 'DPI',
+          desc: 'Změnit měřítko vestavěného displeje.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.',
+          percent: '{{value}}%'
+        },
+        flipToStart: {
+          title: 'Zapnout otevřením víka',
+          desc: 'Zapne notebook, když otevřete víko.'
+        },
+        fnLock: {
+          title: 'Fn Lock',
+          desc: 'Používat sekundární funkce kláves F1-F12 bez držení klávesy Fn.'
+        },
+        godModePreset: {
+          title: 'Předvolba vlastního režimu',
+          desc: 'Aktivovat předvolbu vlastního režimu.\nToto nastavení se projeví pouze tehdy, když je vlastní režim povolen.'
+        },
+        hdr: {
+          title: 'HDR',
+          desc: 'Povolit vysoký dynamický rozsah (HDR) na vestavěném displeji.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.'
+        },
+        hideMainWindow: {
+          title: 'Skrýt hlavní okno'
+        },
+        rgbKeyboardBacklight: {
+          title: 'Podsvícení klávesnice',
+          desc: 'Upravit předvolbu podsvícení klávesnice.'
+        },
+        run: {
+          title: 'Spustit',
+          desc: 'Spustit skript nebo program.\nNejprve se ujistěte, že váš skript běží správně.'
+        },
+        showMainWindow: {
+          title: 'Zobrazit hlavní okno'
+        },
+        speaker: {
+          title: 'Reproduktor',
+          desc: 'Když je ztlumeno, všechna aktivní zvuková výstupní zařízení budou ztlumena.'
+        },
+        spectrumKeyboardBacklightBrightness: {
+          title: 'Jas podsvícení klávesnice',
+          desc: 'Upravit jas podsvícení klávesnice.'
+        },
+        spectrumKeyboardBacklightImportProfile: {
+          title: 'Importovat profil podsvícení klávesnice',
+          desc: 'Importovat a použít konfiguraci podsvícení v aktuálním profilu.'
+        },
+        spectrumKeyboardBacklightProfile: {
+          title: 'Profil podsvícení klávesnice',
+          desc: 'Upravit profil podsvícení klávesnice.'
+        },
+        touchpadLock: {
+          title: 'Zámek touchpadu',
+          desc: 'Vypnout touchpad.'
+        },
+        turnOffMonitors: {
+          title: 'Vypnout displeje',
+          desc: 'Vypnout všechny dostupné displeje.'
+        },
+        turnOffWiFi: {
+          title: 'Vypnout Wi-Fi'
+        },
+        turnOnWiFi: {
+          title: 'Zapnout Wi-Fi'
+        },
+        whiteKeyboardBacklight: {
+          title: 'Podsvícení klávesnice',
+          desc: 'Upravit jas podsvícení klávesnice.'
+        },
+        winKey: {
+          title: 'Zámek klávesy Windows',
+          desc: 'Zakázat klávesu Windows na vestavěné klávesnici.'
+        }
+      },
+      moveUp: 'Posunout nahoru',
+      moveDown: 'Posunout dolů',
+      noEditableParameters: 'Tento krok nemá žádné editovatelné parametry.',
+      addAutomaticPipeline: 'Nová akce',
+      addQuickAction: 'Nová rychlá akce',
+      quickActionName: 'Název rychlé akce',
+      triggerPicker: {
+        title: 'Nová akce – vyberte spouštěč'
+      },
+      triggerConfig: {
+        title: 'Nastavit spouštěč',
+        noEditableTriggers: 'Tento spouštěč nemá žádné konfigurovatelné parametry.'
+      },
+      triggerNames: {
+        aCAdapterConnected: 'Když je připojen napájecí adaptér AC',
+        lowWattageACAdapterConnected: 'Když je připojen napájecí adaptér AC s nízkým výkonem',
+        aCAdapterDisconnected: 'Když je napájecí adaptér AC odpojen',
+        powerMode: 'Když se změní režim výkonu',
+        godModePresetChanged: 'Když se změní předvolba vlastního režimu',
+        gamesAreRunning: 'Když běží hra',
+        gamesStop: 'Když se hra zavře',
+        processesAreRunning: 'Když se spustí aplikace',
+        processesStopRunning: 'Když se aplikace zavře',
+        userInactivity: 'Když se uživatel stane neaktivním',
+        userInactivityZero: 'Když se uživatel stane aktivním',
+        sessionLock: 'Relace uzamčena',
+        sessionUnlock: 'Relace odemčena',
+        lidOpened: 'Víko otevřeno',
+        lidClosed: 'Víko zavřeno',
+        displayOn: 'Když se displeje zapnou',
+        displayOff: 'Když se displeje vypnou',
+        hdrOn: 'Když se HDR zapne',
+        hdrOff: 'Když se HDR vypne',
+        deviceConnected: 'Když je zařízení připojeno',
+        deviceDisconnected: 'Když je zařízení odpojeno',
+        externalDisplayConnected: 'Když je připojen externí displej',
+        externalDisplayDisconnected: 'Když je externí displej odpojen',
+        wiFiConnected: 'Když je připojena Wi-Fi',
+        wiFiDisconnected: 'Když je Wi-Fi odpojena',
+        time: 'V určený čas',
+        periodic: 'Periodická akce',
+        hardwareSensor: 'Hardwarový senzor',
+        batteryPercentage: 'Procento baterie',
+        onStartup: 'Při spuštění',
+        onResume: 'Po probuzení'
+      },
+      triggerEditors: {
+        noProcesses: 'Nejsou vybrány žádné procesy.',
+        noDevices: 'Nejsou vybrána žádná zařízení.',
+        inactivityTimeout: 'Časový limit',
+        seconds: '{{count}} sekund',
+        minutes: '{{count}} minut',
+        hours: '{{count}} hodin',
+        ssidPlaceholder: 'Název sítě (SSID)',
+        addSsid: 'Přidat název sítě',
+        atTime: 'V čas',
+        hour: 'Hodina',
+        minute: 'Minuta',
+        allDays: 'Každý den',
+        day: {
+          0: 'Neděle',
+          1: 'Pondělí',
+          2: 'Úterý',
+          3: 'Středa',
+          4: 'Čtvrtek',
+          5: 'Pátek',
+          6: 'Sobota'
+        },
+        metric: 'Metrika',
+        comparison: 'Porovnání',
+        threshold: 'Práh',
+        thresholdPercent: 'Práh (%)',
+        durationSeconds: 'Doba trvání (sekundy)',
+        cooldownSeconds: 'Prodleva (sekundy)',
+        chargeFilter: 'Filtr nabíjení',
+        deviceInstanceId: 'ID instance zařízení'
+      }
+    },
+    macro: {
+      title: 'Makro klávesnice',
+      enable: 'Povolit makra',
+      enableDesc: 'Aby makra fungovala, musí běžet Universal Device Toolkit.',
+      subtitle: 'Můžete nahrát sérii stisknutí kláves a vyvolat je pomocí numerické klávesnice.',
+      numpad: 'Numerická klávesnice',
+      sequence: 'Sekvence',
+      repeat: 'Počet opakování',
+      events: 'Události',
+      save: 'Uložit',
+      clear: 'Vymazat',
+      play: 'Přehrát',
+      record: 'Nahrát',
+      recordingOptions: 'Možnosti nahrávání',
+      ignoreDelays: 'Ignorovat zpoždění',
+      interruptOnOtherKey: 'Přerušit při jiné klávese',
+      dontRepeat: 'Neopakovat',
+      keyboardOnly: 'Pouze klávesnice',
+      keyboardMouse: 'Klávesy klávesnice a tlačítka myši',
+      allInputs: 'Všechny vstupy',
+      recordingInterrupted: 'Nahrávání přerušeno',
+      keyboard: 'Klávesnice',
+      mouse: 'Myš',
+      move: 'Pohyb myši',
+      wheelUp: 'Kolečko myši nahoru',
+      wheelDown: 'Kolečko myši dolů',
+      wheelLeft: 'Kolečko myši doleva',
+      wheelRight: 'Kolečko myši doprava',
+      leftButton: 'Levé tlačítko',
+      rightButton: 'Pravé tlačítko',
+      middleButton: 'Prostřední tlačítko',
+      xButton: 'Tlačítko X',
+      button: 'Tlačítko myši',
+      empty: 'Pro tuto klávesu zatím žádná sekvence maker',
+      recording: {
+        preparing: 'Nahrávání začne za 3 sekundy...',
+        title: 'Nahrávání...',
+        pressEscToStop: 'Pro zastavení stiskněte ESC.',
+        focusHint: 'Během nahrávání ponechte toto okno zaměřené.'
+      }
+    },
+    plugins: {
+      title: 'Pluginy a rozšíření',
+      search: 'Hledat pluginy',
+      filterAll: 'Vše',
+      filterInstalled: 'Nainstalováno',
+      filterNotInstalled: 'Nenainstalováno',
+      refresh: 'Obnovit',
+      total: '{{count}} celkem',
+      summary: '{{count}} nainstalováno',
+      updatable: '{{count}} dostupných aktualizací',
+      install: 'Nainstalovat',
+      update: 'Aktualizovat',
+      updateAvailable: 'Dostupná aktualizace',
+      uninstall: 'Odinstalovat',
+      uninstallConfirm: 'Odinstalovat tento plugin?',
+      uninstallFailed: 'Odinstalace selhala',
+      installed: 'Nainstalováno',
+      online: 'Online',
+      settings: {
+        nativePageUnavailable: 'Tento plugin obsahuje nativní stránky uživatelského rozhraní, které nejsou dostupné ve verzi Electron. Jeho funkce na pozadí nadále funguje prostřednictvím hostitele backendu.',
+        capability: {
+          settingsPage: 'Stránka nastavení',
+          featurePage: 'Stránka funkcí',
+          optimizationCategory: 'Kategorie optimalizace',
+          executableEntryPoint: 'Spustitelný záznam'
+        }
+      },
+      installing: 'Instalace…',
+      downloading: 'Stahování…',
+      preparingDownload: 'Příprava stahování…',
+      downloadCompleted: 'Stahování dokončeno',
+      offline: 'Online obchod je nedostupný; zobrazují se pouze lokálně nainstalované pluginy',
+      empty: 'Nebyly nalezeny žádné pluginy',
+      noResults: 'Nebyly nalezeny žádné pluginy odpovídající vašemu hledání.',
+      dependencies: 'Závislosti',
+      dependenciesBlocked: 'Tento plugin má neuspokojené závislosti a nelze jej odinstalovat',
+      details: 'Podrobnosti',
+      usageGuide: 'Návod k použití',
+      changelog: 'Změny',
+      importProgress: 'Import balíčků pluginů…',
+      importSuccess: 'Importováno {{count}} balíčků pluginů',
+      importFailed: 'Import {{count}} balíčků pluginů selhal',
+      installAll: 'Nainstalovat vše',
+      installAllComplete: 'Nainstalováno {{count}} pluginů',
+      installAllPartial: 'Dokončeno {{count}} z {{total}} operací s pluginy',
+      copyId: 'Kopírovat ID pluginu',
+      copied: 'ID pluginu zkopírováno do schránky',
+      copyFailed: 'ID pluginu se nepodařilo zkopírovat',
+      local: 'Místní',
+      collapseDetails: 'Skrýt podrobnosti',
+      showDetails: 'Zobrazit podrobnosti',
+      updateInfo: 'Informace o aktualizaci',
+      versionLabel: 'Verze:',
+      configure: 'Nastavit',
+      open: 'Otevřít',
+      description: 'Nainstalujte a spravujte pluginy pro rozšíření funkcí',
+      storeUnavailable: 'Obchod s pluginy je nedostupný',
+      summaryTotal: 'Celkem pluginů',
+      summaryInstalled: 'Nainstalováno',
+      summaryUpdates: 'Dostupné aktualizace',
+      importFromFiles: 'Importovat ze souborů',
+      importDesktopOnly: 'Import souborů pluginu vyžaduje desktopovou aplikaci.',
+
+
+      notFound: 'Plugin nenalezen',
+
+      back: 'Zpět k pluginům',
+
+      noWebPage: 'Tento plugin nemá žádné webové rozhraní.',
+
+      pageLoadFailed: 'Stránku pluginu nelze načíst.',
+
+      openPage: 'Otevřete stránku pluginu',      updateAll: 'Aktualizovat vše',
+      emptyStore: 'Obchod s pluginy je momentálně prázdný. Sledujte budoucí aktualizace pluginů.'
+    },
+    optimization: {
+      title: 'Optimalizace systému',
+      info: 'Tyto akce mění systémové služby a soubory a mohou vyžadovat oprávnění správce.',
+      tabs: {
+        optimization: 'Optimalizace systému',
+        cleanup: 'Úklid',
+        driverDownload: 'Stažení ovladačů',
+        networkAcceleration: 'Síť a akcelerace'
+      },
+      recommended: 'Doporučeno',
+      selected: 'Vybrané',
+      selectedActions: 'Vybrané akce',
+      noSelection: 'Nejsou vybrány žádné akce',
+      selectRecommended: 'Vybrat doporučené',
+      applyRecommended: 'Použít vše doporučené',
+      apply: 'Použít',
+      clear: 'Vymazat (vrátit zpět)',
+      applied: 'Použito',
+      applyFailed: 'Použití selhalo (mohou být vyžadována oprávnění správce)',
+      elevationRequired:
+        'Je vyžadován souhlas administrátora. Potvrďte výzvu UAC nebo spusťte aplikaci zvýšenou.',
+      reverted: 'Vráceno zpět',
+      revertFailed: 'Vrácení zpět selhalo (mohou být vyžadována oprávnění správce)',
+      estimate: 'Odhadnout velikost',
+      estimateResult: 'Uvolnitelné místo',
+      runCleanup: 'Spustit úklid',
+      cleanupHint: 'Úklid spustí vaše vlastní pravidla čištění.',
+      cleanupConfirm: 'Spustit úklid nyní?',
+      cleanupDone: 'Úklid dokončen',
+      cleanupFailed: 'Úklid selhal',
+      cleanup: {
+        items: 'Items',
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        custom: {
+          header: 'Vlastní pravidla čištění',
+          description: 'Další složky, které se vyčistí společně s vybranými akcemi úklidu.',
+          empty: 'Žádná vlastní pravidla čištění',
+          add: 'Přidat složku',
+          edit: 'Upravit složku',
+          remove: 'Odebrat',
+          clear: 'Vymazat vše',
+          added: 'Pravidlo přidáno',
+          updated: 'Pravidlo aktualizováno',
+          recursive: 'Zahrnout podsložky',
+          noExtensions: 'Nejsou zadány žádné přípony',
+          folderPickerFailed: 'Výběr složky se nepodařilo otevřít'
+        }
+      },
+      network: {
+        status: 'Stav',
+        running: 'Běží',
+        stopped: 'Zastaveno',
+        backendReady: 'Backend připraven',
+        backendNotReady: 'Backend není připraven',
+        config: 'Základní konfigurace',
+        accelerationEnabled: 'Povolit akceleraci',
+        mode: 'Režim',
+        modes: {
+          off: 'Vypnuto',
+          systemProxy: 'Systémový proxy',
+          hosts: 'Hosts',
+          diagnosticsOnly: 'Pouze diagnostika'
+        },
+        save: 'Uložit konfiguraci',
+        saved: 'Konfigurace uložena',
+        saveFailed: 'Konfiguraci se nepodařilo uložit',
+        start: 'Spustit',
+        stop: 'Zastavit',
+        startFailed: 'Spuštění selhalo',
+        stopFailed: 'Zastavení selhalo',
+        modeLabel: 'Režim',
+        targetsLabel: 'Cíle',
+        portLabel: 'Port',
+        targetsHeading: 'Cíle akcelerace',
+        domainGroupsHint: 'Vyberte služby, které se budou akcelerovat přes místní proxy.',
+        domainGroupsEmptyTitle: 'Žádné cíle akcelerace',
+        domainGroupsEmptyDescription: 'Seznam cílů je prázdný nebo nic neodpovídá hledání.',
+        selectionHint: 'Vybrané cíle se použijí při spuštění akcelerace.',
+        searchTargets: 'Hledat cíle',
+        recommendedMenu: 'Doporučené',
+        groupRuntime: '{{selected}}/{{total}} vybráno  {{active}} aktivních',
+        trafficHeading: 'Přehled provozu',
+        metrics: {
+          upload: 'Odesílání',
+          download: 'Stahování',
+          connections: 'Připojení',
+          total: 'Celkový provoz',
+          health: 'Stav'
+        },
+        trafficLive: 'Sbírá se živý proxy provoz',
+        trafficWaiting: 'Pro sběr živého provozu spusťte akceleraci',
+        trafficUnavailable: 'Data o provozu jsou dočasně nedostupná',
+        connectionsWaiting: 'Čekání na data připojení…',
+        destinationsWaiting: 'Čekání na data cíle…',
+        connectionsHeading: 'Aktuální a nedávná připojení',
+        destinationsHeading: 'Statistiky cílů',
+        connectionSummary: '{{active}} aktivních / {{total}} celkem',
+        destinationSummary: '{{count}} cílů',
+        connectionStates: {
+          active: 'Aktivní',
+          completed: 'Dokončeno',
+          blocked: 'Blokováno',
+          failed: 'Selhalo',
+          stopped: 'Zastaveno',
+          unknown: 'Neznámé'
+        },
+        unknownHost: 'Neznámý hostitel',
+        destinationRow: '{{count}} spojení  {{latency}}',
+        health: {
+          healthy: 'V pořádku',
+          degraded: 'Snížená funkčnost',
+          stopped: 'Zastaveno',
+          unknown: 'Neznámé'
+        },
+        modeFull: {
+          systemProxy: 'Systémový proxy',
+          hosts: 'Soubor hosts',
+          diagnosticsOnly: 'Pouze diagnostika',
+          off: 'Nečinný'
+        },
+        backendMissingHint: 'Proxy worker není k dispozici',
+        proxyMissing:
+          'Síťovou akceleraci nelze spustit, protože v instalaci chybí NetworkProxy.exe.',
+        hostsModeRefused:
+          'Režim hostitelů se z této stránky nespouští. Použijte systémový proxy nebo diagnostiku.',
+        startRefused:
+          'Akcelerace se nespustila. Zkontrolujte, zda je povoleno a zda je vybrán alespoň jeden cíl.',
+        selectGroupsFirstHint: 'Vyberte alespoň jeden cíl',
+        advancedHeading: 'Pokročilé',
+        advancedBody: 'Pokročilá nastavení a obnova sítě.',
+        portFormat: 'Port: {{port}}',
+        dangerZoneHeading: 'Nebezpečná zóna',
+        restoreHint: 'Obnovit původní stav systémové sítě zaznamenaný před akcelerací.',
+        restoreNetwork: 'Obnovit síť',
+        restoreConfirm: 'Obnovit stav systémové sítě nyní?',
+        restored: 'Stav sítě obnoven',
+        diag: {
+          natTitle: 'NAT',
+          dnsTitle: 'DNS',
+          ipv6Title: 'IPv6',
+          detect: 'Detekovat',
+          unknown: 'Neznámé',
+          natTypes: {
+            OpenInternet: 'Otevřený NAT',
+            Nat: 'NAT',
+            UdpBlocked: 'UDP blokováno',
+            Unknown: 'Neznámé'
+          },
+          internetConnected: 'Připojeno',
+          internetUnreachable: 'Nedostupné',
+          natType: 'Typ NAT',
+          localIp: 'Místní IP',
+          publicIp: 'Veřejná IP',
+          internet: 'Internet',
+          dnsDomain: 'Doména',
+          customDns: 'Vlastní DNS',
+          enableDoh: 'DoH',
+          dohUrl: 'URL DoH',
+          latency: 'Latence',
+          resolvedAddress: 'Přeložená adresa',
+          latencyFormat: '{{ms}} ms',
+          failed: 'Selhalo',
+          ipv6Support: 'Podpora IPv6',
+          ipv6Address: 'Adresa IPv6',
+          ipv6SupportedFull: 'Přístup IPv6 podporován',
+          notSupported: 'Nepodporováno'
+        }
+      },
+      driverDownload: {
+        comingSoon: 'Stažení ovladačů bude dostupné v budoucí verzi'
+      },
+      driver: {
+        machineType: 'Typ zařízení',
+        machineTypePlaceholder: 'např. 82K3',
+        os: 'Operační systém',
+        downloadTo: 'Stáhnout do',
+        downloadToPlaceholder: 'Vyberte složku pro stahování',
+        browse: 'Procházet',
+        openDownloadTo: 'Otevřít složku',
+        source: 'Zdroj',
+        primarySource: 'Vantage',
+        primarySourceMessage: 'Oficiální databáze zařízení přes Vantage.',
+        secondarySource: 'PC Support',
+        secondarySourceMessage: 'Databáze kompatibility z PC Support.',
+        scan: 'Vyhledat',
+        scanning: 'Skenování…',
+        scanValidation: 'Zadejte platný 4znakový typ zařízení a vyberte operační systém.',
+        disclaimer: 'Balíčky pocházejí z vybraného zdroje. Instalujte na vlastní riziko.',
+        filter: 'Filtr',
+        onlyShowUpdates: 'Pouze aktualizace',
+        sort: {
+          name: 'Řadit podle názvu',
+          category: 'Řadit podle kategorie',
+          date: 'Řadit podle data'
+        },
+        selectRecommended: 'Vybrat doporučené',
+        startAll: 'Spustit vše',
+        pauseAll: 'Pozastavit vše',
+        clearSelection: 'Zrušit výběr',
+        packagesFound: 'Nalezeno {{count}} balíčků.',
+        packagesFoundOne: 'Nalezen 1 balíček.',
+        status: {
+          NotStarted: '',
+          Queued: 'Ve frontě',
+          Downloading: 'Stahuje se',
+          Installing: 'Instaluje se',
+          Completed: 'Dokončeno',
+          Error: 'Chyba'
+        },
+        recommended: 'Doporučeno',
+        isUpdate: 'Aktualizace',
+        reboot: {
+          recommended: 'Doporučen restart',
+          required: 'Vyžadován restart',
+          shutdown: 'Vyžadováno vypnutí'
+        },
+        oldPackageWarning: 'Tento balíček je starší než jeden rok; ovladač může být zastaralý.',
+        download: 'Stáhnout',
+        install: 'Nainstalovat',
+        uninstall: 'Odinstalovat',
+        pause: 'Pozastavit',
+        openReadme: 'Otevřít README',
+        hide: 'Skrýt',
+        hideAll: 'Skrýt vše',
+        showHiddenDownloads: 'Zobrazit skrytá stahování',
+        downloadInProgress: {
+          title: 'Probíhá stahování',
+          message: 'Stahování stále běží. Vyhledat znovu?',
+          confirm: 'Vyhledat'
+        },
+        empty: {
+          notScanned: {
+            title: 'Vyhledat balíčky ovladačů',
+            message: 'Vyberte zdroj a spusťte vyhledávání, aby se zobrazily kompatibilní stahování ovladačů.'
+          },
+          noResults: {
+            title: 'Nebyly nalezeny žádné stahování ovladačů',
+            message: 'Zkuste jiný zdroj, operační systém nebo typ zařízení.'
+          },
+          noFilterResults: {
+            title: 'Nebyly nalezeny žádné odpovídající soubory ke stažení',
+            message: 'Upravte filtr, možnost pouze aktualizace nebo seznam skrytých stahování.'
+          },
+          error: {
+            title: 'Vyhledávání ovladačů nebylo dokončeno',
+            message: 'Zkontrolujte vybraný zdroj a síťové připojení a poté spusťte vyhledávání znovu.'
+          }
+        },
+        osOptions: {
+          windows7: 'Windows 7',
+          windows8: 'Windows 8',
+          windows10: 'Windows 10',
+          windows11: 'Windows 11'
+        }
+      }
+    },
+    about: {
+      title: 'O aplikaci',
+      appName: 'Aplikace',
+      version: 'Verze',
+      build: 'Sestavení',
+      links: 'Odkazy na projekt',
+      projectWebsite: 'Web projektu na GitHubu',
+      latestRelease: 'Poslední vydání na GitHubu',
+      applicationFolders: 'Složky aplikace',
+      data: 'Data',
+      temp: 'Dočasné',
+      pid: 'ID procesu',
+      machine: 'Model zařízení',
+      bios: 'Verze BIOSu',
+      compatible: 'Kompatibilita',
+      yes: 'Kompatibilní',
+      no: 'Nekompatibilní',
+      dataFolder: 'Složka dat',
+      thirdParty: 'Knihovny třetích stran',
+      translationCredit: 'Překlady od komunity.',
+      copyright: 'Autorská práva'
+    },
+    statusBanner: {
+      updateAvailable: 'Aktualizace k dispozici!',
+      updateAvailableWithVersion: 'Aktualizace {{version}} k dispozici!',
+      pluginExtensionsDisabled: 'Navigace rozšíření pluginů je skrytá. Povolte jej v části Nastavení → Položky navigace.',
+      vantageRunning: 'Lenovo Vantage a/nebo ImController běží na pozadí.',
+      legionZoneRunning: 'Legion Zone běží na pozadí.',
+      fnKeysRunning: 'Lenovo Hotkeys běží na pozadí.'
+    },
+    clipboard: {
+      copyProcesses: 'Kopírovat seznam procesů',
+      copySuccess: 'Seznam procesů zkopírován do schránky',
+      copyFailed: 'Seznam procesů se nepodařilo zkopírovat'
+    },
+    notifications: {
+      mergedCount: '×{{count}}'
+    },
+    loading: {
+      automation: 'Načítání automatizace',
+      dashboard: 'Načítání přehledu…',
+      settings: 'Načítání nastavení…'
+    },
+    update: {
+      checkResult: {
+        available: 'Nová verze k dispozici: v{{version}}',
+        latest: 'Máte nejnovější verzi'
+      }
+    },
     bootLogoWindowcustomize: 'Přizpůsobit',
     bootLogoWindowcustomLogoSet: 'Vlastní logo při spouštění je nastaveno',
     bootLogoWindowdefaultLogoSet: 'Výchozí logo při spouštění je nastaveno',
@@ -122,7 +1610,7 @@
     applyAndClose: 'Použít a zavřít',
     automationPageactionsEnablemessage: 'Universal Device Toolkit musí být zapnut, aby fungovaly automatické akce.',
     automationPageactionsEnabledtitle: 'Povolit',
-    automationPageactionsempty: 'Nejsou definovány žádné akce. Kliknutím na „Přidat novou…?vytvoříte novou akci.',
+    automationPageactionsempty: 'Nejsou definovány žádné akce. Kliknutím na „Přidat novou“ vytvoříte novou akci.',
     automationPageactionsmessage: 'Pokud je tato funkce povolena, akce se spustí automaticky. Kdykoli se stav změní, všechny akce budou vyhodnoceny shora dolů.\nSpustí se pouze akce, které odpovídají aktuálnímu stavu.',
     automationPageactionstitle: 'Akce',
     automationPageaddManualPipelineerrormessage: 'Nepodařilo se přidat ruční pipeline. Zkuste to znovu.',
@@ -132,7 +1620,7 @@
     automationPagechangeIcon: 'Změnit ikonu',
     automationPageenableAutomaticPipelineserrormessage: 'Nepodařilo se přepnout automatické pipeline. Zkuste to znovu.',
     automationPageenableAutomaticPipelineserrortitle: 'Nelze přepnout automatické pipeline',
-    automationPagequickActionsempty: 'Nejsou definovány žádné rychlé akce. Kliknutím na „Přidat novou…?vytvoř novou rychlou akci.',
+    automationPagequickActionsempty: 'Nejsou definovány žádné rychlé akce. Kliknutím na „Přidat nový“ vytvoříte novou rychlou akci.',
     automationPagequickActionsmessage: 'Rychlé akce jsou dostupné v nabídce po kliknutí pravým tlačítkem na ikonu na hlavním panelu.',
     automationPagequickActionstitle: 'Rychlé akce',
     automationPagerenamePipelineplaceholder: 'Jméno...',
@@ -258,7 +1746,7 @@
     crashReportNotificationunableToLoad: 'Nelze načíst podrobnosti hlášení o pádu.',
     create: 'Vytvořit',
     createAutomationPipelineWindowtitle: 'Vytvořit akci',
-    customCleanupRuleWindowbrowsebutton: 'Procházet…?',
+    customCleanupRuleWindowbrowsebutton: 'Procházet',
     customCleanupRuleWindowerrorextensions: 'Zadejte prosím alespoň jednu příponu souboru.',
     customCleanupRuleWindowerrorfolder: 'Vyberte prosím složku.',
     customCleanupRuleWindowextensionshint: 'Oddělte více přípon čárkami (například: tmp, log, bak)',
@@ -300,7 +1788,7 @@
     deviceInformationWindowmodeltitle: 'Vzor',
     deviceInformationWindowrefresh: 'Obnovit',
     deviceInformationWindowserialNumbertitle: 'Sériové číslo',
-    deviceInformationWindowtitle: 'Informace o zařízení',
+    deviceInformationWindowtitle: 'Informace o zařízení',
     deviceInformationWindowwarrantyEndDatetitle: 'Datum ukončení',
     deviceInformationWindowwarrantyLinkUnavailable: 'Nepodařilo se otevřít stránku podpory Lenovo. Zkontrolujte síť nebo to zkuste znovu později.',
     deviceInformationWindowwarrantyStartDatetitle: 'Datum začátku',
@@ -311,15 +1799,15 @@
     deviceSetupWindowbasicModePackName: 'Základní režim (pouze pluginy a optimalizace)',
     deviceSetupWindowbasicModeSummary: 'Toto zařízení se spustí v základním režimu. Ovládací prvky specifické pro hardware budou skryty, dokud nebude k dispozici kompatibilní sada zařízení.',
     deviceSetupWindowbasicPackDetail: 'Základní profil: pluginy, optimalizace systému, jazyk a motiv. Hardwarové ovládací prvky zůstanou skryté.',
-    deviceSetupWindowbasicPackFormat: '{0} …?základní',
+    deviceSetupWindowbasicPackFormat: '{0} — základní',
     deviceSetupWindowconfirmButton: 'Potvrdit',
     deviceSetupWindowdevicePackFormat: 'Sada zařízení: {0}',
-    deviceSetupWindowdownloadingPack: 'Stahování balíčku podpory zařízení…?',
+    deviceSetupWindowdownloadingPack: 'Stahování balíčku podpory zařízení…',
     deviceSetupWindowhardwarePackDetail: 'Plný hardware: režimy napájení, senzory, ventilátory a ovládání Lenovo, pokud je firmware poskytuje.',
-    deviceSetupWindowhardwarePackFormat: '{0} …?plný hardware',
+    deviceSetupWindowhardwarePackFormat: '{0} — plný hardware',
     deviceSetupWindowmatchingPackHint: 'Potvrzení uloží tento profil a pokračuje. Přeskočit zatím ponechá výchozí a může se znovu zeptat při příštím spuštění. Tím se Windows nerestartuje.',
     deviceSetupWindowmatchingPackSummary: 'Universal Device Toolkit detekoval odpovídající sadu zařízení. Potvrďte ji nyní, aby aplikace mohla připravit funkce specifické pro hardware.',
-    deviceSetupWindowpackDownloadFailed: 'Balíček podpory zařízení se nepodařilo stáhnout. Zkontrolujte připojení a potvrďte pro opakování, nebo přeskočte …?zeptáme se znovu při příštím spuštění.',
+    deviceSetupWindowpackDownloadFailed: 'Nepodařilo se stáhnout balíček podpory zařízení. Zkontrolujte připojení a potvrďte akci opakujte, nebo přeskočte a my se zeptáme znovu při příštím spuštění.',
     deviceSetupWindowpreparing: 'Příprava nastavení zařízení...',
     deviceSetupWindowrecommendedPackFormat: '{0} (doporučeno)',
     deviceSetupWindowselectPackLabel: 'Profil zařízení (sada)',
@@ -522,7 +2010,7 @@
     mainWindownavigationItemsettings: 'Nastavení',
     mainWindownavigationItemwindowsOptimization: 'Optimalizace systému',
     mainWindowopenLogsTooltip: 'Otevřít složku protokolů',
-    mainWindowpluginExtensionsDisabledNotice: 'Rozšíření pluginů je ve výchozím stavu vypnuto. Povolte je v Nastavení …?Položky navigace.',
+    mainWindowpluginExtensionsDisabledNotice: 'Navigace rozšíření pluginů je skrytá. Povolte jej v části Nastavení → Položky navigace.',
     mainWindowstopFnKeyserrormessage: 'Failed to stop Lenovo Hotkeys: {0}',
     mainWindowstopLegionZoneerrormessage: 'Failed to stop Legion Zone: {0}',
     mainWindowstopSoftwareerrortitle: 'Operation failed',
@@ -579,7 +2067,7 @@
     networkAccelerationPageadvancedHeading: 'Pokročilé',
     networkAccelerationPagebackendMissinghint: 'Součást back-endu akcelerace chybí, takže spuštění není k dispozici.',
     networkAccelerationPagecontrolHeading: 'Ovládání',
-    networkAccelerationPagecontrolSubtitle: 'Volitelná místní akcelerace. Ve výchozím stavu vypnuto …?při spuštění se nikdy nespouští automaticky.',
+    networkAccelerationPagecontrolSubtitle: 'Volitelné místní zrychlení. Ve výchozím nastavení vypnuto – nikdy se automaticky nespustí při spuštění.',
     networkAccelerationPagedangerZoneHeading: 'Nebezpečná zóna',
     networkAccelerationPagediagbackend: 'Proces proxy',
     networkAccelerationPagediagbackendMissing: 'Nenalezeno',
@@ -602,21 +2090,21 @@
     networkAccelerationPagedomainEnabled: 'Zapnuto',
     networkAccelerationPagedomainGroupsEmptyDescription: 'Nejsou nakonfigurovány žádné cíle akcelerace. Vestavěné výchozí skupiny se přidají automaticky při spuštění.',
     networkAccelerationPagedomainGroupsEmptyTitle: 'Žádné skupiny domén',
-    networkAccelerationPagedomainGroupsFootnote: 'Pouze statické auditované seznamy …?bez stahování vzdálených pravidel. Po změně skupin znovu spusťte akceleraci.',
+    networkAccelerationPagedomainGroupsFootnote: 'Pouze statické auditované seznamy – žádné vzdálené stahování pravidel. Po změně skupin znovu spusťte akceleraci.',
     networkAccelerationPagedomainGroupsHint: 'PAC (systémový proxy) používá pouze zapnuté skupiny. Všechny skupiny jsou ve výchozím stavu vypnuté.',
     networkAccelerationPagedomainGroupsLabel: 'Skupiny domén',
-    networkAccelerationPagedomainGroupsSummary: '{0}/{1} skupin zapnuto, domény: {2} (vestavěné Steam/GitHub, ve výchozím stavu vyp. …?v případě potřeby upravte pokročilou konfiguraci).',
+    networkAccelerationPagedomainGroupsSummary: 'Skupiny {0}/{1} povoleny · Domény {2} (Steam/GitHub vestavěné, ve výchozím nastavení vypnuto).',
     networkAccelerationPageenableHint: 'Odemkne výběr režimu a ruční Spustit. Systémový proxy se do spuštění nezmění.',
     networkAccelerationPageenableLabel: 'Povolit akceleraci (pouze ruční spuštění)',
-    networkAccelerationPagehostsDisabledDetail: 'Hosts…?27.0.0.1 není k dispozici, dokud neexistuje místní TLS origin. Zvolte System proxy nebo pouze diagnostiku.',
-    networkAccelerationPagehostsDisabledNote: 'Režim Hosts vypnut …?použijte System proxy',
+    networkAccelerationPagehostsDisabledDetail: 'Hosts→127.0.0.1 není k dispozici, dokud nebude existovat místní původ TLS. Zvolte System proxy nebo Diagnostics only.',
+    networkAccelerationPagehostsDisabledNote: 'Režim hostitelů vypnut — použít System proxy',
     networkAccelerationPagemetricUnitms: 'ms',
     networkAccelerationPagemetricUnitrate: 'KB/s',
     networkAccelerationPagemetricconnections: 'Připojení',
     networkAccelerationPagemetricdownload: 'Stahování',
     networkAccelerationPagemetriclatency: 'Latence',
     networkAccelerationPagemetricrules: 'Aktivní pravidla',
-    networkAccelerationPagemetricunavailable: '…?',
+    networkAccelerationPagemetricunavailable: '—',
     networkAccelerationPagemetricupload: 'Odesílání',
     networkAccelerationPagemetricsHeading: 'Přehled',
     networkAccelerationPagemodeHint: 'Zvolte System proxy (PAC) nebo pouze diagnostiku. Přepis Hosts je vyhrazen, dokud neexistuje místní TLS origin.',
@@ -634,7 +2122,7 @@
     networkAccelerationPagerestorePartial: 'Obnovení dokončeno s upozorněními:',
     networkAccelerationPageretry: 'Zkusit znovu',
     networkAccelerationPagerunDiagnostics: 'Spustit diagnostiku',
-    networkAccelerationPagerunningDiagnostics: 'Probíhá diagnostika…?',
+    networkAccelerationPagerunningDiagnostics: 'Spouští se diagnostika…',
     networkAccelerationPageselectGroupsFirsthint: 'Nejprve níže vyberte jednu nebo více skupin domén.',
     networkAccelerationPageselectionBar: 'Akce výběru skupin domén',
     networkAccelerationPageselectionCountFormat: 'Vybráno položek: {0}',
@@ -649,17 +2137,17 @@
     networkAccelerationPagestateconnected: 'Připojeno',
     networkAccelerationPagestatefailed: 'Spuštění selhalo',
     networkAccelerationPagestateidle: 'Nespouštěno',
-    networkAccelerationPagestaterestoring: 'Obnovování…?',
-    networkAccelerationPagestatestarting: 'Spouštění…?',
-    networkAccelerationPagestatestopping: 'Zastavování…?',
+    networkAccelerationPagestaterestoring: 'Obnovování…',
+    networkAccelerationPagestatestarting: 'Spouštění…',
+    networkAccelerationPagestatestopping: 'Zastavování…',
     networkAccelerationPagestatusDiagnosticsOnly: 'Pouze diagnostika (bez změn systémové sítě)',
     networkAccelerationPagestatusHeading: 'Stav',
     networkAccelerationPagestatusOff: 'Vyp. (výchozí)',
     networkAccelerationPagestatusRunning: 'Běží ({0}) loopback:{1}',
     networkAccelerationPagestatusStopped: 'Zastaveno ({0})',
-    networkAccelerationPagestatusWorkerMissing: 'Binární soubor worker nebyl nalezen …?sestavte/nainstalujte UniversalDeviceToolkit.NetworkProxy.exe',
+    networkAccelerationPagestatusWorkerMissing: 'Binární soubor Worker nenalezen — sestavení/instalace UniversalDeviceToolkit.NetworkProxy.exe',
     networkAccelerationPagestop: 'Zastavit',
-    networkAccelerationPagesubtitle: 'Volitelná místní akcelerace. Ve výchozím stavu vypnuto …?proxy, hosts ani certifikáty se při spuštění nikdy nespouštějí automaticky.',
+    networkAccelerationPagesubtitle: 'Volitelné místní zrychlení. Ve výchozím nastavení vypnuto – při spuštění se nikdy automaticky nespustí proxy, hostitelé ani certifikáty.',
     networkAccelerationPagetargetsHeading: 'Cíle akcelerace',
     networkAccelerationPagetitle: 'Síť a akcelerace',
     no: 'Ne',
@@ -1041,7 +2529,7 @@
     sensorsControldate: 'Datum',
     sensorsControldesignCapacity: 'Návrh',
     sensorsControldetails: 'Podrobnosti senzoru',
-sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryjete podrobné informace o senzorech.',
+    sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryjete podrobné informace o senzorech.',
     sensorsControleCoreClocktitle: 'Frekvence E-Core',
     sensorsControlfantitle: 'Ventilátor',
     sensorsControlfullCapacity: 'Plná kapacita',
@@ -1135,8 +2623,8 @@ sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryje
     settingsPagelanguageinstall: 'Nainstalovat jazyk',
     settingsPagelanguageinstallFailed: 'Instalace jazyka se nezdařila',
     settingsPagelanguageinstalling: 'Instalace jazyka',
-    settingsPagelanguageinstallingapplying: 'Rozbalování a instalace…?',
-    settingsPagelanguageinstallingdownload: 'Stahování jazykového balíčku…?',
+    settingsPagelanguageinstallingapplying: 'Vytahování a instalace…',
+    settingsPagelanguageinstallingdownload: 'Stahování jazykového balíčku…',
     settingsPagelanguageinstallingpercent: '{0}%',
     settingsPagelanguagemessage: 'Vybrat jazyk.',
     settingsPagelanguagenotInstalledmessage: 'Použijte tlačítko stáhnout pro instalaci tohoto jazykového balíčku.',
@@ -1157,8 +2645,8 @@ sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryje
     settingsPagenavigationsmartKeys: 'Chytré klávesy',
     settingsPagenotificationsmessage: 'Nastavení notifikací z aplikace.',
     settingsPagenotificationstitle: 'Notifikace',
-    settingsPageonBatterySinceResetmessage: 'Resetuje počítadlo „Na baterii od…?v sekci baterie při restartu systému.',
-    settingsPageonBatterySinceResettitle: 'Resetovat „Na baterii od…?při startu',
+    settingsPageonBatterySinceResetmessage: 'Resetuje počítadlo pro „Na baterii od“ v sekci baterie, když se systém restartuje.',
+    settingsPageonBatterySinceResettitle: 'Při spuštění resetujte „Na baterii od“.',
     settingsPageosdmessage: 'Plovoucí překrytí zobrazující živá data ze senzorů.',
     settingsPageosdtitle: 'Povolit OSD',
     settingsPagepowerModeMappingmessage: 'Automaticky měnit plán napájení Windows nebo režim napájení Windows při změně režimu napájení.',
@@ -1305,6 +2793,12 @@ sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryje
     update: 'Aktualizovat',
     updateWindowtitle: 'K dispozici je aktualizace',
     updateWindowwhatsNew: 'Co je nového?',
+    updateWindowreleaseNotesUnavailable: 'Poznámky k vydání nejsou k dispozici. Otevřete stránku projektu a podívejte se, co se změnilo.',
+    languageSelectorWindowsafeModeHint: 'Bezpečný / offline režim: můžete pokračovat v angličtině bez stahování jazykového balíčku.',
+    languageSelectorWindowcancelled: 'Stahování zrušeno.',
+    languageSelectorWindowhashMismatch: 'Kontrola integrity balíčku selhala.',
+    languageSelectorWindowcorruptPackage: 'Jazykový balíček je poškozený.',
+    symbolRegularPickerempty: 'Žádné odpovídající ikony',
     watt: 'W',
     whiteKeyboardBacklightAutomationStepControlmessage: 'Upravit jas podsvícení klávesnice.',
     whiteKeyboardBacklightAutomationStepControltitle: 'Podsvícení klávesnice',
@@ -1332,7 +2826,7 @@ sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryje
     windowsOptimizationPagecustomCleanupremove: 'Odstranit',
     windowsOptimizationPagedriverEmptyerrormessage: '\n    Zkontrolujte vybraný zdroj a síťové připojení a poté spusťte vyhledávání znovu.\n',
     windowsOptimizationPagedriverEmptyerrortitle: '\n    Vyhledávání ovladačů nebylo dokončeno\n',
-    windowsOptimizationPagedriverEmptynoFilterResultsmessage: '\n    Upravte filtr, možnost „pouze aktualizace…?nebo seznam skrytých stažení.\n',
+    windowsOptimizationPagedriverEmptynoFilterResultsmessage: 'Upravte filtr, možnost pouze aktualizace nebo seznam skrytých stahování.',
     windowsOptimizationPagedriverEmptynoFilterResultstitle: '\n    Nebyly nalezeny žádné odpovídající soubory ke stažení\n',
     windowsOptimizationPagedriverEmptynoResultsmessage: '\n    Zkuste jiný zdroj, operační systém nebo typ zařízení.\n',
     windowsOptimizationPagedriverEmptynoResultstitle: '\n    Nebyly nalezeny žádné ovladače ke stažení\n',
@@ -1454,13 +2948,6 @@ sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryje
     windowsPowerModesWindowtitle: 'Režimy napájení Windows',
     windowsPowerPlansWindowdefaultPowerPlan: 'Výchozí',
     windowsPowerPlansWindowtitle: 'Plány napájení',
-    yes: 'Ano',
-    updateWindowreleaseNotesUnavailable: 'Poznámky k vydání nejsou k dispozici. Otevřete stránku projektu a podívejte se, co se změnilo.',
-    languageSelectorWindowsafeModeHint: 'Bezpečný / offline režim: můžete pokračovat v angličtině bez stahování jazykového balíčku.',
-    languageSelectorWindowcancelled: 'Stahování zrušeno.',
-    languageSelectorWindowhashMismatch: 'Kontrola integrity balíčku selhala.',
-    languageSelectorWindowcorruptPackage: 'Jazykový balíček je poškozený.',
-    symbolRegularPickerempty: 'Žádné odpovídající ikony',
     powerModeStateQuiet: 'Tichý',
     powerModeStateBalance: 'Vyvážený',
     powerModeStatePerformance: 'Výkon',
@@ -1473,1447 +2960,12 @@ sensorsControldetailsToggleToolTip: 'Dvojitým kliknutím zobrazíte nebo skryje
     sensorSectionBattery: 'Baterie',
     sensorSectionGpu: 'GPU',
     powerPlansWindowloadError: 'Plány napájení Windows se nepodařilo načíst. Je dostupný pouze výchozí plán napájení.',
-    browse: 'Procházet…?',
+    yes: 'Ano',
+    browse: 'Procházet…',
     commonExecutableFileDialogFilter: 'Název procesu nebo cesta ke spustitelnému souboru',
     deleteAll: 'Vymazat vše',
     updateWindowdownloadComplete: 'Stahování dokončeno.',
-    updateWindowrestartToInstall: 'Nainstalovat a restartovat'
-  },
-  app: {
-    name: 'Universal Device Toolkit'
-  },
-  titlebar: {
-    log: 'Protokol',
-    openLogs: 'Otevřít složku protokolů',
-    deviceName: 'Legion Y9000P IRX9',
-    deviceInfo: 'Informace o zařízení'
-  },
-  nav: {
-    dashboard: 'Konzole',
-    settings: 'Nastavení',
-    automation: 'Automatizace',
-    keyboard: 'Klávesnice',
-    keyboardBacklight: 'Podsvícení klávesnice',
-    macro: 'Vlastní makro',
-    windowsOptimization: 'Optimalizace systému',
-    pluginExtensions: 'Pluginy a rozšíření',
-    about: 'O aplikaci'
-  },
-  home: {
-    title: 'Universal Device Toolkit',
-    subtitle: 'Vítejte! Vyberte si sekci níže a začněte',
-    hostReady: 'Backend připojen',
-    hostState: 'Stav backendu',
-    hostVersion: 'Verze backendu',
-    hostUnavailable: 'Backend host neběží. Počkejte chvíli a zkuste to znovu, nebo restartujte aplikaci.',
-    initComplete: 'Inicializace dokončena',
-    safeStart: 'Bezpečný start, přeskočeno',
-    machine: 'Zařízení',
-    compatible: 'Kompatibilita',
-    status: 'Stav'
-  },
-  dashboard: {
-    title: 'Konzole',
-    customize: 'Přizpůsobit',
-    edit: {
-      title: 'Upravit přehled',
-      description: 'Vyberte, které sekce a funkce se zobrazí na domovské stránce.',
-      showSensors: 'Hardwarové senzory',
-      groups: 'Skupiny funkcí',
-      save: 'Uložit',
-      cancel: 'Zrušit',
-      saved: 'Rozložení přehledu uloženo',
-      error: 'Rozložení přehledu se nepodařilo uložit',
-      disclaimer: 'Některé funkce se nemusí objevit na přehledu v závislosti na stavu a konfiguraci vašeho notebooku.',
-      addGroup: 'Přidat',
-      renameGroup: 'Upravit název skupiny',
-      deleteGroup: 'Smazat',
-      moveUp: 'Posunout nahoru',
-      moveDown: 'Posunout dolů',
-      deleteItem: 'Smazat',
-      addItem: 'Přidat',
-      groupNamePlaceholder: 'Název',
-      default: 'Výchozí',
-      items: {
-        discreteGpu: 'Režim dedikované GPU',
-        overclockGpu: 'Přetaktování GPU',
-        turnOffMonitors: 'Vypnout monitory'
-      }
-    },
-    addItem: {
-      title: 'Přidat',
-      searchPlaceholder: 'Hledat',
-      empty: 'Všechny položky přehledu jsou již přidány',
-      addHint: 'Přidat položku'
-    },
-    cpu: 'CPU',
-    gpu: 'GPU',
-    memory: 'Paměť',
-    temperature: 'Teplota',
-    usage: 'Využití',
-    power: 'Příkon',
-    fanSpeed: 'Ventilátor',
-    vram: 'VRAM',
-    memoryUsed: 'Využitá paměť',
-    memoryTotal: 'Celková paměť',
-    storageTemp: 'Teplota úložiště',
-    notAvailable: '--',
-    sensor: {
-      cpu: 'Procesor',
-      gpu: 'Grafická karta',
-      memory: 'Paměť',
-      temperature: 'Teplota',
-      usage: 'Využití',
-      power: 'Příkon',
-      fanSpeed: 'Ventilátor',
-      vram: 'VRAM',
-      frequency: 'Takt jádra',
-      battery: 'Baterie',
-      charge: 'Nabíjení',
-      health: 'Stav',
-      rate: 'Rychlost',
-      fan: 'Ventilátor',
-      lowPowerAdapter: 'Připojen adaptér s nízkým výkonem',
-      batteryLow: 'Nízký stav baterie',
-      acCharging: 'Připojen napájecí adaptér, nabíjení...',
-      acNotCharging: 'Připojen napájecí adaptér, nenabíjí se...',
-      remainingTime: 'Odhadovaný zbývající čas: {0}',
-      memoryTemperature: 'Teplota paměti',
-      ssdTemperature: 'Teplota SSD',
-      vramTemperature: 'Teplota VRAM',
-      vramUsage: 'Využití VRAM',
-      cycles: 'Cyklů',
-      capacity: 'Kapacita',
-      fullCapacity: 'Plná kapacita nabití',
-      designCapacity: 'Konstrukční kapacita',
-      date: 'Datum',
-      voltage: 'Napětí jádra',
-      voltageRange: 'Rozsah napětí',
-      powerRange: 'Rozsah příkonu',
-      details: 'Podrobnosti',
-      chartEmpty: 'Čekání na data senzorů',
-      refreshInterval: 'Interval obnovování',
-      detail: {
-        power: 'Příkon',
-        powerCores: 'Jádra',
-        powerMemory: 'Paměť',
-        powerPlatform: 'Platforma',
-        pCoreClock: 'Takt P-Core',
-        eCoreClock: 'Takt E-Core',
-        memoryUsage: 'Využití paměti',
-        sharedMemoryUsage: 'Využití sdílené paměti',
-        vramUsage: 'Využití VRAM',
-        hotSpot: 'Hot spot GPU',
-        pcieThroughput: 'Propustnost PCIe',
-        designCapacity: 'Konstrukční kapacita',
-        fullChargeCapacity: 'Plná kapacita nabití',
-        vramClock: 'Takt paměti VRAM',
-        currentPower: 'Aktuální příkon'
-      }
-    },
-    group: {
-      power: 'Napájení',
-      graphics: 'Grafika',
-      display: 'Displej',
-      other: 'Jiné',
-      custom: 'Vlastní'
-    },
-    card: {
-      error: 'Nastavení se nepodařilo použít',
-      config: 'Pokročilá nastavení',
-      configComingSoon: 'Pokročilá nastavení budou dostupná v budoucí verzi'
-    }
-  },
-  balanceMode: {
-    title: 'Nastavení vyváženého módu',
-    aiEngine: 'Povolit AI',
-    aiEngineDesc: 'Automaticky detekuje, kdy běží určité hry, a upravuje výkon CPU a GPU. Mohou se zvýšit teploty a hluk ventilátoru.'
-  },
-  godMode: {
-    title: 'Nastavení vlastního režimu',
-    activePreset: 'Aktivní předvolba',
-    presetName: 'Název předvolby',
-    name: 'Název',
-    errorLoad: 'Nastavení se nepodařilo načíst.',
-    errorApply: 'Nastavení se nepodařilo použít',
-    applySuccess: 'Nastavení vlastního režimu bylo úspěšně použito.',
-    defaultPresetName: 'Předvolba',
-    cpu: {
-      title: 'CPU',
-      longTermPL: 'Dlouhodobý limit výkonu',
-      'longTermPL.desc': 'Nepřetržitá spotřeba, které může CPU dosáhnout.',
-      shortTermPL: 'Krátkodobý limit výkonu',
-      'shortTermPL.desc': 'Špičková spotřeba, které může CPU dosáhnout v krátkém čase.',
-      peakPL: 'Limit špičkového výkonu',
-      'peakPL.desc': 'Maximální okamžitá spotřeba, které může CPU dosáhnout.',
-      crossLoading: 'Dlouhodobý limit výkonu (křížové zatížení)',
-      'crossLoading.desc': 'Maximální spotřeba, které může CPU dosáhnout při plném využití CPU i GPU.',
-      pl1Tau: 'Doba krátkodobého limitu výkonu',
-      'pl1Tau.desc': 'Čas, po který může CPU využívat krátkodobý limit výkonu. Po vypršení času Tau se použije dlouhodobý limit výkonu.',
-      apuSppt: 'Limit výkonu APU sPPT',
-      'apuSppt.desc': 'Špičková spotřeba, které může CPU dosáhnout s menším zpožděním.',
-      tempLimit: 'Teplotní limit CPU',
-      'tempLimit.desc': 'Maximální teplota CPU, než se sníží frekvence a výkon.'
-    },
-    gpu: {
-      title: 'GPU',
-      dynamicBoost: 'Dynamický Boost',
-      'dynamicBoost.desc': 'Dodatečný maximální výkon, který může být GPU přidělen na základě spotřeby CPU.',
-      ctgp: 'Nastavitelný TGP',
-      'ctgp.desc': 'Dodatečný výkon, který může být GPU přidělen nad rámec základní spotřeby.',
-      tempLimit: 'Teplotní limit GPU',
-      'tempLimit.desc': 'Maximální teplota GPU, než se sníží frekvence a výkon.',
-      totalProcessingPowerTarget: 'Cíl celkového výkonu procesoru v AC',
-      'totalProcessingPowerTarget.desc': 'Bod, ve kterém CPU spouští dynamickou úpravu spotřeby pro GPU.',
-      toCpuDynamicBoost: 'Dynamické posílení GPU na CPU',
-      'toCpuDynamicBoost.desc': 'Maximální dodatečný výkon, který může být CPU přidělen z GPU na základě využití CPU. Čím vyšší hodnota, tím lepší výkon aplikací využívajících CPU.'
-    },
-    fans: {
-      title: 'Ventilátory',
-      curve: 'Křivka ventilátorů',
-      curveMessage: 'Rychlost ventilátoru sleduje nejvyšší hodnotu senzoru CPU, GPU nebo chladiče. Najeďte myší na každý krok a zobrazí se přesné hodnoty.',
-      maxSpeed: 'Maximální rychlost ventilátorů',
-      maxSpeedWarning: 'Dlouhodobé používání této možnosti ventilátory opotřebí a zkrátí jejich životnost.\nVážně, buďte s touto možností opatrní!'
-    },
-    advanced: {
-      title: 'Pokročilé',
-      message: 'Neměňte níže uvedené možnosti, pokud opravdu nevíte, co děláte.',
-      maxOffset: 'Maximální posun',
-      maxOffsetWarning: 'Vyšší hodnoty mohou způsobit nepředvídatelné chování. Pokud si nejste jistí, nechte hodnotu na 0.',
-      minOffset: 'Minimální posun',
-      minOffsetWarning: 'Nižší hodnoty mohou způsobit nepředvídatelné chování. Pokud si nejste jistí, nechte hodnotu na 0.',
-      invalidOffset: 'Před uložením zadejte celé číslo.'
-    },
-    vantageWarning: 'Nastavení vlastního režimu nebude správně použito, když běží Lenovo Vantage nebo jeho služby.',
-    legionZoneWarning: 'Nastavení vlastního režimu nebude správně použito, když běží Legion Zone nebo její služby.'
-  },
-  overclock: {
-    title: 'Nastavení přetaktování GPU',
-    preset: 'Předvolba',
-    coreOffset: 'Posun frekvence jádra',
-    memoryOffset: 'Posun frekvence paměti',
-    namePlaceholder: 'Název...',
-    newProfileName: 'Předvolba',
-    loadError: 'Nastavení přetaktování se nepodařilo načíst.'
-  },
-  feature: {
-    powerMode: 'Režim výkonu',
-    'powerMode.desc': 'Změnit režim výkonu.\nRežim výkonu lze také změnit pomocí Fn+Q.',
-    'powerMode.hint': 'Rychle jej změníte zkratkou Fn+Q.',
-    'powerMode.warning': 'Režim výkonu nemusí fungovat správně, když není připojen napájecí adaptér.',
-    battery: 'Režim nabíjení baterie',
-    'battery.desc': 'Vyberte režim nabíjení baterie. Konzervační režim omezuje úroveň nabití pro delší životnost baterie, zatímco režim rychlého nabíjení nabíjí vyšším výkonem.',
-    batteryNightCharge: 'Noční nabíjení baterie',
-    'batteryNightCharge.desc': 'Když je povoleno, přes noc nabije na 80 % a do rána dobije na 100 %.',
-    alwaysOnUsb: 'Vždy napájené USB',
-    'alwaysOnUsb.desc': 'Udržuje porty USB napájené, když je počítač vypnutý, spí nebo hibernuje. Obvykle se to týká pouze portu USB označeného ikonou baterie na boku notebooku.',
-    instantBoot: 'Okamžité spuštění',
-    'instantBoot.desc': 'Zapne počítač, jakmile je připojeno napájení.',
-    flipToStart: 'Zapnout otevřením víka',
-    'flipToStart.desc': 'Otevření víka automaticky zapne notebook.',
-    fnLock: 'Fn Lock',
-    'fnLock.desc': 'Když je povoleno, funkce lze spouštět bez stisknutí Fn. Stiskněte Fn společně s původními klávesami F1 až F12 pro jejich spuštění.',
-    gSync: 'GSync',
-    'gSync.desc': 'Povolit nebo zakázat variabilní obnovovací frekvenci G-Sync',
-    hdr: 'HDR',
-    'hdr.desc': 'Povolí vysoký dynamický rozsah (HDR) pro vestavěný displej.',
-    'hdr.warning': 'Použití HDR je blokováno nastavením systému Windows.',
-    hybridMode: 'Hybridní režim',
-    'hybridMode.desc': 'Hybridní režim umožňuje přepínat mezi integrovanou a dedikovanou GPU. Vypnutí zapne přímý režim dedikované GPU; pro provedení přepnutí je nutný restart.',
-    igpuMode: 'Režim dedikované GPU',
-    'igpuMode.desc': 'Vynutit výstup integrované grafiky pro úsporu energie',
-    refreshRate: 'Obnovovací frekvence',
-    'refreshRate.desc': 'Přepnout obnovovací frekvenci vestavěného displeje.',
-    itsMode: 'Režim ITS',
-    'itsMode.desc': 'Inteligentní tepelné řešení',
-    microphone: 'Mikrofon',
-    'microphone.desc': 'Vypnutí ztlumí všechny dostupné mikrofony.',
-    overDrive: 'Over Drive',
-    'overDrive.desc': 'Když je povoleno, přeřadí vestavěný displej pro lepší dobu odezvy. Může způsobit přestřel na přechodech (ghosting).',
-    panelLogo: 'Světlo loga Legion',
-    'panelLogo.desc': 'Zapíná nebo vypíná světlo loga Legion na zadní straně zařízení.',
-    portsBacklight: 'Podsvícení portů',
-    'portsBacklight.desc': 'Zapíná nebo vypíná světla portů na zadní straně zařízení.',
-    resolution: 'Rozlišení',
-    'resolution.desc': 'Přepnout rozlišení vestavěného displeje.',
-    dpiScale: 'Měřítko DPI',
-    'dpiScale.desc': 'Přepnout měřítko vestavěného displeje.',
-    speaker: 'Reproduktor',
-    touchpadLock: 'Zámek touchpadu',
-    'touchpadLock.desc': 'Vypne touchpad. Doporučeno při použití myši, aby nedošlo k náhodnému dotyku.',
-    whiteKeyboard: 'Podsvícení klávesnice',
-    'whiteKeyboard.desc': 'Pomocí zkratky Fn + Mezerník přepínejte a upravujte jas podsvícení klávesnice.',
-    winKey: 'Zakázat klávesu Win',
-    'winKey.desc': 'Týká se pouze vestavěné klávesnice. Když je povoleno, klávesa Win přestane reagovat.',
-    oneLevelWhiteKeyboard: 'Podsvícení klávesnice',
-    'oneLevelWhiteKeyboard.desc': 'Pomocí zkratky Fn + Mezerník přepínejte podsvícení.',
-    'hybridMode.states.hybrid': 'Hybridní',
-    'hybridMode.states.hybridIGPUOnly': 'Hybrid-iGPU',
-    'hybridMode.states.hybridAuto': 'Hybrid-Auto',
-    'hybridMode.states.off': 'dGPU',
-    'hybridMode.info.title': 'O pracovních režimech GPU',
-    'hybridMode.info.hybrid.title': 'Hybridní režim',
-    'hybridMode.info.hybrid.message': 'Integrovaná i dedikovaná GPU jsou povoleny. Systém mezi nimi bude automaticky přepínat podle svých potřeb.',
-    'hybridMode.info.hybridIgpu.title': 'Režim pouze Hybrid-iGPU',
-    'hybridMode.info.hybridIgpu.message': 'Používat pouze integrovanou GPU. Tento režim minimalizuje spotřebu energie a hluk.',
-    'hybridMode.info.hybridIgpu.disclaimer': 'Tento režim se projeví pouze tehdy, když dedikovaná GPU nepracuje.',
-    'hybridMode.info.hybridAuto.title': 'Režim Hybrid-Auto',
-    'hybridMode.info.hybridAuto.message': 'Na baterii používejte pouze integrovanou GPU, při připojeném adaptéru integrovanou i dedikovanou GPU. Když je připojen nestandardní adaptér, systém přepne na režim pouze Hybrid-iGPU.',
-    'hybridMode.info.dgpu.title': 'Režim dGPU',
-    'hybridMode.info.dgpu.message': 'Používat pouze dedikovanou GPU. Tento režim poskytuje nejlepší grafický výkon, ale zvyšuje spotřebu energie.',
-    'hybridMode.info.dgpu.disclaimer': 'Přepnutí do a z tohoto režimu vyžaduje restart.',
-    'hybridMode.restartRequired.title': 'Je vyžadován restart',
-    'hybridMode.restartRequired.message': 'Přepnutí na {{mode}} vyžaduje restart. Chcete restartovat nyní?',
-    'hybridMode.restartRequired.now': 'Restartovat nyní',
-    'hybridMode.restartRequired.later': 'Restartuji později',
-    'hybridMode.restartFailed': 'Počítač se nepodařilo automaticky restartovat. Pro dokončení změny jej restartujte ručně.',
-    'hybridMode.changeFailed.title': 'Nepodařilo se změnit pracovní režim GPU',
-    'hybridMode.changeFailed.message': 'Zkuste režim znovu za pár sekund, pokud nevidíte očekávaný výsledek. Pokud dGPU vůbec nereaguje, restartujte prosím notebook.',
-    batteryModes: {
-      conservation: 'Konzervační režim',
-      normal: 'Normální režim',
-      rapidCharge: 'Režim rychlého nabíjení'
-    },
-    powerModeOptions: {
-      quiet: 'Tichý',
-      balance: 'Vyvážený',
-      performance: 'Výkon',
-      extreme: 'Extrémní',
-      godMode: 'Vlastní'
-    }
-  },
-  common: {
-    loading: 'Načítání…?',
-    deleteColor: 'Delete color',
-    notifications: 'Notifications',
-    minimize: 'Minimize',
-    maximize: 'Maximize',
-    restore: 'Restore',
-    windowClose: 'Close',
-    navigation: 'Navigation',
-    expandNavigation: 'Expand navigation',
-    collapseNavigation: 'Collapse navigation',
-    error: 'Něco se pokazilo',
-    retry: 'Zkusit znovu',
-    close: 'Zavřít',
-    cancel: 'Zrušit',
-    moreActions: 'Další akce',
-    copied: 'Zkopírováno do schránky',
-    add: 'Přidat',
-    save: 'Uložit',
-    saveAndClose: 'Uložit a zavřít',
-    apply: 'Použít',
-    applyAndClose: 'Použít a zavřít',
-    default: 'Výchozí',
-    rename: 'Přejmenovat',
-    delete: 'Smazat',
-    ok: 'OK',
-    confirm: 'Potvrdit',
-    resetDefault: 'Obnovit výchozí'
-  },
-  colorPicker: {
-    hex: 'Hex',
-    red: 'Červená',
-    green: 'Zelená',
-    blue: 'Modrá',
-    ok: 'OK'
-  },
-  fanCurve: {
-    fanSpeed: 'Rychlost ventilátoru',
-    fanSpeedMax: '100%',
-    cpu: 'CPU',
-    cpuSensor: 'Senzor CPU',
-    gpu: 'GPU',
-    gpu2: 'GPU #2',
-    rpm: 'ot./min'
-  },
-  pages: {
-    placeholder: 'Již brzy'
-  },
-  settings: {
-    title: 'Nastavení',
-    description: 'Nakonfigurujte možnosti vzhledu, chování a funkcí aplikace.',
-    nav: {
-      appearance: 'Vzhled',
-      application: 'Aplikace',
-      power: 'Napájení',
-      display: 'Displej',
-      smartKeys: 'Chytré klávesy',
-      update: 'Aktualizace',
-      integrations: 'Integrace',
-      osd: 'OSD'
-    },
-    appearance: {
-      language: 'Jazyk',
-      languageDesc: 'Vyberte jazyk',
-      temperature: 'Teplota',
-      temperatureDesc: 'Vyberte jednotky používané teplotními senzory.',
-      theme: 'Globální barevný režim rozhraní',
-      accentColor: 'Globální barva zvýraznění rozhraní',
-      accentColorDesc: 'Změňte barvu zvýraznění aplikace.',
-      accentColorSource: {
-        system: 'Systém',
-        custom: 'Vlastní'
-      },
-      appScale: 'Měřítko UI',
-      appScaleDesc: 'Rovnoměrně zvětšit text i celé rozhraní, nezávisle na škálování zobrazení Windows.',
-      themeOptions: {
-        system: 'Systém',
-        light: 'Světlý',
-        dark: 'Tmavý'
-      }
-    },
-    application: {
-      minimizeToTray: 'Minimalizovat do oznamovací oblasti',
-      minimizeToTrayDesc: 'Vždy minimalizovat do oznamovací oblasti místo hlavního panelu.',
-      minimizeOnClose: 'Minimalizovat při zavření',
-      minimizeOnCloseDesc: 'Vždy minimalizovat do oznamovací oblasti. Když je povoleno, klikněte pravým tlačítkem na ikonu v oznamovací oblasti a zvolte Zavřít pro ukončení aplikace.',
-      disableUnsupportedWarning: 'Nevarovat u nekompatibilních zařízení',
-      disableUnsupportedWarningDesc: 'Skrýt upozornění na nekompatibilní zařízení zobrazené při spuštění.',
-      enableHardwareSensors: 'Hardwarové senzory',
-      enableHardwareSensorsDesc: 'Povolit pokročilé dotazování hardwaru pro sledování podrobných teplot, frekvencí a limitů výkonu.',
-      dontShowNotifications: 'Nezobrazovat oznámení',
-      dontShowNotificationsDesc: 'Zakázat oznámení v aplikaci a systému',
-      autorun: 'Spustit při přihlášení',
-      autorunDesc: 'Spustit aplikaci při přihlášení do Windows.',
-      autorunOptions: {
-        enabled: 'Povoleno',
-        enabledDelayed: 'Povoleno (se zpožděním)',
-        disabled: 'Zakázáno'
-      },
-      groupStartup: 'Spuštění a okno',
-      groupSensors: 'Hardwarové senzory',
-      groupNotifications: 'Oznámení a upozornění',
-      groupSoftware: 'Softwarové konflikty',
-
-
-      animationsEnabled: 'UI animace',
-
-      animationsEnabledDesc: 'Animuje okna, dialogy a další prvky rozhraní. Vypněte pro omezení pohybu.',      sensorRefreshInterval: 'Interval obnovování senzorů',
-      sensorRefreshIntervalDesc: 'Jak často se hodnoty senzorů obnovují. Kartu senzorů můžete také dočasně změnit kliknutím pravým tlačítkem.',
-      extensionsEnabled: 'Povolit rozšíření',
-      extensionsEnabledDesc: 'Povolit načítání pluginů a rozšíření',
-      sensorSections: 'Sekce senzorů',
-      sensorSectionsDesc: 'Vyberte, které sekce senzorů se zobrazí a v jakém pořadí.',
-      disableVantage: 'Zakázat Lenovo Vantage',
-      disableVantageDesc: 'Zakázat Lenovo Vantage a ImController bez jejich odinstalace.\nPo změně této možnosti se doporučuje restart.',
-      disableLegionZone: 'Zakázat Legion Zone',
-      disableLegionZoneDesc: 'Zakázat Legion Zone a její službu bez odinstalace.\nPo změně této možnosti se doporučuje restart.',
-      disableLenovoHotkeys: 'Zakázat Lenovo Hotkeys',
-      disableLenovoHotkeysDesc: 'Zakázat Lenovo Hotkeys a jejich službu bez odinstalace.\nPokud je zakázáno, tato aplikace bude zpracovávat zkratky Fn.\nPo změně této možnosti se doporučuje restart.',
-      valueOn: 'Zapnuto',
-      valueOff: 'Vypnuto'
-    },
-    saved: 'Nastavení uloženo',
-    saveFailed: 'Nastavení se nepodařilo uložit',
-    osd: {
-      title: 'OSD',
-      showOsd: 'Zobrazit OSD',
-      showOsdDesc: 'Okamžitě zobrazit překryvné zobrazení.',
-      style: 'Styl překrytí',
-      styles: {
-        panel: 'Panel',
-        bar: 'Lišta'
-      },
-      refreshInterval: 'Interval obnovování',
-      snapThreshold: 'Práh přichycení',
-      lockPosition: 'Zamknout pozici',
-      resetPosition: 'Obnovit pozici',
-      previewHint: 'Náhled',
-      tabs: {
-        general: 'Obecné',
-        appearance: 'Vzhled',
-        thresholds: 'Prahy',
-        sensors: 'Senzory'
-      },
-      opacity: 'Průhlednost',
-      cornerRadius: 'Poloměr rohů',
-      cornerRadiusTop: 'Nahoře',
-      cornerRadiusBottom: 'Dole',
-      fontSize: 'Velikost písma',
-      background: 'Barva pozadí',
-      category: 'Barva kategorie',
-      label: 'Barva popisku',
-      value: 'Barva hodnoty',
-      warning: 'Barva varování',
-      critical: 'Barva kritického stavu',
-      separator: 'Barva oddělovače',
-      thresholds: {
-        performance: 'Výkon',
-        fpsRedline: 'Limit FPS',
-        lowFpsDelta: 'Delta nízkých FPS',
-        temperature: 'Teplota',
-        usage: 'Využití',
-        warning: 'Varování',
-        critical: 'Kritické'
-      },
-      items: {
-        groups: {
-          game: 'Hra',
-          cpu: 'CPU',
-          gpu: 'GPU',
-          pch: 'PCH'
-        },
-        names: {
-          Fps: 'FPS',
-          LowFps: '1% Low',
-          FrameTime: 'Doba snímku',
-          CpuFrequency: 'Takt jádra',
-          CpuPCoreFrequency: 'Takt P-Core',
-          CpuECoreFrequency: 'Takt E-Core',
-          CpuUtilization: 'Využití',
-          CpuTemperature: 'Teplota',
-          CpuPower: 'Příkon',
-          CpuFan: 'Ventilátor',
-          GpuFrequency: 'Takt jádra',
-          GpuUtilization: 'Využití',
-          GpuTemperature: 'Teplota jádra',
-          GpuVramUtilization: 'Využití VRAM',
-          GpuVramTemperature: 'Teplota VRAM',
-          GpuPower: 'Příkon',
-          GpuFan: 'Ventilátor',
-          MemoryUtilization: 'Využití',
-          MemoryTemperature: 'Teplota',
-          Disk1Temperature: 'Teplota disku 1',
-          Disk2Temperature: 'Teplota disku 2',
-          PchTemperature: 'Teplota PCH',
-          PchFan: 'Ventilátor'
-        }
-      }
-    },
-    power: {
-      powerModeMapping: 'Mapování režimu výkonu',
-      powerModeMappingDesc: 'Při přepínání režimů výkonu automaticky synchronizovaně přepněte plán napájení Windows nebo režim napájení Windows.',
-      mappingModes: {
-        disabled: 'Zakázáno',
-        windowsPowerMode: 'Režim napájení Windows',
-        windowsPowerPlan: 'Plán napájení Windows'
-      },
-      windowsPowerModes: 'Režim napájení Windows',
-      windowsPowerModesDesc: 'Vyberte režim napájení Windows, který se použije při změně režimu výkonu.',
-      windowsPowerPlans: 'Plán napájení Windows',
-      windowsPowerPlansDesc: 'Vyberte plán napájení Windows, který se použije při změně režimu výkonu.',
-      synchronizeBrightness: 'Zamknout jas displeje',
-      synchronizeBrightnessDesc: 'Když je povoleno, jas zůstává stejný při přepínání plánů napájení.',
-      smartFnLock: 'Modifikační klávesy chytrého Fn Locku',
-      modifierKeys: {
-        shift: 'Shift',
-        ctrl: 'Ctrl',
-        alt: 'Alt'
-      },
-      resetBatteryOnSince: 'Resetovat „Na baterii od…?při spuštění',
-      resetBatteryOnSinceDesc: 'Resetuje počítadlo „Na baterii od…?v sekci baterie při restartu systému.',
-      godModeFnQ: 'Přepnout do vlastního režimu pomocí Fn+Q',
-      godModeFnQDesc: 'Povolit rychlé přepnutí do vlastního režimu pomocí Fn+Q.'
-    },
-    display: {
-      navigationItems: 'Viditelnost položek navigace',
-      navigationKeys: {
-        keyboard: 'Podsvícení klávesnice',
-        battery: 'Baterie',
-        automation: 'Automatizace',
-        macro: 'Makro',
-        windowsOptimization: 'Optimalizace systému',
-        pluginExtensions: 'Pluginy a rozšíření',
-        about: 'O aplikaci'
-      },
-      notificationPosition: 'Pozice oznámení',
-      notificationPositions: {
-        bottomRight: 'Vpravo dole',
-        bottomCenter: 'Dole uprostřed',
-        bottomLeft: 'Vlevo dole',
-        centerLeft: 'Vlevo uprostřed',
-        topLeft: 'Vlevo nahoře',
-        topCenter: 'Nahoře uprostřed',
-        topRight: 'Vpravo nahoře',
-        centerRight: 'Vpravo uprostřed',
-        center: 'Uprostřed'
-      },
-      notificationDuration: 'Doba zobrazení oznámení',
-      notificationDurations: {
-        short: 'Krátká (3 s)',
-        normal: 'Normální (5 s)',
-        long: 'Dlouhá (10 s)'
-      },
-      excludedRefreshRates: 'Vyloučené obnovovací frekvence',
-      excludedRefreshRatesDesc: 'Vyloučte obnovovací frekvence, aby bylo přepínání Fn+R rychlejší.',
-      excludedRefreshRatesHint: 'Pokročilá úprava bude dostupná v budoucí verzi',
-      excludedRefreshRatesEmpty: 'Žádné vyloučené obnovovací frekvence',
-      excludedRefreshRatesManageHint: 'Klikněte pro správu vyloučených obnovovacích frekvencí',
-      notifications: 'Oznámení',
-      notificationsDesc: 'Vyberte, která oznámení se zobrazují.',
-      bootLogo: 'Logo při spouštění',
-      bootLogoDesc: 'Přizpůsobte logo spouštění zobrazené při startu počítače.'
-    },
-    smartKeys: {
-      smartFnLock: 'Chytrý Fn Lock',
-      smartFnLockDesc: 'Když je stisknuto Alt, Ctrl nebo Shift, Fn je dočasně odemčen.',
-      off: 'Vypnuto',
-      hint: 'Modifikační klávesy chytrého Fn Locku lze změnit v nastavení Napájení.',
-      singlePressActionDesc: 'Přiřaďte rychlou akci k jednoduchému stisku Fn+F9.',
-      doublePressActionDesc: 'Přiřaďte rychlou akci k dvojitému stisku Fn+F9.'
-    },
-    update: {
-      frequency: 'Automaticky kontrolovat aktualizace',
-      frequencies: {
-        perHour: 'Každou hodinu',
-        perThreeHours: 'Každé 3 hodiny',
-        perTwelveHours: 'Každých 12 hodin',
-        perDay: 'Každý den',
-        perWeek: 'Každý týden',
-        perMonth: 'Každý měsíc'
-      },
-      includePrerelease: 'Zahrnout předběžné verze',
-      includePrereleaseDesc: 'Když je vypnuto, nabízejí se pouze stabilní verze; když je zapnuto, přijímají se také předběžné (beta) aktualizace.',
-      repository: 'Repozitář aktualizací',
-      repositoryDesc: 'Nakonfigurujte GitHub repozitář pro kontrolu aktualizací. Nechte prázdné pro použití výchozího.',
-      repositoryOwner: 'Vlastník repozitáře',
-      repositoryOwnerPlaceholder: 'např. SSC-STUDIO',
-      repositoryName: 'Název repozitáře',
-      repositoryNamePlaceholder: 'např. UniversalDeviceToolkit',
-      check: 'Zkontrolovat aktualizace',
-      comingSoon: 'Kontrola aktualizací bude dostupná v budoucí verzi'
-    },
-    checkResult: {
-      available: 'Nová verze k dispozici: v{{version}}',
-      latest: 'Máte nejnovější verzi'
-    },
-    integrations: {
-      hwinfo: 'HWiNFO64',
-      hwinfoDesc: 'Sdílejte rychlost ventilátorů, teplotu baterie a další data s HWiNFO64. Po přepnutí může být nutné HWiNFO64 restartovat.',
-      cli: 'Rozhraní příkazového řádku',
-      cliDesc: 'Povolit rozhraní příkazového řádku pro ovládání z příkazového řádku.'
-    }
-  },
-  keyboard: {
-    title: 'Podsvícení klávesnice',
-    unsupported: 'Podsvícení klávesnice není na tomto zařízení podporováno',
-    rgb: {
-      preset: 'Předvolba',
-      settings: 'Nastavení podsvícení',
-      effect: 'Efekt',
-      speed: 'Rychlost',
-      brightness: 'Jas',
-      zones: 'Barvy zón',
-      synchroniseZones: 'Synchronizovat zóny',
-      presets: {
-        off: 'Vypnuto',
-        one: 'Předvolba 1',
-        two: 'Předvolba 2',
-        three: 'Předvolba 3',
-        four: 'Předvolba 4'
-      },
-      effectOptions: {
-        static: 'Statické',
-        breath: 'Dýchání',
-        smooth: 'Plynulé',
-        waveRtl: 'Vlna (RTL)',
-        waveLtr: 'Vlna (LTR)'
-      },
-      speedOptions: {
-        slowest: 'Nejpomalejší',
-        slow: 'Pomalá',
-        fast: 'Rychlá',
-        fastest: 'Nejrychlejší'
-      },
-      brightnessOptions: {
-        low: 'Nízký',
-        high: 'Vysoký'
-      }
-    },
-    spectrum: {
-      brightness: 'Jas',
-      profile: 'Profil',
-      logo: 'Světlo loga',
-      effects: 'Efekty',
-      colors: 'Barvy',
-      addEffect: 'Přidat efekt',
-      deleteEffect: 'Smazat',
-      noEffects: 'Žádné efekty',
-      selectAll: 'Vybrat všechny zóny',
-      deselectAll: 'Zrušit výběr všech zón',
-      switchLayout: 'Přepnout rozložení klávesnice',
-      editEffect: 'Upravit',
-      allKeys: 'Všechny klávesy',
-      zonesCount: '{{count}} zón',
-      noLayoutHint: 'Rozložení klávesnice se nepodařilo načíst.',
-      selectEffectHint: 'Vyberte níže efekt pro náhled a úpravu jeho kláves.',
-      frontPanelHint: 'Kliknutím nebo tažením vyberte zóny klávesnice a předního panelu',
-      effectEdit: {
-        addTitle: 'Přidat efekt',
-        editTitle: 'Upravit efekt',
-        effect: 'Efekt',
-        speed: 'Rychlost',
-        direction: 'Směr',
-        clockwiseDirection: 'Směr',
-        color: 'Barva',
-        colors: 'Barvy',
-        addColor: 'Přidat barvu',
-        keys: 'Klávesy',
-        alwaysWarning: 'Tento efekt bude použit na celou klávesnici a nahradí všechny ostatní efekty.'
-      },
-      effectTypes: {
-        always: 'Vždy',
-        rainbowScrew: 'Rainbow Screw',
-        rainbowWave: 'Rainbow Wave',
-        colorChange: 'Změna barvy',
-        colorWave: 'Barevná vlna',
-        colorPulse: 'Barevný puls',
-        smooth: 'Plynulé',
-        rain: 'Déšť',
-        ripple: 'Vlnění',
-        type: 'Typ',
-        audioBounce: 'Audio Bounce',
-        audioRipple: 'Audio Ripple',
-        auroraSync: 'Aurora Sync'
-      }
-    }
-  },
-  automation: {
-    title: 'Automatizace',
-    enable: 'Povolit automatizaci',
-    enableDesc: 'Aby automatické akce fungovaly, musí běžet Universal Device Toolkit.',
-    subtitle: 'Když je povoleno, aplikace při změně stavu zařízení zkontroluje a spustí odpovídající akce v pořadí.',
-    actionsTitle: 'Akce',
-    actionsEmpty: 'Zatím žádné automatické akce',
-    quickActionsTitle: 'Rychlé akce',
-    quickActionsEmpty: 'Zatím žádné rychlé akce. Kliknutím na „Nová…?vytvoříte novou.',
-    renamePipeline: 'Přejmenovat pipeline',
-    changeIcon: 'Změnit ikonu',
-    renamePipelineTitle: 'Přejmenovat pipeline',
-    renamePipelinePlaceholder: 'Zadejte název pipeline',
-    empty: 'Zatím žádné automatizační skripty. Kliknutím na „Nová…?vytvoříte nový.',
-    runNow: 'Spustit nyní',
-    delete: 'Smazat',
-    deleteStep: 'Smazat krok',
-    addPipeline: 'Nová',
-    addStep: 'Přidat krok',
-    configure: 'Nastavit',
-    stepType: 'Typ kroku',
-    steps: 'Kroky',
-    save: 'Uložit',
-    revert: 'Vrátit zpět',
-    pipelineName: 'Název pipeline',
-    pipelineNamePlaceholder: 'Zadejte název pipeline',
-    quickAction: 'Rychlá akce',
-    optionsLoading: 'Načítání možností…?',
-    stepLabels: {
-      rgbKeyboardBacklight: 'Podsvícení klávesnice',
-      run: 'Spustit',
-      showMainWindow: 'Zobrazit hlavní okno',
-      speaker: 'Reproduktor',
-      spectrumKeyboardBacklightBrightness: 'Jas podsvícení klávesnice',
-      spectrumKeyboardBacklightImportProfile: 'Importovat profil podsvícení klávesnice',
-      spectrumKeyboardBacklightProfile: 'Profil podsvícení klávesnice',
-      touchpadLock: 'Zámek touchpadu',
-      turnOffMonitors: 'Vypnout displeje',
-      turnOffWiFi: 'Vypnout Wi-Fi',
-      turnOnWiFi: 'Zapnout Wi-Fi',
-      whiteKeyboardBacklight: 'Podsvícení klávesnice',
-      winKey: 'Zámek klávesy Windows',
-      scriptPath: 'Cesta ke spustitelnému souboru',
-      scriptArguments: 'Parametry',
-      runSilently: 'Spustit tiše',
-      runSilentlyDesc: 'Spustit konzolové aplikace bez vytvoření okna konzole.',
-      runWaitUntilFinished: 'Počkat na dokončení',
-      runWaitUntilFinishedDesc: 'Počkat, dokud program nebo skript nedokončí provádění',
-      runHint: 'Spustit skript nebo program.\nNejprve se ujistěte, že váš skript běží správně.',
-      importProfilePath: 'Cesta',
-      browse: 'Procházet',
-      off: 'Vypnuto',
-      on: 'Zapnuto',
-      mute: 'Ztlumit',
-      unmute: 'Zrušit ztlumení',
-      low: 'Nízká',
-      high: 'Vysoká',
-      presetOne: 'Předvolba 1',
-      presetTwo: 'Předvolba 2',
-      presetThree: 'Předvolba 3',
-      presetFour: 'Předvolba 4',
-      values: {
-        off: 'Vypnuto',
-        on: 'Zapnuto',
-        mute: 'Ztlumit',
-        unmute: 'Zrušit ztlumení',
-        low: 'Nízká',
-        high: 'Vysoká',
-        presetOne: 'Předvolba 1',
-        presetTwo: 'Předvolba 2',
-        presetThree: 'Předvolba 3',
-        presetFour: 'Předvolba 4'
-      }
-    },
-    state: {
-      on: 'Zapnuto',
-      off: 'Vypnuto',
-      hidden: 'Skrýt',
-      show: 'Zobrazit',
-      toggle: 'Přepnout stav',
-      quiet: 'Tichý',
-      balance: 'Vyvážený',
-      performance: 'Výkon',
-      extreme: 'Extrémní',
-      godMode: 'Vlastní',
-      hybrid: 'Hybridní',
-      hybridIgpu: 'Hybrid-iGPU',
-      hybridAuto: 'Hybrid-Auto',
-      dgpu: 'dGPU',
-      acAdapter: 'AC adaptér',
-      usbPd: 'USB Power Delivery',
-      acAndUsbPd: 'AC a USB PD',
-      hz: '{{frequency}} Hz',
-      resolution: '{{width}} × {{height}}'
-    },
-    stepEditors: {
-      hybridMode: {
-        title: 'Pracovní režim GPU',
-        desc: 'Vyberte provozní režim GPU na základě využití počítače a podmínek napájení.\nPřepínání režimů může vyžadovat restart.'
-      },
-      instantBoot: {
-        title: 'Okamžité spuštění',
-        desc: 'Zapne notebook, když je připojena nabíječka.'
-      },
-      macro: {
-        title: 'Makro',
-        desc: 'Povolit nebo zakázat makra.'
-      },
-      microphone: {
-        title: 'Mikrofon',
-        desc: 'Když je vypnuto, mikrofony budou ztlumeny.'
-      },
-      notification: {
-        title: 'Zobrazit oznámení',
-        desc: 'Zobrazit oznámení se zadaným textem.',
-        placeholder: 'Text oznámení'
-      },
-      oneLevelWhiteKeyboardBacklight: {
-        title: 'Podsvícení klávesnice',
-        desc: 'Zapnout nebo vypnout podsvícení.'
-      },
-      osd: {
-        title: 'OSD',
-        desc: 'Zobrazit nebo skrýt OSD'
-      },
-      overclockDiscreteGPU: {
-        title: 'Přetaktovat GPU',
-        desc: 'Zvýšit výkon přetaktováním dedikované GPU.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud dedikovaná GPU není k dispozici.'
-      },
-      overDrive: {
-        title: 'Over Drive',
-        desc: 'Zlepšit dobu odezvy vestavěného displeje.'
-      },
-      panelLogoBacklight: {
-        title: 'Podsvícení loga na panelu',
-        desc: 'Zapnout nebo vypnout podsvícení na víku notebooku.'
-      },
-      playSound: {
-        title: 'Přehrát zvuk',
-        desc: 'Jsou podporovány běžné hudební formáty jako wav nebo mp3.',
-        browse: 'Procházet…?',
-        none: 'Není vybrán žádný soubor'
-      },
-      portsBacklight: {
-        title: 'Podsvícení portů',
-        desc: 'Zapnout nebo vypnout podsvícení portů na zadní straně notebooku.'
-      },
-      powerMode: {
-        title: 'Režim výkonu',
-        desc: 'Změnit režim výkonu.'
-      },
-      quickAction: {
-        title: 'Rychlá akce',
-        desc: 'Spustit uloženou rychlou akci.',
-        placeholder: 'Vyberte rychlou akci',
-        empty: 'Zatím žádné rychlé akce. Nejprve vytvořte pipeline bez spouštěče.'
-      },
-      refreshRate: {
-        title: 'Obnovovací frekvence',
-        desc: 'Změnit obnovovací frekvenci vestavěného displeje.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.',
-        empty: 'Žádné dostupné obnovovací frekvence'
-      },
-      resolution: {
-        title: 'Rozlišení',
-        desc: 'Změnit rozlišení vestavěného displeje.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.',
-        empty: 'Žádná dostupná rozlišení'
-      },
-      alwaysOnUsb: {
-        title: 'Vždy napájené USB',
-        desc: 'Nabíjet zařízení USB, když je notebook vypnutý, spí nebo hibernuje.',
-        options: {
-          OnWhenSleeping: 'Zapnuto při spánku',
-          OnAlways: 'Zapnuto vždy'
-        }
-      },
-      battery: {
-        title: 'Režim baterie',
-        desc: 'Vyberte, jak se bude baterie nabíjet.',
-        options: {
-          Conservation: 'Konzervace',
-          Normal: 'Normální',
-          RapidCharge: 'Rychlé nabíjení'
-        }
-      },
-      batteryNightCharge: {
-        title: 'Noční nabíjení baterie',
-        desc: 'Když je povoleno, toto zařízení se přes noc při připojení nabije na 80 % a do rána, než zařízení použijete, dokončí nabíjení na 100 %.'
-      },
-      deactivateGPU: {
-        title: 'Deaktivovat GPU',
-        desc: 'Vypnout dedikovanou GPU, pokud je zbytečně aktivní.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý nebo není aktivní hybridní režim.',
-        options: {
-          KillApps: 'Ukončit aplikace',
-          RestartGPU: 'Restartovat GPU'
-        }
-      },
-      delay: {
-        title: 'Zpoždění',
-        desc: 'Přidat zpoždění před spuštěním dalšího kroku.',
-        second_one: '{{count}} sekunda',
-        second_other: '{{count}} sekund'
-      },
-      displayBrightness: {
-        title: 'Jas displeje',
-        desc: 'Změnit jas displeje vestavěného displeje.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.',
-        percent: '{{value}}%'
-      },
-      dpiScale: {
-        title: 'DPI',
-        desc: 'Změnit měřítko vestavěného displeje.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.',
-        percent: '{{value}}%'
-      },
-      flipToStart: {
-        title: 'Zapnout otevřením víka',
-        desc: 'Zapne notebook, když otevřete víko.'
-      },
-      fnLock: {
-        title: 'Fn Lock',
-        desc: 'Používat sekundární funkce kláves F1-F12 bez držení klávesy Fn.'
-      },
-      godModePreset: {
-        title: 'Předvolba vlastního režimu',
-        desc: 'Aktivovat předvolbu vlastního režimu.\nToto nastavení se projeví pouze tehdy, když je vlastní režim povolen.'
-      },
-      hdr: {
-        title: 'HDR',
-        desc: 'Povolit vysoký dynamický rozsah (HDR) na vestavěném displeji.\n\nUPOZORNĚNÍ: Tato akce nebude fungovat správně, pokud je interní displej vypnutý.'
-      },
-      hideMainWindow: {
-        title: 'Skrýt hlavní okno'
-      },
-      rgbKeyboardBacklight: {
-        title: 'Podsvícení klávesnice',
-        desc: 'Upravit předvolbu podsvícení klávesnice.'
-      },
-      run: {
-        title: 'Spustit',
-        desc: 'Spustit skript nebo program.\nNejprve se ujistěte, že váš skript běží správně.'
-      },
-      showMainWindow: {
-        title: 'Zobrazit hlavní okno'
-      },
-      speaker: {
-        title: 'Reproduktor',
-        desc: 'Když je ztlumeno, všechna aktivní zvuková výstupní zařízení budou ztlumena.'
-      },
-      spectrumKeyboardBacklightBrightness: {
-        title: 'Jas podsvícení klávesnice',
-        desc: 'Upravit jas podsvícení klávesnice.'
-      },
-      spectrumKeyboardBacklightImportProfile: {
-        title: 'Importovat profil podsvícení klávesnice',
-        desc: 'Importovat a použít konfiguraci podsvícení v aktuálním profilu.'
-      },
-      spectrumKeyboardBacklightProfile: {
-        title: 'Profil podsvícení klávesnice',
-        desc: 'Upravit profil podsvícení klávesnice.'
-      },
-      touchpadLock: {
-        title: 'Zámek touchpadu',
-        desc: 'Vypnout touchpad.'
-      },
-      turnOffMonitors: {
-        title: 'Vypnout displeje',
-        desc: 'Vypnout všechny dostupné displeje.'
-      },
-      turnOffWiFi: {
-        title: 'Vypnout Wi-Fi'
-      },
-      turnOnWiFi: {
-        title: 'Zapnout Wi-Fi'
-      },
-      whiteKeyboardBacklight: {
-        title: 'Podsvícení klávesnice',
-        desc: 'Upravit jas podsvícení klávesnice.'
-      },
-      winKey: {
-        title: 'Zámek klávesy Windows',
-        desc: 'Zakázat klávesu Windows na vestavěné klávesnici.'
-      }
-    },
-    moveUp: 'Posunout nahoru',
-    moveDown: 'Posunout dolů',
-    noEditableParameters: 'Tento krok nemá žádné editovatelné parametry.',
-    addAutomaticPipeline: 'Nová akce',
-    addQuickAction: 'Nová rychlá akce',
-    quickActionName: 'Název rychlé akce',
-    triggerPicker: {
-      title: 'Nová akce …?vyberte spouštěč'
-    },
-    triggerConfig: {
-      title: 'Nastavit spouštěč',
-      noEditableTriggers: 'Tento spouštěč nemá žádné konfigurovatelné parametry.'
-    },
-    triggerNames: {
-      aCAdapterConnected: 'Když je připojen napájecí adaptér AC',
-      lowWattageACAdapterConnected: 'Když je připojen napájecí adaptér AC s nízkým výkonem',
-      aCAdapterDisconnected: 'Když je napájecí adaptér AC odpojen',
-      powerMode: 'Když se změní režim výkonu',
-      godModePresetChanged: 'Když se změní předvolba vlastního režimu',
-      gamesAreRunning: 'Když běží hra',
-      gamesStop: 'Když se hra zavře',
-      processesAreRunning: 'Když se spustí aplikace',
-      processesStopRunning: 'Když se aplikace zavře',
-      userInactivity: 'Když se uživatel stane neaktivním',
-      userInactivityZero: 'Když se uživatel stane aktivním',
-      sessionLock: 'Relace uzamčena',
-      sessionUnlock: 'Relace odemčena',
-      lidOpened: 'Víko otevřeno',
-      lidClosed: 'Víko zavřeno',
-      displayOn: 'Když se displeje zapnou',
-      displayOff: 'Když se displeje vypnou',
-      hdrOn: 'Když se HDR zapne',
-      hdrOff: 'Když se HDR vypne',
-      deviceConnected: 'Když je zařízení připojeno',
-      deviceDisconnected: 'Když je zařízení odpojeno',
-      externalDisplayConnected: 'Když je připojen externí displej',
-      externalDisplayDisconnected: 'Když je externí displej odpojen',
-      wiFiConnected: 'Když je připojena Wi-Fi',
-      wiFiDisconnected: 'Když je Wi-Fi odpojena',
-      time: 'V určený čas',
-      periodic: 'Periodická akce',
-      hardwareSensor: 'Hardwarový senzor',
-      batteryPercentage: 'Procento baterie',
-      onStartup: 'Při spuštění',
-      onResume: 'Po probuzení'
-    },
-    triggerEditors: {
-      noProcesses: 'Nejsou vybrány žádné procesy.',
-      noDevices: 'Nejsou vybrána žádná zařízení.',
-      inactivityTimeout: 'Časový limit',
-      seconds: '{{count}} sekund',
-      minutes: '{{count}} minut',
-      hours: '{{count}} hodin',
-      ssidPlaceholder: 'Název sítě (SSID)',
-      addSsid: 'Přidat název sítě',
-      atTime: 'V čas',
-      hour: 'Hodina',
-      minute: 'Minuta',
-      allDays: 'Každý den',
-      day: {
-        0: 'Neděle',
-        1: 'Pondělí',
-        2: 'Úterý',
-        3: 'Středa',
-        4: 'Čtvrtek',
-        5: 'Pátek',
-        6: 'Sobota'
-      },
-      metric: 'Metrika',
-      comparison: 'Porovnání',
-      threshold: 'Práh',
-      thresholdPercent: 'Práh (%)',
-      durationSeconds: 'Doba trvání (sekundy)',
-      cooldownSeconds: 'Prodleva (sekundy)',
-      chargeFilter: 'Filtr nabíjení',
-      deviceInstanceId: 'ID instance zařízení'
-    }
-  },
-  macro: {
-    title: 'Makro klávesnice',
-    enable: 'Povolit makra',
-    enableDesc: 'Aby makra fungovala, musí běžet Universal Device Toolkit.',
-    subtitle: 'Můžete nahrát sérii stisknutí kláves a vyvolat je pomocí numerické klávesnice.',
-    numpad: 'Numerická klávesnice',
-    sequence: 'Sekvence',
-    repeat: 'Počet opakování',
-    events: 'Události',
-    save: 'Uložit',
-    clear: 'Vymazat',
-    play: 'Přehrát',
-    record: 'Nahrát',
-    recordingOptions: 'Možnosti nahrávání',
-    ignoreDelays: 'Ignorovat zpoždění',
-    interruptOnOtherKey: 'Přerušit při jiné klávese',
-    dontRepeat: 'Neopakovat',
-    keyboardOnly: 'Pouze klávesnice',
-    keyboardMouse: 'Klávesy klávesnice a tlačítka myši',
-    allInputs: 'Všechny vstupy',
-    recordingInterrupted: 'Nahrávání přerušeno',
-    keyboard: 'Klávesnice',
-    mouse: 'Myš',
-    move: 'Pohyb myši',
-    wheelUp: 'Kolečko myši nahoru',
-    wheelDown: 'Kolečko myši dolů',
-    wheelLeft: 'Kolečko myši doleva',
-    wheelRight: 'Kolečko myši doprava',
-    leftButton: 'Levé tlačítko',
-    rightButton: 'Pravé tlačítko',
-    middleButton: 'Prostřední tlačítko',
-    xButton: 'Tlačítko X',
-    button: 'Tlačítko myši',
-    empty: 'Pro tuto klávesu zatím žádná sekvence maker',
-    recording: {
-      preparing: 'Nahrávání začne za 3 sekundy...',
-      title: 'Nahrávání...',
-      pressEscToStop: 'Pro zastavení stiskněte ESC.',
-      focusHint: 'Během nahrávání ponechte toto okno zaměřené.'
-    }
-  },
-  plugins: {
-    title: 'Pluginy a rozšíření',
-    search: 'Hledat pluginy',
-    filterAll: 'Vše',
-    filterInstalled: 'Nainstalováno',
-    filterNotInstalled: 'Nenainstalováno',
-    refresh: 'Obnovit',
-    total: '{{count}} celkem',
-    summary: '{{count}} nainstalováno',
-    updatable: '{{count}} dostupných aktualizací',
-    install: 'Nainstalovat',
-    update: 'Aktualizovat',
-    updateAvailable: 'Dostupná aktualizace',
-    uninstall: 'Odinstalovat',
-    uninstallConfirm: 'Odinstalovat tento plugin?',
-    uninstallFailed: 'Odinstalace selhala',
-    installed: 'Nainstalováno',
-    online: 'Online',
-    installing: 'Instaluji…?',
-    downloading: 'Stahuji…?',
-    preparingDownload: 'Příprava stahování…?',
-    downloadCompleted: 'Stahování dokončeno',
-    offline: 'Online obchod je nedostupný; zobrazují se pouze lokálně nainstalované pluginy',
-    empty: 'Nebyly nalezeny žádné pluginy',
-    noResults: 'Nebyly nalezeny žádné pluginy odpovídající vašemu hledání.',
-    dependencies: 'Závislosti',
-    dependenciesBlocked: 'Tento plugin má neuspokojené závislosti a nelze jej odinstalovat',
-    details: 'Podrobnosti',
-    usageGuide: 'Návod k použití',
-    changelog: 'Změny',
-    importProgress: 'Importuji balíčky pluginů…?',
-    importSuccess: 'Importováno {{count}} balíčků pluginů',
-    importFailed: 'Import {{count}} balíčků pluginů selhal',
-    installAll: 'Nainstalovat vše',
-    installAllComplete: 'Nainstalováno {{count}} pluginů',
-    installAllPartial: 'Dokončeno {{count}} z {{total}} operací s pluginy',
-    copyId: 'Kopírovat ID pluginu',
-    copied: 'ID pluginu zkopírováno do schránky',
-    copyFailed: 'ID pluginu se nepodařilo zkopírovat',
-    local: 'Místní',
-    collapseDetails: 'Skrýt podrobnosti',
-    showDetails: 'Zobrazit podrobnosti',
-    updateInfo: 'Informace o aktualizaci',
-    versionLabel: 'Verze:',
-    configure: 'Nastavit',
-    open: 'Otevřít',
-    description: 'Nainstalujte a spravujte pluginy pro rozšíření funkcí',
-    storeUnavailable: 'Obchod s pluginy je nedostupný',
-    summaryTotal: 'Celkem pluginů',
-    summaryInstalled: 'Nainstalováno',
-    summaryUpdates: 'Dostupné aktualizace',
-    importFromFiles: 'Importovat ze souborů',
-    updateAll: 'Aktualizovat vše',
-    emptyStore: 'Obchod s pluginy je momentálně prázdný. Sledujte budoucí aktualizace pluginů.'
-  },
-  optimization: {
-    title: 'Optimalizace systému',
-    info: 'Tyto akce mění systémové služby a soubory a mohou vyžadovat oprávnění správce.',
-    tabs: {
-      optimization: 'Optimalizace systému',
-      cleanup: 'Úklid',
-      driverDownload: 'Stažení ovladačů',
-      networkAcceleration: 'Síť a akcelerace'
-    },
-    recommended: 'Doporučeno',
-    selected: 'Vybrané',
-    selectedActions: 'Vybrané akce',
-    noSelection: 'Nejsou vybrány žádné akce',
-    selectRecommended: 'Vybrat doporučené',
-    applyRecommended: 'Použít vše doporučené',
-    apply: 'Použít',
-    clear: 'Vymazat (vrátit zpět)',
-    applied: 'Použito',
-    applyFailed: 'Použití selhalo (mohou být vyžadována oprávnění správce)',
-    reverted: 'Vráceno zpět',
-    revertFailed: 'Vrácení zpět selhalo (mohou být vyžadována oprávnění správce)',
-    estimate: 'Odhadnout velikost',
-    estimateResult: 'Uvolnitelné místo',
-    runCleanup: 'Spustit úklid',
-    cleanupHint: 'Úklid spustí vaše vlastní pravidla čištění.',
-    cleanupConfirm: 'Spustit úklid nyní?',
-    cleanupDone: 'Úklid dokončen',
-    cleanupFailed: 'Úklid selhal',
-    cleanup: {
-      scanning: 'Scanning',
-      running: 'Cleaning…',
-      done: 'Cleanup complete',
-      moreItems: 'more',
-      items: 'Items',
-      custom: {
-
-        header: 'Vlastní pravidla čištění',
-        description: 'Další složky, které se vyčistí společně s vybranými akcemi úklidu.',
-        empty: 'Žádná vlastní pravidla čištění',
-        add: 'Přidat složku',
-        edit: 'Upravit složku',
-        remove: 'Odebrat',
-        clear: 'Vymazat vše',
-        added: 'Pravidlo přidáno',
-        updated: 'Pravidlo aktualizováno',
-        recursive: 'Zahrnout podsložky',
-        noExtensions: 'Nejsou zadány žádné přípony',
-        folderPickerFailed: 'Výběr složky se nepodařilo otevřít'
-      }
-    },
-    network: {
-      status: 'Stav',
-      running: 'Běží',
-      stopped: 'Zastaveno',
-      backendReady: 'Backend připraven',
-      backendNotReady: 'Backend není připraven',
-      config: 'Základní konfigurace',
-      accelerationEnabled: 'Povolit akceleraci',
-      mode: 'Režim',
-      modes: {
-        off: 'Vypnuto',
-        systemProxy: 'Systémový proxy',
-        hosts: 'Hosts',
-        diagnosticsOnly: 'Pouze diagnostika'
-      },
-      save: 'Uložit konfiguraci',
-      saved: 'Konfigurace uložena',
-      saveFailed: 'Konfiguraci se nepodařilo uložit',
-      start: 'Spustit',
-      stop: 'Zastavit',
-      startFailed: 'Spuštění selhalo',
-      stopFailed: 'Zastavení selhalo',
-      modeLabel: 'Režim',
-      targetsLabel: 'Cíle',
-      portLabel: 'Port',
-      targetsHeading: 'Cíle akcelerace',
-      domainGroupsHint: 'Vyberte služby, které se budou akcelerovat přes místní proxy.',
-      domainGroupsEmptyTitle: 'Žádné cíle akcelerace',
-      domainGroupsEmptyDescription: 'Seznam cílů je prázdný nebo nic neodpovídá hledání.',
-      selectionHint: 'Vybrané cíle se použijí při spuštění akcelerace.',
-      searchTargets: 'Hledat cíle',
-      recommendedMenu: 'Doporučené',
-      groupRuntime: '{{selected}}/{{total}} vybráno  {{active}} aktivních',
-      trafficHeading: 'Přehled provozu',
-      metrics: {
-        upload: 'Odesílání',
-        download: 'Stahování',
-        connections: 'Připojení',
-        total: 'Celkový provoz',
-        health: 'Stav'
-      },
-      trafficLive: 'Sbírá se živý proxy provoz',
-      trafficWaiting: 'Pro sběr živého provozu spusťte akceleraci',
-      trafficUnavailable: 'Data o provozu jsou dočasně nedostupná',
-      connectionsHeading: 'Aktuální a nedávná připojení',
-      destinationsHeading: 'Statistiky cílů',
-      connectionsWaiting: 'Čekání na data o připojení…?',
-      destinationsWaiting: 'Čekání na data o cílech…?',
-      connectionSummary: '{{active}} aktivních / {{total}} celkem',
-      destinationSummary: '{{count}} cílů',
-      connectionStates: {
-        active: 'Aktivní',
-        completed: 'Dokončeno',
-        blocked: 'Blokováno',
-        failed: 'Selhalo',
-        stopped: 'Zastaveno',
-        unknown: 'Neznámé'
-      },
-      unknownHost: 'Neznámý hostitel',
-      destinationRow: '{{count}} spojení  {{latency}}',
-      health: {
-        healthy: 'V pořádku',
-        degraded: 'Snížená funkčnost',
-        stopped: 'Zastaveno',
-        unknown: 'Neznámé'
-      },
-      modeFull: {
-        systemProxy: 'Systémový proxy',
-        hosts: 'Soubor hosts',
-        diagnosticsOnly: 'Pouze diagnostika',
-        off: 'Nečinný'
-      },
-      backendMissingHint: 'Proxy worker není k dispozici',
-      selectGroupsFirstHint: 'Vyberte alespoň jeden cíl',
-      advancedHeading: 'Pokročilé',
-      advancedBody: 'Pokročilá nastavení a obnova sítě.',
-      portFormat: 'Port: {{port}}',
-      dangerZoneHeading: 'Nebezpečná zóna',
-      restoreHint: 'Obnovit původní stav systémové sítě zaznamenaný před akcelerací.',
-      restoreNetwork: 'Obnovit síť',
-      restoreConfirm: 'Obnovit stav systémové sítě nyní?',
-      restored: 'Stav sítě obnoven',
-      diag: {
-        natTitle: 'NAT',
-        dnsTitle: 'DNS',
-        ipv6Title: 'IPv6',
-        detect: 'Detekovat',
-        unknown: 'Neznámé',
-        natTypes: {
-          OpenInternet: 'Otevřený NAT',
-          Nat: 'NAT',
-          UdpBlocked: 'UDP blokováno',
-          Unknown: 'Neznámé'
-        },
-        internetConnected: 'Připojeno',
-        internetUnreachable: 'Nedostupné',
-        natType: 'Typ NAT',
-        localIp: 'Místní IP',
-        publicIp: 'Veřejná IP',
-        internet: 'Internet',
-        dnsDomain: 'Doména',
-        customDns: 'Vlastní DNS',
-        enableDoh: 'DoH',
-        dohUrl: 'URL DoH',
-        latency: 'Latence',
-        resolvedAddress: 'Přeložená adresa',
-        latencyFormat: '{{ms}} ms',
-        failed: 'Selhalo',
-        ipv6Support: 'Podpora IPv6',
-        ipv6Address: 'Adresa IPv6',
-        ipv6SupportedFull: 'Přístup IPv6 podporován',
-        notSupported: 'Nepodporováno'
-      }
-    },
-    driverDownload: {
-      comingSoon: 'Stažení ovladačů bude dostupné v budoucí verzi'
-    },
-    driver: {
-      machineType: 'Typ zařízení',
-      machineTypePlaceholder: 'např. 82K3',
-      os: 'Operační systém',
-      downloadTo: 'Stáhnout do',
-      downloadToPlaceholder: 'Vyberte složku pro stahování',
-      browse: 'Procházet',
-      openDownloadTo: 'Otevřít složku',
-      source: 'Zdroj',
-      primarySource: 'Vantage',
-      primarySourceMessage: 'Oficiální databáze zařízení přes Vantage.',
-      secondarySource: 'PC Support',
-      secondarySourceMessage: 'Databáze kompatibility z PC Support.',
-      scan: 'Vyhledat',
-      scanning: 'Vyhledávání…?',
-      scanValidation: 'Zadejte platný 4znakový typ zařízení a vyberte operační systém.',
-      disclaimer: 'Balíčky pocházejí z vybraného zdroje. Instalujte na vlastní riziko.',
-      filter: 'Filtr',
-      onlyShowUpdates: 'Pouze aktualizace',
-      sort: {
-        name: 'Řadit podle názvu',
-        category: 'Řadit podle kategorie',
-        date: 'Řadit podle data'
-      },
-      selectRecommended: 'Vybrat doporučené',
-      startAll: 'Spustit vše',
-      pauseAll: 'Pozastavit vše',
-      clearSelection: 'Zrušit výběr',
-      packagesFound: 'Nalezeno {{count}} balíčků.',
-      packagesFoundOne: 'Nalezen 1 balíček.',
-      status: {
-        NotStarted: '',
-        Queued: 'Ve frontě',
-        Downloading: 'Stahuje se',
-        Installing: 'Instaluje se',
-        Completed: 'Dokončeno',
-        Error: 'Chyba'
-      },
-      recommended: 'Doporučeno',
-      isUpdate: 'Aktualizace',
-      reboot: {
-        recommended: 'Doporučen restart',
-        required: 'Vyžadován restart',
-        shutdown: 'Vyžadováno vypnutí'
-      },
-      oldPackageWarning: 'Tento balíček je starší než jeden rok; ovladač může být zastaralý.',
-      download: 'Stáhnout',
-      install: 'Nainstalovat',
-      uninstall: 'Odinstalovat',
-      pause: 'Pozastavit',
-      openReadme: 'Otevřít README',
-      hide: 'Skrýt',
-      hideAll: 'Skrýt vše',
-      showHiddenDownloads: 'Zobrazit skrytá stahování',
-      downloadInProgress: {
-        title: 'Probíhá stahování',
-        message: 'Stahování stále běží. Vyhledat znovu?',
-        confirm: 'Vyhledat'
-      },
-      empty: {
-        notScanned: {
-          title: 'Vyhledat balíčky ovladačů',
-          message: 'Vyberte zdroj a spusťte vyhledávání, aby se zobrazily kompatibilní stahování ovladačů.'
-        },
-        noResults: {
-          title: 'Nebyly nalezeny žádné stahování ovladačů',
-          message: 'Zkuste jiný zdroj, operační systém nebo typ zařízení.'
-        },
-        noFilterResults: {
-          title: 'Nebyly nalezeny žádné odpovídající soubory ke stažení',
-          message: 'Upravte filtr, možnost „pouze aktualizace…?nebo seznam skrytých stahování.'
-        },
-        error: {
-          title: 'Vyhledávání ovladačů nebylo dokončeno',
-          message: 'Zkontrolujte vybraný zdroj a síťové připojení a poté spusťte vyhledávání znovu.'
-        }
-      },
-      osOptions: {
-        windows7: 'Windows 7',
-        windows8: 'Windows 8',
-        windows10: 'Windows 10',
-        windows11: 'Windows 11'
-      }
-    }
-  },
-  about: {
-    title: 'O aplikaci',
-    appName: 'Aplikace',
-    version: 'Verze',
-    build: 'Sestavení',
-    links: 'Odkazy na projekt',
-    projectWebsite: 'Web projektu na GitHubu',
-    latestRelease: 'Poslední vydání na GitHubu',
-    applicationFolders: 'Složky aplikace',
-    data: 'Data',
-    temp: 'Dočasné',
-    pid: 'ID procesu',
-    machine: 'Model zařízení',
-    bios: 'Verze BIOSu',
-    compatible: 'Kompatibilita',
-    yes: 'Kompatibilní',
-    no: 'Nekompatibilní',
-    dataFolder: 'Složka dat',
-    thirdParty: 'Knihovny třetích stran',
-    translationCredit: 'Překlady od komunity.',
-    copyright: 'Autorská práva'
-  },
-  statusBanner: {
-    updateAvailable: 'Aktualizace k dispozici!',
-    updateAvailableWithVersion: 'Aktualizace {{version}} k dispozici!',
-    pluginExtensionsDisabled: 'Navigace Rozšíření pluginů je skrytá. Povolte ji v Nastavení …?Položky navigace.',
-    vantageRunning: 'Lenovo Vantage a/nebo ImController běží na pozadí.',
-    legionZoneRunning: 'Legion Zone běží na pozadí.',
-    fnKeysRunning: 'Lenovo Hotkeys běží na pozadí.'
-  },
-  clipboard: {
-    copyProcesses: 'Kopírovat seznam procesů',
-    copySuccess: 'Seznam procesů zkopírován do schránky',
-    copyFailed: 'Seznam procesů se nepodařilo zkopírovat'
-  },
-  notifications: {
-    mergedCount: '×{{count}}'
+    updateWindowrestartToInstall: 'Nainstalovat a restartovat',
   }
   }
-}
-
+})

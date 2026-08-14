@@ -1,32 +1,7 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import enUS from './locales/en-US'
-import zhCN from './locales/zh-CN'
-import zhHant from './locales/zh-Hant'
-import ja from './locales/ja'
-import de from './locales/de'
-import fr from './locales/fr'
-import es from './locales/es'
-import it from './locales/it'
-import ptBR from './locales/pt-BR'
-import pt from './locales/pt'
-import ru from './locales/ru'
-import uk from './locales/uk'
-import pl from './locales/pl'
-import cs from './locales/cs'
-import sk from './locales/sk'
-import hu from './locales/hu'
-import ro from './locales/ro'
-import bg from './locales/bg'
-import tr from './locales/tr'
-import el from './locales/el'
-import ar from './locales/ar'
-import lv from './locales/lv'
-import nlNL from './locales/nl-NL'
-import vi from './locales/vi'
-import uzLatnUZ from './locales/uz-Latn-UZ'
 import { dashboardParityEnUS, dashboardParityZhCN } from './locales/dashboard-parity'
-
 export interface LanguageOption {
   code: string
   /** Native name shown in the language picker. */
@@ -34,8 +9,10 @@ export interface LanguageOption {
 }
 
 /**
- * Selectable languages (25) — mirrors the Electron resx set. Every code here ships
- * with a full locale file; unknown legacy codes fall back to English.
+ * Selectable languages (25) — mirrors the resx set. Locale files are loaded
+ * ON DEMAND (dynamic import) so the main entry chunk stays small and the
+ * renderer does not hold all 25 translations in memory; only the active
+ * language plus the English fallback are ever bundled/loaded.
  */
 export const LANGUAGES: LanguageOption[] = [
   { code: 'en', name: 'English' },
@@ -69,12 +46,27 @@ export const supportedLanguages: string[] = LANGUAGES.map((language) => language
 export type SupportedLanguage = (typeof supportedLanguages)[number]
 
 const DEFAULT_LANGUAGE: SupportedLanguage = 'zh-CN'
-const LANGUAGE_STORAGE_KEY = 'udt-language'
-const LEGACY_LANGUAGE_STORAGE_KEY = 'udt.lang'
+export const LANGUAGE_STORAGE_KEY = 'udt-language'
+export const LEGACY_LANGUAGE_STORAGE_KEY = 'udt.lang'
+
+type LocaleBundle = { translation: Record<string, unknown> }
 
 /**
- * Legacy language codes (persisted by older builds / the Electron app) mapped onto
- * the current registry.
+ * Vite emits one async chunk per locale file. The glob MUST include the `.ts`
+ * extension — `import(\`./locales/${lng}\`)` is dropped in production builds
+ * (dynamic-import-vars requires a file extension), which left every non-English
+ * UI on the English fallback while the settings dropdown still showed 简体中文.
+ */
+const localeModules = import.meta.glob<LocaleBundle>(
+  ['./locales/*.ts', '!./locales/dashboard-parity.ts', '!./locales/en-US.ts'],
+  {
+    import: 'default'
+  }
+)
+
+/**
+ * Legacy language codes (persisted by older builds / the app) mapped onto the
+ * current registry.
  */
 const LEGACY_ALIASES: Record<string, string> = {
   'en-US': 'en',
@@ -89,6 +81,15 @@ function normalizeLanguage(lng: string): string {
   return supportedLanguages.includes(normalized as SupportedLanguage) ? normalized : 'en'
 }
 
+function persistLanguage(lng: string): void {
+  try {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, lng)
+    localStorage.setItem(LEGACY_LANGUAGE_STORAGE_KEY, lng)
+  } catch {
+    /* ignore quota / private mode */
+  }
+}
+
 function resolveInitialLanguage(): string {
   try {
     const stored =
@@ -100,10 +101,37 @@ function resolveInitialLanguage(): string {
   return DEFAULT_LANGUAGE
 }
 
+function localeModulePath(lng: string): string {
+  return `./locales/${lng}.ts`
+}
+
+/**
+ * Load a locale module on demand and register it with i18next. Only English is
+ * bundled statically (fallback); every other language is a separate chunk that
+ * Vite code-splits out of the main entry.
+ */
+async function loadLocale(lng: string): Promise<void> {
+  if (lng === 'en' || i18n.hasResourceBundle(lng, 'translation')) return
+  const loader = localeModules[localeModulePath(lng)]
+  if (loader == null) {
+    console.warn(`[i18n] no locale module for '${lng}'`)
+    return
+  }
+  try {
+    const module = await loader()
+    const bundle = { ...module.translation }
+    if (lng === 'zh-CN') {
+      Object.assign(bundle, dashboardParityZhCN)
+    }
+    i18n.addResourceBundle(lng, 'translation', bundle, true, true)
+  } catch (error) {
+    console.warn(`[i18n] failed to load locale '${lng}':`, error)
+  }
+}
+
 void i18n.use(initReactI18next).init({
   resources: {
-    // 'en-US' stays registered so the legacy code path and fallbackLng keep
-    // working; 'en' is the canonical code used by the UI.
+    // English is always bundled: canonical 'en' + legacy 'en-US' alias.
     'en-US': {
       translation: {
         ...enUS.translation,
@@ -115,36 +143,7 @@ void i18n.use(initReactI18next).init({
         ...enUS.translation,
         ...dashboardParityEnUS
       }
-    },
-    'zh-CN': {
-      translation: {
-        ...zhCN.translation,
-        ...dashboardParityZhCN
-      }
-    },
-    'zh-Hant': { translation: zhHant.translation },
-    ja: { translation: ja.translation },
-    de: { translation: de.translation },
-    fr: { translation: fr.translation },
-    es: { translation: es.translation },
-    it: { translation: it.translation },
-    'pt-BR': { translation: ptBR.translation },
-    pt: { translation: pt.translation },
-    ru: { translation: ru.translation },
-    uk: { translation: uk.translation },
-    pl: { translation: pl.translation },
-    cs: { translation: cs.translation },
-    sk: { translation: sk.translation },
-    hu: { translation: hu.translation },
-    ro: { translation: ro.translation },
-    bg: { translation: bg.translation },
-    tr: { translation: tr.translation },
-    el: { translation: el.translation },
-    ar: { translation: ar.translation },
-    lv: { translation: lv.translation },
-    'nl-NL': { translation: nlNL.translation },
-    vi: { translation: vi.translation },
-    'uz-Latn-UZ': { translation: uzLatnUZ.translation }
+    }
   },
   lng: resolveInitialLanguage(),
   fallbackLng: 'en-US',
@@ -153,14 +152,22 @@ void i18n.use(initReactI18next).init({
   }
 })
 
+// Load the initial language bundle before rendering (keeps first paint correct).
+const initialLanguage = resolveInitialLanguage()
+if (initialLanguage !== 'en') {
+  // The bundle is registered after init — re-apply the language so i18next
+  // re-resolves every key and React re-renders with the real translations
+  // instead of the English fallback (which is what a bare init would show).
+  void loadLocale(initialLanguage).then(() => {
+    void i18n.changeLanguage(initialLanguage)
+  })
+}
+
 export async function changeLanguage(lng: string): Promise<void> {
   const normalized = normalizeLanguage(lng)
+  await loadLocale(normalized)
   await i18n.changeLanguage(normalized)
-  try {
-    localStorage.setItem(LANGUAGE_STORAGE_KEY, normalized)
-  } catch {
-    /* ignore quota / private mode */
-  }
+  persistLanguage(normalized)
   window.bridge?.setTrayLanguage?.(normalized)
 }
 

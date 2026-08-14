@@ -1,4 +1,6 @@
-﻿export default {
+import { withEnglishFallback } from './en-US'
+
+export default withEnglishFallback({
   translation: {
     app: {
       name: 'Universal Device Toolkit'
@@ -113,6 +115,9 @@
         voltageRange: 'Voltage Range',
         powerRange: 'Power Range',
         details: 'Details',
+        doubleClickHint: '雙擊查看所有感測器數據',
+        showDetails: '顯示詳情',
+        hideDetails: '隱藏詳細訊息',
         chartEmpty: 'Waiting for sensor data',
         refreshInterval: 'Refresh Interval',
         detail: {
@@ -143,7 +148,8 @@
       card: {
         error: 'Failed to apply setting',
         config: 'Advanced settings',
-        configComingSoon: 'Advanced settings will be available in a future version'
+        configComingSoon: 'Advanced settings will be available in a future version',
+        notSupported: '此設備不支援'
       }
     },
     balanceMode: {
@@ -156,8 +162,8 @@
       activePreset: 'Active preset',
       presetName: 'Preset name',
       name: 'Name',
-      errorLoad: "Couldn't load setting.",
-      errorApply: "Couldn't apply settings",
+      errorLoad: 'Couldn\'t load setting.',
+      errorApply: 'Couldn\'t apply settings',
       applySuccess: 'Custom mode settings applied successfully.',
       defaultPresetName: 'Preset',
       cpu: {
@@ -305,17 +311,26 @@
       }
     },
     common: {
+
       loading: 'Loading…',
+
       deleteColor: 'Delete color',
+
       notifications: 'Notifications',
+
       minimize: 'Minimize',
+
       maximize: 'Maximize',
+
       restore: 'Restore',
+
       windowClose: 'Close',
+
       navigation: 'Navigation',
+
       expandNavigation: 'Expand navigation',
-      collapseNavigation: 'Collapse navigation',
-      error: 'Something went wrong',
+
+      collapseNavigation: 'Collapse navigation',      error: 'Something went wrong',
       retry: 'Retry',
       close: 'Close',
       cancel: 'Cancel',
@@ -331,7 +346,9 @@
       delete: 'Delete',
       ok: 'OK',
       confirm: 'Confirm',
-      resetDefault: 'Reset to default'
+      resetDefault: 'Reset to default',
+      load: '負載',
+      notSupportedOnPlatform: '此平台不支援。'
     },
     colorPicker: {
       hex: 'Hex',
@@ -378,7 +395,9 @@
           custom: 'Custom'
         },
         appScale: 'UI Scale',
-        appScaleDesc: 'Uniformly scale text and the entire interface, independent of the Windows display scaling.',
+        appScaleDesc:
+          'Uniformly scale text and the entire interface, independent of the Windows display scaling.',
+        appScaleAuto: '汽車',
         themeOptions: {
           system: 'System',
           light: 'Light',
@@ -390,14 +409,16 @@
         minimizeToTrayDesc: 'Always minimize to the tray instead of the taskbar.',
         minimizeOnClose: 'Minimize on Close',
         minimizeOnCloseDesc: 'Always minimize to the tray. When enabled, right-click the tray icon and click Close to exit the application.',
-        disableUnsupportedWarning: 'Don\u2019t warn about incompatible devices',
+        disableUnsupportedWarning: 'Don’t warn about incompatible devices',
         disableUnsupportedWarningDesc: 'Hide the incompatible device prompt shown at startup.',
         enableHardwareSensors: 'Hardware Sensors',
         enableHardwareSensorsDesc: 'Enable advanced hardware polling to monitor detailed temperature, frequency and power limits.',
-        dontShowNotifications: "Don't Show Notifications",
+        dontShowNotifications: 'Don\'t Show Notifications',
         dontShowNotificationsDesc: 'Disable in-app and system notifications',
         autorun: 'Start on Login',
         autorunDesc: 'Start the application when you sign in to Windows.',
+        autorunDescLoginItem: '當您登入此電腦時啟動該應用程式。',
+        autorunUnavailable: '登入時啟動在瀏覽器預覽中不可用。',
         autorunOptions: {
           enabled: 'Enabled',
           enabledDelayed: 'Enabled (Delayed)',
@@ -528,6 +549,9 @@
       },
       display: {
         navigationItems: 'Navigation Items Visibility',
+        groupNotifications: '通知',
+        groupWindow: '櫥窗及展示',
+        notificationCategories: '通知類別和行為',
         navigationKeys: {
           keyboard: 'Keyboard Backlight',
           battery: 'Battery',
@@ -608,6 +632,7 @@
     keyboard: {
       title: 'Keyboard Backlight',
       unsupported: 'Keyboard backlight is not supported on this device',
+      simulatedHint: '模擬模式:未偵測到鍵盤,顯示演示介面',
       rgb: {
         preset: 'Preset',
         settings: 'Backlight Settings',
@@ -697,7 +722,9 @@
       actionsTitle: 'Actions',
       actionsEmpty: 'There are no automatic actions yet',
       quickActionsTitle: 'Quick Actions',
+      quickActionsHint: '托盤圖示的右鍵選單中提供快速操作。',
       quickActionsEmpty: 'There are no quick actions yet. Click "New" to create one.',
+      deactivateGpu: '停用 GPU',
       renamePipeline: 'Rename pipeline',
       changeIcon: 'Change icon',
       renamePipelineTitle: 'Rename pipeline',
@@ -787,7 +814,7 @@
       stepEditors: {
         hybridMode: {
           title: 'GPU Working Mode',
-          desc: "Select GPU operating mode based on your computer's usage and power conditions.\nSwitching modes may require restart."
+          desc: 'Select GPU operating mode based on your computer\'s usage and power conditions.\nSwitching modes may require restart.'
         },
         instantBoot: {
           title: 'Instant Boot',
@@ -1064,7 +1091,7 @@
       recordingOptions: 'Recording Options',
       ignoreDelays: 'Ignore Delays',
       interruptOnOtherKey: 'Interrupt on Other Key',
-      dontRepeat: "Don't repeat",
+      dontRepeat: 'Don\'t repeat',
       keyboardOnly: 'Keyboard only',
       keyboardMouse: 'Keyboard keys and mouse buttons',
       allInputs: 'All inputs',
@@ -1107,6 +1134,15 @@
       uninstallFailed: 'Failed to uninstall',
       installed: 'Installed',
       online: 'Online',
+      settings: {
+        nativePageUnavailable: '該外掛包含 Electron 版本中不可用的本機 UI 頁面。其後台功能透過後端主機繼續運作。',
+        capability: {
+          settingsPage: '設定頁面',
+          featurePage: '專題頁面',
+          optimizationCategory: '優化類別',
+          executableEntryPoint: '可執行條目'
+        }
+      },
       installing: 'Installing…',
       downloading: 'Downloading…',
       preparingDownload: 'Preparing download…',
@@ -1141,7 +1177,18 @@
       summaryInstalled: 'Installed',
       summaryUpdates: 'Updates available',
       importFromFiles: 'Import from files',
-      updateAll: 'Update all',
+      importDesktopOnly: '導入插件檔案需要桌面應用程式。',
+
+
+      notFound: '找不到插件',
+
+      back: '返回插件',
+
+      noWebPage: '該插件沒有網路介面。',
+
+      pageLoadFailed: '無法載入插件頁面。',
+
+      openPage: '開啟插件頁面',      updateAll: 'Update all',
       emptyStore: 'The plugin store is currently empty. Stay tuned for future plugin updates.'
     },
     optimization: {
@@ -1163,6 +1210,8 @@
       clear: 'Clear (Revert)',
       applied: 'Applied',
       applyFailed: 'Failed to apply (administrator rights may be required)',
+      elevationRequired:
+        '需要管理員批准。確認 UAC 提示,或啟動提升的應用程式。',
       reverted: 'Reverted',
       revertFailed: 'Failed to revert (administrator rights may be required)',
       estimate: 'Estimate Size',
@@ -1173,13 +1222,12 @@
       cleanupDone: 'Cleanup finished',
       cleanupFailed: 'Cleanup failed',
       cleanup: {
+        items: 'Items',
         scanning: 'Scanning',
         running: 'Cleaning…',
         done: 'Cleanup complete',
         moreItems: 'more',
-        items: 'Items',
         custom: {
-
           header: 'Custom Cleanup Rules',
           description: 'Extra folders that are cleaned together with the selected cleanup actions.',
           empty: 'No custom cleanup rules',
@@ -1267,6 +1315,12 @@
           off: 'Idle'
         },
         backendMissingHint: 'Proxy worker is unavailable',
+        proxyMissing:
+          '網路加速無法啟動,因為安裝中缺少 NetworkProxy.exe。',
+        hostsModeRefused:
+          '主機模式不是從此頁面啟動的。使用系統代理或診斷。',
+        startRefused:
+          '加速沒有開始。檢查它是否已啟用並且至少選擇了一個目標。',
         selectGroupsFirstHint: 'Select at least one target',
         advancedHeading: 'Advanced',
         advancedBody: 'Advanced settings and network recovery.',
@@ -2914,4 +2968,4 @@
     updateWindowrestartToInstall: 'Install & Restart',
   }
   }
-}
+})

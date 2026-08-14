@@ -1,757 +1,772 @@
-﻿export default {
+import { withEnglishFallback } from './en-US'
+
+export default withEnglishFallback({
   translation: {
-  app: {
-    name: 'Universal Device Toolkit'
-  },
-  titlebar: {
-    log: 'Registo',
-    openLogs: 'Abrir pasta de registos',
-    deviceName: 'Legion Y9000P IRX9',
-    deviceInfo: 'Informações do dispositivo'
-  },
-  nav: {
-    dashboard: 'Painel de Controlo',
-    settings: 'Definições',
-    automation: 'Automação',
-    keyboard: 'Teclado',
-    keyboardBacklight: 'Luz do teclado',
-    macro: 'Macro',
-    windowsOptimization: 'Otimização do sistema',
-    pluginExtensions: 'Plugins e extensões',
-    about: 'Sobre'
-  },
-  home: {
-    title: 'Universal Device Toolkit',
-    subtitle: 'Bem-vindo! Escolhe uma secção abaixo para começar',
-    hostReady: 'Backend ligado',
-    hostState: 'Estado do backend',
-    hostVersion: 'Versão do backend',
-    hostUnavailable: 'O backend não está a correr. Espera um momento e tenta novamente, ou reinicia a aplicação.',
-    initComplete: 'Inicialização concluída',
-    safeStart: 'Arranque seguro, ignorado',
-    machine: 'Dispositivo',
-    compatible: 'Compatibilidade',
-    status: 'Estado'
-  },
-  dashboard: {
-    title: 'Console',
-    customize: 'Personalizar',
-    edit: {
-      title: 'Editar Painel',
-      description: 'Escolhe as secções e funcionalidades apresentadas na página inicial.',
-      showSensors: 'Sensores de hardware',
-      groups: 'Grupos de funcionalidades',
-      save: 'Guardar',
-      cancel: 'Cancelar',
-      saved: 'Disposição do painel guardada',
-      error: 'Falha ao guardar a disposição do painel',
-      'default': 'Predefinição',
-      disclaimer: 'Algumas funcionalidades podem não aparecer no Painel dependendo do estado e da configuração do teu portátil.',
-      addGroup: 'Adicionar',
-      renameGroup: 'Editar o nome do grupo',
-      deleteGroup: 'Apagar',
-      moveUp: 'Mover para cima',
-      moveDown: 'Mover para baixo',
-      deleteItem: 'Apagar',
-      addItem: 'Adicionar',
-      groupNamePlaceholder: 'Nome',
-      items: {
-        discreteGpu: 'Modo de GPU discreta',
-        overclockGpu: 'Overclock da GPU',
-        turnOffMonitors: 'Desligar os ecrãs'
-      }
+    app: {
+      name: 'Universal Device Toolkit'
     },
-    addItem: {
-      title: 'Adicionar',
-      searchPlaceholder: 'Pesquisar',
-      empty: 'Todos os itens do painel já foram adicionados',
-      addHint: 'Adicionar item'
+    titlebar: {
+      log: 'Registo',
+      openLogs: 'Abrir pasta de registos',
+      deviceName: 'Legion Y9000P IRX9',
+      deviceInfo: 'Informações do dispositivo'
     },
-    cpu: 'CPU',
-    gpu: 'GPU',
-    memory: 'Memória',
-    temperature: 'Temperatura',
-    usage: 'Utilização',
-    power: 'Energia',
-    fanSpeed: 'Ventoinha',
-    vram: 'VRAM',
-    memoryUsed: 'Memória utilizada',
-    memoryTotal: 'Memória total',
-    storageTemp: 'Temp. do armazenamento',
-    notAvailable: '--',
-    sensor: {
-      cpu: 'Processador',
-      gpu: 'Placa gráfica',
+    nav: {
+      dashboard: 'Painel de Controlo',
+      settings: 'Definições',
+      automation: 'Automação',
+      keyboard: 'Teclado',
+      keyboardBacklight: 'Luz do teclado',
+      macro: 'Macro',
+      windowsOptimization: 'Otimização do sistema',
+      pluginExtensions: 'Plugins e extensões',
+      about: 'Sobre'
+    },
+    home: {
+      title: 'Universal Device Toolkit',
+      subtitle: 'Bem-vindo! Escolhe uma secção abaixo para começar',
+      hostReady: 'Backend ligado',
+      hostState: 'Estado do backend',
+      hostVersion: 'Versão do backend',
+      hostUnavailable:
+        'O backend não está a correr. Espera um momento e tenta novamente, ou reinicia a aplicação.',
+      initComplete: 'Inicialização concluída',
+      safeStart: 'Arranque seguro, ignorado',
+      machine: 'Dispositivo',
+      compatible: 'Compatibilidade',
+      status: 'Estado'
+    },
+    dashboard: {
+      title: 'Console',
+      customize: 'Personalizar',
+      edit: {
+        title: 'Editar Painel',
+        description: 'Escolhe as secções e funcionalidades apresentadas na página inicial.',
+        showSensors: 'Sensores de hardware',
+        groups: 'Grupos de funcionalidades',
+        save: 'Guardar',
+        cancel: 'Cancelar',
+        saved: 'Disposição do painel guardada',
+        error: 'Falha ao guardar a disposição do painel',
+        disclaimer: 'Algumas funcionalidades podem não aparecer no Painel dependendo do estado e da configuração do teu portátil.',
+        addGroup: 'Adicionar',
+        renameGroup: 'Editar o nome do grupo',
+        deleteGroup: 'Apagar',
+        moveUp: 'Mover para cima',
+        moveDown: 'Mover para baixo',
+        deleteItem: 'Apagar',
+        addItem: 'Adicionar',
+        groupNamePlaceholder: 'Nome',
+        default: 'Predefinição',
+        items: {
+          discreteGpu: 'Modo de GPU discreta',
+          overclockGpu: 'Overclock da GPU',
+          turnOffMonitors: 'Desligar os ecrãs'
+        }
+      },
+      addItem: {
+        title: 'Adicionar',
+        searchPlaceholder: 'Pesquisar',
+        empty: 'Todos os itens do painel já foram adicionados',
+        addHint: 'Adicionar item'
+      },
+      cpu: 'CPU',
+      gpu: 'GPU',
       memory: 'Memória',
       temperature: 'Temperatura',
       usage: 'Utilização',
       power: 'Energia',
       fanSpeed: 'Ventoinha',
       vram: 'VRAM',
-      frequency: 'Frequência do núcleo',
-      battery: 'Bateria',
-      charge: 'Carga',
-      health: 'Saúde',
-      rate: 'Taxa',
-      fan: 'Ventoinha',
-      lowPowerAdapter: 'Carregador de baixa potência ligado',
-      batteryLow: 'Nível de bateria baixo',
-      acCharging: 'Carregador ligado, a carregar...',
-      acNotCharging: 'Carregador ligado, sem carregar...',
-      remainingTime: 'Tempo restante estimado: {0}',
-      memoryTemperature: 'Temperatura da memória',
-      ssdTemperature: 'Temperatura do SSD',
-      vramTemperature: 'Temperatura da VRAM',
-      vramUsage: 'Utilização da VRAM',
-      cycles: 'Ciclos',
-      capacity: 'Capacidade',
-      fullCapacity: 'Capacidade de carga total',
-      designCapacity: 'Capacidade de projeto',
-      date: 'Data',
-      voltage: 'Voltagem do núcleo',
-      voltageRange: 'Intervalo de voltagem',
-      powerRange: 'Intervalo de energia',
-      details: 'Detalhes',
-      chartEmpty: 'A aguardar dados dos sensores',
-refreshInterval: 'Intervalo de atualização',
-      detail: {
-        power: 'Energia',
-        powerCores: 'Núcleos',
-        powerMemory: 'Memória',
-        powerPlatform: 'Plataforma',
-        pCoreClock: 'Relógio do núcleo P',
-        eCoreClock: 'Relógio do núcleo E',
-        memoryUsage: 'Utilização da memória',
-        sharedMemoryUsage: 'Utilização da memória partilhada',
-        vramUsage: 'Utilização da VRAM',
-        hotSpot: 'Ponto quente da GPU',
-        pcieThroughput: 'Largura de banda PCIe',
-        designCapacity: 'Capacidade de projeto',
-        fullChargeCapacity: 'Capacidade de carga total',
-        vramClock: 'Relógio da VRAM',
-        currentPower: 'Energia atual'
-      }
-    },
-    group: {
-      power: 'Energia',
-      graphics: 'Gráficos',
-      display: 'Ecrã',
-      other: 'Outros',
-      custom: 'Personalizado'
-    },
-    card: {
-      error: 'Falha ao aplicar a definição',
-      config: 'Definições avançadas',
-      configComingSoon: 'As definições avançadas estarão disponíveis numa versão futura'
-    }
-  },
-  balanceMode: {
-    title: 'Definições do modo de equilíbrio',
-    aiEngine: 'Ativar AI Engine',
-    aiEngineDesc: 'Deteta automaticamente quando certos jogos estão a correr e ajusta a performance da CPU e da GPU. A temperatura e o ruído das ventoinhas podem aumentar.'
-  },
-  godMode: {
-    title: 'Definições do modo personalizado',
-    activePreset: 'Predefinição ativa',
-    presetName: 'Nome da predefinição',
-    name: 'Nome',
-    errorLoad: 'Não foi possível carregar as definições.',
-    errorApply: 'Não foi possível aplicar as definições',
-    applySuccess: 'As definições do modo personalizado foram aplicadas com sucesso.',
-    defaultPresetName: 'Predefinição',
-    cpu: {
-      title: 'CPU',
-      longTermPL: 'Limite de energia a longo prazo',
-      'longTermPL.desc': 'O consumo de energia contínuo que a CPU pode alcançar.',
-      shortTermPL: 'Limite de energia a curto prazo',
-      'shortTermPL.desc': 'O consumo de energia máximo que a CPU pode alcançar num curto período de tempo.',
-      peakPL: 'Limite de energia máximo',
-      'peakPL.desc': 'O consumo de energia instantâneo máximo que a CPU pode alcançar.',
-      crossLoading: 'Limite de energia a longo prazo (Cross Loading)',
-      'crossLoading.desc': 'O consumo de energia máximo que a CPU pode alcançar quando tanto a CPU como a GPU estão totalmente utilizadas.',
-      pl1Tau: 'Duração do limite de energia a curto prazo',
-      'pl1Tau.desc': 'O período de tempo durante o qual a CPU pode fazer boost e usar o Limite de Energia a Curto Prazo. Quando expira, é usado o Limite de Energia a Longo Prazo.',
-      apuSppt: 'Limite de energia APU sPPT',
-      'apuSppt.desc': 'O consumo de energia máximo que a CPU pode alcançar com um pequeno atraso.',
-      tempLimit: 'Limite de temperatura da CPU',
-      'tempLimit.desc': 'A temperatura máxima que a CPU pode atingir antes de a frequência e a energia serem reduzidas.'
-    },
-    gpu: {
-      title: 'GPU',
-      dynamicBoost: 'Dynamic Boost',
-      'dynamicBoost.desc': 'A potência máxima adicional que pode ser atribuída à GPU com base no consumo de energia da CPU.',
-      ctgp: 'TGP configurável',
-      'ctgp.desc': 'A quantidade adicional de energia que pode ser atribuída à GPU para além do consumo de energia base.',
-      tempLimit: 'Limite de temperatura da GPU',
-      'tempLimit.desc': 'A temperatura máxima que a GPU pode atingir antes de a frequência e a energia serem reduzidas.',
-      totalProcessingPowerTarget: 'Alvo de energia total do processador em AC',
-      'totalProcessingPowerTarget.desc': 'O ponto em que a CPU ativa o ajuste dinâmico do consumo de energia para a GPU.',
-      toCpuDynamicBoost: 'Dynamic Boost da GPU para CPU',
-      'toCpuDynamicBoost.desc': 'Esta é a potência máxima adicional que pode ser atribuída à CPU a partir da GPU com base na utilização da CPU. Quanto maior o valor, melhor a performance das aplicações que utilizam a CPU.'
-    },
-    fans: {
-      title: 'Ventoinhas',
-      curve: 'Curva da ventoinha',
-      curveMessage: 'A velocidade da ventoinha segue o valor mais alto dos sensores de CPU, GPU ou heatsink. Passa o rato por cada passo para veres os valores exatos.',
-      maxSpeed: 'Velocidade máxima da ventoinha',
-      maxSpeedWarning: 'O uso prolongado desta opção vai degradar as ventoinhas, diminuindo a sua longevidade.\nA sério, tem cuidado com esta opção!'
-    },
-    advanced: {
-      title: 'Avançado',
-      message: 'Não alteres as opções abaixo a menos que saibas realmente o que estás a fazer.',
-      maxOffset: 'Offset máximo',
-      maxOffsetWarning: 'Valores mais altos podem causar comportamento imprevisível. Deixa em 0 se não tiveres a certeza.',
-      minOffset: 'Offset mínimo',
-      minOffsetWarning: 'Valores mais baixos podem causar comportamento imprevisível. Deixa em 0 se não tiveres a certeza.',
-      invalidOffset: 'Introduz um número inteiro antes de guardar.'
-    },
-    vantageWarning: 'As definições do modo personalizado não serão aplicadas corretamente quando o Lenovo Vantage ou os seus serviços estiverem a correr.',
-    legionZoneWarning: 'As definições do modo personalizado não serão aplicadas corretamente quando o Legion Zone ou os seus serviços estiverem a correr.'
-  },
-  overclock: {
-    title: 'Definições de overclock da GPU',
-    preset: 'Predefinição',
-    coreOffset: 'Offset da frequência do núcleo',
-    memoryOffset: 'Offset da frequência da memória',
-    namePlaceholder: 'Nome...',
-    newProfileName: 'Predefinição',
-    loadError: 'Não foi possível carregar as definições de overclock.'
-  },
-  feature: {
-    powerMode: 'Modo de energia',
-    'powerMode.desc': 'Alterar o modo de desempenho.\nO modo de desempenho também pode ser alterado com Fn+Q.',
-    'powerMode.hint': 'Podes alterá-lo rapidamente com o atalho Fn+Q.',
-    'powerMode.warning': 'O modo de desempenho pode não funcionar corretamente quando o carregador não está ligado.',
-    battery: 'Modo de carga da bateria',
-    'battery.desc': 'Escolhe o modo de carga da bateria. O modo de conservação limita o nível de carga para prolongar a vida útil da bateria, enquanto o modo de carga rápida carrega com maior potência.',
-    batteryNightCharge: 'Carga da bateria durante a noite',
-    'batteryNightCharge.desc': 'Quando ativado, carrega até 80% durante a noite e completa até 100% pela manhã.',
-    alwaysOnUsb: 'USB sempre ligado',
-    'alwaysOnUsb.desc': 'Mantém as portas USB com energia quando o computador está desligado, em suspensão ou em hibernação. Normalmente, apenas a porta USB marcada com um ícone de bateria no portátil é afetada.',
-    instantBoot: 'Arranque instantâneo',
-    'instantBoot.desc': 'Liga o computador assim que a energia é ligada.',
-    flipToStart: 'Abrir para ligar',
-    'flipToStart.desc': 'Abrir a tampa liga automaticamente o portátil.',
-    fnLock: 'Bloqueio Fn',
-    'fnLock.desc': 'Quando ativado, as funções podem ser acionadas sem premir Fn. Prime Fn juntamente com as teclas F1 a F12 originais para as acionar.',
-    gSync: 'GSync',
-    'gSync.desc': 'Ativar ou desativar a taxa de atualização variável G-Sync',
-    hdr: 'HDR',
-    'hdr.desc': 'Ativa high dynamic range (HDR) no ecrã integrado.',
-    'hdr.warning': 'A utilização de HDR está bloqueada pelas definições do Windows.',
-    hybridMode: 'Modo híbrido',
-    'hybridMode.desc': 'O modo híbrido permite alternar entre a GPU integrada e a discreta. Desativá-lo ativa o modo direto da GPU discreta; é necessário reiniciar para que a alteração tenha efeito.',
-    igpuMode: 'Modo de GPU discreta',
-    'igpuMode.desc': 'Forçar a saída gráfica integrada para poupar energia',
-    refreshRate: 'Taxa de atualização',
-    'refreshRate.desc': 'Alterar a taxa de atualização do ecrã integrado.',
-    itsMode: 'Modo ITS',
-    'itsMode.desc': 'Solução térmica inteligente',
-    microphone: 'Microfone',
-    'microphone.desc': 'Desativar isto silencia todos os microfones disponíveis.',
-    overDrive: 'Over Drive',
-    'overDrive.desc': 'Quando ativado, faz overdrive do ecrã integrado para melhorar o tempo de resposta. Pode causar ghosting com overshoot.',
-    panelLogo: 'Luz do logótipo Legion',
-    'panelLogo.desc': 'Liga ou desliga a luz do logótipo Legion na parte de trás do dispositivo.',
-    portsBacklight: 'Luz das portas',
-    'portsBacklight.desc': 'Liga ou desliga as luzes das portas na parte de trás do dispositivo.',
-    resolution: 'Resolução',
-    'resolution.desc': 'Alterar a resolução do ecrã integrado.',
-    dpiScale: 'Escala DPI',
-    'dpiScale.desc': 'Alterar a escala do ecrã integrado.',
-    speaker: 'Altifalante',
-    touchpadLock: 'Bloqueio do touchpad',
-    'touchpadLock.desc': 'Desativa o touchpad. Recomendado quando usas um rato para evitar toques acidentais.',
-    whiteKeyboard: 'Luz do teclado',
-    'whiteKeyboard.desc': 'Usa o atalho Fn + Espaço para alternar e ajustar o brilho da luz do teclado.',
-    winKey: 'Desativar tecla Windows',
-    'winKey.desc': 'Aplica-se apenas ao teclado integrado. Quando ativado, a tecla Windows deixa de responder.',
-    oneLevelWhiteKeyboard: 'Luz do teclado',
-    'oneLevelWhiteKeyboard.desc': 'Usa o atalho Fn + Espaço para ligar ou desligar a luz de fundo.',
-    'hybridMode.states.hybrid': 'Híbrido',
-    'hybridMode.states.hybridIGPUOnly': 'Híbrido-iGPU',
-    'hybridMode.states.hybridAuto': 'Híbrido-Auto',
-    'hybridMode.states.off': 'dGPU',
-    'hybridMode.info.title': 'Sobre os modos de funcionamento da GPU',
-    'hybridMode.info.hybrid.title': 'Modo híbrido',
-    'hybridMode.info.hybrid.message': 'Tanto a GPU integrada como a discreta estão ativadas. O sistema alterna automaticamente entre elas conforme as necessidades.',
-    'hybridMode.info.hybridIgpu.title': 'Modo Híbrido-iGPU apenas',
-    'hybridMode.info.hybridIgpu.message': 'Usa apenas a GPU integrada. Este modo minimiza o consumo de energia e o ruído.',
-    'hybridMode.info.hybridIgpu.disclaimer': 'Este modo só tem efeito quando a GPU discreta não está a funcionar.',
-    'hybridMode.info.hybridAuto.title': 'Modo Híbrido-Auto',
-    'hybridMode.info.hybridAuto.message': 'Usa apenas a GPU integrada em bateria e ambas quando o carregador está ligado. Quando um carregador não standard está ligado, o sistema muda para o Modo Híbrido-iGPU apenas.',
-    'hybridMode.info.dgpu.title': 'Modo dGPU',
-    'hybridMode.info.dgpu.message': 'Usa apenas a GPU discreta. Este modo proporciona a melhor performance gráfica, mas aumenta o consumo de energia.',
-    'hybridMode.info.dgpu.disclaimer': 'Mudar de e para este modo requer um reinício.',
-    'hybridMode.restartRequired.title': 'É necessário reiniciar',
-    'hybridMode.restartRequired.message': 'Mudar para {{mode}} requer um reinício. Queres reiniciar agora?',
-    'hybridMode.restartRequired.now': 'Reiniciar agora',
-    'hybridMode.restartRequired.later': 'Vou reiniciar mais tarde',
-    'hybridMode.restartFailed': 'Não foi possível reiniciar o computador automaticamente. Reinicia-o manualmente para concluir a alteração.',
-    'hybridMode.changeFailed.title': 'Não foi possível alterar o modo de funcionamento da GPU',
-    'hybridMode.changeFailed.message': 'Tenta alterar o modo novamente em alguns segundos, se não vires o resultado esperado. Se a dGPU não responder de todo, reinicia o portátil.',
-    batteryModes: {
-      conservation: 'Modo de conservação',
-      normal: 'Modo normal',
-      rapidCharge: 'Modo de carga rápida'
-    },
-    powerModeOptions: {
-      quiet: 'Silencioso',
-      balance: 'Equilibrado',
-      performance: 'Desempenho',
-      extreme: 'Extremo',
-      godMode: 'Personalizado'
-    }
-  },
-  common: {
-    loading: 'A carregar…',
-    deleteColor: 'Delete color',
-    notifications: 'Notifications',
-    minimize: 'Minimize',
-    maximize: 'Maximize',
-    restore: 'Restore',
-    windowClose: 'Close',
-    navigation: 'Navigation',
-    expandNavigation: 'Expand navigation',
-    collapseNavigation: 'Collapse navigation',
-    error: 'Algo correu mal',
-    retry: 'Tentar novamente',
-    close: 'Fechar',
-    cancel: 'Cancelar',
-    moreActions: 'Mais ações',
-    copied: 'Copiado para a área de transferência',
-    add: 'Adicionar',
-    save: 'Guardar',
-    saveAndClose: 'Guardar e fechar',
-    apply: 'Aplicar',
-    applyAndClose: 'Aplicar e fechar',
-    'default': 'Predefinição',
-    rename: 'Renomear',
-    'delete': 'Apagar',
-    ok: 'OK',
-    confirm: 'Confirmar',
-    resetDefault: 'Repor predefinições'
-  },
-  colorPicker: {
-    hex: 'Hex',
-    red: 'Vermelho',
-    green: 'Verde',
-    blue: 'Azul',
-    ok: 'OK'
-  },
-  fanCurve: {
-    fanSpeed: 'Velocidade da ventoinha',
-    fanSpeedMax: '100%',
-    cpu: 'CPU',
-    cpuSensor: 'Sensor da CPU',
-    gpu: 'GPU',
-    gpu2: 'GPU nº2',
-    rpm: 'RPM'
-  },
-  pages: {
-    placeholder: 'Em breve'
-  },
-  settings: {
-    title: 'Definições',
-    description: 'Configura a aparência, o comportamento e as opções de funcionalidade da aplicação.',
-    nav: {
-      appearance: 'Aparência',
-      application: 'Aplicação',
-      power: 'Energia',
-      display: 'Ecrã',
-      smartKeys: 'Teclas inteligentes',
-      update: 'Atualização',
-      integrations: 'Integrações',
-      osd: 'OSD'
-    },
-    appearance: {
-      language: 'Idioma',
-      languageDesc: 'Escolhe o idioma',
-      temperature: 'Temperatura',
-      temperatureDesc: 'Escolhe a unidade usada pelos sensores de temperatura.',
-      theme: 'Modo de cor global da interface',
-      accentColor: 'Cor de destaque global da interface',
-      accentColorDesc: 'Altera a cor de destaque da aplicação.',
-      accentColorSource: {
-        system: 'Sistema',
-        custom: 'Personalizada'
-      },
-      appScale: 'Escala da interface',
-      appScaleDesc: 'Dimensiona uniformemente o texto e toda a interface, independentemente da escala de ecrã do Windows.',
-      themeOptions: {
-        system: 'Sistema',
-        light: 'Claro',
-        dark: 'Escuro'
-      }
-    },
-    application: {
-      minimizeToTray: 'Minimizar para a bandeja',
-      minimizeToTrayDesc: 'Minimizar sempre para a bandeja em vez da barra de tarefas.',
-      minimizeOnClose: 'Minimizar ao fechar',
-      minimizeOnCloseDesc: 'Minimizar sempre para a bandeja. Quando ativado, clica com o botão direito no ícone da bandeja e clica em Fechar para sair da aplicação.',
-      disableUnsupportedWarning: 'Não avisar sobre dispositivos incompatíveis',
-      disableUnsupportedWarningDesc: 'Ocultar o aviso de dispositivo incompatível mostrado no arranque.',
-      enableHardwareSensors: 'Sensores de hardware',
-      enableHardwareSensorsDesc: 'Ativa a monitorização avançada de hardware para acompanhar temperaturas, frequências e limites de energia detalhados.',
-      dontShowNotifications: 'Não mostrar notificações',
-      dontShowNotificationsDesc: 'Desativa notificações na aplicação e no sistema',
-      autorun: 'Iniciar no início de sessão',
-      autorunDesc: 'Inicia a aplicação quando inicias sessão no Windows.',
-      autorunOptions: {
-        enabled: 'Ativado',
-        enabledDelayed: 'Ativado (com atraso)',
-        disabled: 'Desativado'
-      },
-      groupStartup: 'Arranque e janela',
-      groupSensors: 'Sensores de hardware',
-      groupNotifications: 'Notificações e avisos',
-      groupSoftware: 'Conflitos de software',
-
-
-      animationsEnabled: 'Animações da interface',
-
-      animationsEnabledDesc: 'Anima janelas, diálogos e outros elementos da interface. Desative para reduzir o movimento.',      sensorRefreshInterval: 'Intervalo de atualização dos sensores',
-      sensorRefreshIntervalDesc: 'Com que frequência os valores dos sensores são atualizados. Também podes clicar com o botão direito no cartão de sensores para o alterar temporariamente.',
-      extensionsEnabled: 'Ativar extensões',
-      extensionsEnabledDesc: 'Ativa o carregamento de plugins e extensões',
-      sensorSections: 'Secções de sensores',
-      sensorSectionsDesc: 'Escolhe quais as secções de sensores mostradas e em que ordem.',
-      disableVantage: 'Desativar Lenovo Vantage',
-      disableVantageDesc: 'Desativa o Lenovo Vantage e o ImController sem os desinstalar.\nÉ recomendado reiniciar depois de alterar esta opção.',
-      disableLegionZone: 'Desativar Legion Zone',
-      disableLegionZoneDesc: 'Desativa o Legion Zone e o seu serviço sem o desinstalar.\nÉ recomendado reiniciar depois de alterar esta opção.',
-      disableLenovoHotkeys: 'Desativar Lenovo Hotkeys',
-      disableLenovoHotkeysDesc: 'Desativa o Lenovo Hotkeys e o seu serviço sem o desinstalar.\nSe desativado, esta aplicação tratará dos atalhos Fn.\nÉ recomendado reiniciar depois de alterar esta opção.',
-      valueOn: 'Ligado',
-      valueOff: 'Desligado'
-    },
-    saved: 'Definições guardadas',
-    saveFailed: 'Falha ao guardar as definições',
-    osd: {
-      title: 'OSD',
-      showOsd: 'Mostrar OSD',
-      showOsdDesc: 'Mostra a sobreposição no ecrã imediatamente.',
-      style: 'Estilo da sobreposição',
-      styles: {
-        panel: 'Painel',
-        bar: 'Barra'
-      },
-      refreshInterval: 'Intervalo de atualização',
-      snapThreshold: 'Limite de ajuste',
-      lockPosition: 'Bloquear posição',
-      resetPosition: 'Repor posição',
-      previewHint: 'Pré-visualização',
-      tabs: {
-        general: 'Geral',
-        appearance: 'Aparência',
-        thresholds: 'Limiares',
-        sensors: 'Sensores'
-      },
-      opacity: 'Opacidade',
-      cornerRadius: 'Raio dos cantos',
-      cornerRadiusTop: 'Superior',
-      cornerRadiusBottom: 'Inferior',
-      fontSize: 'Tamanho da letra',
-      background: 'Cor de fundo',
-      category: 'Cor da categoria',
-      label: 'Cor do rótulo',
-      value: 'Cor do valor',
-      warning: 'Cor de aviso',
-      critical: 'Cor crítica',
-      separator: 'Cor do separador',
-      thresholds: {
-        performance: 'Desempenho',
-        fpsRedline: 'FPS Mínimo',
-        lowFpsDelta: 'Diferença de FPS baixo',
+      memoryUsed: 'Memória utilizada',
+      memoryTotal: 'Memória total',
+      storageTemp: 'Temp. do armazenamento',
+      notAvailable: '--',
+      sensor: {
+        cpu: 'Processador',
+        gpu: 'Placa gráfica',
+        memory: 'Memória',
         temperature: 'Temperatura',
         usage: 'Utilização',
-        warning: 'Aviso',
-        critical: 'Crítico'
+        power: 'Energia',
+        fanSpeed: 'Ventoinha',
+        vram: 'VRAM',
+        frequency: 'Frequência do núcleo',
+        battery: 'Bateria',
+        charge: 'Carga',
+        health: 'Saúde',
+        rate: 'Taxa',
+        fan: 'Ventoinha',
+        lowPowerAdapter: 'Carregador de baixa potência ligado',
+        batteryLow: 'Nível de bateria baixo',
+        acCharging: 'Carregador ligado, a carregar...',
+        acNotCharging: 'Carregador ligado, sem carregar...',
+        remainingTime: 'Tempo restante estimado: {0}',
+        memoryTemperature: 'Temperatura da memória',
+        ssdTemperature: 'Temperatura do SSD',
+        vramTemperature: 'Temperatura da VRAM',
+        vramUsage: 'Utilização da VRAM',
+        cycles: 'Ciclos',
+        capacity: 'Capacidade',
+        fullCapacity: 'Capacidade de carga total',
+        designCapacity: 'Capacidade de projeto',
+        date: 'Data',
+        voltage: 'Voltagem do núcleo',
+        voltageRange: 'Intervalo de voltagem',
+        powerRange: 'Intervalo de energia',
+        details: 'Detalhes',
+        doubleClickHint: 'Clique duas vezes para todos os dados do sensor',
+        showDetails: 'Mostrar detalhes',
+        hideDetails: 'Ocultar detalhes',
+        chartEmpty: 'A aguardar dados dos sensores',
+        refreshInterval: 'Intervalo de atualização',
+        detail: {
+          power: 'Energia',
+          powerCores: 'Núcleos',
+          powerMemory: 'Memória',
+          powerPlatform: 'Plataforma',
+          pCoreClock: 'Relógio do núcleo P',
+          eCoreClock: 'Relógio do núcleo E',
+          memoryUsage: 'Utilização da memória',
+          sharedMemoryUsage: 'Utilização da memória partilhada',
+          vramUsage: 'Utilização da VRAM',
+          hotSpot: 'Ponto quente da GPU',
+          pcieThroughput: 'Largura de banda PCIe',
+          designCapacity: 'Capacidade de projeto',
+          fullChargeCapacity: 'Capacidade de carga total',
+          vramClock: 'Relógio da VRAM',
+          currentPower: 'Energia atual'
+        }
       },
-      items: {
-        groups: {
-          game: 'Jogo',
-          cpu: 'CPU',
-          gpu: 'GPU',
-          pch: 'PCH'
+      group: {
+        power: 'Energia',
+        graphics: 'Gráficos',
+        display: 'Ecrã',
+        other: 'Outros',
+        custom: 'Personalizado'
+      },
+      card: {
+        error: 'Falha ao aplicar a definição',
+        config: 'Definições avançadas',
+        configComingSoon: 'As definições avançadas estarão disponíveis numa versão futura',
+        notSupported: 'Não compatível com este dispositivo'
+      }
+    },
+    balanceMode: {
+      title: 'Definições do modo de equilíbrio',
+      aiEngine: 'Ativar AI Engine',
+      aiEngineDesc: 'Deteta automaticamente quando certos jogos estão a correr e ajusta a performance da CPU e da GPU. A temperatura e o ruído das ventoinhas podem aumentar.'
+    },
+    godMode: {
+      title: 'Definições do modo personalizado',
+      activePreset: 'Predefinição ativa',
+      presetName: 'Nome da predefinição',
+      name: 'Nome',
+      errorLoad: 'Não foi possível carregar as definições.',
+      errorApply: 'Não foi possível aplicar as definições',
+      applySuccess: 'As definições do modo personalizado foram aplicadas com sucesso.',
+      defaultPresetName: 'Predefinição',
+      cpu: {
+        title: 'CPU',
+        longTermPL: 'Limite de energia a longo prazo',
+        'longTermPL.desc': 'O consumo de energia contínuo que a CPU pode alcançar.',
+        shortTermPL: 'Limite de energia a curto prazo',
+        'shortTermPL.desc': 'O consumo de energia máximo que a CPU pode alcançar num curto período de tempo.',
+        peakPL: 'Limite de energia máximo',
+        'peakPL.desc': 'O consumo de energia instantâneo máximo que a CPU pode alcançar.',
+        crossLoading: 'Limite de energia a longo prazo (Cross Loading)',
+        'crossLoading.desc': 'O consumo de energia máximo que a CPU pode alcançar quando tanto a CPU como a GPU estão totalmente utilizadas.',
+        pl1Tau: 'Duração do limite de energia a curto prazo',
+        'pl1Tau.desc': 'O período de tempo durante o qual a CPU pode fazer boost e usar o Limite de Energia a Curto Prazo. Quando expira, é usado o Limite de Energia a Longo Prazo.',
+        apuSppt: 'Limite de energia APU sPPT',
+        'apuSppt.desc': 'O consumo de energia máximo que a CPU pode alcançar com um pequeno atraso.',
+        tempLimit: 'Limite de temperatura da CPU',
+        'tempLimit.desc': 'A temperatura máxima que a CPU pode atingir antes de a frequência e a energia serem reduzidas.'
+      },
+      gpu: {
+        title: 'GPU',
+        dynamicBoost: 'Dynamic Boost',
+        'dynamicBoost.desc': 'A potência máxima adicional que pode ser atribuída à GPU com base no consumo de energia da CPU.',
+        ctgp: 'TGP configurável',
+        'ctgp.desc': 'A quantidade adicional de energia que pode ser atribuída à GPU para além do consumo de energia base.',
+        tempLimit: 'Limite de temperatura da GPU',
+        'tempLimit.desc': 'A temperatura máxima que a GPU pode atingir antes de a frequência e a energia serem reduzidas.',
+        totalProcessingPowerTarget: 'Alvo de energia total do processador em AC',
+        'totalProcessingPowerTarget.desc': 'O ponto em que a CPU ativa o ajuste dinâmico do consumo de energia para a GPU.',
+        toCpuDynamicBoost: 'Dynamic Boost da GPU para CPU',
+        'toCpuDynamicBoost.desc': 'Esta é a potência máxima adicional que pode ser atribuída à CPU a partir da GPU com base na utilização da CPU. Quanto maior o valor, melhor a performance das aplicações que utilizam a CPU.'
+      },
+      fans: {
+        title: 'Ventoinhas',
+        curve: 'Curva da ventoinha',
+        curveMessage: 'A velocidade da ventoinha segue o valor mais alto dos sensores de CPU, GPU ou heatsink. Passa o rato por cada passo para veres os valores exatos.',
+        maxSpeed: 'Velocidade máxima da ventoinha',
+        maxSpeedWarning: 'O uso prolongado desta opção vai degradar as ventoinhas, diminuindo a sua longevidade.\nA sério, tem cuidado com esta opção!'
+      },
+      advanced: {
+        title: 'Avançado',
+        message: 'Não alteres as opções abaixo a menos que saibas realmente o que estás a fazer.',
+        maxOffset: 'Offset máximo',
+        maxOffsetWarning: 'Valores mais altos podem causar comportamento imprevisível. Deixa em 0 se não tiveres a certeza.',
+        minOffset: 'Offset mínimo',
+        minOffsetWarning: 'Valores mais baixos podem causar comportamento imprevisível. Deixa em 0 se não tiveres a certeza.',
+        invalidOffset: 'Introduz um número inteiro antes de guardar.'
+      },
+      vantageWarning: 'As definições do modo personalizado não serão aplicadas corretamente quando o Lenovo Vantage ou os seus serviços estiverem a correr.',
+      legionZoneWarning: 'As definições do modo personalizado não serão aplicadas corretamente quando o Legion Zone ou os seus serviços estiverem a correr.'
+    },
+    overclock: {
+      title: 'Definições de overclock da GPU',
+      preset: 'Predefinição',
+      coreOffset: 'Offset da frequência do núcleo',
+      memoryOffset: 'Offset da frequência da memória',
+      namePlaceholder: 'Nome...',
+      newProfileName: 'Predefinição',
+      loadError: 'Não foi possível carregar as definições de overclock.'
+    },
+    feature: {
+      powerMode: 'Modo de energia',
+      'powerMode.desc': 'Alterar o modo de desempenho.\nO modo de desempenho também pode ser alterado com Fn+Q.',
+      'powerMode.hint': 'Podes alterá-lo rapidamente com o atalho Fn+Q.',
+      'powerMode.warning': 'O modo de desempenho pode não funcionar corretamente quando o carregador não está ligado.',
+      battery: 'Modo de carga da bateria',
+      'battery.desc': 'Escolhe o modo de carga da bateria. O modo de conservação limita o nível de carga para prolongar a vida útil da bateria, enquanto o modo de carga rápida carrega com maior potência.',
+      batteryNightCharge: 'Carga da bateria durante a noite',
+      'batteryNightCharge.desc': 'Quando ativado, carrega até 80% durante a noite e completa até 100% pela manhã.',
+      alwaysOnUsb: 'USB sempre ligado',
+      'alwaysOnUsb.desc': 'Mantém as portas USB com energia quando o computador está desligado, em suspensão ou em hibernação. Normalmente, apenas a porta USB marcada com um ícone de bateria no portátil é afetada.',
+      instantBoot: 'Arranque instantâneo',
+      'instantBoot.desc': 'Liga o computador assim que a energia é ligada.',
+      flipToStart: 'Abrir para ligar',
+      'flipToStart.desc': 'Abrir a tampa liga automaticamente o portátil.',
+      fnLock: 'Bloqueio Fn',
+      'fnLock.desc': 'Quando ativado, as funções podem ser acionadas sem premir Fn. Prime Fn juntamente com as teclas F1 a F12 originais para as acionar.',
+      gSync: 'GSync',
+      'gSync.desc': 'Ativar ou desativar a taxa de atualização variável G-Sync',
+      hdr: 'HDR',
+      'hdr.desc': 'Ativa high dynamic range (HDR) no ecrã integrado.',
+      'hdr.warning': 'A utilização de HDR está bloqueada pelas definições do Windows.',
+      hybridMode: 'Modo híbrido',
+      'hybridMode.desc': 'O modo híbrido permite alternar entre a GPU integrada e a discreta. Desativá-lo ativa o modo direto da GPU discreta; é necessário reiniciar para que a alteração tenha efeito.',
+      igpuMode: 'Modo de GPU discreta',
+      'igpuMode.desc': 'Forçar a saída gráfica integrada para poupar energia',
+      refreshRate: 'Taxa de atualização',
+      'refreshRate.desc': 'Alterar a taxa de atualização do ecrã integrado.',
+      itsMode: 'Modo ITS',
+      'itsMode.desc': 'Solução térmica inteligente',
+      microphone: 'Microfone',
+      'microphone.desc': 'Desativar isto silencia todos os microfones disponíveis.',
+      overDrive: 'Over Drive',
+      'overDrive.desc': 'Quando ativado, faz overdrive do ecrã integrado para melhorar o tempo de resposta. Pode causar ghosting com overshoot.',
+      panelLogo: 'Luz do logótipo Legion',
+      'panelLogo.desc': 'Liga ou desliga a luz do logótipo Legion na parte de trás do dispositivo.',
+      portsBacklight: 'Luz das portas',
+      'portsBacklight.desc': 'Liga ou desliga as luzes das portas na parte de trás do dispositivo.',
+      resolution: 'Resolução',
+      'resolution.desc': 'Alterar a resolução do ecrã integrado.',
+      dpiScale: 'Escala DPI',
+      'dpiScale.desc': 'Alterar a escala do ecrã integrado.',
+      speaker: 'Altifalante',
+      touchpadLock: 'Bloqueio do touchpad',
+      'touchpadLock.desc': 'Desativa o touchpad. Recomendado quando usas um rato para evitar toques acidentais.',
+      whiteKeyboard: 'Luz do teclado',
+      'whiteKeyboard.desc': 'Usa o atalho Fn + Espaço para alternar e ajustar o brilho da luz do teclado.',
+      winKey: 'Desativar tecla Windows',
+      'winKey.desc': 'Aplica-se apenas ao teclado integrado. Quando ativado, a tecla Windows deixa de responder.',
+      oneLevelWhiteKeyboard: 'Luz do teclado',
+      'oneLevelWhiteKeyboard.desc': 'Usa o atalho Fn + Espaço para ligar ou desligar a luz de fundo.',
+      'hybridMode.states.hybrid': 'Híbrido',
+      'hybridMode.states.hybridIGPUOnly': 'Híbrido-iGPU',
+      'hybridMode.states.hybridAuto': 'Híbrido-Auto',
+      'hybridMode.states.off': 'dGPU',
+      'hybridMode.info.title': 'Sobre os modos de funcionamento da GPU',
+      'hybridMode.info.hybrid.title': 'Modo híbrido',
+      'hybridMode.info.hybrid.message': 'Tanto a GPU integrada como a discreta estão ativadas. O sistema alterna automaticamente entre elas conforme as necessidades.',
+      'hybridMode.info.hybridIgpu.title': 'Modo Híbrido-iGPU apenas',
+      'hybridMode.info.hybridIgpu.message': 'Usa apenas a GPU integrada. Este modo minimiza o consumo de energia e o ruído.',
+      'hybridMode.info.hybridIgpu.disclaimer': 'Este modo só tem efeito quando a GPU discreta não está a funcionar.',
+      'hybridMode.info.hybridAuto.title': 'Modo Híbrido-Auto',
+      'hybridMode.info.hybridAuto.message': 'Usa apenas a GPU integrada em bateria e ambas quando o carregador está ligado. Quando um carregador não standard está ligado, o sistema muda para o Modo Híbrido-iGPU apenas.',
+      'hybridMode.info.dgpu.title': 'Modo dGPU',
+      'hybridMode.info.dgpu.message': 'Usa apenas a GPU discreta. Este modo proporciona a melhor performance gráfica, mas aumenta o consumo de energia.',
+      'hybridMode.info.dgpu.disclaimer': 'Mudar de e para este modo requer um reinício.',
+      'hybridMode.restartRequired.title': 'É necessário reiniciar',
+      'hybridMode.restartRequired.message': 'Mudar para {{mode}} requer um reinício. Queres reiniciar agora?',
+      'hybridMode.restartRequired.now': 'Reiniciar agora',
+      'hybridMode.restartRequired.later': 'Vou reiniciar mais tarde',
+      'hybridMode.restartFailed': 'Não foi possível reiniciar o computador automaticamente. Reinicia-o manualmente para concluir a alteração.',
+      'hybridMode.changeFailed.title': 'Não foi possível alterar o modo de funcionamento da GPU',
+      'hybridMode.changeFailed.message': 'Tenta alterar o modo novamente em alguns segundos, se não vires o resultado esperado. Se a dGPU não responder de todo, reinicia o portátil.',
+      batteryModes: {
+        conservation: 'Modo de conservação',
+        normal: 'Modo normal',
+        rapidCharge: 'Modo de carga rápida'
+      },
+      powerModeOptions: {
+        quiet: 'Silencioso',
+        balance: 'Equilibrado',
+        performance: 'Desempenho',
+        extreme: 'Extremo',
+        godMode: 'Personalizado'
+      }
+    },
+    common: {
+
+      loading: 'A carregar…',
+
+      deleteColor: 'Delete color',
+
+      notifications: 'Notifications',
+
+      minimize: 'Minimize',
+
+      maximize: 'Maximize',
+
+      restore: 'Restore',
+
+      windowClose: 'Close',
+
+      navigation: 'Navigation',
+
+      expandNavigation: 'Expand navigation',
+
+      collapseNavigation: 'Collapse navigation',      error: 'Algo correu mal',
+      retry: 'Tentar novamente',
+      close: 'Fechar',
+      cancel: 'Cancelar',
+      moreActions: 'Mais ações',
+      copied: 'Copiado para a área de transferência',
+      add: 'Adicionar',
+      save: 'Guardar',
+      saveAndClose: 'Guardar e fechar',
+      apply: 'Aplicar',
+      applyAndClose: 'Aplicar e fechar',
+      default: 'Predefinição',
+      rename: 'Renomear',
+      delete: 'Apagar',
+      ok: 'OK',
+      confirm: 'Confirmar',
+      resetDefault: 'Repor predefinições',
+      load: 'Carregar',
+      notSupportedOnPlatform: 'Não suportado nesta plataforma.'
+    },
+    colorPicker: {
+      hex: 'Hex',
+      red: 'Vermelho',
+      green: 'Verde',
+      blue: 'Azul',
+      ok: 'OK'
+    },
+    fanCurve: {
+      fanSpeed: 'Velocidade da ventoinha',
+      fanSpeedMax: '100%',
+      cpu: 'CPU',
+      cpuSensor: 'Sensor da CPU',
+      gpu: 'GPU',
+      gpu2: 'GPU nº2',
+      rpm: 'RPM'
+    },
+    pages: {
+      placeholder: 'Em breve'
+    },
+    settings: {
+      title: 'Definições',
+      description: 'Configura a aparência, o comportamento e as opções de funcionalidade da aplicação.',
+      nav: {
+        appearance: 'Aparência',
+        application: 'Aplicação',
+        power: 'Energia',
+        display: 'Ecrã',
+        smartKeys: 'Teclas inteligentes',
+        update: 'Atualização',
+        integrations: 'Integrações',
+        osd: 'OSD'
+      },
+      appearance: {
+        language: 'Idioma',
+        languageDesc: 'Escolhe o idioma',
+        temperature: 'Temperatura',
+        temperatureDesc: 'Escolhe a unidade usada pelos sensores de temperatura.',
+        theme: 'Modo de cor global da interface',
+        accentColor: 'Cor de destaque global da interface',
+        accentColorDesc: 'Altera a cor de destaque da aplicação.',
+        accentColorSource: {
+          system: 'Sistema',
+          custom: 'Personalizada'
         },
-        names: {
-          Fps: 'FPS',
-          LowFps: '1% Low',
-          FrameTime: 'Tempo de fotograma',
-          CpuFrequency: 'Relógio do núcleo',
-          CpuPCoreFrequency: 'Relógio do núcleo P',
-          CpuECoreFrequency: 'Relógio do núcleo E',
-          CpuUtilization: 'Utilização',
-          CpuTemperature: 'Temperatura',
-          CpuPower: 'Energia',
-          CpuFan: 'Ventoinha',
-          GpuFrequency: 'Relógio do núcleo',
-          GpuUtilization: 'Utilização',
-          GpuTemperature: 'Temp. do núcleo',
-          GpuVramUtilization: 'Utilização da VRAM',
-          GpuVramTemperature: 'Temp. da VRAM',
-          GpuPower: 'Energia',
-          GpuFan: 'Ventoinha',
-          MemoryUtilization: 'Utilização',
-          MemoryTemperature: 'Temperatura',
-          Disk1Temperature: 'Temperatura do disco 1',
-          Disk2Temperature: 'Temperatura do disco 2',
-          PchTemperature: 'Temperatura do PCH',
-          PchFan: 'Ventoinha'
+        appScale: 'Escala da interface',
+        appScaleDesc:
+          'Dimensiona uniformemente o texto e toda a interface, independentemente da escala de ecrã do Windows.',
+        appScaleAuto: 'Automático',
+        themeOptions: {
+          system: 'Sistema',
+          light: 'Claro',
+          dark: 'Escuro'
+        }
+      },
+      application: {
+        minimizeToTray: 'Minimizar para a bandeja',
+        minimizeToTrayDesc: 'Minimizar sempre para a bandeja em vez da barra de tarefas.',
+        minimizeOnClose: 'Minimizar ao fechar',
+        minimizeOnCloseDesc: 'Minimizar sempre para a bandeja. Quando ativado, clica com o botão direito no ícone da bandeja e clica em Fechar para sair da aplicação.',
+        disableUnsupportedWarning: 'Não avisar sobre dispositivos incompatíveis',
+        disableUnsupportedWarningDesc: 'Ocultar o aviso de dispositivo incompatível mostrado no arranque.',
+        enableHardwareSensors: 'Sensores de hardware',
+        enableHardwareSensorsDesc: 'Ativa a monitorização avançada de hardware para acompanhar temperaturas, frequências e limites de energia detalhados.',
+        dontShowNotifications: 'Não mostrar notificações',
+        dontShowNotificationsDesc: 'Desativa notificações na aplicação e no sistema',
+        autorun: 'Iniciar no início de sessão',
+        autorunDesc: 'Inicia a aplicação quando inicias sessão no Windows.',
+        autorunDescLoginItem: 'Inicie o aplicativo ao entrar neste computador.',
+        autorunUnavailable: 'Iniciar no login não está disponível na visualização do navegador.',
+        autorunOptions: {
+          enabled: 'Ativado',
+          enabledDelayed: 'Ativado (com atraso)',
+          disabled: 'Desativado'
+        },
+        groupStartup: 'Arranque e janela',
+        groupSensors: 'Sensores de hardware',
+        groupNotifications: 'Notificações e avisos',
+        groupSoftware: 'Conflitos de software',
+        animationsEnabled: 'Animações da interface',
+        animationsEnabledDesc: 'Anima janelas, diálogos e outros elementos da interface. Desative para reduzir o movimento.',
+        sensorRefreshInterval: 'Intervalo de atualização dos sensores',
+        sensorRefreshIntervalDesc: 'Com que frequência os valores dos sensores são atualizados. Também podes clicar com o botão direito no cartão de sensores para o alterar temporariamente.',
+        extensionsEnabled: 'Ativar extensões',
+        extensionsEnabledDesc: 'Ativa o carregamento de plugins e extensões',
+        sensorSections: 'Secções de sensores',
+        sensorSectionsDesc: 'Escolhe quais as secções de sensores mostradas e em que ordem.',
+        disableVantage: 'Desativar Lenovo Vantage',
+        disableVantageDesc: 'Desativa o Lenovo Vantage e o ImController sem os desinstalar.\nÉ recomendado reiniciar depois de alterar esta opção.',
+        disableLegionZone: 'Desativar Legion Zone',
+        disableLegionZoneDesc: 'Desativa o Legion Zone e o seu serviço sem o desinstalar.\nÉ recomendado reiniciar depois de alterar esta opção.',
+        disableLenovoHotkeys: 'Desativar Lenovo Hotkeys',
+        disableLenovoHotkeysDesc: 'Desativa o Lenovo Hotkeys e o seu serviço sem o desinstalar.\nSe desativado, esta aplicação tratará dos atalhos Fn.\nÉ recomendado reiniciar depois de alterar esta opção.',
+        valueOn: 'Ligado',
+        valueOff: 'Desligado'
+      },
+      saved: 'Definições guardadas',
+      saveFailed: 'Falha ao guardar as definições',
+      osd: {
+        title: 'OSD',
+        showOsd: 'Mostrar OSD',
+        showOsdDesc: 'Mostra a sobreposição no ecrã imediatamente.',
+        style: 'Estilo da sobreposição',
+        styles: {
+          panel: 'Painel',
+          bar: 'Barra'
+        },
+        refreshInterval: 'Intervalo de atualização',
+        snapThreshold: 'Limite de ajuste',
+        lockPosition: 'Bloquear posição',
+        resetPosition: 'Repor posição',
+        previewHint: 'Pré-visualização',
+        tabs: {
+          general: 'Geral',
+          appearance: 'Aparência',
+          thresholds: 'Limiares',
+          sensors: 'Sensores'
+        },
+        opacity: 'Opacidade',
+        cornerRadius: 'Raio dos cantos',
+        cornerRadiusTop: 'Superior',
+        cornerRadiusBottom: 'Inferior',
+        fontSize: 'Tamanho da letra',
+        background: 'Cor de fundo',
+        category: 'Cor da categoria',
+        label: 'Cor do rótulo',
+        value: 'Cor do valor',
+        warning: 'Cor de aviso',
+        critical: 'Cor crítica',
+        separator: 'Cor do separador',
+        thresholds: {
+          performance: 'Desempenho',
+          fpsRedline: 'FPS Mínimo',
+          lowFpsDelta: 'Diferença de FPS baixo',
+          temperature: 'Temperatura',
+          usage: 'Utilização',
+          warning: 'Aviso',
+          critical: 'Crítico'
+        },
+        items: {
+          groups: {
+            game: 'Jogo',
+            cpu: 'CPU',
+            gpu: 'GPU',
+            pch: 'PCH'
+          },
+          names: {
+            Fps: 'FPS',
+            LowFps: '1% Low',
+            FrameTime: 'Tempo de fotograma',
+            CpuFrequency: 'Relógio do núcleo',
+            CpuPCoreFrequency: 'Relógio do núcleo P',
+            CpuECoreFrequency: 'Relógio do núcleo E',
+            CpuUtilization: 'Utilização',
+            CpuTemperature: 'Temperatura',
+            CpuPower: 'Energia',
+            CpuFan: 'Ventoinha',
+            GpuFrequency: 'Relógio do núcleo',
+            GpuUtilization: 'Utilização',
+            GpuTemperature: 'Temp. do núcleo',
+            GpuVramUtilization: 'Utilização da VRAM',
+            GpuVramTemperature: 'Temp. da VRAM',
+            GpuPower: 'Energia',
+            GpuFan: 'Ventoinha',
+            MemoryUtilization: 'Utilização',
+            MemoryTemperature: 'Temperatura',
+            Disk1Temperature: 'Temperatura do disco 1',
+            Disk2Temperature: 'Temperatura do disco 2',
+            PchTemperature: 'Temperatura do PCH',
+            PchFan: 'Ventoinha'
+          }
+        }
+      },
+      power: {
+        powerModeMapping: 'Sincronização do modo de energia',
+        powerModeMappingDesc: 'Ao mudar de modo de desempenho, muda automaticamente o plano de energia ou o modo de energia do Windows em sincronia.',
+        mappingModes: {
+          disabled: 'Desativado',
+          windowsPowerMode: 'Modo de energia do Windows',
+          windowsPowerPlan: 'Plano de energia do Windows'
+        },
+        windowsPowerModes: 'Modo de energia do Windows',
+        windowsPowerModesDesc: 'Escolhe o modo de energia do Windows aplicado quando o modo de energia muda.',
+        windowsPowerPlans: 'Plano de energia do Windows',
+        windowsPowerPlansDesc: 'Escolhe o plano de energia do Windows aplicado quando o modo de energia muda.',
+        synchronizeBrightness: 'Bloquear brilho do ecrã',
+        synchronizeBrightnessDesc: 'Quando ativado, o brilho mantém-se igual ao alternar entre planos de energia.',
+        smartFnLock: 'Teclas modificadoras do bloqueio inteligente Fn',
+        modifierKeys: {
+          shift: 'Shift',
+          ctrl: 'Ctrl',
+          alt: 'Alt'
+        },
+        resetBatteryOnSince: 'Repor "Em bateria desde" no arranque',
+        resetBatteryOnSinceDesc: 'Repõe o contador de "Em bateria desde" na secção da bateria quando o sistema reinicia.',
+        godModeFnQ: 'Mudar para o modo personalizado com Fn+Q',
+        godModeFnQDesc: 'Permite mudar rapidamente para o modo personalizado com Fn+Q.'
+      },
+      display: {
+        navigationItems: 'Visibilidade dos itens de navegação',
+        groupNotifications: 'Notificações',
+        groupWindow: 'Janela e exibição',
+        notificationCategories: 'Categorias e comportamento de notificação',
+        navigationKeys: {
+          keyboard: 'Luz do teclado',
+          battery: 'Bateria',
+          automation: 'Automação',
+          macro: 'Macro',
+          windowsOptimization: 'Otimização do sistema',
+          pluginExtensions: 'Plugins e extensões',
+          about: 'Sobre'
+        },
+        notificationPosition: 'Posição das notificações',
+        notificationPositions: {
+          bottomRight: 'Inferior direita',
+          bottomCenter: 'Inferior centro',
+          bottomLeft: 'Inferior esquerda',
+          centerLeft: 'Centro esquerda',
+          topLeft: 'Superior esquerda',
+          topCenter: 'Superior centro',
+          topRight: 'Superior direita',
+          centerRight: 'Centro direita',
+          center: 'Centro'
+        },
+        notificationDuration: 'Duração das notificações',
+        notificationDurations: {
+          short: 'Curta (3s)',
+          normal: 'Normal (5s)',
+          long: 'Longa (10s)'
+        },
+        excludedRefreshRates: 'Taxas de atualização excluídas',
+        excludedRefreshRatesDesc: 'Exclui taxas de atualização para tornar a alternância Fn+R mais rápida.',
+        excludedRefreshRatesHint: 'A edição avançada estará disponível numa versão futura',
+        excludedRefreshRatesEmpty: 'Sem taxas de atualização excluídas',
+        excludedRefreshRatesManageHint: 'Clica para gerir as taxas de atualização excluídas',
+        notifications: 'Notificações',
+        notificationsDesc: 'Escolhe quais as notificações mostradas.',
+        bootLogo: 'Logo de arranque',
+        bootLogoDesc: 'Personaliza o logo de arranque mostrado quando o computador inicia.'
+      },
+      smartKeys: {
+        smartFnLock: 'Bloqueio inteligente Fn',
+        smartFnLockDesc: 'Quando Alt, Ctrl ou Shift é premido, Fn é temporariamente desbloqueado.',
+        off: 'Desligado',
+        hint: 'As teclas modificadoras do bloqueio inteligente Fn podem ser alteradas nas definições de energia.',
+        singlePressActionDesc: 'Atribui uma ação rápida ao clique único de Fn+F9.',
+        doublePressActionDesc: 'Atribui uma ação rápida ao duplo clique de Fn+F9.'
+      },
+      update: {
+        frequency: 'Verificar atualizações automaticamente',
+        frequencies: {
+          perHour: 'A cada hora',
+          perThreeHours: 'A cada 3 horas',
+          perTwelveHours: 'A cada 12 horas',
+          perDay: 'Todos os dias',
+          perWeek: 'Todas as semanas',
+          perMonth: 'Todos os meses'
+        },
+        includePrerelease: 'Incluir versões preliminares',
+        includePrereleaseDesc: 'Quando desativado, apenas são disponibilizadas versões estáveis; quando ativado, também são recebidas versões preliminares (beta).',
+        repository: 'Repositório de atualizações',
+        repositoryDesc: 'Configura o repositório GitHub usado para verificar atualizações. Deixa vazio para usar o predefinido.',
+        repositoryOwner: 'Proprietário do repositório',
+        repositoryOwnerPlaceholder: 'ex.: SSC-STUDIO',
+        repositoryName: 'Nome do repositório',
+        repositoryNamePlaceholder: 'ex.: UniversalDeviceToolkit',
+        check: 'Verificar atualizações',
+        comingSoon: 'A verificação de atualizações estará disponível numa versão futura'
+      },
+      checkResult: {
+        available: 'Nova versão disponível: v{{version}}',
+        latest: 'Estás atualizado'
+      },
+      integrations: {
+        hwinfo: 'HWiNFO64',
+        hwinfoDesc: 'Partilha velocidades de ventoinhas, temperatura da bateria e outros dados com o HWiNFO64. O HWiNFO64 pode precisar de um reinício depois de alternar.',
+        cli: 'Interface de linha de comandos',
+        cliDesc: 'Ativa a interface de linha de comandos para permitir o controlo a partir da linha de comandos.'
+      }
+    },
+    keyboard: {
+      title: 'Luz do teclado',
+      unsupported: 'A luz do teclado não é suportada neste dispositivo',
+      simulatedHint: 'Modo de simulação: nenhum teclado detectado, mostrando uma interface de demonstração',
+      rgb: {
+        preset: 'Predefinição',
+        settings: 'Definições da luz',
+        effect: 'Efeito',
+        speed: 'Velocidade',
+        brightness: 'Brilho',
+        zones: 'Cores das zonas',
+        synchroniseZones: 'Sincronizar zonas',
+        presets: {
+          off: 'Desligado',
+          one: 'Predefinição 1',
+          two: 'Predefinição 2',
+          three: 'Predefinição 3',
+          four: 'Predefinição 4'
+        },
+        effectOptions: {
+          static: 'Estático',
+          breath: 'Respiração',
+          smooth: 'Suave',
+          waveRtl: 'Onda (D→E)',
+          waveLtr: 'Onda (E→D)'
+        },
+        speedOptions: {
+          slowest: 'Mais lenta',
+          slow: 'Lenta',
+          fast: 'Rápida',
+          fastest: 'Mais rápida'
+        },
+        brightnessOptions: {
+          low: 'Baixo',
+          high: 'Alto'
+        }
+      },
+      spectrum: {
+        brightness: 'Brilho',
+        profile: 'Perfil',
+        logo: 'Luz do logótipo',
+        effects: 'Efeitos',
+        colors: 'Cores',
+        addEffect: 'Adicionar efeito',
+        deleteEffect: 'Apagar',
+        noEffects: 'Sem efeitos',
+        selectAll: 'Selecionar todas as zonas',
+        deselectAll: 'Desselecionar todas as zonas',
+        switchLayout: 'Alterar o esquema do teclado',
+        editEffect: 'Editar',
+        allKeys: 'Todas as teclas',
+        zonesCount: '{{count}} zonas',
+        noLayoutHint: 'Não foi possível carregar o esquema do teclado.',
+        selectEffectHint: 'Seleciona um efeito abaixo para pré-visualizar e editar as suas teclas.',
+        frontPanelHint: 'Clica ou arrasta para selecionar as zonas do teclado e do painel frontal',
+        effectEdit: {
+          addTitle: 'Adicionar efeito',
+          editTitle: 'Editar efeito',
+          effect: 'Efeito',
+          speed: 'Velocidade',
+          direction: 'Direção',
+          clockwiseDirection: 'Direção',
+          color: 'Cor',
+          colors: 'Cores',
+          addColor: 'Adicionar cor',
+          keys: 'Teclas',
+          alwaysWarning: 'Este efeito será aplicado a todo o teclado e substituirá todos os outros efeitos.'
+        },
+        effectTypes: {
+          always: 'Sempre',
+          rainbowScrew: 'Arco-íris em espiral',
+          rainbowWave: 'Onda de arco-íris',
+          colorChange: 'Mudança de cor',
+          colorWave: 'Onda de cor',
+          colorPulse: 'Pulso de cor',
+          smooth: 'Suave',
+          rain: 'Chuva',
+          ripple: 'Ondulação',
+          type: 'Tipo',
+          audioBounce: 'Áudio Bounce',
+          audioRipple: 'Áudio Ripple',
+          auroraSync: 'Aurora Sync'
         }
       }
     },
-    power: {
-      powerModeMapping: 'Sincronização do modo de energia',
-      powerModeMappingDesc: 'Ao mudar de modo de desempenho, muda automaticamente o plano de energia ou o modo de energia do Windows em sincronia.',
-      mappingModes: {
-        disabled: 'Desativado',
-        windowsPowerMode: 'Modo de energia do Windows',
-        windowsPowerPlan: 'Plano de energia do Windows'
-      },
-      windowsPowerModes: 'Modo de energia do Windows',
-      windowsPowerModesDesc: 'Escolhe o modo de energia do Windows aplicado quando o modo de energia muda.',
-      windowsPowerPlans: 'Plano de energia do Windows',
-      windowsPowerPlansDesc: 'Escolhe o plano de energia do Windows aplicado quando o modo de energia muda.',
-      synchronizeBrightness: 'Bloquear brilho do ecrã',
-      synchronizeBrightnessDesc: 'Quando ativado, o brilho mantém-se igual ao alternar entre planos de energia.',
-      smartFnLock: 'Teclas modificadoras do bloqueio inteligente Fn',
-      modifierKeys: {
-        shift: 'Shift',
-        ctrl: 'Ctrl',
-        alt: 'Alt'
-      },
-      resetBatteryOnSince: 'Repor "Em bateria desde" no arranque',
-      resetBatteryOnSinceDesc: 'Repõe o contador de "Em bateria desde" na secção da bateria quando o sistema reinicia.',
-      godModeFnQ: 'Mudar para o modo personalizado com Fn+Q',
-      godModeFnQDesc: 'Permite mudar rapidamente para o modo personalizado com Fn+Q.'
-    },
-    display: {
-      navigationItems: 'Visibilidade dos itens de navegação',
-      navigationKeys: {
-        keyboard: 'Luz do teclado',
-        battery: 'Bateria',
-        automation: 'Automação',
-        macro: 'Macro',
-        windowsOptimization: 'Otimização do sistema',
-        pluginExtensions: 'Plugins e extensões',
-        about: 'Sobre'
-      },
-      notificationPosition: 'Posição das notificações',
-      notificationPositions: {
-        bottomRight: 'Inferior direita',
-        bottomCenter: 'Inferior centro',
-        bottomLeft: 'Inferior esquerda',
-        centerLeft: 'Centro esquerda',
-        topLeft: 'Superior esquerda',
-        topCenter: 'Superior centro',
-        topRight: 'Superior direita',
-        centerRight: 'Centro direita',
-        center: 'Centro'
-      },
-      notificationDuration: 'Duração das notificações',
-      notificationDurations: {
-        short: 'Curta (3s)',
-        normal: 'Normal (5s)',
-        long: 'Longa (10s)'
-      },
-      excludedRefreshRates: 'Taxas de atualização excluídas',
-      excludedRefreshRatesDesc: 'Exclui taxas de atualização para tornar a alternância Fn+R mais rápida.',
-      excludedRefreshRatesHint: 'A edição avançada estará disponível numa versão futura',
-      excludedRefreshRatesEmpty: 'Sem taxas de atualização excluídas',
-      excludedRefreshRatesManageHint: 'Clica para gerir as taxas de atualização excluídas',
-      notifications: 'Notificações',
-      notificationsDesc: 'Escolhe quais as notificações mostradas.',
-      bootLogo: 'Logo de arranque',
-      bootLogoDesc: 'Personaliza o logo de arranque mostrado quando o computador inicia.'
-    },
-    smartKeys: {
-      smartFnLock: 'Bloqueio inteligente Fn',
-      smartFnLockDesc: 'Quando Alt, Ctrl ou Shift é premido, Fn é temporariamente desbloqueado.',
-      off: 'Desligado',
-      hint: 'As teclas modificadoras do bloqueio inteligente Fn podem ser alteradas nas definições de energia.',
-      singlePressActionDesc: 'Atribui uma ação rápida ao clique único de Fn+F9.',
-      doublePressActionDesc: 'Atribui uma ação rápida ao duplo clique de Fn+F9.'
-    },
-    update: {
-      frequency: 'Verificar atualizações automaticamente',
-      frequencies: {
-        perHour: 'A cada hora',
-        perThreeHours: 'A cada 3 horas',
-        perTwelveHours: 'A cada 12 horas',
-        perDay: 'Todos os dias',
-        perWeek: 'Todas as semanas',
-        perMonth: 'Todos os meses'
-      },
-      includePrerelease: 'Incluir versões preliminares',
-      includePrereleaseDesc: 'Quando desativado, apenas são disponibilizadas versões estáveis; quando ativado, também são recebidas versões preliminares (beta).',
-      repository: 'Repositório de atualizações',
-      repositoryDesc: 'Configura o repositório GitHub usado para verificar atualizações. Deixa vazio para usar o predefinido.',
-      repositoryOwner: 'Proprietário do repositório',
-      repositoryOwnerPlaceholder: 'ex.: SSC-STUDIO',
-      repositoryName: 'Nome do repositório',
-      repositoryNamePlaceholder: 'ex.: UniversalDeviceToolkit',
-      check: 'Verificar atualizações',
-      comingSoon: 'A verificação de atualizações estará disponível numa versão futura'
-    },
-    checkResult: {
-      available: 'Nova versão disponível: v{{version}}',
-      latest: 'Estás atualizado'
-    },
-    integrations: {
-      hwinfo: 'HWiNFO64',
-      hwinfoDesc: 'Partilha velocidades de ventoinhas, temperatura da bateria e outros dados com o HWiNFO64. O HWiNFO64 pode precisar de um reinício depois de alternar.',
-      cli: 'Interface de linha de comandos',
-      cliDesc: 'Ativa a interface de linha de comandos para permitir o controlo a partir da linha de comandos.'
-    }
-  },
-  keyboard: {
-    title: 'Luz do teclado',
-    unsupported: 'A luz do teclado não é suportada neste dispositivo',
-    rgb: {
-      preset: 'Predefinição',
-      settings: 'Definições da luz',
-      effect: 'Efeito',
-      speed: 'Velocidade',
-      brightness: 'Brilho',
-      zones: 'Cores das zonas',
-      synchroniseZones: 'Sincronizar zonas',
-      presets: {
-        off: 'Desligado',
-        one: 'Predefinição 1',
-        two: 'Predefinição 2',
-        three: 'Predefinição 3',
-        four: 'Predefinição 4'
-      },
-      effectOptions: {
-        'static': 'Estático',
-        breath: 'Respiração',
-        smooth: 'Suave',
-        waveRtl: 'Onda (D→E)',
-        waveLtr: 'Onda (E→D)'
-      },
-      speedOptions: {
-        slowest: 'Mais lenta',
-        slow: 'Lenta',
-        fast: 'Rápida',
-        fastest: 'Mais rápida'
-      },
-      brightnessOptions: {
-        low: 'Baixo',
-        high: 'Alto'
-      }
-    },
-    spectrum: {
-      brightness: 'Brilho',
-      profile: 'Perfil',
-      logo: 'Luz do logótipo',
-      effects: 'Efeitos',
-      colors: 'Cores',
-      addEffect: 'Adicionar efeito',
-      deleteEffect: 'Apagar',
-      noEffects: 'Sem efeitos',
-      selectAll: 'Selecionar todas as zonas',
-      deselectAll: 'Desselecionar todas as zonas',
-      switchLayout: 'Alterar o esquema do teclado',
-      editEffect: 'Editar',
-      allKeys: 'Todas as teclas',
-      zonesCount: '{{count}} zonas',
-      noLayoutHint: 'Não foi possível carregar o esquema do teclado.',
-      selectEffectHint: 'Seleciona um efeito abaixo para pré-visualizar e editar as suas teclas.',
-      frontPanelHint: 'Clica ou arrasta para selecionar as zonas do teclado e do painel frontal',
-      effectEdit: {
-        addTitle: 'Adicionar efeito',
-        editTitle: 'Editar efeito',
-        effect: 'Efeito',
-        speed: 'Velocidade',
-        direction: 'Direção',
-        clockwiseDirection: 'Direção',
-        color: 'Cor',
-        colors: 'Cores',
-        addColor: 'Adicionar cor',
-        keys: 'Teclas',
-        alwaysWarning: 'Este efeito será aplicado a todo o teclado e substituirá todos os outros efeitos.'
-      },
-      effectTypes: {
-        always: 'Sempre',
-        rainbowScrew: 'Arco-íris em espiral',
-        rainbowWave: 'Onda de arco-íris',
-        colorChange: 'Mudança de cor',
-        colorWave: 'Onda de cor',
-        colorPulse: 'Pulso de cor',
-        smooth: 'Suave',
-        rain: 'Chuva',
-        ripple: 'Ondulação',
-        type: 'Tipo',
-        audioBounce: 'Áudio Bounce',
-        audioRipple: 'Áudio Ripple',
-        auroraSync: 'Aurora Sync'
-      }
-    }
-  },
-  automation: {
-    title: 'Automação',
-    enable: 'Ativar automação',
-    enableDesc: 'O Universal Device Toolkit tem de estar a correr para que as ações automáticas tenham efeito.',
-    subtitle: 'Quando ativado, esta aplicação verificará e executará as ações correspondentes por ordem quando o estado do dispositivo mudar.',
-    actionsTitle: 'Ações',
-    actionsEmpty: 'Ainda não há ações automáticas',
-    quickActionsTitle: 'Ações rápidas',
-    quickActionsEmpty: 'Ainda não há ações rápidas. Clica em "Nova" para criar uma.',
-    renamePipeline: 'Renomear pipeline',
-    changeIcon: 'Alterar ícone',
-    renamePipelineTitle: 'Renomear pipeline',
-    renamePipelinePlaceholder: 'Introduz o nome do pipeline',
-    empty: 'Ainda não há scripts de automação. Clica em "Nova" para criar um.',
-    runNow: 'Executar agora',
-    'delete': 'Apagar',
-    deleteStep: 'Apagar etapa',
-    addPipeline: 'Nova',
-    addStep: 'Adicionar etapa',
-    configure: 'Configurar',
-    stepType: 'Tipo de etapa',
-    steps: 'Etapas',
-    save: 'Guardar',
-    revert: 'Reverter',
-    pipelineName: 'Nome do pipeline',
-    pipelineNamePlaceholder: 'Introduz o nome do pipeline',
-    quickAction: 'Ação rápida',
-    optionsLoading: 'A carregar opções…',
-    stepLabels: {
-      rgbKeyboardBacklight: 'Luz do teclado',
-      run: 'Executar',
-      showMainWindow: 'Mostrar a janela principal',
-      speaker: 'Altifalante',
-      spectrumKeyboardBacklightBrightness: 'Brilho da luz do teclado',
-      spectrumKeyboardBacklightImportProfile: 'Importar perfil da luz do teclado',
-      spectrumKeyboardBacklightProfile: 'Perfil da luz do teclado',
-      touchpadLock: 'Bloqueio do touchpad',
-      turnOffMonitors: 'Desligar os ecrãs',
-      turnOffWiFi: 'Desligar o Wi-Fi',
-      turnOnWiFi: 'Ligar o Wi-Fi',
-      whiteKeyboardBacklight: 'Luz do teclado',
-      winKey: 'Bloqueio da tecla Windows',
-      scriptPath: 'Caminho do executável',
-      scriptArguments: 'Argumentos',
-      runSilently: 'Executar silenciosamente',
-      runSilentlyDesc: 'Executa aplicações de consola sem criar uma janela de consola.',
-      runWaitUntilFinished: 'Aguardar até terminar',
-      runWaitUntilFinishedDesc: 'Aguarda até o programa ou script terminar de executar',
-      runHint: 'Executa um script ou programa.\nCertifica-te primeiro de que o teu script corre corretamente.',
-      importProfilePath: 'Caminho',
-      browse: 'Procurar',
-      off: 'Desligado',
-      on: 'Ligado',
-      mute: 'Silenciar',
-      unmute: 'Ativar som',
-      low: 'Baixo',
-      high: 'Alto',
-      presetOne: 'Predefinição 1',
-      presetTwo: 'Predefinição 2',
-      presetThree: 'Predefinição 3',
-      presetFour: 'Predefinição 4',
-      values: {
+    automation: {
+      title: 'Automação',
+      enable: 'Ativar automação',
+      enableDesc: 'O Universal Device Toolkit tem de estar a correr para que as ações automáticas tenham efeito.',
+      subtitle: 'Quando ativado, esta aplicação verificará e executará as ações correspondentes por ordem quando o estado do dispositivo mudar.',
+      actionsTitle: 'Ações',
+      actionsEmpty: 'Ainda não há ações automáticas',
+      quickActionsTitle: 'Ações rápidas',
+      quickActionsHint: 'Ações rápidas estão disponíveis no menu do botão direito do ícone da bandeja.',
+      quickActionsEmpty: 'Ainda não há ações rápidas. Clica em "Nova" para criar uma.',
+      deactivateGpu: 'Desativar GPU',
+      renamePipeline: 'Renomear pipeline',
+      changeIcon: 'Alterar ícone',
+      renamePipelineTitle: 'Renomear pipeline',
+      renamePipelinePlaceholder: 'Introduz o nome do pipeline',
+      empty: 'Ainda não há scripts de automação. Clica em "Nova" para criar um.',
+      runNow: 'Executar agora',
+      delete: 'Apagar',
+      deleteStep: 'Apagar etapa',
+      addPipeline: 'Nova',
+      addStep: 'Adicionar etapa',
+      configure: 'Configurar',
+      stepType: 'Tipo de etapa',
+      steps: 'Etapas',
+      save: 'Guardar',
+      revert: 'Reverter',
+      pipelineName: 'Nome do pipeline',
+      pipelineNamePlaceholder: 'Introduz o nome do pipeline',
+      quickAction: 'Ação rápida',
+      optionsLoading: 'A carregar opções…',
+      stepLabels: {
+        rgbKeyboardBacklight: 'Luz do teclado',
+        run: 'Executar',
+        showMainWindow: 'Mostrar a janela principal',
+        speaker: 'Altifalante',
+        spectrumKeyboardBacklightBrightness: 'Brilho da luz do teclado',
+        spectrumKeyboardBacklightImportProfile: 'Importar perfil da luz do teclado',
+        spectrumKeyboardBacklightProfile: 'Perfil da luz do teclado',
+        touchpadLock: 'Bloqueio do touchpad',
+        turnOffMonitors: 'Desligar os ecrãs',
+        turnOffWiFi: 'Desligar o Wi-Fi',
+        turnOnWiFi: 'Ligar o Wi-Fi',
+        whiteKeyboardBacklight: 'Luz do teclado',
+        winKey: 'Bloqueio da tecla Windows',
+        scriptPath: 'Caminho do executável',
+        scriptArguments: 'Argumentos',
+        runSilently: 'Executar silenciosamente',
+        runSilentlyDesc: 'Executa aplicações de consola sem criar uma janela de consola.',
+        runWaitUntilFinished: 'Aguardar até terminar',
+        runWaitUntilFinishedDesc: 'Aguarda até o programa ou script terminar de executar',
+        runHint: 'Executa um script ou programa.\nCertifica-te primeiro de que o teu script corre corretamente.',
+        importProfilePath: 'Caminho',
+        browse: 'Procurar',
         off: 'Desligado',
         on: 'Ligado',
         mute: 'Silenciar',
@@ -761,685 +776,722 @@ refreshInterval: 'Intervalo de atualização',
         presetOne: 'Predefinição 1',
         presetTwo: 'Predefinição 2',
         presetThree: 'Predefinição 3',
-        presetFour: 'Predefinição 4'
-      }
-    },
-    state: {
-      on: 'Ligado',
-      off: 'Desligado',
-      hidden: 'Ocultar',
-      show: 'Mostrar',
-      toggle: 'Alternar estado',
-      quiet: 'Silencioso',
-      balance: 'Equilibrado',
-      performance: 'Desempenho',
-      extreme: 'Extremo',
-      godMode: 'Personalizado',
-      hybrid: 'Híbrido',
-      hybridIgpu: 'Híbrido-iGPU',
-      hybridAuto: 'Híbrido-Auto',
-      dgpu: 'dGPU',
-      acAdapter: 'Carregador',
-      usbPd: 'USB Power Delivery',
-      acAndUsbPd: 'Carregador e USB PD',
-      hz: '{{frequency}} Hz',
-      resolution: '{{width}} × {{height}}'
-    },
-    stepEditors: {
-      hybridMode: {
-        title: 'Modo de funcionamento da GPU',
-        desc: 'Seleciona o modo de funcionamento da GPU com base na utilização do computador e nas condições de energia.\nMudar de modo pode exigir um reinício.'
-      },
-      instantBoot: {
-        title: 'Arranque instantâneo',
-        desc: 'Liga o portátil quando um carregador é conectado.'
-      },
-      macro: {
-        title: 'Macro',
-        desc: 'Ativa ou desativa macros.'
-      },
-      microphone: {
-        title: 'Microfone',
-        desc: 'Quando desligado, os microfones serão silenciados.'
-      },
-      notification: {
-        title: 'Mostrar notificação',
-        desc: 'Mostra uma notificação com o texto introduzido.',
-        placeholder: 'Texto da notificação'
-      },
-      oneLevelWhiteKeyboardBacklight: {
-        title: 'Luz do teclado',
-        desc: 'Liga ou desliga a luz de fundo.'
-      },
-      osd: {
-        title: 'OSD',
-        desc: 'Mostrar ou ocultar o OSD'
-      },
-      overclockDiscreteGPU: {
-        title: 'Overclock da GPU',
-        desc: 'Aumenta a performance ao fazer overclock da GPU discreta.\n\nATENÇÃO: Esta ação não correrá corretamente se a GPU discreta não estiver disponível.'
-      },
-      overDrive: {
-        title: 'Over Drive',
-        desc: 'Melhora o tempo de resposta do ecrã integrado.'
-      },
-      panelLogoBacklight: {
-        title: 'Luz do logótipo do painel',
-        desc: 'Liga ou desliga a luz na tampa do portátil.'
-      },
-      playSound: {
-        title: 'Reproduzir som',
-        desc: 'São suportados formatos de música comuns como wav ou mp3.',
-        browse: 'Procurar…?',
-        none: 'Nenhum ficheiro selecionado'
-      },
-      portsBacklight: {
-        title: 'Luz das portas',
-        desc: 'Liga ou desliga a luz das portas na parte de trás do portátil.'
-      },
-      powerMode: {
-        title: 'Modo de energia',
-        desc: 'Alterar o modo de desempenho.'
-      },
-      quickAction: {
-        title: 'Ação rápida',
-        desc: 'Executa uma ação rápida guardada.',
-        placeholder: 'Seleciona uma ação rápida',
-        empty: 'Ainda não há ações rápidas. Cria primeiro um pipeline sem gatilho.'
-      },
-      refreshRate: {
-        title: 'Taxa de atualização',
-        desc: 'Altera a taxa de atualização do ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.',
-        empty: 'Sem taxas de atualização disponíveis'
-      },
-      resolution: {
-        title: 'Resolução',
-        desc: 'Altera a resolução do ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.',
-        empty: 'Sem resoluções disponíveis'
-      },
-      alwaysOnUsb: {
-        title: 'USB sempre ligado',
-        desc: 'Carrega dispositivos USB quando o portátil está desligado, em suspensão ou em hibernação.',
-        options: {
-          OnWhenSleeping: 'Ligado, em suspensão',
-          OnAlways: 'Ligado, sempre'
+        presetFour: 'Predefinição 4',
+        values: {
+          off: 'Desligado',
+          on: 'Ligado',
+          mute: 'Silenciar',
+          unmute: 'Ativar som',
+          low: 'Baixo',
+          high: 'Alto',
+          presetOne: 'Predefinição 1',
+          presetTwo: 'Predefinição 2',
+          presetThree: 'Predefinição 3',
+          presetFour: 'Predefinição 4'
         }
       },
-      battery: {
-        title: 'Modo de bateria',
-        desc: 'Escolhe como a bateria é carregada.',
-        options: {
-          Conservation: 'Conservação',
-          Normal: 'Normal',
-          RapidCharge: 'Carga rápida'
-        }
-      },
-      batteryNightCharge: {
-        title: 'Carga da bateria durante a noite',
-        desc: 'Quando ativado, este dispositivo carrega até 80% quando ligado durante a noite e termina de carregar até 100% pela manhã, quando o usares.'
-      },
-      deactivateGPU: {
-        title: 'Desativar GPU',
-        desc: 'Desativa a GPU discreta se estiver ativa desnecessariamente.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado ou se o modo híbrido não estiver ativo.',
-        options: {
-          KillApps: 'Fechar aplicações',
-          RestartGPU: 'Reiniciar GPU'
-        }
-      },
-      delay: {
-        title: 'Atraso',
-        desc: 'Adiciona um atraso antes de executar a etapa seguinte.',
-        second_one: '{{count}} segundo',
-        second_other: '{{count}} segundos'
-      },
-      displayBrightness: {
-        title: 'Brilho do ecrã',
-        desc: 'Altera o brilho do ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.',
-        percent: '{{value}}%'
-      },
-      dpiScale: {
-        title: 'DPI',
-        desc: 'Altera a escala do ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.',
-        percent: '{{value}}%'
-      },
-      flipToStart: {
-        title: 'Abrir para ligar',
-        desc: 'Liga o portátil quando abres a tampa.'
-      },
-      fnLock: {
-        title: 'Bloqueio Fn',
-        desc: 'Usa as funções secundárias das teclas F1-F12 sem manter premida a tecla Fn.'
-      },
-      godModePreset: {
-        title: 'Predefinição do modo personalizado',
-        desc: 'Ativa a predefinição do modo personalizado.\nEsta definição só tem efeito quando o modo personalizado está ativado.'
-      },
-      hdr: {
-        title: 'HDR',
-        desc: 'Ativa high dynamic range (HDR) no ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.'
-      },
-      hideMainWindow: {
-        title: 'Ocultar a janela principal'
-      },
-      rgbKeyboardBacklight: {
-        title: 'Luz do teclado',
-        desc: 'Ajusta a predefinição da luz do teclado.'
-      },
-      run: {
-        title: 'Executar',
-        desc: 'Executa um script ou programa.\nCertifica-te primeiro de que o teu script corre corretamente.'
-      },
-      showMainWindow: {
-        title: 'Mostrar a janela principal'
-      },
-      speaker: {
-        title: 'Altifalante',
-        desc: 'Quando silenciado, todos os dispositivos de saída de áudio ativos serão silenciados.'
-      },
-      spectrumKeyboardBacklightBrightness: {
-        title: 'Brilho da luz do teclado',
-        desc: 'Ajusta o brilho da luz do teclado.'
-      },
-      spectrumKeyboardBacklightImportProfile: {
-        title: 'Importar perfil da luz do teclado',
-        desc: 'Importa e aplica a configuração da luz de fundo ao perfil atual.'
-      },
-      spectrumKeyboardBacklightProfile: {
-        title: 'Perfil da luz do teclado',
-        desc: 'Ajusta o perfil da luz do teclado.'
-      },
-      touchpadLock: {
-        title: 'Bloqueio do touchpad',
-        desc: 'Desativa o touchpad.'
-      },
-      turnOffMonitors: {
-        title: 'Desligar os ecrãs',
-        desc: 'Desliga todos os ecrãs disponíveis.'
-      },
-      turnOffWiFi: {
-        title: 'Desligar o Wi-Fi'
-      },
-      turnOnWiFi: {
-        title: 'Ligar o Wi-Fi'
-      },
-      whiteKeyboardBacklight: {
-        title: 'Luz do teclado',
-        desc: 'Ajusta o brilho da luz do teclado.'
-      },
-      winKey: {
-        title: 'Bloqueio da tecla Windows',
-        desc: 'Desativa a tecla Windows no teclado integrado.'
-      }
-    },
-    moveUp: 'Mover para cima',
-    moveDown: 'Mover para baixo',
-    noEditableParameters: 'Esta etapa não tem parâmetros editáveis.',
-    addAutomaticPipeline: 'Nova ação',
-    addQuickAction: 'Nova ação rápida',
-    quickActionName: 'Nome da ação rápida',
-    triggerPicker: {
-      title: 'Nova ação …?escolhe um gatilho'
-    },
-    triggerConfig: {
-      title: 'Configurar gatilho',
-      noEditableTriggers: 'Este gatilho não tem parâmetros configuráveis.'
-    },
-    triggerNames: {
-      aCAdapterConnected: 'Quando o carregador AC é ligado',
-      lowWattageACAdapterConnected: 'Quando um carregador AC de baixa potência é ligado',
-      aCAdapterDisconnected: 'Quando o carregador AC é desligado',
-      powerMode: 'Quando o modo de energia muda',
-      godModePresetChanged: 'Quando a predefinição do modo personalizado muda',
-      gamesAreRunning: 'Quando um jogo está a correr',
-      gamesStop: 'Quando um jogo fecha',
-      processesAreRunning: 'Quando uma aplicação inicia',
-      processesStopRunning: 'Quando uma aplicação fecha',
-      userInactivity: 'Quando o utilizador fica inativo',
-      userInactivityZero: 'Quando o utilizador fica ativo',
-      sessionLock: 'Sessão bloqueada',
-      sessionUnlock: 'Sessão desbloqueada',
-      lidOpened: 'Tampa aberta',
-      lidClosed: 'Tampa fechada',
-      displayOn: 'Quando os ecrãs ligam',
-      displayOff: 'Quando os ecrãs desligam',
-      hdrOn: 'Quando o HDR liga',
-      hdrOff: 'Quando o HDR desliga',
-      deviceConnected: 'Quando um dispositivo é ligado',
-      deviceDisconnected: 'Quando um dispositivo é desligado',
-      externalDisplayConnected: 'Quando um ecrã externo é ligado',
-      externalDisplayDisconnected: 'Quando um ecrã externo é desligado',
-      wiFiConnected: 'Quando o Wi-Fi é ligado',
-      wiFiDisconnected: 'Quando o Wi-Fi é desligado',
-      time: 'A uma hora específica',
-      periodic: 'Ação periódica',
-      hardwareSensor: 'Sensor de hardware',
-      batteryPercentage: 'Percentagem de bateria',
-      onStartup: 'No arranque',
-      onResume: 'Ao retomar'
-    },
-    triggerEditors: {
-      noProcesses: 'Sem processos selecionados.',
-      noDevices: 'Sem dispositivos selecionados.',
-      inactivityTimeout: 'Tempo limite',
-      seconds: '{{count}} segundos',
-      minutes: '{{count}} minutos',
-      hours: '{{count}} horas',
-      ssidPlaceholder: 'Nome da rede (SSID)',
-      addSsid: 'Adicionar nome de rede',
-      atTime: 'Às',
-      hour: 'Hora',
-      minute: 'Minuto',
-      allDays: 'Todos os dias',
-      day: {
-        '0': 'Domingo',
-        '1': 'Segunda-feira',
-        '2': 'Terça-feira',
-        '3': 'Quarta-feira',
-        '4': 'Quinta-feira',
-        '5': 'Sexta-feira',
-        '6': 'Sábado'
-      },
-      metric: 'Métrica',
-      comparison: 'Comparação',
-      threshold: 'Limiar',
-      thresholdPercent: 'Limiar (%)',
-      durationSeconds: 'Duração (segundos)',
-      cooldownSeconds: 'Tempo de espera (segundos)',
-      chargeFilter: 'Filtro de carga',
-      deviceInstanceId: 'ID da instância do dispositivo'
-    }
-  },
-  macro: {
-    title: 'Macro do teclado',
-    enable: 'Ativar macros',
-    enableDesc: 'O Universal Device Toolkit tem de estar a correr para que as macros funcionem.',
-    subtitle: 'Podes gravar sequências de teclas e invocá-las usando o teclado numérico.',
-    numpad: 'Teclado numérico',
-    sequence: 'Sequência',
-    repeat: 'Número de repetições',
-    events: 'Eventos',
-    save: 'Guardar',
-    clear: 'Limpar',
-    play: 'Reproduzir',
-    record: 'Gravar',
-    recordingOptions: 'Opções de gravação',
-    ignoreDelays: 'Ignorar atrasos',
-    interruptOnOtherKey: 'Interromper com outra tecla',
-    dontRepeat: 'Não repetir',
-    keyboardOnly: 'Apenas teclado',
-    keyboardMouse: 'Teclas do teclado e botões do rato',
-    allInputs: 'Todas as entradas',
-    recordingInterrupted: 'Gravação interrompida',
-    keyboard: 'Teclado',
-    mouse: 'Rato',
-    move: 'Mover o rato',
-    wheelUp: 'Roda do rato para cima',
-    wheelDown: 'Roda do rato para baixo',
-    wheelLeft: 'Roda do rato para a esquerda',
-    wheelRight: 'Roda do rato para a direita',
-    leftButton: 'Botão esquerdo',
-    rightButton: 'Botão direito',
-    middleButton: 'Botão do meio',
-    xButton: 'Botão X',
-    button: 'Botão do rato',
-    empty: 'Ainda não há sequência de macro para esta tecla',
-    recording: {
-      preparing: 'A gravação começará em 3 segundos...',
-      title: 'A gravar...',
-      pressEscToStop: 'Prime ESC para parar.',
-      focusHint: 'Mantém esta janela focada durante a gravação.'
-    }
-  },
-  plugins: {
-    title: 'Plugins e extensões',
-    search: 'Pesquisar plugins',
-    filterAll: 'Todos',
-    filterInstalled: 'Instalados',
-    filterNotInstalled: 'Não instalados',
-    refresh: 'Atualizar',
-    total: '{{count}} no total',
-    summary: '{{count}} instalados',
-    updatable: '{{count}} atualização(ões) disponível(eis)',
-    install: 'Instalar',
-    update: 'Atualizar',
-    updateAvailable: 'Atualização disponível',
-    uninstall: 'Desinstalar',
-    uninstallConfirm: 'Desinstalar este plugin?',
-    uninstallFailed: 'Falha na desinstalação',
-    installed: 'Instalado',
-    online: 'Online',
-    installing: 'A instalar…?',
-    downloading: 'A transferir…?',
-    preparingDownload: 'A preparar a transferência…?',
-    downloadCompleted: 'Transferência concluída',
-    offline: 'A loja online não está disponível; apenas são mostrados os plugins instalados localmente',
-    empty: 'Não foram encontrados plugins',
-    noResults: 'Não foram encontrados plugins que correspondam à tua pesquisa.',
-    dependencies: 'Dependências',
-    dependenciesBlocked: 'Este plugin tem dependências por satisfazer e não pode ser desinstalado',
-    details: 'Detalhes',
-    usageGuide: 'Guia de utilização',
-    changelog: 'Registo de alterações',
-    importProgress: 'A importar pacotes de plugins…?',
-    importSuccess: 'Importados {{count}} pacote(s) de plugin',
-    importFailed: 'Falha ao importar {{count}} pacote(s) de plugin',
-    installAll: 'Instalar tudo',
-    installAllComplete: 'Instalados {{count}} plugin(s)',
-    installAllPartial: '{{count}} de {{total}} operações de plugins concluídas',
-    copyId: 'Copiar ID do plugin',
-    copied: 'ID do plugin copiado para a área de transferência',
-    copyFailed: 'Não foi possível copiar o ID do plugin',
-    local: 'Local',
-    collapseDetails: 'Ocultar detalhes',
-    showDetails: 'Mostrar detalhes',
-    updateInfo: 'Informações da atualização',
-    versionLabel: 'Versão:',
-    configure: 'Configurar',
-    open: 'Abrir',
-    description: 'Instala e gere plugins para expandir a funcionalidade',
-    storeUnavailable: 'Loja de plugins indisponível',
-    summaryTotal: 'Total de plugins',
-    summaryInstalled: 'Instalados',
-    summaryUpdates: 'Atualizações disponíveis',
-    importFromFiles: 'Importar de ficheiros',
-    updateAll: 'Atualizar tudo',
-    emptyStore: 'A loja de plugins está atualmente vazia. Fica atento a futuras atualizações de plugins.'
-  },
-  optimization: {
-    title: 'Otimização do sistema',
-    info: 'Estas ações modificam serviços e ficheiros do sistema e podem exigir direitos de administrador.',
-    tabs: {
-      optimization: 'Otimização do Windows',
-      cleanup: 'Limpeza',
-      driverDownload: 'Transferência de drivers',
-      networkAcceleration: 'Rede e aceleração'
-    },
-    recommended: 'Recomendado',
-    selected: 'Selecionado',
-    selectedActions: 'Ações selecionadas',
-    noSelection: 'Sem ações selecionadas',
-    selectRecommended: 'Selecionar recomendado',
-    applyRecommended: 'Aplicar todos os recomendados',
-    apply: 'Aplicar',
-    clear: 'Limpar (reverter)',
-    applied: 'Aplicado',
-    applyFailed: 'Falha ao aplicar (podem ser necessários direitos de administrador)',
-    reverted: 'Revertido',
-    revertFailed: 'Falha ao reverter (podem ser necessários direitos de administrador)',
-    estimate: 'Estimar tamanho',
-    estimateResult: 'Espaço recuperável',
-    runCleanup: 'Executar limpeza',
-    cleanupHint: 'A limpeza executa as tuas regras de limpeza personalizadas.',
-    cleanupConfirm: 'Executar a limpeza agora?',
-    cleanupDone: 'Limpeza concluída',
-    cleanupFailed: 'Falha na limpeza',
-    cleanup: {
-      scanning: 'Scanning',
-      running: 'Cleaning…',
-      done: 'Cleanup complete',
-      moreItems: 'more',
-      items: 'Items',
-      custom: {
-
-        header: 'Regras de limpeza personalizadas',
-        description: 'Pastas extra que são limpas juntamente com as ações de limpeza selecionadas.',
-        empty: 'Sem regras de limpeza personalizadas',
-        add: 'Adicionar pasta',
-        edit: 'Editar pasta',
-        remove: 'Remover',
-        clear: 'Limpar tudo',
-        added: 'Regra adicionada',
-        updated: 'Regra atualizada',
-        recursive: 'Incluir subpastas',
-        noExtensions: 'Sem extensões especificadas',
-        folderPickerFailed: 'Não foi possível abrir o seletor de pastas'
-      }
-    },
-    network: {
-      status: 'Estado',
-      running: 'A correr',
-      stopped: 'Parado',
-      backendReady: 'Backend pronto',
-      backendNotReady: 'Backend não pronto',
-      config: 'Configuração básica',
-      accelerationEnabled: 'Ativar aceleração',
-      mode: 'Modo',
-      modes: {
+      state: {
+        on: 'Ligado',
         off: 'Desligado',
-        systemProxy: 'Proxy do sistema',
-        hosts: 'Hosts',
-        diagnosticsOnly: 'Apenas diagnósticos'
+        hidden: 'Ocultar',
+        show: 'Mostrar',
+        toggle: 'Alternar estado',
+        quiet: 'Silencioso',
+        balance: 'Equilibrado',
+        performance: 'Desempenho',
+        extreme: 'Extremo',
+        godMode: 'Personalizado',
+        hybrid: 'Híbrido',
+        hybridIgpu: 'Híbrido-iGPU',
+        hybridAuto: 'Híbrido-Auto',
+        dgpu: 'dGPU',
+        acAdapter: 'Carregador',
+        usbPd: 'USB Power Delivery',
+        acAndUsbPd: 'Carregador e USB PD',
+        hz: '{{frequency}} Hz',
+        resolution: '{{width}} × {{height}}'
       },
-      save: 'Guardar configuração',
-      saved: 'Configuração guardada',
-      saveFailed: 'Falha ao guardar a configuração',
-      start: 'Iniciar',
-      stop: 'Parar',
-      startFailed: 'Falha ao iniciar',
-      stopFailed: 'Falha ao parar',
-      modeLabel: 'Modo',
-      targetsLabel: 'Alvos',
-      portLabel: 'Porta',
-      targetsHeading: 'Alvos de aceleração',
-      domainGroupsHint: 'Seleciona os serviços a acelerar através do proxy local.',
-      domainGroupsEmptyTitle: 'Sem alvos de aceleração',
-      domainGroupsEmptyDescription: 'A lista de alvos está vazia ou nada corresponde à pesquisa.',
-      selectionHint: 'Os alvos selecionados são aplicados quando a aceleração inicia.',
-      searchTargets: 'Pesquisar alvos',
-      recommendedMenu: 'Recomendado',
-      groupRuntime: '{{selected}}/{{total}} selecionados  {{active}} ativos',
-      trafficHeading: 'Visão geral do tráfego',
-      metrics: {
-        upload: 'Envio',
-        download: 'Transferência',
-        connections: 'Ligações',
-        total: 'Tráfego total',
-        health: 'Estado'
-      },
-      trafficLive: 'A recolher tráfego de proxy em tempo real',
-      trafficWaiting: 'Inicia a aceleração para recolher tráfego em tempo real',
-      trafficUnavailable: 'Os dados de tráfego estão temporariamente indisponíveis',
-      connectionsHeading: 'Ligações atuais e recentes',
-      connectionsWaiting: 'A aguardar dados de ligações…?',
-      destinationsHeading: 'Estatísticas de destinos',
-      destinationsWaiting: 'A aguardar dados de destinos…?',
-      connectionSummary: '{{active}} ativas / {{total}} no total',
-      destinationSummary: '{{count}} destinos',
-      connectionStates: {
-        active: 'Ativa',
-        completed: 'Concluída',
-        blocked: 'Bloqueada',
-        failed: 'Falhada',
-        stopped: 'Parada',
-        unknown: 'Desconhecida'
-      },
-      unknownHost: 'Anfitrião desconhecido',
-      destinationRow: '{{count}} lig.  {{latency}}',
-      health: {
-        healthy: 'Saudável',
-        degraded: 'Degradado',
-        stopped: 'Parado',
-        unknown: 'Desconhecido'
-      },
-      modeFull: {
-        systemProxy: 'Proxy do sistema',
-        hosts: 'Ficheiro hosts',
-        diagnosticsOnly: 'Apenas diagnósticos',
-        off: 'Inativo'
-      },
-      backendMissingHint: 'O worker de proxy não está disponível',
-      selectGroupsFirstHint: 'Seleciona pelo menos um alvo',
-      advancedHeading: 'Avançado',
-      advancedBody: 'Definições avançadas e recuperação da rede.',
-      portFormat: 'Porta: {{port}}',
-      dangerZoneHeading: 'Zona de perigo',
-      restoreHint: 'Restaura o estado de rede original do sistema registado antes da aceleração.',
-      restoreNetwork: 'Restaurar rede',
-      restoreConfirm: 'Restaurar o estado de rede do sistema agora?',
-      restored: 'Estado de rede restaurado',
-      diag: {
-        natTitle: 'NAT',
-        dnsTitle: 'DNS',
-        ipv6Title: 'IPv6',
-        detect: 'Detetar',
-        unknown: 'Desconhecido',
-        natTypes: {
-          OpenInternet: 'NAT aberto',
-          Nat: 'NAT',
-          UdpBlocked: 'UDP bloqueado',
-          Unknown: 'Desconhecido'
+      stepEditors: {
+        hybridMode: {
+          title: 'Modo de funcionamento da GPU',
+          desc: 'Seleciona o modo de funcionamento da GPU com base na utilização do computador e nas condições de energia.\nMudar de modo pode exigir um reinício.'
         },
-        internetConnected: 'Ligado',
-        internetUnreachable: 'Inacessível',
-        natType: 'Tipo de NAT',
-        localIp: 'IP local',
-        publicIp: 'IP público',
-        internet: 'Internet',
-        dnsDomain: 'Domínio',
-        customDns: 'DNS personalizado',
-        enableDoh: 'DoH',
-        dohUrl: 'URL DoH',
-        latency: 'Latência',
-        resolvedAddress: 'Endereço resolvido',
-        latencyFormat: '{{ms}} ms',
-        failed: 'Falhou',
-        ipv6Support: 'Suporte IPv6',
-        ipv6Address: 'Endereço IPv6',
-        ipv6SupportedFull: 'Acesso IPv6 suportado',
-        notSupported: 'Não suportado'
+        instantBoot: {
+          title: 'Arranque instantâneo',
+          desc: 'Liga o portátil quando um carregador é conectado.'
+        },
+        macro: {
+          title: 'Macro',
+          desc: 'Ativa ou desativa macros.'
+        },
+        microphone: {
+          title: 'Microfone',
+          desc: 'Quando desligado, os microfones serão silenciados.'
+        },
+        notification: {
+          title: 'Mostrar notificação',
+          desc: 'Mostra uma notificação com o texto introduzido.',
+          placeholder: 'Texto da notificação'
+        },
+        oneLevelWhiteKeyboardBacklight: {
+          title: 'Luz do teclado',
+          desc: 'Liga ou desliga a luz de fundo.'
+        },
+        osd: {
+          title: 'OSD',
+          desc: 'Mostrar ou ocultar o OSD'
+        },
+        overclockDiscreteGPU: {
+          title: 'Overclock da GPU',
+          desc: 'Aumenta a performance ao fazer overclock da GPU discreta.\n\nATENÇÃO: Esta ação não correrá corretamente se a GPU discreta não estiver disponível.'
+        },
+        overDrive: {
+          title: 'Over Drive',
+          desc: 'Melhora o tempo de resposta do ecrã integrado.'
+        },
+        panelLogoBacklight: {
+          title: 'Luz do logótipo do painel',
+          desc: 'Liga ou desliga a luz na tampa do portátil.'
+        },
+        playSound: {
+          title: 'Reproduzir som',
+          desc: 'São suportados formatos de música comuns como wav ou mp3.',
+          browse: 'Navegar…',
+          none: 'Nenhum ficheiro selecionado'
+        },
+        portsBacklight: {
+          title: 'Luz das portas',
+          desc: 'Liga ou desliga a luz das portas na parte de trás do portátil.'
+        },
+        powerMode: {
+          title: 'Modo de energia',
+          desc: 'Alterar o modo de desempenho.'
+        },
+        quickAction: {
+          title: 'Ação rápida',
+          desc: 'Executa uma ação rápida guardada.',
+          placeholder: 'Seleciona uma ação rápida',
+          empty: 'Ainda não há ações rápidas. Cria primeiro um pipeline sem gatilho.'
+        },
+        refreshRate: {
+          title: 'Taxa de atualização',
+          desc: 'Altera a taxa de atualização do ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.',
+          empty: 'Sem taxas de atualização disponíveis'
+        },
+        resolution: {
+          title: 'Resolução',
+          desc: 'Altera a resolução do ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.',
+          empty: 'Sem resoluções disponíveis'
+        },
+        alwaysOnUsb: {
+          title: 'USB sempre ligado',
+          desc: 'Carrega dispositivos USB quando o portátil está desligado, em suspensão ou em hibernação.',
+          options: {
+            OnWhenSleeping: 'Ligado, em suspensão',
+            OnAlways: 'Ligado, sempre'
+          }
+        },
+        battery: {
+          title: 'Modo de bateria',
+          desc: 'Escolhe como a bateria é carregada.',
+          options: {
+            Conservation: 'Conservação',
+            Normal: 'Normal',
+            RapidCharge: 'Carga rápida'
+          }
+        },
+        batteryNightCharge: {
+          title: 'Carga da bateria durante a noite',
+          desc: 'Quando ativado, este dispositivo carrega até 80% quando ligado durante a noite e termina de carregar até 100% pela manhã, quando o usares.'
+        },
+        deactivateGPU: {
+          title: 'Desativar GPU',
+          desc: 'Desativa a GPU discreta se estiver ativa desnecessariamente.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado ou se o modo híbrido não estiver ativo.',
+          options: {
+            KillApps: 'Fechar aplicações',
+            RestartGPU: 'Reiniciar GPU'
+          }
+        },
+        delay: {
+          title: 'Atraso',
+          desc: 'Adiciona um atraso antes de executar a etapa seguinte.',
+          second_one: '{{count}} segundo',
+          second_other: '{{count}} segundos'
+        },
+        displayBrightness: {
+          title: 'Brilho do ecrã',
+          desc: 'Altera o brilho do ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.',
+          percent: '{{value}}%'
+        },
+        dpiScale: {
+          title: 'DPI',
+          desc: 'Altera a escala do ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.',
+          percent: '{{value}}%'
+        },
+        flipToStart: {
+          title: 'Abrir para ligar',
+          desc: 'Liga o portátil quando abres a tampa.'
+        },
+        fnLock: {
+          title: 'Bloqueio Fn',
+          desc: 'Usa as funções secundárias das teclas F1-F12 sem manter premida a tecla Fn.'
+        },
+        godModePreset: {
+          title: 'Predefinição do modo personalizado',
+          desc: 'Ativa a predefinição do modo personalizado.\nEsta definição só tem efeito quando o modo personalizado está ativado.'
+        },
+        hdr: {
+          title: 'HDR',
+          desc: 'Ativa high dynamic range (HDR) no ecrã integrado.\n\nATENÇÃO: Esta ação não correrá corretamente se o ecrã interno estiver desligado.'
+        },
+        hideMainWindow: {
+          title: 'Ocultar a janela principal'
+        },
+        rgbKeyboardBacklight: {
+          title: 'Luz do teclado',
+          desc: 'Ajusta a predefinição da luz do teclado.'
+        },
+        run: {
+          title: 'Executar',
+          desc: 'Executa um script ou programa.\nCertifica-te primeiro de que o teu script corre corretamente.'
+        },
+        showMainWindow: {
+          title: 'Mostrar a janela principal'
+        },
+        speaker: {
+          title: 'Altifalante',
+          desc: 'Quando silenciado, todos os dispositivos de saída de áudio ativos serão silenciados.'
+        },
+        spectrumKeyboardBacklightBrightness: {
+          title: 'Brilho da luz do teclado',
+          desc: 'Ajusta o brilho da luz do teclado.'
+        },
+        spectrumKeyboardBacklightImportProfile: {
+          title: 'Importar perfil da luz do teclado',
+          desc: 'Importa e aplica a configuração da luz de fundo ao perfil atual.'
+        },
+        spectrumKeyboardBacklightProfile: {
+          title: 'Perfil da luz do teclado',
+          desc: 'Ajusta o perfil da luz do teclado.'
+        },
+        touchpadLock: {
+          title: 'Bloqueio do touchpad',
+          desc: 'Desativa o touchpad.'
+        },
+        turnOffMonitors: {
+          title: 'Desligar os ecrãs',
+          desc: 'Desliga todos os ecrãs disponíveis.'
+        },
+        turnOffWiFi: {
+          title: 'Desligar o Wi-Fi'
+        },
+        turnOnWiFi: {
+          title: 'Ligar o Wi-Fi'
+        },
+        whiteKeyboardBacklight: {
+          title: 'Luz do teclado',
+          desc: 'Ajusta o brilho da luz do teclado.'
+        },
+        winKey: {
+          title: 'Bloqueio da tecla Windows',
+          desc: 'Desativa a tecla Windows no teclado integrado.'
+        }
+      },
+      moveUp: 'Mover para cima',
+      moveDown: 'Mover para baixo',
+      noEditableParameters: 'Esta etapa não tem parâmetros editáveis.',
+      addAutomaticPipeline: 'Nova ação',
+      addQuickAction: 'Nova ação rápida',
+      quickActionName: 'Nome da ação rápida',
+      triggerPicker: {
+        title: 'Nova ação – escolha um gatilho'
+      },
+      triggerConfig: {
+        title: 'Configurar gatilho',
+        noEditableTriggers: 'Este gatilho não tem parâmetros configuráveis.'
+      },
+      triggerNames: {
+        aCAdapterConnected: 'Quando o carregador AC é ligado',
+        lowWattageACAdapterConnected: 'Quando um carregador AC de baixa potência é ligado',
+        aCAdapterDisconnected: 'Quando o carregador AC é desligado',
+        powerMode: 'Quando o modo de energia muda',
+        godModePresetChanged: 'Quando a predefinição do modo personalizado muda',
+        gamesAreRunning: 'Quando um jogo está a correr',
+        gamesStop: 'Quando um jogo fecha',
+        processesAreRunning: 'Quando uma aplicação inicia',
+        processesStopRunning: 'Quando uma aplicação fecha',
+        userInactivity: 'Quando o utilizador fica inativo',
+        userInactivityZero: 'Quando o utilizador fica ativo',
+        sessionLock: 'Sessão bloqueada',
+        sessionUnlock: 'Sessão desbloqueada',
+        lidOpened: 'Tampa aberta',
+        lidClosed: 'Tampa fechada',
+        displayOn: 'Quando os ecrãs ligam',
+        displayOff: 'Quando os ecrãs desligam',
+        hdrOn: 'Quando o HDR liga',
+        hdrOff: 'Quando o HDR desliga',
+        deviceConnected: 'Quando um dispositivo é ligado',
+        deviceDisconnected: 'Quando um dispositivo é desligado',
+        externalDisplayConnected: 'Quando um ecrã externo é ligado',
+        externalDisplayDisconnected: 'Quando um ecrã externo é desligado',
+        wiFiConnected: 'Quando o Wi-Fi é ligado',
+        wiFiDisconnected: 'Quando o Wi-Fi é desligado',
+        time: 'A uma hora específica',
+        periodic: 'Ação periódica',
+        hardwareSensor: 'Sensor de hardware',
+        batteryPercentage: 'Percentagem de bateria',
+        onStartup: 'No arranque',
+        onResume: 'Ao retomar'
+      },
+      triggerEditors: {
+        noProcesses: 'Sem processos selecionados.',
+        noDevices: 'Sem dispositivos selecionados.',
+        inactivityTimeout: 'Tempo limite',
+        seconds: '{{count}} segundos',
+        minutes: '{{count}} minutos',
+        hours: '{{count}} horas',
+        ssidPlaceholder: 'Nome da rede (SSID)',
+        addSsid: 'Adicionar nome de rede',
+        atTime: 'Às',
+        hour: 'Hora',
+        minute: 'Minuto',
+        allDays: 'Todos os dias',
+        day: {
+          0: 'Domingo',
+          1: 'Segunda-feira',
+          2: 'Terça-feira',
+          3: 'Quarta-feira',
+          4: 'Quinta-feira',
+          5: 'Sexta-feira',
+          6: 'Sábado'
+        },
+        metric: 'Métrica',
+        comparison: 'Comparação',
+        threshold: 'Limiar',
+        thresholdPercent: 'Limiar (%)',
+        durationSeconds: 'Duração (segundos)',
+        cooldownSeconds: 'Tempo de espera (segundos)',
+        chargeFilter: 'Filtro de carga',
+        deviceInstanceId: 'ID da instância do dispositivo'
       }
     },
-    driverDownload: {
-      comingSoon: 'A transferência de drivers estará disponível numa versão futura'
+    macro: {
+      title: 'Macro do teclado',
+      enable: 'Ativar macros',
+      enableDesc: 'O Universal Device Toolkit tem de estar a correr para que as macros funcionem.',
+      subtitle: 'Podes gravar sequências de teclas e invocá-las usando o teclado numérico.',
+      numpad: 'Teclado numérico',
+      sequence: 'Sequência',
+      repeat: 'Número de repetições',
+      events: 'Eventos',
+      save: 'Guardar',
+      clear: 'Limpar',
+      play: 'Reproduzir',
+      record: 'Gravar',
+      recordingOptions: 'Opções de gravação',
+      ignoreDelays: 'Ignorar atrasos',
+      interruptOnOtherKey: 'Interromper com outra tecla',
+      dontRepeat: 'Não repetir',
+      keyboardOnly: 'Apenas teclado',
+      keyboardMouse: 'Teclas do teclado e botões do rato',
+      allInputs: 'Todas as entradas',
+      recordingInterrupted: 'Gravação interrompida',
+      keyboard: 'Teclado',
+      mouse: 'Rato',
+      move: 'Mover o rato',
+      wheelUp: 'Roda do rato para cima',
+      wheelDown: 'Roda do rato para baixo',
+      wheelLeft: 'Roda do rato para a esquerda',
+      wheelRight: 'Roda do rato para a direita',
+      leftButton: 'Botão esquerdo',
+      rightButton: 'Botão direito',
+      middleButton: 'Botão do meio',
+      xButton: 'Botão X',
+      button: 'Botão do rato',
+      empty: 'Ainda não há sequência de macro para esta tecla',
+      recording: {
+        preparing: 'A gravação começará em 3 segundos...',
+        title: 'A gravar...',
+        pressEscToStop: 'Prime ESC para parar.',
+        focusHint: 'Mantém esta janela focada durante a gravação.'
+      }
     },
-    driver: {
-      machineType: 'Tipo de máquina',
-      machineTypePlaceholder: 'ex.: 82K3',
-      os: 'Sistema operativo',
-      downloadTo: 'Transferir para',
-      downloadToPlaceholder: 'Escolhe uma pasta para as transferências',
-      browse: 'Procurar',
-      openDownloadTo: 'Abrir pasta',
-      source: 'Origem',
-      primarySource: 'Vantage',
-      primarySourceMessage: 'Base de dados oficial de dispositivos via Vantage.',
-      secondarySource: 'PC Support',
-      secondarySourceMessage: 'Base de dados de compatibilidade do PC Support.',
-      scan: 'Analisar',
-      scanning: 'A analisar…?',
-      scanValidation: 'Introduz um tipo de máquina válido de 4 caracteres e escolhe um sistema operativo.',
-      disclaimer: 'Os pacotes vêm da origem selecionada. Instala por tua conta e risco.',
-      filter: 'Filtro',
-      onlyShowUpdates: 'Apenas atualizações',
-      sort: {
-        name: 'Ordenar por nome',
-        category: 'Ordenar por categoria',
-        date: 'Ordenar por data'
+    plugins: {
+      title: 'Plugins e extensões',
+      search: 'Pesquisar plugins',
+      filterAll: 'Todos',
+      filterInstalled: 'Instalados',
+      filterNotInstalled: 'Não instalados',
+      refresh: 'Atualizar',
+      total: '{{count}} no total',
+      summary: '{{count}} instalados',
+      updatable: '{{count}} atualização(ões) disponível(eis)',
+      install: 'Instalar',
+      update: 'Atualizar',
+      updateAvailable: 'Atualização disponível',
+      uninstall: 'Desinstalar',
+      uninstallConfirm: 'Desinstalar este plugin?',
+      uninstallFailed: 'Falha na desinstalação',
+      installed: 'Instalado',
+      online: 'Online',
+      settings: {
+        nativePageUnavailable: 'Este plugin contém páginas de UI nativas que não estão disponíveis na versão Electron. Sua funcionalidade em segundo plano continua funcionando por meio do host de back-end.',
+        capability: {
+          settingsPage: 'Página de configurações',
+          featurePage: 'Página de recursos',
+          optimizationCategory: 'Categoria de otimização',
+          executableEntryPoint: 'Entrada executável'
+        }
       },
-      selectRecommended: 'Selecionar recomendado',
-      startAll: 'Iniciar tudo',
-      pauseAll: 'Pausar tudo',
-      clearSelection: 'Limpar seleção',
-      packagesFound: '{{count}} pacotes encontrados.',
-      packagesFoundOne: '1 pacote encontrado.',
-      status: {
-        NotStarted: '',
-        Queued: 'Em fila',
-        Downloading: 'A transferir',
-        Installing: 'A instalar',
-        Completed: 'Concluído',
-        Error: 'Erro'
+      installing: 'Instalando…',
+      downloading: 'Baixando…',
+      preparingDownload: 'Preparando download…',
+      downloadCompleted: 'Transferência concluída',
+      offline: 'A loja online não está disponível; apenas são mostrados os plugins instalados localmente',
+      empty: 'Não foram encontrados plugins',
+      noResults: 'Não foram encontrados plugins que correspondam à tua pesquisa.',
+      dependencies: 'Dependências',
+      dependenciesBlocked: 'Este plugin tem dependências por satisfazer e não pode ser desinstalado',
+      details: 'Detalhes',
+      usageGuide: 'Guia de utilização',
+      changelog: 'Registo de alterações',
+      importProgress: 'Importando pacotes de plugins…',
+      importSuccess: 'Importados {{count}} pacote(s) de plugin',
+      importFailed: 'Falha ao importar {{count}} pacote(s) de plugin',
+      installAll: 'Instalar tudo',
+      installAllComplete: 'Instalados {{count}} plugin(s)',
+      installAllPartial: '{{count}} de {{total}} operações de plugins concluídas',
+      copyId: 'Copiar ID do plugin',
+      copied: 'ID do plugin copiado para a área de transferência',
+      copyFailed: 'Não foi possível copiar o ID do plugin',
+      local: 'Local',
+      collapseDetails: 'Ocultar detalhes',
+      showDetails: 'Mostrar detalhes',
+      updateInfo: 'Informações da atualização',
+      versionLabel: 'Versão:',
+      configure: 'Configurar',
+      open: 'Abrir',
+      description: 'Instala e gere plugins para expandir a funcionalidade',
+      storeUnavailable: 'Loja de plugins indisponível',
+      summaryTotal: 'Total de plugins',
+      summaryInstalled: 'Instalados',
+      summaryUpdates: 'Atualizações disponíveis',
+      importFromFiles: 'Importar de ficheiros',
+      importDesktopOnly: 'A importação de arquivos de plug-in requer o aplicativo de desktop.',
+
+
+      notFound: 'Plug-in não encontrado',
+
+      back: 'Voltar aos plug-ins',
+
+      noWebPage: 'Este plugin não possui interface web.',
+
+      pageLoadFailed: 'A página do plugin não pôde ser carregada.',
+
+      openPage: 'Abrir página do plug-in',      updateAll: 'Atualizar tudo',
+      emptyStore: 'A loja de plugins está atualmente vazia. Fica atento a futuras atualizações de plugins.'
+    },
+    optimization: {
+      title: 'Otimização do sistema',
+      info: 'Estas ações modificam serviços e ficheiros do sistema e podem exigir direitos de administrador.',
+      tabs: {
+        optimization: 'Otimização do Windows',
+        cleanup: 'Limpeza',
+        driverDownload: 'Transferência de drivers',
+        networkAcceleration: 'Rede e aceleração'
       },
       recommended: 'Recomendado',
-      isUpdate: 'Atualização',
-      reboot: {
-        recommended: 'Reinício recomendado',
-        required: 'Reinício necessário',
-        shutdown: 'Encerramento necessário'
-      },
-      oldPackageWarning: 'Este pacote tem mais de um ano; o driver pode estar desatualizado.',
-      download: 'Transferir',
-      install: 'Instalar',
-      uninstall: 'Desinstalar',
-      pause: 'Pausar',
-      openReadme: 'Abrir README',
-      hide: 'Ocultar',
-      hideAll: 'Ocultar tudo',
-      showHiddenDownloads: 'Mostrar transferências ocultas',
-      downloadInProgress: {
-        title: 'Transferências em curso',
-        message: 'Ainda há transferências a decorrer. Analisar novamente?',
-        confirm: 'Analisar'
-      },
-      empty: {
-        notScanned: {
-          title: 'Procurar pacotes de drivers',
-          message: 'Escolhe uma origem e analisa para listar transferências de drivers compatíveis.'
-        },
-        noResults: {
-          title: 'Não foram encontradas transferências de drivers',
-          message: 'Tenta outra origem, sistema operativo ou tipo de máquina.'
-        },
-        noFilterResults: {
-          title: 'Não foram encontradas transferências correspondentes',
-          message: 'Ajusta o filtro, a opção de apenas atualizações ou a lista de transferências ocultas.'
-        },
-        error: {
-          title: 'A análise de drivers não foi concluída',
-          message: 'Verifica a origem selecionada e a ligação de rede e analisa novamente.'
+      selected: 'Selecionado',
+      selectedActions: 'Ações selecionadas',
+      noSelection: 'Sem ações selecionadas',
+      selectRecommended: 'Selecionar recomendado',
+      applyRecommended: 'Aplicar todos os recomendados',
+      apply: 'Aplicar',
+      clear: 'Limpar (reverter)',
+      applied: 'Aplicado',
+      applyFailed: 'Falha ao aplicar (podem ser necessários direitos de administrador)',
+      elevationRequired:
+        'A aprovação do administrador é necessária. Confirme o prompt do UAC ou inicie o aplicativo elevado.',
+      reverted: 'Revertido',
+      revertFailed: 'Falha ao reverter (podem ser necessários direitos de administrador)',
+      estimate: 'Estimar tamanho',
+      estimateResult: 'Espaço recuperável',
+      runCleanup: 'Executar limpeza',
+      cleanupHint: 'A limpeza executa as tuas regras de limpeza personalizadas.',
+      cleanupConfirm: 'Executar a limpeza agora?',
+      cleanupDone: 'Limpeza concluída',
+      cleanupFailed: 'Falha na limpeza',
+      cleanup: {
+        items: 'Items',
+        scanning: 'Scanning',
+        running: 'Cleaning…',
+        done: 'Cleanup complete',
+        moreItems: 'more',
+        custom: {
+          header: 'Regras de limpeza personalizadas',
+          description: 'Pastas extra que são limpas juntamente com as ações de limpeza selecionadas.',
+          empty: 'Sem regras de limpeza personalizadas',
+          add: 'Adicionar pasta',
+          edit: 'Editar pasta',
+          remove: 'Remover',
+          clear: 'Limpar tudo',
+          added: 'Regra adicionada',
+          updated: 'Regra atualizada',
+          recursive: 'Incluir subpastas',
+          noExtensions: 'Sem extensões especificadas',
+          folderPickerFailed: 'Não foi possível abrir o seletor de pastas'
         }
       },
-      osOptions: {
-        windows7: 'Windows 7',
-        windows8: 'Windows 8',
-        windows10: 'Windows 10',
-        windows11: 'Windows 11'
+      network: {
+        status: 'Estado',
+        running: 'A correr',
+        stopped: 'Parado',
+        backendReady: 'Backend pronto',
+        backendNotReady: 'Backend não pronto',
+        config: 'Configuração básica',
+        accelerationEnabled: 'Ativar aceleração',
+        mode: 'Modo',
+        modes: {
+          off: 'Desligado',
+          systemProxy: 'Proxy do sistema',
+          hosts: 'Hosts',
+          diagnosticsOnly: 'Apenas diagnósticos'
+        },
+        save: 'Guardar configuração',
+        saved: 'Configuração guardada',
+        saveFailed: 'Falha ao guardar a configuração',
+        start: 'Iniciar',
+        stop: 'Parar',
+        startFailed: 'Falha ao iniciar',
+        stopFailed: 'Falha ao parar',
+        modeLabel: 'Modo',
+        targetsLabel: 'Alvos',
+        portLabel: 'Porta',
+        targetsHeading: 'Alvos de aceleração',
+        domainGroupsHint: 'Seleciona os serviços a acelerar através do proxy local.',
+        domainGroupsEmptyTitle: 'Sem alvos de aceleração',
+        domainGroupsEmptyDescription: 'A lista de alvos está vazia ou nada corresponde à pesquisa.',
+        selectionHint: 'Os alvos selecionados são aplicados quando a aceleração inicia.',
+        searchTargets: 'Pesquisar alvos',
+        recommendedMenu: 'Recomendado',
+        groupRuntime: '{{selected}}/{{total}} selecionados  {{active}} ativos',
+        trafficHeading: 'Visão geral do tráfego',
+        metrics: {
+          upload: 'Envio',
+          download: 'Transferência',
+          connections: 'Ligações',
+          total: 'Tráfego total',
+          health: 'Estado'
+        },
+        trafficLive: 'A recolher tráfego de proxy em tempo real',
+        trafficWaiting: 'Inicia a aceleração para recolher tráfego em tempo real',
+        trafficUnavailable: 'Os dados de tráfego estão temporariamente indisponíveis',
+        connectionsWaiting: 'Aguardando dados de conexão…',
+        destinationsWaiting: 'Aguardando dados de destino…',
+        connectionsHeading: 'Ligações atuais e recentes',
+        destinationsHeading: 'Estatísticas de destinos',
+        connectionSummary: '{{active}} ativas / {{total}} no total',
+        destinationSummary: '{{count}} destinos',
+        connectionStates: {
+          active: 'Ativa',
+          completed: 'Concluída',
+          blocked: 'Bloqueada',
+          failed: 'Falhada',
+          stopped: 'Parada',
+          unknown: 'Desconhecida'
+        },
+        unknownHost: 'Anfitrião desconhecido',
+        destinationRow: '{{count}} lig.  {{latency}}',
+        health: {
+          healthy: 'Saudável',
+          degraded: 'Degradado',
+          stopped: 'Parado',
+          unknown: 'Desconhecido'
+        },
+        modeFull: {
+          systemProxy: 'Proxy do sistema',
+          hosts: 'Ficheiro hosts',
+          diagnosticsOnly: 'Apenas diagnósticos',
+          off: 'Inativo'
+        },
+        backendMissingHint: 'O worker de proxy não está disponível',
+        proxyMissing:
+          'A aceleração de rede não pode ser iniciada porque NetworkProxy.exe está faltando na instalação.',
+        hostsModeRefused:
+          'O modo Hosts não é iniciado nesta página. Use proxy do sistema ou diagnóstico.',
+        startRefused:
+          'A aceleração não começou. Verifique se está ativado e se pelo menos um alvo está selecionado.',
+        selectGroupsFirstHint: 'Seleciona pelo menos um alvo',
+        advancedHeading: 'Avançado',
+        advancedBody: 'Definições avançadas e recuperação da rede.',
+        portFormat: 'Porta: {{port}}',
+        dangerZoneHeading: 'Zona de perigo',
+        restoreHint: 'Restaura o estado de rede original do sistema registado antes da aceleração.',
+        restoreNetwork: 'Restaurar rede',
+        restoreConfirm: 'Restaurar o estado de rede do sistema agora?',
+        restored: 'Estado de rede restaurado',
+        diag: {
+          natTitle: 'NAT',
+          dnsTitle: 'DNS',
+          ipv6Title: 'IPv6',
+          detect: 'Detetar',
+          unknown: 'Desconhecido',
+          natTypes: {
+            OpenInternet: 'NAT aberto',
+            Nat: 'NAT',
+            UdpBlocked: 'UDP bloqueado',
+            Unknown: 'Desconhecido'
+          },
+          internetConnected: 'Ligado',
+          internetUnreachable: 'Inacessível',
+          natType: 'Tipo de NAT',
+          localIp: 'IP local',
+          publicIp: 'IP público',
+          internet: 'Internet',
+          dnsDomain: 'Domínio',
+          customDns: 'DNS personalizado',
+          enableDoh: 'DoH',
+          dohUrl: 'URL DoH',
+          latency: 'Latência',
+          resolvedAddress: 'Endereço resolvido',
+          latencyFormat: '{{ms}} ms',
+          failed: 'Falhou',
+          ipv6Support: 'Suporte IPv6',
+          ipv6Address: 'Endereço IPv6',
+          ipv6SupportedFull: 'Acesso IPv6 suportado',
+          notSupported: 'Não suportado'
+        }
+      },
+      driverDownload: {
+        comingSoon: 'A transferência de drivers estará disponível numa versão futura'
+      },
+      driver: {
+        machineType: 'Tipo de máquina',
+        machineTypePlaceholder: 'ex.: 82K3',
+        os: 'Sistema operativo',
+        downloadTo: 'Transferir para',
+        downloadToPlaceholder: 'Escolhe uma pasta para as transferências',
+        browse: 'Procurar',
+        openDownloadTo: 'Abrir pasta',
+        source: 'Origem',
+        primarySource: 'Vantage',
+        primarySourceMessage: 'Base de dados oficial de dispositivos via Vantage.',
+        secondarySource: 'PC Support',
+        secondarySourceMessage: 'Base de dados de compatibilidade do PC Support.',
+        scan: 'Analisar',
+        scanning: 'Digitalizando…',
+        scanValidation: 'Introduz um tipo de máquina válido de 4 caracteres e escolhe um sistema operativo.',
+        disclaimer: 'Os pacotes vêm da origem selecionada. Instala por tua conta e risco.',
+        filter: 'Filtro',
+        onlyShowUpdates: 'Apenas atualizações',
+        sort: {
+          name: 'Ordenar por nome',
+          category: 'Ordenar por categoria',
+          date: 'Ordenar por data'
+        },
+        selectRecommended: 'Selecionar recomendado',
+        startAll: 'Iniciar tudo',
+        pauseAll: 'Pausar tudo',
+        clearSelection: 'Limpar seleção',
+        packagesFound: '{{count}} pacotes encontrados.',
+        packagesFoundOne: '1 pacote encontrado.',
+        status: {
+          NotStarted: '',
+          Queued: 'Em fila',
+          Downloading: 'A transferir',
+          Installing: 'A instalar',
+          Completed: 'Concluído',
+          Error: 'Erro'
+        },
+        recommended: 'Recomendado',
+        isUpdate: 'Atualização',
+        reboot: {
+          recommended: 'Reinício recomendado',
+          required: 'Reinício necessário',
+          shutdown: 'Encerramento necessário'
+        },
+        oldPackageWarning: 'Este pacote tem mais de um ano; o driver pode estar desatualizado.',
+        download: 'Transferir',
+        install: 'Instalar',
+        uninstall: 'Desinstalar',
+        pause: 'Pausar',
+        openReadme: 'Abrir README',
+        hide: 'Ocultar',
+        hideAll: 'Ocultar tudo',
+        showHiddenDownloads: 'Mostrar transferências ocultas',
+        downloadInProgress: {
+          title: 'Transferências em curso',
+          message: 'Ainda há transferências a decorrer. Analisar novamente?',
+          confirm: 'Analisar'
+        },
+        empty: {
+          notScanned: {
+            title: 'Procurar pacotes de drivers',
+            message: 'Escolhe uma origem e analisa para listar transferências de drivers compatíveis.'
+          },
+          noResults: {
+            title: 'Não foram encontradas transferências de drivers',
+            message: 'Tenta outra origem, sistema operativo ou tipo de máquina.'
+          },
+          noFilterResults: {
+            title: 'Não foram encontradas transferências correspondentes',
+            message: 'Ajusta o filtro, a opção de apenas atualizações ou a lista de transferências ocultas.'
+          },
+          error: {
+            title: 'A análise de drivers não foi concluída',
+            message: 'Verifica a origem selecionada e a ligação de rede e analisa novamente.'
+          }
+        },
+        osOptions: {
+          windows7: 'Windows 7',
+          windows8: 'Windows 8',
+          windows10: 'Windows 10',
+          windows11: 'Windows 11'
+        }
       }
-    }
-  },
-  about: {
-    title: 'Sobre',
-    appName: 'Aplicação',
-    version: 'Versão',
-    build: 'Compilação',
-    links: 'Ligações do projeto',
-    projectWebsite: 'Site do projeto no GitHub',
-    latestRelease: 'Última versão no GitHub',
-    applicationFolders: 'Pastas da aplicação',
-    data: 'Dados',
-    temp: 'Temporários',
-    pid: 'ID do processo',
-    machine: 'Modelo do dispositivo',
-    bios: 'Versão da BIOS',
-    compatible: 'Compatibilidade',
-    yes: 'Compatível',
-    no: 'Não compatível',
-    dataFolder: 'Pasta de dados',
-    thirdParty: 'Bibliotecas de terceiros',
-    copyright: 'Direitos de autor',
-    translationCredit: 'Tradução fornecida pela comunidade.'
-  },
-  statusBanner: {
-    updateAvailable: 'Atualização disponível!',
-    updateAvailableWithVersion: 'Atualização {{version}} disponível!',
-    pluginExtensionsDisabled: 'A navegação de extensões de plugins está oculta. Ativa-a em Definições …?Itens de navegação.',
-    vantageRunning: 'O Lenovo Vantage e/ou o ImController está a correr em segundo plano.',
-    legionZoneRunning: 'O Legion Zone está a correr em segundo plano.',
-    fnKeysRunning: 'O Lenovo Hotkeys está a correr em segundo plano.'
-  },
-  clipboard: {
-    copyProcesses: 'Copiar lista de processos',
-    copySuccess: 'Lista de processos copiada para a área de transferência',
-    copyFailed: 'Falha ao copiar a lista de processos'
-  },
-  notifications: {
-    mergedCount: '×{{count}}'
-  },
-
+    },
+    about: {
+      title: 'Sobre',
+      appName: 'Aplicação',
+      version: 'Versão',
+      build: 'Compilação',
+      links: 'Ligações do projeto',
+      projectWebsite: 'Site do projeto no GitHub',
+      latestRelease: 'Última versão no GitHub',
+      applicationFolders: 'Pastas da aplicação',
+      data: 'Dados',
+      temp: 'Temporários',
+      pid: 'ID do processo',
+      machine: 'Modelo do dispositivo',
+      bios: 'Versão da BIOS',
+      compatible: 'Compatibilidade',
+      yes: 'Compatível',
+      no: 'Não compatível',
+      dataFolder: 'Pasta de dados',
+      thirdParty: 'Bibliotecas de terceiros',
+      translationCredit: 'Tradução fornecida pela comunidade.',
+      copyright: 'Direitos de autor'
+    },
+    statusBanner: {
+      updateAvailable: 'Atualização disponível!',
+      updateAvailableWithVersion: 'Atualização {{version}} disponível!',
+      pluginExtensionsDisabled: 'A navegação das extensões de plug-in está oculta. Ative-o em Configurações → Itens de navegação.',
+      vantageRunning: 'O Lenovo Vantage e/ou o ImController está a correr em segundo plano.',
+      legionZoneRunning: 'O Legion Zone está a correr em segundo plano.',
+      fnKeysRunning: 'O Lenovo Hotkeys está a correr em segundo plano.'
+    },
+    clipboard: {
+      copyProcesses: 'Copiar lista de processos',
+      copySuccess: 'Lista de processos copiada para a área de transferência',
+      copyFailed: 'Falha ao copiar a lista de processos'
+    },
+    notifications: {
+      mergedCount: '×{{count}}'
+    },
     loading: {
-      automation: 'A carregar automação…?',
-      dashboard: 'A carregar painel…?',
-      settings: 'A carregar definições…?'
+      automation: 'Carregando automação…',
+      dashboard: 'Carregando painel…',
+      settings: 'Carregando configurações…'
     },
     update: {
       checkResult: {
@@ -1669,7 +1721,7 @@ refreshInterval: 'Intervalo de atualização',
     compatibilityCheckErrorWindowtitle: 'Erro de Verificação de Compatibilidade',
     compatibilityCheckErrorWindowtroubleshootingTitle: 'Passos de Resolução de Problemas',
     compatibilityCheckErrormessage: 'Ocorreu um erro ao ler informações do dispositivo.',
-    'continue': 'Continuar',
+    continue: 'Continuar',
     copiedToClipboardmessage: 'Texto copiado para a área de transferência.',
     copiedToClipboardmessagewithParam: '{0} copiado para a área de transferência.',
     copiedToClipboardtitle: 'Copiado!',
@@ -1694,7 +1746,7 @@ refreshInterval: 'Intervalo de atualização',
     crashReportNotificationunableToLoad: 'Não foi possível carregar os detalhes do relatório de falha.',
     create: 'Criar',
     createAutomationPipelineWindowtitle: 'Criar Ação',
-    customCleanupRuleWindowbrowsebutton: 'Procurar…?',
+    customCleanupRuleWindowbrowsebutton: 'Navegar',
     customCleanupRuleWindowerrorextensions: 'Por favor, introduza pelo menos uma extensão de ficheiro.',
     customCleanupRuleWindowerrorfolder: 'Por favor, escolha uma pasta.',
     customCleanupRuleWindowextensionshint: 'Separe múltiplas extensões com vírgulas (exemplo: tmp, log, bak)',
@@ -1715,10 +1767,10 @@ refreshInterval: 'Intervalo de atualização',
     dashboardPagetitle: 'Início',
     deactivateGPUAutomationStepControlmessage: 'Desativar GPU se estiver ligada desnecessariamente.\n\nATENÇÃO: Esta ação não irá correr corretamente se o ecrã interno estiver desligado ou se o modo Híbrido não estiver ativo.',
     deactivateGPUAutomationStepControltitle: 'Desativar GPU',
-    'default': 'Padrão',
+    default: 'Padrão',
     delayAutomationStepControlmessage: 'Adicionar atraso antes de executar o passo seguinte.',
     delayAutomationStepControltitle: 'Atraso',
-    'delete': 'Apagar',
+    delete: 'Apagar',
     deselectAll: 'Desselecionar todos',
     deviceAutomationPipelineTriggerTabItemContentnotConnected: 'Não ligado',
     deviceAutomationPipelineTriggerTabItemContentonlyConnected: 'Mostrar apenas dispositivos conectados',
@@ -1747,15 +1799,15 @@ refreshInterval: 'Intervalo de atualização',
     deviceSetupWindowbasicModePackName: 'Modo básico (apenas plugins e otimização)',
     deviceSetupWindowbasicModeSummary: 'Este dispositivo será iniciado no modo básico. Os controlos específicos do hardware permanecem ocultos até estar disponível um pacote de dispositivo compatível.',
     deviceSetupWindowbasicPackDetail: 'Perfil básico: plugins, otimização do sistema, idioma e tema. Os controlos de hardware permanecem ocultos.',
-    deviceSetupWindowbasicPackFormat: '{0} …?básico',
+    deviceSetupWindowbasicPackFormat: '{0} – básico',
     deviceSetupWindowconfirmButton: 'Confirmar',
     deviceSetupWindowdevicePackFormat: 'Pacote de dispositivo: {0}',
-    deviceSetupWindowdownloadingPack: 'A transferir o pacote de suporte do dispositivo…?',
+    deviceSetupWindowdownloadingPack: 'Baixando o pacote de suporte do dispositivo…',
     deviceSetupWindowhardwarePackDetail: 'Hardware completo: modos de energia, sensores, ventoinhas e controlos Lenovo quando o firmware os expõe.',
-    deviceSetupWindowhardwarePackFormat: '{0} …?hardware completo',
+    deviceSetupWindowhardwarePackFormat: '{0} – hardware completo',
     deviceSetupWindowmatchingPackHint: 'Confirmar guarda este perfil e continua. Saltar por agora mantém a predefinição e pode perguntar novamente no próximo arranque. Isto não reinicia o Windows.',
     deviceSetupWindowmatchingPackSummary: 'O Universal Device Toolkit detetou um pacote de dispositivo correspondente. Confirme-o agora para que a aplicação possa preparar as funcionalidades específicas do hardware.',
-    deviceSetupWindowpackDownloadFailed: 'Não foi possível transferir o pacote de suporte do dispositivo. Verifique a ligação e confirme para tentar novamente, ou ignore …?perguntaremos de novo no próximo arranque.',
+    deviceSetupWindowpackDownloadFailed: 'Não foi possível baixar o pacote de suporte do dispositivo. Verifique sua conexão e confirme para tentar novamente ou pule e perguntaremos novamente no próximo lançamento.',
     deviceSetupWindowpreparing: 'A preparar a configuração do dispositivo...',
     deviceSetupWindowrecommendedPackFormat: '{0} (recomendado)',
     deviceSetupWindowselectPackLabel: 'Perfil do dispositivo (pacote)',
@@ -1790,7 +1842,7 @@ refreshInterval: 'Intervalo de atualização',
     excludeRefreshRatesWindownoRefreshRatesFoundtitle: 'Não foram encontradas taxas de atualização',
     excludeRefreshRatesWindowtitle: 'Excluir taxas de atualização',
     exit: 'Sair',
-    'export': 'Exportar',
+    export: 'Exportar',
     extendedHybridModeInfoWindowautomessage: 'Usa apenas a GPU integrada quando em bateria e ambas quando o carregador está ligado. Quando um carregador não standard está ligado, o sistema muda para modo Híbrido-iGPU Apenas.',
     extendedHybridModeInfoWindowautotitle: 'Modo Híbrido-Auto',
     extendedHybridModeInfoWindowdgpudisclaimer: 'Mudar de e para este modo requer que o computador seja reiniciado.',
@@ -1885,7 +1937,7 @@ refreshInterval: 'Intervalo de atualização',
     iGPUModeChangeExceptiontitle: 'Não foi possível alterar Modo de Funcionamento da GPU',
     iGPUModeChangeExceptiontitleauto: 'dGPU está em uso ou o laptop não está com bateria',
     iGPUModeChangeExceptiontitleiGPUOnly: 'dGPU está em uso',
-    'import': 'Importar',
+    import: 'Importar',
     inactive: 'Inativa',
     information: 'Informação',
     instantBootAutomationStepControlmessage: 'Ligar o dispositivo quando um carregador é conectado.',
@@ -1958,7 +2010,7 @@ refreshInterval: 'Intervalo de atualização',
     mainWindownavigationItemsettings: 'Definições',
     mainWindownavigationItemwindowsOptimization: 'Otimização do sistema',
     mainWindowopenLogsTooltip: 'Abrir pasta de registos',
-    mainWindowpluginExtensionsDisabledNotice: 'As Extensões de Plugins estão desativadas por predefinição. Ative-as em Definições …?Itens de navegação.',
+    mainWindowpluginExtensionsDisabledNotice: 'A navegação das extensões de plug-in está oculta. Ative-o em Configurações → Itens de navegação.',
     mainWindowstopFnKeyserrormessage: 'Failed to stop Lenovo Hotkeys: {0}',
     mainWindowstopLegionZoneerrormessage: 'Failed to stop Legion Zone: {0}',
     mainWindowstopSoftwareerrortitle: 'Operation failed',
@@ -2015,7 +2067,7 @@ refreshInterval: 'Intervalo de atualização',
     networkAccelerationPageadvancedHeading: 'Avançado',
     networkAccelerationPagebackendMissinghint: 'O componente de back-end de aceleração está em falta, pelo que o início não está disponível.',
     networkAccelerationPagecontrolHeading: 'Controlo',
-    networkAccelerationPagecontrolSubtitle: 'Aceleração local opcional. Desligada por predefinição …?nunca inicia automaticamente ao arrancar.',
+    networkAccelerationPagecontrolSubtitle: 'Aceleração local opcional. Desativado por padrão – nunca inicia automaticamente na inicialização.',
     networkAccelerationPagedangerZoneHeading: 'Zona de perigo',
     networkAccelerationPagediagbackend: 'Worker de proxy',
     networkAccelerationPagediagbackendMissing: 'Não encontrado',
@@ -2038,21 +2090,21 @@ refreshInterval: 'Intervalo de atualização',
     networkAccelerationPagedomainEnabled: 'Ativado',
     networkAccelerationPagedomainGroupsEmptyDescription: 'Nenhum alvo de aceleração configurado. Os grupos predefinidos integrados são adicionados automaticamente no arranque.',
     networkAccelerationPagedomainGroupsEmptyTitle: 'Sem grupos de domínios',
-    networkAccelerationPagedomainGroupsFootnote: 'Apenas listas estáticas auditadas …?sem descarga remota de regras. Reinicie a aceleração após alterar grupos.',
+    networkAccelerationPagedomainGroupsFootnote: 'Somente listas auditadas estáticas — sem download remoto de regras. Reinicie a aceleração após mudar de grupo.',
     networkAccelerationPagedomainGroupsHint: 'Apenas os grupos ativados são aplicados pelo PAC (proxy do sistema). Todos os grupos ficam desligados por predefinição.',
     networkAccelerationPagedomainGroupsLabel: 'Grupos de domínios',
-    networkAccelerationPagedomainGroupsSummary: '{0}/{1} grupos ativados, {2} domínios (Steam/GitHub integrados, desativados por predefinição …?edite a configuração avançada se necessário).',
+    networkAccelerationPagedomainGroupsSummary: 'Grupos {0}/{1} ativados · Domínios {2} (Steam/GitHub integrado, desativado por padrão).',
     networkAccelerationPageenableHint: 'Desbloqueia a seleção do modo e o Iniciar manual. Não altera o proxy do sistema até iniciar.',
     networkAccelerationPageenableLabel: 'Permitir aceleração (apenas arranque manual)',
-    networkAccelerationPagehostsDisabledDetail: 'Hosts…?27.0.0.1 fica indisponível até existir uma origem TLS local. Escolha Proxy do sistema ou Apenas diagnósticos.',
-    networkAccelerationPagehostsDisabledNote: 'Modo Hosts desativado …?use o proxy do sistema',
+    networkAccelerationPagehostsDisabledDetail: 'Hosts→127.0.0.1 não está disponível até que exista uma origem TLS local. Escolha Proxy do sistema ou Somente diagnóstico.',
+    networkAccelerationPagehostsDisabledNote: 'Modo Hosts desabilitado – use proxy do sistema',
     networkAccelerationPagemetricUnitms: 'ms',
     networkAccelerationPagemetricUnitrate: 'KB/s',
     networkAccelerationPagemetricconnections: 'Ligações',
     networkAccelerationPagemetricdownload: 'Transferência',
     networkAccelerationPagemetriclatency: 'Latência',
     networkAccelerationPagemetricrules: 'Regras ativas',
-    networkAccelerationPagemetricunavailable: '…?',
+    networkAccelerationPagemetricunavailable: '-',
     networkAccelerationPagemetricupload: 'Envio',
     networkAccelerationPagemetricsHeading: 'Descrição geral',
     networkAccelerationPagemodeHint: 'Escolha Proxy do sistema (PAC) ou Apenas diagnósticos. A reescrita de Hosts está reservada até existir uma origem TLS local.',
@@ -2070,7 +2122,7 @@ refreshInterval: 'Intervalo de atualização',
     networkAccelerationPagerestorePartial: 'Restauro concluído com avisos:',
     networkAccelerationPageretry: 'Tentar novamente',
     networkAccelerationPagerunDiagnostics: 'Executar diagnósticos',
-    networkAccelerationPagerunningDiagnostics: 'A executar diagnósticos…?',
+    networkAccelerationPagerunningDiagnostics: 'Executando diagnóstico…',
     networkAccelerationPageselectGroupsFirsthint: 'Selecione primeiro um ou mais grupos de domínios abaixo.',
     networkAccelerationPageselectionBar: 'Ações de seleção de grupos de domínios',
     networkAccelerationPageselectionCountFormat: '{0} itens selecionados',
@@ -2085,17 +2137,17 @@ refreshInterval: 'Intervalo de atualização',
     networkAccelerationPagestateconnected: 'Ligado',
     networkAccelerationPagestatefailed: 'Falha ao iniciar',
     networkAccelerationPagestateidle: 'Não iniciado',
-    networkAccelerationPagestaterestoring: 'A restaurar…?',
-    networkAccelerationPagestatestarting: 'A iniciar…?',
-    networkAccelerationPagestatestopping: 'A parar…?',
+    networkAccelerationPagestaterestoring: 'Restaurando…',
+    networkAccelerationPagestatestarting: 'Começando…',
+    networkAccelerationPagestatestopping: 'Parando…',
     networkAccelerationPagestatusDiagnosticsOnly: 'Apenas diagnósticos (sem alterações à rede do sistema)',
     networkAccelerationPagestatusHeading: 'Estado',
     networkAccelerationPagestatusOff: 'Desligado (predefinição)',
     networkAccelerationPagestatusRunning: 'Em execução ({0}) loopback:{1}',
     networkAccelerationPagestatusStopped: 'Parado ({0})',
-    networkAccelerationPagestatusWorkerMissing: 'Binário do worker não encontrado …?compile/instale UniversalDeviceToolkit.NetworkProxy.exe',
+    networkAccelerationPagestatusWorkerMissing: 'Binário de trabalho não encontrado – construir/instalar UniversalDeviceToolkit.NetworkProxy.exe',
     networkAccelerationPagestop: 'Parar',
-    networkAccelerationPagesubtitle: 'Aceleração local opcional. Desligada por predefinição …?nunca inicia automaticamente proxy, hosts ou certificados no arranque.',
+    networkAccelerationPagesubtitle: 'Aceleração local opcional. Desativado por padrão – nunca inicia automaticamente proxy, hosts ou certificados na inicialização.',
     networkAccelerationPagetargetsHeading: 'Alvos de aceleração',
     networkAccelerationPagetitle: 'Rede e aceleração',
     no: 'Não',
@@ -2571,8 +2623,8 @@ refreshInterval: 'Intervalo de atualização',
     settingsPagelanguageinstall: 'Instalar idioma',
     settingsPagelanguageinstallFailed: 'Falha ao instalar o idioma',
     settingsPagelanguageinstalling: 'A instalar idioma',
-    settingsPagelanguageinstallingapplying: 'A extrair e instalar…?',
-    settingsPagelanguageinstallingdownload: 'A transferir pacote de idioma…?',
+    settingsPagelanguageinstallingapplying: 'Extraindo e instalando…',
+    settingsPagelanguageinstallingdownload: 'Fazendo download do pacote de idiomas…',
     settingsPagelanguageinstallingpercent: '{0}%',
     settingsPagelanguagemessage: 'Selecionar idioma.',
     settingsPagelanguagenotInstalledmessage: 'Use o botão de transferência para instalar este pacote de idioma.',
@@ -2741,6 +2793,12 @@ refreshInterval: 'Intervalo de atualização',
     update: 'Atualizar',
     updateWindowtitle: 'Atualização disponível',
     updateWindowwhatsNew: 'Novidades',
+    updateWindowreleaseNotesUnavailable: 'Notas de versão indisponíveis',
+    languageSelectorWindowsafeModeHint: 'Arranque seguro ativo: as transferências e a instalação de idiomas estão desativadas nesta sessão.',
+    languageSelectorWindowcancelled: 'Cancelado',
+    languageSelectorWindowhashMismatch: 'A verificação do pacote de idioma falhou; a transferência pode ter sido interrompida.',
+    languageSelectorWindowcorruptPackage: 'O pacote de idioma está corrompido e foi removido.',
+    symbolRegularPickerempty: 'Sem ícones disponíveis',
     watt: 'W',
     whiteKeyboardBacklightAutomationStepControlmessage: 'Ajustar o brilho da luz de fundo do teclado.',
     whiteKeyboardBacklightAutomationStepControltitle: 'Luz do teclado',
@@ -2775,7 +2833,7 @@ refreshInterval: 'Intervalo de atualização',
     windowsOptimizationPagedriverEmptynotScannedmessage: 'Escolha uma origem e analise para listar downloads de drivers compatíveis.',
     windowsOptimizationPagedriverEmptynotScannedtitle: 'Procurar pacotes de driver',
     windowsOptimizationPageestimatedCleanupSize: 'Tamanho estimado da limpeza: {0}',
-    windowsOptimizationPageestimatedCleanupSizepending: 'A estimar…?',
+    windowsOptimizationPageestimatedCleanupSizepending: 'Clique em Digitalizar para calcular o tamanho total',
     windowsOptimizationPageextensionscomingSoonmessage: 'O mercado de extensões estará disponível numa atualização futura.',
     windowsOptimizationPageextensionscomingSoontitle: 'Em Breve',
     windowsOptimizationPageinfo: 'Estas ações modificam serviços e ficheiros do sistema. Podem ser necessárias privilégios de administrador.',
@@ -2890,32 +2948,24 @@ refreshInterval: 'Intervalo de atualização',
     windowsPowerModesWindowtitle: 'Modos de Energia do Windows',
     windowsPowerPlansWindowdefaultPowerPlan: 'Padrão',
     windowsPowerPlansWindowtitle: 'Esquemas de Energia do Windows',
-
-    browse: 'Procurar…?',
+    powerModeStateQuiet: 'Silencioso',
+    powerModeStateBalance: 'Equilibrado',
+    powerModeStatePerformance: 'Desempenho',
+    powerModeStateExtreme: 'Extremo',
+    powerModeStateGodMode: 'Personalizado',
+    windowsPowerModeBestPowerEfficiency: 'Melhor eficiência energética',
+    windowsPowerModeBalanced: 'Equilibrado',
+    windowsPowerModeBestPerformance: 'Melhor desempenho',
+    sensorSectionCpu: 'CPU',
+    sensorSectionBattery: 'Bateria',
+    sensorSectionGpu: 'GPU',
+    powerPlansWindowloadError: 'Não foi possível carregar os planos de energia do Windows. Apenas o plano de energia predefinido está disponível.',
+    yes: 'Sim',
+    browse: 'Navegar…',
     commonExecutableFileDialogFilter: 'Nome do processo ou caminho do executável',
     deleteAll: 'Limpar tudo',
     updateWindowdownloadComplete: 'Transferência concluída.',
     updateWindowrestartToInstall: 'Instalar e reiniciar',
-    yes: 'Sim',
-    languageSelectorWindowcancelled: 'Cancelado',
-    languageSelectorWindowcorruptPackage: 'O pacote de idioma está corrompido e foi removido.',
-    languageSelectorWindowhashMismatch: 'A verificação do pacote de idioma falhou; a transferência pode ter sido interrompida.',
-    languageSelectorWindowsafeModeHint: 'Arranque seguro ativo: as transferências e a instalação de idiomas estão desativadas nesta sessão.',
-    powerModeStateBalance: 'Equilibrado',
-    powerModeStateExtreme: 'Extremo',
-    powerModeStateGodMode: 'Personalizado',
-    powerModeStatePerformance: 'Desempenho',
-    powerModeStateQuiet: 'Silencioso',
-    powerPlansWindowloadError: 'Não foi possível carregar os planos de energia do Windows. Apenas o plano de energia predefinido está disponível.',
-    sensorSectionBattery: 'Bateria',
-    sensorSectionCpu: 'CPU',
-    sensorSectionGpu: 'GPU',
-    symbolRegularPickerempty: 'Sem ícones disponíveis',
-    updateWindowreleaseNotesUnavailable: 'Notas de versão indisponíveis',
-    windowsPowerModeBalanced: 'Equilibrado',
-    windowsPowerModeBestPerformance: 'Melhor desempenho',
-    windowsPowerModeBestPowerEfficiency: 'Melhor eficiência energética'
   }
   }
-}
-
+})

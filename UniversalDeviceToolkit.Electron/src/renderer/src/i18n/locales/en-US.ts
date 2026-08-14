@@ -1,4 +1,28 @@
-﻿export default {
+export function withEnglishFallback<T extends { translation: Record<string, unknown> }>(locale: T): T {
+  const merge = (fallback: Record<string, unknown>, value: Record<string, unknown>): Record<string, unknown> => {
+    const result: Record<string, unknown> = { ...fallback }
+    for (const [key, localValue] of Object.entries(value)) {
+      const fallbackValue = result[key]
+      if (
+        typeof fallbackValue === 'object' &&
+        fallbackValue !== null &&
+        !Array.isArray(fallbackValue) &&
+        typeof localValue === 'object' &&
+        localValue !== null &&
+        !Array.isArray(localValue)
+      ) {
+        result[key] = merge(fallbackValue as Record<string, unknown>, localValue as Record<string, unknown>)
+      } else {
+        result[key] = localValue
+      }
+    }
+    return result
+  }
+
+  return { ...locale, translation: merge(enUS.translation, locale.translation) } as T
+}
+
+const enUS = {
   translation: {
     app: {
       name: 'Universal Device Toolkit'
@@ -2967,3 +2991,5 @@
   }
   }
 }
+
+export default enUS

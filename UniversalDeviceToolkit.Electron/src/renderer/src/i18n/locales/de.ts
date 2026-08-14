@@ -1,4 +1,6 @@
-﻿export default {
+import { withEnglishFallback } from './en-US'
+
+export default withEnglishFallback({
   translation: {
     app: {
       name: 'Universal Device Toolkit'
@@ -26,7 +28,8 @@
       hostReady: 'Backend verbunden',
       hostState: 'Backend-Status',
       hostVersion: 'Backend-Version',
-      hostUnavailable: 'Das Backend wird nicht ausgeführt. Warten Sie einen Moment und versuchen Sie es erneut, oder starten Sie die App neu.',
+      hostUnavailable:
+        'Das Backend wird nicht ausgeführt. Warten Sie einen Moment und versuchen Sie es erneut, oder starten Sie die App neu.',
       initComplete: 'Initialisierung abgeschlossen',
       safeStart: 'Sicherer Start, übersprungen',
       machine: 'Gerät',
@@ -112,8 +115,11 @@
         voltageRange: 'Spannungsbereich',
         powerRange: 'Leistungsbereich',
         details: 'Details',
+        doubleClickHint: 'Für alle Sensordaten doppelklicken',
+        showDetails: 'Details anzeigen',
+        hideDetails: 'Details ausblenden',
         chartEmpty: 'Warten auf Sensordaten',
-refreshInterval: 'Aktualisierungsintervall',
+        refreshInterval: 'Aktualisierungsintervall',
         detail: {
           power: 'Leistung',
           powerCores: 'Kerne',
@@ -142,7 +148,8 @@ refreshInterval: 'Aktualisierungsintervall',
       card: {
         error: 'Einstellung konnte nicht angewendet werden',
         config: 'Erweiterte Einstellungen',
-        configComingSoon: 'Erweiterte Einstellungen werden in einer zukünftigen Version verfügbar sein'
+        configComingSoon: 'Erweiterte Einstellungen werden in einer zukünftigen Version verfügbar sein',
+        notSupported: 'Wird auf diesem Gerät nicht unterstützt'
       }
     },
     balanceMode: {
@@ -304,17 +311,26 @@ refreshInterval: 'Aktualisierungsintervall',
       }
     },
     common: {
+
       loading: 'Wird geladen…',
+
       deleteColor: 'Delete color',
+
       notifications: 'Notifications',
+
       minimize: 'Minimize',
+
       maximize: 'Maximize',
+
       restore: 'Restore',
+
       windowClose: 'Close',
+
       navigation: 'Navigation',
+
       expandNavigation: 'Expand navigation',
-      collapseNavigation: 'Collapse navigation',
-      error: 'Etwas ist schiefgelaufen',
+
+      collapseNavigation: 'Collapse navigation',      error: 'Etwas ist schiefgelaufen',
       retry: 'Erneut versuchen',
       close: 'Schließen',
       cancel: 'Abbrechen',
@@ -326,11 +342,13 @@ refreshInterval: 'Aktualisierungsintervall',
       apply: 'Anwenden',
       applyAndClose: 'Anwenden & Schließen',
       default: 'Standard',
-      confirm: 'Bestätigen',
-      resetDefault: 'Auf Standard zurücksetzen',
       rename: 'Umbenennen',
       delete: 'Löschen',
-      ok: 'OK'
+      ok: 'OK',
+      confirm: 'Bestätigen',
+      resetDefault: 'Auf Standard zurücksetzen',
+      load: 'Laden',
+      notSupportedOnPlatform: 'Auf dieser Plattform nicht unterstützt.'
     },
     colorPicker: {
       hex: 'Hex',
@@ -377,7 +395,9 @@ refreshInterval: 'Aktualisierungsintervall',
           custom: 'Benutzerdefiniert'
         },
         appScale: 'UI-Skalierung',
-        appScaleDesc: 'Skaliert Text und die gesamte Oberfläche gleichmäßig, unabhängig von der Windows-Anzeigeskalierung.',
+        appScaleDesc:
+          'Skaliert Text und die gesamte Oberfläche gleichmäßig, unabhängig von der Windows-Anzeigeskalierung.',
+        appScaleAuto: 'Automatisch',
         themeOptions: {
           system: 'System',
           light: 'Hell',
@@ -397,6 +417,8 @@ refreshInterval: 'Aktualisierungsintervall',
         dontShowNotificationsDesc: 'In-App- und Systembenachrichtigungen deaktivieren',
         autorun: 'Bei Anmeldung starten',
         autorunDesc: 'Die Anwendung starten, wenn Sie sich bei Windows anmelden.',
+        autorunDescLoginItem: 'Starten Sie die Anwendung, wenn Sie sich an diesem Computer anmelden.',
+        autorunUnavailable: '„Beim Anmelden starten“ ist in der Browservorschau nicht verfügbar.',
         autorunOptions: {
           enabled: 'Aktiviert',
           enabledDelayed: 'Aktiviert (verzögert)',
@@ -406,11 +428,9 @@ refreshInterval: 'Aktualisierungsintervall',
         groupSensors: 'Hardware-Sensoren',
         groupNotifications: 'Benachrichtigungen & Warnungen',
         groupSoftware: 'Softwarekonflikte',
-
-
         animationsEnabled: 'UI-Animationen',
-
-        animationsEnabledDesc: 'Animiert Fenster, Dialoge und andere Oberflächenelemente. Deaktivieren, um Bewegungen zu reduzieren.',        sensorRefreshInterval: 'Sensor-Aktualisierungsintervall',
+        animationsEnabledDesc: 'Animiert Fenster, Dialoge und andere Oberflächenelemente. Deaktivieren, um Bewegungen zu reduzieren.',
+        sensorRefreshInterval: 'Sensor-Aktualisierungsintervall',
         sensorRefreshIntervalDesc: 'Wie oft die Sensorwerte aktualisiert werden. Sie können auch mit der rechten Maustaste auf die Sensorkarte klicken, um dies vorübergehend zu ändern.',
         extensionsEnabled: 'Erweiterungen aktivieren',
         extensionsEnabledDesc: 'Laden von Plugins und Erweiterungen aktivieren',
@@ -527,16 +547,11 @@ refreshInterval: 'Aktualisierungsintervall',
         godModeFnQ: 'Mit Fn+Q in den benutzerdefinierten Modus wechseln',
         godModeFnQDesc: 'Schnelles Umschalten in den benutzerdefinierten Modus mit Fn+Q ermöglichen.'
       },
-      smartKeys: {
-        smartFnLock: 'Smart Fn-Lock',
-        smartFnLockDesc: 'Wenn Alt, Strg oder Umschalt gedrückt wird, ist Fn vorübergehend entsperrt.',
-        off: 'Aus',
-        hint: 'Die Modifikatortasten für Smart Fn Lock können in den Energieeinstellungen geändert werden.',
-        singlePressActionDesc: 'Weisen Sie dem einfachen Drücken von Fn+F9 eine Schnellaktion zu.',
-        doublePressActionDesc: 'Weisen Sie dem doppelten Drücken von Fn+F9 eine Schnellaktion zu.'
-      },
       display: {
         navigationItems: 'Sichtbarkeit der Navigationselemente',
+        groupNotifications: 'Benachrichtigungen',
+        groupWindow: 'Fenster & Anzeige',
+        notificationCategories: 'Benachrichtigungskategorien und Verhalten',
         navigationKeys: {
           keyboard: 'Tastaturbeleuchtung',
           battery: 'Akku',
@@ -574,6 +589,14 @@ refreshInterval: 'Aktualisierungsintervall',
         bootLogo: 'Boot-Logo',
         bootLogoDesc: 'Passen Sie das Boot-Logo an, das beim Start des Computers angezeigt wird.'
       },
+      smartKeys: {
+        smartFnLock: 'Smart Fn-Lock',
+        smartFnLockDesc: 'Wenn Alt, Strg oder Umschalt gedrückt wird, ist Fn vorübergehend entsperrt.',
+        off: 'Aus',
+        hint: 'Die Modifikatortasten für Smart Fn Lock können in den Energieeinstellungen geändert werden.',
+        singlePressActionDesc: 'Weisen Sie dem einfachen Drücken von Fn+F9 eine Schnellaktion zu.',
+        doublePressActionDesc: 'Weisen Sie dem doppelten Drücken von Fn+F9 eine Schnellaktion zu.'
+      },
       update: {
         frequency: 'Automatisch nach Updates suchen',
         frequencies: {
@@ -609,6 +632,7 @@ refreshInterval: 'Aktualisierungsintervall',
     keyboard: {
       title: 'Tastaturbeleuchtung',
       unsupported: 'Tastaturbeleuchtung wird auf diesem Gerät nicht unterstützt',
+      simulatedHint: 'Simulationsmodus: Keine Tastatur erkannt, Demo-Oberfläche wird angezeigt',
       rgb: {
         preset: 'Vorlage',
         settings: 'Beleuchtungseinstellungen',
@@ -698,7 +722,9 @@ refreshInterval: 'Aktualisierungsintervall',
       actionsTitle: 'Aktionen',
       actionsEmpty: 'Es gibt noch keine automatischen Aktionen',
       quickActionsTitle: 'Schnellaktionen',
+      quickActionsHint: 'Schnellaktionen sind im Rechtsklickmenü des Taskleistensymbols verfügbar.',
       quickActionsEmpty: 'Es gibt noch keine Schnellaktionen. Klicken Sie auf "Neu", um eine zu erstellen.',
+      deactivateGpu: 'GPU deaktivieren',
       renamePipeline: 'Pipeline umbenennen',
       changeIcon: 'Symbol ändern',
       renamePipelineTitle: 'Pipeline umbenennen',
@@ -1049,61 +1075,6 @@ refreshInterval: 'Aktualisierungsintervall',
         deviceInstanceId: 'Geräteinstanz-ID'
       }
     },
-    plugins: {
-      title: 'Plugins & Erweiterungen',
-      search: 'Plugins suchen',
-      noResults: 'Keine Plugins gefunden, die Ihrer Suche entsprechen.',
-      filterAll: 'Alle',
-      filterInstalled: 'Installiert',
-      filterNotInstalled: 'Nicht installiert',
-      refresh: 'Aktualisieren',
-      total: '{{count}} insgesamt',
-      summary: '{{count}} installiert',
-      updatable: '{{count}} Update(s) verfügbar',
-      install: 'Installieren',
-      update: 'Aktualisieren',
-      updateAvailable: 'Update verfügbar',
-      uninstall: 'Deinstallieren',
-      uninstallConfirm: 'Dieses Plugin deinstallieren?',
-      uninstallFailed: 'Deinstallation fehlgeschlagen',
-      installed: 'Installiert',
-      online: 'Online',
-      installing: 'Wird installiert…',
-      downloading: 'Wird heruntergeladen…',
-      preparingDownload: 'Download wird vorbereitet…',
-      downloadCompleted: 'Download abgeschlossen',
-      offline: 'Online-Store nicht verfügbar; nur lokal installierte Plugins werden angezeigt',
-      empty: 'Keine Plugins gefunden',
-      dependencies: 'Abhängigkeiten',
-      dependenciesBlocked: 'Dieses Plugin hat unerfüllte Abhängigkeiten und kann nicht deinstalliert werden',
-      details: 'Details',
-      usageGuide: 'Benutzerhandbuch',
-      changelog: 'Änderungsprotokoll',
-      importProgress: 'Plugin-Pakete werden importiert…',
-      importSuccess: '{{count}} Plugin-Paket(e) importiert',
-      importFailed: '{{count}} Plugin-Paket(e) konnten nicht importiert werden',
-      installAll: 'Alle installieren',
-      installAllComplete: '{{count}} Plugin(s) installiert',
-      installAllPartial: '{{count}} von {{total}} Plugin-Operationen abgeschlossen',
-      copyId: 'Plugin-ID kopieren',
-      copied: 'Plugin-ID in die Zwischenablage kopiert',
-      copyFailed: 'Plugin-ID konnte nicht kopiert werden',
-      local: 'Lokal',
-      collapseDetails: 'Details ausblenden',
-      showDetails: 'Details anzeigen',
-      updateInfo: 'Update-Informationen',
-      versionLabel: 'Version:',
-      configure: 'Konfigurieren',
-      open: 'Öffnen',
-      description: 'Plugins installieren und verwalten, um die Funktionalität zu erweitern',
-      storeUnavailable: 'Plugin-Store nicht verfügbar',
-      summaryTotal: 'Plugins gesamt',
-      summaryInstalled: 'Installiert',
-      summaryUpdates: 'Updates verfügbar',
-      importFromFiles: 'Aus Dateien importieren',
-      updateAll: 'Alle aktualisieren',
-      emptyStore: 'Der Plugin-Store ist derzeit leer. Bleiben Sie gespannt auf zukünftige Plugin-Updates.'
-    },
     macro: {
       title: 'Tastatur-Makro',
       enable: 'Makros aktivieren',
@@ -1145,6 +1116,81 @@ refreshInterval: 'Aktualisierungsintervall',
         focusHint: 'Halten Sie dieses Fenster während der Aufnahme im Fokus.'
       }
     },
+    plugins: {
+      title: 'Plugins & Erweiterungen',
+      search: 'Plugins suchen',
+      filterAll: 'Alle',
+      filterInstalled: 'Installiert',
+      filterNotInstalled: 'Nicht installiert',
+      refresh: 'Aktualisieren',
+      total: '{{count}} insgesamt',
+      summary: '{{count}} installiert',
+      updatable: '{{count}} Update(s) verfügbar',
+      install: 'Installieren',
+      update: 'Aktualisieren',
+      updateAvailable: 'Update verfügbar',
+      uninstall: 'Deinstallieren',
+      uninstallConfirm: 'Dieses Plugin deinstallieren?',
+      uninstallFailed: 'Deinstallation fehlgeschlagen',
+      installed: 'Installiert',
+      online: 'Online',
+      settings: {
+        nativePageUnavailable: 'Dieses Plugin enthält native UI-Seiten, die in der Electron-Version nicht verfügbar sind. Seine Hintergrundfunktionalität funktioniert weiterhin über den Backend-Host.',
+        capability: {
+          settingsPage: 'Einstellungsseite',
+          featurePage: 'Feature-Seite',
+          optimizationCategory: 'Optimierungskategorie',
+          executableEntryPoint: 'Ausführbarer Eintrag'
+        }
+      },
+      installing: 'Wird installiert…',
+      downloading: 'Wird heruntergeladen…',
+      preparingDownload: 'Download wird vorbereitet…',
+      downloadCompleted: 'Download abgeschlossen',
+      offline: 'Online-Store nicht verfügbar; nur lokal installierte Plugins werden angezeigt',
+      empty: 'Keine Plugins gefunden',
+      noResults: 'Keine Plugins gefunden, die Ihrer Suche entsprechen.',
+      dependencies: 'Abhängigkeiten',
+      dependenciesBlocked: 'Dieses Plugin hat unerfüllte Abhängigkeiten und kann nicht deinstalliert werden',
+      details: 'Details',
+      usageGuide: 'Benutzerhandbuch',
+      changelog: 'Änderungsprotokoll',
+      importProgress: 'Plugin-Pakete werden importiert…',
+      importSuccess: '{{count}} Plugin-Paket(e) importiert',
+      importFailed: '{{count}} Plugin-Paket(e) konnten nicht importiert werden',
+      installAll: 'Alle installieren',
+      installAllComplete: '{{count}} Plugin(s) installiert',
+      installAllPartial: '{{count}} von {{total}} Plugin-Operationen abgeschlossen',
+      copyId: 'Plugin-ID kopieren',
+      copied: 'Plugin-ID in die Zwischenablage kopiert',
+      copyFailed: 'Plugin-ID konnte nicht kopiert werden',
+      local: 'Lokal',
+      collapseDetails: 'Details ausblenden',
+      showDetails: 'Details anzeigen',
+      updateInfo: 'Update-Informationen',
+      versionLabel: 'Version:',
+      configure: 'Konfigurieren',
+      open: 'Öffnen',
+      description: 'Plugins installieren und verwalten, um die Funktionalität zu erweitern',
+      storeUnavailable: 'Plugin-Store nicht verfügbar',
+      summaryTotal: 'Plugins gesamt',
+      summaryInstalled: 'Installiert',
+      summaryUpdates: 'Updates verfügbar',
+      importFromFiles: 'Aus Dateien importieren',
+      importDesktopOnly: 'Für den Import von Plugin-Dateien ist die Desktop-App erforderlich.',
+
+
+      notFound: 'Plugin nicht gefunden',
+
+      back: 'Zurück zu Plugins',
+
+      noWebPage: 'Dieses Plugin hat kein Webinterface.',
+
+      pageLoadFailed: 'Die Plugin-Seite konnte nicht geladen werden.',
+
+      openPage: 'Plugin-Seite öffnen',      updateAll: 'Alle aktualisieren',
+      emptyStore: 'Der Plugin-Store ist derzeit leer. Bleiben Sie gespannt auf zukünftige Plugin-Updates.'
+    },
     optimization: {
       title: 'Systemoptimierung',
       info: 'Diese Aktionen ändern Systemdienste und Dateien und können Administratorrechte erfordern.',
@@ -1164,6 +1210,8 @@ refreshInterval: 'Aktualisierungsintervall',
       clear: 'Löschen (Zurücksetzen)',
       applied: 'Angewendet',
       applyFailed: 'Anwendung fehlgeschlagen (Administratorrechte können erforderlich sein)',
+      elevationRequired:
+        'Die Genehmigung des Administrators ist erforderlich. Bestätigen Sie die UAC-Eingabeaufforderung oder starten Sie die App mit erhöhten Rechten.',
       reverted: 'Zurückgesetzt',
       revertFailed: 'Zurücksetzen fehlgeschlagen (Administratorrechte können erforderlich sein)',
       estimate: 'Größe schätzen',
@@ -1174,13 +1222,12 @@ refreshInterval: 'Aktualisierungsintervall',
       cleanupDone: 'Bereinigung abgeschlossen',
       cleanupFailed: 'Bereinigung fehlgeschlagen',
       cleanup: {
+        items: 'Items',
         scanning: 'Scanning',
         running: 'Cleaning…',
         done: 'Cleanup complete',
         moreItems: 'more',
-        items: 'Items',
         custom: {
-
           header: 'Benutzerdefinierte Bereinigungsregeln',
           description: 'Zusätzliche Ordner, die zusammen mit den ausgewählten Bereinigungsaktionen bereinigt werden.',
           empty: 'Keine benutzerdefinierten Bereinigungsregeln',
@@ -1237,10 +1284,10 @@ refreshInterval: 'Aktualisierungsintervall',
           health: 'Zustand'
         },
         trafficLive: 'Live-Proxy-Datenverkehr wird erfasst',
-        connectionsWaiting: 'Warten auf Verbindungsdaten…',
-        destinationsWaiting: 'Warten auf Zieldaten…',
         trafficWaiting: 'Starten Sie die Beschleunigung, um Live-Datenverkehr zu erfassen',
         trafficUnavailable: 'Datenverkehrsdaten sind vorübergehend nicht verfügbar',
+        connectionsWaiting: 'Warten auf Verbindungsdaten…',
+        destinationsWaiting: 'Warten auf Zieldaten…',
         connectionsHeading: 'Aktuelle und vergangene Verbindungen',
         destinationsHeading: 'Zielstatistiken',
         connectionSummary: '{{active}} aktiv / {{total}} insgesamt',
@@ -1268,6 +1315,12 @@ refreshInterval: 'Aktualisierungsintervall',
           off: 'Inaktiv'
         },
         backendMissingHint: 'Proxy-Worker nicht verfügbar',
+        proxyMissing:
+          'Die Netzwerkbeschleunigung kann nicht gestartet werden, da NetworkProxy.exe in der Installation fehlt.',
+        hostsModeRefused:
+          'Der Hosts-Modus wird von dieser Seite aus nicht gestartet. Verwenden Sie System-Proxy oder Diagnose.',
+        startRefused:
+          'Beschleunigung startete nicht. Überprüfen Sie, ob es aktiviert ist und mindestens ein Ziel ausgewählt ist.',
         selectGroupsFirstHint: 'Wählen Sie mindestens ein Ziel aus',
         advancedHeading: 'Erweitert',
         advancedBody: 'Erweiterte Einstellungen und Netzwerkwiederherstellung.',
@@ -1399,7 +1452,6 @@ refreshInterval: 'Aktualisierungsintervall',
     },
     about: {
       title: 'Über',
-      translationCredit: 'Übersetzungen werden von der Community bereitgestellt.',
       appName: 'Anwendung',
       version: 'Version',
       build: 'Build',
@@ -1417,6 +1469,7 @@ refreshInterval: 'Aktualisierungsintervall',
       no: 'Nicht kompatibel',
       dataFolder: 'Datenordner',
       thirdParty: 'Drittanbieterbibliotheken',
+      translationCredit: 'Übersetzungen werden von der Community bereitgestellt.',
       copyright: 'Copyright'
     },
     statusBanner: {
@@ -2915,5 +2968,4 @@ refreshInterval: 'Aktualisierungsintervall',
     updateWindowrestartToInstall: 'Installieren & neu starten',
   }
   }
-}
-
+})

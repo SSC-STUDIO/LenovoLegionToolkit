@@ -1,4 +1,6 @@
-export default {
+import { withEnglishFallback } from './en-US'
+
+export default withEnglishFallback({
   translation: {
     app: {
       name: '通用设备工具箱'
@@ -2961,4 +2963,4 @@ export default {
     updateWindowrestartToInstall: '安装并重启',
   }
   }
-}
+})

@@ -1,4 +1,6 @@
-﻿export default {
+import { withEnglishFallback } from './en-US'
+
+export default withEnglishFallback({
   translation: {
     app: {
       name: 'Universal Device Toolkit'
@@ -26,9 +28,9 @@
       hostReady: 'Backend connesso',
       hostState: 'Stato del backend',
       hostVersion: 'Versione del backend',
-      initComplete: 'Inizializzazione completata',
       hostUnavailable:
         'Il backend non è in esecuzione. Attendi un momento e riprova, oppure riavvia l’app.',
+      initComplete: 'Inizializzazione completata',
       safeStart: 'Avvio sicuro, saltato',
       machine: 'Dispositivo',
       compatible: 'Compatibilità',
@@ -113,8 +115,11 @@
         voltageRange: 'Intervallo tensione',
         powerRange: 'Intervallo potenza',
         details: 'Dettagli',
+        doubleClickHint: 'Fare doppio clic per tutti i dati del sensore',
+        showDetails: 'Mostra dettagli',
+        hideDetails: 'Nascondi dettagli',
         chartEmpty: 'In attesa dei dati dei sensori',
-refreshInterval: 'Intervallo di aggiornamento',
+        refreshInterval: 'Intervallo di aggiornamento',
         detail: {
           power: 'Potenza',
           powerCores: 'Core',
@@ -143,7 +148,8 @@ refreshInterval: 'Intervallo di aggiornamento',
       card: {
         error: 'Impossibile applicare l’impostazione',
         config: 'Impostazioni avanzate',
-        configComingSoon: 'Le impostazioni avanzate saranno disponibili in una versione futura'
+        configComingSoon: 'Le impostazioni avanzate saranno disponibili in una versione futura',
+        notSupported: 'Non supportato su questo dispositivo'
       }
     },
     balanceMode: {
@@ -305,17 +311,26 @@ refreshInterval: 'Intervallo di aggiornamento',
       }
     },
     common: {
+
       loading: 'Caricamento…',
+
       deleteColor: 'Delete color',
+
       notifications: 'Notifications',
+
       minimize: 'Minimize',
+
       maximize: 'Maximize',
+
       restore: 'Restore',
+
       windowClose: 'Close',
+
       navigation: 'Navigation',
+
       expandNavigation: 'Expand navigation',
-      collapseNavigation: 'Collapse navigation',
-      error: 'Qualcosa è andato storto',
+
+      collapseNavigation: 'Collapse navigation',      error: 'Qualcosa è andato storto',
       retry: 'Riprova',
       close: 'Chiudi',
       cancel: 'Annulla',
@@ -327,11 +342,13 @@ refreshInterval: 'Intervallo di aggiornamento',
       apply: 'Applica',
       applyAndClose: 'Applica e chiudi',
       default: 'Predefinito',
-      confirm: 'Conferma',
-      resetDefault: 'Ripristina predefiniti',
       rename: 'Rinomina',
       delete: 'Elimina',
-      ok: 'OK'
+      ok: 'OK',
+      confirm: 'Conferma',
+      resetDefault: 'Ripristina predefiniti',
+      load: 'Caricare',
+      notSupportedOnPlatform: 'Non supportato su questa piattaforma.'
     },
     colorPicker: {
       hex: 'Hex',
@@ -378,7 +395,9 @@ refreshInterval: 'Intervallo di aggiornamento',
           custom: 'Personalizzato'
         },
         appScale: 'Scala interfaccia',
-        appScaleDesc: 'Scala testo e intera interfaccia, indipendentemente dalla scala di Windows.',
+        appScaleDesc:
+          'Scala testo e intera interfaccia, indipendentemente dalla scala di Windows.',
+        appScaleAuto: 'Automatico',
         themeOptions: {
           system: 'Sistema',
           light: 'Chiaro',
@@ -398,6 +417,8 @@ refreshInterval: 'Intervallo di aggiornamento',
         dontShowNotificationsDesc: 'Disattiva le notifiche dell’app e di sistema',
         autorun: 'Avvio all’accesso',
         autorunDesc: 'Avvia ridotto nell’area di notifica dopo l’accesso a Windows.',
+        autorunDescLoginItem: 'Avvia l\'applicazione quando accedi a questo computer.',
+        autorunUnavailable: 'Avvia all\'accesso non è disponibile nell\'anteprima del browser.',
         autorunOptions: {
           enabled: 'Attivo',
           enabledDelayed: 'Attivo (ritardato)',
@@ -410,8 +431,7 @@ refreshInterval: 'Intervallo di aggiornamento',
         animationsEnabled: 'Animazioni interfaccia',
         animationsEnabledDesc: 'Anima finestre, finestre di dialogo e altri elementi dell\'interfaccia. Disattiva per ridurre i movimenti.',
         sensorRefreshInterval: 'Intervallo di aggiornamento sensori',
-        sensorRefreshIntervalDesc:
-          'Ogni quanto vengono aggiornati i valori dei sensori. Puoi anche fare clic destro sulla scheda dei sensori per cambiarlo temporaneamente.',
+        sensorRefreshIntervalDesc: 'Ogni quanto vengono aggiornati i valori dei sensori. Puoi anche fare clic destro sulla scheda dei sensori per cambiarlo temporaneamente.',
         extensionsEnabled: 'Attiva estensioni',
         extensionsEnabledDesc: 'Abilita il caricamento di plugin ed estensioni',
         sensorSections: 'Sezioni sensori',
@@ -529,6 +549,9 @@ refreshInterval: 'Intervallo di aggiornamento',
       },
       display: {
         navigationItems: 'Visibilità elementi di navigazione',
+        groupNotifications: 'Notifiche',
+        groupWindow: 'Vetrina ed esposizione',
+        notificationCategories: 'Categorie e comportamento delle notifiche',
         navigationKeys: {
           keyboard: 'Retroilluminazione tastiera',
           battery: 'Batteria',
@@ -609,6 +632,7 @@ refreshInterval: 'Intervallo di aggiornamento',
     keyboard: {
       title: 'Retroilluminazione tastiera',
       unsupported: 'La retroilluminazione della tastiera non è supportata su questo dispositivo',
+      simulatedHint: 'Modalità simulazione: nessuna tastiera rilevata, mostra un\'interfaccia demo',
       rgb: {
         preset: 'Profilo',
         settings: 'Impostazioni retroilluminazione',
@@ -698,11 +722,13 @@ refreshInterval: 'Intervallo di aggiornamento',
       actionsTitle: 'Azioni',
       actionsEmpty: 'Nessuna azione automatica per ora',
       quickActionsTitle: 'Azioni rapide',
+      quickActionsHint: 'Le azioni rapide sono disponibili nel menu contestuale dell\'icona nella barra delle applicazioni.',
       quickActionsEmpty: 'Nessuna azione rapida per ora. Fai clic su «Nuova» per crearne una.',
+      deactivateGpu: 'Disattiva GPU',
       renamePipeline: 'Rinomina pipeline',
+      changeIcon: 'Cambia icona',
       renamePipelineTitle: 'Rinomina pipeline',
       renamePipelinePlaceholder: 'Inserisci il nome della pipeline',
-      changeIcon: 'Cambia icona',
       empty: 'Nessuno script di automazione per ora. Fai clic su «Nuova» per crearne uno.',
       runNow: 'Esegui ora',
       delete: 'Elimina',
@@ -1093,7 +1119,6 @@ refreshInterval: 'Intervallo di aggiornamento',
     plugins: {
       title: 'Plugin ed estensioni',
       search: 'Cerca plugin',
-      noResults: 'Nessun plugin trovato per la ricerca.',
       filterAll: 'Tutti',
       filterInstalled: 'Installati',
       filterNotInstalled: 'Non installati',
@@ -1109,12 +1134,22 @@ refreshInterval: 'Intervallo di aggiornamento',
       uninstallFailed: 'Disinstallazione non riuscita',
       installed: 'Installato',
       online: 'Online',
+      settings: {
+        nativePageUnavailable: 'Questo plugin contiene pagine dell\'interfaccia utente native che non sono disponibili nella versione Electron. La sua funzionalità in background continua a funzionare tramite l\'host back-end.',
+        capability: {
+          settingsPage: 'Pagina Impostazioni',
+          featurePage: 'Pagina delle funzionalità',
+          optimizationCategory: 'Categoria di ottimizzazione',
+          executableEntryPoint: 'Voce eseguibile'
+        }
+      },
       installing: 'Installazione…',
       downloading: 'Download…',
       preparingDownload: 'Preparazione download…',
       downloadCompleted: 'Download completato',
       offline: 'Il negozio online non è disponibile; vengono mostrati solo i plugin locali',
       empty: 'Nessun plugin trovato',
+      noResults: 'Nessun plugin trovato per la ricerca.',
       dependencies: 'Dipendenze',
       dependenciesBlocked: 'Questo plugin ha dipendenze non soddisfatte e non può essere disinstallato',
       details: 'Dettagli',
@@ -1142,7 +1177,18 @@ refreshInterval: 'Intervallo di aggiornamento',
       summaryInstalled: 'Installati',
       summaryUpdates: 'Aggiornamenti disponibili',
       importFromFiles: 'Importa da file',
-      updateAll: 'Aggiorna tutto',
+      importDesktopOnly: 'L\'importazione di file plug-in richiede l\'app desktop.',
+
+
+      notFound: 'Plug-in non trovato',
+
+      back: 'Torniamo ai plugin',
+
+      noWebPage: 'Questo plugin non ha interfaccia web.',
+
+      pageLoadFailed: 'Impossibile caricare la pagina del plugin.',
+
+      openPage: 'Apri la pagina del plugin',      updateAll: 'Aggiorna tutto',
       emptyStore: 'Il negozio di plugin è attualmente vuoto. Resta sintonizzato per i futuri aggiornamenti.'
     },
     optimization: {
@@ -1164,6 +1210,8 @@ refreshInterval: 'Intervallo di aggiornamento',
       clear: 'Cancella (annulla)',
       applied: 'Applicato',
       applyFailed: 'Applicazione non riuscita (potrebbero servire privilegi di amministratore)',
+      elevationRequired:
+        'È richiesta l\'approvazione dell\'amministratore. Conferma la richiesta dell\'UAC o avvia l\'app con privilegi elevati.',
       reverted: 'Annullato',
       revertFailed: 'Annullamento non riuscito (potrebbero servire privilegi di amministratore)',
       estimate: 'Stima dimensione',
@@ -1174,13 +1222,12 @@ refreshInterval: 'Intervallo di aggiornamento',
       cleanupDone: 'Pulizia completata',
       cleanupFailed: 'Pulizia non riuscita',
       cleanup: {
+        items: 'Items',
         scanning: 'Scanning',
         running: 'Cleaning…',
         done: 'Cleanup complete',
         moreItems: 'more',
-        items: 'Items',
         custom: {
-
           header: 'Regole di pulizia personalizzate',
           description: 'Cartelle aggiuntive pulite insieme alle azioni selezionate.',
           empty: 'Nessuna regola di pulizia personalizzata',
@@ -1237,10 +1284,10 @@ refreshInterval: 'Intervallo di aggiornamento',
           health: 'Salute'
         },
         trafficLive: 'Raccolta traffico proxy in tempo reale',
-        connectionsWaiting: 'In attesa dei dati delle connessioni…',
-        destinationsWaiting: 'In attesa dei dati delle destinazioni…',
         trafficWaiting: 'Avvia l’accelerazione per raccogliere il traffico in tempo reale',
         trafficUnavailable: 'Dati sul traffico temporaneamente non disponibili',
+        connectionsWaiting: 'In attesa dei dati delle connessioni…',
+        destinationsWaiting: 'In attesa dei dati delle destinazioni…',
         connectionsHeading: 'Connessioni attuali e recenti',
         destinationsHeading: 'Statistiche destinazioni',
         connectionSummary: '{{active}} attive / {{total}} totali',
@@ -1268,6 +1315,12 @@ refreshInterval: 'Intervallo di aggiornamento',
           off: 'Inattivo'
         },
         backendMissingHint: 'Worker proxy non disponibile',
+        proxyMissing:
+          'Impossibile avviare l\'accelerazione di rete perché NetworkProxy.exe non è presente nell\'installazione.',
+        hostsModeRefused:
+          'La modalità host non viene avviata da questa pagina. Utilizzare proxy di sistema o diagnostica.',
+        startRefused:
+          'L\'accelerazione non è iniziata. Verificare che sia abilitato e che sia selezionato almeno un target.',
         selectGroupsFirstHint: 'Seleziona almeno un obiettivo',
         advancedHeading: 'Avanzate',
         advancedBody: 'Impostazioni avanzate e ripristino della rete.',
@@ -1399,7 +1452,6 @@ refreshInterval: 'Intervallo di aggiornamento',
     },
     about: {
       title: 'Informazioni',
-      translationCredit: 'Traduzioni fornite dalla community.',
       appName: 'Applicazione',
       version: 'Versione',
       build: 'Build',
@@ -1417,6 +1469,7 @@ refreshInterval: 'Intervallo di aggiornamento',
       no: 'Non compatibile',
       dataFolder: 'Cartella dati',
       thirdParty: 'Librerie di terze parti',
+      translationCredit: 'Traduzioni fornite dalla community.',
       copyright: 'Copyright'
     },
     statusBanner: {
@@ -2915,5 +2968,4 @@ refreshInterval: 'Intervallo di aggiornamento',
     updateWindowrestartToInstall: 'Installa e riavvia',
   }
   }
-}
-
+})
