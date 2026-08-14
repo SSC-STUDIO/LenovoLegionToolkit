@@ -21,7 +21,7 @@
 
 [![Download from GitHub Releases](https://img.shields.io/badge/Download-GitHub%20Releases-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
 [![Install via Scoop](https://img.shields.io/badge/Install-via%20Scoop-F24E1E?style=for-the-badge&logo=powershell&logoColor=white)](https://github.com/SSC-STUDIO/scoop-bucket)
-**Install:** download the installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest), or use Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`
+**Install:** download the installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest), or use Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/universaldevicetoolkit`
 
 > **Goal: 1,000 stars.** If UDT keeps your laptop running lean, a star helps more people find it -- and tells us the plugin model is worth building out.
 
@@ -36,11 +36,11 @@
 
 ---
 
-Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows device utility that keeps Lenovo hardware control direct on supported machines and still remains useful on other PCs through basic mode. It runs without background services, uses very little memory and CPU, contains no telemetry, and is built around plugin extensions for device-specific workflows.
+Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows device utility that keeps Lenovo hardware control direct on supported machines and still remains useful on other PCs through basic mode. It runs without background services, keeps typical memory around 400MB (Electron UI + .NET Host), contains no telemetry, and is built around plugin extensions for device-specific workflows.
 
 Plugin extensions are a first-class part of this project. You can install, update, configure, open, and remove plugins from the Plugin Extensions page to add CPU, GPU, network, shell, mouse, and other specialized tools without bloating the base application.
 
-UDT is an actively maintained GPL-3.0 project focused on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensibility, and ongoing Windows support. Existing Lenovo Legion Toolkit users can upgrade directly; settings, plugins, and package-manager identifiers are kept compatible during the rename. The full desktop hardware-control app remains Windows-first; macOS and Linux work before 5.x is limited to diagnostics groundwork, safe basic-mode discovery, and local development of the `UniversalDeviceToolkit.CrossPlatform` CLI. Android and mobile companion applications are out of scope and are not supported.
+UDT is an actively maintained GPL-3.0 project focused on compatibility updates, security hardening, CI/release automation, newer device detection, plugin extensibility, and ongoing Windows support. Existing Lenovo Legion Toolkit users keep their settings, plugins, and data when upgrading; package-manager identities split in 6.x (winget `SSC-STUDIO.UniversalDeviceToolkit`, Scoop `universaldevicetoolkit`), so legacy package IDs do not upgrade in place. The Electron client runs on Windows, macOS, and Linux: Windows keeps **full hardware control**, while macOS and Linux run in **basic mode** (the full UI, plugins, and system tools without Lenovo hardware control). Android and mobile companion applications are out of scope and are not supported.
 
 > [!NOTE]
 > **What "Universal" means**
@@ -86,7 +86,7 @@ Promotion copy (conversational): [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [COM
 | 🖥️ **Sensors** | Real-time CPU/GPU temp, fan speed, clock monitoring |
 | 🔧 **Plugin Extensions** | CPU tools, GPU tools, network acceleration, shell integration, mouse |
 | 🌍 **78+ Languages** | Full localization with community translations |
-| 📦 **No Bloat** | Zero background service, <30MB RAM, no telemetry, no account |
+| 📦 **No Bloat** | Zero background service, ~400MB RAM typical (Electron + Host; tray idle is lower), no telemetry, no account |
 
 &nbsp;
 
@@ -120,13 +120,13 @@ Please be patient and read through this readme carefully - it contains important
 
 ## Download
 
-Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. Some package identifiers temporarily retain the UniversalDeviceToolkit name for upgrade continuity.
+Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. 6.x is a package-manager breaking change: winget moves to `SSC-STUDIO.UniversalDeviceToolkit` and Scoop to `universaldevicetoolkit`; the legacy package IDs are not upgraded in place.
 
 > [!NOTE]
-> **Current stable release: v5.0.2.** Application releases use the normal `vX.Y.Z` tags. Official plugin packages are published separately in the non-Latest rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog).
-> **Note on winget:** the package id `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships. Use Releases or Scoop in the meantime.
+> **Current stable release: v5.0.2.** Application releases use the normal `vX.Y.Z` tags. Official 1.x plugin packages stay in the non-Latest rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog). Source is now the **6.0** train (`Directory.Build.props` `6.0.0`); the first preview tag is `v6.0.0-preview.1`, which reads [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview) for 2.x packages. Do not upload 2.x ZIPs to `plugin-catalog`.
+> **Note on winget:** the 6.x package id `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships, and the legacy Lenovo Legion Toolkit package does not upgrade in place. Use Releases or Scoop in the meantime.
 
-- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). Full includes bundled languages and device data; Online is smaller and installs language/device resources from the app. Always install the newest version from the latest release page; legacy Lenovo Legion Toolkit upgrade compatibility is retained where supported.
+- **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). **Full** is a complete offline NSIS installer (Electron + self-contained .NET Host). **Online** is a small stub (about 15MB or less) that downloads the same runtime during setup; language and device packs still install from the in-app catalog. Always install the newest version from the latest release page; settings, plugins, and data migrate automatically, while package-manager installs must switch to the new 6.x IDs.
 
 #### Language packs (Full vs Online) & privacy
 
@@ -134,18 +134,18 @@ Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained buil
 - Offline / `--safe-start` / no network: the app continues in English — it does **not** phone home for language packs unless you start an install.
 - Catalog downloads use HTTPS (or your configured catalog URL). Packages are verified with **SHA-256** before install. No account, no telemetry.
 - Corporate proxy: set system proxy as usual, or point `UDT_RESOURCE_CATALOG_URL` at an internal catalog mirror for air-gapped installs. See `Docs/LanguagePacks.md`.
- - ~~**winget** (pending)~~: the `PackageIdentifier` `SSC-STUDIO.UniversalDeviceToolkit` is reserved for in-place upgrade from the legacy Lenovo Legion Toolkit, but the manifest has not been submitted to microsoft/winget-pkgs yet -- `winget install` will fail until it ships. Use Releases or Scoop today; this bullet becomes a one-line install again once the winget-pkgs PR merges.
-- **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/lenovolegiontoolkit`. The Scoop manifest name also remains `lenovolegiontoolkit` for now.
+ - ~~**winget** (pending)~~: the 6.x `PackageIdentifier` is `SSC-STUDIO.UniversalDeviceToolkit`; the manifest has not been submitted to microsoft/winget-pkgs yet, so `winget install` fails until it ships. The legacy Lenovo Legion Toolkit package does not upgrade in place. Use Releases or Scoop today; this bullet becomes a one-line install again once the winget-pkgs PR merges.
+- **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/universaldevicetoolkit`. The 6.x manifest consumes the Full portable ZIP (`innosetup: false`); the legacy `lenovolegiontoolkit` package stays on 5.x — uninstall it before installing `universaldevicetoolkit`.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
 
 #### Naming and upgrade compatibility
 
-During the rename from Lenovo Legion Toolkit, several identifiers intentionally stay on the legacy names so existing installs upgrade in place:
+During the rename from Lenovo Legion Toolkit, runtime identifiers intentionally stay compatible so existing settings and plugins carry over. Package-manager identities are the exception — 6.x introduces new IDs and no in-place upgrade:
 
 | What you see | Legacy identifier | Why it remains |
 |---|---|---|
 | Product name in UI / Releases | Universal Device Toolkit (UDT) | Current public branding |
-| winget ID (pending) / Scoop ID | `SSC-STUDIO.UniversalDeviceToolkit` (not yet in winget-pkgs) / `lenovolegiontoolkit` | Upgrade continuity once winget publishes; Scoop works now |
+| winget ID (pending) / Scoop ID | `SSC-STUDIO.UniversalDeviceToolkit` (new 6.x ID, not yet in winget-pkgs) / `universaldevicetoolkit` (new 6.x Scoop name) | 6.x package break; legacy `SSC-STUDIO.LenovoLegionToolkit` / `lenovolegiontoolkit` do not upgrade in place |
 | CLI executable | `udt-cli.exe` | Scripts and automation compatibility |
 | Data directory | `%LOCALAPPDATA%\UniversalDeviceToolkit` | Settings/plugins migrate automatically |
 | Action env vars | `LLT_*` + `UDT_*` (dual-write) | Existing user scripts; UDT aliases available |
@@ -211,10 +211,50 @@ If UDT starts in basic mode, it is doing that intentionally to avoid showing uns
 
 ### macOS and Linux
 
-> [!NOTE]
-> End users on Windows should install the WPF app from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). The cross-platform CLI below is **developer/diagnostics groundwork** for 5.x; formal macOS/Linux release assets are planned for 5.x and later.
+The Electron client runs on **Windows, macOS, and Linux**. Because the .NET
+backend and its hardware-control layer use Windows-only surfaces (Win32, WMI,
+registry, and vendor-specific Windows drivers), **full Lenovo hardware control
+is Windows-only**. On macOS and Linux UDT runs in **basic mode**: the complete
+UI, plugin extensions, system optimization, themes, updates, and logs remain
+available, while Lenovo hardware toggles are unavailable.
 
-The Windows desktop app uses WPF, Win32, WMI, registry, and vendor-specific Windows drivers, so those hardware-control surfaces are not portable as-is. Until 5.x, the repository includes `UniversalDeviceToolkit.CrossPlatform`, a plain `net10.0` CLI entry point for local macOS/Linux and Windows diagnostics (see [DEPLOYMENT.md](Docs/DEPLOYMENT.md) for build details):
+| Capability | Windows | macOS | Linux |
+|---|---|---|---|
+| Lenovo hardware control (Fn+Q, RGB, fan curves, dGPU, battery care) | ✅ | — (basic mode) | — (basic mode) |
+| Plugins, system optimization, themes, updates, logs | ✅ | ✅ | ✅ |
+| Title bar | Frameless custom (Mica) | Native traffic lights + vibrancy | Frameless custom |
+| Menu bar | Auto-hidden | Native system menu | Auto-hidden |
+| Tray icon & quick actions | ✅ | ✅ | ✅ |
+| OSD overlay window | ✅ | ✅ | ✅ |
+| Restart / shutdown / sleep actions | ✅ | ❌ | ❌ |
+| Windows power plan switching | ✅ | ❌ | ❌ |
+
+> [!NOTE]
+> Restart/shutdown/sleep and Windows power-plan switching are implemented with
+> Windows-only tools (`shutdown.exe`, `powercfg`) in the Electron main process,
+> so they are unavailable on macOS and Linux. The OSD window itself is
+> cross-platform, but its sensor values come from the host and are only
+> meaningful on Windows.
+
+**Build the Electron client**
+
+```bash
+cd UniversalDeviceToolkit.Electron
+npm ci              # first time only (uses package-lock.json)
+npm run dev         # dev server + Electron window (hot reload)
+npm run dist:win    # Windows NSIS installer (x64)
+npm run dist:mac    # macOS DMG (arm64 + x64)
+npm run dist:linux  # Linux AppImage (x64)
+```
+
+The Windows package embeds the self-contained .NET Host published to
+`UniversalDeviceToolkit.Host/publish/win-x64`; per-platform Host publishing and
+the remaining macOS/Linux release work are tracked in
+[DEPLOYMENT.md](Docs/DEPLOYMENT.md).
+
+The repository also includes `UniversalDeviceToolkit.CrossPlatform`, a plain
+`net10.0` CLI entry point for local macOS/Linux and Windows diagnostics (see
+[DEPLOYMENT.md](Docs/DEPLOYMENT.md) for build details):
 
 <details>
 <summary>Cross-platform CLI commands (developers)</summary>
@@ -233,7 +273,7 @@ dotnet run --project UniversalDeviceToolkit.CrossPlatform -- support
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- doctor
 ```
 
-On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, reads safe CPU/memory/frequency/temperature/fan telemetry from Linux procfs/sysfs or macOS `sysctl`, reads battery and external power state from Linux `power_supply` or macOS `pmset`, inspects platform power profiles through Linux `powerprofilesctl` or macOS `pmset`, scans plugin manifests without loading WPF/Windows assemblies, matches common vendors to safe basic device packs, and treats the machine as safe basic mode. The `doctor` command aggregates readiness checks into a pass/warn/fail report. Vendor-specific control backends and cross-platform plugin loading are future 5.x expansion points.
+On macOS/Linux this CLI reports platform/runtime information, reads basic hardware identity from Linux DMI (`/sys/class/dmi/id`) or macOS `sysctl`/`system_profiler`, reads safe CPU/memory/frequency/temperature/fan telemetry from Linux procfs/sysfs or macOS `sysctl`, reads battery and external power state from Linux `power_supply` or macOS `pmset`, inspects platform power profiles through Linux `powerprofilesctl` or macOS `pmset`, scans plugin manifests without loading Windows assemblies, matches common vendors to safe basic device packs, and treats the machine as safe basic mode. The `doctor` command aggregates readiness checks into a pass/warn/fail report. Vendor-specific control backends and cross-platform plugin loading are future 5.x expansion points.
 
 </details>
 
@@ -466,8 +506,8 @@ If "Wait for exit" is checked, UDT will capture the output from standard output 
 
 UDT ships two command-line surfaces with different responsibilities:
 
-- `udt-cli.exe` is the Windows IPC remote control client. It requires the WPF app to be running in the background and the CLI option to be enabled.
-- `udt` is the independent `UniversalDeviceToolkit.CrossPlatform` diagnostics CLI. It runs without the WPF app and is the Windows/macOS/Linux path for safe platform discovery and diagnostics.
+- `udt-cli.exe` is the Windows IPC remote control client. It requires the Electron app to be running in the background and the CLI option to be enabled.
+- `udt` is the independent `UniversalDeviceToolkit.CrossPlatform` diagnostics CLI. It runs without the Electron app and is the Windows/macOS/Linux path for safe platform discovery and diagnostics.
 
 The Windows IPC CLI executable is `udt-cli.exe` and can be found in the install directory.
 
@@ -518,7 +558,7 @@ Official plugins for UDT live in this repository under [`Plugins/Official`](Plug
 
 ### Available Plugins
 
-Official plugins are published as ZIP assets of the main repository's rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog). The online catalog currently includes:
+Official 1.x plugins are ZIP assets of the rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) (v5.0.2 hosts). 6.0 preview hosts read [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview) for 2.x packages. The catalogs currently include:
 
 - **Custom Mouse**: Cursor themes, pointer settings, and Windows optimization actions
 - **Network Acceleration**: Built into **System Optimization → Network & acceleration** (plugin removed in v5.0.0)
@@ -792,13 +832,13 @@ The more info you add, the better the app will get over time. If anything seems 
 
 UDT localization is managed through Crowdin with a repository-level config at `crowdin.yml`.
 
-- Source files: neutral `Resource.resx` in six modules:
-  - `UniversalDeviceToolkit.WPF/Resources`
+- Source files: neutral `Resource.resx` in five modules:
   - `UniversalDeviceToolkit.Lib/Resources`
   - `UniversalDeviceToolkit.Lib.Automation/Resources`
   - `UniversalDeviceToolkit.Lib.Macro/Resources`
   - `UniversalDeviceToolkit.Lib.Plugins/Resources`
   - `UniversalDeviceToolkit.CLI/Resources` (`CLI.Resources.resx`)
+  The Electron UI strings live in `UniversalDeviceToolkit.Electron/src/renderer/src/i18n/locales/` (TS modules).
 - Target files: `Resource.<locale>.resx` (or `CLI.Resources.<locale>.resx` for CLI) beside each source file. Culture names use the BCP 47 canonical form (`zh-Hans`, `zh-Hant`, `pt-BR`, `nl-NL`, `uz-Latn-UZ`) — enforced by `Scripts/Assert-CultureNaming.ps1`.
 - Locale mapping is defined in `crowdin.yml` (for example `zh-CN -> zh-Hans`, `zh-TW -> zh-Hant`, `pt-BR -> pt-BR`).
 
@@ -817,7 +857,7 @@ crowdin download --config crowdin.yml
 
 ## Documentation
 
-Additional documentation is available in the `Docs/` directory:
+Additional documentation is indexed in [Docs/README.md](Docs/README.md). Topic docs in `Docs/`:
 
 | Document | Description |
 |----------|-------------|
@@ -835,7 +875,7 @@ Additional documentation is available in the `Docs/` directory:
 
 ### Screenshots
 
-Captured at **1300×850** logical window size via `Tools/VisualRegression.Smoke` (IPC render; pixel dimensions follow Windows display scale). README images are displayed at 700 px width.
+Captured at **1300×850** logical window size (pixel dimensions follow Windows display scale). README images are displayed at 700 px width.
 
 | File | Description |
 |------|-------------|
