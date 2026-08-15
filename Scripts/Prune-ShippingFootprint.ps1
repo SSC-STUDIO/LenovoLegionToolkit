@@ -1,7 +1,9 @@
-# Prune non-x64 natives and unsupported satellite culture folders from a shipping payload.
+# Prune shipping debug symbols, unsupported satellite cultures, and Windows non-x64 natives.
 param(
     [Parameter(Mandatory = $true)]
     [string]$PayloadPath,
+
+    [string]$RuntimeIdentifier = 'win-x64',
 
     [string]$AllowedCultures = ''
 )
@@ -28,12 +30,22 @@ $allowed = @(
         Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
 )
 
-$nativeDirs = @('x86', 'arm64')
-foreach ($name in $nativeDirs) {
-    $path = Join-Path $root $name
-    if (Test-Path -LiteralPath $path) {
-        Remove-Item -LiteralPath $path -Recurse -Force
-        Write-Host "Pruned native folder: $name"
+$removedPdbs = @(
+    Get-ChildItem -LiteralPath $root -Filter '*.pdb' -File -Recurse -Force -ErrorAction Stop
+)
+foreach ($pdb in $removedPdbs) {
+    Remove-Item -LiteralPath $pdb.FullName -Force
+    Write-Host "Pruned debug symbol: $($pdb.FullName)"
+}
+
+if ($RuntimeIdentifier -eq 'win-x64') {
+    $nativeDirs = @('x86', 'arm64')
+    foreach ($name in $nativeDirs) {
+        $path = Join-Path $root $name
+        if (Test-Path -LiteralPath $path) {
+            Remove-Item -LiteralPath $path -Recurse -Force
+            Write-Host "Pruned native folder: $name"
+        }
     }
 }
 
@@ -60,4 +72,4 @@ Get-ChildItem -LiteralPath $root -Directory -ErrorAction Stop | ForEach-Object {
     }
 }
 
-Write-Host "Satellite prune complete. kept=$kept removed=$removed root=$root"
+Write-Host "Shipping footprint prune complete. rid=$RuntimeIdentifier pdb=$($removedPdbs.Count) satellites-kept=$kept satellites-removed=$removed root=$root"

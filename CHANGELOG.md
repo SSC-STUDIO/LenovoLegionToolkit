@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Electron release packaging now keeps renderer-only packages out of production dependencies, limits application Chromium locales to the supported 24-locale set, removes shipping Host PDB files, and audits `app.asar`, locales, Host, unpacked directories, and final artifacts. Windows x64 unsigned local output: `app.asar` 10.08 MiB, Full Setup 181.99 MiB, Full ZIP 186.99 MiB, Online Setup 0.61 MiB, and Online ZIP 184.39 MiB (previous Full Setup/ZIP: 214.24/245.76 MiB).
 - Source version train is **6.0.0** (`Directory.Build.props`). First ship tag is `v6.0.0-preview.1` (hyphen = GitHub prerelease; winget skipped). Official plugins are **2.0.0-preview.1** with `minHostVersion` **6.0.0**. Vendored plugin host baseline stays **5.0.2** until a v6 ZIP exists.
 - Host tests are split into `Tests.Contracts` (Guard/Security), `Tests` (parallel unit), `Tests.Stateful` (collection-bound), and existing `Fast.Tests`. Plugin tests run in `plugins-validate.yml`; Electron `npm test` runs with typecheck.
 - `PluginManager.SynchronizeStateStore` persists Windows plugin state through `ApplicationSettings.SynchronizeStore` instead of recursing into itself.

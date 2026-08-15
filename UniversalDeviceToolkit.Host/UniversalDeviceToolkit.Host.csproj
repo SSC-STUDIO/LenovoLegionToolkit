@@ -11,6 +11,7 @@
     <SelfContained>false</SelfContained>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <GenerateDependencyFile>true</GenerateDependencyFile>
+    <IsUdtShippingApp>true</IsUdtShippingApp>
   </PropertyGroup>
 
   <ItemGroup>

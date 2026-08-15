@@ -54,6 +54,15 @@ jobs:
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 10.0.x
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: '22'
+        cache: npm
+        cache-dependency-path: UniversalDeviceToolkit.Electron/package-lock.json
+    - name: Restore Electron build tools
+      working-directory: UniversalDeviceToolkit.Electron
+      run: npm ci
     - name: Cache NuGet packages
       uses: actions/cache@v6
       with:
@@ -408,6 +417,21 @@ jobs:
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
       shell: pwsh
       run: ./Scripts/Assert-AuthenticodeSignatures.ps1 -Path $env:INSTALLER_OUTPUT
+
+    - name: Verify final Electron footprint
+      shell: pwsh
+      run: |
+        $auditor = 'UniversalDeviceToolkit.Electron/scripts/package-footprint.mjs'
+        node $auditor --app "$env:INSTALLER_PAYLOAD_OUTPUT\full" --rid win-x64
+        if ($LASTEXITCODE -ne 0) { throw 'Full Electron payload footprint audit failed after signing.' }
+        node $auditor --app "$env:INSTALLER_PAYLOAD_OUTPUT\online" --rid win-x64
+        if ($LASTEXITCODE -ne 0) { throw 'Online Electron payload footprint audit failed after signing.' }
+        node $auditor `
+          "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitSetup.exe" `
+          "$env:INSTALLER_OUTPUT\UniversalDeviceToolkitOnlineSetup.exe" `
+          "$env:INSTALLER_OUTPUT\$env:ZIP_FULL_ASSET" `
+          "$env:INSTALLER_OUTPUT\$env:ZIP_ONLINE_ASSET"
+        if ($LASTEXITCODE -ne 0) { throw 'Final Electron installer artifact footprint audit failed after signing.' }
 
     - name: Publish cross-platform CLI asset
       if: ${{ env.ENABLE_CROSS_PLATFORM_CLI == 'true' }}

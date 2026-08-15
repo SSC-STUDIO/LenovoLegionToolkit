@@ -343,6 +343,12 @@ Copy-Item -LiteralPath $onlineZipArtifact.FullName -Destination $onlineZipPath -
 Assert-ElectronZip -Path $onlineZipPath
 Write-Host "Electron Online ZIP built: $onlineZipPath"
 
+$footprintAuditor = Join-Path $electronProject 'scripts\package-footprint.mjs'
+& node $footprintAuditor $finalSetupPath $finalOnlinePath $fullZipPath $onlineZipPath
+if ($LASTEXITCODE -ne 0) {
+    throw 'Electron installer artifact footprint audit failed.'
+}
+
 $nsisPackages = @(Get-ChildItem -LiteralPath $distDir -Filter '*.nsis.7z' -Recurse -ErrorAction SilentlyContinue)
 if ($nsisPackages.Count -eq 0) {
     throw "nsis-web package (*.nsis.7z) not found under '$distDir'."

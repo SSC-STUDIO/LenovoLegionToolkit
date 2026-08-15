@@ -42,17 +42,19 @@
       Text="Shipping app publish cannot use EnableUdtTestHooks=true. Build the standalone test tools instead, or set AllowUdtTestHookPublish=true only for isolated non-shipping artifacts." />
   </Target>
 
-  <!-- TraceEvent natives + orphan Crowdin satellites inflate win-x64 shipping output. -->
+  <!-- TraceEvent natives + orphan Crowdin satellites inflate shipping output. -->
   <Target Name="PruneShippingAppFootprint"
           AfterTargets="Publish"
-          Condition="'$(RuntimeIdentifier)' == 'win-x64' and '$(IsUdtShippingApp)' == 'true' and '$(Configuration)' == 'Release' and '$(PublishDir)' != ''">
+          Condition="'$(RuntimeIdentifier)' != '' and '$(IsUdtShippingApp)' == 'true' and '$(Configuration)' == 'Release' and '$(PublishDir)' != ''">
     <PropertyGroup>
       <_UdtPruneScript>$(MSBuildThisFileDirectory)Scripts\Prune-ShippingFootprint.ps1</_UdtPruneScript>
+      <_UdtPowerShellExecutable Condition="$([MSBuild]::IsOSPlatform('Windows'))">powershell</_UdtPowerShellExecutable>
+      <_UdtPowerShellExecutable Condition="!$([MSBuild]::IsOSPlatform('Windows'))">pwsh</_UdtPowerShellExecutable>
       <!-- Trim trailing slash so PowerShell does not swallow the closing quote. -->
       <_UdtPublishDirFull>$([System.String]::Copy($([System.IO.Path]::GetFullPath('$(PublishDir)'))).TrimEnd('\'))</_UdtPublishDirFull>
     </PropertyGroup>
     <Exec
       Condition="Exists('$(_UdtPruneScript)') and Exists('$(_UdtPublishDirFull)')"
-      Command="powershell -NoProfile -ExecutionPolicy Bypass -File &quot;$(_UdtPruneScript)&quot; -PayloadPath &quot;$(_UdtPublishDirFull)&quot; -AllowedCultures &quot;$(UdtSatelliteResourceLanguages)&quot;" />
+      Command="$(_UdtPowerShellExecutable) -NoProfile -ExecutionPolicy Bypass -File &quot;$(_UdtPruneScript)&quot; -PayloadPath &quot;$(_UdtPublishDirFull)&quot; -RuntimeIdentifier &quot;$(RuntimeIdentifier)&quot; -AllowedCultures &quot;$(UdtSatelliteResourceLanguages)&quot;" />
   </Target>
 </Project>

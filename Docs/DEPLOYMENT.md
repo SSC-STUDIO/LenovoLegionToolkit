@@ -131,9 +131,12 @@ dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
     --self-contained true \
     --output UniversalDeviceToolkit.Host/publish/win-x64
 
-# Drop non-x64 natives and satellite cultures outside UdtSatelliteResourceLanguages
+# Remove shipping PDB files, non-x64 Windows natives, and satellite cultures
+# outside UdtSatelliteResourceLanguages. RuntimeIdentifier is optional and
+# defaults to win-x64 for backwards-compatible Windows release invocations.
 ./Scripts/Prune-ShippingFootprint.ps1 \
     -PayloadPath UniversalDeviceToolkit.Host/publish/win-x64 \
+    -RuntimeIdentifier win-x64 \
     -AllowedCultures 'ar;bg;cs;de;el;en;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;uz-latn-uz;vi;zh-hans;zh-hant'
 
 # macOS (Apple Silicon)
@@ -192,7 +195,7 @@ The packaging targets are defined in `UniversalDeviceToolkit.Electron/electron-b
 |---|---|---|
 | Windows | `nsis` (Full, x64) and `nsis-web` (Online stub, x64) | Full is a complete offline installer. Online is a small web installer (asserted <= 15MB) that downloads the `.nsis.7z` payload from the GitHub Release. Both embed the self-contained Host via `extraResources`. 23 installer languages on Full; Online stays English to keep the stub small. |
 | macOS | `dmg` (arm64 + x64) | Category `public.app-category.utilities`; **unsigned/notarized only if credentials are configured** (see below) |
-| Linux | `AppImage` (x64) | Category `Utility`; deb/rpm can be added by extending the `linux.target` list in `electron-builder.yml` |
+| Linux | `AppImage` and `deb` (x64) | Category `Utility`; rpm can be added by extending the `linux.target` list in `electron-builder.yml` |
 
 **Artifact naming** (`artifactName` / electron-builder defaults):
 
@@ -202,6 +205,44 @@ The packaging targets are defined in `UniversalDeviceToolkit.Electron/electron-b
 | Windows Online | `UniversalDeviceToolkitOnlineSetup-<version>.exe` (nsis-web stub, <= 15MB) plus `*.nsis.7z` payload |
 | macOS | `Universal Device Toolkit-<version>-arm64.dmg` / `-x64.dmg` |
 | Linux | `Universal Device Toolkit-<version>.AppImage` |
+
+#### Release footprint gate
+
+Release builds use Node 22 and `npm ci` before Electron packaging. Renderer-only
+libraries are development dependencies because Vite bundles them into `out/`;
+the Electron main and preload processes use only Electron, Node built-ins, and
+local modules. This prevents electron-builder from copying a production
+`node_modules` tree into `app.asar`.
+
+`afterPack` runs `scripts/package-footprint.mjs` for every target and writes
+`dist/footprint/<rid>.json`. It rejects `node_modules` in `app.asar`, Host PDB
+files, an incorrect Chromium locale set, and any exceeded unpacked budget. The
+main application keeps these 24 Chromium locales: `en-US`, `zh-CN`, `zh-TW`,
+`ja`, `de`, `fr`, `es`, `it`, `pt-BR`, `pt-PT`, `ru`, `uk`, `pl`, `cs`, `sk`,
+`hu`, `ro`, `bg`, `tr`, `el`, `ar`, `lv`, `nl`, and `vi`. Uzbek application
+content remains shipped and Chromium's built-in pages fall back to `en-US`.
+The separate custom Windows installer shell keeps only `en-US`; it embeds the
+fully audited application payload unchanged.
+
+| Content | Hard limit |
+|---|---:|
+| `app.asar` | 15 MiB |
+| Chromium locales | 20 MiB and the exact 24-locale set above |
+| Host (`win-x64` / `linux-x64` / `osx-*`) | 180 / 92 / 100 MiB |
+| Unpacked application (`win-x64` / `linux-x64` / `osx-*`) | 540 / 450 / 500 MiB |
+| Full ZIP, Setup, DMG, AppImage, DEB | 190 MiB each |
+| Online bootstrap | 15 MiB |
+
+The post-sign Release check repeats the payload and distributable audits. It
+does not remove Electron licenses, GPU/SwiftShader files, or change .NET
+deployment mode.
+
+Windows x64 unsigned local measurement (2026-08-15): `app.asar` is **10.08
+MiB**, Chromium locales **18.06 MiB**, Full/Online unpacked payloads **490.62
+MiB / 481.54 MiB**, Full Setup **181.99 MiB**, Full ZIP **186.99 MiB**, Online
+Setup **0.61 MiB**, and Online ZIP **184.39 MiB**. The pre-change Full payload,
+ZIP, Setup, `app.asar`, and Chromium locales measured 763.27, 245.76, 214.24,
+252.93, and 46.65 MiB respectively.
 
 **macOS signing & notarization:** `electron-builder.yml` defines **no**
 `mac.identity` / `notarize` configuration, so `npm run dist:mac` produces

@@ -25,7 +25,9 @@
     "dist:mac": "npm run build && electron-builder --config electron-builder.yml --mac",
     "dist:linux": "npm run build && electron-builder --config electron-builder.yml --linux"
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
+    "@electron/asar": "^3.4.1",
     "@fluentui/react-icons": "^2.0.316",
     "antd": "^6.6.0",
     "echarts": "^6.1.0",
@@ -34,9 +36,7 @@
     "react-dom": "^19.2.8",
     "react-i18next": "^17.0.11",
     "react-router-dom": "^7.18.2",
-    "zustand": "^5.0.14"
-  },
-  "devDependencies": {
+    "zustand": "^5.0.14",
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.2.0",
     "@types/react": "^19.2.18",
