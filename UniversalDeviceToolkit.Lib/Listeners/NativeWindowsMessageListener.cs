@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Features;
@@ -21,7 +20,7 @@ using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Listeners;
 
-public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindowsMessageListener.ChangedEventArgs>
+public class NativeWindowsMessageListener : IListener<NativeWindowsMessageListener.ChangedEventArgs>
 {
     public class ChangedEventArgs(NativeWindowsMessage message, object? data = null) : EventArgs
     {
@@ -40,11 +39,14 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
     private readonly TaskCompletionSource _isMonitorOnTaskCompletionSource = new();
     private readonly TaskCompletionSource _isLidOpenTaskCompletionSource = new();
 
+    // Touched only on the pump thread while the window is alive.
     private HDEVNOTIFY _deviceNotificationHandle;
     private HPOWERNOTIFY _consoleDisplayStateNotificationHandle;
     private HPOWERNOTIFY _lidSwitchStateChangeNotificationHandle;
     private HPOWERNOTIFY _powerSavingStateChangeNotificationHandle;
     private HHOOK _kbHook;
+
+    private PumpedMessageWindow? _window;
 
     public bool IsMonitorOn { get; private set; }
     public bool IsLidOpen { get; private set; }
@@ -67,112 +69,119 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         await _delayProvider.Delay(TimeSpan.FromSeconds(1), CancellationToken.None).ConfigureAwait(false);
         await _mainThreadDispatcher.DispatchAsync(() =>
         {
-            PInvoke.SendMessage(new HWND(Handle), PInvoke.WM_SYSCOMMAND, new WPARAM(PInvoke.SC_MONITORPOWER), new LPARAM(2));
+            var hwnd = _window?.Hwnd ?? default;
+            if (hwnd.IsNull)
+                return Task.CompletedTask;
+
+            PInvoke.SendMessage(hwnd, PInvoke.WM_SYSCOMMAND, new WPARAM(PInvoke.SC_MONITORPOWER), new LPARAM(2));
             return Task.CompletedTask;
         }).ConfigureAwait(false);
     }
 
     public Task StartAsync() => _mainThreadDispatcher.DispatchAsync(() =>
     {
-        CreateHandle(new CreateParams
-        {
-            Caption = "UniversalDeviceToolkit_MessageWindow",
-            Parent = new IntPtr(-3)
-        });
+        // The message-only window (and every hook / notification registered
+        // against it) lives on the pump thread inside PumpedMessageWindow; the
+        // headless dispatcher never pumps messages, so the window must own its
+        // GetMessage loop.
+        _window = new PumpedMessageWindow(
+            "UniversalDeviceToolkit_MessageWindow",
+            WndProc,
+            onStarted: hwnd =>
+            {
+                _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _kbProc, HINSTANCE.Null, 0);
 
-        _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _kbProc, HINSTANCE.Null, 0);
+                _deviceNotificationHandle = RegisterDeviceNotification(hwnd);
+                _consoleDisplayStateNotificationHandle = RegisterPowerNotification(hwnd, PInvoke.GUID_CONSOLE_DISPLAY_STATE);
+                _lidSwitchStateChangeNotificationHandle = RegisterPowerNotification(hwnd, PInvoke.GUID_LIDSWITCH_STATE_CHANGE);
+                _powerSavingStateChangeNotificationHandle = RegisterPowerNotification(hwnd, PInvoke.GUID_POWER_SAVING_STATUS);
+            },
+            onStopped: () =>
+            {
+                var kbHookLocal = _kbHook;
+                var deviceNotifLocal = _deviceNotificationHandle;
+                var consoleDisplayLocal = _consoleDisplayStateNotificationHandle;
+                var lidSwitchLocal = _lidSwitchStateChangeNotificationHandle;
+                var powerSavingLocal = _powerSavingStateChangeNotificationHandle;
+                _kbHook = default;
+                _deviceNotificationHandle = default;
+                _consoleDisplayStateNotificationHandle = default;
+                _lidSwitchStateChangeNotificationHandle = default;
+                _powerSavingStateChangeNotificationHandle = default;
 
-        _deviceNotificationHandle = RegisterDeviceNotification(Handle);
-        _consoleDisplayStateNotificationHandle = RegisterPowerNotification(PInvoke.GUID_CONSOLE_DISPLAY_STATE);
-        _lidSwitchStateChangeNotificationHandle = RegisterPowerNotification(PInvoke.GUID_LIDSWITCH_STATE_CHANGE);
-        _powerSavingStateChangeNotificationHandle = RegisterPowerNotification(PInvoke.GUID_POWER_SAVING_STATUS);
+                try
+                {
+                    PInvoke.UnhookWindowsHookEx(kbHookLocal);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Warning($"Failed to unhook keyboard hook in NativeWindowsMessageListener: {ex.Message}", ex);
+                }
+
+                try
+                {
+                    PInvoke.UnregisterDeviceNotification(deviceNotifLocal);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Warning($"Failed to unregister device notification: {ex.Message}", ex);
+                }
+
+                try
+                {
+                    PInvoke.UnregisterPowerSettingNotification(consoleDisplayLocal);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Warning($"Failed to unregister console display state notification: {ex.Message}", ex);
+                }
+
+                try
+                {
+                    PInvoke.UnregisterPowerSettingNotification(lidSwitchLocal);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Warning($"Failed to unregister lid switch state notification: {ex.Message}", ex);
+                }
+
+                try
+                {
+                    PInvoke.UnregisterPowerSettingNotification(powerSavingLocal);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.Warning($"Failed to unregister power saving state notification: {ex.Message}", ex);
+                }
+            });
+
+        if (!_window.Start(TimeSpan.FromSeconds(5)))
+            throw new InvalidOperationException("Failed to start the native Windows message window within the timeout.");
 
         return WaitForInit();
     });
 
     public Task StopAsync() => _mainThreadDispatcher.DispatchAsync(() =>
     {
-        var kbHookLocal = _kbHook;
-        var deviceNotifLocal = _deviceNotificationHandle;
-        var consoleDisplayLocal = _consoleDisplayStateNotificationHandle;
-        var lidSwitchLocal = _lidSwitchStateChangeNotificationHandle;
-        var powerSavingLocal = _powerSavingStateChangeNotificationHandle;
-        _kbHook = default;
-        _deviceNotificationHandle = default;
-        _consoleDisplayStateNotificationHandle = default;
-        _lidSwitchStateChangeNotificationHandle = default;
-        _powerSavingStateChangeNotificationHandle = default;
-
-        try
-        {
-            PInvoke.UnhookWindowsHookEx(kbHookLocal);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"Failed to unhook keyboard hook in NativeWindowsMessageListener: {ex.Message}", ex);
-        }
-
-        try
-        {
-            PInvoke.UnregisterDeviceNotification(deviceNotifLocal);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"Failed to unregister device notification: {ex.Message}", ex);
-        }
-
-        try
-        {
-            PInvoke.UnregisterPowerSettingNotification(consoleDisplayLocal);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"Failed to unregister console display state notification: {ex.Message}", ex);
-        }
-
-        try
-        {
-            PInvoke.UnregisterPowerSettingNotification(lidSwitchLocal);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"Failed to unregister lid switch state notification: {ex.Message}", ex);
-        }
-
-        try
-        {
-            PInvoke.UnregisterPowerSettingNotification(powerSavingLocal);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"Failed to unregister power saving state notification: {ex.Message}", ex);
-        }
-
-        try
-        {
-            ReleaseHandle();
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning($"Failed to release handle in NativeWindowsMessageListener: {ex.Message}", ex);
-        }
+        _window?.Dispose();
+        _window = null;
 
         return Task.CompletedTask;
     });
 
 
-    protected override unsafe void WndProc(ref Message m)
+    private unsafe LRESULT WndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
     {
-        if (m.Msg == PInvoke.WM_DEVICECHANGE && m.LParam != IntPtr.Zero)
+        if (msg == PInvoke.WM_DEVICECHANGE && lParam.Value != 0)
         {
-            ref var devBroadcastHdr = ref Unsafe.AsRef<DEV_BROADCAST_HDR>((void*)m.LParam);
+            ref var devBroadcastHdr = ref Unsafe.AsRef<DEV_BROADCAST_HDR>((void*)lParam.Value);
             if (devBroadcastHdr.dbch_devicetype == DEV_BROADCAST_HDR_DEVICE_TYPE.DBT_DEVTYP_DEVICEINTERFACE)
             {
-                ref var devBroadcastDeviceInterface = ref Unsafe.AsRef<DEV_BROADCAST_DEVICEINTERFACE_W>((void*)m.LParam);
+                ref var devBroadcastDeviceInterface = ref Unsafe.AsRef<DEV_BROADCAST_DEVICEINTERFACE_W>((void*)lParam.Value);
                 var length = ((int)devBroadcastDeviceInterface.dbcc_size - sizeof(DEV_BROADCAST_DEVICEINTERFACE_W)) / sizeof(char);
                 var name = devBroadcastDeviceInterface.dbcc_name.AsSpan(length).ToString();
 
-                var state = (uint)m.WParam.ToInt32();
+                var state = (uint)wParam.Value;
                 switch (state)
                 {
                     case PInvoke.DBT_DEVICEARRIVAL:
@@ -224,9 +233,9 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
             }
         }
 
-        if (m.Msg == PInvoke.WM_POWERBROADCAST && m.WParam == (IntPtr)PInvoke.PBT_POWERSETTINGCHANGE && m.LParam != IntPtr.Zero)
+        if (msg == PInvoke.WM_POWERBROADCAST && wParam.Value == PInvoke.PBT_POWERSETTINGCHANGE && lParam.Value != 0)
         {
-            ref var str = ref Unsafe.AsRef<POWERBROADCAST_SETTING>((void*)m.LParam);
+            ref var str = ref Unsafe.AsRef<POWERBROADCAST_SETTING>((void*)lParam.Value);
 
             if (str.PowerSetting == PInvoke.GUID_CONSOLE_DISPLAY_STATE)
             {
@@ -275,7 +284,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
             }
         }
 
-        base.WndProc(ref m);
+        return PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
     }
 
     private async Task WaitForInit()
@@ -402,7 +411,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         return PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam);
     }
 
-    private static unsafe HDEVNOTIFY RegisterDeviceNotification(IntPtr handle)
+    private static unsafe HDEVNOTIFY RegisterDeviceNotification(HWND hwnd)
     {
         var ptr = IntPtr.Zero;
         try
@@ -412,7 +421,7 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
             str.dbcc_devicetype = (uint)DEV_BROADCAST_HDR_DEVICE_TYPE.DBT_DEVTYP_DEVICEINTERFACE;
             ptr = Marshal.AllocHGlobal(Marshal.SizeOf(str));
             Marshal.StructureToPtr(str, ptr, true);
-            return PInvoke.RegisterDeviceNotification(new HANDLE(handle),
+            return PInvoke.RegisterDeviceNotification(new HANDLE(hwnd.Value),
                 ptr.ToPointer(),
                 REGISTER_NOTIFICATION_FLAGS.DEVICE_NOTIFY_WINDOW_HANDLE | REGISTER_NOTIFICATION_FLAGS.DEVICE_NOTIFY_ALL_INTERFACE_CLASSES);
         }
@@ -422,9 +431,9 @@ public class NativeWindowsMessageListener : NativeWindow, IListener<NativeWindow
         }
     }
 
-    private unsafe HPOWERNOTIFY RegisterPowerNotification(Guid guid)
+    private static unsafe HPOWERNOTIFY RegisterPowerNotification(HWND hwnd, Guid guid)
     {
-        return PInvoke.RegisterPowerSettingNotification(new HANDLE(Handle), &guid, 0);
+        return PInvoke.RegisterPowerSettingNotification(new HANDLE(hwnd.Value), &guid, 0);
     }
 
     private static string? ConvertDeviceNameToDeviceInstanceId(string name)

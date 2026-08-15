@@ -1,4 +1,4 @@
-﻿HWND_BROADCAST
+HWND_BROADCAST
 
 WM_CLOSE
 WM_COMMAND
@@ -243,3 +243,16 @@ WTS_CURRENT_SERVER_HANDLE
 WTSFreeMemory
 WTS_SESSIONSTATE_LOCK
 WTS_SESSIONSTATE_UNLOCK
+CreateWindowEx
+RegisterClassEx
+DefWindowProc
+DestroyWindow
+UnregisterClassW
+GetMessage
+PostThreadMessage
+TranslateMessage
+DispatchMessage
+GetModuleHandle
+GetSystemMetrics
+SystemParametersInfo
+GetCurrentThreadId

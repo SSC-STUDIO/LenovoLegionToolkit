@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
 using Windows.Win32.Foundation;
@@ -18,60 +17,14 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
         public uint TickCount { get; } = tickCount;
     }
 
-    private class UserInactivityWindow : NativeWindow, IDisposable
-    {
-        private readonly Action _callback;
-
-        private readonly HOOKPROC _hookProc;
-
-        private HHOOK _kbHook;
-        private HHOOK _mouseHook;
-
-        public UserInactivityWindow(Action callback)
-        {
-            _callback = callback;
-
-            _hookProc = HookProc;
-        }
-
-        public void Create()
-        {
-            CreateHandle(new CreateParams
-            {
-                Caption = "UniversalDeviceToolkit_UserInactivityListenerWindow",
-                Parent = new IntPtr(-3)
-            });
-
-            _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _hookProc, HINSTANCE.Null, 0);
-            _mouseHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_MOUSE_LL, _hookProc, HINSTANCE.Null, 0);
-        }
-
-        private LRESULT HookProc(int nCode, WPARAM wParam, LPARAM lParam)
-        {
-            _callback();
-            return PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam);
-        }
-
-        public void Dispose()
-        {
-            var kbHookLocal = _kbHook;
-            var mouseHookLocal = _mouseHook;
-            _kbHook = HHOOK.Null;
-            _mouseHook = HHOOK.Null;
-
-            PInvoke.UnhookWindowsHookEx(kbHookLocal);
-            PInvoke.UnhookWindowsHookEx(mouseHookLocal);
-
-            ReleaseHandle();
-
-            GC.SuppressFinalize(this);
-        }
-    }
-
     private readonly TimeSpan _timerResolution = TimeSpan.FromSeconds(10);
     private readonly object _lock = new();
 
-    private UserInactivityWindow? _window;
+    // Hook handles are touched only on the pump thread while the window lives.
+    private PumpedMessageWindow? _window;
+    private HOOKPROC? _hookProc;
+    private HHOOK _kbHook;
+    private HHOOK _mouseHook;
     private uint _tickCount;
     private Timer? _timer;
 
@@ -83,10 +36,32 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
         {
             _timer = new Timer(TimerCallback, null, _timerResolution, _timerResolution);
             _tickCount = 0;
+            _hookProc = HookProc;
 
-            var window = new UserInactivityWindow(WindowCallback);
-            window.Create();
-            _window = window;
+            // The low-level hooks are installed on the pump thread inside the
+            // window: hook callbacks only flow while the installing thread
+            // pumps messages, which the headless dispatcher thread never does.
+            _window = new PumpedMessageWindow(
+                "UniversalDeviceToolkit_UserInactivityListenerWindow",
+                DefaultWndProc,
+                onStarted: _ =>
+                {
+                    _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _hookProc!, HINSTANCE.Null, 0);
+                    _mouseHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_MOUSE_LL, _hookProc!, HINSTANCE.Null, 0);
+                },
+                onStopped: () =>
+                {
+                    var kbHookLocal = _kbHook;
+                    var mouseHookLocal = _mouseHook;
+                    _kbHook = HHOOK.Null;
+                    _mouseHook = HHOOK.Null;
+
+                    PInvoke.UnhookWindowsHookEx(kbHookLocal);
+                    PInvoke.UnhookWindowsHookEx(mouseHookLocal);
+                });
+
+            if (!_window.Start(TimeSpan.FromSeconds(5)))
+                throw new InvalidOperationException("Failed to start the user-inactivity message window within the timeout.");
         }
 
         return Task.CompletedTask;
@@ -106,6 +81,15 @@ public class UserInactivityAutoListener(IMainThreadDispatcher mainThreadDispatch
 
         return Task.CompletedTask;
     });
+
+    private static LRESULT DefaultWndProc(HWND hwnd, uint msg, WPARAM wParam, LPARAM lParam)
+        => PInvoke.DefWindowProc(hwnd, msg, wParam, lParam);
+
+    private LRESULT HookProc(int nCode, WPARAM wParam, LPARAM lParam)
+    {
+        WindowCallback();
+        return PInvoke.CallNextHookEx(HHOOK.Null, nCode, wParam, lParam);
+    }
 
     private void WindowCallback()
     {

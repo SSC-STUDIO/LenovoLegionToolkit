@@ -2,9 +2,10 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Threading;
-using System.Windows.Forms;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Controllers;
+using Windows.Win32;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace UniversalDeviceToolkit.Lib.Controllers;
 
@@ -14,14 +15,17 @@ public class SpectrumScreenCapture : SpectrumKeyboardBacklightController.ISpectr
 
     public void CaptureScreen(ref RGBColor[,] buffer, int width, int height, CancellationToken token)
     {
-        var screen = Screen.PrimaryScreen?.Bounds ?? default;
+        // Primary screen bounds without System.Windows.Forms.Screen: the
+        // primary monitor starts at (0,0) by definition.
+        var screenWidth = PInvoke.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CXSCREEN);
+        var screenHeight = PInvoke.GetSystemMetrics(SYSTEM_METRICS_INDEX.SM_CYSCREEN);
 
         using var targetImage = new Bitmap(width, height, PIXEL_FORMAT);
 
-        using (var image = new Bitmap(screen.Width, screen.Height, PIXEL_FORMAT))
+        using (var image = new Bitmap(screenWidth, screenHeight, PIXEL_FORMAT))
         {
             using (var graphics = Graphics.FromImage(image))
-                graphics.CopyFromScreen(screen.Left, screen.Top, 0, 0, screen.Size);
+                graphics.CopyFromScreen(0, 0, 0, 0, new Size(screenWidth, screenHeight));
 
             token.ThrowIfCancellationRequested();
 

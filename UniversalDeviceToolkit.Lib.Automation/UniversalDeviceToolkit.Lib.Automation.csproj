@@ -7,8 +7,12 @@
 		<NeutralLanguage>en</NeutralLanguage>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="Autofac" />
-		<PackageReference Include="NeoSmart.AsyncLock" />
+<PackageReference Include="Autofac" />
+    <PackageReference Include="NeoSmart.AsyncLock" />
+    <!-- SoundPlayer (System.Media) previously flowed from the implicit Windows
+         Desktop reference pack via Lib's UseWindowsForms; reference it
+         explicitly now that the desktop stack is gone. -->
+    <PackageReference Include="System.Windows.Extensions" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />

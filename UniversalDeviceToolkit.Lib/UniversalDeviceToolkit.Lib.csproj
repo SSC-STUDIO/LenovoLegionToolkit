@@ -9,9 +9,11 @@
 		     ambiguous System.Windows.Forms/System.Timers and System.Drawing/Windows.UI types. -->
 		<ImplicitUsings>disable</ImplicitUsings>
 		<Copyright>$(ProjectCopyright)</Copyright>
-		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-		<NeutralLanguage>en</NeutralLanguage>
-		<UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">true</UseWindowsForms>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <NeutralLanguage>en</NeutralLanguage>
+		<!-- No WinForms: the headless host ships no desktop stack. System.Drawing
+		     (screen capture bitmaps) comes from the explicit System.Drawing.Common
+		     package below instead of the WindowsDesktop reference pack. -->
 	</PropertyGroup>
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">
 		<PackageReference Include="Autofac" />
@@ -25,6 +27,8 @@
 		</PackageReference>
 		<PackageReference Include="NAudio.Wasapi" />
 		<PackageReference Include="LibreHardwareMonitorLib" />
+		<PackageReference Include="System.Drawing.Common" />
+		<PackageReference Include="System.Diagnostics.PerformanceCounter" />
 		<PackageReference Include="System.Management" />
 		<PackageReference Include="System.ServiceProcess.ServiceController" />
 		<PackageReference Include="NeoSmart.AsyncLock" />
@@ -176,6 +180,7 @@
     <Compile Remove="Utils\LampEffects\CustomPatternEffect.cs" />
     <Compile Remove="Utils\LampEffects\ILampEffect.cs" />
     <Compile Remove="Utils\PawnIOHelper.cs" />
+    <Compile Remove="Utils\PumpedMessageWindow.cs" />
     <Compile Remove="Utils\ReflectionCache.cs" />
     <Compile Remove="Utils\SafePerformanceCounter.cs" />
     <Compile Remove="Utils\StructSafeHandle.cs" />

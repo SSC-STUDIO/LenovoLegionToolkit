@@ -6,7 +6,8 @@
 		<Copyright>$(ProjectCopyright)</Copyright>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<NeutralLanguage>en</NeutralLanguage>
-		<UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">true</UseWindowsForms>
+		<!-- No WinForms: System.Drawing.Rectangle flows transitively from Lib's
+		     System.Drawing.Common package reference. -->
 	</PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />

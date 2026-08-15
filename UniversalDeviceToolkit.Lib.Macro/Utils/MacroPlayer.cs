@@ -3,10 +3,10 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
+using Windows.Win32.Foundation;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
 using Windows.Win32.UI.WindowsAndMessaging;
 using UniversalDeviceToolkit.Abstractions.Utils;
@@ -84,7 +84,7 @@ internal class MacroPlayer
 
                     try
                     {
-                        var input = ToInput(macroEvent, Screen.PrimaryScreen?.WorkingArea ?? Rectangle.Empty);
+                        var input = ToInput(macroEvent, GetPrimaryWorkingArea());
                         var result = PInvoke.SendInput(MemoryMarshal.CreateSpan(ref input, 1), Marshal.SizeOf<INPUT>());
                         if (result == 0)
                             PInvokeExtensions.ThrowIfWin32Error($"Failed to send input. Return code was {result}.");
@@ -106,6 +106,28 @@ internal class MacroPlayer
         MacroSource.Unknown => throw new ArgumentException(null, nameof(macroEvent)),
         _ => throw new ArgumentOutOfRangeException(nameof(macroEvent))
     };
+
+    /// <summary>
+    /// Primary-monitor working area (taskbar excluded) without
+    /// System.Windows.Forms.Screen; absolute mouse coordinates are normalized
+    /// against it. Falls back to an empty rectangle when the query fails.
+    /// </summary>
+    private static unsafe Rectangle GetPrimaryWorkingArea()
+    {
+        try
+        {
+            var workArea = new RECT();
+            if (PInvoke.SystemParametersInfo(SYSTEM_PARAMETERS_INFO_ACTION.SPI_GETWORKAREA, 0, &workArea, 0))
+                return Rectangle.FromLTRB(workArea.left, workArea.top, workArea.right, workArea.bottom);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("SPI_GETWORKAREA failed; macro mouse moves use an empty screen area.", ex);
+        }
+
+        return Rectangle.Empty;
+    }
 
     private static INPUT ToKeyboardInput(MacroEvent macroEvent) => new()
     {
