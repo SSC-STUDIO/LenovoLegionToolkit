@@ -26,7 +26,7 @@ import AppStatusBanners from '../components/AppStatusBanners'
 import LoadingOverlay from '../components/LoadingOverlay'
 import NotificationCenter from '../components/NotificationCenter'
 import UtilsModalHost from '../components/utils/UtilsModalHost'
-import StartupGates from '../components/utils/StartupGates'
+import UnsupportedDeviceGate from '../components/utils/UnsupportedDeviceGate'
 import { openStatusModal } from '../components/utils/StatusModal'
 import { on } from '../api/bridge'
 import { useSettingsStore } from '../stores/settingsStore'
@@ -307,7 +307,7 @@ export default function AppLayout(): React.JSX.Element {
   return (
     <div className="udt-app-shell">
       <WindowBackdropController />
-      <StartupGates />
+      <UnsupportedDeviceGate />
       <UtilsModalHost />
       <LoadingOverlay />
       <NotificationCenter />

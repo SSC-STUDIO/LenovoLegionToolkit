@@ -3,8 +3,6 @@ import ActionDetailsModalHost from './ActionDetailsModal'
 import CompatibilityCheckErrorModalHost from './CompatibilityCheckErrorModal'
 import CrashReportNotificationModalHost from './CrashReportNotificationModal'
 import DeviceInformationModalHost from './DeviceInformationModal'
-import DeviceSetupModalHost from './DeviceSetupModal'
-import LanguageSelectorModalHost from './LanguageSelectorModal'
 import StatusModalHost from './StatusModal'
 import SymbolPickerModalHost from './SymbolPickerModal'
 import UnsupportedDeviceModalHost from './UnsupportedDeviceModal'
@@ -23,8 +21,6 @@ export default function UtilsModalHost(): React.JSX.Element {
       <CompatibilityCheckErrorModalHost />
       <CrashReportNotificationModalHost />
       <DeviceInformationModalHost />
-      <DeviceSetupModalHost />
-      <LanguageSelectorModalHost />
       <StatusModalHost />
       <SymbolPickerModalHost />
       <UnsupportedDeviceModalHost />
