@@ -1,6 +1,11 @@
-﻿export interface Bridge {
+export interface Bridge {
   /** Runtime platform ('darwin' on macOS) — drives native title bar layout. */
   platform: string
+  /** Selection captured by the NSIS setup wizard, if this install has one. */
+  installerSelection: {
+    language: string
+    deviceMode: 'auto' | 'basic'
+  } | null
   invoke: (method: string, params?: unknown) => Promise<unknown>
   getHostStatus: () => Promise<{
     running: boolean

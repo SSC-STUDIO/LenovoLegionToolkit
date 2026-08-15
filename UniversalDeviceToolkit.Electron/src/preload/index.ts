@@ -1,8 +1,14 @@
-﻿import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
+
+import { parseInstallerSelectionArguments } from '../shared/installer-selection'
+
+const installerSelection = parseInstallerSelectionArguments(process.argv)
 
 const bridge = {
   /** Runtime platform ('darwin' on macOS) — drives native title bar layout. */
   platform: process.platform,
+  /** Selection captured by the NSIS setup wizard, if this install has one. */
+  installerSelection,
   invoke: (method: string, params?: unknown): Promise<unknown> =>
     ipcRenderer.invoke('bridge:invoke', method, params),
   getHostStatus: (): Promise<{

@@ -92,13 +92,26 @@ function persistLanguage(lng: string): void {
 }
 
 function resolveInitialLanguage(): string {
+  let storedLanguage: string | null = null
   try {
-    const stored =
+    storedLanguage =
       localStorage.getItem(LANGUAGE_STORAGE_KEY) ?? localStorage.getItem(LEGACY_LANGUAGE_STORAGE_KEY)
-    if (stored != null) return normalizeLanguage(stored)
   } catch {
     /* ignore quota / private mode */
   }
+
+  if (storedLanguage != null) return normalizeLanguage(storedLanguage)
+
+  // The installer is the first-run language picker. Persist its validated
+  // choice immediately so a later launch is governed by Settings instead of
+  // replaying setup state from the installed application directory.
+  const installerLanguage = typeof window === 'undefined' ? undefined : window.bridge?.installerSelection?.language
+  if (installerLanguage != null && supportedLanguages.includes(installerLanguage as SupportedLanguage)) {
+    const normalized = normalizeLanguage(installerLanguage)
+    persistLanguage(normalized)
+    return normalized
+  }
+
   return DEFAULT_LANGUAGE
 }
 

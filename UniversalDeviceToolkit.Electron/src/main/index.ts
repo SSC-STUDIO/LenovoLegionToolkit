@@ -21,6 +21,11 @@ import { initTray, destroyTray, refreshTrayMenu, updateTrayLanguage } from './tr
 import { initOsdWindow, destroyOsdWindow } from './osd-window'
 import { initStatusWindow, destroyStatusWindow, showStatusWindow } from './status-window'
 import { flags, describeFlags, toHostArgs } from './flags'
+import {
+  buildInstallerHostArguments,
+  buildInstallerRendererArguments,
+  readInstallerSelection
+} from './installer-selection'
 import { attachResizeStability, attachMaximizeWorkAreaClamp, constrainToWorkArea } from './window-helpers'
 import { listPowerPlans, setActivePowerPlan } from './power-plans'
 import { restartSystem, shutdownSystem, sleepSystem } from './system-power'
@@ -74,6 +79,7 @@ if (!initSingleInstance()) {
 
 let mainWindow: BrowserWindow | null = null
 let isQuitting = false
+let installerSelection: ReturnType<typeof readInstallerSelection> = null
 type WindowsBackgroundMaterial = 'none' | 'mica' | 'acrylic'
 let currentBackgroundMaterial: WindowsBackgroundMaterial = 'none'
 
@@ -515,6 +521,8 @@ function createWindow(): void {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
+      additionalArguments:
+        installerSelection == null ? [] : buildInstallerRendererArguments(installerSelection),
       // First paint already at the effective zoom (installZoomAutoApply keeps
       // later navigations in sync).
       zoomFactor: zoom,
@@ -636,6 +644,9 @@ function startHost(): void {
   try {
     const hostPath = resolveHostPath()
     const hostArgs = toHostArgs(flags)
+    for (const argument of buildInstallerHostArguments(installerSelection)) {
+      if (!hostArgs.includes(argument)) hostArgs.push(argument)
+    }
     console.log(`[main] starting host: ${hostPath}${hostArgs.length > 0 ? ` ${hostArgs.join(' ')}` : ''}`)
     hostClient.start(hostPath, hostArgs)
   } catch (error) {
@@ -674,6 +685,12 @@ app.whenReady().then(() => {
   // (Electron requests it automatically on first use), Linux has no special
   // handling beyond the desktop environment's own notification settings.
   console.log('[main] app ready')
+  installerSelection = readInstallerSelection()
+  if (installerSelection != null) {
+    console.log(
+      `[main] installer selection: language=${installerSelection.language}, deviceMode=${installerSelection.deviceMode}`
+    )
+  }
   if (flags.isTraceEnabled) {
     console.log(`[main] flags: ${describeFlags(flags)}`)
   }

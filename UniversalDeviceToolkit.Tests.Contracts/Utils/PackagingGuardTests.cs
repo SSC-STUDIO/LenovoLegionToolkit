@@ -43,4 +43,17 @@ public sealed class PackagingGuardTests
         workflow.Should().Contain("UniversalDeviceToolkit.Host/publish/win-x64");
         workflow.Should().NotContain("OnlineInstallerPath = \"$env:INSTALLER_OUTPUT\\UniversalDeviceToolkitSetup.exe\"");
     }
+
+    [Fact]
+    public void ElectronInstaller_ShouldPersistLanguageAndDeviceSelectionBeforeFirstLaunch()
+    {
+        var script = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "buildResources", "installer.nsh");
+
+        script.Should().Contain("customPageAfterChangeDir");
+        script.Should().Contain("Page custom UdtLanguagePage UdtLanguageLeave");
+        script.Should().Contain("Page custom UdtDevicePage UdtDeviceLeave");
+        script.Should().Contain("$INSTDIR\\installer-selection.ini");
+        script.Should().Contain("WriteINIStr");
+        script.Should().Contain("deviceMode");
+    }
 }
