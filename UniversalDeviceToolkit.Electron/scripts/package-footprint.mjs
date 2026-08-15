@@ -15,9 +15,11 @@ const CHROMIUM_LOCALE_SET = new Set(CHROMIUM_LOCALES)
 export const BUDGETS = Object.freeze({
   appAsar: 15 * MEBIBYTE,
   chromiumLocales: 20 * MEBIBYTE,
-  host: Object.freeze({ 'win-x64': 180 * MEBIBYTE, 'linux-x64': 92 * MEBIBYTE, 'osx-x64': 100 * MEBIBYTE, 'osx-arm64': 100 * MEBIBYTE }),
-  unpacked: Object.freeze({ 'win-x64': 540 * MEBIBYTE, 'linux-x64': 450 * MEBIBYTE, 'osx-x64': 500 * MEBIBYTE, 'osx-arm64': 500 * MEBIBYTE }),
-  distributable: 190 * MEBIBYTE,
+  // The Windows Desktop (WinForms) stack is no longer shipped with the host;
+  // screen geometry and message windows come from CsWin32 P/Invoke instead.
+  host: Object.freeze({ 'win-x64': 130 * MEBIBYTE, 'linux-x64': 92 * MEBIBYTE, 'osx-x64': 100 * MEBIBYTE, 'osx-arm64': 100 * MEBIBYTE }),
+  unpacked: Object.freeze({ 'win-x64': 470 * MEBIBYTE, 'linux-x64': 450 * MEBIBYTE, 'osx-x64': 500 * MEBIBYTE, 'osx-arm64': 500 * MEBIBYTE }),
+  distributable: 185 * MEBIBYTE,
   onlineBootstrap: 15 * MEBIBYTE
 })
 
