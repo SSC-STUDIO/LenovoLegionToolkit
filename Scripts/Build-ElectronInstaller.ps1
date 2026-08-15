@@ -9,13 +9,15 @@ param(
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
-# Builds the Electron NSIS installer (UniversalDeviceToolkit.Electron) in
+# Builds the branded Electron installer (UniversalDeviceToolkit.Electron) in
 # both flavors, mirroring the retired WPF installer output layout:
 #   BuildInstaller\UniversalDeviceToolkitSetup.exe
 #   BuildInstaller\UniversalDeviceToolkitOnlineSetup.exe
-# The Electron app embeds the self-contained .NET host via extraResources.
-# Full is packed first (all Host satellites). Online is packed after pruning
-# the Host publish dir to English-only satellites.
+# The offline/full installer is a self-contained portable Electron setup app.
+# Its renderer owns the complete installation flow and copies the signed
+# win-unpacked payload. The online installer remains the small nsis-web
+# downloader so release asset size stays within the existing distribution
+# contract. Both installers embed the same signed Host payload.
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $electronProject = Join-Path $repoRoot 'UniversalDeviceToolkit.Electron'
@@ -23,6 +25,7 @@ $hostPublishDir = Join-Path $repoRoot 'UniversalDeviceToolkit.Host\publish\win-x
 $pruneScript = Join-Path $PSScriptRoot 'Prune-ShippingFootprint.ps1'
 $channelFile = Join-Path $electronProject 'resources\install-channel'
 $distDir = Join-Path $electronProject 'dist'
+$customDistDir = Join-Path $distDir 'custom-installer'
 
 if (-not (Test-Path -LiteralPath (Join-Path $electronProject 'package.json'))) {
     throw "Electron project not found at '$electronProject'."
@@ -102,6 +105,14 @@ try {
     }
 
     Set-InstallChannel -Channel 'full'
+    # Stage a normal unpacked application first. custom-installer.yml embeds
+    # this directory as its payload so the custom setup UI can copy it to the
+    # selected destination without showing any native NSIS page.
+    Invoke-ElectronWinTarget -Target 'dir'
+    npx electron-builder --config custom-installer.yml --win portable
+    if ($LASTEXITCODE -ne 0) {
+        throw 'Custom Electron installer failed.'
+    }
     Invoke-ElectronWinTarget -Target 'nsis'
     Invoke-ElectronWinTarget -Target 'zip'
 
@@ -126,21 +137,22 @@ finally {
     Pop-Location
 }
 
-# Locate the produced NSIS setup artifacts.
-# Full (offline) uses UniversalDeviceToolkitSetup-*.exe
+# Locate the produced custom full setup artifact.
+# Full (offline) uses the portable custom setup app. NSIS is still generated
+# for compatibility with the web/bootstrap distribution and historical CI
+# diagnostics, but it is not the user-facing full setup asset.
 # Online (nsis-web stub) uses UniversalDeviceToolkitOnlineSetup-*.exe
-$setupArtifact = Get-ChildItem -LiteralPath $distDir -Filter 'UniversalDeviceToolkitSetup-*.exe' -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -notmatch 'Online' } |
+$customSetupArtifact = Get-ChildItem -LiteralPath $customDistDir -Filter 'UniversalDeviceToolkitSetup-*.exe' -ErrorAction SilentlyContinue |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1
 
-if ($null -eq $setupArtifact) {
-    throw "NSIS Full setup artifact not found under '$distDir'."
+if ($null -eq $customSetupArtifact) {
+    throw "Custom Full setup artifact not found under '$customDistDir'."
 }
 
 $finalSetupPath = Join-Path $installerOutputPath 'UniversalDeviceToolkitSetup.exe'
-Copy-Item -LiteralPath $setupArtifact.FullName -Destination $finalSetupPath -Force
-Write-Host "Electron Full installer built: $finalSetupPath ($([math]::Round($setupArtifact.Length / 1MB, 1)) MB)"
+Copy-Item -LiteralPath $customSetupArtifact.FullName -Destination $finalSetupPath -Force
+Write-Host "Custom Electron Full installer built: $finalSetupPath ($([math]::Round($customSetupArtifact.Length / 1MB, 1)) MB)"
 
 $onlineArtifact = Get-ChildItem -LiteralPath $distDir -Filter 'UniversalDeviceToolkitOnlineSetup-*.exe' -ErrorAction SilentlyContinue |
     Sort-Object LastWriteTime -Descending |

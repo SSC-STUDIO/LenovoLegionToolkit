@@ -40,7 +40,10 @@ win:
 nsis:
   oneClick: false
   perMachine: true
-  allowToChangeInstallationDirectory: true
+  # The branded custom welcome page owns the destination-folder picker. Keeping
+  # the stock directory page disabled prevents a second white page from leaking
+  # into the reference-matched setup flow.
+  allowToChangeInstallationDirectory: false
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: Universal Device Toolkit
@@ -78,7 +81,7 @@ nsisWeb:
   artifactName: UniversalDeviceToolkitOnlineSetup-${version}.${ext}
   oneClick: false
   perMachine: true
-  allowToChangeInstallationDirectory: true
+  allowToChangeInstallationDirectory: false
   createDesktopShortcut: true
   createStartMenuShortcut: true
   shortcutName: Universal Device Toolkit

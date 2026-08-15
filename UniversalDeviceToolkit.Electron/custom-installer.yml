@@ -1,0 +1,29 @@
+appId: com.universaldevicetoolkit.installer
+productName: Universal Device Toolkit Setup
+copyright: Universal Device Toolkit Contributors
+directories:
+  output: dist/custom-installer
+  buildResources: buildResources
+files:
+  - installer/**
+  - package.json
+extraResources:
+  - from: resources/icon.png
+    to: installer-assets/icon.png
+  - from: dist/win-unpacked
+    to: payload
+    filter:
+      - "**/*"
+win:
+  icon: buildResources/icon.ico
+  requestedExecutionLevel: requireAdministrator
+  target:
+    - target: portable
+      arch:
+        - x64
+portable:
+  artifactName: UniversalDeviceToolkitSetup-${version}.${ext}
+compression: maximum
+asar: true
+extraMetadata:
+  main: installer/main.mjs

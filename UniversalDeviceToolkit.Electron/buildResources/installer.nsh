@@ -1,13 +1,23 @@
-; Universal Device Toolkit NSIS installer customizations.
-; The setup wizard collects first-run choices before files are extracted. The
-; Electron main process reads the resulting INI file and applies the choices to
-; the first launch, so the application does not show duplicate setup dialogs.
+; Universal Device Toolkit branded NSIS pages.
+;
+; The installer remains electron-builder + NSIS so it keeps the established
+; per-machine install, shortcut, upgrade, signing, and uninstall behavior. The
+; assisted wizard pages are deliberately drawn as a dark product surface so
+; the setup experience matches the Electron product instead of exposing the
+; default white Modern UI pages.
 
 !include LogicLib.nsh
 !include WinMessages.nsh
 !include nsDialogs.nsh
 
 !define UDT_SELECTION_FILE "$INSTDIR\installer-selection.ini"
+!define UDT_BG "0x171717"
+!define UDT_PANEL "0x0D0D0D"
+!define UDT_CARD "0x242424"
+!define UDT_BORDER "0x3A3A3A"
+!define UDT_TEXT "0xF5F5F5"
+!define UDT_MUTED "0xB6B6B6"
+!define UDT_RED "0xF52632"
 
 !ifndef BUILD_UNINSTALLER
 Var udtSelectionInitialized
@@ -16,6 +26,13 @@ Var udtDeviceMode
 Var udtLanguageCombo
 Var udtAutoRadio
 Var udtBasicRadio
+Var udtPathEdit
+Var udtBrowseButton
+Var udtRequiredLabel
+Var udtAvailableLabel
+Var udtFontTitle
+Var udtFontBody
+Var udtFontSmall
 
 Function UdtLoadSelection
   ${If} $udtSelectionInitialized == "1"
@@ -64,23 +81,173 @@ Function UdtLoadSelection
   StrCpy $udtSelectionInitialized "1"
 FunctionEnd
 
-Function UdtLanguagePage
+Function UdtHideNativeChrome
+  ; The custom page owns the content header. Hide only the Modern UI header
+  ; labels/branding; native window controls and the footer remain accessible.
+  GetDlgItem $0 $HWNDPARENT 1034
+  ShowWindow $0 ${SW_HIDE}
+  GetDlgItem $0 $HWNDPARENT 1035
+  ShowWindow $0 ${SW_HIDE}
+  GetDlgItem $0 $HWNDPARENT 1036
+  ShowWindow $0 ${SW_HIDE}
+  GetDlgItem $0 $HWNDPARENT 1037
+  ShowWindow $0 ${SW_HIDE}
+  GetDlgItem $0 $HWNDPARENT 1038
+  ShowWindow $0 ${SW_HIDE}
+  GetDlgItem $0 $HWNDPARENT 1039
+  ShowWindow $0 ${SW_HIDE}
+  GetDlgItem $0 $HWNDPARENT 1028
+  ShowWindow $0 ${SW_HIDE}
+  GetDlgItem $0 $HWNDPARENT 1256
+  ShowWindow $0 ${SW_HIDE}
+
+  ; Keep the wizard background from flashing white around the custom dialog.
+  SetCtlColors $HWNDPARENT "" "${UDT_BG}"
+  GetDlgItem $0 $HWNDPARENT 1
+  SetCtlColors $0 "${UDT_TEXT}" "${UDT_RED}"
+  GetDlgItem $0 $HWNDPARENT 2
+  SetCtlColors $0 "${UDT_TEXT}" "${UDT_CARD}"
+  GetDlgItem $0 $HWNDPARENT 3
+  SetCtlColors $0 "${UDT_TEXT}" "${UDT_CARD}"
+FunctionEnd
+
+Function UdtCreateFonts
+  CreateFont $udtFontTitle "Segoe UI" 18 700
+  CreateFont $udtFontBody "Segoe UI" 10 400
+  CreateFont $udtFontSmall "Segoe UI" 8 400
+FunctionEnd
+
+Function UdtWelcomePage
   Call UdtLoadSelection
+  Call UdtHideNativeChrome
+  Call UdtCreateFonts
+
   nsDialogs::Create 1018
   Pop $0
   ${If} $0 == error
     Abort
   ${EndIf}
+  ; nsDialogs normally reserves the former Modern UI header area. Stretch the
+  ; custom surface back to the whole client so the brand panel starts directly
+  ; below the title bar like the reference design.
+  System::Call 'user32::SetWindowPos(i $0, i 0, i 0, i 0, i 750, i 500, i 0)'
+  SetCtlColors $0 "" "${UDT_BG}"
 
-  ${NSD_CreateLabel} 0u 0u 300u 18u "Universal Device Toolkit"
+  ; Left brand panel, matching the reference composition.
+  ${NSD_CreateLabel} 0u 0u 145u 250u ""
+  Pop $1
+  SetCtlColors $1 "" "${UDT_PANEL}"
+  ${NSD_CreateLabel} 18u 28u 110u 28u "U"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontTitle 0
+  ${NSD_CreateLabel} 16u 75u 120u 25u "Universal Device"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontBody 0
+  ${NSD_CreateLabel} 16u 97u 120u 25u "Toolkit"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontBody 0
+  ${NSD_CreateLabel} 16u 130u 120u 18u "6.0.0"
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontSmall 0
+  ${NSD_CreateLabel} 16u 202u 118u 22u "WINDOWS x64"
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontSmall 0
+  ${NSD_CreateLabel} 16u 225u 118u 20u "●  LOCAL INSTALL"
+  Pop $1
+  SetCtlColors $1 "0x46D369" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontSmall 0
+
+  ; Main setup card.
+  ${NSD_CreateLabel} 155u 0u 185u 250u ""
+  Pop $1
+  SetCtlColors $1 "" "${UDT_BG}"
+  ${NSD_CreateLabel} 170u 22u 155u 28u "准备安装"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontTitle 0
+  ${NSD_CreateLabel} 170u 52u 155u 20u "选择安装位置，然后开始安装。"
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
+  ${NSD_CreateLabel} 170u 83u 155u 18u "安装位置"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontBody 0
+
+  ${NSD_CreateDirRequest} 170u 105u 130u 24u "$INSTDIR"
+  Pop $udtPathEdit
+  SetCtlColors $udtPathEdit "${UDT_TEXT}" "${UDT_CARD}"
+  ${NSD_CreateBrowseButton} 304u 105u 35u 24u "浏览"
+  Pop $udtBrowseButton
+  SetCtlColors $udtBrowseButton "${UDT_TEXT}" "${UDT_CARD}"
+  ${NSD_OnClick} $udtBrowseButton UdtBrowseClicked
+
+  ${NSD_CreateLabel} 170u 145u 155u 58u ""
+  Pop $1
+  SetCtlColors $1 "" "${UDT_CARD}"
+  ${NSD_CreateLabel} 180u 154u 62u 16u "需要空间"
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
+  ${NSD_CreateLabel} 180u 172u 62u 22u "763 MB"
+  Pop $udtRequiredLabel
+  SetCtlColors $udtRequiredLabel "${UDT_TEXT}" "transparent"
+  SendMessage $udtRequiredLabel ${WM_SETFONT} $udtFontBody 0
+  ${NSD_CreateLabel} 252u 154u 70u 16u "可用空间"
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
+  ${NSD_CreateLabel} 252u 172u 70u 22u "检测中..."
+  Pop $udtAvailableLabel
+  SetCtlColors $udtAvailableLabel "${UDT_TEXT}" "transparent"
+  SendMessage $udtAvailableLabel ${WM_SETFONT} $udtFontBody 0
+
+  nsDialogs::Show
+FunctionEnd
+
+Function UdtBrowseClicked
   Pop $0
-  ${NSD_CreateLabel} 0u 23u 300u 28u "Choose the language for the application / 选择应用语言"
+  ${NSD_GetText} $udtPathEdit $1
+  nsDialogs::SelectFolderDialog "选择安装位置" $1
+  Pop $1
+  ${If} $1 != error
+    SendMessage $udtPathEdit ${WM_SETTEXT} 0 STR:$1
+    StrCpy $INSTDIR $1
+  ${EndIf}
+FunctionEnd
+
+Function UdtWelcomeLeave
+  ${NSD_GetText} $udtPathEdit $INSTDIR
+  ${If} $INSTDIR == ""
+    StrCpy $INSTDIR "$PROGRAMFILES64\Universal Device Toolkit"
+  ${EndIf}
+FunctionEnd
+
+Function UdtLanguagePage
+  Call UdtLoadSelection
+  Call UdtHideNativeChrome
+  nsDialogs::Create 1018
   Pop $0
-  ${NSD_CreateLabel} 0u 57u 300u 18u "Language / 语言"
-  Pop $0
-  ${NSD_CreateDropList} 0u 77u 300u 120u ""
+  ${If} $0 == error
+    Abort
+  ${EndIf}
+  System::Call 'user32::SetWindowPos(i $0, i 0, i 0, i 0, i 750, i 500, i 0)'
+  SetCtlColors $0 "" "${UDT_BG}"
+  ${NSD_CreateLabel} 22u 22u 290u 28u "语言选择"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontTitle 0
+  ${NSD_CreateLabel} 22u 55u 290u 20u "Select the application language / 选择应用语言"
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
+  ${NSD_CreateLabel} 22u 92u 290u 18u "语言 / Language"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  ${NSD_CreateDropList} 22u 116u 290u 130u ""
   Pop $udtLanguageCombo
-
+  SetCtlColors $udtLanguageCombo "${UDT_TEXT}" "${UDT_CARD}"
   ${NSD_CB_AddString} $udtLanguageCombo "English (en)"
   ${NSD_CB_AddString} $udtLanguageCombo "简体中文 (zh-CN)"
   ${NSD_CB_AddString} $udtLanguageCombo "繁體中文 (zh-Hant)"
@@ -106,11 +273,8 @@ Function UdtLanguagePage
   ${NSD_CB_AddString} $udtLanguageCombo "Nederlands (nl-NL)"
   ${NSD_CB_AddString} $udtLanguageCombo "Tiếng Việt (vi)"
   ${NSD_CB_AddString} $udtLanguageCombo "O'zbek (uz-Latn-UZ)"
-
   ${If} $udtLanguage == "en"
     ${NSD_CB_SelectString} $udtLanguageCombo "English (en)"
-  ${ElseIf} $udtLanguage == "zh-CN"
-    ${NSD_CB_SelectString} $udtLanguageCombo "简体中文 (zh-CN)"
   ${ElseIf} $udtLanguage == "zh-Hant"
     ${NSD_CB_SelectString} $udtLanguageCombo "繁體中文 (zh-Hant)"
   ${ElseIf} $udtLanguage == "ja"
@@ -155,8 +319,10 @@ Function UdtLanguagePage
     ${NSD_CB_SelectString} $udtLanguageCombo "Nederlands (nl-NL)"
   ${ElseIf} $udtLanguage == "vi"
     ${NSD_CB_SelectString} $udtLanguageCombo "Tiếng Việt (vi)"
-  ${Else}
+  ${ElseIf} $udtLanguage == "uz-Latn-UZ"
     ${NSD_CB_SelectString} $udtLanguageCombo "O'zbek (uz-Latn-UZ)"
+  ${Else}
+    ${NSD_CB_SelectString} $udtLanguageCombo "简体中文 (zh-CN)"
   ${EndIf}
   nsDialogs::Show
 FunctionEnd
@@ -165,8 +331,6 @@ Function UdtLanguageLeave
   ${NSD_GetText} $udtLanguageCombo $0
   ${If} $0 == "English (en)"
     StrCpy $udtLanguage "en"
-  ${ElseIf} $0 == "简体中文 (zh-CN)"
-    StrCpy $udtLanguage "zh-CN"
   ${ElseIf} $0 == "繁體中文 (zh-Hant)"
     StrCpy $udtLanguage "zh-Hant"
   ${ElseIf} $0 == "日本語 (ja)"
@@ -211,34 +375,44 @@ Function UdtLanguageLeave
     StrCpy $udtLanguage "nl-NL"
   ${ElseIf} $0 == "Tiếng Việt (vi)"
     StrCpy $udtLanguage "vi"
-  ${Else}
+  ${ElseIf} $0 == "O'zbek (uz-Latn-UZ)"
     StrCpy $udtLanguage "uz-Latn-UZ"
+  ${Else}
+    StrCpy $udtLanguage "zh-CN"
   ${EndIf}
 FunctionEnd
 
 Function UdtDevicePage
   Call UdtLoadSelection
+  Call UdtHideNativeChrome
   nsDialogs::Create 1018
   Pop $0
   ${If} $0 == error
     Abort
   ${EndIf}
-
-  ${NSD_CreateLabel} 0u 0u 300u 18u "Device configuration / 设备配置"
-  Pop $0
-  ${NSD_CreateLabel} 0u 25u 300u 30u "Choose how hardware support should start. / 选择硬件支持启动方式。"
-  Pop $0
-  ${NSD_CreateRadioButton} 10u 65u 285u 24u "Automatically detect supported hardware (recommended) / 自动识别支持的硬件 (推荐)"
+  System::Call 'user32::SetWindowPos(i $0, i 0, i 0, i 0, i 750, i 500, i 0)'
+  SetCtlColors $0 "" "${UDT_BG}"
+  ${NSD_CreateLabel} 22u 22u 290u 28u "设备选择"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontTitle 0
+  ${NSD_CreateLabel} 22u 55u 290u 35u "Choose the hardware mode / 选择硬件模式"
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
+  ${NSD_CreateRadioButton} 22u 102u 290u 30u "自动识别支持的硬件（推荐）"
   Pop $udtAutoRadio
-  ${NSD_CreateRadioButton} 10u 98u 285u 30u "Basic mode — plugins and system optimization only / 基础模式 — 仅插件与系统优化"
+  SetCtlColors $udtAutoRadio "${UDT_TEXT}" "transparent"
+  ${NSD_CreateRadioButton} 22u 140u 290u 35u "基础模式 — 仅插件与系统优化"
   Pop $udtBasicRadio
+  SetCtlColors $udtBasicRadio "${UDT_TEXT}" "transparent"
   ${If} $udtDeviceMode == "basic"
     ${NSD_SetState} $udtBasicRadio ${BST_CHECKED}
   ${Else}
     ${NSD_SetState} $udtAutoRadio ${BST_CHECKED}
   ${EndIf}
-  ${NSD_CreateLabel} 10u 143u 285u 28u "You can change this later in Settings. / 稍后可在设置中更改。"
-  Pop $0
+  ${NSD_CreateLabel} 22u 192u 290u 35u "ⓘ  不会修改设备设置，安装后可在应用中更改。"
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
   nsDialogs::Show
 FunctionEnd
 
@@ -251,33 +425,33 @@ Function UdtDeviceLeave
   ${EndIf}
 FunctionEnd
 
-; Insert the two first-run setup pages after the installation directory page and
-; before the file-copy progress page supplied by electron-builder.
+; Define the first page in place of the default white welcome page. The path
+; selector lives inside the branded page, therefore the stock directory page
+; is disabled in electron-builder.yml.
+!macro customWelcomePage
+  Page custom UdtWelcomePage UdtWelcomeLeave
+!macroend
+
+; Insert language and device pages before the file-copy progress page.
 !macro customPageAfterChangeDir
   Page custom UdtLanguagePage UdtLanguageLeave
   Page custom UdtDevicePage UdtDeviceLeave
 !macroend
 !endif
 
+!macro customInstall
+  Call UdtLoadSelection
+  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "language" "$udtLanguage"
+  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "deviceMode" "$udtDeviceMode"
+!macroend
+
 !macro customUnInstall
   ; Unregister Nilesoft Shell before deleting files so its file locks are released.
-  ; This mirrors the Inno Setup InitializeUninstall logic. Explorer restarts as
-  ; part of the unregistration; the waits give it time to release the locks.
   StrCpy $R0 "$INSTDIR\Shell.exe"
   IfFileExists $R0 0 uninstallShellDone
-    ; silent unregister (also restarts Explorer)
     nsExec::Exec '"$R0" -unregister -treat -restart -silent'
     Sleep 2000
     Sleep 5000
   uninstallShellDone:
   Delete "$INSTDIR\installer-selection.ini"
-!macroend
-
-!macro customInstall
-  ; The same loader is used for interactive, silent, and upgrade installs.
-  ; Silent upgrades therefore retain the existing selection instead of
-  ; replacing it with the defaults used for a brand-new unattended install.
-  Call UdtLoadSelection
-  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "language" "$udtLanguage"
-  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "deviceMode" "$udtDeviceMode"
 !macroend

@@ -29,6 +29,24 @@ export default tseslint.config(
     }
   },
   {
+    files: ['installer/main.mjs', 'installer/preload.mjs'],
+    languageOptions: {
+      globals: { ...globals.node }
+    }
+  },
+  {
+    files: ['installer/renderer.mjs'],
+    languageOptions: {
+      globals: { ...globals.browser }
+    }
+  },
+  {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: { ...globals.node }
+    }
+  },
+  {
     files: ['src/renderer/**/*.{ts,tsx}'],
     languageOptions: {
       globals: { ...globals.browser }
