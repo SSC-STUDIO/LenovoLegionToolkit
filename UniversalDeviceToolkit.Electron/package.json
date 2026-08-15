@@ -14,6 +14,7 @@
     "dev:minimized": "node scripts/ensure-host.mjs && electron-vite dev -- --minimized",
     "dev:trace-minimized": "node scripts/ensure-host.mjs && electron-vite dev -- --trace --minimized",
     "dev:single": "node scripts/ensure-host.mjs && electron-vite dev -- --single-process",
+    "preview:installer": "electron installer/main.mjs --preview",
     "build": "electron-vite build",
     "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json",
     "test": "node --test tests/*.mjs",

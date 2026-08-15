@@ -7,7 +7,19 @@ import { fileURLToPath } from 'node:url'
 
 const execFileAsync = promisify(execFile)
 const installerRoot = dirname(fileURLToPath(import.meta.url))
-const payloadRoot = join(process.resourcesPath, 'payload')
+const projectRoot = dirname(installerRoot)
+const setupIsPreview = process.argv.includes('--preview')
+const previewThemeValue = process.argv.find((argument) => argument.startsWith('--preview-theme='))?.split('=', 2)[1]
+const previewThemeMode = setupIsPreview && (previewThemeValue === 'light' || previewThemeValue === 'dark')
+  ? previewThemeValue
+  : null
+const previewAccentValue = process.argv.find((argument) => argument.startsWith('--preview-accent='))?.split('=', 2)[1]
+const previewAccentColor = setupIsPreview && /^#[0-9a-f]{6}$/i.test(previewAccentValue ?? '')
+  ? previewAccentValue
+  : null
+const payloadRoot = app.isPackaged
+  ? join(process.resourcesPath, 'payload')
+  : join(projectRoot, 'dist', 'win-unpacked')
 const validLanguages = new Set([
   'en', 'zh-CN', 'zh-Hant', 'ja', 'de', 'fr', 'es', 'it', 'pt-BR', 'pt', 'ru',
   'uk', 'pl', 'cs', 'sk', 'hu', 'ro', 'bg', 'tr', 'el', 'ar', 'lv', 'nl-NL',
@@ -30,7 +42,21 @@ function accentColor() {
 }
 
 function themeInfo() {
-  return { mode: nativeTheme.shouldUseDarkColors ? 'dark' : 'light', accent: accentColor() }
+  return {
+    mode: previewThemeMode ?? (nativeTheme.shouldUseDarkColors ? 'dark' : 'light'),
+    accent: previewAccentColor ?? accentColor()
+  }
+}
+
+async function displayVersion() {
+  if (app.isPackaged) return app.getVersion()
+  try {
+    const metadata = JSON.parse(await fs.readFile(join(projectRoot, 'package.json'), 'utf8'))
+    if (typeof metadata.version === 'string' && metadata.version.length > 0) return metadata.version
+  } catch {
+    // Fall back to Electron's development version when metadata is unavailable.
+  }
+  return app.getVersion()
 }
 
 function broadcastTheme() {
@@ -149,6 +175,7 @@ async function removeUninstallRegistration() {
 }
 
 async function installApplication(options) {
+  if (setupIsPreview) throw new Error('Preview mode does not install files.')
   if (isInstalling) throw new Error('Installation is already in progress.')
   if (!payloadRoot) throw new Error('The embedded application payload is missing.')
   const destination = resolve(String(options?.destination ?? ''))
@@ -218,7 +245,7 @@ function createWindow() {
     resizable: false,
     frame: false,
     show: false,
-    backgroundColor: nativeTheme.shouldUseDarkColors ? '#171717' : '#f3f5f8',
+    backgroundColor: themeInfo().mode === 'dark' ? '#171717' : '#f3f5f8',
     title: setupIsUninstaller ? 'Universal Device Toolkit 卸载' : 'Universal Device Toolkit 安装',
     webPreferences: {
       preload: join(installerRoot, 'preload.mjs'),
@@ -236,16 +263,19 @@ ipcMain.handle('installer:info', async () => {
   const payloadFiles = await collectFiles(payloadRoot).catch(() => [])
   const payloadSize = payloadFiles.reduce((sum, file) => sum + file.size, 0)
   const stats = await directoryStats(dirname(defaultInstallPath()))
-  const logoPath = join(process.resourcesPath, 'installer-assets', 'icon.png')
+  const logoPath = app.isPackaged
+    ? join(process.resourcesPath, 'installer-assets', 'icon.png')
+    : join(projectRoot, 'resources', 'icon.png')
   const logoData = await fs.readFile(logoPath).then((data) => `data:image/png;base64,${data.toString('base64')}`).catch(() => '')
   return {
-    version: app.getVersion(),
+    version: await displayVersion(),
     defaultPath: defaultInstallPath(),
     availableBytes: stats.available,
     totalBytes: stats.total,
     payloadBytes: payloadSize,
     architecture: process.arch === 'x64' ? 'Windows x64' : `Windows ${process.arch}`,
     isUninstaller: setupIsUninstaller,
+    isPreview: setupIsPreview,
     platform: process.platform,
     logoData,
     theme: themeInfo()
@@ -275,7 +305,7 @@ ipcMain.on('installer:minimize', () => mainWindow?.minimize())
 ipcMain.on('installer:close', () => mainWindow?.close())
 
 app.on('window-all-closed', () => app.quit())
-nativeTheme.themeSource = 'system'
+nativeTheme.themeSource = previewThemeMode ?? 'system'
 nativeTheme.on('updated', broadcastTheme)
 systemPreferences.on('color-changed', broadcastTheme)
 systemPreferences.on('accent-color-changed', broadcastTheme)

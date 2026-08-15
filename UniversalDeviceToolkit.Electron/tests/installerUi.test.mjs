@@ -7,6 +7,18 @@ const installerSource = readFileSync(
   fileURLToPath(new URL('../buildResources/installer.nsh', import.meta.url)),
   'utf8'
 )
+const buildScriptSource = readFileSync(
+  fileURLToPath(new URL('../scripts/build-custom-installer.mjs', import.meta.url)),
+  'utf8'
+)
+const builderHookSource = readFileSync(
+  fileURLToPath(new URL('../scripts/installer-builder-hooks.mjs', import.meta.url)),
+  'utf8'
+)
+const customInstallerConfig = readFileSync(
+  fileURLToPath(new URL('../custom-installer.yml', import.meta.url)),
+  'utf8'
+)
 const mainSource = readFileSync(
   fileURLToPath(new URL('../installer/main.mjs', import.meta.url)),
   'utf8'
@@ -35,13 +47,28 @@ test('installer keeps the reference visual language and setup choices', () => {
   assert.match(rendererSource, /设备选择/)
   assert.match(rendererSource, /需要管理员权限/)
   assert.doesNotMatch(rendererSource, /不会修改设备设置，安装后由你控制/)
+  assert.doesNotMatch(rendererSource, /安装器只保存你的选择，不会修改设备配置/)
   assert.doesNotMatch(installerSource, /不会修改设备设置，安装后由你控制/)
   assert.match(rendererSource, /onThemeChanged/)
   assert.match(rendererSource, /dataset\.theme/)
+  assert.match(rendererSource, /--accent-foreground/)
+  assert.match(rendererSource, /aria-checked/)
   assert.match(mainSource, /systemPreferences\.getAccentColor/)
-  assert.match(mainSource, /nativeTheme\.themeSource = 'system'/)
+  assert.match(mainSource, /nativeTheme\.themeSource = previewThemeMode \?\? 'system'/)
   assert.match(mainSource, /systemPreferences\.on\('color-changed'/)
   assert.match(styleSource, /--accent:\s*#ff2a38/)
+  assert.match(styleSource, /--accent-soft:\s*color-mix\(in srgb, var\(--accent\)/)
   assert.match(styleSource, /data-theme="dark"/)
+  assert.match(styleSource, /prefers-reduced-motion:\s*reduce/)
+  assert.match(styleSource, /\.choice-description\s*\{[^}]*display:\s*block/)
   assert.match(styleSource, /\.brand-panel\s*\{/)
+})
+
+test('custom installer rebuilds its application payload before packaging', () => {
+  const payloadBuild = buildScriptSource.indexOf("'electron-builder.yml', '--win', 'dir'")
+  const installerBuild = buildScriptSource.indexOf("'custom-installer.yml', '--win', 'portable'")
+  assert.ok(payloadBuild >= 0)
+  assert.ok(installerBuild > payloadBuild)
+  assert.match(customInstallerConfig, /beforeBuild:\s*\.\/scripts\/installer-builder-hooks\.mjs/)
+  assert.match(builderHookSource, /return false/)
 })

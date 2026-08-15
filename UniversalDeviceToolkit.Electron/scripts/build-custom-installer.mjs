@@ -14,5 +14,8 @@ function run(command, args) {
   })
 }
 
+const packageRunner = process.platform === 'win32' ? 'npx.cmd' : 'npx'
+
+await run(packageRunner, ['electron-builder', '--config', 'electron-builder.yml', '--win', 'dir'])
 await access(join(projectRoot, 'dist', 'win-unpacked', 'UniversalDeviceToolkit.exe'), constants.F_OK)
-await run(process.platform === 'win32' ? 'npx.cmd' : 'npx', ['electron-builder', '--config', 'custom-installer.yml', '--win', 'portable'])
+await run(packageRunner, ['electron-builder', '--config', 'custom-installer.yml', '--win', 'portable'])

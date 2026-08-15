@@ -41,6 +41,15 @@ function windowsIcon() {
   return `<svg class="platform-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4.5 10.8 3.3v8.4H2V4.5Zm10.1-1.4L22 1.7v10h-9.9V3.1ZM2 12.9h8.8v8.4L2 20.1v-7.2Zm10.1 0H22v10l-9.9-1.4v-8.6Z" fill="currentColor"/></svg>`
 }
 
+function accentForeground(accent) {
+  const weights = [0.2126, 0.7152, 0.0722]
+  const luminance = [1, 3, 5]
+    .map((offset) => Number.parseInt(accent.slice(offset, offset + 2), 16) / 255)
+    .map((channel) => channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4)
+    .reduce((sum, channel, index) => sum + channel * weights[index], 0)
+  return luminance > 0.48 ? '#111111' : '#ffffff'
+}
+
 function applyTheme(theme) {
   const mode = theme?.mode === 'light' ? 'light' : 'dark'
   const accent = typeof theme?.accent === 'string' && /^#[0-9a-f]{6}$/i.test(theme.accent)
@@ -50,6 +59,7 @@ function applyTheme(theme) {
   state.accentColor = accent
   document.documentElement.dataset.theme = mode
   document.documentElement.style.setProperty('--accent', accent)
+  document.documentElement.style.setProperty('--accent-foreground', accentForeground(accent))
 }
 
 function shell() {
@@ -71,7 +81,7 @@ function shell() {
 function renderSteps(active) {
   const steps = [['welcome', '位置'], ['language', '语言'], ['device', '设备'], ['install', '安装']]
   const activeIndex = steps.findIndex(([id]) => id === active)
-  return `<div class="steps">${steps.map(([, name], index) => `<div class="step ${index === activeIndex ? 'active' : ''} ${index < activeIndex ? 'done' : ''}" data-step="${index < activeIndex ? '' : index + 1}">${name}</div>`).join('')}</div>`
+  return `<nav class="steps" aria-label="安装进度">${steps.map(([, name], index) => `<div class="step ${index === activeIndex ? 'active' : ''} ${index < activeIndex ? 'done' : ''}" data-step="${index < activeIndex ? '' : index + 1}">${name}</div>`).join('')}</nav>`
 }
 
 function renderPage(info) {
@@ -88,19 +98,19 @@ function renderWelcome(info) {
     <section class="page"><h3 class="section-title">安装位置</h3><label class="field-label" for="destination">选择 Universal Device Toolkit 要安装的文件夹</label>
       <div class="path-row"><input id="destination" class="path-input" value="${escapeHtml(state.destination)}" spellcheck="false"/><button class="button-secondary" data-action="browse">浏览</button></div>
       <div class="space-card"><div class="space-item"><div class="space-label">需要空间</div><div class="space-value">${formatBytes(info.payloadBytes)}</div></div><div class="space-item"><div class="space-label">可用空间</div><div class="space-value">${formatBytes(info.availableBytes)}</div></div></div>
-      <div class="info-card admin"><span class="info-icon">!</span><span>需要管理员权限</span></div><div class="error-message">${escapeHtml(state.error)}</div>
+      <div class="info-card admin"><span class="info-icon">i</span><span>需要管理员权限</span></div><div class="error-message">${escapeHtml(state.error)}</div>
     </section>${footer('下一步', false)}`
 }
 
 function renderLanguage() {
-  return `<h2 class="heading">语言选择</h2><p class="subtitle">选择安装后首次启动使用的语言。</p><div class="divider"></div>${renderSteps('language')}<section class="page"><div class="language-grid">${languageOptions.map(([id, label]) => `<button class="language-option ${state.language === id ? 'selected' : ''}" data-language="${id}">${label}</button>`).join('')}</div><div class="error-message">${escapeHtml(state.error)}</div></section>${footer('下一步', true)}`
+  return `<h2 class="heading">语言选择</h2><p class="subtitle">选择安装后首次启动使用的语言。</p><div class="divider"></div>${renderSteps('language')}<section class="page"><div class="language-grid">${languageOptions.map(([id, label]) => `<button class="language-option ${state.language === id ? 'selected' : ''}" data-language="${id}" aria-pressed="${state.language === id}">${label}</button>`).join('')}</div><div class="error-message">${escapeHtml(state.error)}</div></section>${footer('下一步', true)}`
 }
 
 function renderDevice() {
-  return `<h2 class="heading">设备选择</h2><p class="subtitle">选择启动时使用的设备支持模式。</p><div class="divider"></div>${renderSteps('device')}<section class="page"><div class="choice-grid">
-    <button class="choice-card ${state.deviceMode === 'auto' ? 'selected' : ''}" data-device="auto"><span class="choice-radio"></span><span><span class="choice-name">自动检测设备</span><span class="choice-description">启用完整的硬件监控和设备功能。</span></span><span class="choice-meta">推荐</span></button>
-    <button class="choice-card ${state.deviceMode === 'basic' ? 'selected' : ''}" data-device="basic"><span class="choice-radio"></span><span><span class="choice-name">基础模式</span><span class="choice-description">不读取硬件传感器，适用于受限环境。</span></span><span class="choice-meta">安全</span></button>
-  </div><div class="info-card"><span class="info-icon">i</span><span>安装器只保存你的选择，不会修改设备配置。</span></div><div class="error-message">${escapeHtml(state.error)}</div></section>${footer('开始安装', true)}`
+  return `<h2 class="heading">设备选择</h2><p class="subtitle">选择启动时使用的设备支持模式。</p><div class="divider"></div>${renderSteps('device')}<section class="page"><div class="choice-grid" role="radiogroup" aria-label="设备支持模式">
+    <button class="choice-card ${state.deviceMode === 'auto' ? 'selected' : ''}" data-device="auto" role="radio" aria-checked="${state.deviceMode === 'auto'}"><span class="choice-radio"></span><span><span class="choice-name">自动检测设备</span><span class="choice-description">启用完整的硬件监控和设备功能。</span></span><span class="choice-meta">推荐</span></button>
+    <button class="choice-card ${state.deviceMode === 'basic' ? 'selected' : ''}" data-device="basic" role="radio" aria-checked="${state.deviceMode === 'basic'}"><span class="choice-radio"></span><span><span class="choice-name">基础模式</span><span class="choice-description">不读取硬件传感器，适用于受限环境。</span></span><span class="choice-meta">安全</span></button>
+  </div><div class="error-message">${escapeHtml(state.error)}</div></section>${footer('开始安装', true)}`
 }
 
 function renderInstall(info) {

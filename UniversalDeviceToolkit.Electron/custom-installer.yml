@@ -25,5 +25,6 @@ portable:
   artifactName: UniversalDeviceToolkitSetup-${version}.${ext}
 compression: maximum
 asar: true
+beforeBuild: ./scripts/installer-builder-hooks.mjs
 extraMetadata:
   main: installer/main.mjs
