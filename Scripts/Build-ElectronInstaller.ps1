@@ -1,9 +1,18 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
+    [ValidatePattern('^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$')]
     [string]$Version,
 
-    [string]$InstallerOutput = 'BuildInstaller'
+    [string]$InstallerOutput = 'BuildInstaller',
+
+    [string]$PayloadOutput = 'BuildInstallerPayload',
+
+    [switch]$PreparePayloadsOnly,
+
+    [switch]$PrepareInstallerShellOnly,
+
+    [switch]$PackagePreparedPayloads
 )
 
 $ErrorActionPreference = 'Stop'
@@ -13,11 +22,23 @@ Set-StrictMode -Version Latest
 # both flavors, mirroring the retired WPF installer output layout:
 #   BuildInstaller\UniversalDeviceToolkitSetup.exe
 #   BuildInstaller\UniversalDeviceToolkitOnlineSetup.exe
-# The offline/full installer is a self-contained portable Electron setup app.
-# Its renderer owns the complete installation flow and copies the signed
-# win-unpacked payload. The online installer remains the small nsis-web
-# downloader so release asset size stays within the existing distribution
-# contract. Both installers embed the same signed Host payload.
+# The release workflow runs this script in three phases. It stages the Full and
+# Online application payloads, then the custom installer shell, and finally
+# wraps those signed trees without rebuilding them. Calling the script without
+# a phase switch keeps the convenient local behavior by running every phase.
+
+$selectedPhaseCount = @(
+    [bool]$PreparePayloadsOnly
+    [bool]$PrepareInstallerShellOnly
+    [bool]$PackagePreparedPayloads
+).Where({ $_ }).Count
+if ($selectedPhaseCount -gt 1) {
+    throw 'Only one installer build phase switch can be used at a time.'
+}
+
+$runPreparePayloads = $selectedPhaseCount -eq 0 -or $PreparePayloadsOnly
+$runPrepareInstallerShell = $selectedPhaseCount -eq 0 -or $PrepareInstallerShellOnly
+$runPackagePreparedPayloads = $selectedPhaseCount -eq 0 -or $PackagePreparedPayloads
 
 $repoRoot = Split-Path -Parent $PSScriptRoot
 $electronProject = Join-Path $repoRoot 'UniversalDeviceToolkit.Electron'
@@ -25,7 +46,18 @@ $hostPublishDir = Join-Path $repoRoot 'UniversalDeviceToolkit.Host\publish\win-x
 $pruneScript = Join-Path $PSScriptRoot 'Prune-ShippingFootprint.ps1'
 $channelFile = Join-Path $electronProject 'resources\install-channel'
 $distDir = Join-Path $electronProject 'dist'
+$unpackedDir = Join-Path $distDir 'win-unpacked'
 $customDistDir = Join-Path $distDir 'custom-installer'
+$payloadOutputPath = if ([System.IO.Path]::IsPathRooted($PayloadOutput)) {
+    $PayloadOutput
+}
+else {
+    Join-Path $repoRoot $PayloadOutput
+}
+$fullPayloadDir = Join-Path $payloadOutputPath 'full'
+$onlinePayloadDir = Join-Path $payloadOutputPath 'online'
+$installerShellDir = Join-Path $payloadOutputPath 'installer-shell'
+$nsisToolsetDir = Join-Path $payloadOutputPath 'nsis'
 
 if (-not (Test-Path -LiteralPath (Join-Path $electronProject 'package.json'))) {
     throw "Electron project not found at '$electronProject'."
@@ -43,11 +75,64 @@ function Set-InstallChannel {
 }
 
 function Invoke-ElectronWinTarget {
-    param([Parameter(Mandatory = $true)][string]$Target)
+    param(
+        [Parameter(Mandatory = $true)][string]$Target,
+        [string]$PrepackagedPath
+    )
 
-    npx electron-builder --config electron-builder.yml --win $Target
+    $arguments = @('electron-builder', '--config', 'electron-builder.yml', '--win', $Target)
+    if (-not [string]::IsNullOrWhiteSpace($PrepackagedPath)) {
+        $arguments += @('--prepackaged', $PrepackagedPath)
+    }
+
+    & npx @arguments
     if ($LASTEXITCODE -ne 0) {
         throw "electron-builder ($Target) failed."
+    }
+}
+
+function Move-UnpackedPayload {
+    param([Parameter(Mandatory = $true)][string]$Destination)
+
+    if (-not (Test-Path -LiteralPath $unpackedDir -PathType Container)) {
+        throw "Electron unpacked payload not found at '$unpackedDir'."
+    }
+    if (Test-Path -LiteralPath $Destination) {
+        Remove-Item -LiteralPath $Destination -Recurse -Force
+    }
+
+    New-Item -ItemType Directory -Path (Split-Path -Parent $Destination) -Force | Out-Null
+    Move-Item -LiteralPath $unpackedDir -Destination $Destination
+}
+
+function Assert-PreparedPayload {
+    param(
+        [Parameter(Mandatory = $true)][string]$Path,
+        [Parameter(Mandatory = $true)][string]$Description
+    )
+
+    $electronExecutable = Join-Path $Path 'UniversalDeviceToolkit.exe'
+    $hostDirectory = Join-Path $Path 'resources\host'
+    if (-not (Test-Path -LiteralPath $electronExecutable -PathType Leaf)) {
+        throw "$Description payload is missing '$electronExecutable'."
+    }
+    if (-not (Test-Path -LiteralPath $hostDirectory -PathType Container)) {
+        throw "$Description payload is missing '$hostDirectory'."
+    }
+}
+
+function Assert-PreparedInstallerShell {
+    $installerExecutable = Join-Path $installerShellDir 'Universal Device Toolkit Setup.exe'
+    $embeddedPayload = Join-Path $installerShellDir 'resources\payload\UniversalDeviceToolkit.exe'
+    $elevateExecutable = Join-Path $nsisToolsetDir 'elevate.exe'
+    if (-not (Test-Path -LiteralPath $installerExecutable -PathType Leaf)) {
+        throw "Prepared installer shell is missing '$installerExecutable'."
+    }
+    if (-not (Test-Path -LiteralPath $embeddedPayload -PathType Leaf)) {
+        throw "Prepared installer shell is missing '$embeddedPayload'."
+    }
+    if (-not (Test-Path -LiteralPath $elevateExecutable -PathType Leaf)) {
+        throw "Prepared NSIS toolset is missing '$elevateExecutable'."
     }
 }
 
@@ -85,62 +170,142 @@ function Assert-ElectronZip {
     }
 }
 
-# Build the renderer + main process, then package with electron-builder.
+# Build the renderer + main process and stage the exact payload trees that will
+# be signed before packaging.
 Push-Location $electronProject
 try {
-    if (Test-Path -LiteralPath $distDir) {
-        Remove-Item -LiteralPath $distDir -Recurse -Force
+    if ($runPreparePayloads) {
+        if (Test-Path -LiteralPath $distDir) {
+            Remove-Item -LiteralPath $distDir -Recurse -Force
+        }
+        if (Test-Path -LiteralPath $payloadOutputPath) {
+            Remove-Item -LiteralPath $payloadOutputPath -Recurse -Force
+        }
+
+        # electron-builder reads the version from package.json; sync it with the
+        # release version resolved from Directory.Build.props.
+        $packageJsonPath = Join-Path $electronProject 'package.json'
+        $packageJsonText = [System.IO.File]::ReadAllText($packageJsonPath)
+        $versionMatch = [System.Text.RegularExpressions.Regex]::Match(
+            $packageJsonText,
+            '(?m)^(\s*"version"\s*:\s*)"[^"]*"')
+        if (-not $versionMatch.Success) {
+            throw "Electron package.json does not contain a top-level version field."
+        }
+        $versionReplacement = $versionMatch.Groups[1].Value + '"' + $Version + '"'
+        $updatedPackageJson = $packageJsonText.Remove($versionMatch.Index, $versionMatch.Length).
+            Insert($versionMatch.Index, $versionReplacement)
+        $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+        [System.IO.File]::WriteAllText($packageJsonPath, $updatedPackageJson, $utf8WithoutBom)
+
+        npm run build
+        if ($LASTEXITCODE -ne 0) {
+            throw 'Electron build failed.'
+        }
+
+        Set-InstallChannel -Channel 'full'
+        Invoke-ElectronWinTarget -Target 'dir'
+        Move-UnpackedPayload -Destination $fullPayloadDir
+
+        if (Test-Path -LiteralPath $hostPublishDir) {
+            & $pruneScript -PayloadPath $hostPublishDir -AllowedCultures 'en'
+        }
+        else {
+            Write-Warning "Host publish directory not found at '$hostPublishDir'; Online payload will not be English-pruned."
+        }
+
+        Set-InstallChannel -Channel 'online'
+        Invoke-ElectronWinTarget -Target 'dir'
+        Move-UnpackedPayload -Destination $onlinePayloadDir
+
+        Assert-PreparedPayload -Path $fullPayloadDir -Description 'Full'
+        Assert-PreparedPayload -Path $onlinePayloadDir -Description 'Online'
+        Write-Host "Electron payloads prepared for signing under '$payloadOutputPath'."
     }
 
-    # electron-builder reads the version from package.json; sync it with the
-    # release version resolved from Directory.Build.props.
-    $packageJsonPath = Join-Path $electronProject 'package.json'
-    $packageJson = Get-Content -LiteralPath $packageJsonPath -Raw | ConvertFrom-Json
-    $packageJson.version = $Version
-    $packageJson | ConvertTo-Json -Depth 16 | Set-Content -LiteralPath $packageJsonPath -Encoding utf8
+    if ($runPrepareInstallerShell) {
+        Assert-PreparedPayload -Path $fullPayloadDir -Description 'Full'
+        Assert-PreparedPayload -Path $onlinePayloadDir -Description 'Online'
 
-    npm run build
-    if ($LASTEXITCODE -ne 0) {
-        throw 'Electron build failed.'
+        if (Test-Path -LiteralPath $distDir) {
+            Remove-Item -LiteralPath $distDir -Recurse -Force
+        }
+        New-Item -ItemType Directory -Path $distDir -Force | Out-Null
+
+        # custom-installer.yml embeds dist/win-unpacked. Stage its unpacked
+        # Electron shell separately so CI can sign the executable that becomes
+        # the installed uninstaller before the portable wrapper is created.
+        Copy-Item -LiteralPath $fullPayloadDir -Destination $unpackedDir -Recurse -Force
+        & npx electron-builder --config custom-installer.yml --win dir
+        if ($LASTEXITCODE -ne 0) {
+            throw 'Custom Electron installer shell preparation failed.'
+        }
+
+        $customUnpackedDir = Join-Path $customDistDir 'win-unpacked'
+        if (Test-Path -LiteralPath $installerShellDir) {
+            Remove-Item -LiteralPath $installerShellDir -Recurse -Force
+        }
+        Move-Item -LiteralPath $customUnpackedDir -Destination $installerShellDir
+
+        & node scripts/stage-nsis-toolset.mjs $nsisToolsetDir
+        if ($LASTEXITCODE -ne 0) {
+            throw 'NSIS toolset staging failed.'
+        }
+        Assert-PreparedInstallerShell
+        Write-Host "Custom installer shell prepared for signing at '$installerShellDir'."
     }
 
-    Set-InstallChannel -Channel 'full'
-    # Stage a normal unpacked application first. custom-installer.yml embeds
-    # this directory as its payload so the custom setup UI can copy it to the
-    # selected destination without showing any native NSIS page.
-    Invoke-ElectronWinTarget -Target 'dir'
-    npx electron-builder --config custom-installer.yml --win portable
-    if ($LASTEXITCODE -ne 0) {
-        throw 'Custom Electron installer failed.'
-    }
-    Invoke-ElectronWinTarget -Target 'nsis'
-    Invoke-ElectronWinTarget -Target 'zip'
+    if ($runPackagePreparedPayloads) {
+        Assert-PreparedPayload -Path $fullPayloadDir -Description 'Full'
+        Assert-PreparedPayload -Path $onlinePayloadDir -Description 'Online'
+        Assert-PreparedInstallerShell
 
-    $fullZipArtifact = Get-LatestArtifact -Filter 'UniversalDeviceToolkitSetup-*.zip' -Description 'Electron Full ZIP'
-    $fullZipPath = Join-Path $installerOutputPath "UniversalDeviceToolkit_v${Version}_Full_win-x64.zip"
-    Copy-Item -LiteralPath $fullZipArtifact.FullName -Destination $fullZipPath -Force
-    Assert-ElectronZip -Path $fullZipPath
-    Write-Host "Electron Full ZIP built: $fullZipPath"
+        if (Test-Path -LiteralPath $distDir) {
+            Remove-Item -LiteralPath $distDir -Recurse -Force
+        }
+        New-Item -ItemType Directory -Path $distDir -Force | Out-Null
 
-    if (Test-Path -LiteralPath $hostPublishDir) {
-        & $pruneScript -PayloadPath $hostPublishDir -AllowedCultures 'en'
-    }
-    else {
-        Write-Warning "Host publish directory not found at '$hostPublishDir'; Online payload will not be English-pruned."
-    }
+        $previousNsisToolset = [System.Environment]::GetEnvironmentVariable('ELECTRON_BUILDER_NSIS_DIR')
+        try {
+            $env:ELECTRON_BUILDER_NSIS_DIR = $nsisToolsetDir
 
-    Set-InstallChannel -Channel 'online'
-    Invoke-ElectronWinTarget -Target 'nsis-web'
-    Invoke-ElectronWinTarget -Target 'zip'
+            & npx electron-builder --config custom-installer.yml --win portable --prepackaged $installerShellDir
+            if ($LASTEXITCODE -ne 0) {
+                throw 'Custom Electron installer failed.'
+            }
+
+            Invoke-ElectronWinTarget -Target 'zip' -PrepackagedPath $fullPayloadDir
+
+            $fullZipArtifact = Get-LatestArtifact -Filter 'UniversalDeviceToolkitSetup-*.zip' -Description 'Electron Full ZIP'
+            $fullZipPath = Join-Path $installerOutputPath "UniversalDeviceToolkit_v${Version}_Full_win-x64.zip"
+            Copy-Item -LiteralPath $fullZipArtifact.FullName -Destination $fullZipPath -Force
+            Assert-ElectronZip -Path $fullZipPath
+            Write-Host "Electron Full ZIP built: $fullZipPath"
+            Remove-Item -LiteralPath $fullZipArtifact.FullName -Force
+
+            Invoke-ElectronWinTarget -Target 'zip' -PrepackagedPath $onlinePayloadDir
+            Invoke-ElectronWinTarget -Target 'nsis-web' -PrepackagedPath $onlinePayloadDir
+        }
+        finally {
+            if ($null -eq $previousNsisToolset) {
+                Remove-Item Env:ELECTRON_BUILDER_NSIS_DIR -ErrorAction SilentlyContinue
+            }
+            else {
+                $env:ELECTRON_BUILDER_NSIS_DIR = $previousNsisToolset
+            }
+        }
+    }
 }
 finally {
     Pop-Location
 }
 
+if (-not $runPackagePreparedPayloads) {
+    return
+}
+
 # Locate the produced custom full setup artifact.
-# Full (offline) uses the portable custom setup app. NSIS is still generated
-# for compatibility with the web/bootstrap distribution and historical CI
-# diagnostics, but it is not the user-facing full setup asset.
+# Full (offline) uses the portable custom setup app.
 # Online (nsis-web stub) uses UniversalDeviceToolkitOnlineSetup-*.exe
 $customSetupArtifact = Get-ChildItem -LiteralPath $customDistDir -Filter 'UniversalDeviceToolkitSetup-*.exe' -ErrorAction SilentlyContinue |
     Sort-Object LastWriteTime -Descending |
@@ -154,7 +319,7 @@ $finalSetupPath = Join-Path $installerOutputPath 'UniversalDeviceToolkitSetup.ex
 Copy-Item -LiteralPath $customSetupArtifact.FullName -Destination $finalSetupPath -Force
 Write-Host "Custom Electron Full installer built: $finalSetupPath ($([math]::Round($customSetupArtifact.Length / 1MB, 1)) MB)"
 
-$onlineArtifact = Get-ChildItem -LiteralPath $distDir -Filter 'UniversalDeviceToolkitOnlineSetup-*.exe' -ErrorAction SilentlyContinue |
+$onlineArtifact = Get-ChildItem -LiteralPath $distDir -Filter 'UniversalDeviceToolkitOnlineSetup-*.exe' -Recurse -ErrorAction SilentlyContinue |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1
 

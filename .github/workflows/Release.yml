@@ -40,6 +40,7 @@ jobs:
       # extraResources (UniversalDeviceToolkit.Electron/electron-builder.yml).
       HOST_BUILD_OUTPUT: UniversalDeviceToolkit.Host/publish/win-x64
       INSTALLER_OUTPUT: BuildInstaller
+      INSTALLER_PAYLOAD_OUTPUT: BuildInstallerPayload
       RELEASE_OUTPUT: release-assets
       PAGES_OUTPUT: release-assets/pages
 
@@ -310,13 +311,84 @@ jobs:
         ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
         ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:ONLINE_BUILD_OUTPUT
 
+    - name: Prepare Electron installer payloads
+      shell: pwsh
+      run: |
+        # Stage the final Full and Online win-unpacked trees before wrapping
+        # them so every executable embedded in the release can be signed.
+        ./Scripts/Build-ElectronInstaller.ps1 `
+          -Version $env:BUILD_VERSION `
+          -InstallerOutput $env:INSTALLER_OUTPUT `
+          -PayloadOutput $env:INSTALLER_PAYLOAD_OUTPUT `
+          -PreparePayloadsOnly
+
+    - name: Sign Electron installer payloads
+      if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
+      uses: azure/trusted-signing-action@v0.5
+      with:
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+        trusted-signing-account-name: ${{ secrets.AZURE_TRUSTED_SIGNING_ACCOUNT }}
+        certificate-profile-name: ${{ secrets.AZURE_TRUSTED_SIGNING_PROFILE }}
+        files-folder: ${{ env.INSTALLER_PAYLOAD_OUTPUT }}
+        files-folder-filter: exe,dll
+        files-folder-recurse: true
+        files-folder-depth: 2
+        append-signature: true
+        batch-size: 10000
+        timeout: 900
+
+    - name: Verify Electron installer payload signatures
+      if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
+      shell: pwsh
+      run: ./Scripts/Assert-AuthenticodeSignatures.ps1 -Path $env:INSTALLER_PAYLOAD_OUTPUT
+
+    - name: Prepare Electron installer shell
+      shell: pwsh
+      run: |
+        # The portable wrapper extracts this shell and the installer copies it
+        # as uninstall.exe, so it must be signed before the wrapper is built.
+        ./Scripts/Build-ElectronInstaller.ps1 `
+          -Version $env:BUILD_VERSION `
+          -InstallerOutput $env:INSTALLER_OUTPUT `
+          -PayloadOutput $env:INSTALLER_PAYLOAD_OUTPUT `
+          -PrepareInstallerShellOnly
+
+    - name: Sign Electron installer shell
+      if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
+      uses: azure/trusted-signing-action@v0.5
+      with:
+        azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        azure-client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+        endpoint: ${{ secrets.AZURE_TRUSTED_SIGNING_ENDPOINT }}
+        trusted-signing-account-name: ${{ secrets.AZURE_TRUSTED_SIGNING_ACCOUNT }}
+        certificate-profile-name: ${{ secrets.AZURE_TRUSTED_SIGNING_PROFILE }}
+        files: ${{ github.workspace }}\${{ env.INSTALLER_PAYLOAD_OUTPUT }}\nsis\elevate.exe
+        files-folder: ${{ env.INSTALLER_PAYLOAD_OUTPUT }}\installer-shell
+        files-folder-filter: exe,dll
+        files-folder-recurse: false
+        append-signature: true
+        batch-size: 10000
+        timeout: 900
+
+    - name: Verify Electron installer shell signatures
+      if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
+      shell: pwsh
+      run: |
+        ./Scripts/Assert-AuthenticodeSignatures.ps1 -Path "$env:INSTALLER_PAYLOAD_OUTPUT\installer-shell"
+        ./Scripts/Assert-AuthenticodeSignatures.ps1 -Path "$env:INSTALLER_PAYLOAD_OUTPUT\nsis\elevate.exe"
+
     - name: Build Electron installer
       shell: pwsh
       run: |
-        # Full NSIS is packed with all Host satellite cultures; the script then
-        # prunes the Host publish to English before packing the Online nsis-web
-        # payload, so the language pack archives above must already exist.
-        ./Scripts/Build-ElectronInstaller.ps1 -Version $env:BUILD_VERSION -InstallerOutput $env:INSTALLER_OUTPUT
+        ./Scripts/Build-ElectronInstaller.ps1 `
+          -Version $env:BUILD_VERSION `
+          -InstallerOutput $env:INSTALLER_OUTPUT `
+          -PayloadOutput $env:INSTALLER_PAYLOAD_OUTPUT `
+          -PackagePreparedPayloads
 
     - name: Sign installers
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}

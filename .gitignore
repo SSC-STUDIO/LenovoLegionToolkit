@@ -39,6 +39,7 @@ bld/
 Build/
 Build-English/
 BuildInstaller/
+BuildInstallerPayload/
 BuildPages/
 BuildRelease/
 # Electron packaging assets live in UniversalDeviceToolkit.Electron/buildResources/

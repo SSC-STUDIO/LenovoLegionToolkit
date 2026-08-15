@@ -136,24 +136,30 @@ public sealed class ReleaseAssetScriptTests
     }
 
     [Fact]
-    public void ElectronInstallerBuilder_ShouldCaptureFullZipBeforePruningOnlinePayload()
+    public void ElectronInstallerBuilder_ShouldStageFullPayloadBeforePruningOnlinePayload()
     {
         var repositoryRoot = RepositoryPaths.FindRoot();
         var script = File.ReadAllText(Path.Combine(repositoryRoot, "Scripts", "Build-ElectronInstaller.ps1"));
 
-        var fullZipCopy = script.IndexOf(
-            "Copy-Item -LiteralPath $fullZipArtifact.FullName -Destination $fullZipPath",
+        var fullPayloadStage = script.IndexOf(
+            "Move-UnpackedPayload -Destination $fullPayloadDir",
             StringComparison.Ordinal);
         var hostPrune = script.IndexOf("& $pruneScript -PayloadPath $hostPublishDir", StringComparison.Ordinal);
         var onlineChannel = script.IndexOf("Set-InstallChannel -Channel 'online'", StringComparison.Ordinal);
+        var onlinePayloadStage = script.IndexOf(
+            "Move-UnpackedPayload -Destination $onlinePayloadDir",
+            StringComparison.Ordinal);
         var onlineZipCopy = script.IndexOf(
             "Copy-Item -LiteralPath $onlineZipArtifact.FullName -Destination $onlineZipPath",
             StringComparison.Ordinal);
 
-        fullZipCopy.Should().BeGreaterThan(-1);
-        hostPrune.Should().BeGreaterThan(fullZipCopy);
+        fullPayloadStage.Should().BeGreaterThan(-1);
+        hostPrune.Should().BeGreaterThan(fullPayloadStage);
         onlineChannel.Should().BeGreaterThan(hostPrune);
-        onlineZipCopy.Should().BeGreaterThan(onlineChannel);
+        onlinePayloadStage.Should().BeGreaterThan(onlineChannel);
+        onlineZipCopy.Should().BeGreaterThan(onlinePayloadStage);
+        script.Should().Contain("-PrepackagedPath $fullPayloadDir");
+        script.Should().Contain("-PrepackagedPath $onlinePayloadDir");
         script.Should().Contain("Remove-Item -LiteralPath $distDir -Recurse -Force");
     }
 

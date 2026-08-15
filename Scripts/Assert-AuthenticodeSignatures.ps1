@@ -1,12 +1,21 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
-    [ValidateScript({ Test-Path -LiteralPath $_ -PathType Container })]
+    [ValidateScript({ Test-Path -LiteralPath $_ })]
     [string]$Path
 )
 
-$files = Get-ChildItem -LiteralPath $Path -Recurse -File |
-    Where-Object { $_.Extension -in @('.exe', '.dll') }
+$target = Get-Item -LiteralPath $Path
+$files = if ($target.PSIsContainer) {
+    Get-ChildItem -LiteralPath $target.FullName -Recurse -File |
+        Where-Object { $_.Extension -in @('.exe', '.dll') }
+}
+elseif ($target.Extension -in @('.exe', '.dll')) {
+    @($target)
+}
+else {
+    @()
+}
 
 if (-not $files) {
     throw "No PE files were found under '$Path'."
