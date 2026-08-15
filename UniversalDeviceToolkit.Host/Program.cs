@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Lib;
 #if WINDOWS
 using Autofac;
@@ -56,6 +57,11 @@ public static class Program
 
         try
         {
+            // Restore the shared language before plugins, hardware services, or
+            // RPC handlers are initialized so Host-owned resources start in that
+            // culture. Startup failures remain inside the normal fatal handler.
+            LocalizationRuntime.Initialize();
+
 #if WINDOWS
             var settings = new ApplicationSettings();
 
@@ -161,6 +167,7 @@ public static class Program
                 pid = Environment.ProcessId,
                 version = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "0.0.0.0",
                 logPath = Log.Instance.LogPath,
+                culture = LocalizationRuntime.CurrentCulture.Name,
             });
         });
 
@@ -175,6 +182,8 @@ public static class Program
             rpc.RequestShutdown();
             return BridgeResult.Ok(new { quitting = true });
         });
+
+        LocalizationHandlers.Register(rpc);
 
 #if WINDOWS
         SystemHandlers.Register(rpc);
@@ -245,7 +254,8 @@ public static class Program
         {
             if (listed.Contains(method))
                 continue;
-            if (method is "ping" or "app.getStatus" or "app.getLogPath" or "app.quit")
+            if (method is "ping" or "app.getStatus" or "app.getLogPath" or "app.quit" or
+                "localization.getCulture" or "localization.setCulture")
                 continue;
             if (method.StartsWith("plugins.", StringComparison.Ordinal) ||
                 method.StartsWith("plugin.", StringComparison.Ordinal) ||

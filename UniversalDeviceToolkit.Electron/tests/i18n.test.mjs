@@ -5,6 +5,9 @@ import test from 'node:test'
 import ts from 'typescript'
 
 const i18nUrl = new URL('../src/renderer/src/i18n/index.ts', import.meta.url)
+const antdLocaleUrl = new URL('../src/renderer/src/i18n/antdLocale.ts', import.meta.url)
+const localizationApiUrl = new URL('../src/renderer/src/api/localization.ts', import.meta.url)
+const dateFormatUrl = new URL('../src/renderer/src/utils/dateFormat.ts', import.meta.url)
 const enUsUrl = new URL('../src/renderer/src/i18n/locales/en-US.ts', import.meta.url)
 const zhCnUrl = new URL('../src/renderer/src/i18n/locales/zh-CN.ts', import.meta.url)
 const electronViteUrl = new URL('../electron.vite.config.ts', import.meta.url)
@@ -111,4 +114,45 @@ test('every non-English locale covers English leaves and placeholders', () => {
 test('renderer build does not strip dynamic locale imports', () => {
   const source = readFileSync(electronViteUrl, 'utf8')
   assert.doesNotMatch(source, /dynamicImportVars:\s*false/)
+})
+
+test('Ant Design locale map covers every selectable language', () => {
+  const languages = readFileSync(i18nUrl, 'utf8')
+  const antd = readFileSync(antdLocaleUrl, 'utf8')
+  const codes = [...languages.matchAll(/code: '([^']+)'/g)].map((match) => match[1])
+
+  assert.equal(codes.length, 25)
+  for (const code of codes) {
+    const escaped = code.replaceAll('-', '\\-')
+    assert.match(antd, new RegExp(`(?:['"]${escaped}['"]|${escaped}):`), `${code} needs an Ant Design locale mapping`)
+  }
+  assert.match(antd, /'uz-Latn-UZ': uzUZ/)
+  assert.match(antd, /getAntDesignLocale\(language: string\): AntDesignLocale/)
+})
+
+test('Host culture synchronization and UI date formatting use explicit contracts', () => {
+  const localizationApi = readFileSync(localizationApiUrl, 'utf8')
+  const dateFormat = readFileSync(dateFormatUrl, 'utf8')
+  const handler = readFileSync(
+    new URL('../../UniversalDeviceToolkit.Host/Rpc/Handlers/LocalizationHandlers.cs', import.meta.url),
+    'utf8'
+  )
+  const program = readFileSync(
+    new URL('../../UniversalDeviceToolkit.Host/Program.cs', import.meta.url),
+    'utf8'
+  )
+  const optimization = readFileSync(
+    new URL('../../UniversalDeviceToolkit.Host/Rpc/Handlers/OptimizationHandlers.cs', import.meta.url),
+    'utf8'
+  )
+
+  assert.match(localizationApi, /localization\.getCulture/)
+  assert.match(localizationApi, /localization\.setCulture/)
+  assert.match(localizationApi, /hostCultureForLanguage/)
+  assert.match(handler, /localization\.getCulture/)
+  assert.match(handler, /localization\.setCulture/)
+  assert.match(handler, /TryGetCultureName/)
+  assert.match(program, /LocalizationRuntime\.Initialize\(\)/)
+  assert.match(optimization, /LocalizationCatalog\.GetString\(/)
+  assert.match(dateFormat, /toLocaleDateString\(language\)/)
 })

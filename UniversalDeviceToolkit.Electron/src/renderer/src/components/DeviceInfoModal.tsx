@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatDateForUi } from '../utils/dateFormat'
 import { message } from 'antd'
 import { invoke } from '../api/bridge'
 import { systemApi, type SystemInfo } from '../api/system'
@@ -144,7 +145,7 @@ function formatDate(value: string | null | undefined): string {
   const match = /^(\d{4})-(\d{2})-(\d{2})/.exec(value)
   if (!match) return value
   const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]))
-  return date.toLocaleDateString()
+  return formatDateForUi(date)
 }
 
 /** Mirrors the Electron warranty fallback URL builder. */

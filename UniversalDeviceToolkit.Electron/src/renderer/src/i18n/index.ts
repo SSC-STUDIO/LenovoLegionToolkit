@@ -1,5 +1,6 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import { syncCultureToHost } from '../api/localization'
 import enUS from './locales/en-US'
 import { dashboardParityEnUS, dashboardParityZhCN } from './locales/dashboard-parity'
 export interface LanguageOption {
@@ -169,6 +170,7 @@ export async function changeLanguage(lng: string): Promise<void> {
   await i18n.changeLanguage(normalized)
   persistLanguage(normalized)
   window.bridge?.setTrayLanguage?.(normalized)
+  await syncCultureToHost(normalized)
 }
 
 // Keep the main-process tray menu in sync with the active UI language.

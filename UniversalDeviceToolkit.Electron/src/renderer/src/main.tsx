@@ -3,14 +3,19 @@ import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import { ConfigProvider, message, theme } from 'antd'
-import enUS from 'antd/locale/en_US'
-import zhCN from 'antd/locale/zh_CN'
 import i18n from './i18n'
+import { getAntDesignLocale } from './i18n/antdLocale'
 import logger from './utils/logger'
 import { initNotifications } from './notifications'
 import { initCrashReportListener } from './notifications/crashListener'
 import { settingsApi } from './api/settings'
+import {
+  onCultureSynchronized,
+  registerHostCultureRetry,
+  syncCultureToHost
+} from './api/localization'
 import { useSettingsStore } from './stores/settingsStore'
+import { useOptimizationStore } from './stores/optimizationStore'
 import { useThemeStore } from './stores/themeStore'
 import { useTheme } from './theme/useTheme'
 import { bootstrapThemeDocument } from './theme/bootstrapTheme'
@@ -51,7 +56,7 @@ function Root(): React.JSX.Element {
   const themeMode = useThemeStore((s) => s.themeMode)
   const themePreference = useThemeStore((s) => s.themePreference)
   const colorPrimary = useThemeStore((s) => s.colorPrimary)
-  const [locale, setLocale] = useState(i18n.language.startsWith('zh') ? zhCN : enUS)
+  const [locale, setLocale] = useState(() => getAntDesignLocale(i18n.language))
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', themeMode)
@@ -80,11 +85,27 @@ function Root(): React.JSX.Element {
 
   useEffect(() => {
     const handleLanguageChanged = (lng: string): void => {
-      setLocale(lng.startsWith('zh') ? zhCN : enUS)
+      setLocale(getAntDesignLocale(lng))
     }
     i18n.on('languageChanged', handleLanguageChanged)
     return () => {
       i18n.off('languageChanged', handleLanguageChanged)
+    }
+  }, [])
+
+  useEffect(() => {
+    const offHostReady = registerHostCultureRetry(() => i18n.resolvedLanguage ?? i18n.language)
+    const offCultureSynchronized = onCultureSynchronized(() => {
+      const optimizationState = useOptimizationStore.getState()
+      if (optimizationState.categories.length > 0 || optimizationState.loading)
+        void optimizationState.refresh()
+    })
+
+    void syncCultureToHost(i18n.resolvedLanguage ?? i18n.language)
+
+    return () => {
+      offHostReady()
+      offCultureSynchronized()
     }
   }, [])
 

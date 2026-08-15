@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { formatDateForUi } from '../../utils/dateFormat'
 import {
   ArrowSync24Regular,
   ChevronDown24Regular,
@@ -209,7 +210,7 @@ function formatBatteryDate(iso: string | null | undefined): string {
   if (iso == null || iso === '') return '-'
   const parsed = new Date(`${iso}T00:00:00`)
   if (!Number.isFinite(parsed.getTime())) return iso
-  return parsed.toLocaleDateString()
+  return formatDateForUi(parsed)
 }
 
 function trackSessionExtremum(

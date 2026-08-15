@@ -11,7 +11,7 @@ namespace UniversalDeviceToolkit.Host.Rpc;
 ///
 /// Not listed here:
 /// - Always-on methods registered on every platform (ping, app.getStatus,
-///   app.getLogPath, app.quit, plugins.*, plugin.*).
+///   app.getLogPath, app.quit, localization.*, plugins.*, plugin.*).
 /// - macro.*: MacroHandlers compiles on every platform and registers its own
 ///   non-Windows stubs (see MacroHandlers.cs).
 /// - Electron-main methods that never reach the Host (powerPlans.*, power.*,

@@ -103,6 +103,16 @@ public sealed class LocalizationRuntimeTests : IDisposable
     }
 
     [Fact]
+    public async Task SetCulture_NormalizesElectronChineseCodeToHostCatalogCulture()
+    {
+        var culture = await LocalizationRuntime.SetCultureAsync("zh-CN", persist: true);
+
+        culture.Name.Should().Be("zh-Hans");
+        File.ReadAllText(LocalizationRuntime.LanguageFilePath).Should().Be("zh-Hans");
+        CultureInfo.CurrentUICulture.Name.Should().Be("zh-Hans");
+    }
+
+    [Fact]
     public void ResourceManagerLocalizer_ResolvesEnglishAndChineseResources()
     {
         var localizer = new ResourceManagerStringLocalizer(new ResourceManager(

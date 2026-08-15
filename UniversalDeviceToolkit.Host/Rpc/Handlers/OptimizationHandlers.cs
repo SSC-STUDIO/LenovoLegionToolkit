@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Abstractions.Localization;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Network;
@@ -416,16 +417,11 @@ public static class OptimizationHandlers
     /// culture's string. Falls back to the raw key so unknown keys stay visible to the frontend.
     /// </summary>
     private static string Localize(string resourceKey)
-    {
-        try
-        {
-            return Resource.ResourceManager.GetString(resourceKey) ?? resourceKey;
-        }
-        catch
-        {
-            return resourceKey;
-        }
-    }
+        => LocalizationCatalog.GetString(
+            Resource.ResourceManager,
+            resourceKey,
+            resourceKey,
+            LocalizationRuntime.CurrentCulture);
 
     /// <summary>Mirrors WPF OptimizationCategoryViewModel.HasSettings (plugin settings page presence).</summary>
     private static bool ResolveCategoryHasSettings(string? pluginId)

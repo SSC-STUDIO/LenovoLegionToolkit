@@ -1,5 +1,6 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatDateForUi } from '../../utils/dateFormat'
 import { Modal, Progress, Select, message } from 'antd'
 import {
   ArrowDown24Regular,
@@ -47,7 +48,7 @@ function formatDate(iso: string | null): string {
   if (!iso) return '—'
   const date = new Date(iso)
   if (Number.isNaN(date.getTime())) return iso.slice(0, 10)
-  return date.toLocaleDateString()
+  return formatDateForUi(date)
 }
 
 function isRunning(packageItem: DriverPackageDefinition): boolean {

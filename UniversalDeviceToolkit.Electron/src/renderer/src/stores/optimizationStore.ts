@@ -19,6 +19,7 @@ export interface OptimizationStoreState {
 
 export interface OptimizationStoreActions {
   load: () => Promise<void>
+  refresh: () => Promise<void>
   apply: (keys: string[]) => Promise<boolean>
   revert: (keys: string[]) => Promise<boolean>
   applyRecommended: () => Promise<boolean>
@@ -37,26 +38,33 @@ export interface OptimizationStoreActions {
 
 export type OptimizationStore = OptimizationStoreState & OptimizationStoreActions
 
-export const useOptimizationStore = create<OptimizationStore>((set, get) => ({
-  categories: [],
-  networkStatus: null,
-  trafficSnapshot: null,
-  runtimeSnapshot: null,
-  loading: false,
-  error: null,
+export const useOptimizationStore = create<OptimizationStore>((set, get) => {
+  let categoryRequestId = 0
 
-  async load() {
-    if (get().loading) return
+  const loadCategories = async (force: boolean): Promise<void> => {
+    if (!force && get().loading) return
+    const requestId = ++categoryRequestId
     set({ loading: true, error: null })
     try {
       const { categories } = await optimizationApi.getCategories()
-      set({ categories })
+      if (requestId === categoryRequestId) set({ categories })
     } catch (error) {
-      set({ error: (error as Error).message })
+      if (requestId === categoryRequestId) set({ error: (error as Error).message })
     } finally {
-      set({ loading: false })
+      if (requestId === categoryRequestId) set({ loading: false })
     }
-  },
+  }
+
+  return {
+    categories: [],
+    networkStatus: null,
+    trafficSnapshot: null,
+    runtimeSnapshot: null,
+    loading: false,
+    error: null,
+
+    load: () => loadCategories(false),
+    refresh: () => loadCategories(true),
 
   async apply(keys) {
     if (keys.length === 0) return true
@@ -234,4 +242,5 @@ export const useOptimizationStore = create<OptimizationStore>((set, get) => ({
     }
     return get().saveNetworkConfig(config)
   }
-}))
+  }
+})

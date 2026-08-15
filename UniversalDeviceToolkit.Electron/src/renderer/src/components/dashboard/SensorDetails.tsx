@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { formatDateForUi } from '../../utils/dateFormat'
 import type { SensorsBattery, SensorsCpu, SensorsGpu, SensorsMemory } from '../../api/sensors'
 import { formatUsageInGigabytes } from '../../utils/format'
 
@@ -199,7 +200,7 @@ export function useSensorDetails(props: SensorDetailsProps): {
         const iso = props.battery?.manufactureDate ?? props.battery?.firstUseDate
         if (iso == null || iso === '') return '-'
         const parsed = new Date(`${iso}T00:00:00`)
-        return Number.isFinite(parsed.getTime()) ? parsed.toLocaleDateString() : iso
+        return Number.isFinite(parsed.getTime()) ? formatDateForUi(parsed) : iso
       })()
     },
     { label: t('dashboard.sensor.voltage'), value: formatVoltage(props.battery?.voltage) },
