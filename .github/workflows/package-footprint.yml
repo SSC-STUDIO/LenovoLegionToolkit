@@ -1,0 +1,155 @@
+name: Package Footprint
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'UniversalDeviceToolkit.Electron/**'
+      - 'UniversalDeviceToolkit.Host/**'
+      - 'UniversalDeviceToolkit.Lib/**'
+      - 'UniversalDeviceToolkit.Lib.Abstractions/**'
+      - 'UniversalDeviceToolkit.Lib.Automation/**'
+      - 'UniversalDeviceToolkit.Lib.Macro/**'
+      - 'UniversalDeviceToolkit.Lib.Plugins/**'
+      - 'UniversalDeviceToolkit.Lib.Shared/**'
+      - 'UniversalDeviceToolkit.NetworkProxy/**'
+      - 'UniversalDeviceToolkit.Platform.Linux/**'
+      - 'UniversalDeviceToolkit.Platform.MacOS/**'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'Scripts/Prune-ShippingFootprint.ps1'
+      - '.github/workflows/package-footprint.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'UniversalDeviceToolkit.Electron/**'
+      - 'UniversalDeviceToolkit.Host/**'
+      - 'UniversalDeviceToolkit.Lib/**'
+      - 'UniversalDeviceToolkit.Lib.Abstractions/**'
+      - 'UniversalDeviceToolkit.Lib.Automation/**'
+      - 'UniversalDeviceToolkit.Lib.Macro/**'
+      - 'UniversalDeviceToolkit.Lib.Plugins/**'
+      - 'UniversalDeviceToolkit.Lib.Shared/**'
+      - 'UniversalDeviceToolkit.NetworkProxy/**'
+      - 'UniversalDeviceToolkit.Platform.Linux/**'
+      - 'UniversalDeviceToolkit.Platform.MacOS/**'
+      - 'Directory.Build.props'
+      - 'Directory.Build.targets'
+      - 'Scripts/Prune-ShippingFootprint.ps1'
+      - '.github/workflows/package-footprint.yml'
+  workflow_dispatch:
+
+jobs:
+  package-footprint:
+    name: ${{ matrix.os }} (${{ matrix.runtimeIdentifier }}) package footprint
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-2022
+            platform: windows
+            runtimeIdentifier: win-x64
+            electronPlatform: --win
+            electronTargets: nsis nsis-web zip
+            electronArchitecture: --x64
+          - os: ubuntu-24.04
+            platform: linux
+            runtimeIdentifier: linux-x64
+            electronPlatform: --linux
+            electronTargets: AppImage deb
+            electronArchitecture: --x64
+          - os: macos-15
+            platform: macos
+            runtimeIdentifier: osx-arm64
+            electronPlatform: --mac
+            electronTargets: dmg
+            electronArchitecture: --arm64
+          - os: macos-15-intel
+            platform: macos
+            runtimeIdentifier: osx-x64
+            electronPlatform: --mac
+            electronTargets: dmg
+            electronArchitecture: --x64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Setup Node 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: UniversalDeviceToolkit.Electron/package-lock.json
+
+      - name: Install Electron build dependencies
+        working-directory: UniversalDeviceToolkit.Electron
+        run: npm ci
+
+      - name: Publish and prune self-contained Host (${{ matrix.runtimeIdentifier }})
+        shell: pwsh
+        run: |
+          $expectedArchitecture = if ('${{ matrix.runtimeIdentifier }}' -like '*arm64') { 'Arm64' } else { 'X64' }
+          $actualArchitecture = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture.ToString()
+          if ($actualArchitecture -ne $expectedArchitecture) {
+            throw "Runner architecture '$actualArchitecture' does not match '${{ matrix.runtimeIdentifier }}'."
+          }
+
+          $env:UDT_PLATFORM = '${{ matrix.platform }}'
+          $project = 'UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj'
+          $publishPath = Join-Path $PWD 'UniversalDeviceToolkit.Host/publish/${{ matrix.runtimeIdentifier }}'
+          dotnet restore $project --runtime '${{ matrix.runtimeIdentifier }}' --force-evaluate
+          if ($LASTEXITCODE -ne 0) { throw 'Host restore failed.' }
+          dotnet publish $project --configuration Release --runtime '${{ matrix.runtimeIdentifier }}' --self-contained true --no-restore --output $publishPath
+          if ($LASTEXITCODE -ne 0) { throw 'Host publish failed.' }
+          ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath $publishPath -RuntimeIdentifier '${{ matrix.runtimeIdentifier }}' -AllowedCultures 'ar;bg;cs;de;el;en;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;uz-latn-uz;vi;zh-hans;zh-hant'
+
+      - name: Smoke Host JSON-RPC
+        shell: pwsh
+        run: |
+          $hostName = if ('${{ runner.os }}' -eq 'Windows') { 'UniversalDeviceToolkit.Host.exe' } else { 'UniversalDeviceToolkit.Host' }
+          $hostPath = Join-Path $PWD "UniversalDeviceToolkit.Host/publish/${{ matrix.runtimeIdentifier }}/$hostName"
+          if (-not (Test-Path -LiteralPath $hostPath -PathType Leaf)) {
+            throw "Published Host executable is missing: $hostPath"
+          }
+          node UniversalDeviceToolkit.Electron/scripts/smoke-host.mjs $hostPath
+
+      - name: Build and package Electron product
+        working-directory: UniversalDeviceToolkit.Electron
+        shell: pwsh
+        run: |
+          npm run typecheck
+          if ($LASTEXITCODE -ne 0) { throw 'Electron typecheck failed.' }
+          npm test
+          if ($LASTEXITCODE -ne 0) { throw 'Electron tests failed.' }
+          npm run build
+          if ($LASTEXITCODE -ne 0) { throw 'Electron production build failed.' }
+          $arguments = @('--config', 'electron-builder.yml', '${{ matrix.electronPlatform }}')
+          $arguments += '${{ matrix.electronTargets }}' -split ' '
+          $arguments += @('${{ matrix.electronArchitecture }}', '--publish', 'never')
+          & npx electron-builder @arguments
+          if ($LASTEXITCODE -ne 0) { throw 'Electron package build failed.' }
+
+      - name: Enforce distributable budgets
+        working-directory: UniversalDeviceToolkit.Electron
+        shell: pwsh
+        run: |
+          $artifacts = @(Get-ChildItem -LiteralPath dist -File | Where-Object { $_.Extension -in @('.exe', '.zip', '.dmg', '.AppImage', '.deb') })
+          if ($artifacts.Count -eq 0) { throw 'Electron Builder produced no distributable artifacts.' }
+          node scripts/package-footprint.mjs @($artifacts.FullName)
+          if ($LASTEXITCODE -ne 0) { throw 'Distributable footprint audit failed.' }
+
+      - name: Upload footprint reports
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: package-footprint-${{ matrix.runtimeIdentifier }}-${{ github.run_id }}
+          path: UniversalDeviceToolkit.Electron/dist/footprint/*.json
+          if-no-files-found: warn

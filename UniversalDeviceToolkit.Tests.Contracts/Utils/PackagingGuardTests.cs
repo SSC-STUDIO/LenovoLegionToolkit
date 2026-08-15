@@ -54,6 +54,44 @@ public sealed class PackagingGuardTests
     }
 
     [Fact]
+    public void FootprintPackaging_ShouldKeepOnlyRequiredChromiumLocalesAndAuditEveryPackage()
+    {
+        var builderConfig = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "electron-builder.yml");
+        var installerConfig = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "custom-installer.yml");
+        var auditScript = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "scripts", "package-footprint.mjs");
+        var hostProject = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Host", "UniversalDeviceToolkit.Host.csproj");
+
+        builderConfig.Should().Contain("afterPack: ./scripts/package-footprint.mjs");
+        builderConfig.Should().Contain("electronLanguages:");
+        builderConfig.Should().Contain("- zh-TW");
+        builderConfig.Should().Contain("- pt-PT");
+        installerConfig.Should().Contain("electronLanguages:");
+        installerConfig.Should().Contain("- en-US");
+        auditScript.Should().Contain("app.asar contains node_modules entries");
+        auditScript.Should().Contain("Host contains PDB files");
+        auditScript.Should().Contain("Chromium locale mismatch");
+        hostProject.Should().Contain("<IsUdtShippingApp>true</IsUdtShippingApp>");
+    }
+
+    [Fact]
+    public void FootprintWorkflow_ShouldBuildNativePackagesOnSupportedRunners()
+    {
+        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "package-footprint.yml");
+        var crossPlatformCliWorkflow = RepositoryPaths.ReadFile(".github", "workflows", "CrossPlatformCli.yml");
+
+        workflow.Should().Contain("windows-2022");
+        workflow.Should().Contain("ubuntu-24.04");
+        workflow.Should().Contain("macos-15");
+        workflow.Should().Contain("macos-15-intel");
+        workflow.Should().Contain("npm ci");
+        workflow.Should().Contain("smoke-host.mjs");
+        workflow.Should().Contain("package-footprint.mjs");
+        crossPlatformCliWorkflow.Should().Contain("os: macos-15");
+        crossPlatformCliWorkflow.Should().Contain("os: macos-15-intel");
+        crossPlatformCliWorkflow.Should().NotContain("os: macos-13");
+    }
+
+    [Fact]
     public void ElectronInstaller_ShouldPersistLanguageAndDeviceSelectionBeforeFirstLaunch()
     {
         var script = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "buildResources", "installer.nsh");
