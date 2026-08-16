@@ -3,7 +3,7 @@ import { settingsApi } from '../api/settings'
 import { systemApi } from '../api/system'
 import { applyUiScale, useThemeStore } from '../stores/themeStore'
 import type { ThemeMode } from '../stores/themeStore'
-import { computeAutoUiScale, readLayoutWidth, UI_SCALE_AUTO } from './uiScale'
+import { computeAutoUiScale, layoutWidthChanged, readLayoutWidth, UI_SCALE_AUTO } from './uiScale'
 import {
   applyAccentSurfacePalette,
   clearAccentSurfacePalette,
@@ -22,6 +22,7 @@ interface ApplicationSettings {
 
 const ACCENT_SOURCE_STORAGE_KEY = 'udt.accent-source'
 const ACCENT_COLOR_STORAGE_KEY = 'udt.accent'
+export const ACCENT_TINTS_STORAGE_KEY = 'udt.accent-tints'
 const DEFAULT_SYSTEM_ACCENT_HEX = '#0078d4'
 
 /**
@@ -44,6 +45,25 @@ export function storeAccentPreference(source: 'System' | 'Custom', hex?: string)
   } catch {
     // localStorage is unavailable; Host settings remain the only source.
   }
+}
+
+export function storeAccentTintsPreference(enabled: boolean): void {
+  try {
+    localStorage.setItem(ACCENT_TINTS_STORAGE_KEY, String(enabled))
+  } catch {
+    // localStorage is unavailable; Host settings remain the only source.
+  }
+}
+
+function storedAccentTintsPreference(): boolean {
+  try {
+    const stored = localStorage.getItem(ACCENT_TINTS_STORAGE_KEY)
+    if (stored === 'false') return false
+    if (stored === 'true') return true
+  } catch {
+    // ignore
+  }
+  return true
 }
 
 function storedAccentPreference(): { source: 'System' | 'Custom'; hex?: string } | null {
@@ -152,6 +172,13 @@ export function useTheme(): ThemeController {
       return systemAccentHex
     }
 
+    const resolveAccentTints = (settings?: ApplicationSettings): boolean => {
+      if (settings?.ApplyAccentColorToTheme !== undefined) {
+        return settings.ApplyAccentColorToTheme
+      }
+      return storedAccentTintsPreference()
+    }
+
     const apply = (settings?: ApplicationSettings): void => {
       // themePreference is the renderer-authoritative source (Settings page
       // writes it to the store + localStorage; host value may be stale).
@@ -169,7 +196,7 @@ export function useTheme(): ThemeController {
       setAccent(accentHex)
       // Electron ThemeManager: the accent itself always applies; the palette
       // effect above tints surfaces when ApplyAccentColorToTheme is enabled.
-      setAccentTintsSurfaces(settings?.ApplyAccentColorToTheme !== false)
+      setAccentTintsSurfaces(resolveAccentTints(settings))
     }
 
     const load = (): void => {
@@ -207,12 +234,17 @@ export function useTheme(): ThemeController {
 
   useEffect(() => {
     if (uiScalePreference !== UI_SCALE_AUTO) return undefined
+    let lastWidth = readLayoutWidth()
     const applyAuto = (): void => {
-      applyComputedUiScale(computeAutoUiScale(readLayoutWidth()))
+      const width = readLayoutWidth()
+      lastWidth = width
+      applyComputedUiScale(computeAutoUiScale(width))
     }
     applyAuto()
     let debounceId: ReturnType<typeof setTimeout> | undefined
     const onResize = (): void => {
+      // zoomFactor / CSS zoom fire resize while outerWidth stays put.
+      if (!layoutWidthChanged(lastWidth, readLayoutWidth())) return
       if (debounceId !== undefined) clearTimeout(debounceId)
       debounceId = setTimeout(applyAuto, 100)
     }

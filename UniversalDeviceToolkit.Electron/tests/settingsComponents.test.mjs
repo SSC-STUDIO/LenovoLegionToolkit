@@ -10,6 +10,15 @@ const appearanceSectionUrl = new URL(
   '../src/renderer/src/components/settings/AppearanceSection.tsx',
   import.meta.url
 )
+const settingsPageUrl = new URL('../src/renderer/src/pages/SettingsPage.tsx', import.meta.url)
+const settingsCssUrl = new URL(
+  '../src/renderer/src/components/settings/settings.css',
+  import.meta.url
+)
+const settingsLoadErrorUrl = new URL(
+  '../src/renderer/src/components/settings/SettingsLoadError.tsx',
+  import.meta.url
+)
 const settingsCardUrl = new URL(
   '../src/renderer/src/components/settings/SettingsCard.tsx',
   import.meta.url
@@ -165,8 +174,113 @@ async function settleAsyncWork() {
   await new Promise((resolve) => setImmediate(resolve))
 }
 
+function createHookedRenderer() {
+  const cells = []
+  const effectRecords = []
+  let cursor = 0
+  let renderImpl
+  let latestRoot
+  let renderQueued = false
+
+  function rerender() {
+    cursor = 0
+    latestRoot = renderImpl()
+    return latestRoot
+  }
+
+  function queueRender() {
+    if (renderQueued) return
+    renderQueued = true
+    queueMicrotask(() => {
+      renderQueued = false
+      rerender()
+    })
+  }
+
+  function flushEffects() {
+    for (const record of effectRecords) {
+      if (record == null || record.ran) continue
+      record.ran = true
+      const cleanup = record.effect()
+      if (typeof cleanup === 'function') record.cleanup = cleanup
+    }
+  }
+
+  const react = {
+    useState(initial) {
+      const index = cursor++
+      if (cells[index] === undefined) {
+        cells[index] = typeof initial === 'function' ? initial() : initial
+      }
+      return [
+        cells[index],
+        (update) => {
+          const next = typeof update === 'function' ? update(cells[index]) : update
+          if (Object.is(next, cells[index])) return
+          cells[index] = next
+          queueRender()
+        }
+      ]
+    },
+    useEffect(effect, deps) {
+      const index = cursor++
+      const previous = effectRecords[index]
+      const depsChanged =
+        previous == null ||
+        previous.deps == null ||
+        deps == null ||
+        previous.deps.length !== deps.length ||
+        previous.deps.some((dep, depIndex) => !Object.is(dep, deps[depIndex]))
+      if (!depsChanged) return
+      previous?.cleanup?.()
+      effectRecords[index] = { effect, deps, ran: false }
+    },
+    useCallback(fn) {
+      cursor += 1
+      return fn
+    },
+    useRef(initial) {
+      const index = cursor++
+      if (cells[index] === undefined) {
+        cells[index] = { current: initial }
+      }
+      return cells[index]
+    },
+    useMemo(fn) {
+      cursor += 1
+      return fn()
+    }
+  }
+
+  return {
+    react,
+    render(renderFn) {
+      renderImpl = renderFn
+      rerender()
+      flushEffects()
+      return latestRoot
+    },
+    async settle() {
+      for (let attempt = 0; attempt < 12; attempt += 1) {
+        flushEffects()
+        await settleAsyncWork()
+      }
+      return latestRoot
+    },
+    get root() {
+      return latestRoot
+    },
+    cleanup() {
+      for (const record of effectRecords) {
+        record?.cleanup?.()
+      }
+    }
+  }
+}
+
 function createAppearanceFixture({
   application = { UnrelatedSetting: 'preserved' },
+  omitApplicationScope = false,
   storage = {},
   setError,
   saveError
@@ -224,7 +338,7 @@ function createAppearanceFixture({
   )
   settingsStoreModule.useSettingsStore.setState({
     loading: false,
-    scopes: { application: cloneJson(initialApplication) }
+    scopes: omitApplicationScope ? {} : { application: cloneJson(initialApplication) }
   })
   const themeStoreModule = loadModule(
     themeStoreUrl,
@@ -244,6 +358,15 @@ function createAppearanceFixture({
     },
     useState(initial) {
       return [typeof initial === 'function' ? initial() : initial, () => undefined]
+    },
+    useRef(initial) {
+      return { current: initial }
+    },
+    useMemo(fn) {
+      return fn()
+    },
+    useCallback(fn) {
+      return fn
     }
   }
   const systemApi = {
@@ -535,4 +658,238 @@ test('non-clickable SettingsCard rows have no interactive role', () => {
     }
   })
   assert.equal(prevented, false)
+})
+
+test('appearance editors stay disabled until the application scope is loaded', async (t) => {
+  const fixture = createAppearanceFixture({ omitApplicationScope: true })
+  t.after(fixture.cleanup)
+  await settleAsyncWork()
+
+  const languageSelect = findSingleElement(
+    fixture.root,
+    (element) =>
+      element.type === fixture.types.Select &&
+      element.props.className.includes('--language'),
+    'language select'
+  )
+  const temperatureSelect = findSingleElement(
+    fixture.root,
+    (element) =>
+      element.type === fixture.types.Select &&
+      element.props.className === 'udt-settings-select',
+    'temperature select'
+  )
+
+  assert.equal(languageSelect.props.disabled, true)
+  assert.equal(temperatureSelect.props.disabled, true)
+
+  temperatureSelect.props.onChange('F')
+  await settleAsyncWork()
+  assert.equal(fixture.calls.sets.length, 0)
+  assert.equal(fixture.calls.saves.length, 0)
+})
+
+function loadSettingsLoadError() {
+  return loadModule(settingsLoadErrorUrl, {
+    'react-i18next': {
+      useTranslation: () => ({
+        t: (key, options) => options?.defaultValue ?? key
+      })
+    },
+    'react/jsx-runtime': jsxRuntime
+  }).SettingsLoadError
+}
+
+test('SettingsLoadError exposes retry without enabling editors', () => {
+  const SettingsLoadError = loadSettingsLoadError()
+  let retries = 0
+  const root = SettingsLoadError({
+    message: 'host is not running',
+    onRetry: () => {
+      retries += 1
+    }
+  })
+
+  assert.equal(root.props.role, 'alert')
+  const retry = findSingleElement(
+    root,
+    (element) => element.type === 'button' && element.props.onClick != null,
+    'retry button'
+  )
+  retry.props.onClick()
+  assert.equal(retries, 1)
+  const message = findSingleElement(
+    root,
+    (element) => element.type === 'p' && element.props.children === 'host is not running',
+    'error message'
+  )
+  assert.equal(message.props.children, 'host is not running')
+})
+
+function createSettingsPageFixture({ loadImpl, featuresImpl } = {}) {
+  const calls = { loads: 0, features: 0, finished: 0 }
+  const loadingStore = {
+    start: () => 'settings-load',
+    finish: () => {
+      calls.finished += 1
+    },
+    getState() {
+      return this
+    }
+  }
+  const settingsStore = {
+    scopes: {},
+    async load() {
+      calls.loads += 1
+      if (loadImpl != null) return loadImpl()
+      this.scopes = { application: { Theme: 'Dark' } }
+    },
+    getState() {
+      return this
+    }
+  }
+  const featuresApi = {
+    async list() {
+      calls.features += 1
+      if (featuresImpl != null) return featuresImpl()
+      return []
+    }
+  }
+  const Section = function Section() {}
+  const SkeletonList = function SkeletonList() {}
+  const SettingsLoadError = function SettingsLoadError() {}
+  const Tooltip = function Tooltip() {}
+  const Icon = function Icon() {}
+  const translate = (key, options) => options?.defaultValue ?? key
+  const renderer = createHookedRenderer()
+  const pageModule = loadModule(
+    settingsPageUrl,
+    {
+      '../api/bridge': {
+        isHostUnavailableError: (message) => /host is not running/i.test(String(message)),
+        sanitizeBridgeError: (error) => (error instanceof Error ? error.message : String(error))
+      },
+      '../api/features': { featuresApi },
+      '../components/Skeleton': { SkeletonList },
+      '../components/icons/fluent': {
+        Apps24Regular: Icon,
+        ArrowSync24Regular: Icon,
+        Desktop24Regular: Icon,
+        Eye24Regular: Icon,
+        Key24Regular: Icon,
+        PaintBrush24Regular: Icon,
+        PlugConnected24Regular: Icon,
+        Power24Regular: Icon
+      },
+      '../components/settings/AppearanceSection': { __esModule: true, default: Section },
+      '../components/settings/ApplicationSection': { __esModule: true, default: Section },
+      '../components/settings/DisplaySection': { DisplaySection: Section },
+      '../components/settings/IntegrationsSection': { IntegrationsSection: Section },
+      '../components/settings/OsdSection': { OsdSection: Section },
+      '../components/settings/PowerSection': { PowerSection: Section },
+      '../components/settings/SettingsLoadError': { SettingsLoadError },
+      '../components/settings/SmartKeysSection': { SmartKeysSection: Section },
+      '../components/settings/UpdateSection': { UpdateSection: Section },
+      '../components/settings/settings.css': {},
+      '../stores/loadingStore': { useLoadingStore: loadingStore },
+      '../stores/settingsStore': { useSettingsStore: settingsStore },
+      antd: { Tooltip },
+      react: renderer.react,
+      'react-i18next': {
+        useTranslation: () => ({
+          t: translate
+        })
+      },
+      'react/jsx-runtime': jsxRuntime
+    }
+  )
+
+  renderer.render(() => pageModule.default())
+  return {
+    calls,
+    renderer,
+    types: { Section, SettingsLoadError, SkeletonList }
+  }
+}
+
+test('settings page keeps the skeleton until scopes load and then enables editors', async (t) => {
+  let resolveLoad
+  const fixture = createSettingsPageFixture({
+    loadImpl: () =>
+      new Promise((resolve) => {
+        resolveLoad = resolve
+      })
+  })
+  t.after(() => fixture.renderer.cleanup())
+
+  assert.equal(
+    collectElements(fixture.renderer.root).some((element) => element.type === fixture.types.SkeletonList),
+    true
+  )
+  assert.equal(
+    collectElements(fixture.renderer.root).some((element) => element.type === fixture.types.Section),
+    false
+  )
+
+  resolveLoad()
+  const root = await fixture.renderer.settle()
+  assert.equal(
+    collectElements(root).some((element) => element.type === fixture.types.SkeletonList),
+    false
+  )
+  assert.equal(
+    collectElements(root).some((element) => element.type === fixture.types.Section),
+    true
+  )
+  assert.equal(fixture.calls.loads, 1)
+})
+
+test('settings page shows error and retry instead of default editors when load fails', async (t) => {
+  let shouldFail = true
+  const fixture = createSettingsPageFixture({
+    loadImpl: async () => {
+      if (shouldFail) throw new Error('host is not running')
+    }
+  })
+  t.after(() => fixture.renderer.cleanup())
+
+  let root = await fixture.renderer.settle()
+  assert.equal(
+    collectElements(root).some((element) => element.type === fixture.types.Section),
+    false
+  )
+  const error = findSingleElement(
+    root,
+    (element) => element.type === fixture.types.SettingsLoadError,
+    'settings load error'
+  )
+  assert.match(String(error.props.message), /host is not running|backend host/)
+  assert.equal(typeof error.props.onRetry, 'function')
+
+  shouldFail = false
+  error.props.onRetry()
+  root = await fixture.renderer.settle()
+  assert.equal(fixture.calls.loads, 2)
+  assert.equal(
+    collectElements(root).some((element) => element.type === fixture.types.SettingsLoadError),
+    false
+  )
+  assert.equal(
+    collectElements(root).some((element) => element.type === fixture.types.Section),
+    true
+  )
+})
+
+test('settings nav stays inside the shell at the stacked breakpoint', () => {
+  const css = readFileSync(settingsCssUrl, 'utf8')
+  const stacked = css.match(
+    /@container udt-settings-shell \(max-width: 720px\) \{([\s\S]*?)\n\}/
+  )
+  assert.ok(stacked != null, 'expected stacked settings breakpoint')
+  const navBlock = stacked[1].match(/\.udt-settings-page__nav \{([^}]+)\}/)
+  assert.ok(navBlock != null, 'expected stacked nav rules')
+  assert.match(navBlock[1], /min-width:\s*0/)
+  assert.match(navBlock[1], /overflow-x:\s*auto/)
+  assert.doesNotMatch(navBlock[1], /overflow:\s*visible/)
+  assert.doesNotMatch(navBlock[1], /!important/)
 })

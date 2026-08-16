@@ -45,6 +45,18 @@ export interface ThemeStore {
 
 const UI_SCALE_STORAGE_KEY = 'udt-ui-scale'
 const THEME_STORAGE_KEY = 'udt.theme'
+export const ACCENT_TINTS_STORAGE_KEY = 'udt.accent-tints'
+
+function readStoredAccentTintsPreference(): boolean {
+  try {
+    const stored = localStorage.getItem(ACCENT_TINTS_STORAGE_KEY)
+    if (stored === 'false') return false
+    if (stored === 'true') return true
+  } catch {
+    /* ignore quota / private mode */
+  }
+  return true
+}
 
 function readStoredThemePreference(): ThemePreference {
   try {
@@ -108,7 +120,7 @@ export const useThemeStore = create<ThemeStore>()((set, get) => ({
   colorPrimary: undefined,
   uiScale: initialUiScale,
   uiScalePreference: initialUiScalePreference,
-  accentTintsSurfaces: true,
+  accentTintsSurfaces: readStoredAccentTintsPreference(),
   setThemeMode: (themeMode) => set({ themeMode }),
   setThemePreference: (themePreference) => {
     set({ themePreference })
@@ -133,7 +145,14 @@ export const useThemeStore = create<ThemeStore>()((set, get) => ({
     set({ uiScale })
     applyUiScale(uiScale)
   },
-  setAccentTintsSurfaces: (accentTintsSurfaces) => set({ accentTintsSurfaces })
+  setAccentTintsSurfaces: (accentTintsSurfaces) => {
+    set({ accentTintsSurfaces })
+    try {
+      localStorage.setItem(ACCENT_TINTS_STORAGE_KEY, String(accentTintsSurfaces))
+    } catch {
+      /* ignore quota / private mode */
+    }
+  }
 }))
 
 // Apply the persisted scale once at startup (themeStore is imported by main.tsx

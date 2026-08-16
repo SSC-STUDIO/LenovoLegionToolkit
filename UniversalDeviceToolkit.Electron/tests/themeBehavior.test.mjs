@@ -12,6 +12,38 @@ const MAIN_SOURCE = readFileSync(
   'utf8'
 )
 
+function extractCssBlock(css, prelude) {
+  const start = css.indexOf(prelude)
+  if (start < 0) return ''
+  const open = css.indexOf('{', start)
+  if (open < 0) return ''
+  let depth = 0
+  for (let index = open; index < css.length; index += 1) {
+    const character = css[index]
+    if (character === '{') depth += 1
+    else if (character === '}') {
+      depth -= 1
+      if (depth === 0) return css.slice(start, index + 1)
+    }
+  }
+  return ''
+}
+
+function extractMediaBlocks(css, query) {
+  const needle = `@media (${query})`
+  const blocks = []
+  let searchFrom = 0
+  while (searchFrom < css.length) {
+    const start = css.indexOf(needle, searchFrom)
+    if (start < 0) break
+    const block = extractCssBlock(css.slice(start), needle)
+    if (!block) break
+    blocks.push(block)
+    searchFrom = start + block.length
+  }
+  return blocks
+}
+
 function dataModule(source) {
   return `data:text/javascript,${encodeURIComponent(source)}`
 }
@@ -34,7 +66,9 @@ export const systemApi = {
 `),
   '../stores/themeStore': dataModule(`${harnessAccessor}
 export const applyUiScale = (scale) => harness().applyUiScale(scale)
-export const useThemeStore = (selector) => selector(harness().store)
+export const useThemeStore = Object.assign((selector) => selector(harness().store), {
+  getState: () => harness().store
+})
 `),
   './uiScale': new URL('../src/renderer/src/theme/uiScale.ts', import.meta.url).href,
   './accentPalette': dataModule(`${harnessAccessor}
@@ -364,7 +398,9 @@ test('Electron renderer theme behavior', async (t) => {
   })
 
   await t.test('theme store restores Auto and locked UI scale preferences', async () => {
-    const { computeAutoUiScale } = await freshImport('../src/renderer/src/theme/uiScale.ts')
+    const { computeAutoUiScale, layoutWidthChanged, readLayoutWidth } = await freshImport(
+      '../src/renderer/src/theme/uiScale.ts'
+    )
     assert.equal(computeAutoUiScale(1024), 1.1)
     assert.equal(computeAutoUiScale(1058), 1.11)
     assert.equal(computeAutoUiScale(1300), 1.18)
@@ -377,9 +413,26 @@ test('Electron renderer theme behavior', async (t) => {
     assert.equal(computeAutoUiScale(2000), 1.36)
     assert.equal(computeAutoUiScale(0), 1.1)
 
+    assert.equal(layoutWidthChanged(1600, 1600), false)
+    assert.equal(layoutWidthChanged(1600, 1604), false)
+    assert.equal(layoutWidthChanged(1600, 1610), true)
+
+    installBrowserGlobals(null, false)
+    globalThis.window.outerWidth = 1024
+    globalThis.window.innerWidth = 1920
+    assert.equal(readLayoutWidth(), 1024)
+    assert.equal(computeAutoUiScale(readLayoutWidth()), 1.1)
+
+    installBrowserGlobals(null, false)
+    globalThis.window.outerWidth = 0
+    globalThis.window.innerWidth = 1920
+    assert.equal(readLayoutWidth(), 1024)
+    assert.equal(computeAutoUiScale(readLayoutWidth()), 1.1)
+
     installBrowserGlobals(null, false)
     globalThis.localStorage.setItem('udt-ui-scale', 'auto')
     globalThis.window.outerWidth = 1024
+    globalThis.window.innerWidth = 1920
     const autoStore = await freshImport('../src/renderer/src/stores/themeStore.ts')
     assert.equal(autoStore.useThemeStore.getState().uiScalePreference, 'auto')
     assert.equal(autoStore.useThemeStore.getState().uiScale, 1.1)
@@ -389,6 +442,73 @@ test('Electron renderer theme behavior', async (t) => {
     const lockedStore = await freshImport('../src/renderer/src/stores/themeStore.ts')
     assert.equal(lockedStore.useThemeStore.getState().uiScalePreference, 1.25)
     assert.equal(lockedStore.useThemeStore.getState().uiScale, 1.25)
+  })
+
+  await t.test('Auto scale ignores zoom-only resize feedback', async () => {
+    const { useTheme } = await freshImport('../src/renderer/src/theme/useTheme.ts')
+    const runtime = createHookRuntime('dark', false)
+    runtime.store.uiScalePreference = 'auto'
+    runtime.store.uiScale = 1.1
+    const applied = []
+    runtime.store.applyComputedUiScale = (uiScale) => {
+      applied.push(uiScale)
+      runtime.store.uiScale = uiScale
+    }
+
+    globalThis.window.outerWidth = 1024
+    globalThis.window.innerWidth = 1024
+    const listeners = new Map()
+    const previousMatchMedia = globalThis.window.matchMedia
+    globalThis.window.addEventListener = (type, listener) => {
+      listeners.set(type, listener)
+    }
+    globalThis.window.removeEventListener = (type) => {
+      listeners.delete(type)
+    }
+    globalThis.window.matchMedia = previousMatchMedia
+
+    runtime.render(useTheme)
+    assert.deepEqual(applied, [1.1])
+
+    globalThis.window.innerWidth = 750
+    listeners.get('resize')?.()
+    await new Promise((resolve) => setTimeout(resolve, 150))
+    assert.deepEqual(applied, [1.1])
+
+    globalThis.window.outerWidth = 1600
+    globalThis.window.innerWidth = 1185
+    listeners.get('resize')?.()
+    await new Promise((resolve) => setTimeout(resolve, 150))
+    assert.deepEqual(applied, [1.1, 1.27])
+
+    runtime.cleanup()
+  })
+
+  await t.test('global theme tokens define light strokes and reduced-motion coverage', () => {
+    const globalCss = readFileSync(
+      new URL('../src/renderer/src/styles/global.css', import.meta.url),
+      'utf8'
+    )
+    const skeletonCss = readFileSync(
+      new URL('../src/renderer/src/styles/skeleton.css', import.meta.url),
+      'utf8'
+    )
+
+    const lightBlock = extractCssBlock(globalCss, ":root[data-theme='light']")
+    assert.ok(lightBlock, 'light theme token block must exist')
+    assert.match(lightBlock, /--udt-control-stroke-secondary:\s*rgba\(0,\s*0,\s*0/)
+    assert.match(lightBlock, /--udt-control-stroke-strong:\s*rgba\(0,\s*0,\s*0/)
+    assert.match(lightBlock, /--udt-subtle-fill-tertiary:\s*rgba\(0,\s*0,\s*0/)
+    assert.match(globalCss, /--udt-control-stroke-strong:\s*rgba\(255,\s*255,\s*255/)
+
+    const reducedCss = extractMediaBlocks(globalCss, 'prefers-reduced-motion: reduce').join('\n')
+    assert.match(reducedCss, /\.udt-macro-page \.udt-macro-list > \*/)
+    assert.match(reducedCss, /\.udt-modal__list > \*/)
+    assert.match(reducedCss, /\.udt-card:hover/)
+    assert.match(reducedCss, /\.udt-btn:not\(:disabled\):active/)
+    assert.match(reducedCss, /\.udt-nav/)
+    assert.match(skeletonCss, /@media\s*\(prefers-reduced-motion:\s*reduce\)/)
+    assert.match(skeletonCss, /\.udt-skeleton::after/)
   })
 
   await t.test('bootstrap honors valid preferences and treats invalid values as System', async () => {
