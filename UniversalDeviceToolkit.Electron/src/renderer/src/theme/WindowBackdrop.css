@@ -1,16 +1,115 @@
+/* ==========================================================================
+   Window Backdrop (Mica / Acrylic / Vibrancy) System
+   ========================================================================== */
+
+/* ── Base Transparency when a native backdrop is active ── */
+:root[data-backdrop='mica'],
+:root[data-backdrop='acrylic'] {
+  background: transparent !important;
+}
+
 :root[data-backdrop='mica'] body,
 :root[data-backdrop='mica'] #root,
 :root[data-backdrop='acrylic'] body,
 :root[data-backdrop='acrylic'] #root {
-  background: transparent;
+  background: transparent !important;
 }
 
-/* Navigation rail stays opaque — only the content surface is translucent. */
+/* App shell container is transparent with subtle tint for contrast */
 :root[data-backdrop='mica'] .udt-app-shell,
 :root[data-backdrop='acrylic'] .udt-app-shell {
-  background: var(--udt-surface-navigation);
+  background: transparent !important;
 }
 
+:root[data-backdrop='mica'] .udt-app-shell__body,
+:root[data-backdrop='acrylic'] .udt-app-shell__body {
+  background: transparent !important;
+}
+
+:root[data-backdrop='mica'] .udt-titlebar,
+:root[data-backdrop='acrylic'] .udt-titlebar {
+  background: transparent !important;
+}
+
+:root[data-backdrop='mica'] .udt-nav,
+:root[data-backdrop='acrylic'] .udt-nav {
+  background: transparent !important;
+}
+
+:root[data-backdrop='mica'] .udt-app-shell__main,
+:root[data-backdrop='acrylic'] .udt-app-shell__main {
+  background: transparent !important;
+}
+
+/* ── Mica Effect (Layered subtle translucent surface over wallpaper) ── */
+:root[data-backdrop='mica'] .udt-app-shell__content {
+  background: rgba(27, 27, 27, 0.45);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme='light'][data-backdrop='mica'] .udt-app-shell__content {
+  background: rgba(255, 255, 255, 0.55);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Mica cards have clean translucent surfaces with subtle glass backdrop */
+:root[data-backdrop='mica'] .udt-parity-card,
+:root[data-backdrop='mica'] .udt-sensor-board,
+:root[data-backdrop='mica'] .udt-card-base,
+:root[data-backdrop='mica'] .udt-settings-card,
+:root[data-backdrop='mica'] .udt-backdrop-setting {
+  background: rgba(38, 38, 38, 0.72) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: rgba(255, 255, 255, 0.09) !important;
+}
+
+:root[data-theme='light'][data-backdrop='mica'] .udt-parity-card,
+:root[data-theme='light'][data-backdrop='mica'] .udt-sensor-board,
+:root[data-theme='light'][data-backdrop='mica'] .udt-card-base,
+:root[data-theme='light'][data-backdrop='mica'] .udt-settings-card,
+:root[data-theme='light'][data-backdrop='mica'] .udt-backdrop-setting {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* ── Acrylic Effect (Deep blurred translucent surface over windows) ── */
+:root[data-backdrop='acrylic'] .udt-app-shell__content {
+  background: rgba(22, 22, 22, 0.35);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-theme='light'][data-backdrop='acrylic'] .udt-app-shell__content {
+  background: rgba(248, 248, 248, 0.45);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Acrylic cards */
+:root[data-backdrop='acrylic'] .udt-parity-card,
+:root[data-backdrop='acrylic'] .udt-sensor-board,
+:root[data-backdrop='acrylic'] .udt-card-base,
+:root[data-backdrop='acrylic'] .udt-settings-card,
+:root[data-backdrop='acrylic'] .udt-backdrop-setting {
+  background: rgba(35, 35, 35, 0.65) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+:root[data-theme='light'][data-backdrop='acrylic'] .udt-parity-card,
+:root[data-theme='light'][data-backdrop='acrylic'] .udt-sensor-board,
+:root[data-theme='light'][data-backdrop='acrylic'] .udt-card-base,
+:root[data-theme='light'][data-backdrop='acrylic'] .udt-settings-card,
+:root[data-theme='light'][data-backdrop='acrylic'] .udt-backdrop-setting {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Settings card styling for Backdrop Option row */
 .udt-backdrop-setting {
   display: flex;
   min-width: 0;
@@ -46,12 +145,4 @@
   width: 180px;
   max-width: 40%;
   flex: 0 1 180px;
-}
-
-/* Content surface becomes translucent so native mica/acrylic shows through. */
-:root[data-backdrop='mica'] .udt-app-shell__content,
-:root[data-backdrop='mica'] .udt-app-shell__main,
-:root[data-backdrop='acrylic'] .udt-app-shell__content,
-:root[data-backdrop='acrylic'] .udt-app-shell__main {
-  background: color-mix(in srgb, var(--udt-surface-window) 88%, transparent);
 }

@@ -37,6 +37,7 @@ import {
   setSurfaceVisible,
   setUiActivityHandler
 } from './ui-activity'
+import { installPluginWebviewGuards } from './plugin-webview'
 
 // The Windows AppUserModelId (taskbar grouping, notifications) is meaningless
 // on macOS/Linux; setting it there is a no-op, so keep the call Windows-only.
@@ -52,7 +53,22 @@ app.setName('Universal Device Toolkit')
 // Disable the noisy Chromium DevTools shortcut defaults; the app never opens DevTools
 // in production, and an unsuppressed F12 would spawn a hidden 'Electron' frame that the
 // taskbar window preview surfaces as a third entry next to the main window.
-app.commandLine.appendSwitch('disable-features', 'OutOfBlinkCors')
+app.commandLine.appendSwitch(
+  'disable-features',
+  [
+    'OutOfBlinkCors',
+    'TranslateUI',
+    'MediaRouter',
+    'AutofillServerCommunication',
+    'OptimizationHints',
+    'SpareRendererForSitePerProcess',
+    'BackForwardCache'
+  ].join(',')
+)
+app.commandLine.appendSwitch('disable-background-networking')
+app.commandLine.appendSwitch('disable-component-update')
+app.commandLine.appendSwitch('disable-breakpad')
+app.commandLine.appendSwitch('js-flags', '--optimize-for-size')
 // --single-process merges renderers into the main process so memory usage can be
 // inspected as a single entry (debug/dev only).
 if (flags.singleProcess) {
@@ -79,23 +95,33 @@ if (!initSingleInstance()) {
 
 let mainWindow: BrowserWindow | null = null
 let isQuitting = false
+/** One-shot bypass after a close was already decided (sync preventDefault, then real close). */
+let allowCloseOnce = false
 let installerSelection: ReturnType<typeof readInstallerSelection> = null
+/** Path returned by the last successful downloadLatestUpdate in this process. */
+let lastVerifiedInstallerPath: string | null = null
 type WindowsBackgroundMaterial = 'none' | 'mica' | 'acrylic'
 let currentBackgroundMaterial: WindowsBackgroundMaterial = 'none'
 
 function applyMainWindowBackgroundMaterial(material: WindowsBackgroundMaterial): void {
   if (process.platform !== 'win32' || !mainWindow || mainWindow.isDestroyed()) return
   try {
-    mainWindow.setBackgroundMaterial(material)
+    if (material === 'none') {
+      mainWindow.setBackgroundMaterial('none')
+      mainWindow.setBackgroundColor(nativeTheme.shouldUseDarkColors ? '#202020' : '#ffffff')
+    } else {
+      mainWindow.setBackgroundColor('#00000000')
+      mainWindow.setBackgroundMaterial(material)
+    }
   } catch (error) {
     console.error('[main] failed to apply window background material:', error)
   }
 }
 
 function reapplyMainWindowBackgroundMaterial(): void {
-  if (process.platform !== 'win32') return
+  if (process.platform !== 'win32' || !mainWindow || mainWindow.isDestroyed()) return
   // DWM can clear the backdrop while nativeTheme.themeSource is changing.
-  setTimeout(() => applyMainWindowBackgroundMaterial(currentBackgroundMaterial), 0)
+  setTimeout(() => applyMainWindowBackgroundMaterial(currentBackgroundMaterial), 50)
 }
 
 if (process.platform === 'win32') {
@@ -222,6 +248,22 @@ function bufferOrSendHostEvent(event: string, data: unknown): void {
   }
 }
 
+function launchVerifiedInstaller(params: unknown): Promise<{ ok: boolean }> {
+  const requested = (params as { path?: unknown; token?: unknown } | null) ?? {}
+  const requestedPath = typeof requested.path === 'string' ? requested.path : ''
+  const requestedToken = typeof requested.token === 'string' ? requested.token : ''
+  if (lastVerifiedInstallerPath == null || lastVerifiedInstallerPath.length === 0) {
+    throw new Error('No verified installer is available.')
+  }
+  if (requestedPath.length > 0 && requestedPath !== lastVerifiedInstallerPath) {
+    throw new Error('Installer path is not the verified download.')
+  }
+  if (requestedToken.length > 0 && requestedToken !== lastVerifiedInstallerPath) {
+    throw new Error('Installer token is not the verified download.')
+  }
+  return launchInstaller(lastVerifiedInstallerPath)
+}
+
 async function invokeBridgeMethod(method: string, params?: unknown): Promise<unknown> {
   if (method === 'log.open-folder') return openLogFolder()
   if (method === 'device.info') return getDeviceInfo()
@@ -265,6 +307,7 @@ async function invokeBridgeMethod(method: string, params?: unknown): Promise<unk
     return getLatestRelease().then((release) => ({ release }))
   }
   if (method === 'update.download') {
+    lastVerifiedInstallerPath = null
     const started = Date.now()
     return downloadLatestUpdate((progress: DownloadProgress) => {
       if (mainWindow && !mainWindow.isDestroyed()) {
@@ -274,35 +317,45 @@ async function invokeBridgeMethod(method: string, params?: unknown): Promise<unk
         })
       }
     }).then(
-      (path) => ({ ok: true, path }),
-      (error: Error) => ({ ok: false, error: error.message })
+      (path) => {
+        lastVerifiedInstallerPath = path
+        return { ok: true, path }
+      },
+      (error: Error) => {
+        lastVerifiedInstallerPath = null
+        return { ok: false, error: error.message }
+      }
     )
   }
   if (method === 'update.launchInstaller') {
-    const path = (params as { path?: unknown } | null)?.path
-    if (typeof path !== 'string' || path.length === 0) {
-      throw new Error('An installer path is required.')
-    }
-    return launchInstaller(path)
+    return launchVerifiedInstaller(params)
   }
   return hostClient.invoke(method, params)
 }
 
-/**
- * Bridges plugin web pages (hosted in <webview> guests) to the host JSON-RPC
- * backend. The guest preload (plugin-host.ts) sends `plugin-host:invoke`
- * messages via sendToHost; responses are pushed back into the guest frame.
- */
-function attachPluginHostBridge(): void {
-  if (!mainWindow) return
-  mainWindow.webContents.on('ipc-message', (event, channel, ...args) => {
-    if (channel !== 'plugin-host:invoke') return
-    const [id, method, params] = args as [number, string, unknown]
-    void invokeBridgeMethod(method, params).then(
-      (result) => event.senderFrame?.send('plugin-host:response', id, result, null),
-      (error: Error) => event.senderFrame?.send('plugin-host:response', id, null, error.message)
-    )
-  })
+function pluginHostPreloadPath(): string {
+  return join(__dirname, '../preload/plugin-host.js')
+}
+
+function parseWindowVisibilityAction(data: unknown): 'Show' | 'Hide' | null {
+  if (data == null || typeof data !== 'object') return null
+  const action = (data as { action?: unknown }).action
+  if (action === 'Show' || action === 'Hide') return action
+  return null
+}
+
+function applyHostWindowVisibility(data: unknown): void {
+  const action = parseWindowVisibilityAction(data)
+  if (action == null) return
+  const win = mainWindow
+  if (!win || win.isDestroyed()) return
+  if (action === 'Hide') {
+    win.hide()
+    return
+  }
+  if (win.isMinimized()) win.restore()
+  win.show()
+  win.focus()
 }
 
 function flushBufferedHostEvents(window: BrowserWindow): void {
@@ -345,6 +398,63 @@ function forwardHostEvents(window: BrowserWindow): void {
 
 type MinimizeSetting = 'MinimizeOnClose' | 'MinimizeToTray'
 
+interface MinimizeToTrayCache {
+  MinimizeOnClose: boolean
+  MinimizeToTray: boolean
+}
+
+// Matches ApplicationSection defaults: MinimizeToTray on, MinimizeOnClose off.
+let minimizeToTrayCache: MinimizeToTrayCache = {
+  MinimizeOnClose: false,
+  MinimizeToTray: true
+}
+
+function readMinimizeFlags(value: Record<string, unknown> | undefined): MinimizeToTrayCache {
+  return {
+    MinimizeOnClose: value?.['MinimizeOnClose'] === true,
+    MinimizeToTray: value?.['MinimizeToTray'] !== false
+  }
+}
+
+function cachedShouldMinimizeToTray(keys: MinimizeSetting[]): boolean {
+  return keys.some((key) => minimizeToTrayCache[key])
+}
+
+function hideMainWindowToTray(): void {
+  const win = mainWindow
+  if (!win || win.isDestroyed()) return
+  win.hide()
+}
+
+function forceCloseMainWindow(): void {
+  const win = mainWindow
+  if (!win || win.isDestroyed()) {
+    allowCloseOnce = false
+    return
+  }
+  allowCloseOnce = true
+  setImmediate(() => {
+    const pending = mainWindow
+    if (!pending || pending.isDestroyed()) {
+      allowCloseOnce = false
+      return
+    }
+    pending.close()
+  })
+}
+
+async function refreshMinimizeToTrayCache(): Promise<void> {
+  try {
+    const result = (await hostClient.invoke('settings.get', { scope: 'application' })) as
+      | { value?: Record<string, unknown> }
+      | null
+      | undefined
+    minimizeToTrayCache = readMinimizeFlags(result?.value)
+  } catch (error) {
+    console.error('[main] failed to read settings:', error)
+  }
+}
+
 function notifyHostUiActivity(active: boolean): void {
   if (!hostClient.isReady) return
   void hostClient
@@ -359,19 +469,6 @@ function broadcastUiVisibility(active: boolean): void {
     mainWindow.webContents.send('bridge:event', 'app:ui-visibility', { active })
   }
   notifyHostUiActivity(active)
-}
-
-async function shouldMinimizeToTray(keys: MinimizeSetting[]): Promise<boolean> {
-  try {
-    const result = (await hostClient.invoke('settings.get', { scope: 'application' })) as
-      | { value?: Record<string, unknown> }
-      | null
-      | undefined
-    return keys.some((key) => result?.value?.[key] === true)
-  } catch (error) {
-    console.error('[main] failed to read settings:', error)
-    return false
-  }
 }
 
 function resolveWindowIcon(): string | undefined {
@@ -521,6 +618,8 @@ function createWindow(): void {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
+      spellcheck: false,
+      backgroundThrottling: true,
       additionalArguments:
         installerSelection == null ? [] : buildInstallerRendererArguments(installerSelection),
       // First paint already at the effective zoom (installZoomAutoApply keeps
@@ -538,7 +637,6 @@ function createWindow(): void {
   // Port of Electron WindowResizeStabilityHelper: track live move/size loops so
   // heavy per-frame work can be skipped while the user drags a window edge.
   attachResizeStability(mainWindow)
-  attachPluginHostBridge()
   // Port of Electron WindowMaximizeWorkAreaHelper: keep the maximized window inside
   // the monitor work area (safety net for desktop-dock overlays).
   attachMaximizeWorkAreaClamp(mainWindow)
@@ -570,30 +668,34 @@ function createWindow(): void {
   mainWindow.on('close', persistMainWindowBounds)
 
   mainWindow.on('close', (event) => {
-    if (isQuitting) return
+    if (isQuitting || allowCloseOnce) {
+      allowCloseOnce = false
+      return
+    }
     const win = mainWindow
     if (!win || win.isDestroyed()) return
+    // Electron only honors a synchronous preventDefault. An async settings
+    // read after this handler returns cannot cancel the close.
+    event.preventDefault()
     if (process.platform === 'darwin') {
       // macOS convention: the red traffic light hides the window instead of
       // closing it — the Dock icon stays and Cmd+Q is the real quit. Unlike
       // Windows/Linux this is unconditional (not tied to the minimize-to-tray
       // setting): the menu bar icon is the persistent handle for reopening.
-      event.preventDefault()
       win.hide()
       return
     }
-    void shouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray']).then((toTray) => {
-      if (!toTray || !mainWindow || mainWindow.isDestroyed()) return
-      event.preventDefault()
-      mainWindow.hide()
-    })
+    if (cachedShouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray'])) {
+      win.hide()
+      return
+    }
+    forceCloseMainWindow()
   })
 
   mainWindow.on('minimize', () => {
-    void shouldMinimizeToTray(['MinimizeToTray']).then((toTray) => {
-      if (!toTray || !mainWindow || mainWindow.isDestroyed()) return
-      mainWindow.hide()
-    })
+    if (cachedShouldMinimizeToTray(['MinimizeToTray'])) {
+      hideMainWindowToTray()
+    }
   })
 
   mainWindow.on('maximize', () => {
@@ -611,6 +713,7 @@ function createWindow(): void {
   })
 
   mainWindow.on('closed', () => {
+    allowCloseOnce = false
     setSurfaceVisible('main', false)
     mainWindow = null
     destroyTray()
@@ -675,6 +778,7 @@ function applyShellLaunchEnvironment(): void {
 
 app.whenReady().then(() => {
   initMainLogger()
+  installPluginWebviewGuards(pluginHostPreloadPath(), app)
   // Apply the last persisted interface scale before the window exists so the
   // first paint (and the derived minimum size) already match; the renderer
   // re-pushes its localStorage value over IPC right after boot.
@@ -719,7 +823,7 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('window:close', () => {
-    if (isQuitting || !mainWindow) {
+    if (isQuitting || !mainWindow || mainWindow.isDestroyed()) {
       mainWindow?.close()
       return
     }
@@ -728,21 +832,18 @@ app.whenReady().then(() => {
       mainWindow.hide()
       return
     }
-    void shouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray']).then((toTray) => {
-      if (!mainWindow || mainWindow.isDestroyed()) return
-      if (toTray) {
-        mainWindow.hide()
-      } else {
-        mainWindow.close()
-      }
-    })
+    if (cachedShouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray'])) {
+      mainWindow.hide()
+      return
+    }
+    forceCloseMainWindow()
   })
 
   ipcMain.handle('window:is-maximized', () => mainWindow?.isMaximized() ?? false)
 
   // Absolute path of the plugin webview guest preload (built by electron-vite
   // into out/preload/plugin-host.js).
-  ipcMain.handle('plugin:preload-path', () => join(__dirname, '../preload/plugin-host.js'))
+  ipcMain.handle('plugin:preload-path', () => pluginHostPreloadPath())
 
   // Port of Electron FullscreenHelper (renderer-observable window state).
   // The enter/leave-full-screen push listeners are attached in createWindow.
@@ -924,7 +1025,11 @@ app.whenReady().then(() => {
   startHost()
   hostClient.on('host.ready', () => {
     notifyHostUiActivity(isUiActive())
+    void refreshMinimizeToTrayCache()
   })
+  if (hostClient.isReady) {
+    void refreshMinimizeToTrayCache()
+  }
   createWindow()
   setMainWindowRef(() => mainWindow)
   setUiActivityHandler(broadcastUiVisibility)
@@ -940,10 +1045,17 @@ app.whenReady().then(() => {
   }
   initTray(() => mainWindow, trayOpts)
   // Rebuild the tray after automation.json loads (default Deactivate GPU quick action).
-  hostClient.on('host.initialized', () => refreshTrayMenu())
+  hostClient.on('host.initialized', () => {
+    void refreshMinimizeToTrayCache()
+    refreshTrayMenu()
+  })
   hostClient.on('host.ready', () => refreshTrayMenu())
   // Navigation item visibility lives in application settings.
-  hostClient.on('settings.changed', () => refreshTrayMenu())
+  hostClient.on('settings.changed', () => {
+    void refreshMinimizeToTrayCache()
+    refreshTrayMenu()
+  })
+  hostClient.on('window.visibility', (data) => applyHostWindowVisibility(data))
   // OSD and the tray status popup are created lazily on first use (each costs
   // a renderer process ~60-90MB); initOsdWindow only registers subscriptions,
   // the window is built when the showOsd setting or an osd.changed event needs it.
