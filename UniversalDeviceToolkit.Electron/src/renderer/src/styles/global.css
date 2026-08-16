@@ -21,6 +21,7 @@
   --udt-control-fill-tertiary: rgba(255, 255, 255, 0.031);
   --udt-control-stroke-default: rgba(255, 255, 255, 0.07);
   --udt-control-stroke-secondary: rgba(255, 255, 255, 0.094);
+  --udt-control-stroke-strong: rgba(255, 255, 255, 0.18);
   --udt-subtle-fill-secondary: rgba(255, 255, 255, 0.059);
   --udt-subtle-fill-tertiary: rgba(255, 255, 255, 0.039);
 
@@ -239,7 +240,10 @@
   --udt-control-fill-secondary: rgba(0, 0, 0, 0.082);
   --udt-control-fill-tertiary: rgba(0, 0, 0, 0.031);
   --udt-control-stroke-default: rgba(0, 0, 0, 0.07);
+  --udt-control-stroke-secondary: rgba(0, 0, 0, 0.094);
+  --udt-control-stroke-strong: rgba(0, 0, 0, 0.18);
   --udt-subtle-fill-secondary: rgba(0, 0, 0, 0.059);
+  --udt-subtle-fill-tertiary: rgba(0, 0, 0, 0.039);
 
   --udt-chart-track: rgba(0, 0, 0, 0.14);
   --udt-chart-gridline: rgba(0, 0, 0, 0.10);
@@ -893,12 +897,21 @@ body {
 /* Ant Design overrides to match Electron-UI dark chrome.
    Height/fill/radius only — do not reapply native .udt-select chrome
    (CSS chevron, appearance, extra padding) onto antd Select. */
+.ant-select {
+  position: relative;
+}
+
 .ant-select-selector {
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
   min-height: var(--udt-control-height) !important;
-  padding-inline: 11px !important;
+  padding-inline-start: 11px !important;
+  padding-inline-end: 28px !important;
   border: 1px solid var(--udt-control-stroke-default) !important;
   border-radius: var(--udt-radius-control) !important;
   background: var(--udt-control-fill-default) !important;
+  box-sizing: border-box !important;
 }
 
 .ant-select-single .ant-select-selector {
@@ -908,11 +921,29 @@ body {
 .ant-select-selection-item,
 .ant-select-selection-placeholder {
   font-size: var(--udt-font-caption) !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
 }
 
 .ant-select-single .ant-select-selection-item,
 .ant-select-single .ant-select-selection-placeholder {
   line-height: calc(var(--udt-control-height) - 2px) !important;
+}
+
+.ant-select-arrow {
+  position: absolute !important;
+  top: 50% !important;
+  inset-inline-end: 11px !important;
+  transform: translateY(-50%) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--udt-text-secondary) !important;
+  pointer-events: none !important;
+  margin: 0 !important;
 }
 
 /* Enabled value text: antd colorText is 85% white, which reads as grey /
@@ -1734,14 +1765,27 @@ meter {
   .udt-plugins-page__list > .udt-plugin-card,
   .udt-optimization-layout__main > .udt-card,
   .udt-settings-section > .udt-settings-card,
+  .udt-macro-page .udt-macro-list > *,
+  .udt-modal__list > *,
   .udt-tab-content,
   .udt-category__body,
   .udt-empty__icon {
     animation: none;
   }
 
+  .udt-card,
+  .udt-card:hover,
+  .udt-btn,
+  .udt-btn:not(:disabled):hover,
+  .udt-btn:not(:disabled):active,
+  .udt-btn:active:not(:disabled),
+  .udt-icon-btn,
   .udt-icon-btn:not(:disabled):hover,
-  .udt-opt-chrome__icon-btn:not(:disabled):hover {
+  .udt-opt-chrome__icon-btn:not(:disabled):hover,
+  .udt-nav,
+  .udt-switch__track,
+  .udt-switch__track::after {
+    transition: none;
     transform: none;
   }
 
