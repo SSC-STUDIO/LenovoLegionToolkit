@@ -27,12 +27,17 @@ import CleanupRulesPanel from '../components/optimization/CleanupRulesPanel'
 import DriverDownloadPanel from '../components/optimization/DriverDownloadPanel'
 import { NetworkPanels } from '../components/optimization/NetworkPanels'
 import { presentCategoryActions } from '../utils/optimizationToggle'
+import { subscribeUiVisibility } from '../utils/uiVisibility'
 import {
   NETWORK_ACCELERATION_MODES,
   collectRecommendedActionKeys,
   getActionSelectionPresentation,
   getNetworkSelectedTargetCount,
+  isFailedCleanupEstimate,
   isOptimizationPlayDisabled,
+  resolveActionError,
+  runExclusivePoll,
+  shouldShowEmptyPlaceholder,
   type OptimizationTabKey
 } from '../utils/optimizationPresentation'
 import { openActionDetails } from '../components/utils/ActionDetailsModal'
@@ -76,6 +81,10 @@ function localizeText(t: TFunction, text: string): string {
 
 type TabKey = OptimizationTabKey
 
+function reportStoreError(t: TFunction, fallbackKey: string, error: string | null | undefined): void {
+  void message.error(localizeHostError(resolveActionError(error, t(fallbackKey)), t))
+}
+
 function ActionRow({
   action,
   selected,
@@ -98,7 +107,7 @@ function ActionRow({
   }
   return (
     <div className="udt-action-row" onClick={() => !disabled && onToggle(action.key)}>
-      <label className="udt-checkbox">
+      <label className="udt-checkbox" onClick={(event) => event.stopPropagation()}>
         <input
           type="checkbox"
           checked={selection.checked}
@@ -202,14 +211,18 @@ function OptimizationTab({
 }): React.JSX.Element {
   const categories = useOptimizationStore((s) => s.categories)
   const loading = useOptimizationStore((s) => s.loading)
+  const error = useOptimizationStore((s) => s.error)
 
   const optimizationCategories = categories.filter((c) => !c.key.startsWith('cleanup.'))
+  const showEmptyError =
+    optimizationCategories.length === 0 &&
+    !shouldShowEmptyPlaceholder({ loading, itemCount: 0, error })
 
   return (
     <div className="udt-optimization-layout udt-optimization-layout--solo">
       <div className="udt-optimization-layout__main">
         {loading && <SkeletonList rows={3} />}
-        {optimizationCategories.map((category) => {
+        {showEmptyError ? null : optimizationCategories.map((category) => {
           const visible = presentCategoryActions(category.actions, busy).visible
           const appliedCount = visible.filter(({ action }) => action.applied === true).length
           return (
@@ -254,9 +267,19 @@ function CleanupTab({
   const handleEstimate = async (): Promise<void> => {
     if (selectedKeys.length === 0) return
     setEstimating(true)
-    const bytes = await estimate(selectedKeys)
-    setEstimating(false)
-    setEstimateBytes(bytes)
+    try {
+      const priorError = useOptimizationStore.getState().error
+      const bytes = await estimate(selectedKeys)
+      const nextError = useOptimizationStore.getState().error
+      const freshError = nextError !== priorError ? nextError : null
+      if (isFailedCleanupEstimate(bytes, freshError)) {
+        reportStoreError(t, 'optimization.cleanupFailed', freshError)
+        return
+      }
+      setEstimateBytes(bytes)
+    } finally {
+      setEstimating(false)
+    }
   }
 
   const cleanupInfoDescription = estimating
@@ -337,6 +360,7 @@ const NETWORK_MODE_I18N_KEYS: Record<NetworkAccelerationMode, string> = {
 function NetworkTab(): React.JSX.Element {
   const { t } = useTranslation()
   const networkStatus = useOptimizationStore((s) => s.networkStatus)
+  const networkError = useOptimizationStore((s) => s.error)
   const saveNetworkConfig = useOptimizationStore((s) => s.saveNetworkConfig)
   const startNetwork = useOptimizationStore((s) => s.startNetwork)
   const stopNetwork = useOptimizationStore((s) => s.stopNetwork)
@@ -351,11 +375,33 @@ function NetworkTab(): React.JSX.Element {
 
   useEffect(() => {
     if (!isRunning) return
-    const trafficTimer = setInterval(() => void loadTraffic(), 1000)
-    const runtimeTimer = setInterval(() => void loadRuntime(), 2000)
+    const trafficInFlight = { current: false }
+    const runtimeInFlight = { current: false }
+    let trafficTimer: ReturnType<typeof setInterval> | undefined
+    let runtimeTimer: ReturnType<typeof setInterval> | undefined
+    const startPolls = (): void => {
+      if (trafficTimer != null) return
+      trafficTimer = setInterval(() => {
+        void runExclusivePoll(trafficInFlight, loadTraffic)
+      }, 1000)
+      runtimeTimer = setInterval(() => {
+        void runExclusivePoll(runtimeInFlight, loadRuntime)
+      }, 2000)
+    }
+    const stopPolls = (): void => {
+      if (trafficTimer != null) clearInterval(trafficTimer)
+      if (runtimeTimer != null) clearInterval(runtimeTimer)
+      trafficTimer = undefined
+      runtimeTimer = undefined
+    }
+    if (!document.hidden) startPolls()
+    const unsubscribeVisibility = subscribeUiVisibility((active) => {
+      if (active) startPolls()
+      else stopPolls()
+    })
     return () => {
-      clearInterval(trafficTimer)
-      clearInterval(runtimeTimer)
+      unsubscribeVisibility()
+      stopPolls()
     }
   }, [isRunning, loadTraffic, loadRuntime])
 
@@ -376,27 +422,50 @@ function NetworkTab(): React.JSX.Element {
     const current = ensureConfig()
     if (!current) return
     setSaving(true)
-    await saveNetworkConfig(current)
-    setSaving(false)
+    try {
+      const ok = await saveNetworkConfig(current)
+      if (!ok) {
+        reportStoreError(t, 'optimization.network.saveFailed', useOptimizationStore.getState().error)
+      }
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleStart = async (): Promise<void> => {
     setStarting(true)
-    const ok = await startNetwork()
-    if (!ok) {
-      const err = useOptimizationStore.getState().error
-      if (err) void message.error(localizeHostError(err, t))
+    try {
+      const current = ensureConfig()
+      if (current) {
+        const saved = await saveNetworkConfig(current)
+        if (!saved) {
+          reportStoreError(t, 'optimization.network.saveFailed', useOptimizationStore.getState().error)
+          return
+        }
+      }
+      const ok = await startNetwork()
+      if (!ok) {
+        reportStoreError(t, 'optimization.network.startFailed', useOptimizationStore.getState().error)
+      }
+    } finally {
+      setStarting(false)
     }
-    setStarting(false)
   }
 
   const handleStop = async (): Promise<void> => {
     setStopping(true)
-    await stopNetwork()
-    setStopping(false)
+    try {
+      const ok = await stopNetwork()
+      if (!ok) {
+        reportStoreError(t, 'optimization.network.stopFailed', useOptimizationStore.getState().error)
+      }
+    } finally {
+      setStopping(false)
+    }
   }
 
   if (!networkStatus || !editableConfig) {
+    if (networkError) return null
     return <SkeletonCard lines={3} withIcon />
   }
 
@@ -571,18 +640,32 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
     return t('optimization.applyRecommended')
   }, [t, tab])
 
-  const handleStar = (): void => {
+  const handleStar = async (): Promise<void> => {
+    if (chromeBusy) return
     if (tab === 'driverDownload') {
       useDriverStore.getState().selectRecommended()
       return
     }
     if (tab === 'networkAcceleration') {
-      const groups = networkStatus?.config.domainGroups ?? []
-      const recommended = groups.filter(
-        (group) => group.isFavorite || NETWORK_RECOMMENDED_GROUP_IDS.has(group.id)
-      )
-      for (const group of recommended) {
-        void setNetworkGroupEnabled(group.id, true)
+      setChromeBusy(true)
+      try {
+        const groups = networkStatus?.config.domainGroups ?? []
+        const recommended = groups.filter(
+          (group) => group.isFavorite || NETWORK_RECOMMENDED_GROUP_IDS.has(group.id)
+        )
+        for (const group of recommended) {
+          const ok = await setNetworkGroupEnabled(group.id, true)
+          if (!ok) {
+            reportStoreError(
+              t,
+              'optimization.network.saveFailed',
+              useOptimizationStore.getState().error
+            )
+            return
+          }
+        }
+      } finally {
+        setChromeBusy(false)
       }
       return
     }
@@ -598,10 +681,25 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
     setChromeBusy(true)
     try {
       if (tab === 'networkAcceleration') {
+        const status = useOptimizationStore.getState().networkStatus
+        if (status) {
+          const saved = await useOptimizationStore.getState().saveNetworkConfig(status.config)
+          if (!saved) {
+            reportStoreError(
+              t,
+              'optimization.network.saveFailed',
+              useOptimizationStore.getState().error
+            )
+            return
+          }
+        }
         const ok = await startNetwork()
         if (!ok) {
-          const err = useOptimizationStore.getState().error
-          if (err) void message.error(localizeHostError(err, t))
+          reportStoreError(
+            t,
+            'optimization.network.startFailed',
+            useOptimizationStore.getState().error
+          )
         }
         return
       }
@@ -619,19 +717,21 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
               (key) => key.startsWith('cleanup.')
             )
           )
+        } else {
+          reportStoreError(t, 'optimization.cleanupFailed', useOptimizationStore.getState().error)
         }
         return
       }
       if (optSelectedKeys.length > 0) {
         const ok = await apply(optSelectedKeys)
         if (ok) setOptSelectedKeys([])
-        else {
-          const err = useOptimizationStore.getState().error
-          if (err) void message.error(localizeHostError(err, t))
-        }
+        else reportStoreError(t, 'optimization.applyFailed', useOptimizationStore.getState().error)
         return
       }
-      await applyRecommended()
+      const ok = await applyRecommended()
+      if (!ok) {
+        reportStoreError(t, 'optimization.applyFailed', useOptimizationStore.getState().error)
+      }
     } finally {
       setChromeBusy(false)
     }
@@ -678,7 +778,7 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
             title={starTitle}
             aria-label={starTitle}
             disabled={chromeBusy}
-            onClick={handleStar}
+            onClick={() => void handleStar()}
           >
             <Star24Regular />
           </button>
