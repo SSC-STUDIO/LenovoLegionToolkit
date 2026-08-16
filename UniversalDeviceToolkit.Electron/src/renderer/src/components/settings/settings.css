@@ -559,6 +559,23 @@
   max-width: var(--udt-content-control-width);
 }
 
+.udt-settings-row .ant-input {
+  height: var(--udt-control-height);
+  padding: 0 11px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-control);
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption);
+  box-sizing: border-box;
+}
+
+.udt-settings-row .ant-input:focus,
+.udt-settings-row .ant-input-focused {
+  border-color: var(--udt-accent);
+  box-shadow: none;
+}
+
 .udt-settings-card--row:not(.udt-settings-card--action) .udt-settings-select.ant-select {
   width: var(--udt-content-control-width);
   max-width: 100%;

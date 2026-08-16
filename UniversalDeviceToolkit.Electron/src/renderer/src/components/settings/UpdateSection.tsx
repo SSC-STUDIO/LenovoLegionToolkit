@@ -130,7 +130,7 @@ export function UpdateSection(): React.JSX.Element {
           defaultValue: 'Configure the GitHub repository to check for updates. Leave empty to use default.'
         })}
       >
-        <div className="udt-settings-fields">
+        <div className="udt-settings-card__fields">
           <div className="udt-settings-row">
             <span className="udt-settings-row__label">
               {t('settings.update.repositoryOwner', { defaultValue: 'Repository Owner' })}
