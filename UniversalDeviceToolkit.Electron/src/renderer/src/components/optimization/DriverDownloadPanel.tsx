@@ -4,6 +4,7 @@ import { formatDateForUi } from '../../utils/dateFormat'
 import { Modal, Progress, Select, message } from 'antd'
 import {
   ArrowDown24Regular,
+  Checkmark24Regular,
   CheckmarkCircle24Filled,
   Clock24Regular,
   ChevronDown24Regular,
@@ -134,7 +135,7 @@ const PackageCard = memo(function PackageCard({
       <label className="udt-checkbox udt-driver-card__checkbox">
         <input type="checkbox" checked={selected} onChange={() => onToggle(packageItem.id)} />
         <span className="udt-checkbox__box">
-          <CheckmarkCircle24Filled />
+          <Checkmark24Regular />
         </span>
       </label>
 
@@ -345,7 +346,7 @@ function DriverFilterBar({
           onChange={(e) => onOnlyShowUpdatesChange(e.target.checked)}
         />
         <span className="udt-checkbox__box">
-          <CheckmarkCircle24Filled />
+          <Checkmark24Regular />
         </span>
         <span>{t('optimization.driver.onlyShowUpdates')}</span>
       </label>

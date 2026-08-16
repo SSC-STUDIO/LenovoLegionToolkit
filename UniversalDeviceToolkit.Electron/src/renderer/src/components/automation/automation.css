@@ -387,15 +387,15 @@
 }
 
 .udt-pipeline__exclusive input:checked + .udt-checkbox__box {
-  background: var(--udt-accent-secondary);
-  border-color: var(--udt-accent-secondary);
+  background: var(--udt-accent);
+  border-color: var(--udt-accent);
 }
 
 .udt-pipeline__exclusive input:checked + .udt-checkbox__box::after {
   content: '';
   width: 5px;
   height: 9px;
-  border: solid var(--udt-accent-text);
+  border: solid var(--udt-text-on-accent, #ffffff);
   border-width: 0 2px 2px 0;
   transform: rotate(45deg) translateY(-1px);
 }

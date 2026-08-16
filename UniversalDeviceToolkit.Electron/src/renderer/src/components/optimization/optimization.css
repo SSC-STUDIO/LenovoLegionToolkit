@@ -1,4 +1,4 @@
-﻿/* Windows optimization page — mirrors WindowsOptimizationPage.xaml */
+/* Windows optimization page — mirrors WindowsOptimizationPage.xaml */
 
 /* Content-width queries (page column after the sidebar), not OS window width.
    A 1100px window with a 220px nav is only ~850px of page — still two columns. */
@@ -353,39 +353,83 @@
   flex: 0 0 auto;
   position: relative;
   cursor: pointer;
+  align-items: center;
+  user-select: none;
 }
 
 .udt-checkbox input {
   position: absolute;
   opacity: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
 
 .udt-checkbox__box {
+  position: relative;
   width: 18px;
   height: 18px;
   border: 1px solid var(--udt-control-stroke-default);
-  border-radius: 4px;
-  background: transparent;
+  border-radius: var(--udt-radius-small);
+  background: var(--udt-control-alt-secondary, transparent);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: transparent;
-  font-size: 11px;
-  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out,
+              border-color var(--udt-anim-fast) ease-out,
+              color var(--udt-anim-fast) ease-out;
+}
+
+.udt-checkbox__box svg {
+  width: 13px;
+  height: 13px;
+  display: block;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity var(--udt-anim-fast) ease-out, transform var(--udt-anim-fast) ease-out;
 }
 
 .udt-checkbox input:checked + .udt-checkbox__box {
-  background: var(--udt-accent-secondary);
-  border-color: var(--udt-accent-secondary);
-  color: var(--udt-accent-text);
+  background: var(--udt-accent);
+  border-color: var(--udt-accent);
+  color: var(--udt-text-on-accent, #ffffff);
+}
+
+.udt-checkbox input:checked + .udt-checkbox__box svg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.udt-checkbox input:indeterminate + .udt-checkbox__box {
+  background: var(--udt-accent);
+  border-color: var(--udt-accent);
+  color: transparent;
+}
+
+.udt-checkbox input:indeterminate + .udt-checkbox__box svg {
+  display: none;
 }
 
 .udt-checkbox input:indeterminate + .udt-checkbox__box::after {
   content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 8px;
   height: 2px;
   border-radius: 1px;
-  background: var(--udt-text-secondary);
+  background: var(--udt-text-on-accent, #ffffff);
+}
+
+.udt-checkbox:hover .udt-checkbox__box {
+  border-color: var(--udt-control-stroke-strong);
+}
+
+.udt-checkbox input:checked:hover + .udt-checkbox__box,
+.udt-checkbox input:indeterminate:hover + .udt-checkbox__box {
+  filter: brightness(1.08);
 }
 
 /* Recommended badge */

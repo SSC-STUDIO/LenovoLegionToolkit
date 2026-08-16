@@ -8,6 +8,7 @@ import {
   message
 } from 'antd'
 import {
+  Checkmark24Regular,
   CheckmarkCircle24Filled,
   Beaker24Regular,
   Info24Regular,
@@ -301,7 +302,7 @@ function NetworkTargetsCard(): React.JSX.Element {
                       onChange={(e) => handleGroupCheckboxChange(group, someEnabled, e)}
                     />
                     <span className="udt-checkbox__box">
-                      <CheckmarkCircle24Filled />
+                      <Checkmark24Regular />
                     </span>
                   </label>
                   <BrandIcon iconKey={group.iconKey} displayName={group.displayName} />
@@ -329,7 +330,7 @@ function NetworkTargetsCard(): React.JSX.Element {
                             onChange={(e) => handleSubItemToggle(group, sub, e.target.checked)}
                           />
                           <span className="udt-checkbox__box">
-                            <CheckmarkCircle24Filled />
+                            <Checkmark24Regular />
                           </span>
                         </label>
                         <span className="udt-network-subitem__name">{sub.displayName}</span>
