@@ -1486,10 +1486,19 @@
   line-height: 1.4;
 }
 
+.udt-settings-row--disabled .udt-settings-row__label,
+.udt-settings-row:has(.ant-select-disabled, .ant-input-number-disabled, .ant-input-disabled, .ant-btn-disabled, .ant-slider-disabled) .udt-settings-row__label {
+  color: var(--udt-text-disabled);
+}
+
 .udt-settings-row__hint {
   color: var(--udt-text-secondary);
   font-size: var(--udt-font-small-caption);
   line-height: 1.4;
+}
+
+.udt-settings-row--disabled .udt-settings-row__hint {
+  color: var(--udt-text-disabled);
 }
 
 .udt-settings-row__actions {

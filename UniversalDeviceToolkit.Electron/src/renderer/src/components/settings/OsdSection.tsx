@@ -152,9 +152,13 @@ export function OsdSection(): React.JSX.Element {
     value: string,
     key: 'backgroundColor' | 'categoryColor' | 'labelColor' | 'valueColor' | 'warningColor' | 'criticalColor' | 'separatorColor'
   ): React.JSX.Element => (
-    <div className="udt-settings-row udt-settings-row--color">
+    <div className={`udt-settings-row udt-settings-row--color${!settings.showOsd ? ' udt-settings-row--disabled' : ''}`}>
       <span className="udt-settings-row__label">{label}</span>
-      <ColorPicker value={value} onChange={(color) => debounced(() => ({ [key]: color.toHexString() }))} />
+      <ColorPicker
+        value={value}
+        disabled={loading || !settings.showOsd}
+        onChange={(color) => debounced(() => ({ [key]: color.toHexString() }))}
+      />
     </div>
   )
 
@@ -167,7 +171,7 @@ export function OsdSection(): React.JSX.Element {
     step: number,
     key: 'backgroundOpacity' | 'cornerRadiusTop' | 'cornerRadiusBottom'
   ): React.JSX.Element => (
-    <div className="udt-settings-row udt-settings-row--slider">
+    <div className={`udt-settings-row udt-settings-row--slider${!settings.showOsd ? ' udt-settings-row--disabled' : ''}`}>
       <div className="udt-settings-row__copy">
         <span className="udt-settings-row__label">{label}</span>
         <span className="udt-settings-row__hint">{hint}</span>
@@ -178,6 +182,7 @@ export function OsdSection(): React.JSX.Element {
         max={max}
         step={step}
         value={value}
+        disabled={loading || !settings.showOsd}
         onChange={(next) => debounced(() => ({ [key]: next }))}
       />
     </div>
@@ -191,7 +196,7 @@ export function OsdSection(): React.JSX.Element {
     step: number,
     key: 'osdRefreshInterval' | 'snapThreshold' | 'fontSize' | 'tempThresholdWarning' | 'tempThresholdCritical' | 'usageThresholdWarning' | 'usageThresholdCritical' | 'fpsThresholdCritical' | 'lowFpsDeltaThreshold'
   ): React.JSX.Element => (
-    <div className="udt-settings-row">
+    <div className={`udt-settings-row${!settings.showOsd ? ' udt-settings-row--disabled' : ''}`}>
       <span className="udt-settings-row__label">{label}</span>
       <InputNumber
         className="udt-settings-row__number"
@@ -200,6 +205,7 @@ export function OsdSection(): React.JSX.Element {
         step={step}
         precision={step < 1 ? 1 : 0}
         value={value}
+        disabled={loading || !settings.showOsd}
         onChange={(next) => {
           if (next === null || next === undefined) return
           void update({ [key]: next })
@@ -245,12 +251,12 @@ export function OsdSection(): React.JSX.Element {
                       onChange={(checked) => persist({ showOsd: checked })}
                     />
                   </div>
-                  <div className="udt-settings-row">
+                  <div className={`udt-settings-row${!settings.showOsd ? ' udt-settings-row--disabled' : ''}`}>
                     <span className="udt-settings-row__label">{t('settings.osd.style')}</span>
                     <Select<number>
                       className="udt-settings-row__select"
                       value={settings.selectedStyleIndex}
-                      disabled={loading}
+                      disabled={loading || !settings.showOsd}
                       options={[
                         { value: 0, label: t('settings.osd.styles.panel') },
                         { value: 1, label: t('settings.osd.styles.bar') }
@@ -274,11 +280,12 @@ export function OsdSection(): React.JSX.Element {
                     1,
                     'snapThreshold'
                   )}
-                  <div className="udt-settings-row">
+                  <div className={`udt-settings-row${!settings.showOsd ? ' udt-settings-row--disabled' : ''}`}>
                     <span className="udt-settings-row__label">{t('settings.osd.lockPosition')}</span>
                     <span className="udt-settings-row__actions">
                       <Button
                         size="small"
+                        disabled={loading || !settings.showOsd}
                         onClick={() =>
                           void update({
                             panelPositionX: null,
@@ -293,7 +300,7 @@ export function OsdSection(): React.JSX.Element {
                       <Switch
                         className="udt-settings-switch"
                         checked={settings.isLocked}
-                        disabled={loading}
+                        disabled={loading || !settings.showOsd}
                         onChange={(checked) => persist({ isLocked: checked })}
                       />
                     </span>
@@ -424,7 +431,7 @@ export function OsdSection(): React.JSX.Element {
                           <Checkbox
                             key={item}
                             checked={settings.items.includes(item)}
-                            disabled={loading}
+                            disabled={loading || !settings.showOsd}
                             onChange={(e) => {
                               const next = e.target.checked
                                 ? [...settings.items, item]
