@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Controllers.GodMode;
 using UniversalDeviceToolkit.Lib.SoftwareDisabler;
+using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Host.Rpc;
 
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
@@ -18,19 +20,22 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// </summary>
 public static class GodModeHandlers
 {
+    private static readonly SemaphoreSlim MutationGate = new(1, 1);
+
     public static void Register(BridgeRpcServer rpc)
     {
-        rpc.RegisterHandler("godMode.getState", (_, _) => HandleGetStateAsync());
-        rpc.RegisterHandler("godMode.setState", (request, _) => HandleSetStateAsync(request));
-        rpc.RegisterHandler("godMode.apply", (_, _) => HandleApplyAsync());
+        rpc.RegisterHandler("godMode.getState", (_, cancellationToken) => HandleGetStateAsync(cancellationToken));
+        rpc.RegisterHandler("godMode.setState", (request, cancellationToken) => HandleSetStateAsync(request, cancellationToken));
+        rpc.RegisterHandler("godMode.apply", (_, cancellationToken) => HandleApplyAsync(cancellationToken));
     }
 
     private static GodModeController Controller => IoCContainer.Resolve<GodModeController>();
 
-    private static async Task<BridgeResult> HandleGetStateAsync()
+    internal static async Task<BridgeResult> HandleGetStateAsync(CancellationToken cancellationToken = default)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var controller = Controller;
             if (!await controller.IsSupportedAsync().ConfigureAwait(false))
                 return BridgeResult.Error(BridgeErrorCodes.GodModeUnsupported, "Custom Mode is not supported on this device.");
@@ -57,13 +62,17 @@ public static class GodModeHandlers
                 warnLegionZone = needsLegionZone && legionZoneStatus == SoftwareStatus.Enabled,
             });
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return MapGodModeException(ex);
         }
     }
 
-    private static async Task<BridgeResult> HandleSetStateAsync(BridgeRequest request)
+    internal static async Task<BridgeResult> HandleSetStateAsync(BridgeRequest request, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -71,34 +80,100 @@ public static class GodModeHandlers
                 return BridgeResult.Error(-32602, "Missing parameter 'state'.");
 
             var state = ParseState(stateElement);
-            await Controller.SetStateAsync(state).ConfigureAwait(false);
-
             var apply = request.Parameters.TryGetProperty("apply", out var applyProp)
                         && applyProp.ValueKind == JsonValueKind.True;
-            if (apply)
-                await Controller.ApplyStateAsync().ConfigureAwait(false);
 
-            var refreshed = await Controller.GetStateAsync().ConfigureAwait(false);
-            return BridgeResult.Ok(new { state = SerializeState(refreshed), applied = apply });
+            await MutationGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                var controller = Controller;
+                if (!await controller.IsSupportedAsync().ConfigureAwait(false))
+                    return BridgeResult.Error(BridgeErrorCodes.GodModeUnsupported, "Custom Mode is not supported on this device.");
+
+                await controller.SetStateAsync(state).ConfigureAwait(false);
+
+                if (apply)
+                {
+                    var blocked = await GetApplyBlockedReasonAsync(controller).ConfigureAwait(false);
+                    if (blocked is not null)
+                        return BridgeResult.Error(-32603, blocked);
+
+                    await controller.ApplyStateAsync().ConfigureAwait(false);
+                }
+
+                var refreshed = await controller.GetStateAsync().ConfigureAwait(false);
+                return BridgeResult.Ok(new { state = SerializeState(refreshed), applied = apply });
+            }
+            finally
+            {
+                MutationGate.Release();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return MapGodModeException(ex);
         }
     }
 
-    private static async Task<BridgeResult> HandleApplyAsync()
+    internal static async Task<BridgeResult> HandleApplyAsync(CancellationToken cancellationToken = default)
     {
         try
         {
-            await Controller.ApplyStateAsync().ConfigureAwait(false);
-            return BridgeResult.Ok(new { ok = true });
+            await MutationGate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                var controller = Controller;
+                if (!await controller.IsSupportedAsync().ConfigureAwait(false))
+                    return BridgeResult.Error(BridgeErrorCodes.GodModeUnsupported, "Custom Mode is not supported on this device.");
+
+                var blocked = await GetApplyBlockedReasonAsync(controller).ConfigureAwait(false);
+                if (blocked is not null)
+                    return BridgeResult.Error(-32603, blocked);
+
+                await controller.ApplyStateAsync().ConfigureAwait(false);
+                return BridgeResult.Ok(new { ok = true });
+            }
+            finally
+            {
+                MutationGate.Release();
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return MapGodModeException(ex);
         }
     }
+
+    private static async Task<string?> GetApplyBlockedReasonAsync(GodModeController controller)
+    {
+        if (await controller.NeedsVantageDisabledAsync().ConfigureAwait(false) &&
+            await IoCContainer.Resolve<VantageDisabler>().GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled)
+            return "Custom Mode cannot be applied while Lenovo Vantage is enabled.";
+
+        if (await controller.NeedsLegionZoneDisabledAsync().ConfigureAwait(false) &&
+            await IoCContainer.Resolve<LegionZoneDisabler>().GetStatusAsync().ConfigureAwait(false) == SoftwareStatus.Enabled)
+            return "Custom Mode cannot be applied while Legion Zone is enabled.";
+
+        return null;
+    }
+
+    internal static BridgeResult MapGodModeException(Exception ex) => ex switch
+    {
+        BridgeErrorException bridge => BridgeResult.Error(bridge.Code, bridge.Message),
+        WmiWriteIndeterminateException wmi => BridgeResult.Error(-32603, $"{wmi.GetType().Name}: {wmi.Message}"),
+        WmiWriteBusyException wmi => BridgeResult.Error(-32603, $"{wmi.GetType().Name}: {wmi.Message}"),
+        WmiWriteUnavailableException wmi => BridgeResult.Error(-32603, $"{wmi.GetType().Name}: {wmi.Message}"),
+        WmiWriteFailedIndeterminateException wmi => BridgeResult.Error(-32603, $"{wmi.GetType().Name}: {wmi.Message}"),
+        _ => BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}"),
+    };
 
     private static object SerializeState(GodModeState state)
     {
@@ -204,27 +279,27 @@ public static class GodModeHandlers
         FanFullSpeed = defaults.FanFullSpeed,
     };
 
-    private static GodModeState ParseState(JsonElement root)
+    internal static GodModeState ParseState(JsonElement root)
     {
         var activePresetId = ReadGuid(GetProp(root, "ActivePresetId", "activePresetId"))
-            ?? throw new InvalidOperationException("ActivePresetId is required.");
+            ?? throw new BridgeErrorException(-32602, "ActivePresetId is required.");
 
         var presetsElement = GetProp(root, "Presets", "presets");
         if (presetsElement.ValueKind != JsonValueKind.Object)
-            throw new InvalidOperationException("Presets object is required.");
+            throw new BridgeErrorException(-32602, "Presets object is required.");
 
         var presets = new Dictionary<Guid, GodModePreset>();
         foreach (var property in presetsElement.EnumerateObject())
         {
             if (!Guid.TryParse(property.Name, out var presetId))
-                continue;
+                throw new BridgeErrorException(-32602, $"Preset key '{property.Name}' is not a valid GUID.");
             presets[presetId] = ParsePreset(property.Value);
         }
 
         if (presets.Count == 0)
-            throw new InvalidOperationException("At least one preset is required.");
+            throw new BridgeErrorException(-32602, "At least one preset is required.");
         if (!presets.ContainsKey(activePresetId))
-            throw new InvalidOperationException($"Active preset {activePresetId} was not found.");
+            throw new BridgeErrorException(-32602, $"Active preset {activePresetId} was not found.");
 
         return new GodModeState
         {
@@ -239,9 +314,9 @@ public static class GodModeHandlers
         var fanTableElement = GetProp(obj, "FanTable", "fanTable");
         if (fanTableElement.ValueKind is not JsonValueKind.Undefined and not JsonValueKind.Null)
         {
-            var speeds = ReadFanSpeeds(fanTableElement);
-            if (speeds is not null)
-                fanTableInfo = new FanTableInfo([], new FanTable(speeds));
+            var speeds = ReadFanSpeeds(fanTableElement)
+                ?? throw new BridgeErrorException(-32602, "FanTable must be a 10-step array or FSS0-FSS9 object with integer speeds 0-10.");
+            fanTableInfo = new FanTableInfo([], new FanTable(speeds));
         }
 
         return new GodModePreset
@@ -293,9 +368,9 @@ public static class GodModeHandlers
         if (element.ValueKind == JsonValueKind.Array)
         {
             var values = ReadIntArray(element);
-            if (values is null || values.Length != 10)
+            if (values is null || values.Length != 10 || values.Any(v => v is < 0 or > 10))
                 return null;
-            return values.Select(v => (ushort)Math.Clamp(v, 0, 10)).ToArray();
+            return values.Select(v => (ushort)v).ToArray();
         }
 
         if (element.ValueKind != JsonValueKind.Object)
@@ -305,9 +380,9 @@ public static class GodModeHandlers
         for (var i = 0; i < 10; i++)
         {
             var speed = ReadInt(GetProp(element, $"FSS{i}", $"fss{i}"));
-            if (speed is null)
+            if (speed is null || speed.Value is < 0 or > 10)
                 return null;
-            speeds[i] = (ushort)Math.Clamp(speed.Value, 0, 10);
+            speeds[i] = (ushort)speed.Value;
         }
         return speeds;
     }
@@ -320,6 +395,14 @@ public static class GodModeHandlers
         {
             if (obj.TryGetProperty(name, out var value))
                 return value;
+        }
+        foreach (var property in obj.EnumerateObject())
+        {
+            foreach (var name in names)
+            {
+                if (string.Equals(property.Name, name, StringComparison.OrdinalIgnoreCase))
+                    return property.Value;
+            }
         }
         return default;
     }

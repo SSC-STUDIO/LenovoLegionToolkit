@@ -110,9 +110,28 @@ export const GOD_MODE_STEPPER_FIELDS: GodModeStepperFieldName[] = [
   'gpuToCPUDynamicBoost'
 ]
 
-/** Wire (PascalCase) name of a stepper field. */
+const STEPPER_FIELD_WIRE_MAP: Record<GodModeStepperFieldName, string[]> = {
+  cpuLongTermPowerLimit: ['CPULongTermPowerLimit', 'cpuLongTermPowerLimit', 'CpuLongTermPowerLimit'],
+  cpuShortTermPowerLimit: ['CPUShortTermPowerLimit', 'cpuShortTermPowerLimit', 'CpuShortTermPowerLimit'],
+  cpuPeakPowerLimit: ['CPUPeakPowerLimit', 'cpuPeakPowerLimit', 'CpuPeakPowerLimit'],
+  cpuCrossLoadingPowerLimit: ['CPUCrossLoadingPowerLimit', 'cpuCrossLoadingPowerLimit', 'CpuCrossLoadingPowerLimit'],
+  cpuPL1Tau: ['CPUPL1Tau', 'cpuPL1Tau', 'CpuPL1Tau'],
+  apUsPPTPowerLimit: ['APUsPPTPowerLimit', 'apUsPPTPowerLimit', 'ApUsPPTPowerLimit', 'apusPPTPowerLimit'],
+  cpuTemperatureLimit: ['CPUTemperatureLimit', 'cpuTemperatureLimit', 'CpuTemperatureLimit'],
+  gpuPowerBoost: ['GPUPowerBoost', 'gpuPowerBoost', 'GpuPowerBoost'],
+  gpuConfigurableTGP: ['GPUConfigurableTGP', 'gpuConfigurableTGP', 'GpuConfigurableTGP'],
+  gpuTemperatureLimit: ['GPUTemperatureLimit', 'gpuTemperatureLimit', 'GpuTemperatureLimit'],
+  gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline: [
+    'GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline',
+    'gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline',
+    'GpuTotalProcessingPowerTargetOnAcOffsetFromBaseline'
+  ],
+  gpuToCPUDynamicBoost: ['GPUToCPUDynamicBoost', 'gpuToCPUDynamicBoost', 'GpuToCPUDynamicBoost', 'gpuToCpuDynamicBoost']
+}
+
+/** Wire (PascalCase) name of a stepper field matching C# GodModePreset / GodModeHandlers. */
 export function stepperWireName(field: GodModeStepperFieldName): string {
-  return field[0].toUpperCase() + field.slice(1)
+  return STEPPER_FIELD_WIRE_MAP[field]?.[0] ?? (field[0].toUpperCase() + field.slice(1))
 }
 
 type JsonObject = Record<string, unknown>
@@ -126,6 +145,10 @@ function getKey(record: JsonObject | null, ...names: string[]): unknown {
   if (record == null) return undefined
   for (const name of names) {
     if (name in record) return record[name]
+  }
+  const lowerNames = names.map((n) => n.toLowerCase())
+  for (const [k, v] of Object.entries(record)) {
+    if (lowerNames.includes(k.toLowerCase())) return v
   }
   return undefined
 }
@@ -248,7 +271,8 @@ function readPreset(value: unknown): GodModePreset | null {
   preset.minValueOffset = readNumber(getKey(obj, 'MinValueOffset', 'minValueOffset'))
   preset.maxValueOffset = readNumber(getKey(obj, 'MaxValueOffset', 'maxValueOffset'))
   for (const field of GOD_MODE_STEPPER_FIELDS) {
-    preset[field] = readStepper(getKey(obj, stepperWireName(field), field))
+    const candidateKeys = STEPPER_FIELD_WIRE_MAP[field] ?? [stepperWireName(field), field]
+    preset[field] = readStepper(getKey(obj, ...candidateKeys))
   }
   return preset
 }
@@ -270,25 +294,14 @@ export function parseGodModeStore(value: unknown): GodModeStore | null {
 
 function readDefaults(value: unknown): GodModeDefaults {
   const obj = readObject(value)
-  return {
-    cpuLongTermPowerLimit: readNumber(getKey(obj, 'CPULongTermPowerLimit', 'cpuLongTermPowerLimit')),
-    cpuShortTermPowerLimit: readNumber(getKey(obj, 'CPUShortTermPowerLimit', 'cpuShortTermPowerLimit')),
-    cpuPeakPowerLimit: readNumber(getKey(obj, 'CPUPeakPowerLimit', 'cpuPeakPowerLimit')),
-    cpuCrossLoadingPowerLimit: readNumber(getKey(obj, 'CPUCrossLoadingPowerLimit', 'cpuCrossLoadingPowerLimit')),
-    cpuPL1Tau: readNumber(getKey(obj, 'CPUPL1Tau', 'cpuPL1Tau')),
-    apUsPPTPowerLimit: readNumber(getKey(obj, 'APUsPPTPowerLimit', 'apUsPPTPowerLimit')),
-    cpuTemperatureLimit: readNumber(getKey(obj, 'CPUTemperatureLimit', 'cpuTemperatureLimit')),
-    gpuPowerBoost: readNumber(getKey(obj, 'GPUPowerBoost', 'gpuPowerBoost')),
-    gpuConfigurableTGP: readNumber(getKey(obj, 'GPUConfigurableTGP', 'gpuConfigurableTGP')),
-    gpuTemperatureLimit: readNumber(getKey(obj, 'GPUTemperatureLimit', 'gpuTemperatureLimit')),
-    gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline: readNumber(
-      getKey(obj, 'GPUTotalProcessingPowerTargetOnAcOffsetFromBaseline',
-        'gpuTotalProcessingPowerTargetOnAcOffsetFromBaseline')
-    ),
-    gpuToCPUDynamicBoost: readNumber(getKey(obj, 'GPUToCPUDynamicBoost', 'gpuToCPUDynamicBoost')),
-    fanTable: readFanTable(getKey(obj, 'FanTable', 'fanTable')),
-    fanFullSpeed: readBool(getKey(obj, 'FanFullSpeed', 'fanFullSpeed'))
+  const result: Partial<GodModeDefaults> = {}
+  for (const field of GOD_MODE_STEPPER_FIELDS) {
+    const candidateKeys = STEPPER_FIELD_WIRE_MAP[field] ?? [stepperWireName(field), field]
+    result[field] = readNumber(getKey(obj, ...candidateKeys))
   }
+  result.fanTable = readFanTable(getKey(obj, 'FanTable', 'fanTable'))
+  result.fanFullSpeed = readBool(getKey(obj, 'FanFullSpeed', 'fanFullSpeed'))
+  return result as GodModeDefaults
 }
 
 function serializeStepper(stepper: GodModeStepperValue): Record<string, unknown> {
@@ -360,9 +373,13 @@ function parseLoadResult(raw: unknown): GodModeLoadResult | null {
 }
 
 export const godModeApi = {
-  async load(): Promise<GodModeLoadResult | null> {
+  async load(): Promise<GodModeLoadResult> {
     const result = await invoke<unknown>('godMode.getState')
-    return parseLoadResult(result)
+    const parsed = parseLoadResult(result)
+    if (parsed == null) {
+      throw new Error('godMode.getState returned an invalid payload')
+    }
+    return parsed
   },
   async save(store: GodModeStore, apply = false): Promise<GodModeStore> {
     const result = await invoke<unknown>('godMode.setState', {
@@ -371,7 +388,10 @@ export const godModeApi = {
     })
     const obj = readObject(result)
     const next = parseGodModeStore(getKey(obj, 'state', 'State'))
-    return next ?? store
+    if (next == null) {
+      throw new Error('godMode.setState returned an invalid payload')
+    }
+    return next
   },
   async apply(): Promise<void> {
     await invoke('godMode.apply')
