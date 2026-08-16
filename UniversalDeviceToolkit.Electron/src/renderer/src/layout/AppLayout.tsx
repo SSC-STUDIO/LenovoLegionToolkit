@@ -38,9 +38,12 @@ const NAV_WIDTH_COLLAPSED_CSS = '--udt-nav-width-collapsed'
 const NAV_WIDTH_EXPANDED_CSS = '--udt-nav-width-expanded'
 const DESIGN_WINDOW_WIDTH = 1300
 const ABSOLUTE_MAX_EXPANDED = 420
+const MIN_EXPANDED_WIDTH = 150
 const MIN_CONTENT_WIDTH = 480
 const AUTO_COLLAPSE_BELOW = 900
+const COLLAPSE_DRAG_THRESHOLD = 115
 const NAV_COLLAPSED_STORAGE_KEY = 'udt.navCollapsed'
+const NAV_CUSTOM_WIDTH_STORAGE_KEY = 'udt.navCustomWidth'
 
 function readCssNumber(name: string, fallback: number): number {
   const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
@@ -78,10 +81,6 @@ const FOOTER_ITEMS: NavItemDef[] = [
   { key: '/about', icon: (filled) => filled ? <Info24Filled /> : <Info24Regular />, labelKey: 'nav.about' }
 ]
 
-// Keyboard navigation order: main items first, then footer items (Electron
-// NavigationStoreExtensions.Items + Footer).
-const ALL_NAV_ITEMS: NavItemDef[] = [...MAIN_ITEMS, ...FOOTER_ITEMS]
-
 function isRouteActive(pathname: string, key: string): boolean {
   return pathname === key || pathname.startsWith(`${key}/`)
 }
@@ -103,6 +102,7 @@ function NavItem({ item, label, collapsed, active, onClick }: NavItemProps): Rea
       type="button"
       className={className}
       title={collapsed ? label : undefined}
+      aria-label={label}
       aria-current={active ? 'page' : undefined}
       onClick={onClick}
     >
@@ -127,6 +127,20 @@ export default function AppLayout(): React.JSX.Element {
       return false
     }
   })
+  const [customWidth, setCustomWidth] = useState<number | null>(() => {
+    try {
+      const saved = localStorage.getItem(NAV_CUSTOM_WIDTH_STORAGE_KEY)
+      if (saved) {
+        const parsed = Number.parseFloat(saved)
+        if (Number.isFinite(parsed) && parsed >= MIN_EXPANDED_WIDTH) return parsed
+      }
+    } catch {
+      // Ignore
+    }
+    return null
+  })
+  const [isResizing, setIsResizing] = useState(false)
+  const [dragWidth, setDragWidth] = useState<number | null>(null)
   const [windowWidth, setWindowWidth] = useState(() => window.innerWidth)
   // Primary modifier is Ctrl on Windows/Linux and Cmd (metaKey) on macOS.
   const isMac = window.bridge?.platform === 'darwin'
@@ -167,10 +181,17 @@ export default function AppLayout(): React.JSX.Element {
 
   const visibleMainItems = useMemo(() => MAIN_ITEMS.filter(isNavItemVisible), [isNavItemVisible])
   const visibleFooterItems = useMemo(() => FOOTER_ITEMS.filter(isNavItemVisible), [isNavItemVisible])
+  const visibleNavItems = useMemo(
+    () => [...visibleMainItems, ...visibleFooterItems],
+    [visibleMainItems, visibleFooterItems]
+  )
 
-  const navWidth = collapsed
-    ? readCssNumber(NAV_WIDTH_COLLAPSED_CSS, NAV_WIDTH_COLLAPSED_FALLBACK)
-    : getExpandedWidth(windowWidth)
+  const baseExpandedWidth = customWidth ?? getExpandedWidth(windowWidth)
+  const navWidth = dragWidth !== null
+    ? dragWidth
+    : collapsed
+      ? readCssNumber(NAV_WIDTH_COLLAPSED_CSS, NAV_WIDTH_COLLAPSED_FALLBACK)
+      : baseExpandedWidth
 
   const handleResize = useCallback((): void => {
     const width = window.innerWidth
@@ -183,6 +204,17 @@ export default function AppLayout(): React.JSX.Element {
     return () => window.removeEventListener('resize', handleResize)
   }, [handleResize])
 
+  // Persist custom nav width
+  useEffect(() => {
+    if (customWidth !== null) {
+      try {
+        localStorage.setItem(NAV_CUSTOM_WIDTH_STORAGE_KEY, String(Math.round(customWidth)))
+      } catch {
+        // Ignore
+      }
+    }
+  }, [customWidth])
+
   // Persist the navigation collapse state across sessions (Electron parity:
   // NavigationStore saves NavigationPaneExpanded on exit and restores it).
   useEffect(() => {
@@ -192,6 +224,65 @@ export default function AppLayout(): React.JSX.Element {
       // localStorage unavailable — collapse state stays in-memory only
     }
   }, [collapsed])
+
+  const handleResizerPointerDown = useCallback(
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      event.preventDefault()
+      const startX = event.clientX
+      const startWidth = collapsed
+        ? readCssNumber(NAV_WIDTH_COLLAPSED_CSS, NAV_WIDTH_COLLAPSED_FALLBACK)
+        : (customWidth ?? getExpandedWidth(window.innerWidth))
+      const target = event.currentTarget
+      try {
+        target.setPointerCapture(event.pointerId)
+      } catch {
+        // Ignore
+      }
+      setIsResizing(true)
+
+      const onPointerMove = (moveEvent: PointerEvent): void => {
+        const currentX = moveEvent.clientX
+        const delta = currentX - startX
+        const tentativeWidth = startWidth + delta
+        const maxAllowed = Math.min(
+          ABSOLUTE_MAX_EXPANDED,
+          Math.max(MIN_EXPANDED_WIDTH, window.innerWidth - MIN_CONTENT_WIDTH)
+        )
+
+        if (tentativeWidth < COLLAPSE_DRAG_THRESHOLD) {
+          setCollapsed(true)
+          setDragWidth(readCssNumber(NAV_WIDTH_COLLAPSED_CSS, NAV_WIDTH_COLLAPSED_FALLBACK))
+        } else {
+          setCollapsed(false)
+          const clamped = Math.min(Math.max(tentativeWidth, MIN_EXPANDED_WIDTH), maxAllowed)
+          setDragWidth(clamped)
+          setCustomWidth(clamped)
+        }
+      }
+
+      const onPointerUp = (upEvent: PointerEvent): void => {
+        try {
+          target.releasePointerCapture(upEvent.pointerId)
+        } catch {
+          // Ignore
+        }
+        setIsResizing(false)
+        setDragWidth(null)
+        window.removeEventListener('pointermove', onPointerMove)
+        window.removeEventListener('pointerup', onPointerUp)
+        window.removeEventListener('pointercancel', onPointerUp)
+      }
+
+      window.addEventListener('pointermove', onPointerMove)
+      window.addEventListener('pointerup', onPointerUp)
+      window.addEventListener('pointercancel', onPointerUp)
+    },
+    [collapsed, customWidth]
+  )
+
+  const handleResizerDoubleClick = useCallback((): void => {
+    setCollapsed((prev) => !prev)
+  }, [])
 
   // Tray navigation (Electron TrayHelper → NavigationStore.Navigate) and optional
   // status popup (legacy Electron-only; not part of the original tray menu).
@@ -211,7 +302,7 @@ export default function AppLayout(): React.JSX.Element {
 
   // Alt+ArrowLeft/ArrowRight page switching — port of Electron
   // NavigationStoreExtensions.NavigateToPrevious/NavigateToNext: cycles through
-  // MAIN_ITEMS followed by FOOTER_ITEMS, wrapping around at both ends.
+  // currently visible main items then footer items, wrapping around at both ends.
   // Windows/Linux only: on macOS the Cmd+Option+Arrow binding in the handler
   // below covers page cycling, so this Alt-based group stays disabled there
   // (avoiding two overlapping Arrow handlers on the same platform).
@@ -220,20 +311,21 @@ export default function AppLayout(): React.JSX.Element {
     const handleKeyDown = (event: KeyboardEvent): void => {
       if (!event.altKey) return
       if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return
+      if (visibleNavItems.length === 0) return
       event.preventDefault()
-      const currentIndex = ALL_NAV_ITEMS.findIndex((item) => isRouteActive(location.pathname, item.key))
+      const currentIndex = visibleNavItems.findIndex((item) => isRouteActive(location.pathname, item.key))
       let nextIndex: number
       if (event.key === 'ArrowRight') {
-        nextIndex = (currentIndex + 1 + ALL_NAV_ITEMS.length) % ALL_NAV_ITEMS.length
+        nextIndex = (currentIndex + 1 + visibleNavItems.length) % visibleNavItems.length
       } else {
         const index = currentIndex < 0 ? 0 : currentIndex - 1
-        nextIndex = index < 0 ? ALL_NAV_ITEMS.length - 1 : index
+        nextIndex = index < 0 ? visibleNavItems.length - 1 : index
       }
-      navigate(ALL_NAV_ITEMS[nextIndex].key)
+      navigate(visibleNavItems[nextIndex].key)
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isMac, location.pathname, navigate])
+  }, [isMac, location.pathname, navigate, visibleNavItems])
 
   // Page switching + numbered direct jump — port of Electron MainWindow key
   // bindings (NavigationStore.NavigateToNext/Previous and the numbered nav-item
@@ -247,22 +339,23 @@ export default function AppLayout(): React.JSX.Element {
         // Cmd+Option+ArrowLeft/ArrowRight cycles pages (same wrap semantics as
         // the Windows/Linux Alt+Arrow group above).
         if (event.metaKey && event.altKey && !event.ctrlKey && (event.key === 'ArrowRight' || event.key === 'ArrowLeft')) {
+          if (visibleNavItems.length === 0) return
           event.preventDefault()
-          const currentIndex = ALL_NAV_ITEMS.findIndex((item) => isRouteActive(location.pathname, item.key))
+          const currentIndex = visibleNavItems.findIndex((item) => isRouteActive(location.pathname, item.key))
           let nextIndex: number
           if (event.key === 'ArrowRight') {
-            nextIndex = (currentIndex + 1 + ALL_NAV_ITEMS.length) % ALL_NAV_ITEMS.length
+            nextIndex = (currentIndex + 1 + visibleNavItems.length) % visibleNavItems.length
           } else {
             const index = currentIndex < 0 ? 0 : currentIndex - 1
-            nextIndex = index < 0 ? ALL_NAV_ITEMS.length - 1 : index
+            nextIndex = index < 0 ? visibleNavItems.length - 1 : index
           }
-          navigate(ALL_NAV_ITEMS[nextIndex].key)
+          navigate(visibleNavItems[nextIndex].key)
           return
         }
         if (!event.metaKey || event.altKey || event.ctrlKey) return
         const digit = Number(event.key)
-        if (Number.isInteger(digit) && digit >= 1 && digit <= ALL_NAV_ITEMS.length) {
-          const target = ALL_NAV_ITEMS[digit - 1]
+        if (Number.isInteger(digit) && digit >= 1 && digit <= visibleNavItems.length) {
+          const target = visibleNavItems[digit - 1]
           if (target && !isRouteActive(location.pathname, target.key)) {
             event.preventDefault()
             navigate(target.key)
@@ -272,17 +365,18 @@ export default function AppLayout(): React.JSX.Element {
       }
       if (!event.ctrlKey || event.altKey || event.metaKey) return
       if (event.key === 'Tab') {
+        if (visibleNavItems.length === 0) return
         event.preventDefault()
-        const currentIndex = ALL_NAV_ITEMS.findIndex((item) => isRouteActive(location.pathname, item.key))
+        const currentIndex = visibleNavItems.findIndex((item) => isRouteActive(location.pathname, item.key))
         const nextIndex = event.shiftKey
-          ? (currentIndex - 1 + ALL_NAV_ITEMS.length) % ALL_NAV_ITEMS.length
-          : (currentIndex + 1) % ALL_NAV_ITEMS.length
-        navigate(ALL_NAV_ITEMS[nextIndex].key)
+          ? (currentIndex - 1 + visibleNavItems.length) % visibleNavItems.length
+          : (currentIndex + 1) % visibleNavItems.length
+        navigate(visibleNavItems[nextIndex].key)
         return
       }
       const digit = Number(event.key)
-      if (Number.isInteger(digit) && digit >= 1 && digit <= ALL_NAV_ITEMS.length) {
-        const target = ALL_NAV_ITEMS[digit - 1]
+      if (Number.isInteger(digit) && digit >= 1 && digit <= visibleNavItems.length) {
+        const target = visibleNavItems[digit - 1]
         if (target && !isRouteActive(location.pathname, target.key)) {
           event.preventDefault()
           navigate(target.key)
@@ -291,7 +385,7 @@ export default function AppLayout(): React.JSX.Element {
     }
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isMac, location.pathname, navigate])
+  }, [isMac, location.pathname, navigate, visibleNavItems])
 
   const renderItem = (item: NavItemDef): React.JSX.Element => (
     <NavItem
@@ -317,7 +411,7 @@ export default function AppLayout(): React.JSX.Element {
       <div className="udt-app-shell__body">
         <nav
           aria-label={t('common.navigation')}
-          className="udt-nav udt-nav--electron-parity"
+          className={`udt-nav udt-nav--electron-parity${collapsed ? ' udt-nav--collapsed' : ''}${isResizing ? ' udt-nav--resizing' : ''}`}
           style={{ width: navWidth }}
         >
           <div className="udt-nav__scroll">
@@ -333,6 +427,14 @@ export default function AppLayout(): React.JSX.Element {
             {collapsed ? <ChevronRight16Regular /> : <ChevronLeft16Regular />}
           </button>
         </nav>
+        <div
+          role="separator"
+          aria-orientation="vertical"
+          aria-label={t('common.resizeNavigation', { defaultValue: 'Resize navigation' })}
+          className={`udt-nav-resizer${isResizing ? ' udt-nav-resizer--active' : ''}`}
+          onPointerDown={handleResizerPointerDown}
+          onDoubleClick={handleResizerDoubleClick}
+        />
         <div className="udt-app-shell__content">
           <main className="udt-app-shell__main">
             <div key={location.pathname} className="udt-page-enter">

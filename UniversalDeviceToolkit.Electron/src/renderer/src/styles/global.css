@@ -315,7 +315,7 @@ body {
   flex: 1;
   min-height: 0;
   margin-left: 12px;
-  gap: 8px;
+  gap: 0;
 }
 
 .udt-app-shell__content {
@@ -545,11 +545,15 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 0;
+  padding: 0 4px 0 0;
   background: transparent;
   border-right: 0;
-  transition: width var(--udt-anim-medium) var(--udt-ease-cubic-out);
+  transition: width 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
   flex-shrink: 0;
+}
+
+.udt-nav.udt-nav--resizing {
+  transition: none !important;
 }
 
 .udt-nav__scroll {
@@ -589,7 +593,11 @@ body {
   font-size: var(--udt-font-small-body);
   cursor: pointer;
   text-align: left;
-  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out,
+              color var(--udt-anim-fast) ease-out,
+              min-height 0.26s cubic-bezier(0.2, 0.8, 0.2, 1),
+              padding 0.26s cubic-bezier(0.2, 0.8, 0.2, 1),
+              border-radius 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .udt-nav-item:hover {
@@ -627,7 +635,9 @@ body {
   flex-shrink: 0;
   font-size: 24px;
   color: var(--udt-text-secondary);
-  transition: color var(--udt-anim-fast) ease-out;
+  transition: color var(--udt-anim-fast) ease-out,
+              font-size 0.26s cubic-bezier(0.2, 0.8, 0.2, 1),
+              transform 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .udt-nav-item--active .udt-nav-icon {
@@ -641,7 +651,11 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  transition: color var(--udt-anim-fast) ease-out;
+  transition: color var(--udt-anim-fast) ease-out,
+              font-size 0.26s cubic-bezier(0.2, 0.8, 0.2, 1),
+              margin 0.26s cubic-bezier(0.2, 0.8, 0.2, 1),
+              opacity 0.22s ease-out,
+              transform 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Collapsed: icon above, tiny label below (Electron CompactLayout, MinHeight 60) */
@@ -681,7 +695,10 @@ body {
   color: var(--udt-text-secondary);
   font-size: 16px;
   cursor: pointer;
-  transition: background-color var(--udt-anim-fast) ease-out, color var(--udt-anim-fast) ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out,
+              color var(--udt-anim-fast) ease-out,
+              margin 0.26s cubic-bezier(0.2, 0.8, 0.2, 1),
+              align-self 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .udt-nav-toggle:hover {
@@ -693,6 +710,44 @@ body {
   align-self: center;
   justify-content: center;
   margin: 4px 0 8px 0;
+}
+
+/* Draggable resizer divider between navigation and content */
+.udt-nav-resizer {
+  position: relative;
+  width: 8px;
+  margin: 0;
+  z-index: 20;
+  cursor: col-resize;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  touch-action: none;
+  user-select: none;
+}
+
+.udt-nav-resizer::after {
+  content: '';
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: transparent;
+  transition: background-color var(--udt-anim-fast) ease-out, width var(--udt-anim-fast) ease-out;
+}
+
+.udt-nav-resizer:hover::after,
+.udt-nav-resizer.udt-nav-resizer--active::after {
+  background: var(--udt-accent);
+  width: 3px;
+}
+
+.udt-nav--resizing,
+.udt-nav--resizing .udt-nav-item,
+.udt-nav--resizing .udt-nav-icon,
+.udt-nav--resizing .udt-nav-label,
+.udt-nav--resizing .udt-nav-toggle {
+  transition: none !important;
 }
 
 /* ── Dashboard page ─────────────────────────────────────────── */
