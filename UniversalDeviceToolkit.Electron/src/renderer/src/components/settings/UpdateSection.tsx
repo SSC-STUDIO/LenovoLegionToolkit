@@ -70,12 +70,26 @@ export function UpdateSection(): React.JSX.Element {
     setCheckResult(null)
     try {
       const result = await updateApi.check(true)
-      setCheckResult(result)
       if (result.error) {
+        setCheckResult(result)
         message.error(result.error)
-      } else if (!result.available) {
-        message.info(t('update.checkResult.latest'))
+        return
       }
+      if (!result.available) {
+        setCheckResult(result)
+        message.info(t('update.checkResult.latest'))
+        return
+      }
+      const { release } = await updateApi.getRelease()
+      if (release == null) {
+        const error = t('update.checkResult.installerUnavailable', {
+          defaultValue: 'An update is available but no compatible installer was found for this installation.'
+        })
+        setCheckResult({ available: false, version: result.version, error })
+        message.error(error)
+        return
+      }
+      setCheckResult({ available: true, version: release.version })
     } catch (error) {
       message.error((error as Error).message)
     } finally {
@@ -143,16 +157,20 @@ export function UpdateSection(): React.JSX.Element {
           </div>
         </div>
       </SettingsCard>
-      <SettingsCard title={t('settings.update.check')}>
-        <Button
-          type="primary"
-          className="udt-settings-check-button"
-          onClick={() => void handleCheckForUpdates()}
-          loading={checking}
-        >
-          {t('settings.update.check')}
-        </Button>
-        {checkResult?.available && (
+      <SettingsCard
+        title={t('settings.update.check')}
+        action={
+          <Button
+            type="primary"
+            className="udt-settings-check-button"
+            onClick={() => void handleCheckForUpdates()}
+            loading={checking}
+          >
+            {t('settings.update.check')}
+          </Button>
+        }
+      >
+        {checkResult?.available ? (
           <Alert
             className="udt-settings-card__alert"
             type="success"
@@ -164,7 +182,7 @@ export function UpdateSection(): React.JSX.Element {
               </Button>
             }
           />
-        )}
+        ) : null}
       </SettingsCard>
     </div>
   )
