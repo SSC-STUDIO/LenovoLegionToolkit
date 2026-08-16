@@ -5,6 +5,7 @@ import { automationApi } from '../../api/automation'
 import type { AutomationPipeline } from '../../api/automation'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { SettingsLoadError } from './SettingsLoadError'
 
 /**
  * Parity modal for Electron Windows/Settings/SelectSmartKeyPipelinesWindow:
@@ -29,14 +30,19 @@ export default function SmartKeyPipelinesModal({
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [reloadToken, setReloadToken] = useState(0)
   const [pipelines, setPipelines] = useState<AutomationPipeline[]>([])
   const [checkedIds, setCheckedIds] = useState<Set<string>>(new Set())
   const [showThisApp, setShowThisApp] = useState(false)
+  const [pipelinesReady, setPipelinesReady] = useState(false)
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
     setLoading(true)
+    setLoadError(null)
+    setPipelinesReady(false)
     void (async () => {
       try {
         const [state, settingsResult] = await Promise.all([
@@ -69,8 +75,11 @@ export default function SmartKeyPipelinesModal({
               .filter((id): id is string => id != null && (list.includes(id) || id === actionId))
           )
         )
+        setPipelinesReady(true)
       } catch (reason) {
-        if (!cancelled) void message.error((reason as Error).message)
+        if (cancelled) return
+        setPipelinesReady(false)
+        setLoadError(reason instanceof Error ? reason.message : String(reason))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -78,7 +87,7 @@ export default function SmartKeyPipelinesModal({
     return () => {
       cancelled = true
     }
-  }, [open, isDoublePress])
+  }, [open, isDoublePress, reloadToken])
 
   const togglePipeline = (id: string, checked: boolean): void => {
     setCheckedIds((current) => {
@@ -90,6 +99,7 @@ export default function SmartKeyPipelinesModal({
   }
 
   const handleSave = async (): Promise<void> => {
+    if (!pipelinesReady) return
     setSaving(true)
     try {
       const result = await settingsApi.get('application')
@@ -128,19 +138,29 @@ export default function SmartKeyPipelinesModal({
 
   return (
     <Modal
+      centered
       open={open}
       title={t(titleKey)}
       width={400}
       okText={t('common.save')}
       cancelText={t('common.cancel')}
       confirmLoading={saving}
-      onOk={() => void handleSave()}
+      okButtonProps={{ disabled: loading || loadError != null || !pipelinesReady }}
+      onOk={() => {
+        if (!pipelinesReady) return
+        void handleSave()
+      }}
       onCancel={onClose}
     >
       {loading ? (
         <div style={{ textAlign: 'center', padding: 24 }}>
           <Spin />
         </div>
+      ) : loadError != null || !pipelinesReady ? (
+        <SettingsLoadError
+          message={loadError}
+          onRetry={() => setReloadToken((value) => value + 1)}
+        />
       ) : (
         <div>
           <div

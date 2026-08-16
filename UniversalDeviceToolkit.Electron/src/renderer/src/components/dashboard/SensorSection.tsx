@@ -69,7 +69,7 @@ function readStringList(value: unknown): string[] {
 }
 
 /** Visible dashboard columns from hardwareSensors (VisibleSections + SectionOrder). */
-function readSensorLayout(scopes: Record<string, unknown>): SensorColumnId[] {
+export function readSensorLayout(scopes: Record<string, unknown>): SensorColumnId[] {
   const hardware =
     typeof scopes.hardwareSensors === 'object' && scopes.hardwareSensors !== null
       ? (scopes.hardwareSensors as Record<string, unknown>)
@@ -100,7 +100,7 @@ function readTemperatureUnit(scopes: Record<string, unknown>): TemperatureUnit {
   if (application['TemperatureUnit'] === 'F' || application['TemperatureUnit'] === 'C') {
     return application['TemperatureUnit']
   }
-  return getTemperatureUnit()
+  return 'C'
 }
 
 interface SensorMetric {
@@ -947,21 +947,44 @@ export default function SensorSection(): React.JSX.Element {
     return (
       <div className="udt-sensors udt-fade-in" role="status" aria-label={t('common.loading', { defaultValue: 'Loading…' })}>
         <div className="udt-sensor-board">
-          <div className="udt-sensor-board__grid">
-            <SensorSkeletonColumn
-              titleWidth={72}
-              subtitleWidth={168}
-              metricWidths={[52, 44, 40]}
-              staggerBase={0}
-            />
-            <SensorSkeletonColumn
-              titleWidth={64}
-              subtitleWidth={140}
-              metricWidths={[48, 44, 44]}
-              staggerBase={16}
-              legendCount={2}
-            />
-            <SensorSkeletonColumn titleWidth={68} subtitleWidth={152} metricWidths={[52, 40, 44]} staggerBase={32} />
+          <div
+            className="udt-sensor-board__grid"
+            style={{ ['--udt-sensor-columns' as string]: String(sensorLayout.length) }}
+          >
+            {sensorLayout.map((columnId, idx) => {
+              if (columnId === 'CPU') {
+                return (
+                  <SensorSkeletonColumn
+                    key="CPU"
+                    titleWidth={72}
+                    subtitleWidth={168}
+                    metricWidths={[52, 44, 40]}
+                    staggerBase={idx * 16}
+                  />
+                )
+              }
+              if (columnId === 'Battery') {
+                return (
+                  <SensorSkeletonColumn
+                    key="Battery"
+                    titleWidth={64}
+                    subtitleWidth={140}
+                    metricWidths={[48, 44, 44]}
+                    staggerBase={idx * 16}
+                    legendCount={2}
+                  />
+                )
+              }
+              return (
+                <SensorSkeletonColumn
+                  key="GPU"
+                  titleWidth={68}
+                  subtitleWidth={152}
+                  metricWidths={[52, 40, 44]}
+                  staggerBase={idx * 16}
+                />
+              )
+            })}
           </div>
         </div>
       </div>

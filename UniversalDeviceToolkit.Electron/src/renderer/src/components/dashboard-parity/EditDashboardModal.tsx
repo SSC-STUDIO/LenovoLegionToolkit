@@ -24,7 +24,7 @@ import InfoBar from '../InfoBar'
 interface EditDashboardModalProps {
   config: DashboardConfig
   onCancel: () => void
-  onSaved: () => void
+  onSaved: (config: DashboardConfig) => void
 }
 
 function groupTitle(group: DashboardGroup, t: TFunction): string {
@@ -150,13 +150,20 @@ export default function EditDashboardModal({
   const handleApply = async (nextGroups: DashboardGroup[], nextShowSensors: boolean): Promise<void> => {
     setSaving(true)
     setError(null)
+    const nextConfig: DashboardConfig = {
+      showSensors: nextShowSensors,
+      groups: nextGroups,
+      sensorsRefreshIntervalSeconds: config.sensorsRefreshIntervalSeconds
+    }
     try {
-      await dashboardApi.saveConfig({
-        showSensors: nextShowSensors,
-        groups: nextGroups,
-        sensorsRefreshIntervalSeconds: config.sensorsRefreshIntervalSeconds
-      })
-      onSaved()
+      const result = await dashboardApi.saveConfig(nextConfig)
+      if (result.saved !== true) {
+        setError(t('dashboard.edit.saveFailed', {
+          defaultValue: 'Dashboard configuration was not saved.'
+        }))
+        return
+      }
+      onSaved(nextConfig)
     } catch (reason) {
       setError((reason as Error).message)
     } finally {
@@ -361,6 +368,7 @@ export default function EditDashboardModal({
       )}
 
       <Modal
+        centered
         open={namePrompt != null}
         title={
           namePrompt?.mode === 'rename'

@@ -3,6 +3,7 @@ import { Modal, Select, Spin, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { SettingsLoadError } from './SettingsLoadError'
 import {
   buildNotificationDurationOptions,
   buildNotificationPositionOptions
@@ -132,19 +133,28 @@ export default function NotificationsModal({
 }: NotificationsModalProps): React.JSX.Element {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [reloadToken, setReloadToken] = useState(0)
   const [fields, setFields] = useState<NotificationFields>(DEFAULT_FIELDS)
+  const [fieldsReady, setFieldsReady] = useState(false)
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
     setLoading(true)
+    setLoadError(null)
+    setFieldsReady(false)
     settingsApi
       .get('application')
       .then((result) => {
-        if (!cancelled) setFields(parseFields(result.value))
+        if (cancelled) return
+        setFields(parseFields(result.value))
+        setFieldsReady(true)
       })
       .catch((reason: unknown) => {
-        if (!cancelled) void message.error((reason as Error).message)
+        if (cancelled) return
+        setFieldsReady(false)
+        setLoadError(reason instanceof Error ? reason.message : String(reason))
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -152,9 +162,10 @@ export default function NotificationsModal({
     return () => {
       cancelled = true
     }
-  }, [open])
+  }, [open, reloadToken])
 
   const persist = async (patch: Partial<NotificationFields>): Promise<void> => {
+    if (!fieldsReady) return
     const next = { ...fields, ...patch }
     setFields(next)
     try {
@@ -199,6 +210,7 @@ export default function NotificationsModal({
 
   return (
     <Modal
+      centered
       open={open}
       title={t('wpf.notificationsSettingsWindowtitle')}
       width={500}
@@ -209,6 +221,11 @@ export default function NotificationsModal({
         <div style={{ textAlign: 'center', padding: 24 }}>
           <Spin />
         </div>
+      ) : loadError != null || !fieldsReady ? (
+        <SettingsLoadError
+          message={loadError}
+          onRetry={() => setReloadToken((value) => value + 1)}
+        />
       ) : (
         <div style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: 8 }}>
           <div

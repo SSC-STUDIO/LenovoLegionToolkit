@@ -22,7 +22,9 @@ import {
   type NetworkDomainGroup,
   type NetworkDomainSubItem
 } from '../../api/optimization'
+import { localizeHostError } from '../../api/bridge'
 import { useOptimizationStore } from '../../stores/optimizationStore'
+import { resolveActionError } from '../../utils/optimizationPresentation'
 import './optimization.css'
 
 // ── Formatting helpers (mirror NetworkAccelerationControl) ──────
@@ -123,6 +125,14 @@ function getGroupSelectedCount(group: NetworkDomainGroup): number {
 
 const RECOMMENDED_GROUP_IDS = new Set(['steam', 'github', 'public-cdn', 'twitch', 'roblox'])
 
+function reportNetworkStoreError(
+  t: (key: string, options?: Record<string, unknown>) => string,
+  fallbackKey: string
+): void {
+  const err = useOptimizationStore.getState().error
+  void message.error(localizeHostError(resolveActionError(err, t(fallbackKey)), t))
+}
+
 function getRecommendedTargetGroups(groups: NetworkDomainGroup[]): NetworkDomainGroup[] {
   return groups
     .filter((group) => group.isFavorite || RECOMMENDED_GROUP_IDS.has(group.id))
@@ -176,7 +186,10 @@ function NetworkTargetsCard(): React.JSX.Element {
   }
 
   const handleGroupToggle = (group: NetworkDomainGroup, enabled: boolean): void => {
-    void setNetworkGroupEnabled(group.id, enabled)
+    void (async () => {
+      const ok = await setNetworkGroupEnabled(group.id, enabled)
+      if (!ok) reportNetworkStoreError(t, 'optimization.network.saveFailed')
+    })()
   }
 
   // Electron three-state CheckBox cycle is true → indeterminate → false → true;
@@ -191,7 +204,10 @@ function NetworkTargetsCard(): React.JSX.Element {
   }
 
   const handleSubItemToggle = (group: NetworkDomainGroup, sub: NetworkDomainSubItem, enabled: boolean): void => {
-    void setNetworkSubItemEnabled(group.id, sub.id, enabled)
+    void (async () => {
+      const ok = await setNetworkSubItemEnabled(group.id, sub.id, enabled)
+      if (!ok) reportNetworkStoreError(t, 'optimization.network.saveFailed')
+    })()
   }
 
   const recommendedGroups = getRecommendedTargetGroups(groups)
@@ -200,7 +216,10 @@ function NetworkTargetsCard(): React.JSX.Element {
   )
 
   const handleRecommendedToggle = (group: NetworkDomainGroup, enabled: boolean): void => {
-    void setNetworkGroupEnabled(group.id, enabled)
+    void (async () => {
+      const ok = await setNetworkGroupEnabled(group.id, enabled)
+      if (!ok) reportNetworkStoreError(t, 'optimization.network.saveFailed')
+    })()
   }
 
   return (
@@ -645,6 +664,7 @@ function NetworkDiagnosticsRow(): React.JSX.Element {
       </div>
 
       <Modal
+        centered
         open={activePopup === 'nat'}
         title={t('optimization.network.diag.natTitle')}
         footer={null}
@@ -674,6 +694,7 @@ function NetworkDiagnosticsRow(): React.JSX.Element {
       </Modal>
 
       <Modal
+        centered
         open={activePopup === 'dns'}
         title={t('optimization.network.diag.dnsTitle')}
         footer={null}
@@ -726,6 +747,7 @@ function NetworkDiagnosticsRow(): React.JSX.Element {
       </Modal>
 
       <Modal
+        centered
         open={activePopup === 'ipv6'}
         title={t('optimization.network.diag.ipv6Title')}
         footer={null}
@@ -770,9 +792,13 @@ function NetworkAdvancedPanel(): React.JSX.Element | null {
 
   const handleRestore = async (): Promise<void> => {
     setRestoring(true)
-    const ok = await restoreNetwork()
-    setRestoring(false)
-    if (ok) message.success(t('optimization.network.restored'))
+    try {
+      const ok = await restoreNetwork()
+      if (ok) message.success(t('optimization.network.restored'))
+      else reportNetworkStoreError(t, 'optimization.network.saveFailed')
+    } finally {
+      setRestoring(false)
+    }
   }
 
   return (

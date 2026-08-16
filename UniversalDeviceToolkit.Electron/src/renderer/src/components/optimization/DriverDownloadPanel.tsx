@@ -6,7 +6,6 @@ import {
   ArrowDown24Regular,
   CheckmarkCircle24Filled,
   Clock24Regular,
-  Delete24Regular,
   ChevronDown24Regular,
   ArrowDownload24Regular,
   EyeOff24Regular,
@@ -70,10 +69,6 @@ function installPackage(id: string): void {
   void useDriverStore.getState().installPackage(id)
 }
 
-function uninstallPackage(id: string): void {
-  void useDriverStore.getState().uninstallPackage(id)
-}
-
 function pausePackage(id: string): void {
   void useDriverStore.getState().pausePackage(id)
 }
@@ -92,7 +87,6 @@ const PackageCard = memo(function PackageCard({
   onToggle,
   onDownload,
   onInstall,
-  onUninstall,
   onPause,
   onHide,
   onHideAll,
@@ -103,7 +97,6 @@ const PackageCard = memo(function PackageCard({
   onToggle: (id: string) => void
   onDownload: (id: string) => void
   onInstall: (id: string) => void
-  onUninstall: (id: string) => void
   onPause: (id: string) => void
   onHide: (id: string) => void
   onHideAll: () => void
@@ -240,14 +233,12 @@ const PackageCard = memo(function PackageCard({
             </button>
           </>
         ) : completed ? (
-          <button
-            type="button"
-            className="udt-action-btn udt-action-btn--danger"
-            title={t('optimization.driver.uninstall')}
-            onClick={() => onUninstall(packageItem.id)}
+          <span
+            className="udt-driver-card__status udt-driver-card__status--Completed"
+            title={t('optimization.driver.status.Completed')}
           >
-            <Delete24Regular />
-          </button>
+            <CheckmarkCircle24Filled />
+          </span>
         ) : (
           <>
             {packageItem.readmeUrl && (
@@ -284,17 +275,15 @@ const PackageCard = memo(function PackageCard({
             <>
               <div className="udt-driver-card__menu-backdrop" onClick={() => setMenuOpen(false)} />
               <div className="udt-driver-card__menu-popup">
-                {!completed && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setMenuOpen(false)
-                      onInstall(packageItem.id)
-                    }}
-                  >
-                    <PlayCircle24Regular /> {t('optimization.driver.install')}
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMenuOpen(false)
+                    onInstall(packageItem.id)
+                  }}
+                >
+                  <PlayCircle24Regular /> {t('optimization.driver.install')}
+                </button>
                 <button
                   type="button"
                   onClick={() => {
@@ -735,7 +724,6 @@ export default function DriverDownloadPanel(): React.JSX.Element {
               onToggle={toggleSelectedPackage}
               onDownload={downloadPackage}
               onInstall={installPackage}
-              onUninstall={uninstallPackage}
               onPause={pausePackage}
               onHide={hidePackage}
               onHideAll={handleHideAll}
@@ -748,6 +736,7 @@ export default function DriverDownloadPanel(): React.JSX.Element {
       {error && <div className="udt-page-error">{error}</div>}
 
       <Modal
+        centered
         open={confirmScanOpen}
         title={t('optimization.driver.downloadInProgress.title')}
         okText={t('optimization.driver.downloadInProgress.confirm')}

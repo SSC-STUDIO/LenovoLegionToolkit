@@ -138,6 +138,7 @@ export default function ExcludeRefreshRatesModal({
 
   return (
     <Modal
+      centered
       open={open}
       title={t('wpf.excludeRefreshRatesWindowtitle')}
       width={400}

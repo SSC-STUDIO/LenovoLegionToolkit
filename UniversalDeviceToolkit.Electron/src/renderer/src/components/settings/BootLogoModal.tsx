@@ -19,19 +19,39 @@ interface BootLogoResult {
   text: string
 }
 
+interface BootLogoStatusPayload extends BootLogoStatus {
+  supported?: boolean
+}
+
 const BOOT_LOGO_ERROR_MARKERS: Array<{ marker: string; i18nKey: string }> = [
-  { marker: 'CantSetUEFIPrivilegeException', i18nKey: 'bootLogoWindowsetErrorcannotsetuefiprivilege' },
-  { marker: 'CantMountUEFIPartitionException', i18nKey: 'bootLogoWindowsetErrorcannotmountefipartition' },
-  { marker: 'NotEnoughSpaceOnUEFIPartitionException', i18nKey: 'bootLogoWindowsetErrornotenoughfreespaceonefipartition' },
-  { marker: 'InvalidBootLogoImageSizeException', i18nKey: 'bootLogoWindowsetErrorinvalidimagesize' },
-  { marker: 'InvalidBootLogoImageFormatException', i18nKey: 'bootLogoWindowsetErrorinvalidimageformat' }
+  { marker: 'CantSetUEFIPrivilegeException', i18nKey: 'wpf.bootLogoWindowsetErrorcannotsetuefiprivilege' },
+  { marker: 'CantMountUEFIPartitionException', i18nKey: 'wpf.bootLogoWindowsetErrorcannotmountefipartition' },
+  { marker: 'NotEnoughSpaceOnUEFIPartitionException', i18nKey: 'wpf.bootLogoWindowsetErrornotenoughfreespaceonefipartition' },
+  { marker: 'InvalidBootLogoImageSizeException', i18nKey: 'wpf.bootLogoWindowsetErrorinvalidimagesize' },
+  { marker: 'InvalidBootLogoImageFormatException', i18nKey: 'wpf.bootLogoWindowsetErrorinvalidimageformat' }
 ]
+
+function resolvePickedFilePath(file: File): string {
+  try {
+    const fromBridge = window.bridge?.getPathForFile?.(file)
+    if (typeof fromBridge === 'string' && fromBridge.length > 0) {
+      return fromBridge
+    }
+  } catch {
+    // webUtils.getPathForFile throws when the File is not backed by a disk path
+  }
+  throw new Error('File path is not available')
+}
+
+function isBootLogoSupported(status: BootLogoStatusPayload): boolean {
+  return status.supported !== false
+}
 
 export default function BootLogoModal({ open, onClose }: BootLogoModalProps): React.JSX.Element {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
-  const [status, setStatus] = useState<BootLogoStatus | null>(null)
+  const [status, setStatus] = useState<BootLogoStatusPayload | null>(null)
   const [busy, setBusy] = useState(false)
   const [result, setResult] = useState<BootLogoResult | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -48,7 +68,7 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
         const next = await bootLogoApi.getStatus()
         if (!cancelled) setStatus(next)
       } catch (reason) {
-        if (!cancelled) setLoadError((reason as Error).message)
+        if (!cancelled) setLoadError(reason instanceof Error ? reason.message : String(reason))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -61,7 +81,7 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
   }, [open])
 
   const errorText = (reason: unknown): string => {
-    const message = (reason as Error).message ?? ''
+    const message = reason instanceof Error ? reason.message : String(reason ?? '')
     const known = BOOT_LOGO_ERROR_MARKERS.find((entry) => message.includes(entry.marker))
     if (known != null) return t(known.i18nKey)
     return message
@@ -73,7 +93,7 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
     try {
       setStatus(await bootLogoApi.getStatus())
     } catch (reason) {
-      setLoadError((reason as Error).message)
+      setLoadError(reason instanceof Error ? reason.message : String(reason))
     } finally {
       setLoading(false)
     }
@@ -105,11 +125,7 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
     setBusy(true)
     setResult(null)
     try {
-      const filePath = (file as File & { path?: string }).path
-      if (typeof filePath !== 'string' || filePath.length === 0) {
-        throw new Error('File path is not available')
-      }
-      await bootLogoApi.enable(filePath)
+      await bootLogoApi.enable(resolvePickedFilePath(file))
       setResult({ kind: 'success', text: t('wpf.bootLogoWindowsetCustomSuccess') })
       setStatus(await bootLogoApi.getStatus())
     } catch (reason) {
@@ -138,11 +154,13 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
     return t('wpf.bootLogoWindowdescription').replace('{0}', resolution).replace('{1}', formats)
   }
 
-  const showRevert = status?.enabled === true
-  const showCustomize = status?.enabled === false
+  const supported = status != null && isBootLogoSupported(status)
+  const showRevert = supported && status.enabled === true
+  const showCustomize = supported && status.enabled === false
 
   return (
     <Modal
+      centered
       open={open}
       title={t('wpf.bootLogoWindowtitle')}
       width={400}
@@ -170,6 +188,8 @@ export default function BootLogoModal({ open, onClose }: BootLogoModalProps): Re
             }
           />
         </div>
+      ) : !supported ? (
+        <Alert type="info" showIcon message={t('wpf.featureRegistrationnotSupported')} />
       ) : (
         <div className="udt-settings-modal">
           <input

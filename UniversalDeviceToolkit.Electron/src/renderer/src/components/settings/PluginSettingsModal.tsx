@@ -70,6 +70,7 @@ export default function PluginSettingsModal({
 
   return (
     <Modal
+      centered
       open={open}
       title={plugin != null ? `${plugin.name} — ${t('wpf.pluginSettingsWindowsettings')}` : t('wpf.pluginSettingsWindowtitle')}
       width={560}

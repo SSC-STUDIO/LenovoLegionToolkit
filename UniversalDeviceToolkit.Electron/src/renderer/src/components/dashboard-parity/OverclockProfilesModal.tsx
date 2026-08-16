@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button, Input, Modal, Select, Slider, Spin, message } from 'antd'
 import { Delete24Regular, Edit24Regular, Add24Regular } from '../icons/fluent'
 import { useTranslation } from 'react-i18next'
 import { dashboardHardwareApi, type DashboardHardwareState } from '../../api/dashboardHardware'
 import { settingsApi } from '../../api/settings'
+import { requireHardwareOk } from './dashboardHardwareSupport'
 
 /**
  * Parity modal for Electron Windows/Dashboard/OverclockDiscreteGPUSettingsWindow:
@@ -102,10 +103,16 @@ export default function OverclockProfilesModal({
   const [memoryDeltaMhz, setMemoryDeltaMhz] = useState(hardware.memoryDeltaMhz)
   const [namePrompt, setNamePrompt] = useState<NamePromptState | null>(null)
   const [nameInput, setNameInput] = useState('')
+  const hardwareRef = useRef(hardware)
+  hardwareRef.current = hardware
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
+    const snapshot = hardwareRef.current
+    setLoading(true)
+    setCoreDeltaMhz(snapshot.coreDeltaMhz)
+    setMemoryDeltaMhz(snapshot.memoryDeltaMhz)
     settingsApi
       .get('gpuOverclock')
       .then((result) => {
@@ -119,7 +126,10 @@ export default function OverclockProfilesModal({
         }
       })
       .catch((reason: unknown) => {
-        if (!cancelled) void message.error((reason as Error).message)
+        if (!cancelled) {
+          setStore(null)
+          void message.error((reason as Error).message)
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -127,7 +137,7 @@ export default function OverclockProfilesModal({
     return () => {
       cancelled = true
     }
-  }, [open, hardware.coreDeltaMhz, hardware.memoryDeltaMhz])
+  }, [open])
 
   const profileList = store == null
     ? []
@@ -150,7 +160,12 @@ export default function OverclockProfilesModal({
 
   async function persist(next: OverclockStore): Promise<void> {
     await settingsApi.set('gpuOverclock', serializeStore(next))
-    await settingsApi.save(['gpuOverclock'])
+    const saved = await settingsApi.save(['gpuOverclock'])
+    if (!saved.saved.includes('gpuOverclock')) {
+      throw new Error(t('overclock.saveFailed', {
+        defaultValue: 'Failed to save overclock profiles.'
+      }))
+    }
     setStore(next)
   }
 
@@ -249,7 +264,11 @@ export default function OverclockProfilesModal({
     setBusy(true)
     try {
       await saveAll()
-      await dashboardHardwareApi.setOverclock(coreDeltaMhz, memoryDeltaMhz)
+      const result = await dashboardHardwareApi.setOverclock(coreDeltaMhz, memoryDeltaMhz)
+      requireHardwareOk(
+        result,
+        t('overclock.applyFailed', { defaultValue: 'Failed to apply GPU overclock.' })
+      )
       onApplied?.()
       return true
     } catch (reason) {
@@ -279,6 +298,7 @@ export default function OverclockProfilesModal({
 
   return (
     <Modal
+      centered
       open={open}
       title={t('overclock.title')}
       width={520}
@@ -373,6 +393,7 @@ export default function OverclockProfilesModal({
       )}
 
       <Modal
+        centered
         open={namePrompt != null}
         title={namePrompt?.mode === 'rename' ? t('common.rename') : t('common.add')}
         okText={t('common.ok')}

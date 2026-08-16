@@ -71,10 +71,25 @@ export default function BalanceModeSettingsModal({
   const handleSave = async (): Promise<void> => {
     setSaving(true)
     try {
-      await aiApi.setEnabled(aiModeEnabled)
+      const enabled = await aiApi.setEnabled(aiModeEnabled)
+      if (enabled.ok !== true) {
+        throw new Error(t('balanceMode.saveFailed', {
+          defaultValue: 'Failed to update AI Engine.'
+        }))
+      }
       await settingsApi.set('balanceMode', { AIModeEnabled: aiModeEnabled })
-      await settingsApi.save(['balanceMode'])
-      await useFeaturesStore.getState().setState('powerMode', 'Balance')
+      const saved = await settingsApi.save(['balanceMode'])
+      if (!saved.saved.includes('balanceMode')) {
+        throw new Error(t('balanceMode.saveFailed', {
+          defaultValue: 'Failed to save Balance Mode settings.'
+        }))
+      }
+      const switched = await useFeaturesStore.getState().setState('powerMode', 'Balance')
+      if (!switched) {
+        throw new Error(t('feature.powerMode.changeFailed', {
+          defaultValue: 'Failed to switch to Balance mode.'
+        }))
+      }
       await useFeaturesStore.getState().refresh('powerMode')
       onSaved?.()
       onClose()
@@ -87,6 +102,7 @@ export default function BalanceModeSettingsModal({
 
   return (
     <Modal
+      centered
       open={open}
       title={t('balanceMode.title')}
       width={400}

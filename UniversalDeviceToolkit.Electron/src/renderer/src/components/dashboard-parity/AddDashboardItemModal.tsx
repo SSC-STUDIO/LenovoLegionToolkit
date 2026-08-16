@@ -45,6 +45,7 @@ export default function AddDashboardItemModal({
 
   return (
     <Modal
+      centered
       open={open}
       title={t('dashboard.addItem.title')}
       width={600}

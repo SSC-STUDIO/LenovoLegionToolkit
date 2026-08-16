@@ -1,7 +1,10 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import './dashboard/sensor.css'
 import './dashboard-parity/dashboardParity.css'
 import { SkeletonBone, SkeletonGaugeRing } from './Skeleton'
+import { readSensorLayout } from './dashboard/SensorSection'
+import { useSettingsStore } from '../stores/settingsStore'
 import './DashboardSkeleton.css'
 
 /**
@@ -202,24 +205,49 @@ const SKELETON_GROUPS: Array<{
 
 export default function DashboardSkeleton(): React.JSX.Element {
   const { t } = useTranslation()
+  const scopes = useSettingsStore((s) => s.scopes)
+  const sensorLayout = useMemo(() => readSensorLayout(scopes), [scopes])
+
   return (
     <div className="udt-dashboard-skeleton" role="status" aria-label={t('common.loading')}>
       <div className="udt-sensor-board udt-dsk-sensors">
-        <div className="udt-sensor-board__grid udt-dsk-sensors__grid">
-          <SensorSkeletonColumn titleWidth={72} subtitleWidth={168} staggerBase={0} />
-          <SensorSkeletonColumn
-            titleWidth={64}
-            subtitleWidth={140}
-            metricWidths={[48, 44, 44]}
-            staggerBase={16}
-            legendCount={2}
-          />
-          <SensorSkeletonColumn
-            titleWidth={68}
-            subtitleWidth={152}
-            metricWidths={[52, 40, 44]}
-            staggerBase={32}
-          />
+        <div
+          className="udt-sensor-board__grid udt-dsk-sensors__grid"
+          style={{ ['--udt-sensor-columns' as string]: String(sensorLayout.length) }}
+        >
+          {sensorLayout.map((columnId, idx) => {
+            if (columnId === 'CPU') {
+              return (
+                <SensorSkeletonColumn
+                  key="CPU"
+                  titleWidth={72}
+                  subtitleWidth={168}
+                  staggerBase={idx * 16}
+                />
+              )
+            }
+            if (columnId === 'Battery') {
+              return (
+                <SensorSkeletonColumn
+                  key="Battery"
+                  titleWidth={64}
+                  subtitleWidth={140}
+                  metricWidths={[48, 44, 44]}
+                  staggerBase={idx * 16}
+                  legendCount={2}
+                />
+              )
+            }
+            return (
+              <SensorSkeletonColumn
+                key="GPU"
+                titleWidth={68}
+                subtitleWidth={152}
+                metricWidths={[52, 40, 44]}
+                staggerBase={idx * 16}
+              />
+            )
+          })}
         </div>
       </div>
       <div className="udt-parity-feature-groups">

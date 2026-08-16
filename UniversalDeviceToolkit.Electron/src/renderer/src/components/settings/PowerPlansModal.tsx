@@ -5,6 +5,7 @@ import { featuresApi } from '../../api/features'
 import { settingsApi } from '../../api/settings'
 import { DEFAULT_POWER_PLAN_GUID, powerPlansApi, type WindowsPowerPlan } from '../../api/powerSettings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { SettingsLoadError } from './SettingsLoadError'
 
 /**
  * Parity modal for Electron Windows/Settings/WindowsPowerPlansWindow: choose the
@@ -30,15 +31,21 @@ function powerModeLabelKey(state: string): string {
 export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps): React.JSX.Element {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [reloadToken, setReloadToken] = useState(0)
   const [plans, setPlans] = useState<WindowsPowerPlan[]>([])
   const [powerPlans, setPowerPlans] = useState<Record<string, string>>({})
   const [availableStates, setAvailableStates] = useState<string[]>([])
   const [plansUnavailable, setPlansUnavailable] = useState(false)
+  const [plansReady, setPlansReady] = useState(false)
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
     setLoading(true)
+    setLoadError(null)
+    setPlansReady(false)
+    setPlansUnavailable(false)
     void (async () => {
       try {
         const [statesResult, settingsResult] = await Promise.all([
@@ -76,8 +83,11 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
           Performance: storedPlans.Performance ?? DEFAULT_POWER_PLAN_GUID,
           GodMode: storedPlans.GodMode ?? DEFAULT_POWER_PLAN_GUID
         })
+        setPlansReady(true)
       } catch (reason) {
-        if (!cancelled) void message.error((reason as Error).message)
+        if (cancelled) return
+        setPlansReady(false)
+        setLoadError(reason instanceof Error ? reason.message : String(reason))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -85,9 +95,10 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
     return () => {
       cancelled = true
     }
-  }, [open, t])
+  }, [open, reloadToken, t])
 
   const handleChange = async (state: DeviceModeState, guid: string): Promise<void> => {
+    if (!plansReady) return
     const next = { ...powerPlans, [state]: guid }
     setPowerPlans(next)
     try {
@@ -123,6 +134,7 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
 
   return (
     <Modal
+      centered
       open={open}
       title={t('wpf.windowsPowerPlansWindowtitle')}
       width={600}
@@ -133,6 +145,11 @@ export default function PowerPlansModal({ open, onClose }: PowerPlansModalProps)
         <div style={{ textAlign: 'center', padding: 24 }}>
           <Spin />
         </div>
+      ) : loadError != null || !plansReady ? (
+        <SettingsLoadError
+          message={loadError}
+          onRetry={() => setReloadToken((value) => value + 1)}
+        />
       ) : (
         <div>
           {plansUnavailable && (

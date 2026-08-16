@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { featuresApi } from '../../api/features'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { SettingsLoadError } from './SettingsLoadError'
 
 /**
  * Parity modal for Electron Windows/Settings/WindowsPowerModesWindow: choose the
@@ -36,13 +37,18 @@ function windowsPowerModeLabelKey(mode: string): string {
 export default function PowerModesModal({ open, onClose }: PowerModesModalProps): React.JSX.Element {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [reloadToken, setReloadToken] = useState(0)
   const [powerModes, setPowerModes] = useState<Record<string, string>>({})
   const [availableStates, setAvailableStates] = useState<string[]>([])
+  const [modesReady, setModesReady] = useState(false)
 
   useEffect(() => {
     if (!open) return
     let cancelled = false
     setLoading(true)
+    setLoadError(null)
+    setModesReady(false)
     void (async () => {
       try {
         const [statesResult, settingsResult] = await Promise.all([
@@ -62,8 +68,11 @@ export default function PowerModesModal({ open, onClose }: PowerModesModalProps)
           Performance: storedModes.Performance ?? 'Balanced',
           GodMode: storedModes.GodMode ?? 'Balanced'
         })
+        setModesReady(true)
       } catch (reason) {
-        if (!cancelled) void message.error((reason as Error).message)
+        if (cancelled) return
+        setModesReady(false)
+        setLoadError(reason instanceof Error ? reason.message : String(reason))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -71,9 +80,10 @@ export default function PowerModesModal({ open, onClose }: PowerModesModalProps)
     return () => {
       cancelled = true
     }
-  }, [open])
+  }, [open, reloadToken])
 
   const handleChange = async (state: DeviceModeState, value: WindowsPowerMode): Promise<void> => {
+    if (!modesReady) return
     const next = { ...powerModes, [state]: value }
     setPowerModes(next)
     try {
@@ -96,6 +106,7 @@ export default function PowerModesModal({ open, onClose }: PowerModesModalProps)
 
   return (
     <Modal
+      centered
       open={open}
       title={t('wpf.windowsPowerModesWindowtitle')}
       width={600}
@@ -106,6 +117,11 @@ export default function PowerModesModal({ open, onClose }: PowerModesModalProps)
         <div style={{ textAlign: 'center', padding: 24 }}>
           <Spin />
         </div>
+      ) : loadError != null || !modesReady ? (
+        <SettingsLoadError
+          message={loadError}
+          onRetry={() => setReloadToken((value) => value + 1)}
+        />
       ) : (
         <div>
           {DEVICE_MODE_STATES.filter(

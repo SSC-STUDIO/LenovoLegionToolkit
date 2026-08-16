@@ -241,7 +241,11 @@ export default function GodModeSettingsModal({
     godModeApi
       .load()
       .then((loaded) => {
-        if (cancelled || loaded == null) return
+        if (cancelled) return
+        if (loaded == null) {
+          setStore(null)
+          return
+        }
         setStore(loaded.store)
         setMinimumFanTable(loaded.minimumFanTable)
         setDefaultFanTable(loaded.defaultFanTable)
@@ -346,16 +350,19 @@ export default function GodModeSettingsModal({
     setNamePrompt(null)
     if (name.length === 0) return
 
-    let next: GodModeStore
-    if (namePrompt.mode === 'add') {
-      const flushed = storeWithPreset(store, flushWorkingPreset(activePreset, working))
-      next = addPreset(flushed, name)
-      setWorking(workingFromPreset(next.presets[next.activePresetId]))
-    } else {
-      next = renameActivePreset(store, name)
-    }
     try {
-      await persist(next, false)
+      let next: GodModeStore
+      if (namePrompt.mode === 'add') {
+        const flushed = storeWithPreset(store, flushWorkingPreset(activePreset, working))
+        next = addPreset(flushed, name)
+      } else {
+        next = renameActivePreset(store, name)
+      }
+      const saved = await persist(next, false)
+      if (namePrompt.mode === 'add') {
+        const preset = saved.presets[saved.activePresetId]
+        if (preset != null) setWorking(workingFromPreset(preset))
+      }
     } catch (reason) {
       void message.error(`${t('godMode.errorApply')}: ${(reason as Error).message}`)
     }
@@ -400,7 +407,10 @@ export default function GodModeSettingsModal({
       const flushed = storeWithPreset(store, flushWorkingPreset(activePreset, working))
       const powerState = useFeaturesStore.getState().states.powerMode
       if (powerState !== 'GodMode') {
-        await useFeaturesStore.getState().setState('powerMode', 'GodMode')
+        const switched = await useFeaturesStore.getState().setState('powerMode', 'GodMode')
+        if (!switched) {
+          throw new Error(t('godMode.errorApply'))
+        }
       }
       await persist(flushed, true)
       message.success(t('godMode.applySuccess'))
@@ -439,6 +449,7 @@ export default function GodModeSettingsModal({
 
   return (
     <Modal
+      centered
       open={open}
       title={t('godMode.title')}
       width={920}
@@ -692,6 +703,7 @@ export default function GodModeSettingsModal({
       )}
 
       <Modal
+        centered
         open={namePrompt != null}
         title={t('godMode.presetName')}
         okText={t('common.ok')}

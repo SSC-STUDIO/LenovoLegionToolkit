@@ -3,6 +3,7 @@ import { Button, List, Modal, Spin, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
+import { SettingsLoadError } from './SettingsLoadError'
 
 /**
  * Parity modal for Electron Windows/Settings/HardwareSensorSectionsWindow:
@@ -21,8 +22,14 @@ const ALL_SECTIONS = ['CPU', 'Battery', 'GPU'] as const
 
 type SensorSection = (typeof ALL_SECTIONS)[number]
 
-function toTitleCase(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1)
+function getSectionLabel(
+  section: SensorSection,
+  t: (key: string, options?: Record<string, unknown>) => string
+): string {
+  if (section === 'CPU') return t('wpf.sensorSectionCpu', { defaultValue: 'CPU' })
+  if (section === 'Battery') return t('wpf.sensorSectionBattery', { defaultValue: '电池' })
+  if (section === 'GPU') return t('wpf.sensorSectionGpu', { defaultValue: 'GPU' })
+  return section
 }
 
 export default function HardwareSensorSectionsModal({
@@ -33,6 +40,8 @@ export default function HardwareSensorSectionsModal({
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [reloadToken, setReloadToken] = useState(0)
   const [visibility, setVisibility] = useState<Record<string, boolean>>({})
   const [order, setOrder] = useState<SensorSection[]>([])
   const [selected, setSelected] = useState<number | null>(null)
@@ -41,36 +50,48 @@ export default function HardwareSensorSectionsModal({
     if (!open) return
     let cancelled = false
     setLoading(true)
+    setLoadError(null)
     settingsApi
       .get('hardwareSensors')
       .then((result) => {
         if (cancelled) return
         const store = (result.value ?? {}) as Record<string, unknown>
-        const sectionOrder = Array.isArray(store.SectionOrder)
-          ? (store.SectionOrder as unknown[]).filter((section): section is string => typeof section === 'string')
+        const sectionOrderRaw = store.SectionOrder ?? store.sectionOrder
+        const visibleSectionsRaw = store.VisibleSections ?? store.visibleSections
+        const sectionOrder = Array.isArray(sectionOrderRaw)
+          ? (sectionOrderRaw as unknown[]).filter((section): section is string => typeof section === 'string')
           : []
-        const visibleSections = Array.isArray(store.VisibleSections)
-          ? (store.VisibleSections as unknown[]).filter((section): section is string => typeof section === 'string')
+        const visibleSections = Array.isArray(visibleSectionsRaw)
+          ? (visibleSectionsRaw as unknown[]).filter((section): section is string => typeof section === 'string')
           : ALL_SECTIONS
 
-        const normalizedOrder = [
-          ...sectionOrder.filter((section) =>
-            (ALL_SECTIONS as readonly string[]).includes(section)
-          ),
-          ...ALL_SECTIONS.filter(
-            (section) => !sectionOrder.some((entry) => entry === section)
-          )
-        ]
+        const matchKnown = (value: string): SensorSection | undefined =>
+          ALL_SECTIONS.find((section) => section.toUpperCase() === value.toUpperCase())
+        const seen = new Set<SensorSection>()
+        const normalizedOrder: SensorSection[] = []
+        for (const entry of sectionOrder) {
+          const known = matchKnown(entry)
+          if (known == null || seen.has(known)) continue
+          seen.add(known)
+          normalizedOrder.push(known)
+        }
+        for (const section of ALL_SECTIONS) {
+          if (seen.has(section)) continue
+          normalizedOrder.push(section)
+        }
 
         const visible = new Set(visibleSections.map((section) => section.toUpperCase()))
         setVisibility(
-          Object.fromEntries(ALL_SECTIONS.map((section) => [section, visible.has(section)]))
+          Object.fromEntries(
+            ALL_SECTIONS.map((section) => [section, visible.has(section.toUpperCase())])
+          )
         )
-        setOrder(normalizedOrder as SensorSection[])
+        setOrder(normalizedOrder)
         setSelected(normalizedOrder.length > 0 ? 0 : null)
       })
       .catch((reason: unknown) => {
-        if (!cancelled) void message.error((reason as Error).message)
+        if (cancelled) return
+        setLoadError(reason instanceof Error ? reason.message : String(reason))
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -78,7 +99,7 @@ export default function HardwareSensorSectionsModal({
     return () => {
       cancelled = true
     }
-  }, [open])
+  }, [open, reloadToken])
 
   const move = (delta: number): void => {
     if (selected == null) return
@@ -96,6 +117,7 @@ export default function HardwareSensorSectionsModal({
   }
 
   const handleSave = async (): Promise<void> => {
+    if (loadError != null) return
     setSaving(true)
     try {
       const result = await settingsApi.get('hardwareSensors')
@@ -120,28 +142,40 @@ export default function HardwareSensorSectionsModal({
 
   return (
     <Modal
+      centered
       open={open}
-      title={t('wpf.hardwareSensorSectionsWindowtitle')}
+      title={t('wpf.hardwareSensorSectionsWindowtitle', { defaultValue: '传感器分区' })}
       width={420}
-      okText={t('saveButton')}
-      cancelText={t('common.cancel')}
+      okText={t('saveButton', { defaultValue: '保存' })}
+      cancelText={t('common.cancel', { defaultValue: '取消' })}
       confirmLoading={saving}
-      onOk={() => void handleSave()}
+      okButtonProps={{ disabled: loading || loadError != null }}
+      onOk={() => {
+        if (loadError != null) return
+        void handleSave()
+      }}
       onCancel={onClose}
     >
       {loading ? (
         <div style={{ textAlign: 'center', padding: 24 }}>
           <Spin />
         </div>
+      ) : loadError != null ? (
+        <SettingsLoadError
+          message={loadError}
+          onRetry={() => setReloadToken((value) => value + 1)}
+        />
       ) : (
         <div>
-          <div style={{ fontWeight: 600, marginBottom: 8 }}>{t('sensorSectionsvisibletitle')}</div>
+          <div style={{ fontWeight: 600, marginBottom: 8 }}>
+            {t('wpf.sensorSectionsvisibletitle', { defaultValue: '可见分区' })}
+          </div>
           {ALL_SECTIONS.map((section) => (
             <div
               key={section}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}
             >
-              <span>{t(`sensorSection${toTitleCase(section)}`)}</span>
+              <span>{getSectionLabel(section, t)}</span>
               <Switch
                 className="udt-settings-switch"
                 checked={visibility[section] === true}
@@ -151,7 +185,9 @@ export default function HardwareSensorSectionsModal({
               />
             </div>
           ))}
-          <div style={{ fontWeight: 600, margin: '16px 0 8px' }}>{t('sensorSectionsordertitle')}</div>
+          <div style={{ fontWeight: 600, margin: '16px 0 8px' }}>
+            {t('wpf.sensorSectionsordertitle', { defaultValue: '分区排序' })}
+          </div>
           <List
             size="small"
             bordered
@@ -166,13 +202,13 @@ export default function HardwareSensorSectionsModal({
                   paddingLeft: 12
                 }}
               >
-                {t(`sensorSection${toTitleCase(section)}`)}
+                {getSectionLabel(section, t)}
               </List.Item>
             )}
           />
           <div style={{ marginTop: 8 }}>
             <Button size="small" disabled={selected == null || selected <= 0} onClick={() => move(-1)}>
-              {t('sensorSectionsmoveUp')}
+              {t('wpf.sensorSectionsmoveUp', { defaultValue: '上移' })}
             </Button>
             <Button
               size="small"
@@ -180,7 +216,7 @@ export default function HardwareSensorSectionsModal({
               disabled={selected == null || selected >= order.length - 1}
               onClick={() => move(1)}
             >
-              {t('sensorSectionsmoveDown')}
+              {t('wpf.sensorSectionsmoveDown', { defaultValue: '下移' })}
             </Button>
           </div>
         </div>
