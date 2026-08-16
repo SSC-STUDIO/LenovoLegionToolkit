@@ -103,11 +103,21 @@ export const TRIGGER_DEFINITIONS: TriggerDefinition[] = [
 ]
 
 const DEFINITION_BY_KIND = new Map<string, TriggerDefinition[]>()
+const DEFINITION_BY_LOWER_KIND = new Map<string, TriggerKind>()
+
 for (const definition of TRIGGER_DEFINITIONS) {
   const list = DEFINITION_BY_KIND.get(definition.kind) ?? []
   list.push(definition)
   DEFINITION_BY_KIND.set(definition.kind, list)
+  DEFINITION_BY_LOWER_KIND.set(definition.kind.toLowerCase(), definition.kind)
 }
+
+// Add canonical lowercase / common alias mappings
+DEFINITION_BY_LOWER_KIND.set('acadapterconnected', 'aCAdapterConnected')
+DEFINITION_BY_LOWER_KIND.set('acadapterdisconnected', 'aCAdapterDisconnected')
+DEFINITION_BY_LOWER_KIND.set('lowwattageacadapterconnected', 'lowWattageACAdapterConnected')
+DEFINITION_BY_LOWER_KIND.set('wificonnected', 'wiFiConnected')
+DEFINITION_BY_LOWER_KIND.set('wifidisconnected', 'wiFiDisconnected')
 
 /** All configurable trigger kinds (IAutomationPipelineTriggerTabItemContent families). */
 export const CONFIGURABLE_KINDS: TriggerKind[] = [
@@ -140,14 +150,25 @@ export function isTriggerValid(trigger: AutomationTrigger): boolean {
 }
 
 /** Normalize a serialized $type to a catalog kind (case-insensitive, suffix tolerant). */
-export function normalizeTriggerKind($type: string): TriggerKind | null {
+export function normalizeTriggerKind($type: string | undefined | null): TriggerKind | null {
+  if (typeof $type !== 'string') return null
   const trimmed = $type
     .replace(/AutomationPipelineTrigger$/i, '')
     .replace(/PipelineTrigger$/i, '')
     .replace(/Trigger$/i, '')
   if (!trimmed) return null
+  if (DEFINITION_BY_KIND.has(trimmed)) {
+    return trimmed as TriggerKind
+  }
   const first = trimmed.charAt(0).toLowerCase() + trimmed.slice(1)
-  return (DEFINITION_BY_KIND.has(first) ? first : null) as TriggerKind | null
+  if (DEFINITION_BY_KIND.has(first)) {
+    return first as TriggerKind
+  }
+  const canonical = DEFINITION_BY_LOWER_KIND.get(trimmed.toLowerCase())
+  if (canonical) {
+    return canonical
+  }
+  return null
 }
 
 /** True when Configure belongs in the expanded pipeline body (not the collapsed header). */

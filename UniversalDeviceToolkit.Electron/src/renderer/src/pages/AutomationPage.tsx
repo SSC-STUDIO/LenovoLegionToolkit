@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   Add24Regular,
   ArrowDown24Regular,
@@ -9,7 +9,7 @@ import {
   PlayCircle24Regular,
   Settings24Regular
 } from '../components/icons/fluent'
-import { Tooltip } from 'antd'
+import { Tooltip, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type { AutomationPipeline, AutomationStepType } from '../api/automation'
 import { useAutomationStore } from '../stores/automationStore'
@@ -20,6 +20,7 @@ import { StepEditorModal, createDefaultStep, stepSummaryText } from '../componen
 import { formatStepSummary } from '../components/automation/steps'
 import {
   appendAutomationStep,
+  commitAutomationDraft,
   createAutomationPipeline,
   formatAutomationPipelineSubtitle,
   formatAutomationPipelineTitle,
@@ -32,6 +33,7 @@ import {
 } from '../components/automation/pipelineHelpers'
 import { QUICK_ACTION_ICON, triggerIcon } from '../components/automation/triggerMeta'
 import { stepIcon } from '../components/automation/stepIcons'
+import AutomationModal from '../components/automation/AutomationModal'
 import TriggerPickerModal from '../components/automation/TriggerPickerModal'
 import TriggerConfigModal from '../components/automation/TriggerConfigModal'
 import type { AutomationTrigger } from '../components/automation/triggers'
@@ -198,12 +200,17 @@ export default function AutomationPage(): React.JSX.Element {
   const state = useAutomationStore((s) => s.state)
   const steps = useAutomationStore((s) => s.steps)
   const automationLoading = useAutomationStore((s) => s.loading)
+  const error = useAutomationStore((s) => s.error)
   const load = useAutomationStore((s) => s.load)
   const setEnabled = useAutomationStore((s) => s.setEnabled)
   const save = useAutomationStore((s) => s.save)
   const runNow = useAutomationStore((s) => s.runNow)
+  const clearError = useAutomationStore((s) => s.clearError)
   const [pipelines, setPipelines] = useState<AutomationPipeline[]>([])
   const [dirty, setDirty] = useState(false)
+  const [pending, setPending] = useState(false)
+  const dirtyRef = useRef(false)
+  dirtyRef.current = dirty
   const [createOpen, setCreateOpen] = useState(false)
   const [createName, setCreateName] = useState('')
   const [pickerOpen, setPickerOpen] = useState(false)
@@ -224,10 +231,11 @@ export default function AutomationPage(): React.JSX.Element {
     )
     void load()
       .then((loaded) => {
-        if (!loaded) return
+        if (!loaded || dirtyRef.current) return
         const latest = useAutomationStore.getState().state
-        setPipelines(latest?.pipelines ?? [])
-        setDirty(false)
+        const committed = commitAutomationDraft(true, [], latest?.pipelines ?? [])
+        setPipelines(committed.value)
+        setDirty(committed.dirty)
       })
       .finally(() => {
         useLoadingStore.getState().finish(loadingId)
@@ -237,6 +245,17 @@ export default function AutomationPage(): React.JSX.Element {
     }
   }, [load])
 
+  useEffect(() => {
+    if (contextMenu == null) return
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') setContextMenu(null)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [contextMenu])
+
   const { automatic, manual } = splitAutomationPipelines(pipelines)
 
   const markDirty = (next: AutomationPipeline[]): void => {
@@ -245,25 +264,97 @@ export default function AutomationPage(): React.JSX.Element {
     setDirty(true)
   }
 
+  const surfaceStoreError = (fallback: string): void => {
+    const text = useAutomationStore.getState().error?.trim() || fallback
+    void message.error(text)
+  }
+
   const handleSave = async (): Promise<void> => {
+    if (pending) return
+    setPending(true)
     try {
       const saved = await save(pipelines, state?.isEnabled)
-      if (!saved) return
       const latest = useAutomationStore.getState().state
-      setPipelines(latest?.pipelines ?? [])
-      setDirty(false)
-    } catch {
-      // ignored
+      const committed = commitAutomationDraft(saved, pipelines, latest?.pipelines ?? [])
+      setPipelines(committed.value)
+      setDirty(committed.dirty)
+      if (!saved) {
+        surfaceStoreError(t('settings.saveFailed', { defaultValue: 'Failed to save settings' }))
+      }
+    } catch (reason) {
+      const committed = commitAutomationDraft(false, pipelines, pipelines)
+      setPipelines(committed.value)
+      setDirty(committed.dirty)
+      void message.error(
+        reason instanceof Error && reason.message.trim() !== ''
+          ? reason.message
+          : t('settings.saveFailed', { defaultValue: 'Failed to save settings' })
+      )
+    } finally {
+      setPending(false)
     }
   }
 
-  const handleRevert = (): void => {
-    void load().then((loaded) => {
-      if (!loaded) return
+  const handleRevert = async (): Promise<void> => {
+    if (pending) return
+    setPending(true)
+    try {
+      const loaded = await load()
       const latest = useAutomationStore.getState().state
-      setPipelines(latest?.pipelines ?? [])
-      setDirty(false)
-    })
+      const committed = commitAutomationDraft(loaded, pipelines, latest?.pipelines ?? [])
+      setPipelines(committed.value)
+      setDirty(committed.dirty)
+      if (!loaded) {
+        surfaceStoreError(t('common.error', { defaultValue: 'Something went wrong' }))
+      }
+    } catch (reason) {
+      const committed = commitAutomationDraft(false, pipelines, pipelines)
+      setPipelines(committed.value)
+      setDirty(committed.dirty)
+      void message.error(
+        reason instanceof Error && reason.message.trim() !== ''
+          ? reason.message
+          : t('common.error', { defaultValue: 'Something went wrong' })
+      )
+    } finally {
+      setPending(false)
+    }
+  }
+
+  const handleRunNow = async (pipelineId: string): Promise<void> => {
+    try {
+      const ok = await runNow(pipelineId)
+      if (!ok) {
+        surfaceStoreError(
+          t('wpf.automationPipelineControlrunNowerrormessage', {
+            defaultValue: 'Completed with errors.'
+          })
+        )
+        return
+      }
+      void message.success(
+        t('wpf.automationPipelineControlrunNowsuccessmessage', {
+          defaultValue: 'Completed successfully!'
+        })
+      )
+    } catch (reason) {
+      void message.error(
+        reason instanceof Error && reason.message.trim() !== ''
+          ? reason.message
+          : t('wpf.automationPipelineControlrunNowerrormessage', {
+              defaultValue: 'Completed with errors.'
+            })
+      )
+    }
+  }
+
+  const handleEnabledChange = async (enabled: boolean): Promise<void> => {
+    if (await setEnabled(enabled)) return
+    surfaceStoreError(
+      t('wpf.automationPageenableAutomaticPipelineserrormessage', {
+        defaultValue: 'Failed to toggle automatic pipelines. Please try again.'
+      })
+    )
   }
 
   const handleCreate = (): void => {
@@ -284,6 +375,13 @@ export default function AutomationPage(): React.JSX.Element {
   const localizeStoredName = (name: string): string => {
     if (DEACTIVATE_GPU_ALIASES.has(name)) {
       return t('automation.deactivateGpu', { defaultValue: 'Deactivate GPU' })
+    }
+    const normalized = normalizeTriggerKind(name)
+    if (normalized) {
+      const def = TRIGGER_DEFINITIONS.find((d) => d.kind === normalized)
+      if (def) {
+        return t(`automation.triggerNames.${def.nameKey}`, { defaultValue: name })
+      }
     }
     return name
   }
@@ -503,7 +601,7 @@ export default function AutomationPage(): React.JSX.Element {
             <button
               type="button"
               className="udt-btn udt-btn--secondary udt-btn--sm"
-              onClick={() => void runNow(pipelineId)}
+              onClick={() => void handleRunNow(pipelineId)}
             >
               <PlayCircle24Regular /> {t('automation.runNow')}
             </button>
@@ -592,6 +690,20 @@ export default function AutomationPage(): React.JSX.Element {
     <div className="udt-page udt-automation-page udt-content-column udt-content-fill">
       <h1 className="udt-page__title">{t('automation.title')}</h1>
       <p className="udt-page__subtitle">{t('automation.subtitle')}</p>
+      {error != null && error !== '' && (
+        <div className="udt-card udt-card--row" role="alert">
+          <div className="udt-card__copy">
+            <div className="udt-card__desc">{error}</div>
+          </div>
+          <button
+            type="button"
+            className="udt-btn udt-btn--secondary udt-btn--sm"
+            onClick={() => clearError()}
+          >
+            {t('wpf.appNotificationHostclose', { defaultValue: 'Dismiss' })}
+          </button>
+        </div>
+      )}
       {showSkeleton ? (
         <AutomationSkeleton />
       ) : (
@@ -605,7 +717,7 @@ export default function AutomationPage(): React.JSX.Element {
               <input
                 type="checkbox"
                 checked={state?.isEnabled ?? false}
-                onChange={(e) => void setEnabled(e.target.checked)}
+                onChange={(e) => void handleEnabledChange(e.target.checked)}
               />
               <span className="udt-switch__track" />
             </label>
@@ -671,10 +783,20 @@ export default function AutomationPage(): React.JSX.Element {
 
       {dirty && (
         <div className="udt-automation-savebar">
-          <button type="button" className="udt-btn udt-btn--secondary" onClick={handleRevert}>
+          <button
+            type="button"
+            className="udt-btn udt-btn--secondary"
+            disabled={pending}
+            onClick={() => void handleRevert()}
+          >
             {t('automation.revert')}
           </button>
-          <button type="button" className="udt-btn udt-btn--primary" onClick={() => void handleSave()}>
+          <button
+            type="button"
+            className="udt-btn udt-btn--primary"
+            disabled={pending}
+            onClick={() => void handleSave()}
+          >
             {t('automation.save')}
           </button>
         </div>
@@ -692,50 +814,39 @@ export default function AutomationPage(): React.JSX.Element {
       )}
 
       {renaming != null && (
-        <div className="udt-modal-backdrop" onClick={() => setRenaming(null)}>
-          <div className="udt-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="udt-modal__title">{t('automation.renamePipelineTitle')}</div>
-            <input
-              autoFocus
-              className="udt-input"
-              value={renameName}
-              placeholder={t('automation.renamePipelinePlaceholder')}
-              onChange={(e) => setRenameName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') commitRename()
-                if (e.key === 'Escape') setRenaming(null)
-              }}
-            />
-            <div className="udt-modal__actions">
+        <AutomationModal
+          title={t('automation.renamePipelineTitle')}
+          onClose={() => setRenaming(null)}
+          actions={
+            <>
               <button type="button" className="udt-btn udt-btn--secondary" onClick={() => setRenaming(null)}>
                 {t('common.cancel', { defaultValue: '取消' })}
               </button>
               <button type="button" className="udt-btn udt-btn--primary" onClick={commitRename}>
                 <ArrowRight24Regular /> {t('common.confirm', { defaultValue: '确定' })}
               </button>
-            </div>
-          </div>
-        </div>
+            </>
+          }
+        >
+          <input
+            autoFocus
+            className="udt-input"
+            value={renameName}
+            placeholder={t('automation.renamePipelinePlaceholder')}
+            onChange={(e) => setRenameName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') commitRename()
+            }}
+          />
+        </AutomationModal>
       )}
 
       {createOpen && (
-        <div className="udt-modal-backdrop" onClick={() => setCreateOpen(false)}>
-          <div className="udt-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="udt-modal__title">
-              {pendingTrigger != null ? t('automation.pipelineName') : t('automation.quickActionName')}
-            </div>
-            <input
-              autoFocus
-              className="udt-input"
-              value={createName}
-              placeholder={t('automation.pipelineNamePlaceholder')}
-              onChange={(e) => setCreateName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleCreate()
-                if (e.key === 'Escape') setCreateOpen(false)
-              }}
-            />
-            <div className="udt-modal__actions">
+        <AutomationModal
+          title={pendingTrigger != null ? t('automation.pipelineName') : t('automation.quickActionName')}
+          onClose={() => setCreateOpen(false)}
+          actions={
+            <>
               <button type="button" className="udt-btn udt-btn--secondary" onClick={() => setCreateOpen(false)}>
                 {t('common.cancel', { defaultValue: '取消' })}
               </button>
@@ -747,9 +858,20 @@ export default function AutomationPage(): React.JSX.Element {
               >
                 <ArrowRight24Regular /> {t('common.confirm', { defaultValue: '确定' })}
               </button>
-            </div>
-          </div>
-        </div>
+            </>
+          }
+        >
+          <input
+            autoFocus
+            className="udt-input"
+            value={createName}
+            placeholder={t('automation.pipelineNamePlaceholder')}
+            onChange={(e) => setCreateName(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleCreate()
+            }}
+          />
+        </AutomationModal>
       )}
 
       {editingStep &&
@@ -767,25 +889,11 @@ export default function AutomationPage(): React.JSX.Element {
         })()}
 
       {addStepFor !== null && (
-        <div className="udt-modal-backdrop" onClick={() => setAddStepFor(null)}>
-          <div className="udt-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="udt-modal__title">{t('automation.addStep')}</div>
-            <div className="udt-modal__list">
-              {(steps ?? []).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  className={`udt-step-option${selectedStepType === s ? ' udt-step-option--active' : ''}`}
-                  onClick={() => setSelectedStepType(s)}
-                >
-                  {stepIcon(s)}
-                  {t(`automation.stepEditors.${s}.title`, {
-                    defaultValue: shortAutomationTypeName(s)
-                  })}
-                </button>
-              ))}
-            </div>
-            <div className="udt-modal__actions">
+        <AutomationModal
+          title={t('automation.addStep')}
+          onClose={() => setAddStepFor(null)}
+          actions={
+            <>
               <button type="button" className="udt-btn udt-btn--secondary" onClick={() => setAddStepFor(null)}>
                 {t('common.cancel', { defaultValue: '取消' })}
               </button>
@@ -797,9 +905,25 @@ export default function AutomationPage(): React.JSX.Element {
               >
                 <ArrowRight24Regular /> {t('common.confirm', { defaultValue: '确定' })}
               </button>
-            </div>
+            </>
+          }
+        >
+          <div className="udt-modal__list">
+            {(steps ?? []).map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={`udt-step-option${selectedStepType === s ? ' udt-step-option--active' : ''}`}
+                onClick={() => setSelectedStepType(s)}
+              >
+                {stepIcon(s)}
+                {t(`automation.stepEditors.${s}.title`, {
+                  defaultValue: shortAutomationTypeName(s)
+                })}
+              </button>
+            ))}
           </div>
-        </div>
+        </AutomationModal>
       )}
 
       {pickerOpen && (
