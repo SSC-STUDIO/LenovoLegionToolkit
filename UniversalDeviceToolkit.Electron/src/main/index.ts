@@ -423,6 +423,9 @@ function cachedShouldMinimizeToTray(keys: MinimizeSetting[]): boolean {
 function hideMainWindowToTray(): void {
   const win = mainWindow
   if (!win || win.isDestroyed()) return
+  if (win.isMinimized()) {
+    win.restore()
+  }
   win.hide()
 }
 
@@ -811,7 +814,15 @@ app.whenReady().then(() => {
     return invokeBridgeMethod(method, params)
   })
 
-  ipcMain.on('window:minimize', () => mainWindow?.minimize())
+  ipcMain.on('window:minimize', () => {
+    const win = mainWindow
+    if (!win || win.isDestroyed()) return
+    if (cachedShouldMinimizeToTray(['MinimizeToTray'])) {
+      hideMainWindowToTray()
+    } else {
+      win.minimize()
+    }
+  })
 
   ipcMain.on('window:maximize-toggle', () => {
     if (!mainWindow) return
