@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Select, Switch, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { settingsApi } from '../../api/settings'
@@ -63,7 +63,8 @@ export function PowerSection(): React.JSX.Element {
     }
   }
 
-  const app = (scopes.application ?? {}) as Record<string, unknown>
+  const editorsEnabled = typeof scopes.application === 'object' && scopes.application !== null
+  const app = (editorsEnabled ? scopes.application : {}) as Record<string, unknown>
   const powerModeMappingMode =
     (app['PowerModeMappingMode'] as PowerModeMappingMode | undefined) ?? 'WindowsPowerMode'
   const synchronizeBrightness = (app['SynchronizeBrightnessToAllPowerPlans'] as boolean | undefined) ?? false
@@ -71,6 +72,7 @@ export function PowerSection(): React.JSX.Element {
   const resetBatteryOnSince = (app['ResetBatteryOnSinceTimerOnReboot'] as boolean | undefined) ?? false
 
   const persistApplication = async (patch: Record<string, unknown>): Promise<void> => {
+    if (!editorsEnabled) return
     const current = (scopes.application ?? {}) as Record<string, unknown>
     const next = { ...current, ...patch }
     setScope('application', next)
@@ -112,6 +114,7 @@ export function PowerSection(): React.JSX.Element {
           <Select<PowerModeMappingMode>
             className="udt-settings-select"
             value={powerModeMappingMode}
+            disabled={!editorsEnabled}
             onChange={(value) => void persistApplication({ PowerModeMappingMode: value })}
             options={POWER_MODE_MAPPING_OPTIONS.map((option) => ({
               value: option.value,
@@ -141,6 +144,7 @@ export function PowerSection(): React.JSX.Element {
           <Switch
             className="udt-settings-switch"
             checked={synchronizeBrightness}
+            disabled={!editorsEnabled}
             onChange={(checked) =>
               void persistApplication({ SynchronizeBrightnessToAllPowerPlans: checked })
             }
@@ -149,13 +153,18 @@ export function PowerSection(): React.JSX.Element {
       />
       <SettingsCard
         title={t('settings.power.smartFnLock')}
+        description={t('settings.smartKeys.smartFnLockDesc')}
         action={
           <Select<number[]>
             className="udt-settings-select"
             mode="multiple"
-            value={selectedModifierFlags}
+            allowClear
+            maxTagCount="responsive"
+            placeholder={t('settings.smartKeys.off')}
+            value={selectedModifierFlags.length > 0 ? selectedModifierFlags : undefined}
+            disabled={!editorsEnabled}
             onChange={(values) => {
-              const flags = values.reduce((acc, flag) => acc | flag, 0)
+              const flags = (values ?? []).reduce((acc, flag) => acc | flag, 0)
               void persistApplication({ SmartFnLockFlags: flags })
             }}
             options={SMART_FN_LOCK_MODIFIERS.map((modifier) => ({
@@ -172,6 +181,7 @@ export function PowerSection(): React.JSX.Element {
           <Switch
             className="udt-settings-switch"
             checked={resetBatteryOnSince}
+            disabled={!editorsEnabled}
             onChange={(checked) => void persistApplication({ ResetBatteryOnSinceTimerOnReboot: checked })}
           />
         }
