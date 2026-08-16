@@ -756,7 +756,7 @@ function createSettingsPageFixture({ loadImpl, featuresImpl } = {}) {
     }
   }
   const Section = function Section() {}
-  const SkeletonList = function SkeletonList() {}
+  const SettingsSectionSkeleton = function SettingsSectionSkeleton() {}
   const SettingsLoadError = function SettingsLoadError() {}
   const Tooltip = function Tooltip() {}
   const Icon = function Icon() {}
@@ -770,7 +770,6 @@ function createSettingsPageFixture({ loadImpl, featuresImpl } = {}) {
         sanitizeBridgeError: (error) => (error instanceof Error ? error.message : String(error))
       },
       '../api/features': { featuresApi },
-      '../components/Skeleton': { SkeletonList },
       '../components/icons/fluent': {
         Apps24Regular: Icon,
         ArrowSync24Regular: Icon,
@@ -788,6 +787,7 @@ function createSettingsPageFixture({ loadImpl, featuresImpl } = {}) {
       '../components/settings/OsdSection': { OsdSection: Section },
       '../components/settings/PowerSection': { PowerSection: Section },
       '../components/settings/SettingsLoadError': { SettingsLoadError },
+      '../components/settings/SettingsSkeleton': { SettingsSectionSkeleton },
       '../components/settings/SmartKeysSection': { SmartKeysSection: Section },
       '../components/settings/UpdateSection': { UpdateSection: Section },
       '../components/settings/settings.css': {},
@@ -808,7 +808,7 @@ function createSettingsPageFixture({ loadImpl, featuresImpl } = {}) {
   return {
     calls,
     renderer,
-    types: { Section, SettingsLoadError, SkeletonList }
+    types: { Section, SettingsLoadError, SettingsSectionSkeleton }
   }
 }
 
@@ -823,7 +823,9 @@ test('settings page keeps the skeleton until scopes load and then enables editor
   t.after(() => fixture.renderer.cleanup())
 
   assert.equal(
-    collectElements(fixture.renderer.root).some((element) => element.type === fixture.types.SkeletonList),
+    collectElements(fixture.renderer.root).some(
+      (element) => element.type === fixture.types.SettingsSectionSkeleton
+    ),
     true
   )
   assert.equal(
@@ -834,7 +836,9 @@ test('settings page keeps the skeleton until scopes load and then enables editor
   resolveLoad()
   const root = await fixture.renderer.settle()
   assert.equal(
-    collectElements(root).some((element) => element.type === fixture.types.SkeletonList),
+    collectElements(root).some(
+      (element) => element.type === fixture.types.SettingsSectionSkeleton
+    ),
     false
   )
   assert.equal(

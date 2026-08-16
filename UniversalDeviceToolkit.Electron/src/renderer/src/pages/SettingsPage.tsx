@@ -24,7 +24,7 @@ import { UpdateSection } from '../components/settings/UpdateSection'
 import { IntegrationsSection } from '../components/settings/IntegrationsSection'
 import { OsdSection } from '../components/settings/OsdSection'
 import { SettingsLoadError } from '../components/settings/SettingsLoadError'
-import { SkeletonList } from '../components/Skeleton'
+import { SettingsSectionSkeleton } from '../components/settings/SettingsSkeleton'
 import '../components/settings/settings.css'
 
 type SectionKey =
@@ -265,7 +265,7 @@ export default function SettingsPage(): React.JSX.Element {
             <h2 className="udt-settings-page__section-title">{t(`settings.nav.${active}`)}</h2>
           </header>
           {pageLoading ? (
-            <SkeletonList rows={4} withIcon={false} accessory="select" />
+            <SettingsSectionSkeleton section={active} />
           ) : loadError != null || !scopesReady ? (
             <SettingsLoadError message={loadError} onRetry={retry} />
           ) : (
