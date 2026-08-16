@@ -165,19 +165,9 @@ function EyedropperIcon(): React.JSX.Element {
   )
 }
 
-function ThemePreviewTrafficLights(): React.JSX.Element {
+function ThemePreviewWindowButtons(): React.JSX.Element {
   return (
-    <>
-      <span className="udt-theme-option__dot udt-theme-option__dot--red" />
-      <span className="udt-theme-option__dot udt-theme-option__dot--yellow" />
-      <span className="udt-theme-option__dot udt-theme-option__dot--green" />
-    </>
-  )
-}
-
-function ThemePreviewWindowControls(): React.JSX.Element {
-  return (
-    <span className="udt-theme-option__win">
+    <span className="udt-theme-option__win" aria-hidden="true">
       <span className="udt-theme-option__win-btn udt-theme-option__win-btn--min" />
       <span className="udt-theme-option__win-btn udt-theme-option__win-btn--max" />
       <span className="udt-theme-option__win-btn udt-theme-option__win-btn--close" />
@@ -185,19 +175,24 @@ function ThemePreviewWindowControls(): React.JSX.Element {
   )
 }
 
-function ThemePreviewBar({ system = false }: { system?: boolean }): React.JSX.Element {
+function ThemePreviewBar(): React.JSX.Element {
   return (
-    <span className={`udt-theme-option__bar${system ? ' udt-theme-option__bar--system' : ''}`}>
-      <ThemePreviewTrafficLights />
-      <span className="udt-theme-option__caption" />
-      <ThemePreviewWindowControls />
+    <span className="udt-theme-option__bar" aria-hidden="true">
+      <span className="udt-theme-option__app-badge">
+        <span className="udt-theme-option__app-icon" />
+        <span className="udt-theme-option__app-title" />
+      </span>
+      <ThemePreviewWindowButtons />
     </span>
   )
 }
 
 function ThemePreviewNavItem({ active = false }: { active?: boolean }): React.JSX.Element {
   return (
-    <span className={`udt-theme-option__nav-item${active ? ' udt-theme-option__nav-item--active' : ''}`}>
+    <span
+      className={`udt-theme-option__nav-item${active ? ' udt-theme-option__nav-item--active' : ''}`}
+      aria-hidden="true"
+    >
       {active ? <span className="udt-theme-option__nav-accent" /> : null}
       <span className="udt-theme-option__nav-icon" />
       <span className="udt-theme-option__nav-label" />
@@ -207,7 +202,7 @@ function ThemePreviewNavItem({ active = false }: { active?: boolean }): React.JS
 
 function ThemePreviewNav(): React.JSX.Element {
   return (
-    <span className="udt-theme-option__sidebar">
+    <span className="udt-theme-option__sidebar" aria-hidden="true">
       <span className="udt-theme-option__nav-group">
         <ThemePreviewNavItem active />
         <ThemePreviewNavItem />
@@ -215,24 +210,25 @@ function ThemePreviewNav(): React.JSX.Element {
       </span>
       <span className="udt-theme-option__nav-group udt-theme-option__nav-group--footer">
         <ThemePreviewNavItem />
-        <ThemePreviewNavItem />
       </span>
     </span>
   )
 }
 
-function ThemePreviewRow({ variant }: { variant: 'primary' | 'secondary' | 'tertiary' }): React.JSX.Element {
+function ThemePreviewCardItem({
+  controlType
+}: {
+  controlType: 'switch-on' | 'switch-off' | 'button'
+}): React.JSX.Element {
   return (
-    <span className={`udt-theme-option__row udt-theme-option__row--${variant}`}>
-      <span className="udt-theme-option__row-icon" />
-      <span className="udt-theme-option__copy">
+    <span className="udt-theme-option__card-item" aria-hidden="true">
+      <span className="udt-theme-option__card-icon" />
+      <span className="udt-theme-option__card-text">
         <span className="udt-theme-option__line udt-theme-option__line--title" />
         <span className="udt-theme-option__line udt-theme-option__line--desc" />
       </span>
       <span
-        className={`udt-theme-option__control${
-          variant === 'primary' ? ' udt-theme-option__control--on' : ''
-        }`}
+        className={`udt-theme-option__card-control udt-theme-option__card-control--${controlType}`}
       />
     </span>
   )
@@ -240,10 +236,28 @@ function ThemePreviewRow({ variant }: { variant: 'primary' | 'secondary' | 'tert
 
 function ThemePreviewContent(): React.JSX.Element {
   return (
-    <span className="udt-theme-option__content">
-      <ThemePreviewRow variant="primary" />
-      <ThemePreviewRow variant="secondary" />
-      <ThemePreviewRow variant="tertiary" />
+    <span className="udt-theme-option__content" aria-hidden="true">
+      <span className="udt-theme-option__header-line" />
+      <span className="udt-theme-option__card-list">
+        <ThemePreviewCardItem controlType="switch-on" />
+        <ThemePreviewCardItem controlType="switch-off" />
+        <ThemePreviewCardItem controlType="button" />
+      </span>
+    </span>
+  )
+}
+
+function ThemePreviewMockup({ mode }: { mode: 'light' | 'dark' }): React.JSX.Element {
+  return (
+    <span
+      className={`udt-theme-option__mockup udt-theme-option__mockup--${mode}`}
+      aria-hidden="true"
+    >
+      <ThemePreviewBar />
+      <span className="udt-theme-option__body">
+        <ThemePreviewNav />
+        <ThemePreviewContent />
+      </span>
     </span>
   )
 }
@@ -252,11 +266,13 @@ function ThemePreviewCard({
   option,
   selected,
   label,
+  disabled,
   onClick
 }: {
   option: (typeof THEME_OPTIONS)[number]
   selected: boolean
   label: string
+  disabled: boolean
   onClick: () => void
 }): React.JSX.Element {
   const isSystem = option.value === 'System'
@@ -266,39 +282,26 @@ function ThemePreviewCard({
     <button
       type="button"
       className={`udt-theme-option ${option.previewClass}${selected ? ' udt-theme-option--selected' : ''}`}
+      disabled={disabled}
       onClick={onClick}
       aria-pressed={selected}
     >
       <span className="udt-theme-option__preview">
         {isSystem ? (
-          <>
-            <ThemePreviewBar system />
-            <span className="udt-theme-option__split">
-              <span className="udt-theme-option__pane udt-theme-option__pane--light">
-                <span className="udt-theme-option__body">
-                  <ThemePreviewNav />
-                  <ThemePreviewContent />
-                </span>
-              </span>
-              <span className="udt-theme-option__pane udt-theme-option__pane--dark">
-                <span className="udt-theme-option__body">
-                  <ThemePreviewNav />
-                  <ThemePreviewContent />
-                </span>
-              </span>
+          <span className="udt-theme-option__system-wrapper">
+            <ThemePreviewMockup mode="light" />
+            <span className="udt-theme-option__system-clip">
+              <ThemePreviewMockup mode="dark" />
             </span>
-          </>
-        ) : (
-          <span className={`udt-theme-option__pane udt-theme-option__pane--${mode}`}>
-            <ThemePreviewBar />
-            <span className="udt-theme-option__body">
-              <ThemePreviewNav />
-              <ThemePreviewContent />
-            </span>
+            <span className="udt-theme-option__system-line" />
           </span>
+        ) : (
+          <ThemePreviewMockup mode={mode} />
         )}
       </span>
-      <span className="udt-theme-option__label">{label}</span>
+      <span className="udt-theme-option__label-container">
+        <span className="udt-theme-option__label">{label}</span>
+      </span>
     </button>
   )
 }
@@ -316,8 +319,8 @@ export default function AppearanceSection(): React.JSX.Element {
   const [systemAccentHex, setSystemAccentHex] = useState(DEFAULT_SYSTEM_ACCENT_HEX)
 
   const rawApp = scopes.application
-  const app: AppSettings =
-    typeof rawApp === 'object' && rawApp !== null ? (rawApp as AppSettings) : {}
+  const editorsEnabled = typeof rawApp === 'object' && rawApp !== null
+  const app: AppSettings = editorsEnabled ? (rawApp as AppSettings) : {}
 
   useEffect(() => {
     void load()
@@ -365,6 +368,7 @@ export default function AppearanceSection(): React.JSX.Element {
   })
 
   const persistApplication = (next: AppSettings): void => {
+    if (!editorsEnabled) return
     setScope('application', next)
     settingsApi
       .set('application', next)
@@ -484,6 +488,10 @@ export default function AppearanceSection(): React.JSX.Element {
   }
 
   const selectedTheme = readThemePreference(app)
+  const selectedTemperatureUnit: TemperatureUnit =
+    app['TemperatureUnit'] === 'F' || app['TemperatureUnit'] === 'C'
+      ? app['TemperatureUnit']
+      : getTemperatureUnit()
   const customPickerValue = accentHex ?? systemAccentHex
 
   return (
@@ -496,6 +504,7 @@ export default function AppearanceSection(): React.JSX.Element {
             className="udt-settings-select udt-settings-select--language"
             value={currentLanguage}
             options={languageOptions}
+            disabled={!editorsEnabled}
             onChange={handleLanguageChange}
           />
         }
@@ -506,8 +515,9 @@ export default function AppearanceSection(): React.JSX.Element {
         action={
           <Select<TemperatureUnit>
             className="udt-settings-select"
-            value={getTemperatureUnit()}
+            value={selectedTemperatureUnit}
             options={TEMPERATURE_UNIT_OPTIONS}
+            disabled={!editorsEnabled}
             onChange={handleTemperatureUnitChange}
           />
         }
@@ -520,6 +530,7 @@ export default function AppearanceSection(): React.JSX.Element {
               option={option}
               selected={selectedTheme === option.value}
               label={t(option.labelKey)}
+              disabled={!editorsEnabled}
               onClick={() => handleThemeChange(option.value)}
             />
           ))}
@@ -528,12 +539,14 @@ export default function AppearanceSection(): React.JSX.Element {
         <div className="udt-theme-accent-options">
           <Checkbox
             checked={applyAccentToSystem}
+            disabled={!editorsEnabled}
             onChange={(event) => handleApplyAccentToSystemChange(event.target.checked)}
           >
             {t('wpf.settingsPageapplyAccentColorToThemetitle')}
           </Checkbox>
           <Checkbox
             checked={applyAccentToTheme}
+            disabled={!editorsEnabled}
             onChange={(event) => handleApplyAccentToThemeChange(event.target.checked)}
           >
             {t('wpf.settingsPageapplyAccentColorToThemeStyletitle')}
@@ -552,6 +565,7 @@ export default function AppearanceSection(): React.JSX.Element {
             type="button"
             className={`udt-settings-swatch${accentSource === 'System' ? ' udt-settings-swatch--selected' : ''}`}
             style={{ background: SYSTEM_ACCENT_GRADIENT }}
+            disabled={!editorsEnabled}
             aria-label={t('settings.appearance.accentColorSource.system', {
               defaultValue: 'System'
             })}
@@ -567,6 +581,7 @@ export default function AppearanceSection(): React.JSX.Element {
                 type="button"
                 className={`udt-settings-swatch${selected ? ' udt-settings-swatch--selected' : ''}`}
                 style={{ background: preset.hex }}
+                disabled={!editorsEnabled}
                 aria-label={preset.key}
                 title={preset.key}
                 onClick={() => handleAccentPreset(preset.hex)}
@@ -581,6 +596,7 @@ export default function AppearanceSection(): React.JSX.Element {
             <ColorPicker
               value={customPickerValue}
               size={40}
+              disabled={!editorsEnabled}
               tooltip={t('settings.appearance.accentColorSource.custom', {
                 defaultValue: 'Custom'
               })}
@@ -601,6 +617,7 @@ export default function AppearanceSection(): React.JSX.Element {
             options={uiScaleOptions(
               t('settings.appearance.appScaleAuto', { defaultValue: 'Auto' })
             )}
+            disabled={!editorsEnabled}
             onChange={handleUiScaleChange}
           />
         }

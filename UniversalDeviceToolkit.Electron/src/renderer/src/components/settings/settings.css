@@ -77,6 +77,9 @@
 .udt-settings-page__nav {
   flex: 0 0 auto;
   align-self: stretch;
+  width: var(--udt-settings-nav-width, 180px);
+  min-width: 150px;
+  max-width: 480px;
   padding: 0;
   overflow-x: hidden;
   overflow-y: auto;
@@ -188,6 +191,33 @@
   font-size: var(--udt-font-section);
   font-weight: 500;
   line-height: 1.3;
+}
+
+.udt-settings-load-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 220px;
+  padding: 24px 16px;
+  text-align: center;
+}
+
+.udt-settings-load-error__title {
+  margin: 0;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-section);
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.udt-settings-load-error__message {
+  margin: 0;
+  max-width: 420px;
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-caption);
+  line-height: 1.45;
 }
 
 .udt-settings-page__content-anim {
@@ -578,118 +608,169 @@
   gap: 16px;
   width: 100%;
   max-width: calc(3 * 220px + 2 * 16px);
+  margin-top: 4px;
 }
 
 .udt-theme-option {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
+  gap: 8px;
   padding: 0;
   border: none;
   background: transparent;
   font: inherit;
   cursor: pointer;
+  outline: none;
+  user-select: none;
+}
+
+.udt-theme-option:focus-visible .udt-theme-option__preview {
+  outline: 2px solid var(--udt-accent, #0078d4);
+  outline-offset: 2px;
 }
 
 .udt-theme-option__preview {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 10 / 7;
-  border: 1px solid var(--udt-control-stroke-default);
-  border-radius: var(--udt-radius-small);
+  aspect-ratio: 16 / 10.5;
+  border: 1.5px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-control, 12px);
   overflow: hidden;
-  transition: border-color var(--udt-anim-fast) ease-out, box-shadow var(--udt-anim-fast) ease-out;
+  box-shadow: var(--udt-shadow-card, 0 2px 6px rgba(0, 0, 0, 0.04));
+  transition:
+    border-color var(--udt-anim-fast) ease-out,
+    box-shadow var(--udt-anim-fast) ease-out,
+    transform var(--udt-anim-fast) ease-out;
+}
+
+.udt-theme-option:hover:not(:disabled) .udt-theme-option__preview {
+  border-color: var(--udt-control-stroke-strong);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
 }
 
 .udt-theme-option--selected .udt-theme-option__preview {
-  border-width: 2.5px;
+  border-width: 2px;
   border-color: var(--udt-accent, #0078d4);
-  box-shadow: none;
+  box-shadow:
+    0 0 0 1px var(--udt-accent, #0078d4),
+    0 4px 16px color-mix(in srgb, var(--udt-accent, #0078d4) 22%, transparent);
+}
+
+.udt-theme-option:hover:not(:disabled).udt-theme-option--selected .udt-theme-option__preview {
+  border-color: var(--udt-accent, #0078d4);
+  transform: translateY(-2px);
+}
+
+.udt-theme-option__label-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 4px;
 }
 
 .udt-theme-option__label {
-  color: var(--udt-text-primary);
-  font-size: var(--udt-font-caption);
+  color: var(--udt-text-secondary);
+  font-size: var(--udt-font-body, 14px);
   font-weight: 500;
   line-height: 1.3;
   text-align: center;
+  transition: color var(--udt-anim-fast) ease-out;
 }
 
-/* Mini-app mock: one window for Light/Dark; System shares a title bar and splits the body. */
-.udt-theme-option__split {
-  display: flex;
-  flex: 1 1 auto;
-  min-height: 0;
-  width: 100%;
+.udt-theme-option:hover:not(:disabled) .udt-theme-option__label,
+.udt-theme-option--selected .udt-theme-option__label {
+  color: var(--udt-text-primary);
 }
 
-.udt-theme-option__pane {
+.udt-theme-option--selected .udt-theme-option__label {
+  font-weight: 600;
+}
+
+/* ── Window Mockup Container ─────────────────────────────────── */
+
+.udt-theme-option__mockup {
   display: flex;
-  flex: 1 1 0;
   flex-direction: column;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
 }
+
+.udt-theme-option__system-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.udt-theme-option__system-clip {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  clip-path: inset(0 0 0 50%);
+  pointer-events: none;
+}
+
+.udt-theme-option__system-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1.5px;
+  transform: translateX(-50%);
+  background: rgba(130, 130, 130, 0.45);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ── Mockup Window Title Bar ─────────────────────────────────── */
 
 .udt-theme-option__bar {
   display: flex;
-  flex: 0 0 18%;
+  align-items: center;
+  justify-content: space-between;
+  height: 18px;
+  padding: 0 8px;
+  flex: 0 0 18px;
+}
+
+.udt-theme-option__app-badge {
+  display: flex;
   align-items: center;
   gap: 4px;
-  min-height: 16px;
-  padding: 0 5%;
 }
 
-.udt-theme-option__bar--system {
-  background: linear-gradient(to right, #ececec 50%, #2a2a2a 50%);
+.udt-theme-option__app-icon {
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  background: var(--udt-accent, #0078d4);
 }
 
-.udt-theme-option__dot {
-  width: 0.5em;
-  height: 0.5em;
-  border-radius: 50%;
-  flex: 0 0 auto;
+.udt-theme-option__app-title {
+  width: 32px;
+  height: 3.5px;
+  border-radius: 2px;
 }
 
-.udt-theme-option__dot--red {
-  background: #ff5f57;
-}
-
-.udt-theme-option__dot--yellow {
-  background: #febc2e;
-}
-
-.udt-theme-option__dot--green {
-  background: #28c840;
-}
-
-.udt-theme-option__caption {
-  flex: 0 0 28%;
-  max-width: 42px;
-  height: 28%;
-  min-height: 4px;
-  margin-left: 4px;
-  border-radius: 999px;
-}
-
-/* Right-side window chrome (min / max / close), glyphs drawn with currentColor */
 .udt-theme-option__win {
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
-  gap: 6px;
-  margin-left: auto;
+  gap: 5px;
 }
 
 .udt-theme-option__win-btn {
   position: relative;
-  width: 8px;
-  height: 8px;
-  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  display: inline-block;
 }
 
 .udt-theme-option__win-btn--min::before {
@@ -705,9 +786,9 @@
 .udt-theme-option__win-btn--max::before {
   content: '';
   position: absolute;
-  inset: 1px;
-  border: 1px solid currentColor;
-  border-radius: 1px;
+  inset: 0.5px;
+  border: 0.9px solid currentColor;
+  border-radius: 0.5px;
 }
 
 .udt-theme-option__win-btn--close::before,
@@ -729,25 +810,30 @@
   transform: rotate(-45deg);
 }
 
+/* ── Mockup Window Body ──────────────────────────────────────── */
+
 .udt-theme-option__body {
   display: flex;
   flex: 1 1 auto;
   min-height: 0;
+  width: 100%;
 }
+
+/* ── Mockup Sidebar ──────────────────────────────────────────── */
 
 .udt-theme-option__sidebar {
   display: flex;
-  flex: 0 0 28%;
+  flex: 0 0 26%;
   flex-direction: column;
   justify-content: space-between;
+  padding: 6px 4px 6px 6px;
   min-width: 0;
-  padding: 8% 0 6%;
 }
 
 .udt-theme-option__nav-group {
   display: flex;
   flex-direction: column;
-  gap: 10%;
+  gap: 4px;
 }
 
 .udt-theme-option__nav-group--footer {
@@ -757,307 +843,297 @@
 .udt-theme-option__nav-item {
   position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 18%;
-  min-height: 0;
-  padding: 8% 0;
+  gap: 5px;
+  padding: 3px 4px 3px 6px;
+  border-radius: 3px;
 }
 
 .udt-theme-option__nav-accent {
   position: absolute;
-  left: 0;
-  top: 18%;
-  bottom: 18%;
+  left: 1px;
+  top: 20%;
+  bottom: 20%;
   width: 2px;
-  border-radius: 0 2px 2px 0;
+  border-radius: 2px;
+  background: var(--udt-accent, #0078d4);
 }
 
 .udt-theme-option__nav-icon {
-  width: 42%;
-  max-width: 12px;
-  aspect-ratio: 1;
-  border-radius: 22%;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  flex: 0 0 7px;
 }
 
 .udt-theme-option__nav-label {
-  width: 58%;
+  flex: 1;
   height: 3px;
-  border-radius: 999px;
+  border-radius: 2px;
+  max-width: 24px;
 }
+
+/* ── Mockup Content Area ─────────────────────────────────────── */
 
 .udt-theme-option__content {
   display: flex;
   flex: 1 1 auto;
   flex-direction: column;
-  gap: 8%;
+  padding: 6px 8px 6px 6px;
   min-width: 0;
-  padding: 8% 7% 8% 5%;
+  gap: 5px;
 }
 
-.udt-theme-option__row {
-  display: flex;
-  flex: 1 1 auto;
-  align-items: center;
-  gap: 8%;
-  min-height: 0;
-  padding: 0 6%;
-  border-radius: 5px;
+.udt-theme-option__header-line {
+  width: 38%;
+  height: 4px;
+  border-radius: 2px;
+  margin-bottom: 2px;
 }
 
-.udt-theme-option__copy {
+.udt-theme-option__card-list {
   display: flex;
-  flex: 1 1 auto;
   flex-direction: column;
-  gap: 22%;
+  gap: 4px;
+  flex: 1;
+}
+
+.udt-theme-option__card-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.udt-theme-option__card-icon {
+  width: 9px;
+  height: 9px;
+  border-radius: 2.5px;
+  flex: 0 0 9px;
+}
+
+.udt-theme-option__card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  flex: 1;
   min-width: 0;
 }
 
 .udt-theme-option__line {
   display: block;
-  height: 4px;
-  border-radius: 999px;
+  border-radius: 2px;
 }
 
 .udt-theme-option__line--title {
-  height: 5px;
+  width: 55%;
+  height: 3.5px;
 }
 
-.udt-theme-option__row--primary .udt-theme-option__line--title {
-  width: 54%;
+.udt-theme-option__line--desc {
+  width: 80%;
+  height: 2.5px;
 }
 
-.udt-theme-option__row--primary .udt-theme-option__line--desc {
-  width: 78%;
-}
-
-.udt-theme-option__row--secondary .udt-theme-option__line--title {
-  width: 42%;
-}
-
-.udt-theme-option__row--secondary .udt-theme-option__line--desc {
-  width: 70%;
-}
-
-.udt-theme-option__row--tertiary .udt-theme-option__line--title {
-  width: 48%;
-}
-
-.udt-theme-option__row--tertiary .udt-theme-option__line--desc {
-  width: 62%;
-}
-
-.udt-theme-option__row-icon {
-  flex: 0 0 auto;
-  width: 14%;
-  max-width: 14px;
-  aspect-ratio: 1;
-  border-radius: 24%;
-}
-
-.udt-theme-option__control {
+.udt-theme-option__card-control {
   position: relative;
-  flex: 0 0 18%;
-  max-width: 22px;
-  height: 38%;
-  min-height: 8px;
+  flex: 0 0 auto;
+}
+
+/* Toggle switch */
+.udt-theme-option__card-control--switch-on,
+.udt-theme-option__card-control--switch-off {
+  width: 17px;
+  height: 9px;
   border-radius: 999px;
 }
 
-/* Toggle knob: parked left when off, right when on */
-.udt-theme-option__control::after {
+.udt-theme-option__card-control--switch-on::after,
+.udt-theme-option__card-control--switch-off::after {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 10%;
-  height: 72%;
-  aspect-ratio: 1;
-  transform: translateY(-50%);
+  top: 1.5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
 }
 
-.udt-theme-option__control--on::after {
-  left: auto;
-  right: 10%;
-}
-
-/* Light pane (hard-coded chrome so app dark theme cannot wash out the mock) */
-.udt-theme-option__pane--light {
-  background: #f3f3f3;
-}
-
-.udt-theme-option__pane--light .udt-theme-option__bar {
-  background: #ececec;
-}
-
-.udt-theme-option__pane--light .udt-theme-option__caption {
-  background: #d4d4d4;
-}
-
-.udt-theme-option__pane--light .udt-theme-option__sidebar {
-  background: #e8e8e8;
-}
-
-.udt-theme-option__pane--light .udt-theme-option__body {
-  background: #f7f7f7;
-}
-
-.udt-theme-option__pane--light .udt-theme-option__nav-icon,
-.udt-theme-option__pane--light .udt-theme-option__nav-label {
-  background: #cfcfcf;
-}
-
-.udt-theme-option__pane--light .udt-theme-option__nav-item--active {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-.udt-theme-option__pane--light .udt-theme-option__nav-item--active .udt-theme-option__nav-icon,
-.udt-theme-option__pane--light .udt-theme-option__nav-item--active .udt-theme-option__nav-label {
-  background: #9a9a9a;
-}
-
-.udt-theme-option__pane--light .udt-theme-option__win {
-  color: #8a8a8a;
-}
-
-.udt-theme-option__pane--light .udt-theme-option__row {
+.udt-theme-option__card-control--switch-on::after {
+  right: 1.5px;
   background: #ffffff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04);
 }
 
-.udt-theme-option__pane--light .udt-theme-option__line--title {
-  background: #c8c8c8;
+.udt-theme-option__card-control--switch-off::after {
+  left: 1.5px;
 }
 
-.udt-theme-option__pane--light .udt-theme-option__line--desc {
-  background: #dddddd;
+/* Action pill / button */
+.udt-theme-option__card-control--button {
+  width: 15px;
+  height: 8px;
+  border-radius: 2px;
 }
 
-.udt-theme-option__pane--light .udt-theme-option__row-icon {
-  background: #d9d9d9;
+/* ── Light Mode Colors ───────────────────────────────────────── */
+
+.udt-theme-option__mockup--light {
+  background: #f4f4f4;
 }
 
-.udt-theme-option__pane--light .udt-theme-option__control {
-  background: #d6d6d6;
+.udt-theme-option__mockup--light .udt-theme-option__bar {
+  background: #ebebeb;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-.udt-theme-option__pane--light .udt-theme-option__control::after {
+.udt-theme-option__mockup--light .udt-theme-option__app-title {
+  background: #c0c0c0;
+}
+
+.udt-theme-option__mockup--light .udt-theme-option__win {
+  color: #6a6a6a;
+}
+
+.udt-theme-option__mockup--light .udt-theme-option__sidebar {
+  background: #e7e7e7;
+}
+
+.udt-theme-option__mockup--light .udt-theme-option__nav-icon,
+.udt-theme-option__mockup--light .udt-theme-option__nav-label {
+  background: #c4c4c4;
+}
+
+.udt-theme-option__mockup--light .udt-theme-option__nav-item--active {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.udt-theme-option__mockup--light .udt-theme-option__nav-item--active .udt-theme-option__nav-icon,
+.udt-theme-option__mockup--light .udt-theme-option__nav-item--active .udt-theme-option__nav-label {
+  background: #8e8e8e;
+}
+
+.udt-theme-option__mockup--light .udt-theme-option__content {
+  background: #f8f8f8;
+}
+
+.udt-theme-option__mockup--light .udt-theme-option__header-line {
+  background: #a8a8a8;
+}
+
+.udt-theme-option__mockup--light .udt-theme-option__card-item {
   background: #ffffff;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
-/* Dark pane */
-.udt-theme-option__pane--dark {
-  background: #1c1c1c;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__bar {
-  background: #2a2a2a;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__caption {
-  background: #4a4a4a;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__sidebar {
-  background: #232323;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__body {
-  background: #1f1f1f;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__nav-icon,
-.udt-theme-option__pane--dark .udt-theme-option__nav-label {
-  background: #3f3f3f;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__nav-item--active {
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__nav-item--active .udt-theme-option__nav-icon,
-.udt-theme-option__pane--dark .udt-theme-option__nav-item--active .udt-theme-option__nav-label {
-  background: #6a6a6a;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__win {
-  color: #b5b5b5;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__row {
-  background: #2b2b2b;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__line--title {
-  background: #5a5a5a;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__line--desc {
-  background: #404040;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__row-icon {
-  background: #454545;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__control {
-  background: #4a4a4a;
-}
-
-.udt-theme-option__pane--dark .udt-theme-option__control::after {
+.udt-theme-option__mockup--light .udt-theme-option__card-icon {
   background: #d8d8d8;
 }
 
-.udt-theme-option__split .udt-theme-option__pane--dark {
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
+.udt-theme-option__mockup--light .udt-theme-option__line--title {
+  background: #9c9c9c;
 }
 
-.udt-theme-option__bar--system .udt-theme-option__caption {
-  background: linear-gradient(to right, #d4d4d4 50%, #4a4a4a 50%);
+.udt-theme-option__mockup--light .udt-theme-option__line--desc {
+  background: #d2d2d2;
 }
 
-/* System bar: window controls land on the dark right half */
-.udt-theme-option__bar--system .udt-theme-option__win {
-  color: #b5b5b5;
-}
-
-/* Accent touches mirror the real app: active nav indicator + toggled switch.
-   Scoped under .udt-theme-option__pane so they beat the pane gray defaults. */
-.udt-theme-option__nav-accent {
+.udt-theme-option__mockup--light .udt-theme-option__card-control--switch-on {
   background: var(--udt-accent, #0078d4);
 }
 
-.udt-theme-option__pane .udt-theme-option__control--on {
-  background: var(--udt-accent, #0078d4);
+.udt-theme-option__mockup--light .udt-theme-option__card-control--switch-off {
+  background: #d4d4d4;
 }
 
-.udt-theme-option__pane .udt-theme-option__control--on::after {
+.udt-theme-option__mockup--light .udt-theme-option__card-control--switch-off::after {
   background: #ffffff;
-  box-shadow: none;
+  box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.15);
 }
 
-/* Split panes are half width: an icon-only rail and two rows keep the mock
-   readable instead of cramming the full layout into each half. */
-.udt-theme-option__split .udt-theme-option__sidebar {
-  flex-basis: 30%;
+.udt-theme-option__mockup--light .udt-theme-option__card-control--button {
+  background: #e4e4e4;
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.udt-theme-option__split .udt-theme-option__nav-label {
-  display: none;
+/* ── Dark Mode Colors ────────────────────────────────────────── */
+
+.udt-theme-option__mockup--dark {
+  background: #1c1c1c;
 }
 
-.udt-theme-option__split .udt-theme-option__nav-icon {
-  width: 46%;
+.udt-theme-option__mockup--dark .udt-theme-option__bar {
+  background: #242424;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.udt-theme-option__split .udt-theme-option__row--tertiary {
-  display: none;
+.udt-theme-option__mockup--dark .udt-theme-option__app-title {
+  background: #4a4a4a;
 }
 
-.udt-theme-option__split .udt-theme-option__content {
-  padding: 9% 8%;
+.udt-theme-option__mockup--dark .udt-theme-option__win {
+  color: #a8a8a8;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__sidebar {
+  background: #202020;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__nav-icon,
+.udt-theme-option__mockup--dark .udt-theme-option__nav-label {
+  background: #3e3e3e;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__nav-item--active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__nav-item--active .udt-theme-option__nav-icon,
+.udt-theme-option__mockup--dark .udt-theme-option__nav-item--active .udt-theme-option__nav-label {
+  background: #6e6e6e;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__content {
+  background: #181818;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__header-line {
+  background: #5a5a5a;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__card-item {
+  background: #2b2b2b;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__card-icon {
+  background: #484848;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__line--title {
+  background: #787878;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__line--desc {
+  background: #464646;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__card-control--switch-on {
+  background: var(--udt-accent, #0078d4);
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__card-control--switch-off {
+  background: #444444;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__card-control--switch-off::after {
+  background: #8e8e8e;
+}
+
+.udt-theme-option__mockup--dark .udt-theme-option__card-control--button {
+  background: #383838;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* ── Accent options under theme mode (Electron SettingsAppearanceControl) ── */
@@ -1190,14 +1266,20 @@
 
   .udt-settings-page__nav {
     flex: 0 0 auto;
-    width: 100% !important;
-    max-width: none !important;
-    overflow: visible;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
   }
 
   .udt-settings-page__nav-list {
     flex-direction: row;
-    overflow-x: auto;
+    flex-wrap: nowrap;
+    width: max-content;
+    min-width: 100%;
     padding-bottom: 8px;
   }
 
