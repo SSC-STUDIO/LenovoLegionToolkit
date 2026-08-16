@@ -115,6 +115,40 @@
   width: 100%;
 }
 
+.udt-macro-select.ant-select .ant-select-selector {
+  width: 100%;
+  height: var(--udt-control-height) !important;
+  min-height: var(--udt-control-height) !important;
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding-inline-start: 11px !important;
+  padding-inline-end: 28px !important;
+}
+
+.udt-macro-select.ant-select .ant-select-selection-item,
+.udt-macro-select.ant-select .ant-select-selection-placeholder {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  line-height: calc(var(--udt-control-height) - 2px) !important;
+}
+
+.udt-macro-select.ant-select .ant-select-arrow,
+.udt-macro-select.ant-select .ant-select-suffix {
+  position: absolute !important;
+  top: 50% !important;
+  inset-inline-end: 11px !important;
+  transform: translateY(-50%) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--udt-text-secondary) !important;
+  pointer-events: none !important;
+  margin: 0 !important;
+}
+
 /* --- Number pad + sequence workspace --- */
 
 .udt-macro-workspace {

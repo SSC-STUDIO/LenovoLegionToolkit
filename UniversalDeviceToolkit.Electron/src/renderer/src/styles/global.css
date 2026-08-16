@@ -958,6 +958,8 @@ body {
 .ant-select-selector {
   position: relative !important;
   display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
   align-items: center !important;
   min-height: var(--udt-control-height) !important;
   padding-inline-start: 11px !important;
@@ -970,6 +972,16 @@ body {
 
 .ant-select-single .ant-select-selector {
   height: var(--udt-control-height) !important;
+}
+
+.ant-select-selection-wrap {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  overflow: hidden !important;
 }
 
 .ant-select-selection-item,
@@ -987,7 +999,8 @@ body {
   line-height: calc(var(--udt-control-height) - 2px) !important;
 }
 
-.ant-select-arrow {
+.ant-select-arrow,
+.ant-select-suffix {
   position: absolute !important;
   top: 50% !important;
   inset-inline-end: 11px !important;
