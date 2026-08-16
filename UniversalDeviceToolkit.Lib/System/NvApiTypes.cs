@@ -188,7 +188,7 @@ internal struct NvActiveAppV1
     public uint ProcessId;
 }
 
-[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
 internal struct NvActiveAppV2
 {
     public uint Version;

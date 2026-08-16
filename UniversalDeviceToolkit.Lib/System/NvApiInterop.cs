@@ -404,8 +404,8 @@ internal static class NvApiInterop
         var fn = GetFunction<QueryActiveAppsDelegate>(Ids.GPU_QueryActiveApps);
 
         const int maxApps = 32;
-        // NvActiveAppV2 layout: version(4) + processId(4) + deviceId(4) + processName(64*2=128) = 140 bytes
-        const int entrySize = 140;
+        // NvActiveAppV2 layout: version(4) + processId(4) + deviceId(4) + processName(64) = 76 bytes
+        const int entrySize = 76;
         var bufferSize = entrySize * maxApps;
         var buffer = Marshal.AllocHGlobal(bufferSize);
         try
@@ -435,9 +435,9 @@ internal static class NvApiInterop
                 var offset = i * entrySize;
                 var processId = (uint)Marshal.ReadInt32(buffer, offset + 4);
                 var deviceId = (uint)Marshal.ReadInt32(buffer, offset + 8);
-                // Process name is at offset+12, 128 bytes (64 Unicode chars)
+                // Process name is at offset+12, 64 ANSI bytes
                 var namePtr = buffer + offset + 12;
-                var processName = Marshal.PtrToStringUni(namePtr, 64)?.TrimEnd('\0') ?? "";
+                var processName = Marshal.PtrToStringAnsi(namePtr, 64)?.TrimEnd('\0') ?? "";
                 result[i] = new NvActiveAppV2
                 {
                     Version = version,

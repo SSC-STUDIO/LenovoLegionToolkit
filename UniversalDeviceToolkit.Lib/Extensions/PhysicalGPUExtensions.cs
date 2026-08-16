@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -11,7 +11,9 @@ public static class NVAPIExtensions
 {
     private static readonly string[] Exclusions =
     [
+        "dwm",
         "dwm.exe",
+        "explorer",
         "explorer.exe",
     ];
 

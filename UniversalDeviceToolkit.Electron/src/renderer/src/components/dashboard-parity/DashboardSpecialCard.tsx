@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button, Dropdown, Switch, Tooltip, message } from 'antd'
+import { memo, useCallback, useMemo, useState } from 'react'
+import { Button, Dropdown, Popover, Switch, Tooltip, message } from 'antd'
 import {
   ChevronDown16Regular,
   Copy20Regular,
@@ -18,7 +18,7 @@ import {
   type DiscreteGpuState
 } from '../../api/dashboardHardware'
 import type { DashboardItem } from '../../api/dashboard'
-import { isSpecialItemSupported } from './dashboardHardwareSupport'
+import { isSpecialItemSupported, requireHardwareOk } from './dashboardHardwareSupport'
 import OverclockProfilesModal from './OverclockProfilesModal'
 
 export type SpecialDashboardItem = Extract<
@@ -81,18 +81,22 @@ function DiscreteGpuCard({
   const status = t(`dashboardHardware.discreteGpu.status.${gpu.state}`, { defaultValue: gpu.state })
   const canRestart = gpu.state === 'Active' || gpu.state === 'Inactive'
   const canKill = gpu.state === 'Active'
+  const actionFailed = t('dashboardHardware.actionFailed', {
+    defaultValue: 'The action did not complete.'
+  })
 
-  async function run(action: () => Promise<unknown>): Promise<void> {
+  const run = useCallback(async (action: () => Promise<{ ok: boolean }>): Promise<void> => {
     setBusy(true)
     try {
-      await action()
+      const result = await action()
+      requireHardwareOk(result, actionFailed)
       await onChanged()
     } catch (reason) {
       void message.error((reason as Error).message)
     } finally {
       setBusy(false)
     }
-  }
+  }, [actionFailed, onChanged])
 
   // Port of Electron ClipboardExtensions.SetProcesses: copy the GPU process list.
   async function copyProcessList(): Promise<void> {
@@ -111,15 +115,44 @@ function DiscreteGpuCard({
     }
   }
 
-  const details = (
-    <div className="udt-parity-gpu-tooltip">
-      <strong>{t('dashboardHardware.discreteGpu.performance')}</strong>
-      <div>{gpu.performanceState || '-'}</div>
-      <strong>{t('dashboardHardware.discreteGpu.processes')}</strong>
-      {gpu.processes.length > 0
-        ? gpu.processes.map((process) => <div key={process}>{process}</div>)
-        : <div>{t('dashboardHardware.discreteGpu.noProcesses')}</div>}
-    </div>
+  const processKey = gpu.processes.join('\n')
+  const details = useMemo(
+    () => {
+      const processes = processKey.length === 0 ? [] : processKey.split('\n')
+      return (
+        <div className="udt-parity-gpu-tooltip">
+          <strong>{t('dashboardHardware.discreteGpu.performance')}</strong>
+          <div>{gpu.performanceState || '-'}</div>
+          <strong>{t('dashboardHardware.discreteGpu.processes')}</strong>
+          {processes.length > 0
+            ? processes.map((process) => <div key={process}>{process}</div>)
+            : <div>{t('dashboardHardware.discreteGpu.noProcesses')}</div>}
+        </div>
+      )
+    },
+    [gpu.performanceState, processKey, t]
+  )
+
+  const menu = useMemo(
+    () => ({
+      items: [
+        {
+          key: 'kill',
+          label: t('dashboardHardware.discreteGpu.killProcesses'),
+          disabled: !canKill
+        },
+        {
+          key: 'restart',
+          label: t('dashboardHardware.discreteGpu.restart'),
+          disabled: !canRestart
+        }
+      ],
+      onClick: ({ key }: { key: string }) => {
+        if (key === 'kill') void run(() => dashboardHardwareApi.killGpuProcesses())
+        if (key === 'restart') void run(() => dashboardHardwareApi.restartGpu())
+      }
+    }),
+    [canKill, canRestart, run, t]
   )
 
   return (
@@ -143,34 +176,21 @@ function DiscreteGpuCard({
               onClick={() => void copyProcessList()}
             />
           </Tooltip>
-          <Tooltip title={details} placement="topRight">
+          <Popover
+            content={details}
+            placement="topRight"
+            overlayClassName="udt-parity-gpu-popover"
+          >
             <Button
               aria-label={t('dashboardHardware.discreteGpu.information')}
               className="udt-parity-icon-button"
               icon={<QuestionCircle24Regular />}
             />
-          </Tooltip>
+          </Popover>
         </div>
         <Dropdown
           disabled={!canRestart || busy}
-          menu={{
-            items: [
-              {
-                key: 'kill',
-                label: t('dashboardHardware.discreteGpu.killProcesses'),
-                disabled: !canKill
-              },
-              {
-                key: 'restart',
-                label: t('dashboardHardware.discreteGpu.restart'),
-                disabled: !canRestart
-              }
-            ],
-            onClick: ({ key }) => {
-              if (key === 'kill') void run(() => dashboardHardwareApi.killGpuProcesses())
-              if (key === 'restart') void run(() => dashboardHardwareApi.restartGpu())
-            }
-          }}
+          menu={menu}
           placement="bottomRight"
           trigger={['click']}
         >
@@ -202,7 +222,11 @@ function OverclockGpuCard({
   async function setEnabled(enabled: boolean): Promise<void> {
     setBusy(true)
     try {
-      await dashboardHardwareApi.setOverclockEnabled(enabled)
+      const result = await dashboardHardwareApi.setOverclockEnabled(enabled)
+      requireHardwareOk(
+        result,
+        t('dashboardHardware.actionFailed', { defaultValue: 'The action did not complete.' })
+      )
       await onChanged()
     } catch (reason) {
       void message.error((reason as Error).message)
@@ -256,7 +280,11 @@ function TurnOffMonitorsCard({ error }: Omit<DashboardSpecialCardProps, 'item'>)
   async function turnOff(): Promise<void> {
     setBusy(true)
     try {
-      await dashboardHardwareApi.turnOffMonitors()
+      const result = await dashboardHardwareApi.turnOffMonitors()
+      requireHardwareOk(
+        result,
+        t('dashboardHardware.actionFailed', { defaultValue: 'The action did not complete.' })
+      )
     } catch (reason) {
       void message.error((reason as Error).message)
     } finally {
@@ -280,10 +308,12 @@ function TurnOffMonitorsCard({ error }: Omit<DashboardSpecialCardProps, 'item'>)
   )
 }
 
-export default function DashboardSpecialCard(props: DashboardSpecialCardProps): React.JSX.Element | null {
+function DashboardSpecialCard(props: DashboardSpecialCardProps): React.JSX.Element | null {
   if (!isSpecialItemSupported(props.item, props.hardware)) return null
   if (props.item === 'DiscreteGpu') return <DiscreteGpuCard {...props} />
   if (props.item === 'OverclockDiscreteGpu') return <OverclockGpuCard {...props} />
   if (props.item === 'TurnOffMonitors') return <TurnOffMonitorsCard {...props} />
   return null
 }
+
+export default memo(DashboardSpecialCard)

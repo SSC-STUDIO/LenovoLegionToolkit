@@ -48,18 +48,34 @@
   background: var(--udt-status-warning);
 }
 
+.udt-parity-gpu-popover .ant-popover-inner {
+  padding: 12px 14px;
+  border: 1px solid var(--udt-control-stroke-strong);
+  border-radius: var(--udt-radius-control, 12px);
+  background: var(--udt-surface-card);
+  box-shadow: var(--udt-shadow-glass, 0 8px 24px rgba(0, 0, 0, 0.15));
+}
+
 .udt-parity-gpu-tooltip {
   min-width: 180px;
   max-width: 320px;
+  color: var(--udt-text-primary);
+  font-size: var(--udt-font-caption, 14px);
+  line-height: 1.45;
 }
 
 .udt-parity-gpu-tooltip strong {
   display: block;
   margin-top: 8px;
+  color: var(--udt-text-primary);
 }
 
 .udt-parity-gpu-tooltip strong:first-child {
   margin-top: 0;
+}
+
+.udt-parity-gpu-tooltip div {
+  color: var(--udt-text-secondary);
 }
 
 .udt-parity-overclock-accessory {
