@@ -5,6 +5,7 @@ import { useDashboardHardware } from '../../hooks/useDashboardHardware'
 import { useFeaturesStore } from '../../stores/featuresStore'
 import DashboardFeatureCard from './DashboardFeatureCard'
 import DashboardSpecialCard, { type SpecialDashboardItem } from './DashboardSpecialCard'
+import HybridModeCard from './HybridModeCard'
 import { isSpecialItemSupported } from './dashboardHardwareSupport'
 import { isSpecialDashboardItem, resolveDashboardFeature, dashboardItemLabel } from './dashboardItems'
 import './dashboardHardware.css'
@@ -21,11 +22,20 @@ export default function DashboardFeatureGroupsHardware({
 }): React.JSX.Element {
   const { t } = useTranslation()
   const infos = useFeaturesStore((state) => state.infos)
+  const loaded = useFeaturesStore((state) => state.loaded)
   const hardware = useDashboardHardware()
 
   function itemIsVisible(item: DashboardItem): boolean {
-    if (resolveDashboardFeature(item, infos) != null) return true
-    return isSpecialDashboardItem(item)
+    if (isSpecialDashboardItem(item)) {
+      if (hardware.state != null) {
+        return isSpecialItemSupported(item as SpecialDashboardItem, hardware.state)
+      }
+      return hardware.error == null
+    }
+    const feature = resolveDashboardFeature(item, infos)
+    if (feature == null) return false
+    if (loaded && infos[feature]?.supported !== true) return false
+    return true
   }
 
   function renderItem(item: DashboardItem): React.JSX.Element | null {
@@ -41,24 +51,13 @@ export default function DashboardFeatureGroupsHardware({
           />
         )
       }
-      const title = dashboardItemLabel(item, t)
-      const reason = t('dashboard.card.notSupported', {
-        defaultValue: 'Not supported on this device'
-      })
-      return (
-        <article key={item} className="udt-parity-feature-card udt-parity-feature-card--disabled">
-          <div className="udt-parity-feature-card__body">
-            <div className="udt-parity-feature-card__copy">
-              <div className="udt-parity-feature-card__title" title={title}>{title}</div>
-              <div className="udt-parity-feature-card__warning" title={reason}>{reason}</div>
-            </div>
-          </div>
-        </article>
-      )
+      return null
     }
 
     const feature = resolveDashboardFeature(item, infos)
-    return feature == null ? null : <DashboardFeatureCard key={item} feature={feature} />
+    if (feature == null) return null
+    if (feature === 'hybridMode') return <HybridModeCard key={item} />
+    return <DashboardFeatureCard key={item} feature={feature} />
   }
 
   return (

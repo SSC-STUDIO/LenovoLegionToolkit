@@ -1,4 +1,5 @@
-import { Select, Switch, Tooltip } from 'antd'
+import { memo, useEffect, useMemo, useState } from 'react'
+import { Select, Switch, Tooltip, message } from 'antd'
 import { Settings24Regular } from '../icons/fluent'
 import type { TFunction } from 'i18next'
 import {
@@ -28,7 +29,6 @@ import { useFeature } from '../../hooks/useFeature'
 import { powerModeColor } from '../../utils/powerMode'
 import BalanceModeSettingsModal from './BalanceModeSettingsModal'
 import GodModeSettingsModal from './GodModeSettingsModal'
-import { useEffect, useState } from 'react'
 
 const TOGGLE_FEATURES = new Set<FeatureKey>([
   'batteryNightCharge',
@@ -140,12 +140,14 @@ function isOnState(value: unknown): boolean {
   return typeof value === 'string' && value.toLowerCase() === 'on'
 }
 
-export default function DashboardFeatureCard({ feature }: { feature: FeatureKey }): React.JSX.Element | null {
+function DashboardFeatureCard({ feature }: { feature: FeatureKey }): React.JSX.Element | null {
   const { t } = useTranslation()
   const { supported, state, states, loading, error, setState, refresh } = useFeature(feature)
   const [settingsModal, setSettingsModal] = useState<'balance' | 'godMode' | null>(null)
   const [hdrBlocked, setHdrBlocked] = useState(false)
+  const [hdrStatusUnknown, setHdrStatusUnknown] = useState(false)
   const [powerAdapterDisconnected, setPowerAdapterDisconnected] = useState(false)
+  const [adapterStatusUnknown, setAdapterStatusUnknown] = useState(false)
 
   // HDRControl.OnRefreshAsync: while Windows settings block HDR the toggle is
   // disabled and the card shows the HDRControl_Warning.
@@ -155,10 +157,16 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
     featuresApi
       .isHdrBlocked()
       .then((result) => {
-        if (!cancelled) setHdrBlocked(result.blocked === true)
+        if (!cancelled) {
+          setHdrBlocked(result.blocked === true)
+          setHdrStatusUnknown(false)
+        }
       })
       .catch(() => {
-        if (!cancelled) setHdrBlocked(false)
+        if (!cancelled) {
+          setHdrStatusUnknown(true)
+          setHdrBlocked(true)
+        }
       })
     return () => {
       cancelled = true
@@ -171,23 +179,41 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
     if (!supported || feature !== 'powerMode') return
     if (state !== 'Performance' && state !== 'GodMode') {
       setPowerAdapterDisconnected(false)
+      setAdapterStatusUnknown(false)
       return
     }
     let cancelled = false
     systemApi
       .powerAdapterStatus()
       .then((result) => {
-        if (!cancelled) setPowerAdapterDisconnected(result.status === 'Disconnected')
+        if (!cancelled) {
+          setPowerAdapterDisconnected(result.status === 'Disconnected')
+          setAdapterStatusUnknown(false)
+        }
       })
       .catch(() => {
-        if (!cancelled) setPowerAdapterDisconnected(false)
+        if (!cancelled) {
+          setAdapterStatusUnknown(true)
+          setPowerAdapterDisconnected(false)
+        }
       })
     return () => {
       cancelled = true
     }
   }, [supported, feature, state])
 
-  if (HIDE_SINGLE_OPTION_FEATURES.has(feature) && supported && states.length < 2) return null
+  const selectOptions = useMemo(
+    () =>
+      states.map((value) => ({
+        value: wireKey(value),
+        label: labelForState(feature, value, t),
+        wireValue: value
+      })),
+    [feature, states, t]
+  )
+
+  if (!supported) return null
+  if (HIDE_SINGLE_OPTION_FEATURES.has(feature) && states.length < 2) return null
 
   const title = t(`feature.${feature}`, { defaultValue: feature })
   const description = t(`feature.${feature}.desc`, { defaultValue: '' })
@@ -196,13 +222,31 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
     defaultValue: 'Not supported on this device'
   })
 
+  const applyState = (next: unknown): void => {
+    void setState(next).then((ok) => {
+      if (!ok) {
+        void message.error(t('dashboard.card.changeFailed', {
+          defaultValue: 'Failed to change setting.'
+        }))
+      }
+    })
+  }
+
   // Electron HDRControl_Warning / PowerModeControl_Warning.
   const warning =
-    feature === 'hdr' && hdrBlocked
-      ? t('feature.hdr.warning', { defaultValue: 'HDR usage is blocked by Windows settings.' })
-      : feature === 'powerMode' && powerAdapterDisconnected
-        ? t('feature.powerMode.warning')
-        : ''
+    feature === 'hdr' && hdrStatusUnknown
+      ? t('feature.hdr.statusUnknown', {
+          defaultValue: 'Could not verify HDR status. The toggle is disabled until status is known.'
+        })
+      : feature === 'hdr' && hdrBlocked
+        ? t('feature.hdr.warning', { defaultValue: 'HDR usage is blocked by Windows settings.' })
+        : feature === 'powerMode' && adapterStatusUnknown
+          ? t('feature.powerMode.adapterStatusUnknown', {
+              defaultValue: 'Could not verify power adapter status.'
+            })
+          : feature === 'powerMode' && powerAdapterDisconnected
+            ? t('feature.powerMode.warning')
+            : ''
 
   // Electron PowerModeControl.ConfigButton: Balance → AI engine settings;
   // Performance/GodMode → Custom Mode settings (when the machine supports God Mode).
@@ -245,7 +289,7 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
                 checked={isOnState(state)}
                 disabled={!supported || loading || error != null || (feature === 'hdr' && hdrBlocked)}
                 loading={loading}
-                onChange={(checked) => void setState(checked ? 'On' : 'Off')}
+                onChange={(checked) => applyState(checked ? 'On' : 'Off')}
               />
             ) : (
               <Select
@@ -254,15 +298,11 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
                 disabled={!supported || loading || error != null || states.length === 0}
                 loading={loading}
                 value={state == null ? undefined : wireKey(state)}
-                options={states.map((value) => ({
-                  value: wireKey(value),
-                  label: labelForState(feature, value, t),
-                  wireValue: value
-                }))}
+                options={selectOptions}
                 optionRender={(option) => option.label}
                 onChange={(key) => {
                   const next = states.find((candidate) => wireKey(candidate) === key)
-                  if (next !== undefined) void setState(next)
+                  if (next !== undefined) applyState(next)
                 }}
               />
             )}
@@ -300,3 +340,5 @@ export default function DashboardFeatureCard({ feature }: { feature: FeatureKey 
     </>
   )
 }
+
+export default memo(DashboardFeatureCard)

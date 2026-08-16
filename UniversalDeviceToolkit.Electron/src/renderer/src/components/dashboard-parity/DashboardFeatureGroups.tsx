@@ -22,11 +22,17 @@ function RegularDashboardItem({ item }: { item: DashboardItem }): React.JSX.Elem
 export default function DashboardFeatureGroups({ groups }: { groups: DashboardGroup[] }): React.JSX.Element {
   const { t } = useTranslation()
   const infos = useFeaturesStore((state) => state.infos)
+  const loaded = useFeaturesStore((state) => state.loaded)
 
   return (
     <div className="udt-parity-feature-groups">
       {groups.map((group, index) => {
-        const regularItems = group.items.filter((item) => resolveDashboardFeature(item, infos) != null)
+        const regularItems = group.items.filter((item) => {
+          const feature = resolveDashboardFeature(item, infos)
+          if (feature == null) return false
+          if (loaded && infos[feature]?.supported !== true) return false
+          return true
+        })
         if (regularItems.length === 0) return null
 
         return (

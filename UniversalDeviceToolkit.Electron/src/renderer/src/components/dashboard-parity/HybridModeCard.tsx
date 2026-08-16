@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button, Modal, Select, Switch, message } from 'antd'
 import { Info24Regular } from '../icons/fluent'
 import { LeafOne24Regular } from '@fluentui/react-icons'
@@ -82,22 +82,17 @@ export default function HybridModeCard(): React.JSX.Element | null {
     }
   }, [])
 
+  const comboOptions = useMemo(
+    () =>
+      states.filter(isHybridModeValue).map((value) => ({
+        value,
+        label: t(STATE_LABEL_KEYS[value], { defaultValue: value })
+      })),
+    [states, t]
+  )
+
   if (!supported) {
-    const title = t('feature.hybridMode', { defaultValue: 'hybridMode' })
-    const reason = t('dashboard.card.notSupported', {
-      defaultValue: 'Not supported on this device'
-    })
-    return (
-      <article className="udt-parity-feature-card udt-parity-feature-card--disabled">
-        <div className="udt-parity-feature-card__body">
-          <span className="udt-parity-feature-card__icon" aria-hidden="true"><LeafOne24Regular /></span>
-          <div className="udt-parity-feature-card__copy">
-            <div className="udt-parity-feature-card__title" title={title}>{title}</div>
-            <div className="udt-parity-feature-card__warning" title={reason}>{reason}</div>
-          </div>
-        </div>
-      </article>
-    )
+    return null
   }
 
   // Electron HybridModeControlFactory picks the ComboBox when the machine supports
@@ -118,9 +113,18 @@ export default function HybridModeCard(): React.JSX.Element | null {
     })
   }
 
+  function readHybridState(): HybridModeValue | undefined {
+    const latest = useFeaturesStore.getState().states.hybridMode
+    if (isHybridModeValue(latest)) return latest
+    return isHybridModeValue(state) ? state : undefined
+  }
+
   async function attemptRestart(): Promise<void> {
     try {
-      await powerApi.restart()
+      const result = await powerApi.restart()
+      if (result.ok !== true) {
+        message.warning(t('feature.hybridMode.restartFailed'))
+      }
     } catch {
       message.warning(t('feature.hybridMode.restartFailed'))
     }
@@ -145,9 +149,10 @@ export default function HybridModeCard(): React.JSX.Element | null {
   }
 
   async function handleComboChange(value: unknown): Promise<void> {
-    if (!isHybridModeValue(value) || value === current || current === undefined) return
+    const from = readHybridState()
+    if (!isHybridModeValue(value) || from === undefined || value === from) return
 
-    const involvesOff = current === 'Off' || value === 'Off'
+    const involvesOff = from === 'Off' || value === 'Off'
     const restart = involvesOff ? await confirmRestart(value) : false
 
     setChanging(true)
@@ -173,7 +178,8 @@ export default function HybridModeCard(): React.JSX.Element | null {
 
   async function handleToggleChange(checked: boolean): Promise<void> {
     const next: HybridModeValue = checked ? 'On' : 'Off'
-    if (next === current) return
+    const from = readHybridState()
+    if (from === undefined || next === from) return
 
     setChanging(true)
     try {
@@ -207,13 +213,10 @@ export default function HybridModeCard(): React.JSX.Element | null {
               <Select
                 aria-label={title}
                 className="udt-parity-feature-card__select"
-                disabled={changing || loading || error != null || states.length === 0}
+                disabled={changing || loading || error != null || states.length === 0 || restartPrompt != null}
                 loading={loading}
                 value={current}
-                options={states.filter(isHybridModeValue).map((value) => ({
-                  value,
-                  label: stateLabel(value)
-                }))}
+                options={comboOptions}
                 onChange={(value) => void handleComboChange(value)}
               />
               <Button
