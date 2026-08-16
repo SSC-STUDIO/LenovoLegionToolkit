@@ -69,7 +69,7 @@ No paywalls, premium tiers, or ads. MIT-licensed source on GitHub.
 Built with **.NET 10**. Plugin settings pages are Electron `contributes.webPage` entries (`web/index.html` + `plugin-ui.css`).
 
 ### Extensible by Design
-Clean SDK, scaffolder, and **PluginWorkbench** so you can preview plugins without launching the full host app.
+Clean SDK and scaffolder. Preview `contributes.webPage` in the Electron shell against a real Host. The WPF PluginWorkbench host is retired.
 
 ### Localized
 Official plugins ship resource satellites for **32 cultures** (including `en`, `zh-Hans`, `zh-Hant`).
@@ -110,8 +110,8 @@ Canonical CLI entry: **`udt-plugin.cmd`**
 # Scaffold
 .\udt-plugin.cmd init --template feature-settings --folder MyPlugin --id my-plugin --name "My Plugin"
 
-# Inner loop
-.\udt-plugin.cmd dev --plugin my-plugin --theme system --view feature
+# Build (preview in the Electron shell)
+.\udt-plugin.cmd build --plugin my-plugin
 
 # Test / validate / package
 .\udt-plugin.cmd test --plugin my-plugin
@@ -123,7 +123,8 @@ Canonical CLI entry: **`udt-plugin.cmd`**
 |---------|---------|
 | `doctor` | Environment + host dependency checks |
 | `init` | Scaffold from `settings-only` / `feature-settings` / `runtime-optimization` |
-| `dev` | Build + PluginWorkbench preview loop |
+| `build` | Compile the plugin project |
+| `dev` / `preview` | Retired WPF PluginWorkbench launchers; use the Electron shell |
 | `test` | Unit tests |
 | `validate` | Authoring / store metadata gates (`contributor`, `official-candidate`, …) |
 | `package` | Installable ZIP |
@@ -131,26 +132,13 @@ Canonical CLI entry: **`udt-plugin.cmd`**
 | `promote` | Official store metadata in `plugin.manifest.json` |
 | `generate-store` | Regenerate generated `Plugins/.build/catalog/store.json` from manifests + assets |
 
-> Mental model (VS Code extension-like): `plugin.manifest.json` ≈ `package.json`, `dev` ≈ `npm run dev`, `package` ≈ `vsce package`.
+> Mental model (VS Code extension-like): `plugin.manifest.json` ≈ `package.json`, `package` ≈ `vsce package`.
 
 ---
 
 ## PluginWorkbench
 
-Preview without the full host:
-
-```powershell
-dotnet run --project .\Plugins\Tooling\PluginWorkbench\PluginWorkbench.csproj -- `
-  --repository-root . `
-  --plugin-id custom-mouse `
-  --theme dark `
-  --view settings
-```
-
-- Loads build outputs or local ZIPs  
-- Host-style shell (feature / settings / optimization cards)  
-- System / Light / Dark  
-- Safe **Preview** mode by default; **Real Runtime** is explicit  
+The WPF PluginWorkbench host is retired. `Plugins/Tooling/PluginWorkbench/PluginWorkbench.csproj` is not in the tree. Preview plugin pages in the Electron shell against a real Host.
 
 ---
 
@@ -167,7 +155,7 @@ UniversalDeviceToolkit/
 |  +- Shared/               # Shared plugin helpers
 |  +- Shared.Tests/          # Shared helper tests
 |  +- Testing/               # Tooling and performance tests
-|  +- Tooling/               # CLI, PluginWorkbench, and smoke tools
+|  +- Tooling/               # CLI (PluginWorkbench removed)
 |  +- HostBaseline/          # Tracked host release manifest; binaries are downloaded into .host/
 |  +- .build/                # Ignored build, package, and catalog output
 |  +- udt-plugin.cmd         # Canonical tooling entry
@@ -202,7 +190,7 @@ Do not hand-edit generated `Plugins/.build/catalog/store.json` for routine autho
 
 1. Fork and branch from `master`
 2. `.\udt-plugin.cmd doctor`
-3. Develop with `.\udt-plugin.cmd dev`
+3. Build with `.\udt-plugin.cmd build` and preview in the Electron shell
 4. `validate` + tests green
 5. Open a PR
 
