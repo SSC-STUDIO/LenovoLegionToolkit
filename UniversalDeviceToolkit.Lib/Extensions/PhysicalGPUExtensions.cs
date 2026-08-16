@@ -31,12 +31,12 @@ public static class NVAPIExtensions
                 var process = Process.GetProcessById((int)app.ProcessId);
                 processes.Add(process);
             }
-            catch (ArgumentException ex)
+            catch (Exception ex)
             {
-                // Process may have exited, skip this process
+                // Process may have exited or access denied, skip this process
                 Log.Instance.TraceOnce(
                     "nvapi-active-process-gone",
-                    "NVAPI active app process already exited while enumerating.",
+                    "NVAPI active app process already exited or inaccessible while enumerating.",
                     ex);
             }
         }

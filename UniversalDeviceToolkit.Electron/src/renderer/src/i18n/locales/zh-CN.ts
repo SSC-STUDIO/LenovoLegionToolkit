@@ -277,7 +277,7 @@ export default withEnglishFallback({
       'hybridMode.states.hybrid': '混合模式',
       'hybridMode.states.hybridIGPUOnly': '混合 - iGPU',
       'hybridMode.states.hybridAuto': '混合 - 自动',
-      'hybridMode.states.off': 'dGPU',
+      'hybridMode.states.off': '独显直连',
       'hybridMode.info.title': '关于 GPU 工作模式',
       'hybridMode.info.hybrid.title': '混合模式',
       'hybridMode.info.hybrid.message': '核显与独显都将启用，系统将自动决定使用哪一个。',

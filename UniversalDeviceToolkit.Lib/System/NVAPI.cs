@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -36,7 +36,7 @@ internal static class NVAPI
                     // Skip GPUs whose system type cannot be read
                 }
             }
-            return null;
+            return gpus.Length > 0 ? gpus[0] : null;
         }
         catch (Exception ex)
         {
