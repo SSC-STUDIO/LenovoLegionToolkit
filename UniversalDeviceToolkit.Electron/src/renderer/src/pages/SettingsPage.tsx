@@ -1,4 +1,4 @@
-﻿import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import {
   Apps24Regular,
   ArrowSync24Regular,
@@ -11,6 +11,7 @@ import {
 } from '../components/icons/fluent'
 import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
+import { isHostUnavailableError, sanitizeBridgeError } from '../api/bridge'
 import { featuresApi, type FeatureKey } from '../api/features'
 import { useLoadingStore } from '../stores/loadingStore'
 import { useSettingsStore } from '../stores/settingsStore'
@@ -22,6 +23,7 @@ import { SmartKeysSection } from '../components/settings/SmartKeysSection'
 import { UpdateSection } from '../components/settings/UpdateSection'
 import { IntegrationsSection } from '../components/settings/IntegrationsSection'
 import { OsdSection } from '../components/settings/OsdSection'
+import { SettingsLoadError } from '../components/settings/SettingsLoadError'
 import { SkeletonList } from '../components/Skeleton'
 import '../components/settings/settings.css'
 
@@ -97,6 +99,31 @@ export default function SettingsPage(): React.JSX.Element {
   const [navWidth, setNavWidth] = useState(NAV_DEFAULT_WIDTH)
   const [supportsLenovoHardware, setSupportsLenovoHardware] = useState(true)
   const [pageLoading, setPageLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [scopesReady, setScopesReady] = useState(false)
+  const [reloadToken, setReloadToken] = useState(0)
+  const resizeCleanupRef = useRef<(() => void) | null>(null)
+  const contentRef = useRef<HTMLElement | null>(null)
+
+  useEffect(() => {
+    if (contentRef.current) {
+      contentRef.current.scrollTop = 0
+    }
+  }, [active])
+
+  useEffect(() => {
+    return () => {
+      resizeCleanupRef.current?.()
+      resizeCleanupRef.current = null
+    }
+  }, [])
+
+  const retry = useCallback(() => {
+    setLoadError(null)
+    setScopesReady(false)
+    setPageLoading(true)
+    setReloadToken((value) => value + 1)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -106,26 +133,53 @@ export default function SettingsPage(): React.JSX.Element {
       t('loading.settings', { defaultValue: 'Loading settings…' }),
       { canCancel: false, silent: true }
     )
-    Promise.all([featuresApi.list(), useSettingsStore.getState().load()])
-      .then(([infos]) => {
+
+    const loadPage = async (): Promise<void> => {
+      const featuresPromise = featuresApi.list()
+      await useSettingsStore.getState().load()
+      if (cancelled) return
+
+      let nextSupportsLenovoHardware = true
+      try {
+        const infos = await featuresPromise
         if (cancelled) return
-        setSupportsLenovoHardware(
-          infos.some((info) => info.supported && LENOVO_FEATURE_KEYS.includes(info.key))
+        nextSupportsLenovoHardware = infos.some(
+          (info) => info.supported && LENOVO_FEATURE_KEYS.includes(info.key)
         )
-        useLoadingStore.getState().finish(loadingId)
-      })
-      .catch(() => {
+      } catch {
         // Keep the default (all sections visible) when the probe fails.
-        useLoadingStore.getState().finish(loadingId)
+      }
+      if (cancelled) return
+
+      setSupportsLenovoHardware(nextSupportsLenovoHardware)
+      setScopesReady(true)
+      setLoadError(null)
+      setPageLoading(false)
+    }
+
+    loadPage()
+      .catch((reason: unknown) => {
+        if (cancelled) return
+        const raw = sanitizeBridgeError(reason)
+        setScopesReady(false)
+        setLoadError(
+          isHostUnavailableError(raw)
+            ? t('home.hostUnavailable', {
+                defaultValue:
+                  'The backend host is not running. Wait a moment and retry, or restart the app.'
+              })
+            : raw || t('settings.loadFailed', { defaultValue: 'Failed to load settings' })
+        )
+        setPageLoading(false)
       })
       .finally(() => {
-        if (!cancelled) setPageLoading(false)
+        useLoadingStore.getState().finish(loadingId)
       })
     return () => {
       cancelled = true
       useLoadingStore.getState().finish(loadingId)
     }
-  }, [])
+  }, [reloadToken, t])
 
   const navItems = supportsLenovoHardware
     ? NAV_ITEMS
@@ -139,6 +193,7 @@ export default function SettingsPage(): React.JSX.Element {
 
   const startResize = (event: React.PointerEvent<HTMLDivElement>): void => {
     event.preventDefault()
+    resizeCleanupRef.current?.()
     const startX = event.clientX
     const startWidth = navWidth
     const onMove = (moveEvent: PointerEvent): void => {
@@ -148,10 +203,17 @@ export default function SettingsPage(): React.JSX.Element {
     const onUp = (): void => {
       window.removeEventListener('pointermove', onMove)
       window.removeEventListener('pointerup', onUp)
+      resizeCleanupRef.current = null
     }
     window.addEventListener('pointermove', onMove)
     window.addEventListener('pointerup', onUp)
+    resizeCleanupRef.current = () => {
+      window.removeEventListener('pointermove', onMove)
+      window.removeEventListener('pointerup', onUp)
+    }
   }
+
+  const editorsReady = !pageLoading && loadError == null && scopesReady
 
   return (
     <div className="udt-settings-page">
@@ -162,7 +224,7 @@ export default function SettingsPage(): React.JSX.Element {
       <div className="udt-settings-page__surface">
         <nav
           className="udt-settings-page__nav"
-          style={{ width: navWidth, minWidth: NAV_MIN_WIDTH, maxWidth: NAV_MAX_WIDTH }}
+          style={{ '--udt-settings-nav-width': `${navWidth}px` } as React.CSSProperties}
           aria-label={t('settings.title')}
         >
           <ul className="udt-settings-page__nav-list">
@@ -194,14 +256,21 @@ export default function SettingsPage(): React.JSX.Element {
           onPointerDown={startResize}
         />
         <section
-          key={active}
+          ref={contentRef}
+          key={editorsReady ? active : 'settings-pending'}
           className="udt-settings-page__content udt-settings-page__content-anim"
           aria-label={t(`settings.nav.${active}`)}
         >
           <header className="udt-settings-page__section-header">
             <h2 className="udt-settings-page__section-title">{t(`settings.nav.${active}`)}</h2>
           </header>
-          {pageLoading ? <SkeletonList rows={4} withIcon={false} accessory="select" /> : renderSection(active)}
+          {pageLoading ? (
+            <SkeletonList rows={4} withIcon={false} accessory="select" />
+          ) : loadError != null || !scopesReady ? (
+            <SettingsLoadError message={loadError} onRetry={retry} />
+          ) : (
+            renderSection(active)
+          )}
         </section>
       </div>
     </div>
