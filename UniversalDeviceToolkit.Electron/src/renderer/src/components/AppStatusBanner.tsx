@@ -1,4 +1,4 @@
-import { ArrowSync24Regular, Dismiss24Regular, Warning24Filled } from './icons/fluent'
+import { ArrowSync24Regular, Dismiss16Regular, Warning24Filled } from './icons/fluent'
 import './AppStatusBanner.css'
 
 /**
@@ -48,7 +48,7 @@ export default function AppStatusBanner({
             onClosed?.()
           }}
         >
-          <Dismiss24Regular />
+          <Dismiss16Regular />
         </button>
       )}
     </div>

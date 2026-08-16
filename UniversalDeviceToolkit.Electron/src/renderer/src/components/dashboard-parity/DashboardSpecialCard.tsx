@@ -6,9 +6,9 @@ import {
   Desktop24Regular,
   DeveloperBoard24Regular,
   DeveloperBoardLightning20Regular,
-  QuestionCircle24Regular,
   Settings24Regular,
-  Sleep24Regular
+  Sleep24Regular,
+  TaskListSquareLtr20Regular
 } from '@fluentui/react-icons'
 import { useTranslation } from 'react-i18next'
 import { copyLines } from '../../utils/clipboard'
@@ -181,11 +181,13 @@ function DiscreteGpuCard({
             placement="topRight"
             overlayClassName="udt-parity-gpu-popover"
           >
-            <Button
-              aria-label={t('dashboardHardware.discreteGpu.information')}
-              className="udt-parity-icon-button"
-              icon={<QuestionCircle24Regular />}
-            />
+            <Tooltip title={t('dashboardHardware.discreteGpu.processesTooltip', { defaultValue: '查看 GPU 状态及占用进程' })}>
+              <Button
+                aria-label={t('dashboardHardware.discreteGpu.information', { defaultValue: '查看占用 GPU 的进程列表与状态' })}
+                className="udt-parity-icon-button"
+                icon={<TaskListSquareLtr20Regular />}
+              />
+            </Tooltip>
           </Popover>
         </div>
         <Dropdown

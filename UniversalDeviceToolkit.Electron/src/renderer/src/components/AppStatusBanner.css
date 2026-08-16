@@ -22,6 +22,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
+  min-width: 0;
   padding: 12px 10px;
   border: 1px solid var(--udt-control-stroke-default, rgba(128, 128, 128, 0.35));
   border-radius: var(--udt-radius-card, 8px);
@@ -78,6 +79,7 @@
   flex: 1;
   min-width: 0;
   font-weight: 500;
+  overflow-wrap: anywhere;
 }
 
 .udt-status-banner__close {
@@ -85,9 +87,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  margin: -2px -4px 0 0;
+  width: 22px;
+  height: 22px;
+  margin: -2px -2px 0 0;
   padding: 0;
   border: none;
   border-radius: var(--udt-radius-control, 4px);
@@ -102,6 +104,11 @@
 .udt-status-banner__close:hover {
   background: var(--udt-control-fill-secondary, rgba(128, 128, 128, 0.15));
   color: var(--udt-text-primary, #f3f3f3);
+}
+
+.udt-status-banner__close svg {
+  width: 12px;
+  height: 12px;
 }
 
 /* ── Status banner glass (follows the window backdrop setting) ──
@@ -125,4 +132,14 @@
   background: color-mix(in srgb, var(--udt-surface-card) 72%, transparent);
   backdrop-filter: blur(30px) saturate(1.5);
   -webkit-backdrop-filter: blur(30px) saturate(1.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .udt-status-banner {
+    animation: none;
+  }
+}
+
+.udt-animations-off .udt-status-banner {
+  animation: none;
 }

@@ -75,6 +75,7 @@
   display: flex;
   align-items: flex-start;
   gap: 10px;
+  min-width: 0;
   padding: 12px 10px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-card);
@@ -138,8 +139,11 @@
   font-size: var(--udt-font-small-caption);
   line-height: 1.4;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
 }
 
 .udt-notification-item__progress {
@@ -162,15 +166,14 @@
   flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
-  margin: -2px -4px 0 0;
+  width: 22px;
+  height: 22px;
+  margin: -2px -2px 0 0;
   padding: 0;
   border: none;
   border-radius: var(--udt-radius-control);
   background: transparent;
   color: var(--udt-text-tertiary);
-  font-size: 12px;
   cursor: pointer;
   transition:
     background-color var(--udt-anim-fast) ease-out,
@@ -180,6 +183,11 @@
 .udt-notification-item__close:hover {
   background: var(--udt-control-fill-secondary);
   color: var(--udt-text-primary);
+}
+
+.udt-notification-item__close svg {
+  width: 12px;
+  height: 12px;
 }
 
 /* ── Notification glass (follows the window backdrop setting) ────
@@ -207,4 +215,22 @@
   background: color-mix(in srgb, var(--udt-surface-card) 72%, transparent);
   backdrop-filter: blur(30px) saturate(1.5);
   -webkit-backdrop-filter: blur(30px) saturate(1.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .udt-notification-item {
+    animation: none;
+  }
+
+  .udt-notification-item--closing {
+    transform: none;
+  }
+}
+
+.udt-animations-off .udt-notification-item {
+  animation: none;
+}
+
+.udt-animations-off .udt-notification-item--closing {
+  transform: none;
 }

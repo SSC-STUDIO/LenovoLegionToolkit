@@ -1,8 +1,8 @@
-﻿import '../notifications/notifications.css'
+import '../notifications/notifications.css'
 import { useEffect, useRef, useState } from 'react'
 import {
   CheckmarkCircle24Filled,
-  Dismiss24Regular,
+  Dismiss16Regular,
   DismissCircle24Filled,
   Info24Filled,
   Warning24Filled
@@ -94,11 +94,13 @@ function NotificationToast({ item }: { item: NotificationItem }): React.JSX.Elem
   const title = item.mergeCount > 1 ? `${item.title} ×${item.mergeCount}` : item.title
   const classes = ['udt-notification-item']
   if (closing) classes.push('udt-notification-item--closing')
+  const isError = item.severity === 'Error'
 
   return (
     <div
       className={classes.join(' ')}
-      role="status"
+      role={isError ? 'alert' : 'status'}
+      aria-live={isError ? 'assertive' : 'polite'}
       onMouseEnter={() => pause(item.id)}
       onMouseLeave={() => resume(item.id)}
     >
@@ -113,7 +115,13 @@ function NotificationToast({ item }: { item: NotificationItem }): React.JSX.Elem
           <div className="udt-notification-item__message">{item.message}</div>
         )}
         {hasProgress && (
-          <div className="udt-notification-item__progress" aria-hidden="true">
+          <div
+            className="udt-notification-item__progress"
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={percent}
+          >
             <div className="udt-notification-item__progress-fill" style={{ width: `${percent}%` }} />
           </div>
         )}
@@ -124,7 +132,7 @@ function NotificationToast({ item }: { item: NotificationItem }): React.JSX.Elem
         aria-label={t('common.close', { defaultValue: 'Close' })}
         onClick={handleClose}
       >
-        <Dismiss24Regular />
+        <Dismiss16Regular />
       </button>
     </div>
   )
@@ -191,7 +199,10 @@ function positionClass(position: string): string {
 export default function NotificationCenter(): React.JSX.Element {
   const { t } = useTranslation()
   const items = useNotificationCenter((s) => s.items)
-  const settingsReady = useSettingsStore((s) => s.loading === false)
+  const [prefsReady, setPrefsReady] = useState(() => {
+    const application = useSettingsStore.getState().scopes.application
+    return typeof application === 'object' && application !== null
+  })
   // Subscribed (not getState) so position changes apply immediately.
   const applicationScope = useSettingsStore((s) => s.scopes.application)
   const storedPosition =
@@ -201,17 +212,27 @@ export default function NotificationCenter(): React.JSX.Element {
   const position = typeof storedPosition === 'string' ? storedPosition : 'BottomRight'
 
   useEffect(() => {
-    void useSettingsStore.getState().load(['application'])
+    let cancelled = false
+    void useSettingsStore
+      .getState()
+      .load(['application'])
+      .catch(() => undefined)
+      .finally(() => {
+        if (!cancelled) setPrefsReady(true)
+      })
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  if (items.length === 0 || !settingsReady) return <></>
+  if (items.length === 0 || !prefsReady) return <></>
 
   const classes = ['udt-notification-center', positionClass(position)]
 
   // key={position}: remounting on placement change replays the slide-in
   // animation, so moving the notification corner is visible immediately.
   return (
-    <div key={position} className={classes.join(' ')} aria-label={t('common.notifications')}>
+    <div key={position} className={classes.join(' ')} role="region" aria-label={t('common.notifications')}>
       {items.map((item) => (
         <NotificationToast key={item.id} item={item} />
       ))}
