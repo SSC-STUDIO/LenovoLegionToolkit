@@ -1,6 +1,6 @@
-﻿import './sensor.css'
+import './sensor.css'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Tooltip } from 'antd'
+import { Alert, Button, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { formatDateForUi } from '../../utils/dateFormat'
 import {
@@ -23,6 +23,8 @@ import SensorGauge from './SensorGauge'
 import TrendChart, { type TrendSeries } from './TrendChart'
 import { formatUsageInGigabytes } from '../../utils/format'
 import { subscribeUiVisibility } from '../../utils/uiVisibility'
+import { getTemperatureUnit } from '../settings/AppearanceSection'
+import { resolveSensorViewPhase, type SensorViewPhase } from './sensorViewPhase'
 
 const CPU_UTILIZATION = '#4f9df7'
 const CPU_CLOCK = '#6fbf73'
@@ -49,6 +51,57 @@ function readSavedRefreshInterval(scopes: Record<string, unknown>): number {
 }
 
 type TemperatureUnit = 'C' | 'F'
+
+const SENSOR_COLUMNS = ['CPU', 'Battery', 'GPU'] as const
+type SensorColumnId = (typeof SENSOR_COLUMNS)[number]
+
+function normalizeSensorColumnId(value: string): SensorColumnId | null {
+  const upper = value.toUpperCase()
+  if (upper === 'CPU') return 'CPU'
+  if (upper === 'BATTERY') return 'Battery'
+  if (upper === 'GPU') return 'GPU'
+  return null
+}
+
+function readStringList(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  return value.filter((item): item is string => typeof item === 'string')
+}
+
+/** Visible dashboard columns from hardwareSensors (VisibleSections + SectionOrder). */
+function readSensorLayout(scopes: Record<string, unknown>): SensorColumnId[] {
+  const hardware =
+    typeof scopes.hardwareSensors === 'object' && scopes.hardwareSensors !== null
+      ? (scopes.hardwareSensors as Record<string, unknown>)
+      : {}
+  const visible = new Set(
+    readStringList(hardware.VisibleSections ?? hardware.visibleSections)
+      .map(normalizeSensorColumnId)
+      .filter((id): id is SensorColumnId => id != null)
+  )
+  const ordered: SensorColumnId[] = []
+  for (const item of readStringList(hardware.SectionOrder ?? hardware.sectionOrder)) {
+    const id = normalizeSensorColumnId(item)
+    if (id != null && (visible.size === 0 || visible.has(id)) && !ordered.includes(id)) {
+      ordered.push(id)
+    }
+  }
+  for (const id of SENSOR_COLUMNS) {
+    if ((visible.size === 0 || visible.has(id)) && !ordered.includes(id)) ordered.push(id)
+  }
+  return ordered.length > 0 ? ordered : [...SENSOR_COLUMNS]
+}
+
+function readTemperatureUnit(scopes: Record<string, unknown>): TemperatureUnit {
+  const application =
+    typeof scopes.application === 'object' && scopes.application !== null
+      ? (scopes.application as Record<string, unknown>)
+      : {}
+  if (application['TemperatureUnit'] === 'F' || application['TemperatureUnit'] === 'C') {
+    return application['TemperatureUnit']
+  }
+  return getTemperatureUnit()
+}
 
 interface SensorMetric {
   label: string
@@ -488,6 +541,11 @@ export default function SensorSection(): React.JSX.Element {
   const status = useSensorsStore((state) => state.status)
   const trend = useSensorsStore((state) => state.trend)
   const scopes = useSettingsStore((state) => state.scopes)
+  const [requestedPhase, setRequestedPhase] = useState<SensorViewPhase>('idle')
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const viewPhase = resolveSensorViewPhase(snapshot, requestedPhase)
+  const retryRef = useRef<(() => void) | null>(null)
+  const savedIntervalRef = useRef(1)
   // WPF SensorsControl._detailsExpanded: one flag toggles all detail panels.
   const [allDetailsExpanded, setAllDetailsExpanded] = useState(false)
   const toggleAllDetails = (): void => setAllDetailsExpanded((value) => !value)
@@ -506,35 +564,86 @@ export default function SensorSection(): React.JSX.Element {
   // First-snapshot loading chrome: fixed 3-column skeleton with the global
   // shimmer/breathing animation (same structure as DashboardSkeleton).
 
-  const temperatureUnit: TemperatureUnit = (() => {
-    const appearance =
-      typeof scopes.appearance === 'object' && scopes.appearance !== null
-        ? (scopes.appearance as Record<string, unknown>)
-        : {}
-    return appearance['TemperatureUnit'] === 'F' ? 'F' : 'C'
-  })()
+  const temperatureUnit = readTemperatureUnit(scopes)
+  const sensorLayout = readSensorLayout(scopes)
 
   useEffect(() => {
     const store = useSensorsStore.getState()
-    void store.loadStatus()
-    void store.loadSnapshot()
-    let savedInterval = 1
-    const startWithSavedInterval = async (): Promise<void> => {
-      await useSettingsStore.getState().load()
-      savedInterval = readSavedRefreshInterval(useSettingsStore.getState().scopes)
-      await store.start(savedInterval)
+    let cancelled = false
+    let pollGeneration = 0
+    let polling = false
+    let uiActive = false
+    savedIntervalRef.current = 1
+
+    const loadFirstSnapshot = async (): Promise<void> => {
+      setRequestedPhase('loading')
+      setLoadError(null)
+      await store.loadStatus()
+      if (cancelled) return
+      await store.loadSnapshot()
+      if (cancelled) return
+      const after = useSensorsStore.getState()
+      if (after.snapshot != null) {
+        setRequestedPhase('ready')
+        return
+      }
+      setLoadError(after.error)
+      setRequestedPhase('error')
     }
-    void startWithSavedInterval()
+
+    const startPolls = async (): Promise<void> => {
+      if (cancelled || polling) return
+      polling = true
+      const generation = ++pollGeneration
+      await store.start(savedIntervalRef.current)
+      if (cancelled || generation !== pollGeneration) {
+        polling = false
+        await store.stop()
+        return
+      }
+      if (!useSensorsStore.getState().subscribed) {
+        polling = false
+      }
+    }
+
+    const stopPolls = async (): Promise<void> => {
+      pollGeneration += 1
+      polling = false
+      await store.stop()
+    }
+
+    retryRef.current = () => {
+      void (async () => {
+        await loadFirstSnapshot()
+        if (cancelled) return
+        if (uiActive) {
+          polling = false
+          await startPolls()
+        }
+      })()
+    }
+
+    void (async () => {
+      await useSettingsStore.getState().load()
+      if (cancelled) return
+      savedIntervalRef.current = readSavedRefreshInterval(useSettingsStore.getState().scopes)
+      await loadFirstSnapshot()
+    })()
+
     const unsubscribeVisibility = subscribeUiVisibility((active) => {
+      if (cancelled) return
+      uiActive = active
       if (active) {
-        void useSensorsStore.getState().start(savedInterval)
+        void startPolls()
       } else {
-        void useSensorsStore.getState().stop()
+        void stopPolls()
       }
     })
     return () => {
+      cancelled = true
+      retryRef.current = null
       unsubscribeVisibility()
-      void useSensorsStore.getState().stop()
+      void stopPolls()
     }
   }, [])
 
@@ -604,9 +713,9 @@ export default function SensorSection(): React.JSX.Element {
       </div>
     ) : undefined
 
-  // Low-power adapter: pinned to the bottom of the battery column.
-  const batteryFooter = isLowPowerAdapter ? (
-    <div className="udt-sensor-panel__footer udt-sensor-panel__footer--warning" role="status">
+  // Low-power adapter: placed below chart legend (WPF _lowWattageWarning parity).
+  const batteryAfterChart = isLowPowerAdapter ? (
+    <div className="udt-sensor-panel__warning--low-power" role="status">
       {t('dashboard.sensor.lowPowerAdapter')}
     </div>
   ) : undefined
@@ -791,8 +900,13 @@ export default function SensorSection(): React.JSX.Element {
     })
   }
 
+  const handleRetry = (): void => {
+    retryRef.current?.()
+  }
+
   const handleIntervalChange = (seconds: number): void => {
     setRefreshMenu(null)
+    savedIntervalRef.current = seconds
     // start() re-subscribes with the new interval when already polling.
     void useSensorsStore.getState().start(seconds)
     // Persist to the dashboard settings scope so the choice survives restarts.
@@ -809,7 +923,27 @@ export default function SensorSection(): React.JSX.Element {
       .catch(() => undefined)
   }
 
-  if (snapshot == null) {
+  if (viewPhase === 'error') {
+    return (
+      <div className="udt-sensors udt-fade-in">
+        <div className="udt-sensor-board udt-sensor-board--status">
+          <Alert
+            type="error"
+            showIcon
+            message={t('dashboard.sensor.loadError', { defaultValue: 'Failed to load sensor data' })}
+            description={loadError ?? t('common.error', { defaultValue: 'Something went wrong' })}
+            action={
+              <Button size="small" onClick={handleRetry}>
+                {t('common.retry', { defaultValue: 'Retry' })}
+              </Button>
+            }
+          />
+        </div>
+      </div>
+    )
+  }
+
+  if (viewPhase === 'idle' || viewPhase === 'loading' || snapshot == null) {
     return (
       <div className="udt-sensors udt-fade-in" role="status" aria-label={t('common.loading', { defaultValue: 'Loading…' })}>
         <div className="udt-sensor-board">
@@ -841,132 +975,150 @@ export default function SensorSection(): React.JSX.Element {
         className="udt-sensor-board"
         onContextMenu={openRefreshMenu}
       >
-        <div className="udt-sensor-board__grid">
-          <SensorPanel
-            title={t('dashboard.sensor.cpu')}
-            model={cpuModel}
-            gauge={
-              <SensorGauge
-                value={cpu?.usage}
-                max={100}
-                unit="%"
-                label={t('dashboard.sensor.usage')}
-                color={CPU_UTILIZATION}
-              />
+        <div
+          className="udt-sensor-board__grid"
+          style={{ ['--udt-sensor-columns' as string]: String(sensorLayout.length) }}
+        >
+          {sensorLayout.map((columnId) => {
+            if (columnId === 'CPU') {
+              return (
+                <SensorPanel
+                  key="CPU"
+                  title={t('dashboard.sensor.cpu')}
+                  model={cpuModel}
+                  gauge={
+                    <SensorGauge
+                      value={cpu?.usage}
+                      max={100}
+                      unit="%"
+                      label={t('dashboard.sensor.usage')}
+                      color={CPU_UTILIZATION}
+                    />
+                  }
+                  metrics={[
+                    {
+                      label: t('dashboard.sensor.frequency'),
+                      value: formatFrequency(cpuClock),
+                      icon: FREQUENCY_ICON,
+                      ...metricBar(cpuClock, cpu?.coreClockMax, 5000)
+                    },
+                    {
+                      label: t('dashboard.sensor.temperature'),
+                      value: formatTemperature(cpu?.temperature, temperatureUnit),
+                      valueColor: cpuTemperature ?? valueColor,
+                      icon: <TemperatureIcon color={cpuTemperature ?? valueColor} />,
+                      ...metricBar(cpu?.temperature, null, 100)
+                    },
+                    {
+                      label: t('dashboard.sensor.fan'),
+                      value: formatFan(cpu?.fanSpeed),
+                      icon: FAN_ICON,
+                      ...metricBar(cpu?.fanSpeed, null, 5000)
+                    }
+                  ]}
+                  series={trendSeries.cpu}
+                  labels={labels}
+                  details={cpuDetails}
+                  detailsExpanded={allDetailsExpanded}
+                  onToggleDetails={toggleAllDetails}
+                  emptyLabel={chartEmptyLabel}
+                />
+              )
             }
-            metrics={[
-              {
-                label: t('dashboard.sensor.frequency'),
-                value: formatFrequency(cpuClock),
-                icon: FREQUENCY_ICON,
-                ...metricBar(cpuClock, cpu?.coreClockMax, 5000)
-              },
-              {
-                label: t('dashboard.sensor.temperature'),
-                value: formatTemperature(cpu?.temperature, temperatureUnit),
-                valueColor: cpuTemperature ?? valueColor,
-                icon: <TemperatureIcon color={cpuTemperature ?? valueColor} />,
-                ...metricBar(cpu?.temperature, null, 100)
-              },
-              {
-                label: t('dashboard.sensor.fan'),
-                value: formatFan(cpu?.fanSpeed),
-                icon: FAN_ICON,
-                ...metricBar(cpu?.fanSpeed, null, 5000)
-              }
-            ]}
-            series={trendSeries.cpu}
-            labels={labels}
-            details={cpuDetails}
-            detailsExpanded={allDetailsExpanded}
-            onToggleDetails={toggleAllDetails}
-            emptyLabel={chartEmptyLabel}
-          />
-          <SensorPanel
-            title={t('dashboard.sensor.battery')}
-            model={battery?.modelName}
-            gauge={
-              <SensorGauge
-                value={battery?.chargeLevel}
-                max={100}
-                unit="%"
-                label={t('dashboard.sensor.charge')}
-                color={batteryGaugeColor(battery)}
-              />
+            if (columnId === 'Battery') {
+              return (
+                <SensorPanel
+                  key="Battery"
+                  title={t('dashboard.sensor.battery')}
+                  model={battery?.modelName}
+                  gauge={
+                    <SensorGauge
+                      value={battery?.chargeLevel}
+                      max={100}
+                      unit="%"
+                      label={t('dashboard.sensor.charge')}
+                      color={batteryGaugeColor(battery)}
+                    />
+                  }
+                  metrics={[
+                    {
+                      label: t('dashboard.sensor.health'),
+                      value: formatHealth(battery?.health),
+                      icon: HEALTH_ICON,
+                      ...metricBar(healthPercent, 100, 100)
+                    },
+                    {
+                      label: t('dashboard.sensor.temperature'),
+                      value: formatTemperature(battery?.temperature, temperatureUnit),
+                      valueColor: batteryTemperature ?? valueColor,
+                      icon: <TemperatureIcon color={batteryTemperature ?? valueColor} />,
+                      ...metricBar(battery?.temperature, 60, 60)
+                    },
+                    {
+                      label: t('dashboard.sensor.rate'),
+                      value: formatRate(battery?.chargeRate),
+                      icon: RATE_ICON,
+                      barValue: rateBarValue,
+                      barMax: 100
+                    }
+                  ]}
+                  series={trendSeries.battery}
+                  labels={labels}
+                  warnings={batteryWarnings}
+                  afterChart={batteryAfterChart}
+                  details={batteryDetails}
+                  detailsExpanded={allDetailsExpanded}
+                  onToggleDetails={toggleAllDetails}
+                  detailsHeader={batteryDetailsHeader}
+                  emptyLabel={chartEmptyLabel}
+                />
+              )
             }
-            metrics={[
-              {
-                label: t('dashboard.sensor.health'),
-                value: formatHealth(battery?.health),
-                icon: HEALTH_ICON,
-                ...metricBar(healthPercent, 100, 100)
-              },
-              {
-                label: t('dashboard.sensor.temperature'),
-                value: formatTemperature(battery?.temperature, temperatureUnit),
-                valueColor: batteryTemperature ?? valueColor,
-                icon: <TemperatureIcon color={batteryTemperature ?? valueColor} />,
-                ...metricBar(battery?.temperature, 60, 60)
-              },
-              {
-                label: t('dashboard.sensor.rate'),
-                value: formatRate(battery?.chargeRate),
-                icon: RATE_ICON,
-                barValue: rateBarValue,
-                barMax: 100
-              }
-            ]}
-            series={trendSeries.battery}
-            labels={labels}
-            warnings={batteryWarnings}
-            footer={batteryFooter}
-            details={batteryDetails}
-            detailsExpanded={allDetailsExpanded}
-            onToggleDetails={toggleAllDetails}
-            detailsHeader={batteryDetailsHeader}
-            emptyLabel={chartEmptyLabel}
-          />
-          <SensorPanel
-            title={t('dashboard.sensor.gpu')}
-            model={gpuModel}
-            gauge={
-              <SensorGauge
-                value={gpu?.usage}
-                max={100}
-                unit="%"
-                label={t('dashboard.sensor.usage')}
-                color={GPU_UTILIZATION}
+            return (
+              <SensorPanel
+                key="GPU"
+                title={t('dashboard.sensor.gpu')}
+                model={gpuModel}
+                gauge={
+                  <SensorGauge
+                    value={gpu?.usage}
+                    max={100}
+                    unit="%"
+                    label={t('dashboard.sensor.usage')}
+                    color={GPU_UTILIZATION}
+                  />
+                }
+                metrics={[
+                  {
+                    label: t('dashboard.sensor.frequency'),
+                    value: formatFrequency(gpu?.coreClock),
+                    icon: FREQUENCY_ICON,
+                    ...metricBar(gpu?.coreClock, null, 2500)
+                  },
+                  {
+                    label: t('dashboard.sensor.temperature'),
+                    value: formatTemperature(gpu?.temperature, temperatureUnit),
+                    valueColor: gpuTemperature ?? valueColor,
+                    icon: <TemperatureIcon color={gpuTemperature ?? valueColor} />,
+                    ...metricBar(gpu?.temperature, null, 100)
+                  },
+                  {
+                    label: t('dashboard.sensor.fan'),
+                    value: formatFan(gpu?.fanSpeed),
+                    icon: FAN_ICON,
+                    ...metricBar(gpu?.fanSpeed, null, 5000)
+                  }
+                ]}
+                series={trendSeries.gpu}
+                labels={labels}
+                details={gpuDetails}
+                detailsHeader={gpuDetailsHeader}
+                detailsExpanded={allDetailsExpanded}
+                onToggleDetails={toggleAllDetails}
+                emptyLabel={chartEmptyLabel}
               />
-            }
-            metrics={[
-              {
-                label: t('dashboard.sensor.frequency'),
-                value: formatFrequency(gpu?.coreClock),
-                icon: FREQUENCY_ICON,
-                ...metricBar(gpu?.coreClock, null, 2500)
-              },
-              {
-                label: t('dashboard.sensor.temperature'),
-                value: formatTemperature(gpu?.temperature, temperatureUnit),
-                valueColor: gpuTemperature ?? valueColor,
-                icon: <TemperatureIcon color={gpuTemperature ?? valueColor} />,
-                ...metricBar(gpu?.temperature, null, 100)
-              },
-              {
-                label: t('dashboard.sensor.fan'),
-                value: formatFan(gpu?.fanSpeed),
-                icon: FAN_ICON,
-                ...metricBar(gpu?.fanSpeed, null, 5000)
-              }
-            ]}
-            series={trendSeries.gpu}
-            labels={labels}
-            details={gpuDetails}
-            detailsHeader={gpuDetailsHeader}
-            detailsExpanded={allDetailsExpanded}
-            onToggleDetails={toggleAllDetails}
-            emptyLabel={chartEmptyLabel}
-          />
+            )
+          })}
         </div>
         {refreshMenu != null && (
           <div

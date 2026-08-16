@@ -617,12 +617,12 @@
   }
 }
 
-/* ── Battery detail capacity rows (label + value, no progress track) ── */
+/* ── Battery detail capacity rows (label + value, 2 equal columns matching detail grid) ── */
 
 .udt-sensor-panel__battery-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 8px;
   margin-bottom: 12px;
 }
 
@@ -650,7 +650,15 @@
   white-space: nowrap;
 }
 
-/* Panel footer (e.g. low-power adapter warning at the bottom). */
+.udt-sensor-panel__warning--low-power {
+  margin-top: 8px;
+  text-align: center;
+  color: var(--udt-status-warning);
+  font-size: var(--udt-font-caption);
+  font-weight: 500;
+}
+
+/* Panel footer (e.g. status at the bottom). */
 .udt-sensor-panel__footer {
   margin-top: 12px;
   padding-top: 10px;
