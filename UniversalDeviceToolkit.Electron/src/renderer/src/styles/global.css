@@ -729,17 +729,16 @@ body {
 
 .udt-nav-resizer::after {
   content: '';
-  width: 2px;
+  width: 1px;
   height: 100%;
   border-radius: 1px;
   background: transparent;
-  transition: background-color var(--udt-anim-fast) ease-out, width var(--udt-anim-fast) ease-out;
+  transition: background-color var(--udt-anim-fast) ease-out;
 }
 
 .udt-nav-resizer:hover::after,
 .udt-nav-resizer.udt-nav-resizer--active::after {
-  background: var(--udt-accent);
-  width: 3px;
+  background: var(--udt-control-stroke-default);
 }
 
 .udt-nav--resizing,
