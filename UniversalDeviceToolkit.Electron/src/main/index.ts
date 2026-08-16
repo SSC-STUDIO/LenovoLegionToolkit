@@ -265,6 +265,15 @@ function launchVerifiedInstaller(params: unknown): Promise<{ ok: boolean }> {
 }
 
 async function invokeBridgeMethod(method: string, params?: unknown): Promise<unknown> {
+  if (method === 'settings.set') {
+    const p = params as { scope?: string; values?: Record<string, unknown> } | undefined
+    if (p?.scope === 'application' && p.values) {
+      minimizeToTrayCache = {
+        ...minimizeToTrayCache,
+        ...readMinimizeFlags(p.values)
+      }
+    }
+  }
   if (method === 'log.open-folder') return openLogFolder()
   if (method === 'device.info') return getDeviceInfo()
   if (method === 'status-window.show') {
@@ -423,9 +432,6 @@ function cachedShouldMinimizeToTray(keys: MinimizeSetting[]): boolean {
 function hideMainWindowToTray(): void {
   const win = mainWindow
   if (!win || win.isDestroyed()) return
-  if (win.isMinimized()) {
-    win.restore()
-  }
   win.hide()
 }
 
