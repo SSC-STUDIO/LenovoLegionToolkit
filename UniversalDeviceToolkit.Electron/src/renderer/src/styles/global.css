@@ -948,30 +948,45 @@ body {
 /* Legacy .udt-feature-* dashboard card styles removed: the live dashboard
    renders .udt-parity-* classes (dashboardParity.css container queries). */
 
-/* Ant Design overrides to match Electron-UI dark chrome.
-   Height/fill/radius only — do not reapply native .udt-select chrome
-   (CSS chevron, appearance, extra padding) onto antd Select. */
+/* Ant Design Select: ensure .ant-select-selector renders the consistent control
+   box (border, fill, radius, height, padding) across all themes and variants. */
 .ant-select {
   position: relative;
+  box-sizing: border-box;
+  min-height: var(--udt-control-height);
 }
 
-.ant-select-selector {
-  position: relative !important;
+.ant-select .ant-select-selector,
+.ant-select:not(.ant-select-borderless):not(.ant-select-customize-input) .ant-select-selector {
+  border: 1px solid var(--udt-control-stroke-default) !important;
+  border-radius: var(--udt-radius-control) !important;
+  background: var(--udt-control-fill-default) !important;
+  height: var(--udt-control-height) !important;
+  min-height: var(--udt-control-height) !important;
+  padding-inline-start: 11px !important;
+  padding-inline-end: 28px !important;
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
   align-items: center !important;
-  min-height: var(--udt-control-height) !important;
-  padding-inline-start: 11px !important;
-  padding-inline-end: 28px !important;
-  border: 1px solid var(--udt-control-stroke-default) !important;
-  border-radius: var(--udt-radius-control) !important;
-  background: var(--udt-control-fill-default) !important;
   box-sizing: border-box !important;
+  transition: border-color 0.15s ease, background 0.15s ease !important;
 }
 
-.ant-select-single .ant-select-selector {
-  height: var(--udt-control-height) !important;
+.ant-select:not(.ant-select-borderless):not(.ant-select-customize-input) {
+  border: none !important;
+  background: transparent !important;
+}
+
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--udt-control-stroke-secondary) !important;
+  background: var(--udt-control-fill-secondary) !important;
+}
+
+.ant-select:not(.ant-select-disabled).ant-select-focused .ant-select-selector,
+.ant-select:not(.ant-select-disabled).ant-select-open .ant-select-selector {
+  border-color: var(--udt-accent) !important;
+  box-shadow: none !important;
 }
 
 .ant-select-selection-wrap {
@@ -984,6 +999,8 @@ body {
   overflow: hidden !important;
 }
 
+.ant-select-content,
+.ant-select-placeholder,
 .ant-select-selection-item,
 .ant-select-selection-placeholder {
   font-size: var(--udt-font-caption) !important;
@@ -992,10 +1009,6 @@ body {
   text-overflow: ellipsis !important;
   flex: 1 1 auto !important;
   min-width: 0 !important;
-}
-
-.ant-select-single .ant-select-selection-item,
-.ant-select-single .ant-select-selection-placeholder {
   line-height: calc(var(--udt-control-height) - 2px) !important;
 }
 
@@ -1016,18 +1029,10 @@ body {
 /* Enabled value text: antd colorText is 85% white, which reads as grey /
    placeholder-ish next to --udt-text-primary labels. Disabled Selects keep
    antd's dimmed text. */
+.ant-select:not(.ant-select-disabled) .ant-select-content,
+.ant-select:not(.ant-select-disabled) .ant-select-content-value,
 .ant-select:not(.ant-select-disabled) .ant-select-selection-item {
   color: var(--udt-text-primary);
-}
-
-/* Focused/open chrome: without a user accent, antd falls back to its own blue
-   colorPrimary (border + outline ring), clashing with the UDT accent tokens.
-   Align every Select with the .udt-driver-select / .udt-plugins-page__filter
-   states: accent border, no outline ring. */
-.ant-select:not(.ant-select-disabled).ant-select-focused .ant-select-selector,
-.ant-select:not(.ant-select-disabled).ant-select-open .ant-select-selector {
-  border-color: var(--udt-accent) !important;
-  box-shadow: none !important;
 }
 
 /* Linear progress: Ant line, native meter, and custom tracks share geometry. */
@@ -1137,20 +1142,18 @@ meter {
   font-size: var(--udt-font-caption) !important;
 }
 
-/* Native .udt-select chrome (arrow image, padding, border) must not leak onto antd Select. */
+/* Native .udt-select CSS chevron must not leak onto antd Select. Chrome stays
+   on the antd 6 root (see .ant-select rules above). */
 .udt-select.ant-select {
   appearance: none;
-  padding: 0;
+  background-image: none;
   height: auto;
   min-height: var(--udt-control-height);
   min-width: 0;
-  background: none;
-  border: none;
-  box-shadow: none;
 }
 
-.udt-select.ant-select-focused .ant-select-selector,
-.udt-select.ant-select-open .ant-select-selector {
+.udt-select.ant-select-focused,
+.udt-select.ant-select-open {
   border-color: var(--udt-accent-secondary) !important;
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--udt-accent-secondary) 25%, transparent);
 }
@@ -1625,8 +1628,8 @@ meter {
   cursor: default;
 }
 
-/* Native select arrow (theme-neutral grey) */
-.udt-select {
+/* Native <select> arrow only — must not apply to antd .ant-select. */
+select.udt-select {
   padding-right: 26px;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' fill='none' stroke='%23888888' stroke-width='1.5'/></svg>");
   background-repeat: no-repeat;

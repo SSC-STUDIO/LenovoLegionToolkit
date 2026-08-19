@@ -1,4 +1,4 @@
-import { app, BrowserWindow, clipboard, ipcMain, nativeTheme, powerMonitor, screen, shell, webContents } from 'electron'
+import { app, BrowserWindow, clipboard, ipcMain, nativeTheme, powerMonitor, screen, session, shell, webContents } from 'electron'
 import { join } from 'path'
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
@@ -10,15 +10,16 @@ import {
   writeHostLog,
   writeRendererLog
 } from './logger'
-import { initSingleInstance, setMainWindowRef } from './single-instance'
+import { initSingleInstance, setMainWindowRef, setMainWindowRestore } from './single-instance'
 import { effectiveZoom, installZoomAutoApply, setUiScale } from './ui-scale'
 import { readWindowState, updateWindowState } from './window-state'
 import { applyAutorun, readAutorun } from './autorun'
 import { getDeviceInfo } from './device-info'
 import { invokeDialogBridgeMethod, isDialogBridgeMethod, registerFileDialogIpc } from './dialogs'
 import { logMemoryUsage, reportMemoryUsage } from './memory-report'
-import { initTray, destroyTray, refreshTrayMenu, updateTrayLanguage } from './tray'
-import { initOsdWindow, destroyOsdWindow } from './osd-window'
+import { initTray, destroyTray, isTrayActive, refreshTrayMenu, updateTrayLanguage } from './tray'
+import { destroyTrayPopup } from './tray-popup'
+import { initOsdWindow, destroyOsdWindow, isOsdVisible, suspendOsdWindow } from './osd-window'
 import { initStatusWindow, destroyStatusWindow, showStatusWindow } from './status-window'
 import { flags, describeFlags, toHostArgs } from './flags'
 import {
@@ -68,7 +69,8 @@ app.commandLine.appendSwitch(
 app.commandLine.appendSwitch('disable-background-networking')
 app.commandLine.appendSwitch('disable-component-update')
 app.commandLine.appendSwitch('disable-breakpad')
-app.commandLine.appendSwitch('js-flags', '--optimize-for-size')
+app.commandLine.appendSwitch('renderer-process-limit', '2')
+app.commandLine.appendSwitch('js-flags', '--optimize-for-size --max-old-space-size=128')
 // --single-process merges renderers into the main process so memory usage can be
 // inspected as a single entry (debug/dev only).
 if (flags.singleProcess) {
@@ -95,6 +97,15 @@ if (!initSingleInstance()) {
 
 let mainWindow: BrowserWindow | null = null
 let isQuitting = false
+/**
+ * True while the shell is tray-only: no main BrowserWindow, Host still running.
+ * Prevents window-all-closed from quitting and keeps the tray alive.
+ */
+let trayOnlySession = false
+/** Tray navigation requested before the recreated renderer finished loading. */
+let pendingTrayRoute: string | null = null
+/** Cancels a pending tray-background destroy if restore wins the race. */
+let backgroundDestroyGeneration = 0
 /** One-shot bypass after a close was already decided (sync preventDefault, then real close). */
 let allowCloseOnce = false
 let installerSelection: ReturnType<typeof readInstallerSelection> = null
@@ -356,15 +367,23 @@ function parseWindowVisibilityAction(data: unknown): 'Show' | 'Hide' | null {
 function applyHostWindowVisibility(data: unknown): void {
   const action = parseWindowVisibilityAction(data)
   if (action == null) return
-  const win = mainWindow
-  if (!win || win.isDestroyed()) return
   if (action === 'Hide') {
-    win.hide()
+    if (cachedShouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray'])) {
+      enterBackground()
+      return
+    }
+    const win = mainWindow
+    if (win && !win.isDestroyed()) win.hide()
     return
   }
-  if (win.isMinimized()) win.restore()
-  win.show()
-  win.focus()
+  restoreMainWindow()
+}
+
+function flushPendingTrayNavigation(window: BrowserWindow): void {
+  if (!pendingTrayRoute || window.isDestroyed()) return
+  const route = pendingTrayRoute
+  pendingTrayRoute = null
+  window.webContents.send('bridge:event', 'tray:navigate', { route })
 }
 
 function flushBufferedHostEvents(window: BrowserWindow): void {
@@ -380,6 +399,7 @@ function flushBufferedHostEvents(window: BrowserWindow): void {
     window.webContents.send('bridge:event', item.event, item.data)
   }
   bufferedHostEvents.length = 0
+  flushPendingTrayNavigation(window)
 }
 
 function attachHostEventForwarding(): void {
@@ -430,12 +450,63 @@ function cachedShouldMinimizeToTray(keys: MinimizeSetting[]): boolean {
 }
 
 function hideMainWindowToTray(): void {
+  enterBackground()
+}
+
+function enterBackground(): void {
+  if (isQuitting) return
+  trayOnlySession = true
+  persistMainWindowBounds()
+  destroyStatusWindow()
+  destroyTrayPopup()
+  if (!isOsdVisible()) {
+    suspendOsdWindow()
+  }
   const win = mainWindow
-  if (!win || win.isDestroyed()) return
-  win.hide()
+  if (win && !win.isDestroyed()) {
+    if (win.isVisible()) win.hide()
+    const generation = ++backgroundDestroyGeneration
+    setImmediate(() => {
+      if (isQuitting || generation !== backgroundDestroyGeneration) return
+      const pending = mainWindow
+      if (pending && !pending.isDestroyed()) pending.destroy()
+    })
+  } else {
+    setSurfaceVisible('main', false)
+  }
+  void trimChromiumCaches()
+  setTimeout(() => void logMemoryUsage('tray background'), 2000)
+}
+
+function restoreMainWindow(route?: string): void {
+  if (isQuitting) return
+  backgroundDestroyGeneration++
+  if (route) pendingTrayRoute = route
+  if (mainWindow && !mainWindow.isDestroyed()) {
+    if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.show()
+    mainWindow.focus()
+    if (pendingTrayRoute && !mainWindow.webContents.isLoadingMainFrame()) {
+      flushPendingTrayNavigation(mainWindow)
+    }
+    return
+  }
+  createWindow()
+}
+
+async function trimChromiumCaches(): Promise<void> {
+  try {
+    await session.defaultSession.clearCache()
+    await session.defaultSession.clearStorageData({
+      storages: ['serviceworkers', 'cachestorage']
+    })
+  } catch (error) {
+    console.error('[main] failed to clear session cache:', error)
+  }
 }
 
 function forceCloseMainWindow(): void {
+  trayOnlySession = false
   const win = mainWindow
   if (!win || win.isDestroyed()) {
     allowCloseOnce = false
@@ -655,12 +726,7 @@ function createWindow(): void {
     if (persisted.isMaximized) {
       mainWindow.maximize()
     }
-    if (flags.minimized) {
-      // Mirrors Electron --minimized: start hidden in the tray instead of showing.
-      mainWindow.hide()
-    } else {
-      mainWindow.show()
-    }
+    mainWindow.show()
   })
 
   // Renderer-observable window state (port of Electron FullscreenHelper).
@@ -687,15 +753,13 @@ function createWindow(): void {
     // read after this handler returns cannot cancel the close.
     event.preventDefault()
     if (process.platform === 'darwin') {
-      // macOS convention: the red traffic light hides the window instead of
-      // closing it — the Dock icon stays and Cmd+Q is the real quit. Unlike
-      // Windows/Linux this is unconditional (not tied to the minimize-to-tray
-      // setting): the menu bar icon is the persistent handle for reopening.
-      win.hide()
+      // macOS convention: the red traffic light does not quit. Destroy the
+      // renderer so tray-only memory drops; Dock / tray recreate it on activate.
+      enterBackground()
       return
     }
     if (cachedShouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray'])) {
-      win.hide()
+      enterBackground()
       return
     }
     forceCloseMainWindow()
@@ -725,9 +789,11 @@ function createWindow(): void {
     allowCloseOnce = false
     setSurfaceVisible('main', false)
     mainWindow = null
-    destroyTray()
-    destroyOsdWindow()
-    destroyStatusWindow()
+    if (isQuitting || !trayOnlySession) {
+      destroyTray()
+      destroyOsdWindow()
+      destroyStatusWindow()
+    }
   })
 
   const syncMainVisibility = (): void => {
@@ -748,6 +814,7 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+  forwardHostEvents(mainWindow)
 }
 
 function startHost(): void {
@@ -845,12 +912,11 @@ app.whenReady().then(() => {
       return
     }
     if (process.platform === 'darwin') {
-      // Mirrors the native traffic light close: hide, never destroy.
-      mainWindow.hide()
+      enterBackground()
       return
     }
     if (cachedShouldMinimizeToTray(['MinimizeOnClose', 'MinimizeToTray'])) {
-      mainWindow.hide()
+      enterBackground()
       return
     }
     forceCloseMainWindow()
@@ -1006,6 +1072,7 @@ app.whenReady().then(() => {
   // the whole application instead of hiding the window.
   ipcMain.on('app:quit', () => {
     isQuitting = true
+    trayOnlySession = false
     app.quit()
   })
 
@@ -1047,8 +1114,13 @@ app.whenReady().then(() => {
   if (hostClient.isReady) {
     void refreshMinimizeToTrayCache()
   }
-  createWindow()
+  const trayOpts = {
+    disableTooltip: flags.disableTrayTooltip,
+    invokeHost: (method: string, params?: unknown) => hostClient.invoke(method, params),
+    restoreWindow: (route?: string) => restoreMainWindow(route)
+  }
   setMainWindowRef(() => mainWindow)
+  setMainWindowRestore(() => restoreMainWindow())
   setUiActivityHandler(broadcastUiVisibility)
   // macOS: install the native system menu bar (App/File/Edit/View/Window/Help).
   installApplicationMenu()
@@ -1056,11 +1128,14 @@ app.whenReady().then(() => {
   // the VS Output window shows the true total across every Electron process.
   ipcMain.handle('app:memory-usage', () => reportMemoryUsage())
   setTimeout(() => void logMemoryUsage('after startup'), 5000)
-  const trayOpts = {
-    disableTooltip: flags.disableTrayTooltip,
-    invokeHost: (method: string, params?: unknown) => hostClient.invoke(method, params)
-  }
   initTray(() => mainWindow, trayOpts)
+  if (flags.minimized) {
+    // Start tray-only: no main renderer until the user restores from the tray.
+    trayOnlySession = true
+    notifyHostUiActivity(false)
+  } else {
+    createWindow()
+  }
   // Rebuild the tray after automation.json loads (default Deactivate GPU quick action).
   hostClient.on('host.initialized', () => {
     void refreshMinimizeToTrayCache()
@@ -1078,7 +1153,6 @@ app.whenReady().then(() => {
   // the window is built when the showOsd setting or an osd.changed event needs it.
   initOsdWindow()
   initStatusWindow()
-  if (mainWindow) forwardHostEvents(mainWindow)
 
   // Keep the main window inside a visible work area when display metrics
   // change (monitor unplug, resolution or DPI switch). The OSD window has its
@@ -1119,27 +1193,15 @@ app.whenReady().then(() => {
   }
 
   app.on('activate', () => {
-    const win = mainWindow
-    if (win && !win.isDestroyed()) {
-      // macOS: the window commonly still exists but is hidden (close hides it,
-      // Cmd+Q is the only real quit). Show the existing window instead of
-      // rebuilding it; also restores a minimized window.
-      if (win.isMinimized()) win.restore()
-      win.show()
-      win.focus()
-      return
-    }
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow()
-      initTray(() => mainWindow, trayOpts)
-      initOsdWindow()
-      initStatusWindow()
-    }
+    restoreMainWindow()
   })
 })
 
 app.on('window-all-closed', () => {
   console.log('[main] window-all-closed')
+  if (trayOnlySession && isTrayActive() && !isQuitting) {
+    return
+  }
   if (process.platform !== 'darwin') {
     app.quit()
   }
@@ -1148,6 +1210,7 @@ app.on('window-all-closed', () => {
 app.on('before-quit', (event) => {
   console.log('[main] before-quit, host running:', hostClient.isRunning)
   isQuitting = true
+  trayOnlySession = false
   cancelAllIdleDestroys()
   if (!hostClient.isRunning) return
   event.preventDefault()
