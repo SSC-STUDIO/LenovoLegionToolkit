@@ -69,12 +69,10 @@ app.commandLine.appendSwitch(
 app.commandLine.appendSwitch('disable-background-networking')
 app.commandLine.appendSwitch('disable-component-update')
 app.commandLine.appendSwitch('disable-breakpad')
-app.commandLine.appendSwitch('renderer-process-limit', '1')
-app.commandLine.appendSwitch('disable-site-isolation-trials')
 app.commandLine.appendSwitch('disable-gpu-shader-disk-cache')
-app.commandLine.appendSwitch('disk-cache-size', '10485760')
-app.commandLine.appendSwitch('media-cache-size', '10485760')
-app.commandLine.appendSwitch('js-flags', '--optimize-for-size --max-old-space-size=96 --max-semi-space-size=2 --expose_gc')
+app.commandLine.appendSwitch('disk-cache-size', '16777216')
+app.commandLine.appendSwitch('media-cache-size', '16777216')
+app.commandLine.appendSwitch('js-flags', '--optimize-for-size --max-old-space-size=192 --expose_gc')
 // --single-process merges renderers into the main process so memory usage can be
 // inspected as a single entry (debug/dev only).
 if (flags.singleProcess) {
