@@ -69,8 +69,12 @@ app.commandLine.appendSwitch(
 app.commandLine.appendSwitch('disable-background-networking')
 app.commandLine.appendSwitch('disable-component-update')
 app.commandLine.appendSwitch('disable-breakpad')
-app.commandLine.appendSwitch('renderer-process-limit', '2')
-app.commandLine.appendSwitch('js-flags', '--optimize-for-size --max-old-space-size=128')
+app.commandLine.appendSwitch('renderer-process-limit', '1')
+app.commandLine.appendSwitch('disable-site-isolation-trials')
+app.commandLine.appendSwitch('disable-gpu-shader-disk-cache')
+app.commandLine.appendSwitch('disk-cache-size', '10485760')
+app.commandLine.appendSwitch('media-cache-size', '10485760')
+app.commandLine.appendSwitch('js-flags', '--optimize-for-size --max-old-space-size=96 --max-semi-space-size=2 --expose_gc')
 // --single-process merges renderers into the main process so memory usage can be
 // inspected as a single entry (debug/dev only).
 if (flags.singleProcess) {
@@ -500,6 +504,21 @@ async function trimChromiumCaches(): Promise<void> {
     await session.defaultSession.clearStorageData({
       storages: ['serviceworkers', 'cachestorage']
     })
+    if (typeof global.gc === 'function') {
+      try {
+        global.gc()
+      } catch {
+        // Optional V8 garbage collection
+      }
+    }
+    const proc = process as unknown as { trimWorkingSet?: () => void }
+    if (typeof proc.trimWorkingSet === 'function') {
+      try {
+        proc.trimWorkingSet()
+      } catch {
+        // Optional Windows working-set trim
+      }
+    }
   } catch (error) {
     console.error('[main] failed to clear session cache:', error)
   }
@@ -1124,10 +1143,11 @@ app.whenReady().then(() => {
   setUiActivityHandler(broadcastUiVisibility)
   // macOS: install the native system menu bar (App/File/Edit/View/Window/Help).
   installApplicationMenu()
-  // Real memory footprint after all processes settle (5s). Logged to stdout so
-  // the VS Output window shows the true total across every Electron process.
   ipcMain.handle('app:memory-usage', () => reportMemoryUsage())
-  setTimeout(() => void logMemoryUsage('after startup'), 5000)
+  setTimeout(() => {
+    void trimChromiumCaches()
+    void logMemoryUsage('after startup')
+  }, 5000)
   initTray(() => mainWindow, trayOpts)
   if (flags.minimized) {
     // Start tray-only: no main renderer until the user restores from the tray.
