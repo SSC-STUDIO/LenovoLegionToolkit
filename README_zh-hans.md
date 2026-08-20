@@ -38,7 +38,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 宣发文案（口语版）：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
-本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户升级后可保留设置、插件与数据；包管理器身份在 6.x 断代（winget 改为 `SSC-STUDIO.UniversalDeviceToolkit`，Scoop 改为 `universaldevicetoolkit`），旧包 ID 不支持原地升级。Electron 客户端支持 Windows、macOS 与 Linux 三平台：Windows 提供**完整硬件控制**，macOS 与 Linux 以**基础模式**运行（完整界面、插件与系统工具，不含联想硬件控制）。Android 和移动端伴侣应用不在项目范围内，也不受支持。
+本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户升级后可保留设置、插件与数据；包管理器身份在 6.x 断代（winget 改为 `SSC-STUDIO.UniversalDeviceToolkit`，Scoop 改为 `universaldevicetoolkit`），旧包 ID 不支持原地升级。正式产品以 **Windows 为先**：GitHub Releases 发布 Windows NSIS Full/Online 安装包，内嵌自包含 win-x64 Host。macOS 与 Linux 为**实验面**（Electron 壳、可移植 Host、CrossPlatform 诊断 CLI），在对应发布流水线落地前**没有官方 Electron 发行包**。Android 和移动端伴侣应用不在项目范围内，也不受支持。
 
 本软件不运行后台服务，典型内存约 400MB（Electron 界面 + .NET Host；托盘空闲更低），不收集用户信息。
 
@@ -49,12 +49,36 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 | 🔥 **性能与功耗** | Fn+Q 性能模式、自定义模式风扇曲线、CPU/GPU 功耗上限 |
 | 🌈 **RGB 与灯效** | Spectrum 逐键、四区 RGB、白光键盘、启动 Logo |
 | 🎮 **显卡控制** | 独显开关、MUX、超频、关闭独显 |
-| 🔌 **电池养护** | 保养模式、充电阈值（60%/80%） |
-| ⚡ **自动化与宏** | 插电、启动应用、合盖、定时等触发 |
+| 🔌 **电池养护** | 保养模式、充电阈值（60%/80%）、健康度分级与损耗率实时分析 |
+| 🧹 **系统与缓存清理** | 一键清理显卡着色器（DirectX/Vulkan）、微信/QQ 缓存及开发者包管理器缓存 |
+| 🎛️ **托盘控制中心** | 任务栏托盘弹出微型控制台，内嵌电源模式胶囊切换器与电量徽章 |
+| ⚡ **自动化与宏** | 插电、游戏运行等触发，支持内置推荐模板与 JSON/剪贴板快速导入导出 |
 | 🖥️ **传感器** | CPU/GPU 温度、风扇转速、频率监测 |
 | 🔧 **插件扩展** | CPU/GPU 工具、内置网络与加速、Shell、鼠标指针等 |
 | 🌍 **78+ 语言** | 完整本地化 + 社区翻译 |
-| 📦 **无臃肿** | 无后台服务、典型约 400MB 内存（Electron + Host；托盘空闲更低）、无遥测、无账号 |
+| 📦 **极致轻量** | 托盘空闲深度休眠、无后台常驻服务、无遥测、无账号 |
+
+### ⚡ 为什么选用 Electron？它真的臃肿吗？（架构与深度性能优化揭秘）
+
+不少开发者与玩家对基于网页技术（Electron / Chromium）的桌面客户端存在固有偏见，认为其“必定动辄消耗数 G 内存、冷启动慢、掉帧卡顿”。
+
+然而，**架构设计与工程调优的深度决定了软件的最终表现**。UDT 采用了 **现代化 Electron 前端 + 无窗口自包含 .NET 10 后端 (Headless Host)** 的前后端分离解耦架构，并实施了极为严苛的性能控制与专项优化：
+
+#### 1. 前后端职责高度清晰，各展所长
+- **前端（Electron + React 19 + TypeScript）**：仅专注负责高精度像素渲染、Windows 11 Mica 亚克力动态流光材质、跨 DPI 高清缩放与 78+ 语言热重载。
+- **后端（.NET 10 / C# 13 无头宿主进程）**：所有底层硬件访问（WMI/ACPI、内核驱动直通、电源策略交互、传感器数据流轮询、自动化管线引擎与安全插件沙箱）全部在原生高性能 .NET 运行时内执行，通过基于 stdio 的极速 JSON-RPC 与前端通讯。
+
+#### 2. UDT 专属的五大底层性能优化
+- 🍃 **托盘休眠「零内存伪装」机制 (Zero-Memory Tray Sleeping)**：
+  不同于大多数软件将窗口“隐藏”在后台仍保持完整 DOM 树与渲染进程，当 UDT 最小化或关闭到托盘时，主进程会**彻底销毁 (Destroy) 主窗口与 Chromium 渲染实例**；托盘弹窗更是采用毫秒级空闲自动卸载策略。应用常驻后台时内存占用降至最低，不抢占任何前台游戏与生产力资源。
+- ⚡ **亚秒级页面就绪响应 (Sub-400ms Median Ready Latency)**：
+  在自动化性能基准套件（`Tools/UiPerformance.Smoke`）测试下，所有页面从中转到完全交互就绪的中位数耗时全部控制在 **≤ 400ms**（达到测试套件定义的最高评级 *Excellent*）。
+- 🎯 **高频热路径零冗余分配 (Hot-Path Zero Allocation)**：
+  对于每秒刷新的传感器图表、仪表盘与列表渲染，静态 ECharts 配置与 DOM 结构通过 `useMemo` 与静态缓存深度复用，数据更新走增量通道，坚决避免渲染循环内重复创建对象导致的垃圾回收（GC）停顿。
+- 📦 **严格图分析与按需按路由拆包 (Strict Tree Shaking & Bundle Pruning)**：
+  使用 `electron-vite` 进行严谨的依赖图裁剪，对 7000+ Fluent 图标库进行逐个模块按需导入，杜绝整体引入；页面与语言包均走异步动态加载。
+- 🛡️ **无常驻 Windows 服务，无后台遥测 (Zero Services, Zero Telemetry)**：
+  不安装任何常驻后台的 Windows Service，不向任何服务器发送遥测数据，进程随退随止。
 
 <details>
 <summary>更多截图</summary>
@@ -174,36 +198,52 @@ UDT 通过目录化设备支持识别机型：受支持的联想游戏/创作本
 
 若 UDT 以基础模式启动，属于有意隐藏不支持的硬件控制。你仍可使用插件与通用工具，欢迎提交日志或 device-pack 数据以扩大基础模式覆盖。
 
-### macOS 与 Linux
+### macOS 与 Linux（实验）
 
-Electron 客户端支持 **Windows、macOS 与 Linux** 三平台。由于 .NET 后端及其硬件控制层依赖 Windows 专属接口（Win32、WMI、注册表与厂商专用驱动），**完整联想硬件控制仅限 Windows**。macOS 与 Linux 以**基础模式**运行：完整界面、插件扩展、系统优化、主题、更新与日志均可用，但不提供联想硬件开关。
+UDT 正式产品以 **Windows 为先**。官方 GitHub Releases 发布 Windows NSIS Full/Online 安装包，内嵌自包含 win-x64 Host（`Release.yml`）。在对应流水线落地前，**没有官方 macOS 或 Linux Electron 发行包**。
 
-| 能力 | Windows | macOS | Linux |
-|---|---|---|---|
-| 联想硬件控制（Fn+Q、RGB、风扇曲线、独显、电池养护） | ✅ | —（基础模式） | —（基础模式） |
-| 插件、系统优化、主题、更新、日志 | ✅ | ✅ | ✅ |
-| 标题栏 | 无边框自绘（Mica） | 原生红绿灯 + 毛玻璃 | 无边框自绘 |
-| 菜单栏 | 自动隐藏 | 原生系统菜单 | 自动隐藏 |
-| 托盘图标与快捷操作 | ✅ | ✅ | ✅ |
-| OSD 悬浮窗 | ✅ | ✅ | ✅ |
-| 重启 / 关机 / 睡眠操作 | ✅ | ❌ | ❌ |
-| Windows 电源计划切换 | ✅ | ❌ | ❌ |
+当前 macOS/Linux 上存在的是实验性开发面，不是已发布产品：
+
+- `UniversalDeviceToolkit.CrossPlatform` 诊断 CLI（有 CI 覆盖）
+- 可移植 `net10.0` 库，以及用 `UDTWindows=false` / `UDT_PLATFORM=linux|macos` 构建的可移植 Host（`build.sh host`）
+- 适配标题栏、菜单、托盘与 OSD 的 Electron 壳代码
+
+可移植 Host 对大多数 Windows 专属 RPC 返回 `-32099`（`Not supported on this platform.`）。官方插件面向 Windows TFM。不要把本地 `npm run dist:mac` / `npm run dist:linux` 产物当作官方发行包。
+
+| 能力 | Windows（已支持） | macOS / Linux（实验） |
+|---|---|---|
+| 联想硬件控制（Fn+Q、RGB、风扇曲线、独显、电池养护） | 是 | 否 |
+| 官方插件与 Windows 系统优化 | 是 | 否（可移植 Host 对这些域打桩；官方插件为 Windows TFM） |
+| 主题、应用内更新、日志界面 | 是 | 壳层可能渲染；无官方更新通道或发行资源 |
+| 标题栏 / 菜单 / 托盘 / OSD 壳 | 是 | 壳代码存在；不是已发布产品 |
+| 重启 / 关机 / 睡眠操作 | 是 | 否 |
+| Windows 电源计划切换 | 是 | 否 |
 
 > [!NOTE]
-> 重启/关机/睡眠与 Windows 电源计划切换在 Electron 主进程中使用 Windows 专属工具（`shutdown.exe`、`powercfg`）实现，因此 macOS 与 Linux 不可用。OSD 悬浮窗本身跨平台，但其传感器数据来自 Host，仅在 Windows 上有实际意义。
+> 重启/关机/睡眠与 Windows 电源计划切换在 Electron 主进程中使用 Windows 专属工具（`shutdown.exe`、`powercfg`）。OSD 悬浮窗本身是 Electron 壳；传感器数据来自 Host，仅在 Windows 上有实际意义。
 
-**构建 Electron 客户端**
+**构建 Electron 客户端（Windows 产品路径）**
 
 ```bash
 cd UniversalDeviceToolkit.Electron
 npm ci              # 仅首次（使用 package-lock.json）
 npm run dev         # 开发服务器 + Electron 窗口（热重载）
-npm run dist:win    # Windows NSIS 安装包（x64）
-npm run dist:mac    # macOS DMG（arm64 + x64）
-npm run dist:linux  # Linux AppImage（x64）
+npm run dist:win    # Windows NSIS 安装包（x64）；官方发布使用此路径
 ```
 
-Windows 安装包内嵌发布到 `UniversalDeviceToolkit.Host/publish/win-x64` 的自包含 .NET Host；各平台 Host 发布方式与 macOS/Linux 剩余发布工作见 [DEPLOYMENT.md](Docs/DEPLOYMENT.md)。
+`npm run dist:mac` 与 `npm run dist:linux` 是**实验性本地打包脚本**。它们要求可移植 Host 已发布到 `UniversalDeviceToolkit.Host/publish/osx-*` 或 `linux-x64`。`Release.yml` 不会运行它们，也不会挂载 DMG/AppImage/DEB 资源。
+
+**实验性可移植 Host**（不是发行产物）：
+
+```bash
+# Linux x64
+UDT_PLATFORM=linux ./build.sh host
+
+# macOS（自动检测 osx-arm64 或 osx-x64）
+UDT_PLATFORM=macos ./build.sh host
+```
+
+或使用带 `-p:UDTWindows=false` 的等价 `dotnet publish`。用默认 Windows TFM（`net10.0-windows10.0.26100.0`）去发布 `osx-*` / `linux-x64` 不是受支持的产品路径。详见 [DEPLOYMENT.md](Docs/DEPLOYMENT.md)。
 
 仓库还包含 `UniversalDeviceToolkit.CrossPlatform`——一个纯 `net10.0` 的诊断 CLI，可在 macOS/Linux/Windows 本机运行（构建方式见 [DEPLOYMENT.md](Docs/DEPLOYMENT.md)）：
 
