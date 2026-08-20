@@ -1,13 +1,11 @@
 import type { TFunction } from 'i18next'
 
-/** Matches Electron NotificationsSettingsWindow position enum (left positions removed to avoid nav collision). */
+/** Standard desktop notification positions (corners and top/bottom edges). */
 export const NOTIFICATION_POSITIONS = [
   'BottomRight',
-  'BottomCenter',
   'TopRight',
   'TopCenter',
-  'CenterRight',
-  'Center'
+  'BottomCenter'
 ] as const
 
 export const NOTIFICATION_DURATIONS = ['Short', 'Normal', 'Long'] as const
@@ -20,10 +18,11 @@ export function sanitizeNotificationPosition(raw?: unknown): NotificationPositio
   if ((NOTIFICATION_POSITIONS as readonly string[]).includes(raw)) {
     return raw as NotificationPosition
   }
-  // Remap deprecated left-side positions to right-side equivalents
+  // Remap deprecated positions to standard desktop corner/edge equivalents
   if (raw === 'TopLeft') return 'TopRight'
-  if (raw === 'BottomLeft') return 'BottomRight'
-  if (raw === 'CenterLeft') return 'CenterRight'
+  if (raw === 'BottomLeft' || raw === 'CenterLeft' || raw === 'CenterRight' || raw === 'Center') {
+    return 'BottomRight'
+  }
   return 'BottomRight'
 }
 

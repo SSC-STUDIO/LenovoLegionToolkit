@@ -45,18 +45,6 @@
   right: 16px;
 }
 
-.udt-notification-center--center-right {
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-}
-
-.udt-notification-center--center {
-  top: 50%;
-  right: 50%;
-  transform: translate(50%, -50%);
-}
-
 .udt-notification-item {
   display: flex;
   align-items: flex-start;

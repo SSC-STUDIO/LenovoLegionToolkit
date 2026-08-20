@@ -20,8 +20,6 @@ function bannerPositionClass(position: string): string {
       return 'udt-status-banner-stack--top-center'
     case 'TopRight':
       return 'udt-status-banner-stack--top-right'
-    case 'CenterRight':
-      return 'udt-status-banner-stack--center-right'
     default:
       return 'udt-status-banner-stack--bottom-right'
   }

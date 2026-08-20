@@ -38,18 +38,6 @@
   transform: translateX(50%);
 }
 
-.udt-status-banner-stack--center-right {
-  top: 50%;
-  right: 16px;
-  transform: translateY(-50%);
-}
-
-.udt-status-banner-stack--center {
-  top: 50%;
-  right: 50%;
-  transform: translate(50%, -50%);
-}
-
 .udt-status-banner {
   display: flex;
   align-items: flex-start;

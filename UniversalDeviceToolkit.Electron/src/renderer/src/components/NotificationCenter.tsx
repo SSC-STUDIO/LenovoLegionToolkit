@@ -175,7 +175,7 @@ export function maybePlayNotificationSound(): void {
   if (readNotificationPreferences().playSound) playNotificationSound()
 }
 
-/** Electron NotificationPosition → placement CSS class. */
+/** NotificationPosition → placement CSS class. */
 function positionClass(position: string): string {
   const sanitized = sanitizeNotificationPosition(position)
   switch (sanitized) {
@@ -185,8 +185,6 @@ function positionClass(position: string): string {
       return 'udt-notification-center--top-center'
     case 'TopRight':
       return 'udt-notification-center--top-right'
-    case 'CenterRight':
-      return 'udt-notification-center--center-right'
     default:
       return 'udt-notification-center--bottom-right'
   }
