@@ -126,6 +126,9 @@ public sealed class LocalizationRuntimeTests : IDisposable
         localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell \u5DF2\u6CE8\u518C");
 
         localizer.CurrentCulture = new CultureInfo("de");
+        localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell ist registriert");
+
+        localizer.CurrentCulture = new CultureInfo("is");
         localizer.GetString("CLI_Shell_RegisteredYes").Should().Be("Shell is registered");
     }
 

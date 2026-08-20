@@ -5,10 +5,12 @@ using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
+using UniversalDeviceToolkit.Lib.Features.Clevo;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.Features.Msi;
 using UniversalDeviceToolkit.Lib.Features.Razer;
+using UniversalDeviceToolkit.Lib.Features.Tongfang;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.System.EC;
 using UniversalDeviceToolkit.Lib.System.Management;
@@ -190,7 +192,7 @@ public class AsusPowerModeFeatureTests
         atk.Seed(RogEndpoint, 0);
 
         var lenovo = new TestLenovoBackend(supported: true);
-        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp(), UnavailableRazer(), UnavailableAlienware(), UnavailableAcer(), UnavailableMsi());
+        var facade = new PowerModeFeature(lenovo, new AsusPowerModeFeature(atk), UnavailableHp(), UnavailableRazer(), UnavailableAlienware(), UnavailableAcer(), UnavailableMsi(), UnavailableTongfang(), UnavailableClevo());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Balance);
@@ -212,7 +214,9 @@ public class AsusPowerModeFeatureTests
             UnavailableRazer(),
             UnavailableAlienware(),
             UnavailableAcer(),
-            UnavailableMsi());
+            UnavailableMsi(),
+            UnavailableTongfang(),
+            UnavailableClevo());
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Quiet);
@@ -230,7 +234,9 @@ public class AsusPowerModeFeatureTests
             UnavailableRazer(),
             UnavailableAlienware(),
             UnavailableAcer(),
-            UnavailableMsi());
+            UnavailableMsi(),
+            UnavailableTongfang(),
+            UnavailableClevo());
 
         (await facade.IsSupportedAsync()).Should().BeFalse();
         await Assert.ThrowsAnyAsync<Exception>(() => facade.GetStateAsync());
@@ -253,6 +259,10 @@ public class AsusPowerModeFeatureTests
     private static AcerPowerModeFeature UnavailableAcer() => new(new UnavailableAcerWmi());
 
     private static MsiPowerModeFeature UnavailableMsi() => new(new UnavailableEcChannel());
+
+    private static TongfangPowerModeFeature UnavailableTongfang() => new(new UnavailableEcChannel());
+
+    private static ClevoPowerModeFeature UnavailableClevo() => new(new UnavailableEcChannel());
 
     private sealed class UnavailableEcChannel : IEcChannel
     {

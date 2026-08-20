@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 using FluentAssertions;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.DeviceSupport;
@@ -22,7 +24,7 @@ namespace UniversalDeviceToolkit.Tests.Features;
 
 [Trait("Category", TestCategories.Unit)]
 [Collection("PowerModeFeatureTests")]
-public class MsiPowerModeFeatureTests
+public class ClevoPowerModeFeatureTests
 {
     private sealed class FakeEcChannel : IEcChannel
     {
@@ -58,151 +60,95 @@ public class MsiPowerModeFeatureTests
         }
     }
 
-    private static FakeEcChannel Gen2Ec(byte shiftMode = 0xC1)
+    private static FakeEcChannel ClevoEc(byte mode = 0x00)
     {
         var ec = new FakeEcChannel();
-        ec.Seed(0xD2, shiftMode);
+        ec.Seed(0xD8, mode);
         return ec;
     }
 
     [Fact]
     public async Task IsSupported_ShouldBeFalse_WhenEcUnavailable()
     {
-        SetMachineInformation(MsiMachine());
-        var feature = new MsiPowerModeFeature(new FakeEcChannel { Available = false });
+        SetMachineInformation(ClevoMachine());
+        var feature = new ClevoPowerModeFeature(new FakeEcChannel { Available = false });
 
         (await feature.IsSupportedAsync()).Should().BeFalse();
         ResetCompatibilityCache();
     }
 
     [Fact]
-    public async Task IsSupported_ShouldBeFalse_OnNonMsiMachine()
+    public async Task IsSupported_ShouldBeFalse_OnNonClevoMachine()
     {
         SetMachineInformation(new MachineInformation { Vendor = "LENOVO", MachineType = "83DF", Model = "Legion Y9000P IRX9" });
-        var feature = new MsiPowerModeFeature(Gen2Ec());
+        var feature = new ClevoPowerModeFeature(ClevoEc());
 
         (await feature.IsSupportedAsync()).Should().BeFalse();
         ResetCompatibilityCache();
     }
 
     [Fact]
-    public async Task IsSupported_ShouldDetectGen2Layout()
+    public async Task IsSupported_ShouldDetectLayoutAndReadState()
     {
-        SetMachineInformation(MsiMachine());
-        var feature = new MsiPowerModeFeature(Gen2Ec(0xC0));
+        SetMachineInformation(ClevoMachine());
+        var feature = new ClevoPowerModeFeature(ClevoEc(0x03));
 
         (await feature.IsSupportedAsync()).Should().BeTrue();
         (await feature.GetStateAsync()).Should().Be(PowerModeState.Performance);
         ResetCompatibilityCache();
     }
 
-    [Fact]
-    public async Task IsSupported_ShouldFallBackToGen1Layout()
-    {
-        SetMachineInformation(MsiMachine());
-        var ec = new FakeEcChannel();
-        ec.Seed(0xF2, 0xC1);
-
-        var feature = new MsiPowerModeFeature(ec);
-
-        (await feature.IsSupportedAsync()).Should().BeTrue();
-        (await feature.GetStateAsync()).Should().Be(PowerModeState.Balance);
-        ResetCompatibilityCache();
-    }
-
-    [Fact]
-    public async Task IsSupported_ShouldBeFalse_WhenNoLayoutMatches()
-    {
-        SetMachineInformation(MsiMachine());
-        var feature = new MsiPowerModeFeature(new FakeEcChannel()); // empty RAM
-
-        (await feature.IsSupportedAsync()).Should().BeFalse();
-        ResetCompatibilityCache();
-    }
-
     [Theory]
-    [InlineData(PowerModeState.Quiet, 0xC2)]
-    [InlineData(PowerModeState.Balance, 0xC1)]
-    [InlineData(PowerModeState.Performance, 0xC0)]
-    public async Task SetState_ShouldWriteAndVerifyReadBack(PowerModeState state, byte expectedMode)
+    [InlineData(PowerModeState.Quiet, 0x01)]
+    [InlineData(PowerModeState.Balance, 0x00)]
+    [InlineData(PowerModeState.Performance, 0x03)]
+    public async Task SetState_ShouldWriteAndVerifyReadBack(PowerModeState state, byte expectedValue)
     {
-        SetMachineInformation(MsiMachine());
-        var ec = Gen2Ec();
+        SetMachineInformation(ClevoMachine());
+        var ec = ClevoEc();
 
-        var feature = new MsiPowerModeFeature(ec);
+        var feature = new ClevoPowerModeFeature(ec);
         await feature.SetStateAsync(state);
 
         ec.Writes.Should().ContainSingle()
-            .Which.Should().Be((0xD2, expectedMode));
+            .Which.Should().Be((0xD8, expectedValue));
         (await feature.GetStateAsync()).Should().Be(state);
         ResetCompatibilityCache();
     }
 
     [Fact]
-    public async Task SetState_ShouldThrow_WhenWriteFails()
+    public async Task Facade_ShouldUseClevoBackend_WhenEarlierBackendsUnsupported()
     {
-        SetMachineInformation(MsiMachine());
-        var ec = Gen2Ec();
-        ec.WriteSucceeds = false;
-
-        var feature = new MsiPowerModeFeature(ec);
-
-        await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.Quiet));
-        ResetCompatibilityCache();
-    }
-
-    [Fact]
-    public async Task SetState_ShouldRejectGodModeAndExtreme()
-    {
-        SetMachineInformation(MsiMachine());
-        var feature = new MsiPowerModeFeature(Gen2Ec());
-
-        await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.GodMode));
-        await Assert.ThrowsAnyAsync<Exception>(() => feature.SetStateAsync(PowerModeState.Extreme));
-        ResetCompatibilityCache();
-    }
-
-    [Fact]
-    public async Task Facade_ShouldUseMsiBackend_WhenEarlierBackendsUnsupported()
-    {
-        SetMachineInformation(MsiMachine());
+        SetMachineInformation(ClevoMachine());
 
         var facade = new PowerModeFeature(
             new TestLenovoBackend(supported: false),
             new AsusPowerModeFeature(new UnavailableAtk()),
             new HpPowerModeFeature(new UnavailableHpBios()),
             new RazerPowerModeFeature(new UnavailableRazerHidController()),
-            UnavailableAlienware(),
-            UnavailableAcer(),
-            new MsiPowerModeFeature(Gen2Ec(0xC0)),
-            UnavailableTongfang(),
-            UnavailableClevo());
+            new AlienwarePowerModeFeature(new UnavailableAwccWmi()),
+            new AcerPowerModeFeature(new UnavailableAcerWmi()),
+            new MsiPowerModeFeature(new FakeEcChannel { Available = false }),
+            new TongfangPowerModeFeature(new FakeEcChannel { Available = false }),
+            new ClevoPowerModeFeature(ClevoEc(0x03)));
 
         (await facade.IsSupportedAsync()).Should().BeTrue();
         (await facade.GetStateAsync()).Should().Be(PowerModeState.Performance);
         ResetCompatibilityCache();
     }
 
-    private static MachineInformation MsiMachine() => new()
+    private static MachineInformation ClevoMachine() => new()
     {
-        Vendor = "Micro-Star International Co., Ltd.",
+        Vendor = "CLEVO",
         MachineType = "0000",
-        Model = "MSI Raider 18"
+        Model = "NH50"
     };
-
-    private static AlienwarePowerModeFeature UnavailableAlienware() => new(new UnavailableAwccWmi());
-
-    private static TongfangPowerModeFeature UnavailableTongfang() => new(new FakeEcChannel { Available = false });
-
-    private static ClevoPowerModeFeature UnavailableClevo() => new(new FakeEcChannel { Available = false });
 
     private sealed class UnavailableAwccWmi : IAlienwareWmi
     {
         public bool IsAvailable => false;
         public int Execute(string methodName, byte operation, byte arg1 = 0, byte arg2 = 0, byte arg3 = 0) => -1;
     }
-
-    private static AcerPowerModeFeature UnavailableAcer() => new(new UnavailableAcerWmi());
 
     private sealed class UnavailableAcerWmi : IAcerWmi
     {
@@ -233,16 +179,16 @@ public class MsiPowerModeFeatureTests
 
     private sealed class TestLenovoBackend(bool supported) : LenovoPowerModeFeature(null!, null!, null!, null!, null!)
     {
-        internal override Task<bool> IsWmiSupportedAsync(CancellationToken cancellationToken = default) =>
+        internal override Task<bool> IsWmiSupportedAsync(System.Threading.CancellationToken cancellationToken = default) =>
             Task.FromResult(supported);
 
-        internal override Task<PowerModeState> ReadStateCoreAsync(CancellationToken cancellationToken = default) =>
+        internal override Task<PowerModeState> ReadStateCoreAsync(System.Threading.CancellationToken cancellationToken = default) =>
             Task.FromResult(PowerModeState.Balance);
     }
 
     private static void SetMachineInformation(MachineInformation machineInformation)
     {
-        var lazy = new Lazy<Task<MachineInformation>>(() => Task.FromResult(machineInformation));
+        var lazy = new System.Lazy<Task<MachineInformation>>(() => Task.FromResult(machineInformation));
         typeof(Compatibility).GetField("_machineInformationLazy", BindingFlags.NonPublic | BindingFlags.Static)!.SetValue(null, lazy);
     }
 
@@ -255,8 +201,8 @@ public class MsiPowerModeFeatureTests
             var method = typeof(Compatibility).GetMethod("GetMachineInformationInternalAsync", BindingFlags.NonPublic | BindingFlags.Static);
             if (method != null)
             {
-                var del = Delegate.CreateDelegate(typeof(Func<Task<MachineInformation>>), method);
-                var newLazy = Activator.CreateInstance(typeof(Lazy<Task<MachineInformation>>), [del, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication]);
+                var del = System.Delegate.CreateDelegate(typeof(System.Func<Task<MachineInformation>>), method);
+                var newLazy = System.Activator.CreateInstance(typeof(System.Lazy<Task<MachineInformation>>), [del, System.Threading.LazyThreadSafetyMode.ExecutionAndPublication]);
                 lazyField.SetValue(null, newLazy);
             }
         }

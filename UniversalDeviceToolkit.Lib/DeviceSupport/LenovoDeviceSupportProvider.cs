@@ -44,7 +44,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 "lenovo-legion-pro-7",
                 "Lenovo Legion Pro 7",
                 ["Legion"],
-                ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "IRX10", "IAX10", "16IRX9", "16IAX9", "16IRX11", "16IAX11", "16IRX12", "16IAX12", "18IRX", "18IAX"],
+                ["16IAX", "16IRX", "16IRX10", "16IAX10", "16IAX10H", "16ARX", "16ARX10", "16IRX9", "16IAX9", "16IRX11", "16IAX11", "16IRX12", "16IAX12", "18IRX", "18IAX"],
                 // Pro 7 / Y9000K / 至尊版 — PSREF-verified set only:
                 // 83F5 = Pro 7 16IAX10H (Y9000P 2025 至尊版), 83RU = Pro 7 16AFR10H,
                 // 83DE = Pro 7 16IRX9H, 82W* = 2022 Pro 7. (83F4/83F6 are Pro 5-class,
@@ -625,7 +625,13 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["Hasee"],
                 [],
                 [],
-                ["Hasee", "ZhanShen", "Zhan Shen"]),
+                ["Hasee", "ZhanShen", "Zhan Shen"])
+                with
+                {
+                    // Hasee (Clevo / Tongfang ODM): EC power modes + sensors.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "thunderobot-basic",
                 "THUNDEROBOT Basic",
@@ -634,7 +640,13 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["THUNDEROBOT", "Thunderobot"],
                 [],
                 [],
-                ["Thunderobot", "911", "Zero", "Black Warrior"]),
+                ["Thunderobot", "911", "Zero", "Black Warrior"])
+                with
+                {
+                    // Thunderobot (Tongfang / Clevo ODM): EC power modes + sensors.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "machenike-basic",
                 "MACHENIKE Basic",
@@ -643,7 +655,13 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["MACHENIKE", "Machenike"],
                 [],
                 [],
-                ["MACHENIKE", "Machenike", "T58", "F117", "L16"]),
+                ["MACHENIKE", "Machenike", "T58", "F117", "L16"])
+                with
+                {
+                    // Machenike (Tongfang / Clevo ODM): EC power modes + sensors.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "colorful-basic",
                 "COLORFUL Basic",
@@ -652,7 +670,13 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["COLORFUL", "Colorful"],
                 [],
                 [],
-                ["COLORFUL", "Evol", "X15", "MEOW"]),
+                ["COLORFUL", "Evol", "X15", "MEOW"])
+                with
+                {
+                    // Colorful (Clevo / Tongfang ODM): EC power modes + sensors.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "maibenben-basic",
                 "MAIBENBEN Basic",
@@ -670,7 +694,14 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["MECHREVO", "Mechanical Revolution"],
                 [],
                 [],
-                ["MECHREVO", "Mechanical Revolution", "Jiaolong", "Kuangshi", "Code", "Unbounded", "F1"]),
+                ["MECHREVO", "Mechanical Revolution", "Jiaolong", "Kuangshi", "Code", "Unbounded", "F1"])
+                with
+                {
+                    // Tongfang / MECHREVO EC provider: performance modes (Office/Gaming/Turbo) +
+                    // EC sensors (temps + fan tachometers).
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "valve-handheld-basic",
                 "Valve Handheld Basic",
@@ -868,7 +899,13 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["Clevo", "Tongfang", "Barebone"],
                 [],
                 [],
-                ["MECHREVO", "THUNDEROBOT", "Hasee", "SAGER", "Eluktronics", "Maingear", "Illegear", "Aftershock", "Hyperbook"]),
+                ["MECHREVO", "THUNDEROBOT", "Hasee", "SAGER", "Eluktronics", "Maingear", "Illegear", "Aftershock", "Hyperbook"])
+                with
+                {
+                    // Clevo & Tongfang barebone provider: EC power modes + EC sensors.
+                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
+                },
             BasicPack(
                 "eluktronics-basic",
                 "Eluktronics Basic",
@@ -1102,7 +1139,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["Barebone"],
                 [],
                 [],
-                ["Barebone", "Notebook", "To Be Filled By O.E.M.", "Default string"]),
+                ["Barebone", "To Be Filled By O.E.M.", "Default string"]),
             BasicPack(
                 CatalogDeviceSupportProvider.GenericBasicPackId,
                 "Universal PC Basic",

@@ -17,6 +17,8 @@ public class SensorsController(
     AcerSensorsController acerController,
     GigabyteSensorsController gigabyteController,
     MsiSensorsController msiController,
+    TongfangSensorsController tongfangController,
+    ClevoSensorsController clevoController,
     GenericSensorsController genericController)
     : ISensorsController
 {
@@ -91,6 +93,12 @@ public class SensorsController(
 
         if (await ProbeControllerAsync(msiController).ConfigureAwait(false))
             return _controller = msiController;
+
+        if (await ProbeControllerAsync(tongfangController).ConfigureAwait(false))
+            return _controller = tongfangController;
+
+        if (await ProbeControllerAsync(clevoController).ConfigureAwait(false))
+            return _controller = clevoController;
 
         if (await ProbeControllerAsync(genericController).ConfigureAwait(false))
             return _controller = genericController;

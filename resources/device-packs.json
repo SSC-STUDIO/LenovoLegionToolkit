@@ -15,8 +15,6 @@
       "16IAX10H",
       "16ARX",
       "16ARX10",
-      "IRX10",
-      "IAX10",
       "16IRX9",
       "16IAX9",
       "16IRX11",
@@ -2488,15 +2486,16 @@
       "language",
       "theme",
       "updates",
-      "logs"
+      "logs",
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes"
     ],
     "hiddenFeatures": [
-      "lenovo-hardware-controls",
-      "power-modes",
-      "keyboard-backlight",
       "god-mode",
       "gpu-overclock",
-      "fan-curve"
+      "fan-curve",
+      "keyboard-backlight"
     ]
   },
   {
@@ -2525,15 +2524,16 @@
       "language",
       "theme",
       "updates",
-      "logs"
+      "logs",
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes"
     ],
     "hiddenFeatures": [
-      "lenovo-hardware-controls",
-      "power-modes",
-      "keyboard-backlight",
       "god-mode",
       "gpu-overclock",
-      "fan-curve"
+      "fan-curve",
+      "keyboard-backlight"
     ]
   },
   {
@@ -2562,15 +2562,16 @@
       "language",
       "theme",
       "updates",
-      "logs"
+      "logs",
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes"
     ],
     "hiddenFeatures": [
-      "lenovo-hardware-controls",
-      "power-modes",
-      "keyboard-backlight",
       "god-mode",
       "gpu-overclock",
-      "fan-curve"
+      "fan-curve",
+      "keyboard-backlight"
     ]
   },
   {
@@ -2599,15 +2600,16 @@
       "language",
       "theme",
       "updates",
-      "logs"
+      "logs",
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes"
     ],
     "hiddenFeatures": [
-      "lenovo-hardware-controls",
-      "power-modes",
-      "keyboard-backlight",
       "god-mode",
       "gpu-overclock",
-      "fan-curve"
+      "fan-curve",
+      "keyboard-backlight"
     ]
   },
   {
@@ -2678,15 +2680,16 @@
       "language",
       "theme",
       "updates",
-      "logs"
+      "logs",
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes"
     ],
     "hiddenFeatures": [
-      "lenovo-hardware-controls",
-      "power-modes",
-      "keyboard-backlight",
       "god-mode",
       "gpu-overclock",
-      "fan-curve"
+      "fan-curve",
+      "keyboard-backlight"
     ]
   },
   {
@@ -3570,15 +3573,16 @@
       "language",
       "theme",
       "updates",
-      "logs"
+      "logs",
+      "lenovo-hardware-controls",
+      "sensors",
+      "power-modes"
     ],
     "hiddenFeatures": [
-      "lenovo-hardware-controls",
-      "power-modes",
-      "keyboard-backlight",
       "god-mode",
       "gpu-overclock",
-      "fan-curve"
+      "fan-curve",
+      "keyboard-backlight"
     ]
   },
   {
@@ -4537,7 +4541,6 @@
     "modelPrefixes": [],
     "modelKeywords": [
       "Barebone",
-      "Notebook",
       "To Be Filled By O.E.M.",
       "Default string"
     ],

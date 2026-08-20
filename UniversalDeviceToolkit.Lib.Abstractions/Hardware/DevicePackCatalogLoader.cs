@@ -7,6 +7,10 @@ namespace UniversalDeviceToolkit.Abstractions.Hardware;
 /// </summary>
 public static class DevicePackCatalogLoader
 {
+    private const string CatalogFileName = "device-packs.json";
+    private const string ResourcesDirectoryName = "resources";
+    private const int AncestorWalkDepth = 10;
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true,
@@ -16,36 +20,163 @@ public static class DevicePackCatalogLoader
 
     public static IReadOnlyCollection<DevicePackDefinition> Load(string? catalogPath = null)
     {
-        foreach (var path in CandidatePaths(catalogPath))
+        if (!string.IsNullOrWhiteSpace(catalogPath))
         {
-            try
+            var explicitExisted = false;
+            foreach (var path in DistinctExisting(ExpandExplicitPath(catalogPath)))
             {
-                if (!File.Exists(path))
-                    continue;
-
-                var packs = JsonSerializer.Deserialize<DevicePackDefinition[]>(File.ReadAllText(path), JsonOptions);
-                if (packs is { Length: > 0 })
+                explicitExisted = true;
+                if (TryReadPacks(path, out var packs) && packs.Count > 0)
                     return packs;
             }
-            catch
-            {
-                // A missing or invalid optional catalog degrades to generic basic mode.
-            }
+
+            if (explicitExisted)
+                return [];
+        }
+
+        var foundInvalidAppLocal = false;
+        foreach (var path in DistinctExisting(AppLocalPaths()))
+        {
+            if (TryReadPacks(path, out var packs) && packs.Count > 0)
+                return packs;
+
+            foundInvalidAppLocal = true;
+        }
+
+        // An app-local catalog that exists but is empty/invalid must not fall
+        // through to a different device-packs.json higher in the tree.
+        if (foundInvalidAppLocal)
+            return [];
+
+        foreach (var path in DistinctExisting(AncestorPaths()))
+        {
+            if (TryReadPacks(path, out var packs) && packs.Count > 0)
+                return packs;
         }
 
         return [];
     }
 
-    private static IEnumerable<string> CandidatePaths(string? catalogPath)
+    private static IEnumerable<string> AppLocalPaths()
     {
-        if (!string.IsNullOrWhiteSpace(catalogPath))
-            yield return catalogPath;
+        yield return Path.Combine(AppContext.BaseDirectory, ResourcesDirectoryName, CatalogFileName);
 
-        yield return Path.Combine(AppContext.BaseDirectory, "resources", "device-packs.json");
-        yield return Path.Combine(Directory.GetCurrentDirectory(), "resources", "device-packs.json");
+        var assemblyDirectory = Path.GetDirectoryName(typeof(DevicePackCatalogLoader).Assembly.Location);
+        if (!string.IsNullOrWhiteSpace(assemblyDirectory))
+            yield return Path.Combine(assemblyDirectory, ResourcesDirectoryName, CatalogFileName);
 
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        for (var depth = 0; depth < 8 && directory is not null; depth++, directory = directory.Parent)
-            yield return Path.Combine(directory.FullName, "resources", "device-packs.json");
+        yield return Path.Combine(Directory.GetCurrentDirectory(), ResourcesDirectoryName, CatalogFileName);
+    }
+
+    private static IEnumerable<string> ExpandExplicitPath(string? catalogPath)
+    {
+        if (string.IsNullOrWhiteSpace(catalogPath))
+            yield break;
+
+        yield return catalogPath;
+        if (Directory.Exists(catalogPath))
+        {
+            yield return Path.Combine(catalogPath, CatalogFileName);
+            yield return Path.Combine(catalogPath, ResourcesDirectoryName, CatalogFileName);
+        }
+    }
+
+    private static IEnumerable<string> AncestorPaths()
+    {
+        foreach (var root in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })
+        {
+            DirectoryInfo? directory;
+            try
+            {
+                directory = new DirectoryInfo(root);
+            }
+            catch (Exception ex) when (ex is ArgumentException or IOException or UnauthorizedAccessException)
+            {
+                continue;
+            }
+
+            for (var depth = 0; depth < AncestorWalkDepth && directory is not null; depth++, directory = directory.Parent)
+            {
+                yield return Path.Combine(directory.FullName, ResourcesDirectoryName, CatalogFileName);
+                try
+                {
+                    if (directory.EnumerateFiles("*.sln").Any())
+                        break;
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    break;
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<string> DistinctExisting(IEnumerable<string> paths)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var path in paths)
+        {
+            string fullPath;
+            try
+            {
+                fullPath = Path.GetFullPath(path);
+            }
+            catch (Exception ex) when (ex is ArgumentException or IOException or NotSupportedException)
+            {
+                continue;
+            }
+
+            if (!seen.Add(fullPath) || !File.Exists(fullPath))
+                continue;
+
+            yield return fullPath;
+        }
+    }
+
+    private static bool TryReadPacks(string path, out IReadOnlyCollection<DevicePackDefinition> packs)
+    {
+        packs = [];
+        try
+        {
+            var json = File.ReadAllText(path);
+            var parsed = DeserializePacks(json);
+            if (parsed is { Length: > 0 })
+            {
+                packs = parsed;
+                return true;
+            }
+        }
+        catch (Exception ex) when (ex is IOException or JsonException or UnauthorizedAccessException or NotSupportedException)
+        {
+            return false;
+        }
+
+        return false;
+    }
+
+    private static DevicePackDefinition[]? DeserializePacks(string json)
+    {
+        using var document = JsonDocument.Parse(json, new JsonDocumentOptions
+        {
+            CommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true,
+        });
+
+        if (document.RootElement.ValueKind == JsonValueKind.Array)
+            return document.RootElement.Deserialize<DevicePackDefinition[]>(JsonOptions);
+
+        if (document.RootElement.ValueKind != JsonValueKind.Object)
+            return null;
+
+        foreach (var propertyName in new[] { "devicePacks", "DevicePacks" })
+        {
+            if (!document.RootElement.TryGetProperty(propertyName, out var property) ||
+                property.ValueKind != JsonValueKind.Array)
+                continue;
+
+            return property.Deserialize<DevicePackDefinition[]>(JsonOptions);
+        }
+
+        return null;
     }
 }

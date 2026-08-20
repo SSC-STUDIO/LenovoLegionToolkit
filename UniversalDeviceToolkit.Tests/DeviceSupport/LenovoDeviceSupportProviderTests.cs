@@ -241,10 +241,6 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("Jumper", "EZbook X3", "jumper-basic")]
     [InlineData("MEDION AG", "ERAZER Beast X40", "medion-basic")]
     [InlineData("XMG", "XMG Neo 16", "xmg-schenker-basic")]
-    [InlineData("Hasee", "ZhanShen Z8", "hasee-basic")]
-    [InlineData("THUNDEROBOT", "911 Zero", "thunderobot-basic")]
-    [InlineData("MACHENIKE", "F117", "machenike-basic")]
-    [InlineData("COLORFUL", "Evol X15", "colorful-basic")]
     [InlineData("MAIBENBEN", "MaiBook X", "maibenben-basic")]
     [InlineData("TUXEDO", "InfinityBook Pro 14", "xmg-schenker-basic")]
     [InlineData("Valve Corporation", "Steam Deck", "valve-handheld-basic")]
@@ -263,7 +259,6 @@ public sealed class LenovoDeviceSupportProviderTests
     [InlineData("Notebook", "oryp13", "system76-basic")]
     [InlineData("Star Labs Systems", "StarFighter", "star-labs-basic")]
     [InlineData("SLIMBOOK", "KDE Slimbook VII", "slimbook-basic")]
-    [InlineData("Tongfang", "Eluktronics MECH-16", "clevo-tongfang-basic")]
     [InlineData("Monster Notebook", "Tulpar T7 V20", "monster-tulpar-basic")]
     [InlineData("Dream Machines", "RG4070-16", "dream-machines-basic")]
     [InlineData("PC Specialist Ltd", "Recoil 17", "pcspecialist-basic")]
@@ -311,6 +306,34 @@ public sealed class LenovoDeviceSupportProviderTests
         availability.DevicePackId.Should().Be(expectedPackId);
         availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization", "language"]);
         availability.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "power-modes", "gpu-overclock"]);
+    }
+
+    [Theory]
+    [InlineData("Hasee", "ZhanShen Z8", "hasee-basic")]
+    [InlineData("THUNDEROBOT", "911 Zero", "thunderobot-basic")]
+    [InlineData("MACHENIKE", "F117", "machenike-basic")]
+    [InlineData("COLORFUL", "Evol X15", "colorful-basic")]
+    [InlineData("MECHREVO", "Jiaolong 16", "mechrevo-basic")]
+    [InlineData("Tongfang", "Eluktronics MECH-16", "clevo-tongfang-basic")]
+    public void Evaluate_WhenDomesticBarebonePackMatches_ShouldEnableHardwareControls(string vendor, string model, string expectedPackId)
+    {
+        // Arrange
+        var machineInformation = new MachineInformation
+        {
+            Vendor = vendor,
+            MachineType = "0000",
+            Model = model
+        };
+
+        // Act
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        // Assert
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be(expectedPackId);
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
     }
 
     [Theory]
@@ -545,5 +568,95 @@ public sealed class LenovoDeviceSupportProviderTests
         {
             provider.SetInstalledCatalog(null);
         }
+    }
+
+    [Fact]
+    public void Evaluate_WhenPreferredPackIsSet_ShouldOverrideAutoDetect()
+    {
+        var provider = LenovoDeviceSupportProvider.Instance;
+        provider.SetPreferredDevicePackId("lenovo-thinkpad-basic");
+        var machineInformation = new MachineInformation
+        {
+            Vendor = "LENOVO",
+            MachineType = "83DF",
+            Model = "Legion Y9000P IRX9"
+        };
+
+        try
+        {
+            var availability = provider.Evaluate(machineInformation);
+
+            availability.IsSupported.Should().BeFalse();
+            availability.DevicePackId.Should().Be("lenovo-thinkpad-basic");
+            availability.HiddenFeatures.Should().Contain("lenovo-hardware-controls");
+        }
+        finally
+        {
+            provider.SetPreferredDevicePackId(null);
+        }
+    }
+
+    [Fact]
+    public void Evaluate_WhenPreferredPackIsGenericBasic_ShouldStayInBasicMode()
+    {
+        var provider = LenovoDeviceSupportProvider.Instance;
+        provider.SetPreferredDevicePackId(CatalogDeviceSupportProvider.GenericBasicPackId);
+        var machineInformation = new MachineInformation
+        {
+            Vendor = "LENOVO",
+            MachineType = "83DF",
+            Model = "Legion Y9000P IRX9"
+        };
+
+        try
+        {
+            var availability = provider.Evaluate(machineInformation);
+
+            availability.IsSupported.Should().BeFalse();
+            availability.IsBasicMode.Should().BeTrue();
+            availability.DevicePackId.Should().Be(CatalogDeviceSupportProvider.GenericBasicPackId);
+        }
+        finally
+        {
+            provider.SetPreferredDevicePackId(null);
+        }
+    }
+
+    [Fact]
+    public void Evaluate_WhenMachineTypeHasCtoSuffix_ShouldEnablePro5()
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(new MachineInformation
+        {
+            Vendor = "LENOVO",
+            MachineType = "83DFCTO1WW",
+            Model = "Legion Y9000P IRX9"
+        });
+
+        availability.IsSupported.Should().BeTrue();
+        availability.DevicePackId.Should().Be("lenovo-legion-pro-5");
+    }
+
+    [Fact]
+    public void Evaluate_WhenLenovoModelIsUnrecognized_ShouldUseGenericBasic()
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(new MachineInformation
+        {
+            Vendor = "LENOVO",
+            MachineType = "0000",
+            Model = "Unknown Device"
+        });
+
+        availability.IsSupported.Should().BeFalse();
+        availability.DevicePackId.Should().Be(CatalogDeviceSupportProvider.GenericBasicPackId);
+    }
+
+    [Fact]
+    public void Evaluate_WhenLaptopChassisIsNotebook_ShouldNotSelectBarebonePack()
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(
+            MachineInformationTestData.WithChassis("ACME", "Unknown Laptop", "", [10]));
+
+        availability.IsSupported.Should().BeFalse();
+        availability.DevicePackId.Should().Be(CatalogDeviceSupportProvider.GenericBasicPackId);
     }
 }

@@ -19,17 +19,20 @@ using UniversalDeviceToolkit.Lib.DeviceSupport;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
+using UniversalDeviceToolkit.Lib.Features.Clevo;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.FlipToStart;
 using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.Features.Msi;
 using UniversalDeviceToolkit.Lib.Features.Razer;
+using UniversalDeviceToolkit.Lib.Features.Tongfang;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
 using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 using UniversalDeviceToolkit.Lib.Features.InstantBoot;
 using UniversalDeviceToolkit.Lib.Features.OverDrive;
 using UniversalDeviceToolkit.Lib.Features.PanelLogo;
 using UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight;
+using UniversalDeviceToolkit.Lib.GameDetection;
 using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.Lib.Overclocking.Amd;
@@ -102,6 +105,7 @@ public class IoCModule : Autofac.Module
         builder.Register<SpectrumKeyboardSettings>();
         builder.Register<SunriseSunsetSettings>();
         builder.Register<UpdateCheckSettings>();
+        builder.Register<GameBoostSettings>();
 
         builder.Register<AlwaysOnUSBFeature>();
         builder.Register<HardwareSensorsFeature>();
@@ -135,11 +139,16 @@ public class IoCModule : Autofac.Module
         builder.Register<PowerModeFeature>();
         builder.Register<LenovoPowerModeFeature>(true);
         builder.Register<AsusPowerModeFeature>(true);
+        builder.Register<AsusBatteryChargeLimitFeature>(true);
         builder.Register<HpPowerModeFeature>(true);
         builder.Register<RazerPowerModeFeature>(true);
         builder.Register<AlienwarePowerModeFeature>(true);
         builder.Register<AcerPowerModeFeature>(true);
         builder.Register<MsiPowerModeFeature>(true);
+        builder.Register<MsiBatteryChargeLimitFeature>(true);
+        builder.Register<MsiCoolerBoostFeature>(true);
+        builder.Register<TongfangPowerModeFeature>(true);
+        builder.Register<ClevoPowerModeFeature>(true);
         builder.Register<RefreshRateFeature>();
         builder.Register<ResolutionFeature>();
         builder.Register<SpeakerFeature>();
@@ -169,6 +178,7 @@ public class IoCModule : Autofac.Module
         builder.Register<WinKeyListener>().AutoActivateListener();
 
         builder.Register<GameAutoListener>();
+        builder.Register<GameBoostService>().SingleInstance();
         builder.Register<InstanceStartedEventAutoAutoListener>();
         builder.Register<InstanceStoppedEventAutoAutoListener>();
         builder.Register<ProcessAutoListener>();
@@ -203,6 +213,8 @@ public class IoCModule : Autofac.Module
         builder.Register<AcerSensorsController>(true);
         builder.Register<GigabyteSensorsController>(true);
         builder.Register<MsiSensorsController>(true);
+        builder.Register<TongfangSensorsController>(true);
+        builder.Register<ClevoSensorsController>(true);
         builder.Register<GenericSensorsController>(true);
         builder.Register<SensorsGroupController>(true);
         builder.Register<FpsSensorController>();

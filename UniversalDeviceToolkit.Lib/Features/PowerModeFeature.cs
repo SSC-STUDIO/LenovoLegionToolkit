@@ -2,11 +2,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
+using UniversalDeviceToolkit.Lib.Features.Clevo;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.Hp;
 using UniversalDeviceToolkit.Lib.Features.Msi;
 using UniversalDeviceToolkit.Lib.Features.Razer;
+using UniversalDeviceToolkit.Lib.Features.Tongfang;
 using UniversalDeviceToolkit.Lib.Utils;
+using NeoSmart.AsyncLock;
 
 namespace UniversalDeviceToolkit.Lib.Features;
 
@@ -14,9 +17,9 @@ namespace UniversalDeviceToolkit.Lib.Features;
 /// Vendor-agnostic power-mode facade. Keeps the long-standing concrete type so
 /// every existing resolve site (dashboard cards, automation, listeners, startup)
 /// works unchanged, while the actual backend is resolved once per machine:
-/// Lenovo SmartFan first, then the ASUS ATK endpoint. Vendor-specific extras
-/// (God Mode, Windows power plan sync, switching-bug workarounds) stay delegated
-/// to the Lenovo implementation — they are no-ops on other vendors by design.
+/// Lenovo SmartFan first, then ASUS, HP, Razer, Alienware, Acer, MSI, Tongfang, Clevo.
+/// Vendor-specific extras (God Mode, Windows power plan sync, switching-bug workarounds)
+/// stay delegated to the Lenovo implementation — they are no-ops on other vendors by design.
 /// </summary>
 public class PowerModeFeature(
     LenovoPowerModeFeature lenovoFeature,
@@ -25,7 +28,9 @@ public class PowerModeFeature(
     RazerPowerModeFeature razerFeature,
     AlienwarePowerModeFeature alienwareFeature,
     AcerPowerModeFeature acerFeature,
-    MsiPowerModeFeature msiFeature) : IFeature<PowerModeState>
+    MsiPowerModeFeature msiFeature,
+    TongfangPowerModeFeature tongfangFeature,
+    ClevoPowerModeFeature clevoFeature) : IFeature<PowerModeState>
 {
     private readonly LenovoPowerModeFeature _lenovoFeature = lenovoFeature;
     private readonly AsusPowerModeFeature _asusFeature = asusFeature;
@@ -34,6 +39,9 @@ public class PowerModeFeature(
     private readonly AlienwarePowerModeFeature _alienwareFeature = alienwareFeature;
     private readonly AcerPowerModeFeature _acerFeature = acerFeature;
     private readonly MsiPowerModeFeature _msiFeature = msiFeature;
+    private readonly TongfangPowerModeFeature _tongfangFeature = tongfangFeature;
+    private readonly ClevoPowerModeFeature _clevoFeature = clevoFeature;
+    private readonly AsyncLock _lock = new();
     private IFeature<PowerModeState>? _backend;
 
     public bool AllowAllPowerModesOnBattery
@@ -71,14 +79,19 @@ public class PowerModeFeature(
 
     public void InvalidateResolution()
     {
-        _backend = null;
-        _lenovoFeature.InvalidateResolution();
-        _asusFeature.InvalidateResolution();
-        _hpFeature.InvalidateResolution();
-        _razerFeature.InvalidateResolution();
-        _alienwareFeature.InvalidateResolution();
-        _acerFeature.InvalidateResolution();
-        _msiFeature.InvalidateResolution();
+        using (_lock.Lock())
+        {
+            _backend = null;
+            _lenovoFeature.InvalidateResolution();
+            _asusFeature.InvalidateResolution();
+            _hpFeature.InvalidateResolution();
+            _razerFeature.InvalidateResolution();
+            _alienwareFeature.InvalidateResolution();
+            _acerFeature.InvalidateResolution();
+            _msiFeature.InvalidateResolution();
+            _tongfangFeature.InvalidateResolution();
+            _clevoFeature.InvalidateResolution();
+        }
     }
 
     // --- Lenovo-specific flows (delegated; no-ops on machines without Lenovo support) ---
@@ -94,31 +107,40 @@ public class PowerModeFeature(
 
     private async Task<IFeature<PowerModeState>?> ResolveBackendAsync(CancellationToken cancellationToken)
     {
-        if (_backend is not null)
-            return _backend;
+        using (await _lock.LockAsync(cancellationToken).ConfigureAwait(false))
+        {
+            if (_backend is not null)
+                return _backend;
 
-        if (await _lenovoFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return _backend = _lenovoFeature;
+            if (await _lenovoFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _lenovoFeature;
 
-        if (await _asusFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return _backend = _asusFeature;
+            if (await _asusFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _asusFeature;
 
-        if (await _hpFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return _backend = _hpFeature;
+            if (await _hpFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _hpFeature;
 
-        if (await _razerFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return _backend = _razerFeature;
+            if (await _razerFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _razerFeature;
 
-        if (await _alienwareFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return _backend = _alienwareFeature;
+            if (await _alienwareFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _alienwareFeature;
 
-        if (await _acerFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return _backend = _acerFeature;
+            if (await _acerFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _acerFeature;
 
-        if (await _msiFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
-            return _backend = _msiFeature;
+            if (await _msiFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _msiFeature;
 
-        return null;
+            if (await _tongfangFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _tongfangFeature;
+
+            if (await _clevoFeature.IsSupportedAsync(cancellationToken).ConfigureAwait(false))
+                return _backend = _clevoFeature;
+
+            return null;
+        }
     }
 
     private async Task<IFeature<PowerModeState>> RequireBackendAsync(CancellationToken cancellationToken) =>

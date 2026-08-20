@@ -12,6 +12,7 @@ public sealed class DeviceSupportModelSimulationTests
     public DeviceSupportModelSimulationTests()
     {
         LenovoDeviceSupportProvider.Instance.SetInstalledCatalog(null);
+        LenovoDeviceSupportProvider.Instance.SetPreferredDevicePackId(null);
     }
 
     [Theory]
@@ -210,10 +211,49 @@ public sealed class DeviceSupportModelSimulationTests
         MachineInformationTestData.Create("MICRO STAR INTERNATIONAL CO LTD", "Cyborg 15"),
     };
 
+    [Theory]
+    [MemberData(nameof(MechrevoHardwareScenarios))]
+    public void Evaluate_WithSimulatedMechrevoMachine_ShouldUseMechrevoHardwarePack(MachineInformation machineInformation)
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be("mechrevo-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["fan-curve", "gpu-overclock"]);
+    }
+
+    public static TheoryData<MachineInformation> MechrevoHardwareScenarios() => new()
+    {
+        MachineInformationTestData.Create("MECHREVO", "Jiaolong 16 Pro"),
+        MachineInformationTestData.Create("Mechanical Revolution", "Kuangshi 16 Super"),
+        MachineInformationTestData.Create("Tongfang", "Code 01"),
+    };
+
+    [Theory]
+    [MemberData(nameof(HaseeHardwareScenarios))]
+    public void Evaluate_WithSimulatedHaseeMachine_ShouldUseHaseeHardwarePack(MachineInformation machineInformation)
+    {
+        var availability = LenovoDeviceSupportProvider.Instance.Evaluate(machineInformation);
+
+        availability.IsSupported.Should().BeTrue();
+        availability.IsBasicMode.Should().BeFalse();
+        availability.DevicePackId.Should().Be("hasee-basic");
+        availability.EnabledFeatures.Should().Contain(["lenovo-hardware-controls", "sensors", "power-modes"]);
+        availability.HiddenFeatures.Should().NotContain("lenovo-hardware-controls");
+        availability.HiddenFeatures.Should().Contain(["fan-curve", "gpu-overclock"]);
+    }
+
+    public static TheoryData<MachineInformation> HaseeHardwareScenarios() => new()
+    {
+        MachineInformationTestData.Create("Hasee", "ZhanShen T8"),
+        MachineInformationTestData.Create("Hasee Computer", "ZhanShen Z8"),
+    };
+
     public static TheoryData<MachineInformation, string> MultiBrandBasicModeScenarios() => new()
     {
-        { MachineInformationTestData.Create("MECHREVO", "Jiaolong 16 Pro"), "mechrevo-basic" },
-        { MachineInformationTestData.Create("Mechanical Revolution", "Kuangshi 16 Super"), "mechrevo-basic" },
         { MachineInformationTestData.Create("LENOVO", "IdeaPad Flex 5 Chromebook Plus"), "lenovo-chromebook-basic" },
         { MachineInformationTestData.Create("Google LLC", "Pixelbook Go"), "google-chromebook-basic" },
         { MachineInformationTestData.Create("SAMSUNG ELECTRONICS CO., LTD.", "Galaxy Chromebook Plus"), "samsung-basic" },
@@ -225,10 +265,6 @@ public sealed class DeviceSupportModelSimulationTests
         { MachineInformationTestData.Create("Honor Device Co., Ltd.", "MagicBook X 16"), "honor-basic" },
         { MachineInformationTestData.Create("LG", "LG gram Pro 16"), "lg-basic" },
         { MachineInformationTestData.Create("Framework Computer Inc.", "Framework Laptop 13"), "framework-basic" },
-        { MachineInformationTestData.Create("Hasee", "ZhanShen T8"), "hasee-basic" },
-        { MachineInformationTestData.Create("THUNDEROBOT", "911 MT"), "thunderobot-basic" },
-        { MachineInformationTestData.Create("MACHENIKE", "L16"), "machenike-basic" },
-        { MachineInformationTestData.Create("COLORFUL", "Evol P15"), "colorful-basic" },
         { MachineInformationTestData.Create("MAIBENBEN", "Xiaomai 6"), "maibenben-basic" },
         { MachineInformationTestData.Create("Valve Corporation", "Steam Deck"), "valve-handheld-basic" },
         { MachineInformationTestData.Create("GPD", "GPD Win Mini"), "gpd-handheld-basic" },
@@ -278,9 +314,9 @@ public sealed class DeviceSupportModelSimulationTests
             MachineInformationTestData.WithBaseBoard(
                 "",
                 "",
-                "MECHREVO",
-                "Jiaolong Series"),
-            "mechrevo-basic"
+                "MAIBENBEN",
+                "MaiBook Series"),
+            "maibenben-basic"
         },
         {
             MachineInformationTestData.WithComputerSystem(
