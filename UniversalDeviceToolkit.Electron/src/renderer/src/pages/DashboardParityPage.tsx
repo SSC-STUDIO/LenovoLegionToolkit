@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Edit24Regular } from '@fluentui/react-icons'
+import { message } from 'antd'
+import { Edit24Regular } from '../components/icons/fluent'
 import { useTranslation } from 'react-i18next'
 import { isHostUnavailableError, sanitizeBridgeError, waitForHostReady } from '../api/bridge'
 import { dashboardApi, type DashboardConfig, type DashboardGroup } from '../api/dashboard'
@@ -9,6 +10,7 @@ import { DEFAULT_DASHBOARD_GROUPS } from '../components/dashboard-parity/dashboa
 import DashboardSkeleton from '../components/DashboardSkeleton'
 import SensorSection from '../components/dashboard/SensorSection'
 import { useFeaturesStore } from '../stores/featuresStore'
+import { useSensorsStore } from '../stores/sensorsStore'
 import { useLoadingStore } from '../stores/loadingStore'
 import '../components/dashboard-parity/dashboardParity.css'
 
@@ -46,12 +48,18 @@ export default function DashboardParityPage(): React.JSX.Element {
       if (cancelled) return
 
       // SensorSection owns the sensor subscription lifecycle (mount/unmount +
-      // persisted interval); this page only loads the feature list and config.
+      // persisted interval); parallel-load features, config, and initial sensor snapshot
+      // so the page transitions cleanly in a single unified frame without segmented flicker.
       const [, dashboardConfig] = await Promise.all([
         useFeaturesStore.getState().load(),
-        dashboardApi.getConfig()
+        dashboardApi.getConfig(),
+        useSensorsStore.getState().loadSnapshot().catch(() => null)
       ])
       if (cancelled) return
+      const featuresError = useFeaturesStore.getState().error
+      if (featuresError != null) {
+        throw new Error(featuresError)
+      }
       setConfig(dashboardConfig)
       useLoadingStore.getState().finish(loadingId)
     }
@@ -60,12 +68,12 @@ export default function DashboardParityPage(): React.JSX.Element {
       .catch((reason: unknown) => {
         if (cancelled) return
         const raw = sanitizeBridgeError(reason)
-        const message = isHostUnavailableError(raw)
+        const errorMessage = isHostUnavailableError(raw)
           ? t('home.hostUnavailable', {
               defaultValue: 'The backend host is not running. Wait a moment and retry, or restart the app.'
             })
           : raw
-        setError(message)
+        setError(errorMessage)
         // Dismiss the overlay so the page-level error + Retry action is visible.
         useLoadingStore.getState().finish(loadingId)
       })
@@ -115,9 +123,15 @@ export default function DashboardParityPage(): React.JSX.Element {
         <EditDashboardModal
           config={config}
           onCancel={() => setEditOpen(false)}
-          onSaved={() => {
+          onSaved={(next) => {
             setEditOpen(false)
-            void dashboardApi.getConfig().then(setConfig).catch(() => undefined)
+            setConfig(next)
+            void dashboardApi
+              .getConfig()
+              .then(setConfig)
+              .catch((reason: unknown) => {
+                void message.error(sanitizeBridgeError(reason))
+              })
           }}
         />
       )}

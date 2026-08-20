@@ -38,8 +38,6 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  animation: udt-skeleton-breathe var(--udt-anim-shimmer) var(--udt-shimmer-delay, 0s) infinite
-    alternate var(--udt-skeleton-shimmer-ease);
 }
 
 .udt-skeleton::after {
@@ -70,15 +68,6 @@
   }
   to {
     transform: translateX(125%);
-  }
-}
-
-@keyframes udt-skeleton-breathe {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: var(--udt-skeleton-breathe-floor);
   }
 }
 
