@@ -50,11 +50,11 @@
   align-items: flex-start;
   gap: 10px;
   min-width: 0;
-  padding: 12px 10px;
+  padding: 12px 14px;
   border: 1px solid var(--udt-control-stroke-default);
   border-radius: var(--udt-radius-card);
   background: var(--udt-surface-card);
-  box-shadow: var(--udt-shadow-glass);
+  box-shadow: var(--udt-shadow-toast);
   color: var(--udt-text-primary);
   pointer-events: auto;
   animation: udt-notification-in var(--udt-anim-medium) var(--udt-ease-cubic-out);

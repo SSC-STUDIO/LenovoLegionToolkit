@@ -66,7 +66,8 @@ export default function AppStatusBanners(): React.JSX.Element {
       }
     }
     const update = (): void => {
-      document.documentElement.style.setProperty('--udt-status-banner-stack-height', `${node.offsetHeight}px`)
+      const height = node.offsetHeight > 0 ? `${node.offsetHeight + 8}px` : '0px'
+      document.documentElement.style.setProperty('--udt-status-banner-stack-height', height)
     }
     update()
     const observer = new ResizeObserver(update)

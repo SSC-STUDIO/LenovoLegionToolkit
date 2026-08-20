@@ -109,6 +109,7 @@
   --udt-shadow-low: 0 2px 8px rgba(0, 0, 0, 0.10);
   --udt-shadow-medium: 0 3px 12px rgba(0, 0, 0, 0.15);
   --udt-shadow-glass: 0 3px 14px rgba(0, 0, 0, 0.18);
+  --udt-shadow-toast: 0 6px 20px rgba(0, 0, 0, 0.32), 0 2px 6px rgba(0, 0, 0, 0.16);
 
   /* Typography (Typography.xaml: AppFontFamily). Windows-first default;
      overridden per-OS at the bottom (see "Platform adaptations"). */
@@ -256,6 +257,7 @@
   --udt-chart-surface: rgba(0, 0, 0, 0.05);
   --udt-chart-surface-border: rgba(0, 0, 0, 0.12);
   --udt-status-neutral-bg: rgba(0, 0, 0, 0.05);
+  --udt-shadow-toast: 0 6px 20px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 *,
