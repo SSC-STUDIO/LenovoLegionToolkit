@@ -950,7 +950,7 @@ body {
 /* Legacy .udt-feature-* dashboard card styles removed: the live dashboard
    renders .udt-parity-* classes (dashboardParity.css container queries). */
 
-/* Ant Design Select: ensure .ant-select-selector renders the consistent control
+/* Ant Design Select: ensure .ant-select renders the consistent control
    box (border, fill, radius, height, padding) across all themes and variants. */
 .ant-select {
   position: relative;
@@ -958,8 +958,8 @@ body {
   min-height: var(--udt-control-height);
 }
 
-.ant-select .ant-select-selector,
-.ant-select:not(.ant-select-borderless):not(.ant-select-customize-input) .ant-select-selector {
+.ant-select:not(.ant-select-borderless):not(.ant-select-customize-input),
+.ant-select .ant-select-selector {
   border: 1px solid var(--udt-control-stroke-default) !important;
   border-radius: var(--udt-radius-control) !important;
   background: var(--udt-control-fill-default) !important;
@@ -967,7 +967,7 @@ body {
   min-height: var(--udt-control-height) !important;
   padding-inline-start: 11px !important;
   padding-inline-end: 28px !important;
-  display: flex !important;
+  display: inline-flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
   align-items: center !important;
@@ -975,20 +975,23 @@ body {
   transition: border-color 0.15s ease, background 0.15s ease !important;
 }
 
-.ant-select:not(.ant-select-borderless):not(.ant-select-customize-input) {
-  border: none !important;
-  background: transparent !important;
-}
-
+.ant-select:not(.ant-select-disabled):hover,
 .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
   border-color: var(--udt-control-stroke-secondary) !important;
   background: var(--udt-control-fill-secondary) !important;
 }
 
+.ant-select:not(.ant-select-disabled).ant-select-focused,
+.ant-select:not(.ant-select-disabled).ant-select-open,
 .ant-select:not(.ant-select-disabled).ant-select-focused .ant-select-selector,
 .ant-select:not(.ant-select-disabled).ant-select-open .ant-select-selector {
   border-color: var(--udt-accent) !important;
   box-shadow: none !important;
+}
+
+.ant-select.ant-select-disabled {
+  opacity: 0.6 !important;
+  border-color: var(--udt-control-stroke-default) !important;
 }
 
 .ant-select-selection-wrap {
