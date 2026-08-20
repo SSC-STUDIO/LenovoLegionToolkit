@@ -65,6 +65,20 @@ public static class ProcessScheduling
                 ? PROCESS_CREATION_FLAGS.BELOW_NORMAL_PRIORITY_CLASS
                 : PROCESS_CREATION_FLAGS.NORMAL_PRIORITY_CLASS;
             _ = PInvoke.SetPriorityClass(handle, priority);
+
+            if (background)
+            {
+                try
+                {
+                    using var targetProc = global::System.Diagnostics.Process.GetProcessById(processId);
+                    targetProc.MinWorkingSet = (nint)(-1);
+                    targetProc.MaxWorkingSet = (nint)(-1);
+                }
+                catch
+                {
+                    // Target process may have exited or permissions restricted.
+                }
+            }
         }
         finally
         {

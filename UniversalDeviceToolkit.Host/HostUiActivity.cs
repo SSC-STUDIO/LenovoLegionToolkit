@@ -47,6 +47,7 @@ internal static class HostUiActivity
     {
         try
         {
+            System.Runtime.GCSettings.LargeObjectHeapCompactionMode = System.Runtime.GCLargeObjectHeapCompactionMode.CompactOnce;
             GC.Collect(2, GCCollectionMode.Aggressive, true, true);
             GC.WaitForPendingFinalizers();
             GC.Collect(2, GCCollectionMode.Aggressive, true, true);

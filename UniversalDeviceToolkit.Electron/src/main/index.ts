@@ -471,13 +471,19 @@ function enterBackground(): void {
     setImmediate(() => {
       if (isQuitting || generation !== backgroundDestroyGeneration) return
       const pending = mainWindow
-      if (pending && !pending.isDestroyed()) pending.destroy()
+      if (pending && !pending.isDestroyed()) {
+        pending.destroy()
+      }
+      void trimChromiumCaches()
     })
   } else {
     setSurfaceVisible('main', false)
   }
   void trimChromiumCaches()
-  setTimeout(() => void logMemoryUsage('tray background'), 2000)
+  setTimeout(() => {
+    void trimChromiumCaches()
+    void logMemoryUsage('tray background')
+  }, 1500)
 }
 
 function restoreMainWindow(route?: string): void {
