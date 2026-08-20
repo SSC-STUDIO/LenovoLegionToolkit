@@ -18,7 +18,7 @@ import {
   Rocket24Regular,
   Settings24Filled,
   Settings24Regular
-} from '@fluentui/react-icons'
+} from '../components/icons/fluent'
 import { useTranslation } from 'react-i18next'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import TitleBar from '../components/TitleBar'

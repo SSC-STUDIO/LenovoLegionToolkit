@@ -63,16 +63,26 @@ app.commandLine.appendSwitch(
     'AutofillServerCommunication',
     'OptimizationHints',
     'SpareRendererForSitePerProcess',
-    'BackForwardCache'
+    'BackForwardCache',
+    'CalculateNativeWinOcclusion',
+    'InterestFeedContentSuggestions'
   ].join(',')
 )
 app.commandLine.appendSwitch('disable-background-networking')
 app.commandLine.appendSwitch('disable-component-update')
+app.commandLine.appendSwitch('disable-component-extensions-with-background-pages')
+app.commandLine.appendSwitch('disable-default-apps')
+app.commandLine.appendSwitch('disable-extensions')
+app.commandLine.appendSwitch('disable-sync')
+app.commandLine.appendSwitch('disable-speech-api')
+app.commandLine.appendSwitch('disable-domain-reliability')
+app.commandLine.appendSwitch('disable-hang-monitor')
 app.commandLine.appendSwitch('disable-breakpad')
 app.commandLine.appendSwitch('disable-gpu-shader-disk-cache')
-app.commandLine.appendSwitch('disk-cache-size', '16777216')
-app.commandLine.appendSwitch('media-cache-size', '16777216')
-app.commandLine.appendSwitch('js-flags', '--optimize-for-size --max-old-space-size=192 --expose_gc')
+app.commandLine.appendSwitch('disk-cache-size', '8388608')
+app.commandLine.appendSwitch('media-cache-size', '8388608')
+app.commandLine.appendSwitch('js-flags', '--optimize-for-size --max-old-space-size=128 --expose_gc --initial-heap-size=8')
+app.commandLine.appendSwitch('renderer-process-limit', '1')
 // --single-process merges renderers into the main process so memory usage can be
 // inspected as a single entry (debug/dev only).
 if (flags.singleProcess) {
