@@ -1,14 +1,35 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import AppStatusBanner from './AppStatusBanner'
 import { updateApi } from '../api/update'
-import type { SoftwareDisablerApp } from '../api/software'
 import { useSoftwareStore } from '../stores/softwareStore'
 import { useStatusBannerStore } from '../stores/statusBannerStore'
+import { useSettingsStore } from '../stores/settingsStore'
 import { subscribeUiVisibility } from '../utils/uiVisibility'
 
 const BANNER_UPDATE = 'updateAvailable'
+
+function bannerPositionClass(position: string): string {
+  switch (position) {
+    case 'BottomCenter':
+      return 'udt-status-banner-stack--bottom-center'
+    case 'BottomLeft':
+      return 'udt-status-banner-stack--bottom-left'
+    case 'CenterLeft':
+      return 'udt-status-banner-stack--center-left'
+    case 'TopLeft':
+      return 'udt-status-banner-stack--top-left'
+    case 'TopCenter':
+      return 'udt-status-banner-stack--top-center'
+    case 'TopRight':
+      return 'udt-status-banner-stack--top-right'
+    case 'CenterRight':
+      return 'udt-status-banner-stack--center-right'
+    default:
+      return 'udt-status-banner-stack--bottom-right'
+  }
+}
 
 const SOFTWARE_BANNERS: { app: SoftwareDisablerApp; id: string; messageKey: string }[] = [
   { app: 'vantage', id: 'vantageRunning', messageKey: 'statusBanner.vantageRunning' },
@@ -31,13 +52,33 @@ export default function AppStatusBanners(): React.JSX.Element {
   const remove = useStatusBannerStore((s) => s.remove)
   const softwareStatuses = useSoftwareStore((s) => s.statuses)
   const softwareStart = useSoftwareStore((s) => s.start)
+  const applicationScope = useSettingsStore((s) => s.scopes.application)
+  const storedPosition =
+    typeof applicationScope === 'object' && applicationScope !== null
+      ? ((applicationScope as Record<string, unknown>)['NotificationPosition'] as string | undefined)
+      : undefined
+  const position = typeof storedPosition === 'string' ? storedPosition : 'BottomRight'
+  const stackRef = useRef<HTMLDivElement>(null)
 
   // Keep transient AppNotificationHost toasts stacked above these persistent
   // cards when both share the bottom-right corner (Electron single StackPanel).
+  // Measure the live stack so wrapped/high-scale banners do not overlap toasts.
   useEffect(() => {
-    const offset = banners.length === 0 ? 0 : banners.length * 56 + Math.max(0, banners.length - 1) * 8
-    document.documentElement.style.setProperty('--udt-status-banner-stack-height', `${offset}px`)
+    const node = stackRef.current
+    if (node === null) {
+      document.documentElement.style.setProperty('--udt-status-banner-stack-height', '0px')
+      return () => {
+        document.documentElement.style.removeProperty('--udt-status-banner-stack-height')
+      }
+    }
+    const update = (): void => {
+      document.documentElement.style.setProperty('--udt-status-banner-stack-height', `${node.offsetHeight}px`)
+    }
+    update()
+    const observer = new ResizeObserver(update)
+    observer.observe(node)
     return () => {
+      observer.disconnect()
       document.documentElement.style.removeProperty('--udt-status-banner-stack-height')
     }
   }, [banners.length])
@@ -109,7 +150,7 @@ export default function AppStatusBanners(): React.JSX.Element {
 
   if (banners.length === 0) return <></>
   return (
-    <div className="udt-status-banner-stack">
+    <div key={position} ref={stackRef} className={`udt-status-banner-stack ${bannerPositionClass(position)}`}>
       {banners.map((banner) => (
         <AppStatusBanner
           key={banner.id}

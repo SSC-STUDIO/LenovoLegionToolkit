@@ -6,8 +6,6 @@
 
 .udt-status-banner-stack {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -16,6 +14,50 @@
   max-width: calc(100vw - 32px);
   padding: 0;
   pointer-events: none;
+}
+
+.udt-status-banner-stack--bottom-right {
+  right: 16px;
+  bottom: 16px;
+}
+
+.udt-status-banner-stack--bottom-center {
+  right: 50%;
+  bottom: 16px;
+  transform: translateX(50%);
+}
+
+.udt-status-banner-stack--bottom-left {
+  left: 16px;
+  bottom: 16px;
+}
+
+.udt-status-banner-stack--center-left {
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+}
+
+.udt-status-banner-stack--top-left {
+  top: 56px;
+  left: 16px;
+}
+
+.udt-status-banner-stack--top-center {
+  top: 56px;
+  right: 50%;
+  transform: translateX(50%);
+}
+
+.udt-status-banner-stack--top-right {
+  top: 56px;
+  right: 16px;
+}
+
+.udt-status-banner-stack--center-right {
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
 }
 
 .udt-status-banner {
