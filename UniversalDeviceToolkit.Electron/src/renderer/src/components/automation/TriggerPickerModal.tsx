@@ -1,5 +1,5 @@
 /**
- * Trigger picker for new automatic pipelines �?port of Electron
+ * Trigger picker for new automatic pipelines - port of Electron
  * Windows/Automation/CreateAutomationPipelineWindow.xaml.cs.
  */
 import { useMemo, useState } from 'react'
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import type { AutomationTrigger } from './triggers'
 import { TRIGGER_DEFINITIONS } from './triggers'
 import { triggerIcon } from './triggerMeta'
+import AutomationModal from './AutomationModal'
 
 export interface TriggerPickerModalProps {
   /** Kinds already used by existing automatic pipelines (disallow-duplicates gate). */
@@ -59,64 +60,12 @@ export default function TriggerPickerModal(props: TriggerPickerModalProps): Reac
   }
 
   return (
-    <div className="udt-modal-backdrop" onClick={props.onCancel}>
-      <div className="udt-modal udt-modal--wide" onClick={(e) => e.stopPropagation()}>
-        <div className="udt-modal__title">{t('automation.triggerPicker.title')}</div>
-        <div className="udt-modal__scroll">
-          {!multiSelect && (
-            <button
-              type="button"
-              className="udt-trigger-card"
-              onClick={() => setMultiSelect(true)}
-            >
-              <span className="udt-trigger-card__icon">
-                <CheckboxChecked24Regular />
-              </span>
-              <span className="udt-trigger-card__copy">
-                <span className="udt-trigger-card__title">
-                  {t('wpf.multipleTriggersAutomationPipelineTriggerdisplayName', { defaultValue: 'Multiple triggers' })}
-                </span>
-              </span>
-              <ChevronRight16Regular className="udt-trigger-card__chevron" />
-            </button>
-          )}
-          {definitions.map((definition, index) => {
-            const disabled = isDisabled(definition.kind, index)
-            const isChecked = checked.has(index)
-            return (
-              <button
-                key={`${definition.kind}-${definition.nameKey}-${index}`}
-                type="button"
-                className={`udt-trigger-card${disabled ? ' udt-trigger-card--disabled' : ''}${isChecked ? ' udt-trigger-card--checked' : ''}`}
-                disabled={disabled}
-                onClick={() => pick(index)}
-              >
-                <span className="udt-trigger-card__icon">
-                  {triggerIcon(definition.kind) ?? <Add24Regular />}
-                </span>
-                <span className="udt-trigger-card__copy">
-                  <span className="udt-trigger-card__title">
-                    {definition.wpfKey != null
-                      ? t(`wpf.${definition.wpfKey}`, { defaultValue: t(`automation.triggerNames.${definition.nameKey}`) })
-                      : t(`automation.triggerNames.${definition.nameKey}`)}
-                  </span>
-                </span>
-                {multiSelect ? (
-                  <input
-                    type="checkbox"
-                    className="udt-trigger-card__checkbox"
-                    checked={isChecked}
-                    onChange={() => toggleChecked(index)}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                ) : (
-                  <ChevronRight16Regular className="udt-trigger-card__chevron" />
-                )}
-              </button>
-            )
-          })}
-        </div>
-        <div className="udt-modal__actions">
+    <AutomationModal
+      title={t('automation.triggerPicker.title')}
+      onClose={props.onCancel}
+      wide
+      actions={
+        <>
           <button type="button" className="udt-btn udt-btn--secondary" onClick={props.onCancel}>
             {t('common.cancel', { defaultValue: 'Cancel' })}
           </button>
@@ -130,8 +79,63 @@ export default function TriggerPickerModal(props: TriggerPickerModalProps): Reac
               <Add24Regular /> {t('common.confirm', { defaultValue: 'Create' })}
             </button>
           )}
-        </div>
+        </>
+      }
+    >
+      <div className="udt-modal__scroll">
+        {!multiSelect && (
+          <button
+            type="button"
+            className="udt-trigger-card"
+            onClick={() => setMultiSelect(true)}
+          >
+            <span className="udt-trigger-card__icon">
+              <CheckboxChecked24Regular />
+            </span>
+            <span className="udt-trigger-card__copy">
+              <span className="udt-trigger-card__title">
+                {t('wpf.multipleTriggersAutomationPipelineTriggerdisplayName', { defaultValue: 'Multiple triggers' })}
+              </span>
+            </span>
+            <ChevronRight16Regular className="udt-trigger-card__chevron" />
+          </button>
+        )}
+        {definitions.map((definition, index) => {
+          const disabled = isDisabled(definition.kind, index)
+          const isChecked = checked.has(index)
+          return (
+            <button
+              key={`${definition.kind}-${definition.nameKey}-${index}`}
+              type="button"
+              className={`udt-trigger-card${disabled ? ' udt-trigger-card--disabled' : ''}${isChecked ? ' udt-trigger-card--checked' : ''}`}
+              disabled={disabled}
+              onClick={() => pick(index)}
+            >
+              <span className="udt-trigger-card__icon">
+                {triggerIcon(definition.kind) ?? <Add24Regular />}
+              </span>
+              <span className="udt-trigger-card__copy">
+                <span className="udt-trigger-card__title">
+                  {definition.wpfKey != null
+                    ? t(`wpf.${definition.wpfKey}`, { defaultValue: t(`automation.triggerNames.${definition.nameKey}`) })
+                    : t(`automation.triggerNames.${definition.nameKey}`)}
+                </span>
+              </span>
+              {multiSelect ? (
+                <input
+                  type="checkbox"
+                  className="udt-trigger-card__checkbox"
+                  checked={isChecked}
+                  onChange={() => toggleChecked(index)}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              ) : (
+                <ChevronRight16Regular className="udt-trigger-card__chevron" />
+              )}
+            </button>
+          )
+        })}
       </div>
-    </div>
+    </AutomationModal>
   )
 }

@@ -207,5 +207,23 @@ public class WindowsOptimizationDefinitionsTests
         WindowsOptimizationDefinitions.PrefetchCommands.Should().NotBeEmpty();
     }
 
+    [Fact]
+    public void ShaderCacheCommands_ShouldNotBeEmpty()
+    {
+        WindowsOptimizationDefinitions.ShaderCacheCommands.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void InstantMessagingCacheCommands_ShouldNotBeEmpty()
+    {
+        WindowsOptimizationDefinitions.InstantMessagingCacheCommands.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void DevCacheCommands_ShouldNotBeEmpty()
+    {
+        WindowsOptimizationDefinitions.DevCacheCommands.Should().NotBeEmpty();
+    }
+
     #endregion
 }

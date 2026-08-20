@@ -67,6 +67,25 @@ public class WindowsCleanupService
 
             ["cleanup.remoteDesktopCache"] = (ct, cb) => EstimateDirectorySizeAsync(Environment.ExpandEnvironmentVariables("%LocalAppData%\\Microsoft\\Terminal Server Client\\Cache"), null, ct, cb),
             
+            ["cleanup.shaderCache"] = (ct, cb) => EstimateMultipleDirectoriesAsync(ct, cb,
+                "%LocalAppData%\\D3DSCache",
+                "%LocalAppData%\\NVIDIA\\DXCache",
+                "%LocalAppData%\\NVIDIA\\GLCache",
+                "%LocalAppData%\\AMD\\DxCache",
+                "%LocalAppData%\\Intel\\ShaderCache"),
+
+            ["cleanup.instantMessaging"] = (ct, cb) => EstimateMultipleDirectoriesAsync(ct, cb,
+                "%AppData%\\Tencent\\QQNT\\nt_qq\\nt_temp",
+                "%AppData%\\Telegram Desktop\\tdata\\temp",
+                "%AppData%\\DingTalk\\temp",
+                "%LocalAppData%\\Tencent\\WeChat\\Caches"),
+
+            ["cleanup.devCaches"] = (ct, cb) => EstimateMultipleDirectoriesAsync(ct, cb,
+                "%LocalAppData%\\pip\\cache",
+                "%LocalAppData%\\npm-cache",
+                "%LocalAppData%\\Yarn\\Cache",
+                "%LocalAppData%\\NuGet\\v3-cache"),
+
             ["cleanup.largeFiles"] = EstimateLargeFilesSizeAsync,
             ["cleanup.custom"] = EstimateCustomCleanupSizeAsync
         };

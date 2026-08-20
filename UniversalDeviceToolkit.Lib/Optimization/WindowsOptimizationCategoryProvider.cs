@@ -160,7 +160,22 @@ public class WindowsOptimizationCategoryProvider
                     "cleanup.remoteDesktopCache",
                     "WindowsOptimization_Action_CleanupRemoteDesktop_Title",
                     "WindowsOptimization_Action_CleanupRemoteDesktop_Description",
-                    WindowsOptimizationDefinitions.RemoteDesktopCacheCommands)
+                    WindowsOptimizationDefinitions.RemoteDesktopCacheCommands),
+                _service.CreateCommandAction(
+                    "cleanup.shaderCache",
+                    "WindowsOptimization_Action_CleanupShaderCache_Title",
+                    "WindowsOptimization_Action_CleanupShaderCache_Description",
+                    WindowsOptimizationDefinitions.ShaderCacheCommands),
+                _service.CreateCommandAction(
+                    "cleanup.instantMessaging",
+                    "WindowsOptimization_Action_CleanupInstantMessaging_Title",
+                    "WindowsOptimization_Action_CleanupInstantMessaging_Description",
+                    WindowsOptimizationDefinitions.InstantMessagingCacheCommands),
+                _service.CreateCommandAction(
+                    "cleanup.devCaches",
+                    "WindowsOptimization_Action_CleanupDevCaches_Title",
+                    "WindowsOptimization_Action_CleanupDevCaches_Description",
+                    WindowsOptimizationDefinitions.DevCacheCommands)
             ]);
 
     private WindowsOptimizationCategoryDefinition CreateCleanupSystemFilesCategory() =>

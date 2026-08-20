@@ -21,6 +21,7 @@ import { automationApi } from '../../api/automation'
 import type { AutomationPipeline, AutomationStepType } from '../../api/automation'
 import { formatStepSummary } from './steps'
 import { StepEditor as OtherStepEditor } from './stepEditors'
+import AutomationModal from './AutomationModal'
 
 /**
  * Electron counterpart of the 12 Electron step card controls (AbstractAutomationStepControl /
@@ -391,47 +392,50 @@ export function StepEditorModal(props: StepEditorModalProps): React.JSX.Element 
   const summary = stepSummaryText(draft, t) || formatStepSummary(draft, t, pipelines)
 
   return (
-    <div className="udt-modal-backdrop" onClick={onCancel}>
-      <div className="udt-modal udt-step-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="udt-modal__title">{title}</div>
-        {desc !== '' && <div className="udt-step-editor__desc">{desc}</div>}
-        <div className="udt-step-editor__body">
-          {meta !== undefined && meta.kind === 'select' && ENUM_OPTIONS[type] !== undefined && (
-            <EnumStateSelect type={type} step={draft} onChange={(next) => setDraft(next)} />
-          )}
-          {meta !== undefined && type === 'delay' && (
-            <DelaySelect step={draft} onChange={(next) => setDraft(next)} />
-          )}
-          {meta !== undefined && meta.kind === 'number' && (
-            <BrightnessNumber step={draft} onChange={(next) => setDraft(next)} />
-          )}
-          {meta !== undefined && type === 'dpiScale' && (
-            <DpiScaleSelect step={draft} onChange={(next) => setDraft(next)} />
-          )}
-          {meta !== undefined && meta.kind === 'preset' && (
-            <GodModePresetSelect step={draft} onChange={(next) => setDraft(next)} />
-          )}
-          {meta !== undefined && meta.kind === 'none' && (
-            <div className="udt-step-editor__empty">{t('automation.noEditableParameters')}</div>
-          )}
-          {meta === undefined && OTHER_EDITABLE_TYPES.has(type) && (
-            <OtherStepEditor step={draft} onChange={(next) => setDraft(next)} />
-          )}
-          {meta === undefined && !OTHER_EDITABLE_TYPES.has(type) && (
-            <div className="udt-step-editor__empty">{t('automation.noEditableParameters')}</div>
-          )}
-        </div>
-        {summary !== '' && <div className="udt-step-editor__summary">{summary}</div>}
-        <div className="udt-modal__actions">
+    <AutomationModal
+      title={title}
+      onClose={onCancel}
+      className="udt-step-modal"
+      actions={
+        <>
           <button type="button" className="udt-btn udt-btn--secondary" onClick={onCancel}>
             {t('common.cancel', { defaultValue: '取消' })}
           </button>
           <button type="button" className="udt-btn udt-btn--primary" onClick={() => onApply(draft)}>
             <ArrowRight24Regular /> {t('common.confirm', { defaultValue: '确定' })}
           </button>
-        </div>
+        </>
+      }
+    >
+      {desc !== '' && <div className="udt-step-editor__desc">{desc}</div>}
+      <div className="udt-step-editor__body">
+        {meta !== undefined && meta.kind === 'select' && ENUM_OPTIONS[type] !== undefined && (
+          <EnumStateSelect type={type} step={draft} onChange={(next) => setDraft(next)} />
+        )}
+        {meta !== undefined && type === 'delay' && (
+          <DelaySelect step={draft} onChange={(next) => setDraft(next)} />
+        )}
+        {meta !== undefined && meta.kind === 'number' && (
+          <BrightnessNumber step={draft} onChange={(next) => setDraft(next)} />
+        )}
+        {meta !== undefined && type === 'dpiScale' && (
+          <DpiScaleSelect step={draft} onChange={(next) => setDraft(next)} />
+        )}
+        {meta !== undefined && meta.kind === 'preset' && (
+          <GodModePresetSelect step={draft} onChange={(next) => setDraft(next)} />
+        )}
+        {meta !== undefined && meta.kind === 'none' && (
+          <div className="udt-step-editor__empty">{t('automation.noEditableParameters')}</div>
+        )}
+        {meta === undefined && OTHER_EDITABLE_TYPES.has(type) && (
+          <OtherStepEditor step={draft} onChange={(next) => setDraft(next)} />
+        )}
+        {meta === undefined && !OTHER_EDITABLE_TYPES.has(type) && (
+          <div className="udt-step-editor__empty">{t('automation.noEditableParameters')}</div>
+        )}
       </div>
-    </div>
+      {summary !== '' && <div className="udt-step-editor__summary">{summary}</div>}
+    </AutomationModal>
   )
 }
 

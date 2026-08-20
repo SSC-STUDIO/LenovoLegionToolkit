@@ -952,3 +952,123 @@
   font-size: 14px;
   color: var(--udt-text-secondary);
 }
+
+.udt-preset-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 320px;
+}
+
+.udt-preset-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--udt-control-stroke-default);
+  padding-bottom: 8px;
+}
+
+.udt-preset-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: none;
+  border-radius: var(--udt-radius-sm, 6px);
+  background: transparent;
+  color: var(--udt-text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .15s ease;
+}
+
+.udt-preset-tab:hover {
+  background: var(--udt-control-fill-subtle);
+  color: var(--udt-text-primary);
+}
+
+.udt-preset-tab.active {
+  background: var(--udt-control-fill-default);
+  color: var(--udt-text-primary);
+  font-weight: 500;
+}
+
+.udt-preset-content {
+  flex: 1;
+}
+
+.udt-preset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.udt-preset-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-surface-card);
+}
+
+.udt-preset-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--udt-control-fill-subtle);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.udt-preset-card__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.udt-preset-card__title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--udt-text-primary);
+  margin-bottom: 2px;
+}
+
+.udt-preset-card__desc {
+  font-size: 12px;
+  color: var(--udt-text-secondary);
+  line-height: 1.35;
+}
+
+.udt-export-panel,
+.udt-import-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.udt-panel-hint {
+  font-size: 12px;
+  color: var(--udt-text-secondary);
+  margin: 0;
+}
+
+.udt-panel-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.udt-textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-sm, 6px);
+  background: var(--udt-control-fill-subtle);
+  color: var(--udt-text-primary);
+  resize: vertical;
+  box-sizing: border-box;
+}

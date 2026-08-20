@@ -15,13 +15,20 @@ import { cancelIdleDestroy, scheduleIdleDestroy, setSurfaceVisible } from './ui-
 
 export type TrayPopupCommand = string
 
+export interface TraySegmentItem {
+  cmd: string
+  label: string
+  active?: boolean
+}
+
 export type TrayPopupNode =
-  | { type: 'header'; label: string }
+  | { type: 'header'; label: string; badge?: string }
   | { type: 'separator' }
   | { type: 'item'; cmd: string; label: string; iconSvg?: string }
+  | { type: 'segment'; label?: string; items: TraySegmentItem[] }
 
 const SHADOW_GUTTER = 6
-const MENU_MIN_WIDTH = 168
+const MENU_MIN_WIDTH = 180
 const BLUR_CLOSE_GRACE_MS = 180
 
 let popup: BrowserWindow | null = null
@@ -46,10 +53,21 @@ function renderNodes(nodes: TrayPopupNode[]): string {
   return nodes
     .map((node) => {
       if (node.type === 'header') {
-        return `<div class="header">${escapeHtml(node.label)}</div>`
+        const badge = node.badge ? `<span class="header-badge">${escapeHtml(node.badge)}</span>` : ''
+        return `<div class="header"><span>${escapeHtml(node.label)}</span>${badge}</div>`
       }
       if (node.type === 'separator') {
         return '<div class="sep" role="separator"></div>'
+      }
+      if (node.type === 'segment') {
+        const lbl = node.label ? `<div class="segment-label">${escapeHtml(node.label)}</div>` : ''
+        const buttons = node.items
+          .map((item) => {
+            const cls = item.active ? 'segment-btn active' : 'segment-btn'
+            return `<button type="button" class="${cls}" data-cmd="${escapeHtml(item.cmd)}">${escapeHtml(item.label)}</button>`
+          })
+          .join('')
+        return `<div class="segment-group">${lbl}<div class="segment-items">${buttons}</div></div>`
       }
       const icon = node.iconSvg
         ? `<span class="icon">${node.iconSvg}</span>`
@@ -67,16 +85,25 @@ function pageCss(): string {
     '*,*::before,*::after{box-sizing:border-box;}',
     'html.dark{color-scheme:dark;',
     '--bg:#2c2c2c;--text:#f3f3f3;--muted:#b0b0b0;--hover:rgba(255,255,255,.08);',
-    '--stroke:rgba(255,255,255,.1);--shadow:0 4px 16px rgba(0,0,0,.4);}',
+    '--stroke:rgba(255,255,255,.1);--shadow:0 4px 16px rgba(0,0,0,.4);--active-bg:#3b3b3b;}',
     'html.light{color-scheme:light;',
     '--bg:#ffffff;--text:#1a1a1a;--muted:#6b6b6b;--hover:rgba(0,0,0,.06);',
-    '--stroke:rgba(0,0,0,.08);--shadow:0 4px 16px rgba(0,0,0,.18);}',
+    '--stroke:rgba(0,0,0,.08);--shadow:0 4px 16px rgba(0,0,0,.18);--active-bg:#f0f0f0;}',
     `.shell{padding:${SHADOW_GUTTER}px;}`,
-    `.menu{min-width:${MENU_MIN_WIDTH}px;max-width:240px;padding:4px;`,
+    `.menu{min-width:${MENU_MIN_WIDTH}px;max-width:260px;padding:4px;`,
     'border-radius:8px;border:1px solid var(--stroke);background:var(--bg);',
     'box-shadow:var(--shadow);}',
-    '.header{padding:3px 8px 2px;font-size:11px;line-height:16px;font-weight:600;',
-    'color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+    '.header{display:flex;align-items:center;justify-content:space-between;padding:3px 8px 2px;',
+    'font-size:11px;line-height:16px;font-weight:600;color:var(--muted);white-space:nowrap;}',
+    '.header-badge{font-size:10px;padding:1px 6px;border-radius:4px;background:var(--hover);color:var(--text);font-weight:500;}',
+    '.segment-group{padding:2px 4px;margin:2px 0;}',
+    '.segment-label{font-size:10px;color:var(--muted);margin-bottom:3px;padding:0 2px;}',
+    '.segment-items{display:flex;gap:2px;background:var(--hover);padding:2px;border-radius:6px;}',
+    '.segment-btn{flex:1;padding:3px 4px;border:none;border-radius:4px;background:transparent;',
+    'color:var(--muted);font:inherit;font-size:11px;line-height:14px;text-align:center;',
+    'cursor:pointer;-webkit-appearance:none;appearance:none;transition:background .15s ease,color .15s ease;}',
+    '.segment-btn:hover{color:var(--text);}',
+    '.segment-btn.active{background:var(--bg);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.2);}',
     '.sep{height:1px;margin:3px 6px;background:var(--stroke);}',
     '.item{display:flex;align-items:center;gap:8px;height:26px;width:100%;',
     'padding:0 8px;border:none;border-radius:4px;background:transparent;',

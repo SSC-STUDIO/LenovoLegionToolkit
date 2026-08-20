@@ -186,7 +186,29 @@ export function useSensorDetails(props: SensorDetailsProps): {
   const battery: SensorDetailRow[] = [
     { label: t('dashboard.sensor.detail.designCapacity'), value: formatWattHours(props.battery?.designCapacity) },
     { label: t('dashboard.sensor.detail.fullChargeCapacity'), value: formatWattHours(props.battery?.fullChargeCapacity) },
-    { label: t('dashboard.sensor.health'), value: formatHealthPercent(props.battery?.health) },
+    {
+      label: t('dashboard.sensor.health'),
+      value: (() => {
+        const health = props.battery?.health
+        if (health == null || !Number.isFinite(health) || health < 0) return '-'
+        const pct = (health * 100).toFixed(2)
+        if (health >= 0.85) return `${pct}% (${t('dashboard.sensor.healthGood', { defaultValue: 'Good' })})`
+        if (health >= 0.70) return `${pct}% (${t('dashboard.sensor.healthFair', { defaultValue: 'Fair' })})`
+        return `${pct}% (${t('dashboard.sensor.healthDegraded', { defaultValue: 'Degraded' })})`
+      })()
+    },
+    {
+      label: t('dashboard.sensor.wearLevel', { defaultValue: 'Wear Level' }),
+      value: (() => {
+        const design = props.battery?.designCapacity
+        const full = props.battery?.fullChargeCapacity
+        if (design != null && full != null && design > 0 && full > 0) {
+          const wear = Math.max(0, ((design - full) / design) * 100)
+          return `${wear.toFixed(2)}%`
+        }
+        return '-'
+      })()
+    },
     {
       label: t('dashboard.sensor.cycles'),
       value:

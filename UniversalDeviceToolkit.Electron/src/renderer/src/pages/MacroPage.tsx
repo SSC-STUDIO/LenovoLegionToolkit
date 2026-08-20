@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
   ArrowDown24Regular,
+  ArrowExport24Regular,
+  ArrowImport24Regular,
   ArrowUp24Regular,
   Clock24Regular,
   Dismiss24Regular,
@@ -259,7 +261,7 @@ export default function MacroPage(): React.JSX.Element {
         interruptOnOtherKey,
         events
       })
-      if (!saved) {
+      if (saved !== true) {
         message.error(useMacroStore.getState().error ?? t('settings.saveFailed'))
         return
       }
@@ -272,7 +274,7 @@ export default function MacroPage(): React.JSX.Element {
   const handleClear = async (): Promise<void> => {
     try {
       const cleared = await clearSequence(selectedKey)
-      if (!cleared) {
+      if (cleared !== true) {
         message.error(useMacroStore.getState().error ?? t('settings.saveFailed'))
         return
       }
@@ -283,12 +285,12 @@ export default function MacroPage(): React.JSX.Element {
   }
 
   const handleEnabledChange = async (enabled: boolean): Promise<void> => {
-    if (await setEnabled(enabled)) return
+    if ((await setEnabled(enabled)) === true) return
     message.error(useMacroStore.getState().error ?? t('settings.saveFailed'))
   }
 
   const handlePlay = async (): Promise<void> => {
-    if (await play(selectedKey)) return
+    if ((await play(selectedKey)) === true) return
     message.error(useMacroStore.getState().error ?? t('settings.saveFailed'))
   }
 
@@ -298,6 +300,46 @@ export default function MacroPage(): React.JSX.Element {
       return
     }
     recorder.start(recordingMode)
+  }
+
+  const handleExportMacro = (): void => {
+    if (!events || events.length === 0) {
+      message.warning(t('macro.empty', { defaultValue: 'No macro sequence recorded.' }))
+      return
+    }
+    const data = {
+      key: selectedKey,
+      repeatCount,
+      ignoreDelays,
+      interruptOnOtherKey,
+      events
+    }
+    void navigator.clipboard.writeText(JSON.stringify(data, null, 2)).then(() => {
+      message.success(t('macro.exportSuccess', { defaultValue: 'Macro sequence copied to clipboard!' }))
+    })
+  }
+
+  const handleImportMacro = (): void => {
+    void navigator.clipboard.readText().then((text) => {
+      if (!text || !text.trim()) {
+        message.error(t('macro.importEmpty', { defaultValue: 'Clipboard is empty.' }))
+        return
+      }
+      try {
+        const parsed = JSON.parse(text.trim())
+        if (Array.isArray(parsed.events)) {
+          setEvents(parsed.events)
+          if (typeof parsed.repeatCount === 'number') setRepeatCount(parsed.repeatCount)
+          if (typeof parsed.ignoreDelays === 'boolean') setIgnoreDelays(parsed.ignoreDelays)
+          if (typeof parsed.interruptOnOtherKey === 'boolean') setInterruptOnOtherKey(parsed.interruptOnOtherKey)
+          message.success(t('macro.importSuccess', { defaultValue: 'Macro loaded from clipboard! Click Save to persist.' }))
+        } else {
+          message.error(t('macro.importInvalid', { defaultValue: 'Invalid macro JSON format.' }))
+        }
+      } catch {
+        message.error(t('macro.importInvalid', { defaultValue: 'Invalid macro JSON format.' }))
+      }
+    })
   }
 
   // First load only: the store state starts as a non-null default ({ slots: [] }),
@@ -443,6 +485,19 @@ export default function MacroPage(): React.JSX.Element {
           <div className="udt-macro-actions">
             <Button onClick={() => void handleSave()}>{t('macro.save')}</Button>
             <Button onClick={() => void handlePlay()}>{t('macro.play')}</Button>
+            <Tooltip title={t('macro.exportSequence', { defaultValue: 'Export Macro to Clipboard' })}>
+              <Button
+                icon={<ArrowExport24Regular />}
+                disabled={!hasEvents}
+                onClick={handleExportMacro}
+              />
+            </Tooltip>
+            <Tooltip title={t('macro.importSequence', { defaultValue: 'Import Macro from Clipboard' })}>
+              <Button
+                icon={<ArrowImport24Regular />}
+                onClick={handleImportMacro}
+              />
+            </Tooltip>
             <Tooltip title={t('macro.clear')}>
               <Button
                 icon={<Dismiss24Regular />}

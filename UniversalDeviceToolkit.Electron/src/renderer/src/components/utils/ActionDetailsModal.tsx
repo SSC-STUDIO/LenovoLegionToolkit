@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
+import { useUtilsDialog } from './useUtilsDialog'
 import './utils.css'
 
 /**
@@ -97,6 +98,28 @@ function getCleanupCommands(actionKey: string, t: (key: string) => string): stri
       return [
         'rd /s /q "%WinDir%\\assembly\\NativeImages_v4.0.30319_32" >nul 2>&1',
         'rd /s /q "%WinDir%\\assembly\\NativeImages_v4.0.30319_64" >nul 2>&1'
+      ]
+    case 'cleanup.shaderCache':
+      return [
+        'del /f /s /q "%LocalAppData%\\D3DSCache\\*" >nul 2>&1',
+        'del /f /s /q "%LocalAppData%\\NVIDIA\\DXCache\\*" >nul 2>&1',
+        'del /f /s /q "%LocalAppData%\\NVIDIA\\GLCache\\*" >nul 2>&1',
+        'del /f /s /q "%LocalAppData%\\AMD\\DxCache\\*" >nul 2>&1',
+        'del /f /s /q "%LocalAppData%\\Intel\\ShaderCache\\*" >nul 2>&1'
+      ]
+    case 'cleanup.instantMessaging':
+      return [
+        'del /f /s /q "%AppData%\\Tencent\\QQNT\\nt_qq\\nt_temp\\*" >nul 2>&1',
+        'del /f /s /q "%AppData%\\Telegram Desktop\\tdata\\temp\\*" >nul 2>&1',
+        'del /f /s /q "%AppData%\\DingTalk\\temp\\*" >nul 2>&1',
+        'del /f /s /q "%LocalAppData%\\Tencent\\WeChat\\Caches\\*" >nul 2>&1'
+      ]
+    case 'cleanup.devCaches':
+      return [
+        'del /f /s /q "%LocalAppData%\\pip\\cache\\*" >nul 2>&1',
+        'del /f /s /q "%LocalAppData%\\npm-cache\\*" >nul 2>&1',
+        'del /f /s /q "%LocalAppData%\\Yarn\\Cache\\*" >nul 2>&1',
+        'del /f /s /q "%LocalAppData%\\NuGet\\v3-cache\\*" >nul 2>&1'
       ]
     case 'network.optimization':
       return [
@@ -289,6 +312,7 @@ export default function ActionDetailsModalHost(): React.JSX.Element {
   const { t } = useTranslation()
   const request = useActionDetailsStore((s) => s.request)
   const settle = useActionDetailsStore((s) => s.settle)
+  const { dialogRef, titleId, dialogProps } = useUtilsDialog(request != null, settle)
 
   const content = useMemo(() => {
     if (!request) return null
@@ -307,11 +331,13 @@ export default function ActionDetailsModalHost(): React.JSX.Element {
   return (
     <div className="udt-utils-backdrop" onClick={settle}>
       <div
+        ref={dialogRef}
         className="udt-utils-modal"
         style={{ width: 760, height: 560 }}
         onClick={(event) => event.stopPropagation()}
+        {...dialogProps}
       >
-        <div className="udt-utils-modal__title">{t('wpf.actionDetailsWindowtitle')}</div>
+        <div className="udt-utils-modal__title" id={titleId}>{t('wpf.actionDetailsWindowtitle')}</div>
         <div className="udt-utils-modal__body">
           <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 6 }}>{content.title}</div>
           <p className="udt-utils-text" style={{ marginTop: 0, marginBottom: 16 }}>

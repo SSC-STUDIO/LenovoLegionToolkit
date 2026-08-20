@@ -185,4 +185,30 @@ public static class WindowsOptimizationDefinitions
         "dism /Online /Cleanup-Image /StartComponentCleanup /ResetBase",
         Del(Path.Combine(WindowsPath, "WinSxS", "Temp", "*"))
     ];
+
+    public static readonly IReadOnlyList<string> ShaderCacheCommands =
+    [
+        Del(Path.Combine(LocalAppDataPath, "D3DSCache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "NVIDIA", "DXCache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "NVIDIA", "GLCache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "AMD", "DxCache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Intel", "ShaderCache", "*"))
+    ];
+
+    public static readonly IReadOnlyList<string> InstantMessagingCacheCommands =
+    [
+        Del(Path.Combine(RoamingAppDataPath, "Tencent", "QQNT", "nt_qq", "nt_temp", "*")),
+        Del(Path.Combine(RoamingAppDataPath, "Telegram Desktop", "tdata", "temp", "*")),
+        Del(Path.Combine(RoamingAppDataPath, "DingTalk", "temp", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Tencent", "WeChat", "Caches", "*"))
+    ];
+
+    public static readonly IReadOnlyList<string> DevCacheCommands =
+    [
+        Del(Path.Combine(LocalAppDataPath, "pip", "cache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "npm-cache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "Yarn", "Cache", "*")),
+        Del(Path.Combine(LocalAppDataPath, "NuGet", "v3-cache", "*"))
+    ];
 }
+

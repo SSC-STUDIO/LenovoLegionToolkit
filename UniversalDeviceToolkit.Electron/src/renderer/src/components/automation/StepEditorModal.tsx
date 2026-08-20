@@ -9,8 +9,9 @@ import {
   stateLabel,
   statesEqual,
   type StepOption,
-  type StepState,
+  type StepState
 } from './steps'
+import AutomationModal from './AutomationModal'
 
 export interface StepEditorModalProps {
   step: AutomationStepType
@@ -80,17 +81,17 @@ export default function StepEditorModal({ step, pipelines, onApply, onCancel }: 
 
   if (!def) {
     return (
-      <div className="udt-modal-backdrop" onClick={onCancel}>
-        <div className="udt-modal" onClick={(e) => e.stopPropagation()}>
-          <div className="udt-modal__title">{t('automation.addStep')}</div>
-          <div className="udt-step-editor__desc">{String(step.$type)}</div>
-          <div className="udt-modal__actions">
-            <button type="button" className="udt-btn udt-btn--secondary" onClick={onCancel}>
-              {t('common.cancel', { defaultValue: '取消' })}
-            </button>
-          </div>
-        </div>
-      </div>
+      <AutomationModal
+        title={t('automation.addStep')}
+        onClose={onCancel}
+        actions={
+          <button type="button" className="udt-btn udt-btn--secondary" onClick={onCancel}>
+            {t('common.cancel', { defaultValue: '取消' })}
+          </button>
+        }
+      >
+        <div className="udt-step-editor__desc">{String(step.$type)}</div>
+      </AutomationModal>
     )
   }
 
@@ -157,96 +158,96 @@ export default function StepEditorModal({ step, pipelines, onApply, onCancel }: 
   }
 
   return (
-    <div className="udt-modal-backdrop" onClick={onCancel}>
-      <div className="udt-modal" onClick={(e) => e.stopPropagation()}>
-        <div className="udt-modal__title">{t(`automation.stepEditors.${def.i18nKey}.title`)}</div>
-        <div className="udt-step-editor__desc">{t(`automation.stepEditors.${def.i18nKey}.desc`)}</div>
-
-        <div className="udt-step-editor__body">
-          {def.kind === 'select' && (
-            <>
-              <Select
-                className="udt-select"
-                value={uniqueOptions.length === 0 ? undefined : optionKey(value as StepState)}
-                loading={optionsLoading}
-                placeholder={optionsLoading ? t('automation.optionsLoading') : undefined}
-                onChange={handleSelect}
-                options={uniqueOptions.map((option) => ({
-                  value: optionKey(option.value),
-                  label: option.labelText ?? stateLabel(option.value, def, t)
-                }))}
-              />
-              {!optionsLoading && uniqueOptions.length === 0 && (
-                <div className="udt-step-editor__empty">{t(`automation.stepEditors.${def.i18nKey}.empty`)}</div>
-              )}
-            </>
-          )}
-
-          {def.kind === 'text' && (
-            <input
-              autoFocus
-              className="udt-input"
-              value={(value as string) ?? ''}
-              placeholder={t(`automation.stepEditors.${def.i18nKey}.placeholder`)}
-              onChange={(e) => setValue(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleApply()
-                if (e.key === 'Escape') onCancel()
-              }}
-            />
-          )}
-
-          {def.kind === 'file' && (
-            <div className="udt-file-row">
-              <span className="udt-file-row__name" title={(value as string) ?? ''}>
-                {(value as string) || t(`automation.stepEditors.${def.i18nKey}.none`)}
-              </span>
-              <button
-                type="button"
-                className="udt-btn udt-btn--secondary"
-                onClick={() => void handleBrowseFile()}
-              >
-                {t(`automation.stepEditors.${def.i18nKey}.browse`)}
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="audio/*,.wav,.mp3,.ogg,.flac,.aac,.m4a"
-                style={{ display: 'none' }}
-                onChange={(e) => handleFilePicked(e.target.files?.[0])}
-              />
-            </div>
-          )}
-
-          {def.kind === 'pipeline' && (
-            <>
-              <Select
-                className="udt-select"
-                value={(value as string) || undefined}
-                placeholder={t(`automation.stepEditors.${def.i18nKey}.placeholder`)}
-                onChange={(next) => setValue(next ?? null)}
-                options={quickActionPipelines.map((pipeline) => ({
-                  value: pipeline.id,
-                  label: pipeline.name ?? t('automation.quickAction')
-                }))}
-                allowClear
-              />
-              {quickActionPipelines.length === 0 && (
-                <div className="udt-step-editor__empty">{t(`automation.stepEditors.${def.i18nKey}.empty`)}</div>
-              )}
-            </>
-          )}
-        </div>
-
-        <div className="udt-modal__actions">
+    <AutomationModal
+      title={t(`automation.stepEditors.${def.i18nKey}.title`)}
+      onClose={onCancel}
+      actions={
+        <>
           <button type="button" className="udt-btn udt-btn--secondary" onClick={onCancel}>
             {t('common.cancel', { defaultValue: '取消' })}
           </button>
           <button type="button" className="udt-btn udt-btn--primary" disabled={!canSave} onClick={handleApply}>
             {t('common.confirm', { defaultValue: '确定' })}
           </button>
-        </div>
+        </>
+      }
+    >
+      <div className="udt-step-editor__desc">{t(`automation.stepEditors.${def.i18nKey}.desc`)}</div>
+
+      <div className="udt-step-editor__body">
+        {def.kind === 'select' && (
+          <>
+            <Select
+              className="udt-select"
+              value={uniqueOptions.length === 0 ? undefined : optionKey(value as StepState)}
+              loading={optionsLoading}
+              placeholder={optionsLoading ? t('automation.optionsLoading') : undefined}
+              onChange={handleSelect}
+              options={uniqueOptions.map((option) => ({
+                value: optionKey(option.value),
+                label: option.labelText ?? stateLabel(option.value, def, t)
+              }))}
+            />
+            {!optionsLoading && uniqueOptions.length === 0 && (
+              <div className="udt-step-editor__empty">{t(`automation.stepEditors.${def.i18nKey}.empty`)}</div>
+            )}
+          </>
+        )}
+
+        {def.kind === 'text' && (
+          <input
+            autoFocus
+            className="udt-input"
+            value={(value as string) ?? ''}
+            placeholder={t(`automation.stepEditors.${def.i18nKey}.placeholder`)}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') handleApply()
+            }}
+          />
+        )}
+
+        {def.kind === 'file' && (
+          <div className="udt-file-row">
+            <span className="udt-file-row__name" title={(value as string) ?? ''}>
+              {(value as string) || t(`automation.stepEditors.${def.i18nKey}.none`)}
+            </span>
+            <button
+              type="button"
+              className="udt-btn udt-btn--secondary"
+              onClick={() => void handleBrowseFile()}
+            >
+              {t(`automation.stepEditors.${def.i18nKey}.browse`)}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="audio/*,.wav,.mp3,.ogg,.flac,.aac,.m4a"
+              style={{ display: 'none' }}
+              onChange={(e) => handleFilePicked(e.target.files?.[0])}
+            />
+          </div>
+        )}
+
+        {def.kind === 'pipeline' && (
+          <>
+            <Select
+              className="udt-select"
+              value={(value as string) || undefined}
+              placeholder={t(`automation.stepEditors.${def.i18nKey}.placeholder`)}
+              onChange={(next) => setValue(next ?? null)}
+              options={quickActionPipelines.map((pipeline) => ({
+                value: pipeline.id,
+                label: pipeline.name ?? t('automation.quickAction')
+              }))}
+              allowClear
+            />
+            {quickActionPipelines.length === 0 && (
+              <div className="udt-step-editor__empty">{t(`automation.stepEditors.${def.i18nKey}.empty`)}</div>
+            )}
+          </>
+        )}
       </div>
-    </div>
+    </AutomationModal>
   )
 }

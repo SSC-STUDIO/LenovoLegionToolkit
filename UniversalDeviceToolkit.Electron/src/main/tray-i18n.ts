@@ -13,6 +13,11 @@ export interface TrayStrings {
   close: string
   unnamed: string
   deactivateGpu: string
+  powerMode: string
+  quiet: string
+  balance: string
+  performance: string
+  custom: string
 }
 
 const ZH_CN: TrayStrings = {
@@ -24,7 +29,12 @@ const ZH_CN: TrayStrings = {
   open: '打开',
   close: '关闭',
   unnamed: '未命名',
-  deactivateGpu: '停用 GPU'
+  deactivateGpu: '停用 GPU',
+  powerMode: '电源模式',
+  quiet: '安静',
+  balance: '平衡',
+  performance: '野兽',
+  custom: '自定义'
 }
 
 const EN_US: TrayStrings = {
@@ -36,7 +46,12 @@ const EN_US: TrayStrings = {
   open: 'Open',
   close: 'Close',
   unnamed: 'Unnamed',
-  deactivateGpu: 'Deactivate GPU'
+  deactivateGpu: 'Deactivate GPU',
+  powerMode: 'Power Mode',
+  quiet: 'Quiet',
+  balance: 'Balance',
+  performance: 'Performance',
+  custom: 'Custom'
 }
 
 const ZH_HANT: TrayStrings = {
@@ -47,7 +62,12 @@ const ZH_HANT: TrayStrings = {
   open: '開啟',
   close: '關閉',
   unnamed: '未命名',
-  deactivateGpu: '強制休眠獨顯'
+  deactivateGpu: '強制休眠獨顯',
+  powerMode: '電源模式',
+  quiet: '安靜',
+  balance: '平衡',
+  performance: '效能',
+  custom: '自訂'
 }
 
 const BY_LANG: Record<string, TrayStrings> = {

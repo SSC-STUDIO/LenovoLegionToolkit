@@ -13,6 +13,7 @@ import {
 
 let tray: Tray | null = null
 let getWindow: (() => BrowserWindow | null) | null = null
+let restoreWindow: ((route?: string) => void) | null = null
 let invokeHost: ((method: string, params?: unknown) => Promise<unknown>) | null = null
 let refreshTimer: ReturnType<typeof setTimeout> | null = null
 let building = false
@@ -85,8 +86,11 @@ function updateTrayIcon(): void {
   }
 }
 
-function showWindow(window: BrowserWindow | null): void {
-  if (!window || window.isDestroyed()) return
+function showWindow(window: BrowserWindow | null, route?: string): void {
+  if (!window || window.isDestroyed()) {
+    restoreWindow?.(route)
+    return
+  }
   if (window.isMinimized()) window.restore()
   window.show()
   window.focus()
@@ -100,6 +104,10 @@ function sendToRenderer(event: string, data: unknown = null): void {
 
 function navigate(route: string): void {
   const win = getWindow?.() ?? null
+  if (!win || win.isDestroyed()) {
+    restoreWindow?.(route)
+    return
+  }
   showWindow(win)
   // Match Electron TrayHelper delay so the window is foreground before navigation.
   setTimeout(() => sendToRenderer('tray:navigate', { route }), 500)
@@ -156,13 +164,73 @@ function isNavVisible(key: string | undefined, visibility: Record<string, boolea
   return true
 }
 
+async function readPowerModeState(): Promise<{ current: string; states: string[] } | null> {
+  if (!invokeHost) return null
+  try {
+    const isSupported = (await invokeHost('features.isSupported', { feature: 'powerMode' })) as { value?: boolean } | null
+    if (isSupported?.value !== true) return null
+    const [stateRes, allRes] = await Promise.all([
+      invokeHost('features.get', { feature: 'powerMode' }) as Promise<{ value?: string } | null>,
+      invokeHost('features.getAllStates', { feature: 'powerMode' }) as Promise<{ value?: string[] } | null>
+    ])
+    const current = stateRes?.value ?? ''
+    const states = allRes?.value ?? []
+    if (states.length === 0) return null
+    return { current, states }
+  } catch {
+    return null
+  }
+}
+
+async function readBatteryBadge(): Promise<string | undefined> {
+  if (!invokeHost) return undefined
+  try {
+    const sensors = (await invokeHost('sensors.get', {})) as { battery?: { chargeLevel?: number } } | null
+    const charge = sensors?.battery?.chargeLevel
+    if (charge != null && Number.isFinite(charge) && charge >= 0) {
+      return `${Math.round(charge)}%`
+    }
+  } catch {
+    // ignore
+  }
+  return undefined
+}
+
 async function buildPopupNodes(): Promise<TrayPopupNode[]> {
   const s = trayStrings()
-  const visibility = await readNavigationVisibility()
-  const quickActions = await readQuickActions()
+  const [visibility, quickActions, powerMode, batteryBadge] = await Promise.all([
+    readNavigationVisibility(),
+    readQuickActions(),
+    readPowerModeState(),
+    readBatteryBadge()
+  ])
   const nodes: TrayPopupNode[] = []
 
-  nodes.push({ type: 'header', label: 'Universal Device Toolkit' })
+  nodes.push({ type: 'header', label: 'Universal Device Toolkit', badge: batteryBadge })
+
+  if (powerMode && powerMode.states.length > 0) {
+    nodes.push({ type: 'separator' })
+    const stateLabel = (st: string): string => {
+      switch (st) {
+        case 'Quiet': return s.quiet
+        case 'Balance': return s.balance
+        case 'Performance': return s.performance
+        case 'GodMode':
+        case 'Custom': return s.custom
+        default: return st
+      }
+    }
+    nodes.push({
+      type: 'segment',
+      label: s.powerMode,
+      items: powerMode.states.map((st) => ({
+        cmd: `powerMode:${st}`,
+        label: stateLabel(st),
+        active: st.toLowerCase() === powerMode.current.toLowerCase()
+      }))
+    })
+  }
+
   nodes.push({ type: 'separator' })
 
   for (const nav of NAV_ITEMS) {
@@ -202,6 +270,15 @@ function handlePopupCommand(cmd: string): void {
   if (cmd === 'close') {
     // Mirrors Electron Resource.Close → App.ShutdownAsync(true).
     app.quit()
+    return
+  }
+  if (cmd.startsWith('powerMode:')) {
+    const targetMode = cmd.slice(10)
+    void invokeHost?.('features.set', { feature: 'powerMode', value: targetMode }).then(() => {
+      if (lastTrayBounds && isTrayPopupVisible()) {
+        void openFlyout(lastTrayBounds)
+      }
+    })
     return
   }
   if (cmd.startsWith('nav:')) {
@@ -252,6 +329,8 @@ export interface TrayOptions {
   /** Mirrors the Electron --disable-tray-tooltip flag. */
   disableTooltip?: boolean
   invokeHost?: (method: string, params?: unknown) => Promise<unknown>
+  /** Recreate and show the main window when the tray needs the UI. */
+  restoreWindow?: (route?: string) => void
   /** Initial UI language (renderer `udt.lang` / i18n). Defaults to zh-CN. */
   language?: string
 }
@@ -260,6 +339,7 @@ export function initTray(getWin: () => BrowserWindow | null, options?: TrayOptio
   if (tray) return
 
   getWindow = getWin
+  restoreWindow = options?.restoreWindow ?? null
   invokeHost = options?.invokeHost ?? null
   if (options?.language) setTrayLanguage(options.language)
 
@@ -318,6 +398,10 @@ export function updateTrayLanguage(lang: string): void {
   scheduleRebuild()
 }
 
+export function isTrayActive(): boolean {
+  return tray != null
+}
+
 export function destroyTray(): void {
   nativeTheme.removeListener('updated', onNativeThemeUpdated)
   if (refreshTimer) {
@@ -329,6 +413,7 @@ export function destroyTray(): void {
   tray.destroy()
   tray = null
   getWindow = null
+  restoreWindow = null
   invokeHost = null
   lastTrayBounds = null
 }

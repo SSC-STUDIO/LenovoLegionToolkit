@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import {
   Add24Regular,
   ArrowDown24Regular,
+  ArrowDownload24Regular,
   ArrowRight24Regular,
   ArrowUp24Regular,
   Delete24Regular,
@@ -34,13 +35,15 @@ import {
 import { QUICK_ACTION_ICON, triggerIcon } from '../components/automation/triggerMeta'
 import { stepIcon } from '../components/automation/stepIcons'
 import AutomationModal from '../components/automation/AutomationModal'
+import AutomationPresetModal from '../components/automation/AutomationPresetModal'
 import TriggerPickerModal from '../components/automation/TriggerPickerModal'
 import TriggerConfigModal from '../components/automation/TriggerConfigModal'
 import type { AutomationTrigger } from '../components/automation/triggers'
 import {
   isTriggerConfigurable,
   normalizeTriggerKind,
-  triggerDisplayNameKey
+  triggerDisplayNameKey,
+  TRIGGER_DEFINITIONS
 } from '../components/automation/triggers'
 import { openSymbolPicker } from '../components/utils/SymbolPickerModal'
 import { symbolIcon } from '../components/utils/symbolIcons'
@@ -223,6 +226,7 @@ export default function AutomationPage(): React.JSX.Element {
   const [renaming, setRenaming] = useState<{ id: string; name: string } | null>(null)
   const [renameName, setRenameName] = useState('')
   const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({})
+  const [presetOpen, setPresetOpen] = useState(false)
 
   useEffect(() => {
     const loadingId = useLoadingStore.getState().start(
@@ -735,9 +739,16 @@ export default function AutomationPage(): React.JSX.Element {
                 </div>
               )}
 
-              <div className="udt-automation-new-row">
+              <div className="udt-automation-new-row" style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <button type="button" className="udt-btn udt-automation-new" onClick={() => setPickerOpen(true)}>
                   {newLabel}
+                </button>
+                <button
+                  type="button"
+                  className="udt-btn udt-btn--secondary"
+                  onClick={() => setPresetOpen(true)}
+                >
+                  <ArrowDownload24Regular /> {t('automation.presetsAndSharing', { defaultValue: 'Presets & Sharing' })}
                 </button>
               </div>
             </div>
@@ -953,6 +964,20 @@ export default function AutomationPage(): React.JSX.Element {
             />
           )
         })()}
+
+      {presetOpen && (
+        <AutomationPresetModal
+          pipelines={pipelines}
+          onImportPipelines={(newPipelines, replace) => {
+            if (replace) {
+              markDirty(newPipelines)
+            } else {
+              markDirty([...pipelines, ...newPipelines])
+            }
+          }}
+          onClose={() => setPresetOpen(false)}
+        />
+      )}
     </div>
   )
 }

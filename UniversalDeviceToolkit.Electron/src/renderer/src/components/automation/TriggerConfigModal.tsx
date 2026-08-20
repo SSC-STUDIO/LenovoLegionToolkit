@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next'
 import type { AutomationTrigger } from './triggers'
 import { composeTriggers, flattenTriggers, isTriggerValid, normalizeTriggerKind, triggerDisplayNameKey } from './triggers'
 import { triggerIcon } from './triggerMeta'
+import AutomationModal from './AutomationModal'
 import {
   BatteryPercentageEditor,
   DeviceEditor,
@@ -66,19 +67,19 @@ export default function TriggerConfigModal(props: TriggerConfigModalProps): Reac
 
   if (tabs.length === 0) {
     return (
-      <div className="udt-modal-backdrop" onClick={props.onCancel}>
-        <div className="udt-modal" onClick={(e) => e.stopPropagation()}>
-          <div className="udt-modal__title">{t('automation.triggerConfig.title')}</div>
-          <div className="udt-trigger-field__empty">
-            {t('automation.triggerConfig.noEditableTriggers', { defaultValue: 'This trigger has no configurable parameters.' })}
-          </div>
-          <div className="udt-modal__actions">
-            <button type="button" className="udt-btn udt-btn--secondary" onClick={props.onCancel}>
-              {t('common.cancel', { defaultValue: 'Cancel' })}
-            </button>
-          </div>
+      <AutomationModal
+        title={t('automation.triggerConfig.title')}
+        onClose={props.onCancel}
+        actions={
+          <button type="button" className="udt-btn udt-btn--secondary" onClick={props.onCancel}>
+            {t('common.cancel', { defaultValue: 'Cancel' })}
+          </button>
+        }
+      >
+        <div className="udt-trigger-field__empty">
+          {t('automation.triggerConfig.noEditableTriggers', { defaultValue: 'This trigger has no configurable parameters.' })}
         </div>
-      </div>
+      </AutomationModal>
     )
   }
 
@@ -95,36 +96,39 @@ export default function TriggerConfigModal(props: TriggerConfigModalProps): Reac
   const Editor = EDITOR_BY_KIND[normalizeTriggerKind(activeTab.trigger.$type) ?? '']
 
   return (
-    <div className="udt-modal-backdrop" onClick={props.onCancel}>
-      <div className="udt-modal udt-modal--wide" onClick={(e) => e.stopPropagation()}>
-        <div className="udt-modal__title">{t('automation.triggerConfig.title')}</div>
-        <div className="udt-trigger-tabs">
-          {tabs.map((tab, index) => (
-            <button
-              key={`${tab.key}-${index}`}
-              type="button"
-              className={`udt-trigger-tab${index === Math.min(active, tabs.length - 1) ? ' udt-trigger-tab--active' : ''}`}
-              onClick={() => setActive(index)}
-            >
-              {triggerIcon(tab.trigger.$type)}
-              <span>{tab.label}</span>
-            </button>
-          ))}
-        </div>
-        <div className="udt-modal__scroll">
-          {Editor != null && (
-            <Editor trigger={activeTab.trigger} onChange={(next) => updateTab(Math.min(active, tabs.length - 1), next)} />
-          )}
-        </div>
-        <div className="udt-modal__actions">
+    <AutomationModal
+      title={t('automation.triggerConfig.title')}
+      onClose={props.onCancel}
+      wide
+      actions={
+        <>
           <button type="button" className="udt-btn udt-btn--secondary" onClick={props.onCancel}>
             {t('common.cancel', { defaultValue: 'Cancel' })}
           </button>
           <button type="button" className="udt-btn udt-btn--primary" onClick={handleSave}>
             {t('common.save', { defaultValue: 'Save' })}
           </button>
-        </div>
+        </>
+      }
+    >
+      <div className="udt-trigger-tabs">
+        {tabs.map((tab, index) => (
+          <button
+            key={`${tab.key}-${index}`}
+            type="button"
+            className={`udt-trigger-tab${index === Math.min(active, tabs.length - 1) ? ' udt-trigger-tab--active' : ''}`}
+            onClick={() => setActive(index)}
+          >
+            {triggerIcon(tab.trigger.$type)}
+            <span>{tab.label}</span>
+          </button>
+        ))}
       </div>
-    </div>
+      <div className="udt-modal__scroll">
+        {Editor != null && (
+          <Editor trigger={activeTab.trigger} onChange={(next) => updateTab(Math.min(active, tabs.length - 1), next)} />
+        )}
+      </div>
+    </AutomationModal>
   )
 }

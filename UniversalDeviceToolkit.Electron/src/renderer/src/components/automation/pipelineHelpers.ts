@@ -78,6 +78,23 @@ export function formatAutomationStepTitle(
   })
 }
 
+export interface AutomationDraftCommit<T> {
+  value: T
+  dirty: boolean
+}
+
+/** Keep the in-memory draft unless the remote operation explicitly succeeded. */
+export function commitAutomationDraft<T>(
+  succeeded: boolean,
+  draft: T,
+  canonical: T
+): AutomationDraftCommit<T> {
+  if (succeeded !== true) {
+    return { value: draft, dirty: true }
+  }
+  return { value: canonical, dirty: false }
+}
+
 export function isValidAutomationPipelineId(value: unknown): value is string {
   return typeof value === 'string' && GUID_PATTERN.test(value)
 }
