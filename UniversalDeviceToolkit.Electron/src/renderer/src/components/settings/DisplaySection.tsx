@@ -12,7 +12,8 @@ import NavigationItemsSetting from './NavigationItemsSetting'
 import NotificationsModal from './NotificationsModal'
 import {
   buildNotificationDurationOptions,
-  buildNotificationPositionOptions
+  buildNotificationPositionOptions,
+  sanitizeNotificationPosition
 } from './notificationSettingsOptions'
 
 export function DisplaySection(): React.JSX.Element {
@@ -42,12 +43,14 @@ export function DisplaySection(): React.JSX.Element {
     }
   }, [])
 
-  const app = (scopes.application ?? {}) as Record<string, unknown>
-  const notificationPosition = (app['NotificationPosition'] as string | undefined) ?? 'BottomRight'
+  const editorsEnabled = typeof scopes.application === 'object' && scopes.application !== null
+  const app = (editorsEnabled ? scopes.application : {}) as Record<string, unknown>
+  const notificationPosition = sanitizeNotificationPosition(app['NotificationPosition'])
   const notificationDuration = (app['NotificationDuration'] as string | undefined) ?? 'Normal'
   const excludedRefreshRates = (app['ExcludedRefreshRates'] ?? []) as Array<{ Frequency: number }>
 
   const persistApplication = async (patch: Record<string, unknown>): Promise<void> => {
+    if (!editorsEnabled) return
     const current = (scopes.application ?? {}) as Record<string, unknown>
     const next = { ...current, ...patch }
     setScope('application', next)
@@ -75,6 +78,7 @@ export function DisplaySection(): React.JSX.Element {
             <Select<string>
               className="udt-settings-row__select udt-settings-select"
               value={notificationPosition}
+              disabled={!editorsEnabled}
               onChange={(value) => void persistApplication({ NotificationPosition: value })}
               options={buildNotificationPositionOptions(t)}
             />
@@ -84,6 +88,7 @@ export function DisplaySection(): React.JSX.Element {
             <Select<string>
               className="udt-settings-row__select udt-settings-select"
               value={notificationDuration}
+              disabled={!editorsEnabled}
               onChange={(value) => void persistApplication({ NotificationDuration: value })}
               options={buildNotificationDurationOptions(t)}
             />
@@ -99,7 +104,11 @@ export function DisplaySection(): React.JSX.Element {
       </SettingsCard>
 
       <div className="udt-settings-group-title">{t('settings.display.groupWindow')}</div>
-      <WindowBackdropSetting application={app} persist={(patch) => void persistApplication(patch)} />
+      <WindowBackdropSetting
+        application={app}
+        disabled={!editorsEnabled}
+        persist={(patch) => void persistApplication(patch)}
+      />
       {bootLogoSupported && (
         <SettingsCard
           title={t('settings.display.bootLogo')}

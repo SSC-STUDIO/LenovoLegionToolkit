@@ -10,6 +10,7 @@ import {
 import { useTranslation } from 'react-i18next'
 import { useSettingsStore } from '../stores/settingsStore'
 import { useNotificationCenter, type NotificationItem, type NotificationSeverity } from '../notifications/notificationCenterStore'
+import { sanitizeNotificationPosition } from './settings/notificationSettingsOptions'
 
 /**
  * Right-corner notification stack — port of Electron AppNotificationHost +
@@ -176,15 +177,10 @@ export function maybePlayNotificationSound(): void {
 
 /** Electron NotificationPosition → placement CSS class. */
 function positionClass(position: string): string {
-  switch (position) {
+  const sanitized = sanitizeNotificationPosition(position)
+  switch (sanitized) {
     case 'BottomCenter':
       return 'udt-notification-center--bottom-center'
-    case 'BottomLeft':
-      return 'udt-notification-center--bottom-left'
-    case 'CenterLeft':
-      return 'udt-notification-center--center-left'
-    case 'TopLeft':
-      return 'udt-notification-center--top-left'
     case 'TopCenter':
       return 'udt-notification-center--top-center'
     case 'TopRight':
@@ -209,7 +205,7 @@ export default function NotificationCenter(): React.JSX.Element {
     typeof applicationScope === 'object' && applicationScope !== null
       ? ((applicationScope as Record<string, unknown>)['NotificationPosition'] as string | undefined)
       : undefined
-  const position = typeof storedPosition === 'string' ? storedPosition : 'BottomRight'
+  const position = sanitizeNotificationPosition(storedPosition)
 
   useEffect(() => {
     let cancelled = false

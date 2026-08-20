@@ -27,20 +27,9 @@
   transform: translateX(50%);
 }
 
-.udt-status-banner-stack--bottom-left {
-  left: 16px;
-  bottom: 16px;
-}
-
-.udt-status-banner-stack--center-left {
-  top: 50%;
-  left: 16px;
-  transform: translateY(-50%);
-}
-
-.udt-status-banner-stack--top-left {
+.udt-status-banner-stack--top-right {
   top: 56px;
-  left: 16px;
+  right: 16px;
 }
 
 .udt-status-banner-stack--top-center {
@@ -49,15 +38,16 @@
   transform: translateX(50%);
 }
 
-.udt-status-banner-stack--top-right {
-  top: 56px;
-  right: 16px;
-}
-
 .udt-status-banner-stack--center-right {
   top: 50%;
   right: 16px;
   transform: translateY(-50%);
+}
+
+.udt-status-banner-stack--center {
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
 }
 
 .udt-status-banner {

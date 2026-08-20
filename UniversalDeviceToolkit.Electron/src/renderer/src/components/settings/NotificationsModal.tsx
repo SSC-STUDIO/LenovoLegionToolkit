@@ -6,7 +6,8 @@ import { useSettingsStore } from '../../stores/settingsStore'
 import { SettingsLoadError } from './SettingsLoadError'
 import {
   buildNotificationDurationOptions,
-  buildNotificationPositionOptions
+  buildNotificationPositionOptions,
+  sanitizeNotificationPosition
 } from './notificationSettingsOptions'
 
 /**
@@ -85,7 +86,7 @@ function parseFields(value: unknown): NotificationFields {
     notificationSound: readBoolean(notifications, 'NotificationSound', false),
     alwaysOnTop: readBoolean(store, 'NotificationAlwaysOnTop', false),
     onAllScreens: readBoolean(store, 'NotificationOnAllScreens', false),
-    position: readString(store, 'NotificationPosition', 'BottomRight'),
+    position: sanitizeNotificationPosition(store.NotificationPosition),
     duration: readString(store, 'NotificationDuration', 'Normal'),
     updateAvailable: readBoolean(notifications, 'UpdateAvailable', true),
     capsNumLock: readBoolean(notifications, 'CapsNumLock', false),

@@ -19,7 +19,7 @@
   pointer-events: none;
 }
 
-/* Electron NotificationPosition placements */
+/* Electron NotificationPosition placements (left positions removed to protect nav sidebar) */
 .udt-notification-center--bottom-right {
   top: auto;
   right: 16px;
@@ -32,26 +32,6 @@
   right: 50%;
   bottom: calc(16px + var(--udt-status-banner-stack-height, 0px));
   transform: translateX(50%);
-}
-
-.udt-notification-center--bottom-left {
-  top: auto;
-  right: auto;
-  bottom: calc(16px + var(--udt-status-banner-stack-height, 0px));
-  left: 16px;
-}
-
-.udt-notification-center--center-left {
-  top: 50%;
-  right: auto;
-  left: 16px;
-  transform: translateY(-50%);
-}
-
-.udt-notification-center--top-left {
-  top: calc(56px + var(--udt-status-banner-stack-height, 0px));
-  right: auto;
-  left: 16px;
 }
 
 .udt-notification-center--top-center {
@@ -69,6 +49,12 @@
   top: 50%;
   right: 16px;
   transform: translateY(-50%);
+}
+
+.udt-notification-center--center {
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
 }
 
 .udt-notification-item {

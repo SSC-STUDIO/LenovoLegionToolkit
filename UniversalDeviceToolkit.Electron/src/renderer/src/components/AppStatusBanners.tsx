@@ -7,19 +7,15 @@ import { useSoftwareStore } from '../stores/softwareStore'
 import { useStatusBannerStore } from '../stores/statusBannerStore'
 import { useSettingsStore } from '../stores/settingsStore'
 import { subscribeUiVisibility } from '../utils/uiVisibility'
+import { sanitizeNotificationPosition } from './settings/notificationSettingsOptions'
 
 const BANNER_UPDATE = 'updateAvailable'
 
 function bannerPositionClass(position: string): string {
-  switch (position) {
+  const sanitized = sanitizeNotificationPosition(position)
+  switch (sanitized) {
     case 'BottomCenter':
       return 'udt-status-banner-stack--bottom-center'
-    case 'BottomLeft':
-      return 'udt-status-banner-stack--bottom-left'
-    case 'CenterLeft':
-      return 'udt-status-banner-stack--center-left'
-    case 'TopLeft':
-      return 'udt-status-banner-stack--top-left'
     case 'TopCenter':
       return 'udt-status-banner-stack--top-center'
     case 'TopRight':
@@ -57,7 +53,7 @@ export default function AppStatusBanners(): React.JSX.Element {
     typeof applicationScope === 'object' && applicationScope !== null
       ? ((applicationScope as Record<string, unknown>)['NotificationPosition'] as string | undefined)
       : undefined
-  const position = typeof storedPosition === 'string' ? storedPosition : 'BottomRight'
+  const position = sanitizeNotificationPosition(storedPosition)
   const stackRef = useRef<HTMLDivElement>(null)
 
   // Keep transient AppNotificationHost toasts stacked above these persistent
