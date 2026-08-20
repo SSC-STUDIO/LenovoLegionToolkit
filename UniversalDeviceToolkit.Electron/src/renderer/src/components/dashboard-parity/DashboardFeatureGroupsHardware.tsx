@@ -7,7 +7,7 @@ import DashboardFeatureCard from './DashboardFeatureCard'
 import DashboardSpecialCard, { type SpecialDashboardItem } from './DashboardSpecialCard'
 import HybridModeCard from './HybridModeCard'
 import { isSpecialItemSupported } from './dashboardHardwareSupport'
-import { isSpecialDashboardItem, resolveDashboardFeature, dashboardItemLabel } from './dashboardItems'
+import { isSpecialDashboardItem, resolveDashboardFeature } from './dashboardItems'
 import './dashboardHardware.css'
 
 function groupTitle(group: DashboardGroup, t: TFunction): string {

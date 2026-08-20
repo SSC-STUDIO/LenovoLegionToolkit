@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
@@ -14,6 +13,7 @@ using UniversalDeviceToolkit.Lib.Automation.CLI;
 using UniversalDeviceToolkit.Lib.Controllers;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
+using UniversalDeviceToolkit.Lib.GameDetection;
 using UniversalDeviceToolkit.Lib.Integrations;
 using UniversalDeviceToolkit.Lib.Listeners;
 using UniversalDeviceToolkit.Lib.Network;
@@ -149,7 +149,8 @@ public sealed class HardwareInitializer
 
         if (!HasInstalledPlugins())
         {
-            Log.Instance.Trace("No installed plugins found; skipping plugin directory scan.");
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("No installed plugins found; skipping plugin directory scan.");
             return;
         }
 
@@ -163,16 +164,61 @@ public sealed class HardwareInitializer
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to initialize plugins.", ex);
+            Log.Instance.Warning("Failed to initialize plugins.", ex);
         }
     }
 
     private static bool HasInstalledPlugins()
-        => PluginPaths.GetAllPossiblePluginsDirectories()
-            .Where(Directory.Exists)
-            .SelectMany(path => Directory.EnumerateDirectories(path))
-            .Any(PluginPaths.ContainsPlugin);
+    {
+        try
+        {
+            foreach (var root in PluginPaths.GetAllPossiblePluginsDirectories())
+            {
+                if (!Directory.Exists(root))
+                    continue;
+
+                IEnumerable<string> children;
+                try
+                {
+                    children = Directory.EnumerateDirectories(root);
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Skipping unreadable plugin root '{root}'.", ex);
+                    continue;
+                }
+
+                try
+                {
+                    foreach (var dir in children)
+                    {
+                        try
+                        {
+                            if (PluginPaths.ContainsPlugin(dir))
+                                return true;
+                        }
+                        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Skipping unreadable plugin directory '{dir}'.", ex);
+                        }
+                    }
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Plugin root '{root}' enumeration failed.", ex);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Warning("Plugin directory scan failed; skipping plugin loading.", ex);
+        }
+
+        return false;
+    }
 
 #if WINDOWS
     private static async Task RunNetworkStartupRecoveryAsync()
@@ -184,8 +230,7 @@ public sealed class HardwareInitializer
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Network startup recovery failed: {ex.Message}", ex);
+            Log.Instance.Warning($"Network startup recovery failed: {ex.Message}", ex);
         }
     }
 #endif
@@ -244,11 +289,15 @@ public sealed class HardwareInitializer
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Background initialization was cancelled after {totalSw.ElapsedMilliseconds}ms.");
+
+            // Host shutdown cancels this work. Leaving the in-progress marker
+            // would make the next launch auto-enter safe-start as if we crashed.
+            if (_cts.IsCancellationRequested)
+                completedCleanly = true;
         }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Background initialization failed after {totalSw.ElapsedMilliseconds}ms.", ex);
+            Log.Instance.Warning($"Background initialization failed after {totalSw.ElapsedMilliseconds}ms.", ex);
 
             _rpc.Publish("host.initialized", new
             {
@@ -327,6 +376,7 @@ public sealed class HardwareInitializer
             () => IoCContainer.Resolve<HWiNFOIntegration>().StartStopIfNeededAsync(),
             () => IoCContainer.Resolve<IpcServer>().StartStopIfNeededAsync(),
             () => IoCContainer.Resolve<BatteryDischargeRateMonitorService>().StartStopIfNeededAsync(),
+            () => IoCContainer.Resolve<GameBoostService>().StartAsync(),
         ];
         return (bgSteps, postSteps);
     }
@@ -407,8 +457,7 @@ public sealed class HardwareInitializer
                 }
                 catch (Exception ex)
                 {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Background service start step failed.", ex);
+                    Log.Instance.Warning("Background service start step failed.", ex);
                 }
                 finally
                 {

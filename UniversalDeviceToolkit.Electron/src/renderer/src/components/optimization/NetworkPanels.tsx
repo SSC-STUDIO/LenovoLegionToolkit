@@ -9,7 +9,6 @@ import {
 } from 'antd'
 import {
   Checkmark24Regular,
-  CheckmarkCircle24Filled,
   Beaker24Regular,
   Info24Regular,
   Search24Regular,
@@ -24,8 +23,9 @@ import {
   type NetworkDomainSubItem
 } from '../../api/optimization'
 import { localizeHostError } from '../../api/bridge'
+import { notify } from '../../notifications'
 import { useOptimizationStore } from '../../stores/optimizationStore'
-import { resolveActionError } from '../../utils/optimizationPresentation'
+import { presentActionNotification, resolveActionError } from '../../utils/optimizationPresentation'
 import './optimization.css'
 
 // ── Formatting helpers (mirror NetworkAccelerationControl) ──────
@@ -130,8 +130,15 @@ function reportNetworkStoreError(
   t: (key: string, options?: Record<string, unknown>) => string,
   fallbackKey: string
 ): void {
+  const fallback = t(fallbackKey)
   const err = useOptimizationStore.getState().error
-  void message.error(localizeHostError(resolveActionError(err, t(fallbackKey)), t))
+  const localized = localizeHostError(resolveActionError(err, fallback), t)
+  const notif = presentActionNotification(localized, fallback)
+  notify({
+    title: notif.title,
+    message: notif.message ?? '',
+    severity: 'Error'
+  })
 }
 
 function getRecommendedTargetGroups(groups: NetworkDomainGroup[]): NetworkDomainGroup[] {

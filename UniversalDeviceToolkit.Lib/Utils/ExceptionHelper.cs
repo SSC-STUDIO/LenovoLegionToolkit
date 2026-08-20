@@ -93,6 +93,9 @@ public static class ExceptionHelper
     public static InvalidOperationException FailedToDeserializeJSON() =>
         new(Resource.Exception_FailedToDeserializeJSON);
 
+    public static InvalidOperationException FeatureNotSupported() =>
+        new(Resource.Exception_NoSupportedFeature);
+
     public static InvalidOperationException NoSupportedFeature(string typeName) =>
         new($"{Resource.Exception_NoSupportedFeature} [type={typeName}]");
 

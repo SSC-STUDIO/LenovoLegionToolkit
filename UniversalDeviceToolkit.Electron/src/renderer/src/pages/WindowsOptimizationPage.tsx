@@ -8,7 +8,7 @@ import {
   Star24Regular,
   Stop24Regular
 } from '../components/icons/fluent'
-import { Select, Tooltip, message } from 'antd'
+import { Select, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import type { TFunction } from 'i18next'
 import i18n from '../i18n'
@@ -25,9 +25,11 @@ import { SkeletonCard, SkeletonList } from '../components/Skeleton'
 import CardExpander from '../components/CardExpander'
 import CleanupRulesPanel from '../components/optimization/CleanupRulesPanel'
 import DriverDownloadPanel from '../components/optimization/DriverDownloadPanel'
+import GameBoostPanel from '../components/optimization/GameBoostPanel'
 import { NetworkPanels } from '../components/optimization/NetworkPanels'
 import { presentCategoryActions } from '../utils/optimizationToggle'
 import { subscribeUiVisibility } from '../utils/uiVisibility'
+import { notify } from '../notifications'
 import {
   NETWORK_ACCELERATION_MODES,
   collectRecommendedActionKeys,
@@ -35,6 +37,7 @@ import {
   getNetworkSelectedTargetCount,
   isFailedCleanupEstimate,
   isOptimizationPlayDisabled,
+  presentActionNotification,
   resolveActionError,
   runExclusivePoll,
   shouldShowEmptyPlaceholder,
@@ -82,7 +85,14 @@ function localizeText(t: TFunction, text: string): string {
 type TabKey = OptimizationTabKey
 
 function reportStoreError(t: TFunction, fallbackKey: string, error: string | null | undefined): void {
-  void message.error(localizeHostError(resolveActionError(error, t(fallbackKey)), t))
+  const fallback = t(fallbackKey)
+  const localized = localizeHostError(resolveActionError(error, fallback), t)
+  const notif = presentActionNotification(localized, fallback)
+  notify({
+    title: notif.title,
+    message: notif.message ?? '',
+    severity: 'Error'
+  })
 }
 
 function ActionRow({
@@ -465,7 +475,7 @@ function NetworkTab(): React.JSX.Element {
   }
 
   if (!networkStatus || !editableConfig) {
-    if (networkError) return null
+    if (networkError) return <></>
     return <SkeletonCard lines={3} withIcon />
   }
 
@@ -567,17 +577,19 @@ const TAB_I18N_KEYS: Record<TabKey, string> = {
   optimization: 'wpf.windowsOptimizationPagetaboptimization',
   cleanup: 'wpf.windowsOptimizationPagetabcleanup',
   driverDownload: 'wpf.windowsOptimizationPagetabdriverDownload',
-  networkAcceleration: 'wpf.windowsOptimizationPagetabnetworkAcceleration'
+  networkAcceleration: 'wpf.windowsOptimizationPagetabnetworkAcceleration',
+  gameBoost: 'optimization.tabs.gameBoost'
 }
 
 const TAB_FALLBACK_KEYS: Record<TabKey, string> = {
   optimization: 'optimization.tabs.optimization',
   cleanup: 'optimization.tabs.cleanup',
   driverDownload: 'optimization.tabs.driverDownload',
-  networkAcceleration: 'optimization.tabs.networkAcceleration'
+  networkAcceleration: 'optimization.tabs.networkAcceleration',
+  gameBoost: 'optimization.tabs.gameBoost'
 }
 
-const TABS: TabKey[] = ['optimization', 'cleanup', 'driverDownload', 'networkAcceleration']
+const TABS: TabKey[] = ['optimization', 'cleanup', 'driverDownload', 'networkAcceleration', 'gameBoost']
 
 export default function WindowsOptimizationPage(): React.JSX.Element {
   const { t } = useTranslation()
@@ -590,7 +602,6 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
   const startNetwork = useOptimizationStore((s) => s.startNetwork)
   const setNetworkGroupEnabled = useOptimizationStore((s) => s.setNetworkGroupEnabled)
   const networkStatus = useOptimizationStore((s) => s.networkStatus)
-  const error = useOptimizationStore((s) => s.error)
   const driverSelectedCount = useDriverStore((s) => s.selectedIds.length)
   const [tab, setTab] = useState<TabKey>('optimization')
   const [optSelectedKeys, setOptSelectedKeys] = useState<string[]>([])
@@ -749,11 +760,6 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
     <div className="udt-page udt-optimization-page udt-content-column udt-content-fill">
       <h1 className="udt-page__title">{t('optimization.title')}</h1>
       <p className="udt-page__subtitle">{t('optimization.info')}</p>
-      {error != null && error !== '' && (
-        <div className="udt-card udt-card--row" role="alert">
-          <div className="udt-card__desc">{localizeHostError(error, t)}</div>
-        </div>
-      )}
 
       <div className="udt-opt-chrome">
         <div className="udt-segmented-nav" role="tablist" aria-label={t('optimization.title')}>
@@ -811,6 +817,7 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
         )}
         {tab === 'driverDownload' && <DriverDownloadPanel />}
         {tab === 'networkAcceleration' && <NetworkTab />}
+        {tab === 'gameBoost' && <GameBoostPanel />}
       </div>
     </div>
   )

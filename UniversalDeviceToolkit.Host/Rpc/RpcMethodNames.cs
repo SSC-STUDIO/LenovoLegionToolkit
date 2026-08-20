@@ -1,17 +1,19 @@
 namespace UniversalDeviceToolkit.Host.Rpc;
 
 /// <summary>
-/// Single source of truth for the Windows-only bridge method names.
+/// Single source of truth for the bridge method names.
 ///
 /// Windows builds register a concrete handler for every name listed here
-/// (checked at startup by Program.VerifyRpcSurface); portable builds register
-/// "-32099 not supported" stubs from the same list. Keeping one list prevents
-/// the two surfaces from drifting apart (an unknown method surfaces to the
-/// Electron client as -32601 instead of a clean "not supported").
+/// (checked at startup by Program.VerifyRpcSurface). Portable builds register
+/// real handlers for <see cref="PortableCapable"/> (via IPlatformServices and
+/// related abstractions) and "-32099 not supported" stubs for
+/// <see cref="WindowsOnly"/>. Keeping one list prevents the two surfaces from
+/// drifting apart (an unknown method surfaces to the Electron client as -32601
+/// instead of a clean "not supported").
 ///
 /// Not listed here:
-/// - Always-on methods registered on every platform (ping, app.getStatus,
-///   app.getLogPath, app.quit, localization.*, plugins.*, plugin.*).
+/// - Always-on methods registered on every platform (see <see cref="AlwaysOn"/>,
+///   plus plugins.* / plugin.*).
 /// - macro.*: MacroHandlers compiles on every platform and registers its own
 ///   non-Windows stubs (see MacroHandlers.cs).
 /// - Electron-main methods that never reach the Host (powerPlans.*, power.*,
@@ -19,25 +21,29 @@ namespace UniversalDeviceToolkit.Host.Rpc;
 /// </summary>
 public static class RpcMethodNames
 {
-    /// <summary>Windows-only methods; stubbed with -32099 on other platforms.</summary>
-    public static readonly string[] WindowsOnly =
+    /// <summary>
+    /// Methods registered on every platform before domain handlers.
+    /// </summary>
+    public static readonly string[] AlwaysOn =
     [
-        "wmi.getGodModeFnQ",
-        "wmi.setGodModeFnQ",
-        "godMode.getState",
-        "godMode.setState",
-        "godMode.apply",
-        "software.getStatus",
-        "software.setEnabled",
-        "app.getAutorun",
-        "app.setAutorun",
-        "app.setUiActive",
-        "app.update.check",
-        "app.update.status",
+        "ping",
+        "app.getStatus",
+        "app.getLogPath",
+        "app.quit",
+        "localization.getCulture",
+        "localization.setCulture",
+        "host.getCapabilities",
+    ];
+
+    /// <summary>
+    /// Core Electron RPC that portable hosts implement via existing platform
+    /// abstractions when those backends are registered. Missing backends still
+    /// answer -32099; they do not return empty success payloads.
+    /// </summary>
+    public static readonly string[] PortableCapable =
+    [
         "system.info",
         "system.powerAdapterStatus",
-        "system.accentColor.get",
-        "system.accentColor.set",
         "settings.getAll",
         "settings.get",
         "settings.set",
@@ -50,20 +56,39 @@ public static class RpcMethodNames
         "sensors.unsubscribe",
         "sensors.getSettings",
         "sensors.setSettings",
-        "sensors.getFps",
-        "sensors.subscribeFps",
-        "sensors.unsubscribeFps",
-        "bootLogo.getStatus",
-        "bootLogo.enable",
-        "bootLogo.disable",
+        "dashboard.getConfig",
+        "dashboard.saveConfig",
         "feature.list",
         "feature.getSupported",
         "feature.getStates",
         "feature.getState",
         "feature.setState",
         "feature.isHdrBlocked",
-        "dashboard.getConfig",
-        "dashboard.saveConfig",
+        "app.getAutorun",
+        "app.setAutorun",
+    ];
+
+    /// <summary>Windows-only methods; stubbed with -32099 on other platforms.</summary>
+    public static readonly string[] WindowsOnly =
+    [
+        "wmi.getGodModeFnQ",
+        "wmi.setGodModeFnQ",
+        "godMode.getState",
+        "godMode.setState",
+        "godMode.apply",
+        "software.getStatus",
+        "software.setEnabled",
+        "app.setUiActive",
+        "app.update.check",
+        "app.update.status",
+        "system.accentColor.get",
+        "system.accentColor.set",
+        "sensors.getFps",
+        "sensors.subscribeFps",
+        "sensors.unsubscribeFps",
+        "bootLogo.getStatus",
+        "bootLogo.enable",
+        "bootLogo.disable",
         "dashboardHardware.getState",
         "dashboardHardware.setMonitoring",
         "dashboardHardware.killGpuProcesses",
@@ -111,6 +136,8 @@ public static class RpcMethodNames
         "network.detectNat",
         "network.detectDns",
         "network.detectIpv6",
+        "network.getTrafficSnapshot",
+        "network.getRuntimeSnapshot",
         "ai.getStatus",
         "ai.setEnabled",
         "driver.getSettings",
@@ -123,15 +150,10 @@ public static class RpcMethodNames
         "driver.setDownloadPath",
         "driver.setOnlyShowUpdates",
         "driver.setHiddenPackageIds",
-    ];
-
-    /// <summary>
-    /// Telemetry polled unconditionally by the renderer; portable builds answer
-    /// with an empty OK payload instead of an error so the UI stays quiet.
-    /// </summary>
-    public static readonly string[] EmptyOkOnNonWindows =
-    [
-        "network.getTrafficSnapshot",
-        "network.getRuntimeSnapshot",
+        "gameBoost.getStatus",
+        "gameBoost.getConfig",
+        "gameBoost.saveConfig",
+        "gameBoost.boostNow",
+        "gameBoost.revertNow",
     ];
 }

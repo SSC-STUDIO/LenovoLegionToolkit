@@ -23,7 +23,8 @@ import SensorGauge from './SensorGauge'
 import TrendChart, { type TrendSeries } from './TrendChart'
 import { formatUsageInGigabytes } from '../../utils/format'
 import { subscribeUiVisibility } from '../../utils/uiVisibility'
-import { getTemperatureUnit } from '../settings/AppearanceSection'
+import { notify } from '../../notifications'
+import { useNotificationCenter } from '../../notifications/notificationCenterStore'
 import { resolveSensorViewPhase, type SensorViewPhase } from './sensorViewPhase'
 
 const CPU_UTILIZATION = '#4f9df7'
@@ -39,6 +40,18 @@ const BATTERY_CAUTION = '#e0a92e'
 const BATTERY_CRITICAL = '#e05656'
 const BATTERY_LOW_THRESHOLD = 20
 const REFRESH_INTERVALS = [1, 2, 3, 5]
+
+/** Session flag so 1s sensor polls do not restack the same adapter warning. */
+let lowPowerAdapterNotified = false
+
+function dismissLowPowerAdapterNotification(title: string): void {
+  const state = useNotificationCenter.getState()
+  for (const item of state.items) {
+    if (item.severity === 'Warning' && item.title === title) {
+      state.dismiss(item.id)
+    }
+  }
+}
 
 /** Saved refresh interval from the dashboard settings scope (default 1s). */
 function readSavedRefreshInterval(scopes: Record<string, unknown>): number {
@@ -126,8 +139,6 @@ interface SensorPanelProps {
   labels: string[]
   /** Inline warning between metrics and chart (e.g. low battery). */
   warnings?: React.JSX.Element
-  /** Warning/status between chart legend and details (e.g. low-power adapter). */
-  afterChart?: React.JSX.Element
   /** Pinned to the bottom of the panel (below expanded details). */
   footer?: React.JSX.Element
   /** Detail rows grouped per column (Electron detail panel: two equal columns). */
@@ -427,7 +438,6 @@ function SensorPanel({
   series,
   labels,
   warnings,
-  afterChart,
   footer,
   details,
   detailsHeader,
@@ -508,7 +518,6 @@ function SensorPanel({
           </span>
         ))}
       </div>
-      {afterChart}
       {detailsExpanded && hasDetails && (
         <div className="udt-sensor-panel__details">
           {detailsHeader}
@@ -560,6 +569,25 @@ export default function SensorSection(): React.JSX.Element {
   const [refreshMenu, setRefreshMenu] = useState<{ x: number; y: number } | null>(null)
   const boardRef = useRef<HTMLDivElement>(null)
   const refreshMenuRef = useRef<HTMLDivElement>(null)
+  const isLowPowerAdapter =
+    useSensorsStore((state) => state.snapshot?.battery?.isLowPowerAdapter === true)
+
+  // Host already detects the adapter (isLowPowerAdapter on the snapshot).
+  // Presentation goes through the notification center, not a dashboard overlay.
+  // Persistent while the low-watt adapter is still connected; rising-edge only
+  // so polling cannot stack duplicates. Cleared when a sufficient adapter is in.
+  useEffect(() => {
+    const title = t('dashboard.sensor.lowPowerAdapter')
+    if (isLowPowerAdapter) {
+      if (lowPowerAdapterNotified) return
+      lowPowerAdapterNotified = true
+      notify({ title, message: '', severity: 'Warning', isPersistent: true })
+      return
+    }
+    if (!lowPowerAdapterNotified) return
+    lowPowerAdapterNotified = false
+    dismissLowPowerAdapterNotification(title)
+  }, [isLowPowerAdapter, t])
 
   // First-snapshot loading chrome: fixed 3-column skeleton with the global
   // shimmer/breathing animation (same structure as DashboardSkeleton).
@@ -693,7 +721,6 @@ export default function SensorSection(): React.JSX.Element {
     (battery?.chargeLevel != null &&
       Number.isFinite(battery.chargeLevel) &&
       battery.chargeLevel <= BATTERY_LOW_THRESHOLD)
-  const isLowPowerAdapter = battery?.isLowPowerAdapter === true
 
   // Session extrema for detail-grid ranges when Host snapshot lacks min/max.
   trackSessionExtremum(sessionExtremumRef.current.cpuTemp, cpu?.temperature)
@@ -712,13 +739,6 @@ export default function SensorSection(): React.JSX.Element {
         </div>
       </div>
     ) : undefined
-
-  // Low-power adapter: placed below chart legend (WPF _lowWattageWarning parity).
-  const batteryAfterChart = isLowPowerAdapter ? (
-    <div className="udt-sensor-panel__warning--low-power" role="status">
-      {t('dashboard.sensor.lowPowerAdapter')}
-    </div>
-  ) : undefined
 
   // Advanced details (SensorsControl detail window parity). Two columns; rows
   // whose value is "-" are collapsed (Electron UpdateDetailContainerVisibility).
@@ -1088,7 +1108,6 @@ export default function SensorSection(): React.JSX.Element {
                   series={trendSeries.battery}
                   labels={labels}
                   warnings={batteryWarnings}
-                  afterChart={batteryAfterChart}
                   details={batteryDetails}
                   detailsExpanded={allDetailsExpanded}
                   onToggleDetails={toggleAllDetails}

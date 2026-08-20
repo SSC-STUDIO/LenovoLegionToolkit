@@ -11,14 +11,30 @@ import {
   bindPluginWebviewListeners,
   buildPluginPageSource,
   buildPluginPartition,
-  buildPluginPreloadUrl
+  buildPluginPreloadUrl,
+  fileUrlFromAbsolutePath
 } from './pluginPageViewModel'
+import {
+  PLUGIN_WEBVIEW_PREFERENCES,
+  bindPluginWebviewEmbedder,
+  type PluginWebviewEmbedder,
+  type PluginWebviewSession
+} from '../../../../shared/plugin-webview'
 import './plugins.css'
+
+function invokePluginBridge(method: string, params?: unknown): Promise<unknown> {
+  const invoke = window.bridge?.invoke
+  if (invoke == null) {
+    return Promise.reject(new Error('Plugin host bridge is unavailable.'))
+  }
+  return invoke(method, params)
+}
 
 /**
  * Hosts a plugin's web UI (contributes.webPage) in an embedded <webview>.
- * The guest preload (out/preload/plugin-host.js) injects window.pluginHost,
- * which the plugin page uses to call the host JSON-RPC backend.
+ * The guest preload (out/preload/plugin-host.js) injects window.pluginHost.
+ * sendToHost is received here via the webview `ipc-message` event, then
+ * forwarded through window.bridge after plugin-id binding and a method whitelist.
  */
 export default function PluginPageView(): React.JSX.Element {
   const { t } = useTranslation()
@@ -35,6 +51,18 @@ export default function PluginPageView(): React.JSX.Element {
 
   const plugin = plugins.find((p) => p.id === pluginId)
   const src = buildPluginPageSource(plugin?.directory, plugin?.webPage)
+  const directoryUrl =
+    plugin?.directory == null ? null : fileUrlFromAbsolutePath(plugin.directory)
+  const hostSession = useRef<PluginWebviewSession>({
+    pluginId,
+    entryUrl: src ?? '',
+    directoryUrl,
+    invoke: invokePluginBridge
+  })
+  hostSession.current.pluginId = pluginId
+  hostSession.current.entryUrl = src ?? ''
+  hostSession.current.directoryUrl = directoryUrl
+  hostSession.current.invoke = invokePluginBridge
   const webviewKey = `${pluginId}-${src ?? ''}`
   const [webviewState, setWebviewState] = useState<{
     key: string
@@ -82,7 +110,8 @@ export default function PluginPageView(): React.JSX.Element {
     releaseWebviewListeners.current = null
     if (webview == null) return
 
-    releaseWebviewListeners.current = bindPluginWebviewListeners(
+    const embedder = webview as HTMLWebViewElement & PluginWebviewEmbedder
+    const releaseLifecycle = bindPluginWebviewListeners(
       webview,
       () => {
         setWebviewState({ key: webviewKey, status: 'ready' })
@@ -91,6 +120,11 @@ export default function PluginPageView(): React.JSX.Element {
         setWebviewState({ key: webviewKey, status: 'failed' })
       }
     )
+    const releaseHost = bindPluginWebviewEmbedder(embedder, hostSession.current)
+    releaseWebviewListeners.current = () => {
+      releaseHost()
+      releaseLifecycle()
+    }
   }, [webviewKey])
 
   useEffect(() => {
@@ -181,6 +215,7 @@ export default function PluginPageView(): React.JSX.Element {
             preload={preloadUrl}
             className={`udt-plugin-page__webview${ready ? ' udt-plugin-page__webview--ready' : ''}`}
             partition={buildPluginPartition(pluginId)}
+            webpreferences={PLUGIN_WEBVIEW_PREFERENCES}
           />
         )}
         {pageFailed && (

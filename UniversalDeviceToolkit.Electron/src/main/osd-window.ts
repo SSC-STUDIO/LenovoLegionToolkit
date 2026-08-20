@@ -1,5 +1,5 @@
 import { randomBytes } from 'node:crypto'
-import { BrowserWindow, powerMonitor, screen } from 'electron'
+import { BrowserWindow, globalShortcut, powerMonitor, screen } from 'electron'
 import { hostClient } from './host-client'
 import { effectiveZoom } from './ui-scale'
 import { cancelIdleDestroy, scheduleIdleDestroy, setSurfaceVisible } from './ui-activity'
@@ -327,7 +327,7 @@ function sanitizeColor(value: unknown, fallback: string): string {
 }
 
 function sanitizeStyleIndex(value: unknown): number {
-  return value === 0 || value === 1 ? value : DEFAULT_OSD_SETTINGS.selectedStyleIndex
+  return value === 0 || value === 1 || value === 2 ? value : DEFAULT_OSD_SETTINGS.selectedStyleIndex
 }
 
 function sanitizeItems(value: unknown): OsdItemName[] {
@@ -536,18 +536,22 @@ async function writeSettings(): Promise<void> {
 
 // ── window lifecycle ────────────────────────────────────────────────────────
 
+function isMiniStyle(): boolean {
+  return settings.selectedStyleIndex === 2
+}
+
 function isBarStyle(): boolean {
   return settings.selectedStyleIndex === 1
 }
 
 function savedPosition(): { x: number | null; y: number | null } {
-  return isBarStyle()
+  return isBarStyle() || isMiniStyle()
     ? { x: settings.barPositionX, y: settings.barPositionY }
     : { x: settings.panelPositionX, y: settings.panelPositionY }
 }
 
 function savePosition(x: number, y: number): void {
-  if (isBarStyle()) {
+  if (isBarStyle() || isMiniStyle()) {
     settings.barPositionX = x
     settings.barPositionY = y
   } else {
@@ -561,13 +565,30 @@ function savePosition(x: number, y: number): void {
   }, 400)
 }
 
+/** Overlap with a work area below this is treated as unreachable by the user. */
+const MIN_VISIBLE_PX = 24
+
+/**
+ * screen.getDisplayMatching always resolves to the nearest display and never
+ * throws, so it cannot answer "is this rectangle still on a monitor?" — the
+ * work areas have to be intersected explicitly. Without this the OSD keeps a
+ * position that belonged to an unplugged or rescaled monitor and stays
+ * invisible.
+ */
+function rectOnScreen(x: number, y: number, width: number, height: number): boolean {
+  const minWidth = Math.min(MIN_VISIBLE_PX, width)
+  const minHeight = Math.min(MIN_VISIBLE_PX, height)
+  return screen.getAllDisplays().some((display) => {
+    const area = display.workArea
+    const overlapWidth = Math.min(x + width, area.x + area.width) - Math.max(x, area.x)
+    const overlapHeight = Math.min(y + height, area.y + area.height) - Math.max(y, area.y)
+    return overlapWidth >= minWidth && overlapHeight >= minHeight
+  })
+}
+
 function isPositionOnScreen(x: number, y: number): boolean {
-  try {
-    screen.getDisplayMatching({ x, y, width: 1, height: 1 })
-    return true
-  } catch {
-    return false
-  }
+  const [width, height] = osdWindow && !osdWindow.isDestroyed() ? osdWindow.getSize() : [100, 30]
+  return rectOnScreen(x, y, width, height)
 }
 
 function setDefaultWindowPosition(): void {
@@ -575,10 +596,10 @@ function setDefaultWindowPosition(): void {
   if (!win || win.isDestroyed()) return
   const { workArea } = screen.getPrimaryDisplay()
   const [width, height] = win.getSize()
-  if (isBarStyle()) {
+  if (isBarStyle() || isMiniStyle()) {
     win.setPosition(
       Math.round(workArea.x + (workArea.width - width) / 2),
-      Math.round(workArea.y)
+      Math.round(workArea.y + (isMiniStyle() ? 10 : 0))
     )
   } else {
     win.setPosition(
@@ -892,7 +913,7 @@ function renderItem(item: OsdItemName): ValueRender {
   }
 }
 
-type OsdLayout = 'bar' | 'panel'
+type OsdLayout = 'bar' | 'panel' | 'mini'
 
 interface OsdRenderItem {
   key: OsdItemName
@@ -925,8 +946,8 @@ interface OsdRenderModel {
 }
 
 function buildRenderModel(): OsdRenderModel {
-  const layout: OsdLayout = isBarStyle() ? 'bar' : 'panel'
-  const groupDefinitions = layout === 'bar' ? BAR_GROUPS : PANEL_GROUPS
+  const layout: OsdLayout = isMiniStyle() ? 'mini' : isBarStyle() ? 'bar' : 'panel'
+  const groupDefinitions = layout === 'panel' ? PANEL_GROUPS : BAR_GROUPS
   const groups = groupDefinitions.filter(groupVisible).map((group) => ({
     key: group.label,
     label: group.label,
@@ -972,7 +993,12 @@ const OSD_DOCUMENT_STYLE = [
   '.osd-label{margin-right:16px;}',
   '.osd-value{text-align:right;}',
   '.osd-panel-separator{height:1px;margin:8px 0;}',
-  '.osd-panel-separator--clear{height:8px;margin:0;}'
+  '.osd-panel-separator--clear{height:8px;margin:0;}',
+  '.osd-root--mini{display:flex;align-items:center;white-space:nowrap;padding:2px 8px;font-family:Consolas,"Segoe UI",monospace;}',
+  '.osd-mini-badge{display:inline-flex;align-items:center;padding:1px 5px;margin-right:6px;background:rgba(255,255,255,0.06);border-radius:3px;}',
+  '.osd-mini-label{font-weight:700;font-size:0.85em;margin-right:4px;letter-spacing:0.5px;}',
+  '.osd-mini-value{display:inline-block;min-width:28px;text-align:center;font-weight:600;}',
+  '.osd-mini-dot{width:3px;height:3px;border-radius:50%;margin:0 5px;opacity:0.3;display:inline-block;background:currentColor;}'
 ].join('')
 
 const OSD_RENDERER_SCRIPT = `(() => {
@@ -998,11 +1024,34 @@ const OSD_RENDERER_SCRIPT = `(() => {
     labelNodes = []
     separatorNodes = []
     valueNodes.clear()
-    root.className = model.layout === 'bar'
+    root.className = model.layout === 'mini'
+      ? 'osd-root osd-root--mini'
+      : model.layout === 'bar'
       ? 'osd-root osd-root--bar'
       : 'osd-root osd-root--panel'
 
-    if (model.layout === 'bar') {
+    if (model.layout === 'mini') {
+      model.groups.forEach((group, groupIndex) => {
+        if (groupIndex > 0) {
+          const dot = createElement('span', 'osd-mini-dot')
+          separatorNodes.push(dot)
+          fragment.append(dot)
+        }
+
+        const badge = createElement('span', 'osd-mini-badge')
+        const groupLabel = createElement('span', 'osd-mini-label')
+        groupLabel.textContent = group.label
+        categoryNodes.push(groupLabel)
+        badge.append(groupLabel)
+
+        group.items.forEach((item) => {
+          const value = createElement('span', 'osd-mini-value')
+          valueNodes.set(item.key, value)
+          badge.append(value)
+        })
+        fragment.append(badge)
+      })
+    } else if (model.layout === 'bar') {
       model.groups.forEach((group, groupIndex) => {
         if (groupIndex > 0) {
           const separator = createElement('span', 'osd-bar-separator')
@@ -1071,7 +1120,7 @@ const OSD_RENDERER_SCRIPT = `(() => {
 
   const applyAppearance = (model) => {
     const appearance = model.appearance
-    const opacityFactor = model.layout === 'bar' ? 0.8 : 1
+    const opacityFactor = model.layout === 'mini' ? 0.75 : model.layout === 'bar' ? 0.8 : 1
     const opacity = Math.min(1, Math.max(0, appearance.backgroundOpacity * opacityFactor))
     const radius =
       appearance.cornerRadiusTop + 'px ' +
@@ -1304,7 +1353,7 @@ function showOsd(): void {
   }
 }
 
-function hideOsd(): void {
+function hideOsd(persistPreference = true): void {
   const win = osdWindow
   if (!win || win.isDestroyed()) return
   if (win.isVisible()) {
@@ -1312,8 +1361,10 @@ function hideOsd(): void {
   }
   visible = false
   setSurfaceVisible('osd', false)
-  settings.showOsd = false
-  void writeSettings()
+  if (persistPreference) {
+    settings.showOsd = false
+    void writeSettings()
+  }
   stopRefresh()
   if (fpsSubscribed) {
     fpsSubscribed = false
@@ -1341,12 +1392,30 @@ function handleOsdChanged(data: unknown): void {
 
 // ── public API ──────────────────────────────────────────────────────────────
 
+export function toggleOsd(): void {
+  if (visible && osdWindow && !osdWindow.isDestroyed() && osdWindow.isVisible()) {
+    hideOsd(true)
+  } else {
+    showOsd()
+  }
+}
+
 export function initOsdWindow(): void {
   // Lazy window creation: registering the subscriptions is cheap (no
   // renderer process), the BrowserWindow itself is only created when the OSD
   // actually needs to show (showOsd setting or osd.changed event). Each OSD
   // window costs a renderer process (~60-90MB), so never build it at startup.
   if (osdWindow && !osdWindow.isDestroyed()) return
+
+  try {
+    if (!globalShortcut.isRegistered('CommandOrControl+Shift+O')) {
+      globalShortcut.register('CommandOrControl+Shift+O', () => {
+        toggleOsd()
+      })
+    }
+  } catch {
+    // best-effort global shortcut registration
+  }
 
   if (!unsubscribe) {
     unsubscribe = hostClient.on('osd.changed', handleOsdChanged)
@@ -1361,8 +1430,9 @@ export function initOsdWindow(): void {
   }
   // Electron OsdWindowBase listened to SystemEvents.PowerModeChanged: hide the OSD
   // while the machine suspends so it never stays pinned over the lock screen.
+  // Transient only — do not persist showOsd=false, or resume can never restore it.
   if (!unsubscribePower) {
-    const onSuspend = (): void => hideOsd()
+    const onSuspend = (): void => hideOsd(false)
     const onResume = (): void => {
       if (settings.showOsd) showOsd()
     }
@@ -1441,6 +1511,10 @@ function ensureOsdWindow(): void {
   })
 }
 
+export function isOsdVisible(): boolean {
+  return visible && osdWindow != null && !osdWindow.isDestroyed() && osdWindow.isVisible()
+}
+
 function releaseOsdWindow(): void {
   stopRefresh()
   if (fpsSubscribed) {
@@ -1458,8 +1532,19 @@ function releaseOsdWindow(): void {
   pageLoaded = false
 }
 
+/** Destroy the OSD renderer but keep host subscriptions for on-demand show. */
+export function suspendOsdWindow(): void {
+  cancelIdleDestroy('osd')
+  releaseOsdWindow()
+}
+
 export function destroyOsdWindow(): void {
   cancelIdleDestroy('osd')
+  try {
+    globalShortcut.unregister('CommandOrControl+Shift+O')
+  } catch {
+    // best-effort
+  }
   if (positionSaveTimer) {
     clearTimeout(positionSaveTimer)
     positionSaveTimer = null

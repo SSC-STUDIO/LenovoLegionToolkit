@@ -106,7 +106,7 @@ function OsdPreview(): React.JSX.Element {
   const { settings } = useOsdSettingsStore()
   const alpha = Math.min(1, Math.max(0, settings.backgroundOpacity))
   const radius =
-    settings.selectedStyleIndex === 1
+    settings.selectedStyleIndex === 1 || settings.selectedStyleIndex === 2
       ? settings.cornerRadiusTop
       : `${settings.cornerRadiusTop}px ${settings.cornerRadiusTop}px ${settings.cornerRadiusBottom}px ${settings.cornerRadiusBottom}px`
   return (
@@ -259,7 +259,8 @@ export function OsdSection(): React.JSX.Element {
                       disabled={loading || !settings.showOsd}
                       options={[
                         { value: 0, label: t('settings.osd.styles.panel') },
-                        { value: 1, label: t('settings.osd.styles.bar') }
+                        { value: 1, label: t('settings.osd.styles.bar') },
+                        { value: 2, label: t('settings.osd.styles.mini') }
                       ]}
                       onChange={(value) => persist({ selectedStyleIndex: value })}
                     />

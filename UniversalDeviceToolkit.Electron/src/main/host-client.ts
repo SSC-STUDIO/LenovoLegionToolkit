@@ -1,4 +1,4 @@
-import { spawn, ChildProcessWithoutNullStreams } from 'child_process'
+import { spawn, type ChildProcessWithoutNullStreams } from 'child_process'
 import { createInterface } from 'readline'
 
 interface PendingRequest {
@@ -36,6 +36,18 @@ interface ReadyWaiter {
 const READY_TIMEOUT_MS = 15_000
 const MAX_RESTART_ATTEMPTS = 3
 const RESTART_DELAY_MS = 750
+const STOP_GRACE_MS = 5_000
+
+export const EXIT_DRAIN_TIMEOUT_MS = 1_000
+export const HEALTHY_RUN_MS = 60_000
+
+export interface HostClientOptions {
+  readyTimeoutMs?: number
+  restartDelayMs?: number
+  stopGraceMs?: number
+}
+
+type FinalizeKind = 'error' | 'exit' | 'timeout'
 
 /**
  * Manages the UniversalDeviceToolkit.Host child process and speaks the
@@ -57,7 +69,17 @@ export class HostClient {
   private lastError: string | null = null
   private restartAttempts = 0
   private restartTimer: ReturnType<typeof setTimeout> | null = null
+  private bootWatchdog: ReturnType<typeof setTimeout> | null = null
   private lastReadyData: unknown = null
+  private readonly readyTimeoutMs: number
+  private readonly restartDelayMs: number
+  private readonly stopGraceMs: number
+
+  constructor(options: HostClientOptions = {}) {
+    this.readyTimeoutMs = options.readyTimeoutMs ?? READY_TIMEOUT_MS
+    this.restartDelayMs = options.restartDelayMs ?? RESTART_DELAY_MS
+    this.stopGraceMs = options.stopGraceMs ?? STOP_GRACE_MS
+  }
 
   on(event: string, callback: (data: unknown) => void): () => void {
     if (!this.listeners.has(event)) this.listeners.set(event, new Set())
@@ -99,7 +121,7 @@ export class HostClient {
    * Resolves once {@code host.ready} has been observed for the current child.
    * Rejects on timeout, spawn failure, or unexpected exit.
    */
-  waitUntilReady(timeoutMs = READY_TIMEOUT_MS): Promise<void> {
+  waitUntilReady(timeoutMs = this.readyTimeoutMs): Promise<void> {
     if (this.isReady) return Promise.resolve()
     if (this.lastError && !this.child && !this.starting) {
       return Promise.reject(new Error(this.lastError))
@@ -149,48 +171,43 @@ export class HostClient {
 
     console.log(`[host] spawning: ${hostPath}${args.length > 0 ? ` ${args.join(' ')}` : ''}`)
 
-    this.child = spawn(hostPath, args, {
-      stdio: ['pipe', 'pipe', 'pipe'],
-      windowsHide: true
-    })
+    let child: ChildProcessWithoutNullStreams
+    try {
+      child = spawn(hostPath, args, {
+        stdio: ['pipe', 'pipe', 'pipe'],
+        windowsHide: true
+      })
+    } catch (error) {
+      this.starting = false
+      const message = `Host spawn failed: ${error instanceof Error ? error.message : String(error)}`
+      this.lastError = message
+      this.emitSynthetic('host.error', { message })
+      this.rejectReadyWaiters(new Error(message))
+      return
+    }
 
-    this.child.stderr.on('data', (d: Buffer) => {
+    this.child = child
+
+    child.stderr.on('data', (d: Buffer) => {
       console.error(`[host] ${d.toString().trim()}`)
     })
 
-    this.child.on('error', (error) => {
-      this.starting = false
-      this.lastError = `Host spawn failed: ${error.message}`
-      console.error(`[host] spawn error: ${error.message}`)
-      this.emitSynthetic('host.error', { message: this.lastError })
-      this.rejectReadyWaiters(new Error(this.lastError))
+    child.on('error', (error) => {
+      const failure = new Error(`Host spawn failed: ${error.message}`)
+      this.finalizeChild(child, failure, { kind: 'error' })
+      this.killChild(child)
     })
 
-    this.rl = createInterface({ input: this.child.stdout })
+    this.rl = createInterface({ input: child.stdout })
     this.rl.on('line', (line) => this.handleLine(line))
 
-    this.child.on('exit', (code, signal) => {
-      const wasReady = this.ready
-      this.starting = false
-      this.ready = false
-      console.error(`[host] exited code=${code} signal=${signal}`)
-      const error = new Error(`Host exited (code=${code ?? 'n/a'} signal=${signal ?? 'n/a'})`)
-      this.lastError = error.message
-      for (const [, request] of this.pending) {
-        clearTimeout(request.timer)
-        request.reject(error)
-      }
-      this.pending.clear()
-      this.rl?.close()
-      this.rl = null
-      this.child = null
-      this.emitSynthetic('host.exited', { code, signal, wasReady })
-      this.rejectReadyWaiters(error)
-
-      if (!this.stopping && this.hostPath) {
-        this.scheduleRestart()
-      }
+    child.on('exit', (code, signal) => {
+      const wasReady = this.ready && this.child === child
+      const failure = new Error(`Host exited (code=${code ?? 'n/a'} signal=${signal ?? 'n/a'})`)
+      this.finalizeChild(child, failure, { kind: 'exit', code, signal, wasReady })
     })
+
+    this.armBootWatchdog(child)
 
     // Spawn returned — child handle exists; readiness still waits for host.ready.
     this.starting = false
@@ -242,6 +259,7 @@ export class HostClient {
 
   stop(): Promise<void> {
     this.stopping = true
+    this.clearBootWatchdog()
     if (this.restartTimer) {
       clearTimeout(this.restartTimer)
       this.restartTimer = null
@@ -250,9 +268,9 @@ export class HostClient {
     if (!child || child.killed) return Promise.resolve()
     return new Promise((resolve) => {
       const timer = setTimeout(() => {
-        child.kill()
+        this.killChild(child)
         resolve()
-      }, 5000)
+      }, this.stopGraceMs)
       child.once('exit', () => {
         clearTimeout(timer)
         resolve()
@@ -261,10 +279,10 @@ export class HostClient {
         if (child.stdin.writable) {
           child.stdin.write(`${JSON.stringify({ id: this.nextId++, method: 'app.quit', params: {} })}\n`)
         } else {
-          child.kill()
+          this.killChild(child)
         }
       } catch {
-        child.kill()
+        this.killChild(child)
       }
     })
   }
@@ -293,10 +311,11 @@ export class HostClient {
         console.error(`[host] restart failed: ${message}`)
         this.emitSynthetic('host.error', { message, fatal: true })
       }
-    }, RESTART_DELAY_MS)
+    }, this.restartDelayMs)
   }
 
   private setReady(data: unknown): void {
+    this.clearBootWatchdog()
     this.ready = true
     this.lastReadyData = data
     this.lastError = null
@@ -308,6 +327,79 @@ export class HostClient {
   private rejectReadyWaiters(error: Error): void {
     const waiters = this.readyWaiters.splice(0)
     for (const waiter of waiters) waiter.reject(error)
+  }
+
+  /**
+   * Drop the active child only when {@code child} is still the current handle.
+   * A second call, or a late event from a replaced process, is a no-op.
+   */
+  private finalizeChild(
+    child: ChildProcessWithoutNullStreams | null,
+    error: Error,
+    details: {
+      kind: FinalizeKind
+      code?: number | null
+      signal?: NodeJS.Signals | null
+      wasReady?: boolean
+    }
+  ): void {
+    if (this.child !== child) return
+
+    this.clearBootWatchdog()
+    this.starting = false
+    this.ready = false
+    this.lastError = error.message
+
+    for (const [, request] of this.pending) {
+      clearTimeout(request.timer)
+      request.reject(error)
+    }
+    this.pending.clear()
+
+    this.rl?.close()
+    this.rl = null
+    this.child = null
+
+    if (details.kind === 'exit') {
+      this.emitSynthetic('host.exited', {
+        code: details.code ?? null,
+        signal: details.signal ?? null,
+        wasReady: details.wasReady === true
+      })
+    } else {
+      this.emitSynthetic('host.error', { message: this.lastError })
+    }
+
+    this.rejectReadyWaiters(error)
+
+    if (details.kind === 'exit' && !this.stopping && this.hostPath) {
+      this.scheduleRestart()
+    }
+  }
+
+  private armBootWatchdog(child: ChildProcessWithoutNullStreams): void {
+    this.clearBootWatchdog()
+    this.bootWatchdog = setTimeout(() => {
+      this.bootWatchdog = null
+      if (this.child !== child || this.ready || this.stopping) return
+      const error = new Error('Host did not become ready in time')
+      this.finalizeChild(child, error, { kind: 'timeout' })
+      this.killChild(child)
+    }, this.readyTimeoutMs)
+  }
+
+  private clearBootWatchdog(): void {
+    if (!this.bootWatchdog) return
+    clearTimeout(this.bootWatchdog)
+    this.bootWatchdog = null
+  }
+
+  private killChild(child: ChildProcessWithoutNullStreams): void {
+    try {
+      if (!child.killed) child.kill()
+    } catch {
+      // Failed spawn or an already-reaped process has no OS handle to signal.
+    }
   }
 
   private emitSynthetic(event: string, data: unknown): void {

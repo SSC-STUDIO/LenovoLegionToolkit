@@ -184,6 +184,8 @@ public static class Program
         });
 
         LocalizationHandlers.Register(rpc);
+        PortableCapabilityHandlers.Register(rpc);
+        UiActivityHandlers.Register(rpc);
 
 #if WINDOWS
         SystemHandlers.Register(rpc);
@@ -205,11 +207,9 @@ public static class Program
         SoftwareDisablerHandlers.Register(rpc);
         StartupHandlers.Register(rpc);
         GodModeHandlers.Register(rpc);
+        GameBoostHandlers.Register(rpc);
 #else
-        // Windows-only domains keep their RPC surface (the Electron client calls
-        // them unconditionally) but answer "not supported on this platform".
-        // The method list lives in RpcMethodNames so it cannot drift from the
-        // Windows registrations above (see VerifyRpcSurface).
+        PortableCoreHandlers.Register(rpc);
         RegisterPlatformUnsupportedHandlers(rpc);
 #endif
 
@@ -227,53 +227,51 @@ public static class Program
     }
 
     /// <summary>
-    /// Startup guard for the RpcMethodNames registry: on Windows every listed
-    /// method must have a concrete handler; on portable builds the stubs are
-    /// registered from the same list, so a rename or removal in a handler file
-    /// shows up here instead of as a client-visible -32601.
+    /// Startup guard for the RpcMethodNames registry: every listed method must
+    /// have a handler. On Windows that is the concrete implementation; on
+    /// portable builds PortableCapable is implemented and WindowsOnly is stubbed
+    /// from the same lists, so a rename shows up here instead of as -32601.
     /// </summary>
     private static void VerifyRpcSurface(BridgeRpcServer rpc)
     {
-#if WINDOWS
         foreach (var method in RpcMethodNames.WindowsOnly)
         {
             if (!rpc.HasHandler(method))
-                Log.Instance.Warning($"RPC registry drift: '{method}' is listed in RpcMethodNames.WindowsOnly but no Windows handler registered it.");
-        }
-        foreach (var method in RpcMethodNames.EmptyOkOnNonWindows)
-        {
-            if (!rpc.HasHandler(method))
-                Log.Instance.Warning($"RPC registry drift: '{method}' is listed in RpcMethodNames.EmptyOkOnNonWindows but no Windows handler registered it.");
+                Log.Instance.Warning($"RPC registry drift: '{method}' is listed in RpcMethodNames.WindowsOnly but no handler registered it.");
         }
 
-        // Reverse direction: a Windows-only method registered by a handler but
-        // absent from the registry would be -32601 on portable hosts.
+        foreach (var method in RpcMethodNames.PortableCapable)
+        {
+            if (!rpc.HasHandler(method))
+                Log.Instance.Warning($"RPC registry drift: '{method}' is listed in RpcMethodNames.PortableCapable but no handler registered it.");
+        }
+
+        foreach (var method in RpcMethodNames.AlwaysOn)
+        {
+            if (!rpc.HasHandler(method))
+                Log.Instance.Warning($"RPC registry drift: '{method}' is listed in RpcMethodNames.AlwaysOn but no handler registered it.");
+        }
+
         var listed = new HashSet<string>(RpcMethodNames.WindowsOnly, StringComparer.Ordinal);
-        listed.UnionWith(RpcMethodNames.EmptyOkOnNonWindows);
+        listed.UnionWith(RpcMethodNames.PortableCapable);
+        listed.UnionWith(RpcMethodNames.AlwaysOn);
         foreach (var method in rpc.RegisteredMethods)
         {
             if (listed.Contains(method))
-                continue;
-            if (method is "ping" or "app.getStatus" or "app.getLogPath" or "app.quit" or
-                "localization.getCulture" or "localization.setCulture")
                 continue;
             if (method.StartsWith("plugins.", StringComparison.Ordinal) ||
                 method.StartsWith("plugin.", StringComparison.Ordinal) ||
                 method.StartsWith("macro.", StringComparison.Ordinal))
                 continue;
-            Log.Instance.Warning($"RPC registry drift: '{method}' is registered on Windows but missing from RpcMethodNames (portable hosts would answer -32601).");
+            Log.Instance.Warning($"RPC registry drift: '{method}' is registered but missing from RpcMethodNames (portable hosts would answer -32601).");
         }
-#else
-        _ = rpc;
-#endif
     }
 
 #if !WINDOWS
     /// <summary>
-    /// Registers the Windows-only RPC domains as explicit "not supported"
-    /// responses so the Electron front end does not wait on unknown-method
-    /// errors. The method names come from RpcMethodNames - the same list the
-    /// Windows build is verified against - so the surfaces cannot drift.
+    /// Registers remaining Windows-only RPC domains as explicit "not supported"
+    /// responses. Core Electron methods in RpcMethodNames.PortableCapable are
+    /// registered by PortableCoreHandlers instead of these stubs.
     /// </summary>
     private static void RegisterPlatformUnsupportedHandlers(BridgeRpcServer rpc)
     {
@@ -287,16 +285,6 @@ public static class Program
 
         foreach (var method in RpcMethodNames.WindowsOnly)
             rpc.RegisterHandler(method, NotSupportedAsync);
-
-        // Telemetry polled unconditionally by the renderer: safe empty results.
-        foreach (var method in RpcMethodNames.EmptyOkOnNonWindows)
-        {
-            rpc.RegisterHandler(method, async (_, _) =>
-            {
-                await Task.CompletedTask;
-                return BridgeResult.Ok(new { });
-            });
-        }
     }
 #endif
 

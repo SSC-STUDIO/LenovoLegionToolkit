@@ -7,6 +7,7 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.GameDetection;
 using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Shared.Serialization;
@@ -48,6 +49,7 @@ public static class SettingsHandlers
         RegisterScope("networkAcceleration", () => IoCContainer.Resolve<NetworkAccelerationSettings>());
         RegisterScope("batteryHealthAlerts", () => IoCContainer.Resolve<BatteryHealthAlertSettings>());
         RegisterScope("dashboard", () => IoCContainer.Resolve<HostDashboardSettings>());
+        RegisterScope("gameBoost", () => IoCContainer.Resolve<GameBoostSettings>());
 
         rpc.RegisterHandler("settings.getAll", (request, _) => HandleGetAllAsync(request, rpc));
         rpc.RegisterHandler("settings.get", (request, _) => HandleGetAsync(request));

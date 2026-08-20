@@ -54,7 +54,7 @@ public class OsdSettings() : AbstractSettings<OsdSettings.OsdSettingsStore>("osd
         var defaults = new OsdSettingsStore();
 
         store.OsdRefreshInterval = ClampFinite(store.OsdRefreshInterval, 0.1, 10, defaults.OsdRefreshInterval);
-        store.SelectedStyleIndex = store.SelectedStyleIndex is 0 or 1
+        store.SelectedStyleIndex = store.SelectedStyleIndex is >= 0 and <= 2
             ? store.SelectedStyleIndex
             : defaults.SelectedStyleIndex;
         store.BackgroundOpacity = ClampFinite(store.BackgroundOpacity, 0, 1, defaults.BackgroundOpacity);
