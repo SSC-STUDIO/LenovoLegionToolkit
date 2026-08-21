@@ -2,9 +2,8 @@
 """Click through a running Universal Device Toolkit window for a promo capture.
 
 Requires: DISPLAY with the Electron window visible, xdotool.
-Coords assume a maximized ~1920-wide window (nav around 325px).
-After scrolling the dashboard, call scroll_top() before optimization tabs
-so the main pane is at the top (cleanup / network tab y=223).
+Coords assume a maximized ~1920-wide window on a 1920x1200 XFCE desktop
+(window at 0,29). Sidebar click x is 140.
 """
 from __future__ import annotations
 
@@ -14,16 +13,25 @@ import time
 
 os.environ.setdefault("DISPLAY", ":1")
 
-NAV_X = 160
-DASHBOARD = (NAV_X, 102)
-AUTOMATION = (NAV_X, 222)
-MACRO = (NAV_X, 286)
-OPTIMIZE = (NAV_X, 342)
-PLUGINS = (NAV_X, 852)
-SETTINGS = (NAV_X, 908)
-ABOUT = (NAV_X, 972)
-TAB_CLEANUP = (600, 223)
-TAB_NETWORK = (868, 223)
+NAV_X = 140
+DASHBOARD = (NAV_X, 110)
+KEYBOARD = (NAV_X, 170)
+AUTOMATION = (NAV_X, 230)
+MACRO = (NAV_X, 290)
+OPTIMIZE = (NAV_X, 350)
+PLUGINS = (NAV_X, 980)
+SETTINGS = (NAV_X, 1060)
+ABOUT = (NAV_X, 1110)
+
+# System optimization segmented tabs (y of the pill row)
+TAB_Y = 240
+TAB_CLEANUP = (560, TAB_Y)
+TAB_NETWORK = (820, TAB_Y)
+
+# Appearance theme tiles (Settings → 全局界面颜色模式)
+TILE_LIGHT = (780, 560)
+TILE_DARK = (1120, 560)
+TILE_SYSTEM = (1460, 560)
 
 
 def sh(*args: str | int) -> subprocess.CompletedProcess[str]:
@@ -76,85 +84,87 @@ def wheel(n: int, delay: float = 0.11) -> None:
         time.sleep(delay)
 
 
-def scroll_top() -> None:
-    for _ in range(14):
-        sh("xdotool", "click", "4")
-        time.sleep(0.03)
-    time.sleep(0.15)
+def mark(wid: str, label: str, t0: float) -> None:
+    print(f"{time.time() - t0:6.2f}s  {label:16s}  {window_name(wid)}", flush=True)
 
 
 def main() -> None:
     wid = window_id()
     sh("xdotool", "windowactivate", wid)
-    time.sleep(0.2)
-    print("start", window_name(wid), flush=True)
+    time.sleep(0.25)
+    t0 = time.time()
+    mark(wid, "start", t0)
 
     click_at(*DASHBOARD)
-    time.sleep(0.6)
-    move_to(620, 290, 0.4)
     time.sleep(0.7)
-    move_to(960, 290, 0.35)
-    time.sleep(0.7)
-    move_to(1320, 290, 0.35)
-    time.sleep(0.7)
-    move_to(900, 640, 0.35)
-    wheel(5)
+    move_to(620, 310, 0.4)
+    time.sleep(0.8)
+    move_to(960, 310, 0.35)
+    time.sleep(0.8)
+    move_to(1320, 310, 0.35)
+    time.sleep(0.8)
+    move_to(900, 700, 0.35)
     time.sleep(0.9)
-    wheel(-3)
-    time.sleep(0.4)
 
     click_at(*OPTIMIZE)
+    time.sleep(1.0)
+    mark(wid, "optimize", t0)
+    move_to(900, 430, 0.3)
     time.sleep(0.8)
-    move_to(900, 400, 0.3)
-    scroll_top()
-    time.sleep(0.6)
-    print("optimize", window_name(wid), flush=True)
     click_at(*TAB_CLEANUP)
-    time.sleep(1.8)
+    time.sleep(1.6)
     click_at(*TAB_NETWORK)
-    time.sleep(2.4)
-    move_to(780, 430, 0.3)
-    time.sleep(0.5)
+    time.sleep(2.2)
+    move_to(860, 480, 0.3)
+    time.sleep(0.6)
 
     click_at(*AUTOMATION)
-    time.sleep(1.4)
-    print("automation", window_name(wid), flush=True)
-    move_to(700, 280, 0.35)
+    time.sleep(1.3)
+    mark(wid, "automation", t0)
+    move_to(700, 300, 0.35)
     time.sleep(0.7)
-    move_to(1180, 360, 0.35)
+    move_to(1180, 380, 0.35)
     time.sleep(0.8)
 
     click_at(*MACRO)
     time.sleep(1.0)
-    print("macro", window_name(wid), flush=True)
-    click_at(520, 430, 0.35)
+    mark(wid, "macro", t0)
+    click_at(520, 450, 0.35)
     time.sleep(0.9)
-    move_to(1180, 380, 0.35)
+    move_to(1180, 400, 0.35)
     time.sleep(1.0)
 
     click_at(*PLUGINS)
     time.sleep(1.3)
-    print("plugins", window_name(wid), flush=True)
-    move_to(760, 300, 0.35)
+    mark(wid, "plugins", t0)
+    move_to(760, 320, 0.35)
     time.sleep(0.6)
-    move_to(760, 430, 0.3)
+    move_to(760, 450, 0.3)
     time.sleep(0.6)
-    move_to(760, 560, 0.3)
+    move_to(760, 580, 0.3)
     time.sleep(0.8)
 
     click_at(*SETTINGS)
-    time.sleep(1.2)
-    print("settings", window_name(wid), flush=True)
-    move_to(900, 360, 0.35)
-    time.sleep(0.8)
+    time.sleep(1.6)
+    mark(wid, "settings", t0)
+    # Hold the three 全局界面颜色模式 tiles on camera (user's 6.0.0 proof).
+    move_to(*TILE_LIGHT, 0.5)
+    time.sleep(1.4)
+    move_to(*TILE_DARK, 0.55)
+    time.sleep(1.4)
+    move_to(*TILE_SYSTEM, 0.55)
+    time.sleep(2.4)
+    move_to(900, 700, 0.4)
+    time.sleep(1.0)
 
     click_at(*ABOUT)
-    time.sleep(1.5)
-    print("about", window_name(wid), flush=True)
+    time.sleep(1.6)
+    mark(wid, "about", t0)
 
     click_at(*DASHBOARD)
-    time.sleep(1.0)
-    print("done", window_name(wid), flush=True)
+    time.sleep(1.1)
+    mark(wid, "done", t0)
+    print(f"elapsed {time.time() - t0:.2f}s", flush=True)
 
 
 if __name__ == "__main__":

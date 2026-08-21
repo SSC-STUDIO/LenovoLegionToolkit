@@ -68,10 +68,10 @@ EOF
   exit 1
 fi
 
-# Defaults match the 1920x1200 XFCE capture of origin/electron (v3).
-START="${UDT_PROMO_START:-10}"
-DURATION="${UDT_PROMO_DURATION:-43}"
-POSTER_SS="${UDT_PROMO_POSTER_SS:-8}"
+# Defaults match the 1920x1200 XFCE capture of git tag v6.0.0 (f09e76640).
+START="${UDT_PROMO_START:-2}"
+DURATION="${UDT_PROMO_DURATION:-48}"
+POSTER_SS="${UDT_PROMO_POSTER_SS:-36}"
 CRF="${UDT_PROMO_CRF:-18}"
 PRESET="${UDT_PROMO_PRESET:-medium}"
 
@@ -81,7 +81,8 @@ trap cleanup EXIT
 
 mkdir -p "$(dirname "${OUT_MP4}")" "$(dirname "${OUT_POSTER}")" "${WORKDIR}/txt"
 
-# Output-relative lower thirds for the v3 click-through (source t=10..53).
+# Output-relative lower thirds for the v6.0.0 click-through (source t=2..50).
+# Settings appearance (three theme tiles) is held on camera for several seconds.
 # Adjust UDT_PROMO_LABELS (start,end,label per line) if you recapture.
 LABELS_FILE="${UDT_PROMO_LABELS:-}"
 if [[ -z "${LABELS_FILE}" ]]; then
@@ -92,14 +93,15 @@ import sys
 Path(sys.argv[1]).write_text(
     "\n".join(
         [
-            "0.4,11.4,控制台",
-            "12.2,19.6,系统优化",
-            "20.2,23.6,网络与加速",
-            "24.2,31.6,自动化",
-            "32.2,35.6,自定义宏",
-            "36.2,39.6,插件扩展",
-            "40.0,41.8,设置",
-            "42.2,42.9,关于",
+            "0.3,9.6,控制台",
+            "10.2,14.0,系统优化",
+            "14.2,16.6,垃圾清理",
+            "16.8,19.2,网络与加速",
+            "20.0,23.6,自动化",
+            "24.2,27.6,自定义宏",
+            "28.2,33.6,插件扩展",
+            "34.2,43.2,设置",
+            "44.0,46.8,关于",
         ]
     )
     + "\n",
