@@ -2504,6 +2504,259 @@ public class PluginManagerTests : IDisposable
 
     #endregion
 
+    #region Uninstall Cleanup Tests
+
+    [Fact]
+    public void UninstallPlugin_WhenStarted_ShouldCleanupLiveInstanceBeforeStop()
+    {
+        const string pluginId = "live-cleanup-plugin";
+        var settings = CreateSettings();
+        settings.Store.InstalledExtensions.Add(pluginId);
+        settings.SynchronizeStore();
+        var order = new List<string>();
+        var plugin = new Mock<IPlugin>();
+        plugin.SetupGet(candidate => candidate.Id).Returns(pluginId);
+        plugin.Setup(candidate => candidate.OnUninstalled())
+            .Callback(() => order.Add("OnUninstalled"));
+        plugin.Setup(candidate => candidate.Stop())
+            .Callback(() => order.Add("Stop"));
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns(plugin.Object);
+        _mockRegistry.Setup(registry => registry.GetAll()).Returns(Array.Empty<IPlugin>());
+        _mockRegistry.Setup(registry => registry.IsStarted(pluginId)).Returns(true);
+        _mockLoader.Setup(loader => loader.Unload(pluginId)).Returns(true);
+        var manager = CreateManager(settings);
+
+        manager.UninstallPlugin(pluginId).Should().BeTrue();
+
+        order.Should().Equal("OnUninstalled", "Stop");
+        plugin.Verify(candidate => candidate.OnUninstalled(), Times.Once);
+        plugin.Verify(candidate => candidate.Stop(), Times.Once);
+        settings.Store.InstalledExtensions.Should().NotContain(pluginId);
+        settings.Store.PendingDeletionExtensions.Should().Contain(pluginId);
+    }
+
+    [Fact]
+    public void UninstallPlugin_WhenSystemPlugin_ShouldRefuse()
+    {
+        const string pluginId = "shell-integration";
+        var settings = CreateSettings();
+        settings.Store.InstalledExtensions.Add(pluginId);
+        settings.SynchronizeStore();
+        var plugin = new Mock<IPlugin>();
+        plugin.SetupGet(candidate => candidate.Id).Returns(pluginId);
+        plugin.SetupGet(candidate => candidate.IsSystemPlugin).Returns(true);
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns(plugin.Object);
+        _mockRegistry.Setup(registry => registry.GetAll()).Returns(Array.Empty<IPlugin>());
+        var manager = CreateManager(settings);
+
+        manager.UninstallPlugin(pluginId).Should().BeFalse();
+
+        plugin.Verify(candidate => candidate.OnUninstalled(), Times.Never);
+        plugin.Verify(candidate => candidate.Stop(), Times.Never);
+        _mockLoader.Verify(loader => loader.Unload(pluginId), Times.Never);
+        settings.Store.InstalledExtensions.Should().Equal(pluginId);
+        settings.Store.PendingDeletionExtensions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void UninstallPlugin_WhenMetadataMarksSystemPlugin_ShouldRefuse()
+    {
+        const string pluginId = "metadata-system-plugin";
+        var settings = CreateSettings();
+        settings.Store.InstalledExtensions.Add(pluginId);
+        settings.SynchronizeStore();
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns((IPlugin?)null);
+        _mockRegistry.Setup(registry => registry.GetMetadata(pluginId))
+            .Returns(new PluginMetadata { Id = pluginId, IsSystemPlugin = true });
+        _mockRegistry.Setup(registry => registry.GetAll()).Returns(Array.Empty<IPlugin>());
+        var manager = CreateManager(settings);
+
+        manager.UninstallPlugin(pluginId).Should().BeFalse();
+
+        _mockLoader.Verify(loader => loader.Unload(pluginId), Times.Never);
+        settings.Store.InstalledExtensions.Should().Equal(pluginId);
+        settings.Store.PendingDeletionExtensions.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void UninstallPlugin_WhenStopThrows_ShouldCompensateUninstallCallbackWithoutRestart()
+    {
+        const string pluginId = "stop-after-cleanup-plugin";
+        var settings = CreateSettings();
+        settings.Store.InstalledExtensions.Add(pluginId);
+        settings.SynchronizeStore();
+        var plugin = new Mock<IPlugin>();
+        plugin.SetupGet(candidate => candidate.Id).Returns(pluginId);
+        plugin.Setup(candidate => candidate.Stop()).Throws(new InvalidOperationException("stop failed"));
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns(plugin.Object);
+        _mockRegistry.Setup(registry => registry.GetAll()).Returns(Array.Empty<IPlugin>());
+        _mockRegistry.Setup(registry => registry.IsStarted(pluginId)).Returns(true);
+        var manager = CreateManager(settings);
+
+        Action action = () => manager.UninstallPlugin(pluginId);
+
+        action.Should().Throw<InvalidOperationException>().WithMessage("*Failed to stop*");
+        plugin.Verify(candidate => candidate.OnUninstalled(), Times.Once);
+        plugin.Verify(candidate => candidate.OnInstalled(), Times.Once);
+        settings.Store.InstalledExtensions.Should().Equal(pluginId);
+        settings.Store.PendingDeletionExtensions.Should().BeEmpty();
+        _mockLoader.Verify(loader => loader.Unload(pluginId), Times.Never);
+        _mockRegistry.Verify(registry => registry.ReplaceWithMetadataAdapter(pluginId), Times.Never);
+        _mockRegistry.Verify(registry => registry.MarkStopped(pluginId), Times.Never);
+    }
+
+    [Fact]
+    public async Task PermanentlyDeletePluginAsync_WhenLiveInstance_ShouldCleanupBeforeForget()
+    {
+        const string pluginId = "delete-live-plugin";
+        var pluginsRoot = CreateTempDirectory();
+        var pluginDirectory = Path.Combine(pluginsRoot, "local", pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        var mainDll = Path.Combine(
+            pluginDirectory,
+            $"{PluginAssemblyNaming.PreferredPluginsPrefix}{pluginId}.dll");
+        File.WriteAllText(mainDll, "plugin");
+        File.WriteAllText(Path.Combine(pluginDirectory, "plugin.manifest.json"), "{}");
+        var order = new List<string>();
+        var plugin = new Mock<IPlugin>();
+        plugin.SetupGet(candidate => candidate.Id).Returns(pluginId);
+        plugin.Setup(candidate => candidate.OnUninstalled())
+            .Callback(() => order.Add("OnUninstalled"));
+        plugin.Setup(candidate => candidate.Stop())
+            .Callback(() => order.Add("Stop"));
+        var started = true;
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns(plugin.Object);
+        _mockRegistry.Setup(registry => registry.IsStarted(pluginId)).Returns(() => started);
+        _mockRegistry.Setup(registry => registry.MarkStopped(pluginId)).Callback(() => started = false);
+        _mockRegistry.Setup(registry => registry.Forget(pluginId))
+            .Callback(() => order.Add("Forget"));
+        _mockLoader.Setup(loader => loader.Unload(pluginId)).Returns(true);
+        ConfigureFileSystemForDeletion(pluginsRoot);
+        var manager = CreateManager();
+
+        var deleted = await manager.PermanentlyDeletePluginAsync(pluginId);
+
+        deleted.Should().BeTrue();
+        order.Should().HaveCountGreaterThanOrEqualTo(3);
+        order[0].Should().Be("OnUninstalled");
+        order[1].Should().Be("Stop");
+        order.Should().Contain("Forget");
+        order.IndexOf("OnUninstalled").Should().BeLessThan(order.IndexOf("Forget"));
+        Directory.Exists(pluginDirectory).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task PermanentlyDeletePluginAsync_WhenContainedDirectoryHasSidecars_ShouldDeleteEntireDirectory()
+    {
+        const string pluginId = "sidecar-plugin";
+        var pluginsRoot = CreateTempDirectory();
+        var pluginDirectory = Path.Combine(pluginsRoot, "local", pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        File.WriteAllText(
+            Path.Combine(pluginDirectory, $"{PluginAssemblyNaming.PreferredPluginsPrefix}{pluginId}.dll"),
+            "plugin");
+        File.WriteAllText(Path.Combine(pluginDirectory, "plugin.manifest.json"), "{}");
+        File.WriteAllText(Path.Combine(pluginDirectory, "Newtonsoft.Json.dll"), "dep");
+        File.WriteAllText(Path.Combine(pluginDirectory, "icon.png"), "icon");
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns((IPlugin?)null);
+        _mockLoader.Setup(loader => loader.Unload(pluginId)).Returns(true);
+        ConfigureFileSystemForDeletion(pluginsRoot);
+        var manager = CreateManager();
+
+        var deleted = await manager.PermanentlyDeletePluginAsync(pluginId);
+
+        deleted.Should().BeTrue();
+        Directory.Exists(pluginDirectory).Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task PermanentlyDeletePluginAsync_WhenSystemPlugin_ShouldRefuseAndKeepFiles()
+    {
+        const string pluginId = "system-delete-plugin";
+        var pluginsRoot = CreateTempDirectory();
+        var pluginDirectory = Path.Combine(pluginsRoot, "local", pluginId);
+        Directory.CreateDirectory(pluginDirectory);
+        var mainDll = Path.Combine(
+            pluginDirectory,
+            $"{PluginAssemblyNaming.PreferredPluginsPrefix}{pluginId}.dll");
+        File.WriteAllText(mainDll, "plugin");
+        var plugin = new Mock<IPlugin>();
+        plugin.SetupGet(candidate => candidate.Id).Returns(pluginId);
+        plugin.SetupGet(candidate => candidate.IsSystemPlugin).Returns(true);
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns(plugin.Object);
+        ConfigureFileSystemForDeletion(pluginsRoot);
+        var manager = CreateManager();
+
+        var deleted = await manager.PermanentlyDeletePluginAsync(pluginId);
+
+        deleted.Should().BeFalse();
+        plugin.Verify(candidate => candidate.OnUninstalled(), Times.Never);
+        _mockRegistry.Verify(registry => registry.Forget(pluginId), Times.Never);
+        File.Exists(mainDll).Should().BeTrue();
+        Directory.Exists(pluginDirectory).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task PermanentlyDeletePluginAsync_WhenRootLevelDll_ShouldDeleteMatchingFilesOnly()
+    {
+        const string pluginId = "root-plugin";
+        var pluginsRoot = CreateTempDirectory();
+        var matchingDll = Path.Combine(
+            pluginsRoot,
+            $"{PluginAssemblyNaming.PreferredPluginsPrefix}{pluginId}.dll");
+        var otherDll = Path.Combine(
+            pluginsRoot,
+            $"{PluginAssemblyNaming.PreferredPluginsPrefix}other-plugin.dll");
+        var sidecar = Path.Combine(
+            pluginsRoot,
+            $"{PluginAssemblyNaming.PreferredPluginsPrefix}{pluginId}.pdb");
+        File.WriteAllText(matchingDll, "plugin");
+        File.WriteAllText(otherDll, "other");
+        File.WriteAllText(sidecar, "pdb");
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns((IPlugin?)null);
+        _mockLoader.Setup(loader => loader.Unload(pluginId)).Returns(true);
+        ConfigureFileSystemForDeletion(pluginsRoot);
+        var manager = CreateManager();
+
+        var deleted = await manager.PermanentlyDeletePluginAsync(pluginId);
+
+        deleted.Should().BeTrue();
+        File.Exists(matchingDll).Should().BeFalse();
+        File.Exists(sidecar).Should().BeFalse();
+        File.Exists(otherDll).Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task PermanentlyDeletePluginAsync_WhenDirectoryContainsForeignPlugin_ShouldNotDeleteDirectory()
+    {
+        const string pluginId = "shared-folder-plugin";
+        var pluginsRoot = CreateTempDirectory();
+        var pluginDirectory = Path.Combine(pluginsRoot, "shared-folder-plugin");
+        Directory.CreateDirectory(pluginDirectory);
+        var matchingDll = Path.Combine(
+            pluginDirectory,
+            $"{PluginAssemblyNaming.PreferredPluginsPrefix}{pluginId}.dll");
+        var foreignDll = Path.Combine(
+            pluginDirectory,
+            $"{PluginAssemblyNaming.PreferredPluginsPrefix}other-plugin.dll");
+        File.WriteAllText(matchingDll, "plugin");
+        File.WriteAllText(foreignDll, "foreign");
+        File.WriteAllText(Path.Combine(pluginDirectory, "plugin.manifest.json"), "{}");
+        _mockRegistry.Setup(registry => registry.Get(pluginId)).Returns((IPlugin?)null);
+        _mockLoader.Setup(loader => loader.Unload(pluginId)).Returns(true);
+        ConfigureFileSystemForDeletion(pluginsRoot);
+        var manager = CreateManager();
+
+        var deleted = await manager.PermanentlyDeletePluginAsync(pluginId);
+
+        deleted.Should().BeFalse();
+        Directory.Exists(pluginDirectory).Should().BeTrue();
+        File.Exists(matchingDll).Should().BeTrue();
+        File.Exists(foreignDll).Should().BeTrue();
+    }
+
+    #endregion
+
     #region Helper Methods
 
     private static ApplicationSettings CreateSettings() => new();
@@ -2522,6 +2775,35 @@ public class PluginManagerTests : IDisposable
             _mockLoader.Object,
             _mockRegistry.Object,
             _mockFileSystemManager.Object);
+    }
+
+    private void ConfigureFileSystemForDeletion(string pluginsRoot)
+    {
+        _mockFileSystemManager.Setup(manager => manager.GetPluginsDirectory()).Returns(pluginsRoot);
+        _mockFileSystemManager.Setup(manager => manager.GetCultureFolders())
+            .Returns(new HashSet<string>(StringComparer.OrdinalIgnoreCase));
+        _mockFileSystemManager
+            .Setup(manager => manager.DeleteDirectoryWithRetryAsync(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .Returns<string, int, int>((path, _, _) =>
+            {
+                if (Directory.Exists(path))
+                    Directory.Delete(path, true);
+                return Task.FromResult(true);
+            });
+        _mockFileSystemManager
+            .Setup(manager => manager.DeleteFileWithRetryAsync(
+                It.IsAny<string>(),
+                It.IsAny<int>(),
+                It.IsAny<int>()))
+            .Returns<string, int, int>((path, _, _) =>
+            {
+                if (File.Exists(path))
+                    File.Delete(path);
+                return Task.FromResult(true);
+            });
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

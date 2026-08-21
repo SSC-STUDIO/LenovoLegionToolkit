@@ -26,7 +26,7 @@ internal readonly struct RegistryKeyValuePackageRule : IPackageRule
         if (Version.TryParse(RemoveNonVersionCharacters(versionString), out var v))
             version = v;
 
-        if (key is null || keyName is null || version is null)
+        if (key is null || keyName is null || version is null || !RegistryRulePath.TrySplit(key, out _, out _))
         {
             value = default;
             return false;
@@ -38,15 +38,12 @@ internal readonly struct RegistryKeyValuePackageRule : IPackageRule
 
     public Task<bool> CheckDependenciesSatisfiedAsync(List<DriverInfo> _1, HttpClient _2, CancellationToken _3)
     {
-        var hive = Key.Split('\\').FirstOrDefault();
-        var path = string.Join('\\', Key.Split('\\').Skip(1));
-
-        if (hive is null || string.IsNullOrEmpty(path))
+        if (!RegistryRulePath.TrySplit(Key, out var hive, out var path))
             return Task.FromResult(false);
 
         var keyExists = Registry.ValueExists(hive, path, KeyName);
         if (!keyExists)
-            return Task.FromResult(true);
+            return Task.FromResult(false);
 
         var versionString = Registry.GetValue(hive, path, KeyName, string.Empty);
 
@@ -59,10 +56,7 @@ internal readonly struct RegistryKeyValuePackageRule : IPackageRule
 
     public Task<bool> DetectInstallNeededAsync(List<DriverInfo> _1, HttpClient _2, CancellationToken _3)
     {
-        var hive = Key.Split('\\').FirstOrDefault();
-        var path = string.Join('\\', Key.Split('\\').Skip(1));
-
-        if (hive is null || string.IsNullOrEmpty(path))
+        if (!RegistryRulePath.TrySplit(Key, out var hive, out var path))
             return Task.FromResult(false);
 
         var keyExists = Registry.ValueExists(hive, path, KeyName);

@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Cryptography;
 
 namespace UniversalDeviceToolkit.Lib.Utils;
 
@@ -8,10 +9,55 @@ namespace UniversalDeviceToolkit.Lib.Utils;
 /// </summary>
 public static class InstallerLaunchPathValidator
 {
+    public const int Sha256HexLength = 64;
+
+    public static bool IsSha256Hex(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value) || value.Length != Sha256HexLength)
+            return false;
+
+        foreach (var character in value)
+        {
+            var isDigit = character is >= '0' and <= '9';
+            var isUpperHex = character is >= 'A' and <= 'F';
+            var isLowerHex = character is >= 'a' and <= 'f';
+            if (!isDigit && !isUpperHex && !isLowerHex)
+                return false;
+        }
+
+        return true;
+    }
+
+    public static bool TryComputeSha256Hex(string? filePath, out string sha256Hex, out string failureReason)
+    {
+        sha256Hex = string.Empty;
+        failureReason = string.Empty;
+
+        if (string.IsNullOrWhiteSpace(filePath))
+        {
+            failureReason = "Installer path is empty.";
+            return false;
+        }
+
+        try
+        {
+            using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            sha256Hex = Convert.ToHexString(SHA256.HashData(stream));
+            return true;
+        }
+        catch (Exception ex)
+        {
+            sha256Hex = string.Empty;
+            failureReason = $"Failed to hash installer file: {ex.Message}";
+            return false;
+        }
+    }
+
     public static bool TryValidateForExecution(
         string? installerPath,
         string? downloadDirectory,
         string? expectedFileName,
+        string? expectedSha256Hex,
         out string normalizedInstallerPath,
         out string failureReason)
     {
@@ -33,6 +79,12 @@ public static class InstallerLaunchPathValidator
         if (string.IsNullOrWhiteSpace(expectedFileName))
         {
             failureReason = "Expected installer file name is empty.";
+            return false;
+        }
+
+        if (!IsSha256Hex(expectedSha256Hex))
+        {
+            failureReason = "Installer checksum is missing or invalid.";
             return false;
         }
 
@@ -95,6 +147,19 @@ public static class InstallerLaunchPathValidator
         {
             normalizedInstallerPath = string.Empty;
             failureReason = "Installer path points to a reparse point.";
+            return false;
+        }
+
+        if (!TryComputeSha256Hex(normalizedInstallerPath, out var actualSha256Hex, out failureReason))
+        {
+            normalizedInstallerPath = string.Empty;
+            return false;
+        }
+
+        if (!string.Equals(actualSha256Hex, expectedSha256Hex, StringComparison.OrdinalIgnoreCase))
+        {
+            normalizedInstallerPath = string.Empty;
+            failureReason = "Installer checksum mismatch.";
             return false;
         }
 

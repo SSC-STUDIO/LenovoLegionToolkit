@@ -72,7 +72,9 @@ public class PluginSignatureValidator : IPluginSignatureValidator
 
     public PluginSignatureValidator(PluginSignatureSettings? settings = null)
     {
-        _settings = settings ?? new PluginSignatureSettings();
+        _settings = PluginSignatureSettings.RelaxedModesAllowed
+            ? settings ?? new PluginSignatureSettings()
+            : PluginSignatureSettings.Production;
     }
 
     /// <summary>
@@ -158,16 +160,8 @@ public class PluginSignatureValidator : IPluginSignatureValidator
 
             if (!authenticodeOk)
             {
-                // A certificate with an invalid digest is still invalid. A package
-                // authorization may replace it only when the exact bytes and path were
-                // committed from a verified official repository transaction.
-                if (_settings.ValidationMode == PluginSignatureValidationMode.AllowUnsigned)
-                {
-                    return new PluginSignatureResult(PluginSignatureStatus.NotSigned,
-                        Resource.Plugin_Error_Signature_NotSigned_AllowUnsigned)
-                    { IsAllowedByPolicy = true };
-                }
-
+                // A certificate with an invalid digest is still invalid, including
+                // AllowUnsigned. That mode only permits files that are not signed.
                 Log.Instance.Warning($"Plugin {dllPath} Authenticode integrity check failed. WinVerifyTrust=0x{trustStatus:X8}");
                 return new PluginSignatureResult(PluginSignatureStatus.Invalid,
                     string.Format(Resource.Plugin_Error_Signature_ValidationFailed, $"WinVerifyTrust=0x{trustStatus:X8}"));

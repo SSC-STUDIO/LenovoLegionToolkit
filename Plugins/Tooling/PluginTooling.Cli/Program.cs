@@ -223,6 +223,7 @@ static async Task<int> ProgramMainAsync(string[] args)
             Profile = profile,
             SkipBuild = HasFlag(argv, "--skip-build"),
             SkipTests = HasFlag(argv, "--skip-tests"),
+            CatalogChannel = ParseCatalogChannel(OptionalValue(argv, "--catalog-channel")),
             PluginIds = selection,
         });
 
@@ -512,7 +513,7 @@ plugin-tooling dev --plugin <plugin-id> [--configuration Release] [--theme syste
 plugin-tooling build --plugin <plugin-id> [--configuration Release]
 plugin-tooling test --plugin <plugin-id> [--configuration Release]
 plugin-tooling preview --plugin <plugin-id> [--theme system|light|dark] [--view feature|settings|optimization]
-plugin-tooling validate [--plugin <plugin-id>|--plugin-ids <id,id>] [--profile contributor|official-candidate|official-release] [--skip-build] [--skip-tests] [--json-report-path <path>]
+plugin-tooling validate [--plugin <plugin-id>|--plugin-ids <id,id>] [--profile contributor|official-candidate|official-release] [--catalog-channel stable|preview] [--skip-build] [--skip-tests] [--json-report-path <path>]
 plugin-tooling package --plugin <plugin-id> [--configuration Release] [--output-dir <path>] [--build-first]
 plugin-tooling migrate [--plugin <plugin-id>|--plugin-ids <id,id>] [--check]
 plugin-tooling sync-version [--plugin <plugin-id>|--plugin-ids <id,id>] [--check]

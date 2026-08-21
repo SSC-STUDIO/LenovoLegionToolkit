@@ -1,15 +1,43 @@
 using System;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Plugins.CustomMouse;
 using Xunit;
 
 namespace UniversalDeviceToolkit.Plugins.CustomMouse.Tests;
 
+[Collection("CustomMouseResourceCulture")]
 public class ThemeWatcherRuntimeTests
 {
-    private ThemeWatcherRuntime CreateRuntime()
+    private static readonly MethodInfo OnDebounceElapsedMethod =
+        typeof(ThemeWatcherRuntime).GetMethod("OnDebounceElapsed", BindingFlags.Instance | BindingFlags.NonPublic)
+        ?? throw new InvalidOperationException("ThemeWatcherRuntime.OnDebounceElapsed was not found.");
+
+    private static readonly TimeSpan EventTimeout = TimeSpan.FromSeconds(10);
+
+    private static ThemeWatcherRuntime CreateRuntime()
     {
         return new ThemeWatcherRuntime();
+    }
+
+    private static void InvokeDebounceElapsed(ThemeWatcherRuntime runtime)
+    {
+        OnDebounceElapsedMethod.Invoke(runtime, [null]);
+    }
+
+    private static bool IsLightOrDark(string? theme)
+    {
+        return string.Equals(theme, "light", StringComparison.Ordinal)
+            || string.Equals(theme, "dark", StringComparison.Ordinal);
+    }
+
+    private static void WaitUntilThemeApplied(ThemeWatcherRuntime runtime)
+    {
+        Assert.True(
+            SpinWait.SpinUntil(() => IsLightOrDark(runtime.PeekLastAppliedTheme()), EventTimeout),
+            "Debounced theme apply should update last-applied theme.");
     }
 
     #region Lifecycle Tests
@@ -19,9 +47,17 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start(null);
+        try
+        {
+            runtime.Start(null);
+            Assert.NotEqual(CancellationToken.None, runtime.GetCancellationToken());
+        }
+        finally
+        {
+            runtime.Stop();
+        }
 
-        runtime.Stop();
+        Assert.Equal(CancellationToken.None, runtime.GetCancellationToken());
     }
 
     [Fact]
@@ -29,13 +65,21 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start(null);
-        runtime.Start(null);
-        runtime.Start(null);
+        try
+        {
+            runtime.Start(null);
+            var firstToken = runtime.GetCancellationToken();
+            runtime.Start(null);
+            runtime.Start(null);
 
-        // Should still be running (only one instance)
-        // Stop should work once
-        runtime.Stop();
+            var currentToken = runtime.GetCancellationToken();
+            Assert.NotEqual(CancellationToken.None, currentToken);
+            Assert.Equal(firstToken, currentToken);
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -44,7 +88,9 @@ public class ThemeWatcherRuntimeTests
         var runtime = CreateRuntime();
 
         runtime.Start(null);
+        Assert.NotEqual(CancellationToken.None, runtime.GetCancellationToken());
         runtime.Stop();
+        Assert.Equal(CancellationToken.None, runtime.GetCancellationToken());
     }
 
     [Fact]
@@ -52,8 +98,8 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        // Should not throw
         runtime.Stop();
+        Assert.Equal(CancellationToken.None, runtime.GetCancellationToken());
     }
 
     [Fact]
@@ -63,8 +109,8 @@ public class ThemeWatcherRuntimeTests
 
         runtime.Start(null);
         runtime.Stop();
-        // Second stop should not throw
         runtime.Stop();
+        Assert.Equal(CancellationToken.None, runtime.GetCancellationToken());
     }
 
     [Fact]
@@ -72,13 +118,21 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start(null);
-        runtime.Stop();
+        try
+        {
+            runtime.Start(null);
+            var firstToken = runtime.GetCancellationToken();
+            runtime.Stop();
 
-        // Should be able to restart
-        runtime.Start(null);
-
-        runtime.Stop();
+            runtime.Start(null);
+            var restartedToken = runtime.GetCancellationToken();
+            Assert.NotEqual(CancellationToken.None, restartedToken);
+            Assert.NotEqual(firstToken, restartedToken);
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     #endregion
@@ -89,15 +143,28 @@ public class ThemeWatcherRuntimeTests
     public void ThemeChanged_Event_CanSubscribe()
     {
         var runtime = CreateRuntime();
-        var subscribed = false;
+        using var invoked = new ManualResetEventSlim(false);
+        string? receivedTheme = null;
 
-        runtime.ThemeChanged += (theme, token) => Task.CompletedTask;
-        subscribed = true;
+        runtime.ThemeChanged += (theme, _) =>
+        {
+            receivedTheme = theme;
+            invoked.Set();
+            return Task.CompletedTask;
+        };
 
-        runtime.Start(null);
-        runtime.Stop();
+        try
+        {
+            runtime.Start(null);
+            InvokeDebounceElapsed(runtime);
 
-        Assert.True(subscribed);
+            Assert.True(invoked.Wait(EventTimeout), "ThemeChanged handler should run after debounce elapsed.");
+            Assert.True(IsLightOrDark(receivedTheme), $"Handler should receive light or dark, actual: {receivedTheme}");
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -106,19 +173,26 @@ public class ThemeWatcherRuntimeTests
         var runtime = CreateRuntime();
         var callCount = 0;
 
-        Func<string, CancellationToken, Task> handler = (theme, token) =>
+        Func<string, CancellationToken, Task> handler = (_, _) =>
         {
-            callCount++;
+            Interlocked.Increment(ref callCount);
             return Task.CompletedTask;
         };
         runtime.ThemeChanged += handler;
         runtime.ThemeChanged -= handler;
 
-        runtime.Start(null);
-        runtime.Stop();
+        try
+        {
+            runtime.Start(null);
+            InvokeDebounceElapsed(runtime);
+            WaitUntilThemeApplied(runtime);
 
-        // After unsubscribe, handler should not be called
-        Assert.Equal(0, callCount);
+            Assert.Equal(0, callCount);
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -126,16 +200,16 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        // No subscriber
-        runtime.Start(null);
-
-        // Wait a bit
-        Thread.Sleep(100);
-
-        runtime.Stop();
-
-        // Should not throw even with no subscribers
-        Assert.True(true);
+        try
+        {
+            runtime.Start(null);
+            InvokeDebounceElapsed(runtime);
+            WaitUntilThemeApplied(runtime);
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     #endregion
@@ -156,13 +230,18 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start(null);
-        var token = runtime.GetCancellationToken();
+        try
+        {
+            runtime.Start(null);
+            var token = runtime.GetCancellationToken();
 
-        Assert.NotEqual(CancellationToken.None, token);
-        Assert.False(token.IsCancellationRequested);
-
-        runtime.Stop();
+            Assert.NotEqual(CancellationToken.None, token);
+            Assert.False(token.IsCancellationRequested);
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -186,9 +265,15 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start(null);
-
-        runtime.Stop();
+        try
+        {
+            runtime.Start(null);
+            Assert.Null(runtime.PeekLastAppliedTheme());
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -196,9 +281,15 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start("light");
-
-        runtime.Stop();
+        try
+        {
+            runtime.Start("light");
+            Assert.Equal("light", runtime.PeekLastAppliedTheme());
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -206,9 +297,15 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start("dark");
-
-        runtime.Stop();
+        try
+        {
+            runtime.Start("dark");
+            Assert.Equal("dark", runtime.PeekLastAppliedTheme());
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -216,9 +313,52 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start("custom-theme");
+        try
+        {
+            runtime.Start("custom-theme");
+            Assert.Equal("custom-theme", runtime.PeekLastAppliedTheme());
+        }
+        finally
+        {
+            runtime.Stop();
+        }
+    }
 
-        runtime.Stop();
+    [Fact]
+    public void Start_WhenAlreadyRunning_UpdatesLastAppliedTheme()
+    {
+        var runtime = CreateRuntime();
+
+        try
+        {
+            runtime.Start("light");
+            Assert.Equal("light", runtime.PeekLastAppliedTheme());
+
+            runtime.Start("dark");
+            Assert.Equal("dark", runtime.PeekLastAppliedTheme());
+        }
+        finally
+        {
+            runtime.Stop();
+        }
+    }
+
+    [Fact]
+    public void NotifyThemeApplied_UpdatesLastAppliedTheme()
+    {
+        var runtime = CreateRuntime();
+
+        try
+        {
+            runtime.Start("light");
+            runtime.NotifyThemeApplied("dark");
+
+            Assert.Equal("dark", runtime.PeekLastAppliedTheme());
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     #endregion
@@ -229,18 +369,22 @@ public class ThemeWatcherRuntimeTests
     public async Task StartAndStop_Concurrently_DoesNotThrow()
     {
         var runtime = CreateRuntime();
+        using var bothReady = new Barrier(2);
 
-        var startTask = Task.Run(() => runtime.Start(null));
+        var startTask = Task.Run(() =>
+        {
+            bothReady.SignalAndWait(EventTimeout);
+            runtime.Start(null);
+        });
         var stopTask = Task.Run(() =>
         {
-            Thread.Sleep(100);
+            bothReady.SignalAndWait(EventTimeout);
             runtime.Stop();
         });
 
-        // Should not throw
         await Task.WhenAll(startTask, stopTask);
-
-        runtime.Stop(); // Should not throw
+        runtime.Stop();
+        Assert.Equal(CancellationToken.None, runtime.GetCancellationToken());
     }
 
     [Fact]
@@ -248,15 +392,21 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        var tasks = new Task[10];
-        for (int i = 0; i < 10; i++)
+        try
         {
-            tasks[i] = Task.Run(() => runtime.Start(null));
+            var tasks = new Task[10];
+            for (int i = 0; i < 10; i++)
+            {
+                tasks[i] = Task.Run(() => runtime.Start(null));
+            }
+
+            await Task.WhenAll(tasks);
+            Assert.NotEqual(CancellationToken.None, runtime.GetCancellationToken());
         }
-
-        await Task.WhenAll(tasks);
-
-        runtime.Stop();
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -273,6 +423,7 @@ public class ThemeWatcherRuntimeTests
         }
 
         await Task.WhenAll(tasks);
+        Assert.Equal(CancellationToken.None, runtime.GetCancellationToken());
     }
 
     #endregion
@@ -284,13 +435,21 @@ public class ThemeWatcherRuntimeTests
     {
         var runtime = CreateRuntime();
 
-        runtime.Start(null);
-        runtime.Stop();
+        try
+        {
+            runtime.Start(null);
+            var firstToken = runtime.GetCancellationToken();
+            runtime.Stop();
 
-        // Second start should work (resources were disposed)
-        runtime.Start(null);
-
-        runtime.Stop();
+            runtime.Start(null);
+            var restartedToken = runtime.GetCancellationToken();
+            Assert.NotEqual(CancellationToken.None, restartedToken);
+            Assert.NotEqual(firstToken, restartedToken);
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     [Fact]
@@ -300,16 +459,15 @@ public class ThemeWatcherRuntimeTests
 
         CreateAndReleaseRuntime(out weakRef);
 
-        // Force GC
         GC.Collect();
         GC.WaitForPendingFinalizers();
         GC.Collect();
 
-        // Runtime should be collectible
         Assert.False(weakRef.IsAlive);
     }
 
-    private void CreateAndReleaseRuntime(out WeakReference weakRef)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static void CreateAndReleaseRuntime(out WeakReference weakRef)
     {
         var runtime = CreateRuntime();
         runtime.Start(null);
@@ -322,36 +480,38 @@ public class ThemeWatcherRuntimeTests
     #region CancellationToken Propagation Tests
 
     [Fact]
-    public async Task ThemeChanged_HandlerReceivesCancelledTokenOnStop()
+    public void ThemeChanged_HandlerReceivesCancelledTokenOnStop()
     {
         var runtime = CreateRuntime();
-        var tokenCancelled = new ManualResetEventSlim(false);
-        var handlerInvoked = new ManualResetEventSlim(false);
+        using var tokenCancelled = new ManualResetEventSlim(false);
+        using var handlerInvoked = new ManualResetEventSlim(false);
 
-        runtime.ThemeChanged += async (theme, token) =>
+        runtime.ThemeChanged += async (_, token) =>
         {
             handlerInvoked.Set();
             try
             {
-                await Task.Delay(5000, token);
+                await Task.Delay(Timeout.Infinite, token);
             }
             catch (OperationCanceledException)
             {
                 tokenCancelled.Set();
             }
-            return;
         };
 
-        runtime.Start(null);
+        try
+        {
+            runtime.Start(null);
+            InvokeDebounceElapsed(runtime);
 
-        // We can't easily trigger UserPreferenceChanged, so this test
-        // primarily verifies the handler signature and token behavior compile correctly.
-        // In integration tests with actual theme changes, the token would be cancelled on Stop().
-
-        runtime.Stop();
-
-        // Verify the runtime stops without hanging
-        Assert.True(true);
+            Assert.True(handlerInvoked.Wait(EventTimeout), "ThemeChanged handler should start before Stop.");
+            runtime.Stop();
+            Assert.True(tokenCancelled.Wait(EventTimeout), "Handler token should cancel when the runtime stops.");
+        }
+        finally
+        {
+            runtime.Stop();
+        }
     }
 
     #endregion

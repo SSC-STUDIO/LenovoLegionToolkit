@@ -4,17 +4,16 @@ import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import { ConfigProvider, message, theme } from 'antd'
 import i18n from './i18n'
-import { getAntDesignLocale } from './i18n/antdLocale'
+import { getAntDesignLocale, loadAntDesignLocale } from './i18n/antdLocale'
 import logger from './utils/logger'
 import { initNotifications } from './notifications'
 import { initCrashReportListener } from './notifications/crashListener'
-import { settingsApi } from './api/settings'
 import {
   onCultureSynchronized,
   registerHostCultureRetry,
   syncCultureToHost
 } from './api/localization'
-import { useSettingsStore } from './stores/settingsStore'
+import { initSettingsSync, useSettingsStore } from './stores/settingsStore'
 import { useOptimizationStore } from './stores/optimizationStore'
 import { useThemeStore } from './stores/themeStore'
 import { useTheme } from './theme/useTheme'
@@ -41,6 +40,17 @@ void initCrashReportListener()
 // notification stack (AppNotificationHost).
 message.config({ maxCount: 3 })
 
+function getUiDirection(language: string): 'ltr' | 'rtl' {
+  const normalized = language.toLowerCase()
+  return normalized === 'ar' || normalized.startsWith('ar-') ? 'rtl' : 'ltr'
+}
+
+function applyDocumentDirection(language: string): void {
+  document.documentElement.dir = getUiDirection(language)
+}
+
+applyDocumentDirection(i18n.language)
+
 /** Apply the saved AnimationsEnabled flag to <html> (drives window/dialog CSS). */
 function applyAnimationsSetting(application?: unknown): void {
   const enabled =
@@ -57,6 +67,7 @@ function Root(): React.JSX.Element {
   const themePreference = useThemeStore((s) => s.themePreference)
   const colorPrimary = useThemeStore((s) => s.colorPrimary)
   const [locale, setLocale] = useState(() => getAntDesignLocale(i18n.language))
+  const [direction, setDirection] = useState(() => getUiDirection(i18n.language))
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', themeMode)
@@ -84,14 +95,26 @@ function Root(): React.JSX.Element {
   }, [colorPrimary])
 
   useEffect(() => {
+    let cancelled = false
+    const applyLanguage = (lng: string): void => {
+      setDirection(getUiDirection(lng))
+      applyDocumentDirection(lng)
+      void loadAntDesignLocale(lng).then((next) => {
+        if (!cancelled) setLocale(next)
+      })
+    }
+    applyLanguage(i18n.language)
     const handleLanguageChanged = (lng: string): void => {
-      setLocale(getAntDesignLocale(lng))
+      applyLanguage(lng)
     }
     i18n.on('languageChanged', handleLanguageChanged)
     return () => {
+      cancelled = true
       i18n.off('languageChanged', handleLanguageChanged)
     }
   }, [])
+
+  useEffect(() => initSettingsSync(), [])
 
   useEffect(() => {
     const offHostReady = registerHostCultureRetry(() => i18n.resolvedLanguage ?? i18n.language)
@@ -111,35 +134,29 @@ function Root(): React.JSX.Element {
 
   useEffect(() => {
     // Apply saved AnimationsEnabled on startup and keep it in sync when the
-    // setting changes (settings.changed event or the Settings page toggle).
+    // store updates (settings.changed via initSettingsSync, or a Settings toggle).
     let disposed = false
     const applyFromScopes = (): void => {
       if (!disposed) applyAnimationsSetting(useSettingsStore.getState().scopes.application)
     }
-    const refreshAnimations = (): void => {
-      void useSettingsStore
-        .getState()
-        .load(['application'])
-        .then(applyFromScopes)
-        .catch((error: unknown) => {
-          if (!disposed) logger.warn('failed to refresh animation settings', error)
-        })
-    }
-    const offChanged = settingsApi.onChanged(({ scope }) => {
-      if (scope === 'application') {
-        refreshAnimations()
-      }
-    })
-    refreshAnimations()
+    const unsubscribe = useSettingsStore.subscribe(applyFromScopes)
+    void useSettingsStore
+      .getState()
+      .load(['application'])
+      .then(applyFromScopes)
+      .catch((error: unknown) => {
+        if (!disposed) logger.warn('failed to refresh animation settings', error)
+      })
     return () => {
       disposed = true
-      offChanged()
+      unsubscribe()
     }
   }, [])
 
   return (
     <ConfigProvider
       locale={locale}
+      direction={direction}
       theme={{
         algorithm: themeMode === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
         cssVar: { key: 'udt' },

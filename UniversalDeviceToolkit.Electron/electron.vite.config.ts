@@ -25,14 +25,22 @@ export default defineConfig({
     build: {
       rollupOptions: {
         output: {
-          // Split heavy vendor libs out of the main entry chunk so each loads
-          // on demand and the renderer keeps its memory footprint smaller:
-          // antd + React → vendor, echarts → charts (only imported by the
-          // dashboard gauges/trends, which are lazy routes).
-          manualChunks: {
-            vendor: ['react', 'react-dom', 'react-router-dom', 'antd'],
-            charts: ['echarts/core', 'echarts/charts', 'echarts/components', 'echarts/renderers'],
-            icons: ['@fluentui/react-icons']
+          // Split only modules that are already in the module graph. Naming a
+          // barrel package (especially @fluentui/react-icons) as a chunk entry
+          // can pull the entire export surface into the renderer.
+          manualChunks(id) {
+            if (id.includes('node_modules/echarts')) return 'charts'
+            if (id.includes('node_modules/@fluentui/react-icons')) return 'icons'
+            if (
+              id.includes('node_modules/antd') ||
+              id.includes('node_modules/@ant-design') ||
+              id.includes('node_modules/react-dom') ||
+              id.includes('node_modules/react-router') ||
+              id.includes('node_modules/react/')
+            ) {
+              return 'vendor'
+            }
+            return undefined
           }
         }
       }

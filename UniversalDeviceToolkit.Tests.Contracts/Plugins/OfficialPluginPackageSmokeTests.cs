@@ -71,6 +71,9 @@ public class OfficialPluginPackageSmokeTests
 
             var actualDll = TryComputeMainDllHashFromZip(zipPath, id);
             actualDll.Should().NotBeNull($"ZIP {zipPath} must contain a main plugin DLL");
+            if (actualDll is null)
+                continue;
+
             actualDll.Should().BeEquivalentTo(fileHash, because: $"store fileHash must match main DLL in {Path.GetFileName(zipPath)}");
 
             // Host verifier accepts matching expected/actual digests.
@@ -107,9 +110,7 @@ public class OfficialPluginPackageSmokeTests
         using var archive = ZipFile.OpenRead(zipPath);
         foreach (var entry in archive.Entries)
         {
-            if (string.IsNullOrEmpty(entry.Name))
-                continue;
-            if (!candidates.Contains(Path.GetFileName(entry.FullName)))
+            if (string.IsNullOrEmpty(entry.Name) || !candidates.Contains(entry.Name))
                 continue;
 
             using var stream = entry.Open();

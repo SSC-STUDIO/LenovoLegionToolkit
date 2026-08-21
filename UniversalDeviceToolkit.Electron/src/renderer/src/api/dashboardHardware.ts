@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invokeObject } from './bridge'
 
 export type DiscreteGpuState =
   | 'Unknown'
@@ -30,24 +30,24 @@ export interface DashboardHardwareState {
 
 export const dashboardHardwareApi = {
   getState(): Promise<DashboardHardwareState> {
-    return invoke<DashboardHardwareState>('dashboardHardware.getState', {})
+    return invokeObject<DashboardHardwareState>('dashboardHardware.getState', {})
   },
   killGpuProcesses(): Promise<{ ok: boolean }> {
-    return invoke<{ ok: boolean }>('dashboardHardware.killGpuProcesses', {})
+    return invokeObject<{ ok: boolean }>('dashboardHardware.killGpuProcesses', {})
   },
   restartGpu(): Promise<{ ok: boolean }> {
-    return invoke<{ ok: boolean }>('dashboardHardware.restartGpu', {})
+    return invokeObject<{ ok: boolean }>('dashboardHardware.restartGpu', {})
   },
   setOverclockEnabled(enabled: boolean): Promise<{ ok: boolean; enabled: boolean }> {
-    return invoke<{ ok: boolean; enabled: boolean }>('dashboardHardware.setOverclockEnabled', { enabled })
+    return invokeObject<{ ok: boolean; enabled: boolean }>('dashboardHardware.setOverclockEnabled', { enabled })
   },
   setOverclock(coreDeltaMhz: number, memoryDeltaMhz: number): Promise<{ ok: boolean }> {
-    return invoke<{ ok: boolean }>('dashboardHardware.setOverclock', { coreDeltaMhz, memoryDeltaMhz })
+    return invokeObject<{ ok: boolean }>('dashboardHardware.setOverclock', { coreDeltaMhz, memoryDeltaMhz })
   },
   setMonitoring(enabled: boolean): Promise<{ ok: boolean; monitoring: boolean }> {
-    return invoke<{ ok: boolean; monitoring: boolean }>('dashboardHardware.setMonitoring', { enabled })
+    return invokeObject<{ ok: boolean; monitoring: boolean }>('dashboardHardware.setMonitoring', { enabled })
   },
   turnOffMonitors(): Promise<{ ok: boolean }> {
-    return invoke<{ ok: boolean }>('dashboardHardware.turnOffMonitors', {})
+    return invokeObject<{ ok: boolean }>('dashboardHardware.turnOffMonitors', {})
   }
 }

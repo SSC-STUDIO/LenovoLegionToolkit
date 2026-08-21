@@ -5,11 +5,21 @@ export type {
   InstallProgress,
   PluginCapabilities,
   PluginInstalledEvent,
+  PluginOperationOutcome,
+  PluginScanOutcome,
   PluginsApi,
   PluginState,
   PluginUpdate,
   PluginView
 } from './pluginsCore'
-export { createPluginsApi } from './pluginsCore'
+export {
+  createPluginsApi,
+  normalizePluginListResult,
+  normalizePluginOperationOutcome,
+  normalizePluginScanOutcome,
+  normalizePluginUninstallOutcome,
+  normalizePluginView,
+  resolvePluginWebPageValue
+} from './pluginsCore'
 
 export const pluginsApi = createPluginsApi(invoke, on)

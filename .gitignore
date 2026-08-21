@@ -705,3 +705,7 @@ build_debug_log.txt
 
 # Local visual-regression / padding screenshots (do not commit)
 /UniversalDeviceToolkit.Electron/_pad_*.png
+
+# I18n translation drafts and run reports
+/Tools/I18nTranslate/_agent_out/
+/Tools/I18nTranslate/reports/

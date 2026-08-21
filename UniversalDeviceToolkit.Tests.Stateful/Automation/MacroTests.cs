@@ -316,15 +316,24 @@ public class MacroControllerEnabledTests
     public void SetEnabled_TogglesIsEnabled_True()
     {
         var settings = new MacroSettings();
-        var dispatcher = new Mock<IMainThreadDispatcher>();
-        dispatcher.Setup(d => d.Dispatch(It.IsAny<Action>())).Callback<Action>(a => a());
-        using var ctrl = new MacroController(settings, dispatcher.Object);
+        var dispatcher = new Mock<IMainThreadDispatcher>(MockBehavior.Strict);
+        MacroController.HookInstallOverride = static () => true;
+        try
+        {
+            using var ctrl = new MacroController(settings, dispatcher.Object);
 
-        ctrl.SetEnabled(true);
-        Assert.True(ctrl.IsEnabled);
+            ctrl.SetEnabled(true);
+            Assert.True(ctrl.IsEnabled);
+            Assert.True(ctrl.IsHookActive);
 
-        ctrl.SetEnabled(false);
-        Assert.False(ctrl.IsEnabled);
+            ctrl.SetEnabled(false);
+            Assert.False(ctrl.IsEnabled);
+            Assert.False(ctrl.IsHookActive);
+        }
+        finally
+        {
+            MacroController.HookInstallOverride = null;
+        }
     }
 }
 

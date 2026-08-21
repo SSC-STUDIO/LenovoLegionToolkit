@@ -1,4 +1,7 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Settings;
 
@@ -111,8 +114,15 @@ public sealed class DashboardGroup
 /// </summary>
 public sealed class HostDashboardSettings() : AbstractSettings<HostDashboardSettings.DashboardSettingsStore>("dashboard.json")
 {
+    public const int CurrentSchemaVersion = 4;
+    public const double MinSensorsRefreshIntervalSeconds = 0.5;
+    public const double MaxSensorsRefreshIntervalSeconds = 30;
+
     public sealed class DashboardSettingsStore
     {
+        /// <summary>Electron <c>DashboardSettingsStore.schemaVersion</c> (schema v4).</summary>
+        public int? SchemaVersion { get; set; } = CurrentSchemaVersion;
+
         public bool ShowSensors { get; set; } = true;
         public double SensorsRefreshIntervalSeconds { get; set; } = 1;
         public List<DashboardGroup>? Groups { get; set; }
@@ -120,22 +130,72 @@ public sealed class HostDashboardSettings() : AbstractSettings<HostDashboardSett
 
     protected override DashboardSettingsStore Default => new()
     {
+        SchemaVersion = CurrentSchemaVersion,
         Groups = DashboardGroup.DefaultGroups,
     };
+
+    protected override void ConfigureJsonSerializerOptions(JsonSerializerOptions options)
+    {
+        options.PropertyNameCaseInsensitive = true;
+    }
 
     public override DashboardSettingsStore? LoadStore()
     {
         var store = base.LoadStore();
-        if (store is not null && store.Groups is not { Count: > 0 })
-            store.Groups = DashboardGroup.DefaultGroups;
-        return store;
+        return store is null ? null : Normalize(store);
     }
 
     public override async Task<DashboardSettingsStore?> LoadStoreAsync()
     {
         var store = await base.LoadStoreAsync().ConfigureAwait(false);
-        if (store is not null && store.Groups is not { Count: > 0 })
-            store.Groups = DashboardGroup.DefaultGroups;
+        return store is null ? null : Normalize(store);
+    }
+
+    /// <summary>
+    /// Clamps the refresh interval to the Electron subscribe range and restores
+    /// built-in groups when the persisted list is empty or contains no items.
+    /// </summary>
+    public static DashboardSettingsStore Normalize(DashboardSettingsStore store)
+    {
+        store.SchemaVersion = CurrentSchemaVersion;
+        store.SensorsRefreshIntervalSeconds = NormalizeRefreshInterval(store.SensorsRefreshIntervalSeconds);
+        store.Groups = NormalizeGroups(store.Groups);
         return store;
+    }
+
+    public void NormalizeStore() => Normalize(Store);
+
+    private static double NormalizeRefreshInterval(double seconds)
+    {
+        if (!double.IsFinite(seconds))
+            return 1;
+        return Math.Clamp(seconds, MinSensorsRefreshIntervalSeconds, MaxSensorsRefreshIntervalSeconds);
+    }
+
+    private static List<DashboardGroup> NormalizeGroups(List<DashboardGroup>? groups)
+    {
+        if (groups is not { Count: > 0 })
+            return DashboardGroup.DefaultGroups;
+
+        var normalized = new List<DashboardGroup>(groups.Count);
+        foreach (var group in groups)
+        {
+            if (!Enum.IsDefined(group.Type))
+                continue;
+
+            var items = (group.Items ?? [])
+                .Where(Enum.IsDefined)
+                .Distinct()
+                .ToList();
+
+            normalized.Add(new DashboardGroup
+            {
+                Type = group.Type,
+                CustomName = string.IsNullOrWhiteSpace(group.CustomName) ? null : group.CustomName.Trim(),
+                Items = items,
+            });
+        }
+
+        return normalized.Count > 0 ? normalized : DashboardGroup.DefaultGroups;
     }
 }

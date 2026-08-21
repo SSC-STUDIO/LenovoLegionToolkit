@@ -306,7 +306,7 @@ function RgbSection(): React.JSX.Element {
                 <span className="udt-kb-zone-color-host">
                   <ColorPicker
                     value={rgbToHex(desc[zone])}
-                    onChange={handleZoneChange(zone)}
+                    onChangeComplete={handleZoneChange(zone)}
                     disabled={!zonesEnabled || vantageBlocked}
                   />
                 </span>
@@ -830,6 +830,18 @@ export default function KeyboardBacklightPage(): React.JSX.Element {
           )}
           <SpectrumSection />
         </>
+      ) : mode === 'white' || mode === 'oneLevelWhite' ? (
+        <div className="udt-kb-unsupported">
+          <Lightbulb24Regular className="udt-kb-unsupported__icon" />
+          <div className="udt-kb-unsupported__text">
+            {t(mode === 'white' ? 'feature.whiteKeyboard' : 'feature.oneLevelWhiteKeyboard')}
+          </div>
+          <div className="udt-kb-unsupported__text">
+            {t(
+              mode === 'white' ? 'feature.whiteKeyboard.desc' : 'feature.oneLevelWhiteKeyboard.desc'
+            )}
+          </div>
+        </div>
       ) : (
         <div className="udt-kb-unsupported">
           <Keyboard24Regular className="udt-kb-unsupported__icon" />

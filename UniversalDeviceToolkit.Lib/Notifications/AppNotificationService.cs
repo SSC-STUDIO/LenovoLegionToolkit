@@ -27,6 +27,7 @@ public sealed class AppNotificationService : IAppNotificationService
             throw new ArgumentException("Title is required.", nameof(request));
 
         var duration = request.Duration ?? ResolveDefaultDuration(request.Severity, request.IsPersistent);
+        var mergeKey = string.IsNullOrWhiteSpace(request.MergeKey) ? null : request.MergeKey.Trim();
         var mergeCount = 1;
         Guid id;
 
@@ -34,20 +35,20 @@ public sealed class AppNotificationService : IAppNotificationService
         {
             PruneMergesLocked();
 
-            if (!string.IsNullOrWhiteSpace(request.MergeKey)
-                && _recentMerges.TryGetValue(request.MergeKey, out var existing)
+            if (mergeKey is not null
+                && _recentMerges.TryGetValue(mergeKey, out var existing)
                 && DateTimeOffset.UtcNow - existing.At <= MergeWindow)
             {
                 // ValueTuple is a copy — write a new tuple back into the dictionary.
                 mergeCount = existing.Count + 1;
                 id = existing.Id;
-                _recentMerges[request.MergeKey] = (id, DateTimeOffset.UtcNow, mergeCount);
+                _recentMerges[mergeKey] = (id, DateTimeOffset.UtcNow, mergeCount);
             }
             else
             {
                 id = request.Id == Guid.Empty ? Guid.NewGuid() : request.Id;
-                if (!string.IsNullOrWhiteSpace(request.MergeKey))
-                    _recentMerges[request.MergeKey!] = (id, DateTimeOffset.UtcNow, 1);
+                if (mergeKey is not null)
+                    _recentMerges[mergeKey] = (id, DateTimeOffset.UtcNow, 1);
             }
         }
 
@@ -59,7 +60,7 @@ public sealed class AppNotificationService : IAppNotificationService
             Severity = request.Severity,
             Duration = duration,
             IsPersistent = request.IsPersistent,
-            MergeKey = request.MergeKey,
+            MergeKey = mergeKey,
             ProgressPercent = request.ProgressPercent,
             CreatedAt = DateTimeOffset.UtcNow
         };
@@ -78,6 +79,22 @@ public sealed class AppNotificationService : IAppNotificationService
     {
         if (id == Guid.Empty)
             return;
+
+        lock (_gate)
+        {
+            List<string>? mergeKeys = null;
+            foreach (var pair in _recentMerges)
+            {
+                if (pair.Value.Id == id)
+                    (mergeKeys ??= []).Add(pair.Key);
+            }
+
+            if (mergeKeys is not null)
+            {
+                foreach (var key in mergeKeys)
+                    _recentMerges.Remove(key);
+            }
+        }
 
         Volatile.Read(ref Changed)?.Invoke(this, new AppNotificationChangedEventArgs
         {

@@ -5,19 +5,75 @@ namespace UniversalDeviceToolkit.Abstractions.PackageDownloader;
 /// </summary>
 public readonly struct PackageInfo
 {
-    public string Id { get; init; }
-    public string Title { get; init; }
-    public string Description { get; init; }
-    public string Version { get; init; }
-    public string Category { get; init; }
-    public string FileName { get; init; }
-    public string FileSize { get; init; }
+    private readonly string? _id;
+    private readonly string? _title;
+    private readonly string? _description;
+    private readonly string? _version;
+    private readonly string? _category;
+    private readonly string? _fileName;
+    private readonly string? _fileSize;
+    private readonly string? _fileLocation;
+    private readonly string? _index;
+
+    public string Id
+    {
+        get => _id ?? string.Empty;
+        init => _id = value;
+    }
+
+    public string Title
+    {
+        get => _title ?? string.Empty;
+        init => _title = value;
+    }
+
+    public string Description
+    {
+        get => _description ?? string.Empty;
+        init => _description = value;
+    }
+
+    public string Version
+    {
+        get => _version ?? string.Empty;
+        init => _version = value;
+    }
+
+    public string Category
+    {
+        get => _category ?? string.Empty;
+        init => _category = value;
+    }
+
+    public string FileName
+    {
+        get => _fileName ?? string.Empty;
+        init => _fileName = value;
+    }
+
+    public string FileSize
+    {
+        get => _fileSize ?? string.Empty;
+        init => _fileSize = value;
+    }
+
     public string? FileCrc { get; init; }
     public DateTime ReleaseDate { get; init; }
     public string? Readme { get; init; }
-    public string FileLocation { get; init; }
+
+    public string FileLocation
+    {
+        get => _fileLocation ?? string.Empty;
+        init => _fileLocation = value;
+    }
+
     public bool IsUpdate { get; init; }
-    public string Index { get; init; }
+
+    public string Index
+    {
+        get => _index ?? string.Empty;
+        init => _index = value;
+    }
 
     /// <summary>
     /// Validates that required fields are present and non-empty.

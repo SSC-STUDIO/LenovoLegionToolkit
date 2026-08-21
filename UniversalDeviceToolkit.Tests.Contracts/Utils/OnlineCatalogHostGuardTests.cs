@@ -20,6 +20,8 @@ public sealed class OnlineCatalogHostGuardTests
         source.Should().Contain("uri.Scheme != Uri.UriSchemeHttps");
         source.Should().Contain("IsAllowedCatalogHost(uri.Host)");
         source.Should().Contain("ssc-studio.github.io");
+        source.Should().Contain("cdn.jsdelivr.net");
+        source.Should().Contain("github.com");
         source.Should().Contain("raw.githubusercontent.com");
         source.Should().Contain("gh-proxy.com");
         source.Should().Contain("ghfast.top");

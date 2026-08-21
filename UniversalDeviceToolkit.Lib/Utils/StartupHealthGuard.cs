@@ -143,6 +143,25 @@ public class StartupHealthGuard
     /// </summary>
     public bool TryRunStep(string name, Action action, out Exception? error)
     {
+        if (action is null)
+        {
+            error = new ArgumentNullException(nameof(action));
+            LogError($"Step '{name}' has a null action.", error);
+            RegisterFailureLocked();
+            return false;
+        }
+
+        return TryRunStep(name, _ => action(), out error);
+    }
+
+    /// <summary>
+    /// Token-observing variant of <see cref="TryRunStep(string, Action, out Exception?)"/>.
+    /// The timeout token is passed into <paramref name="action"/> so cooperative
+    /// steps can abort; a finite timeout still races the call and marks failure
+    /// if the step overruns.
+    /// </summary>
+    public bool TryRunStep(string name, Action<CancellationToken> action, out Exception? error)
+    {
         error = null;
 
         if (string.IsNullOrWhiteSpace(name))
@@ -177,11 +196,29 @@ public class StartupHealthGuard
 
         try
         {
-            // Soft timeout: action is not aborted mid-flight (may hold locks / native
-            // resources). We detect overrun after return via CTS and elapsed wall time
-            // so short budgets remain reliable when timer resolution is coarse (CI VMs).
             var startedMs = Environment.TickCount64;
-            action();
+            if (timeout == Timeout.InfiniteTimeSpan)
+            {
+                action(cts.Token);
+            }
+            else
+            {
+                var run = Task.Run(() => action(cts.Token), cts.Token);
+                var waitMs = timeout.TotalMilliseconds >= int.MaxValue
+                    ? Timeout.Infinite
+                    : Math.Max(1, (int)timeout.TotalMilliseconds);
+                if (!run.Wait(waitMs))
+                {
+                    error = new TimeoutException(
+                        $"Step '{name}' exceeded its timeout of {timeout}.");
+                    LogWarning($"Step '{name}' exceeded its timeout of {timeout}; marking failed.");
+                    RegisterFailureLocked();
+                    return false;
+                }
+
+                run.GetAwaiter().GetResult();
+            }
+
             var elapsedMs = Environment.TickCount64 - startedMs;
             var timedOut = cts.IsCancellationRequested
                 || (timeout != Timeout.InfiniteTimeSpan
@@ -207,6 +244,23 @@ public class StartupHealthGuard
         {
             throw;
         }
+        catch (AggregateException ex)
+        {
+            var inner = ex.InnerException ?? ex;
+            if (inner is OperationCanceledException && cts.IsCancellationRequested)
+            {
+                error = new TimeoutException(
+                    $"Step '{name}' exceeded its timeout of {timeout}.", inner);
+                LogWarning($"Step '{name}' cancelled by timeout after {timeout}; marking failed.", inner);
+                RegisterFailureLocked();
+                return false;
+            }
+
+            error = inner;
+            LogError($"Step '{name}' threw {inner.GetType().Name}.", inner);
+            RegisterFailureLocked();
+            return false;
+        }
         catch (OperationCanceledException ex) when (cts.IsCancellationRequested)
         {
             error = new TimeoutException(
@@ -225,17 +279,42 @@ public class StartupHealthGuard
     }
 
     /// <summary>
-    /// Async-friendly variant of <see cref="TryRunStep"/>. <paramref name="action"/>
-    /// is invoked synchronously inside the lock-equivalent cancellation token
-    /// so timeout enforcement is uniform with the sync overload.
+    /// Async-friendly variant of <see cref="TryRunStep(string, Action, out Exception?)"/>.
+    /// The timeout token races the task via <see cref="Task.WaitAsync(CancellationToken)"/>
+    /// so a hung step cannot block initialization indefinitely.
     /// </summary>
-    public async Task<(bool Ok, Exception? Error)> TryRunStepAsync(string name, Func<Task> action)
+    public Task<(bool Ok, Exception? Error)> TryRunStepAsync(string name, Func<Task> action)
+    {
+        if (action is null)
+        {
+            LogError($"Step '{name}' has a null async action.");
+            RegisterFailureLocked();
+            return Task.FromResult<(bool, Exception?)>((false, new ArgumentNullException(nameof(action))));
+        }
+
+        return TryRunStepAsync(name, _ => action());
+    }
+
+    /// <summary>
+    /// Token-observing async variant. <paramref name="action"/> receives the
+    /// timeout token so cooperative I/O can abort; <see cref="Task.WaitAsync(CancellationToken)"/>
+    /// still bounds the wait if the action ignores cancellation.
+    /// </summary>
+    public async Task<(bool Ok, Exception? Error)> TryRunStepAsync(string name, Func<CancellationToken, Task> action)
     {
         if (action is null)
         {
             LogError($"Step '{name}' has a null async action.");
             RegisterFailureLocked();
             return (false, new ArgumentNullException(nameof(action)));
+        }
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            var error = new ArgumentException("Step name must not be null or whitespace.", nameof(name));
+            LogError("Refusing to run step with empty name.", error);
+            RegisterFailureLocked();
+            return (false, error);
         }
 
         TimeSpan timeout;
@@ -254,7 +333,7 @@ public class StartupHealthGuard
 
         try
         {
-            await action().ConfigureAwait(false);
+            await action(cts.Token).WaitAsync(cts.Token).ConfigureAwait(false);
 
             if (cts.IsCancellationRequested)
             {
@@ -274,6 +353,13 @@ public class StartupHealthGuard
         catch (StackOverflowException)
         {
             throw;
+        }
+        catch (TimeoutException ex)
+        {
+            var wrapped = new TimeoutException($"Step '{name}' exceeded its timeout of {timeout}.", ex);
+            LogWarning($"Step '{name}' exceeded its timeout of {timeout}; marking failed.", wrapped);
+            RegisterFailureLocked();
+            return (false, wrapped);
         }
         catch (OperationCanceledException ex) when (cts.IsCancellationRequested)
         {

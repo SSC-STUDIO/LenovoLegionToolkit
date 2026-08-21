@@ -19,6 +19,8 @@ public class OfficialPluginWebPageTests
         Assert.Contains("plugin.customMouse.applyCursorThemeNow", html, StringComparison.Ordinal);
         Assert.Contains("plugin.customMouse.syncFromWindows", html, StringComparison.Ordinal);
         Assert.Contains("plugin.customMouse.restoreWindowsDefault", html, StringComparison.Ordinal);
+        Assert.Contains("result.ok === false", html, StringComparison.Ordinal);
+        Assert.Contains("selected === 0", html, StringComparison.Ordinal);
         Assert.DoesNotContain("DPI", html, StringComparison.OrdinalIgnoreCase);
         Assert.DoesNotContain("polling", html, StringComparison.OrdinalIgnoreCase);
     }

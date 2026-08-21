@@ -11,6 +11,18 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors;
 
 internal static class SensorReadingHelper
 {
+    /// <summary>
+    /// LibreHardwareMonitor <c>SensorType.Data</c> is GiB; <c>SensorType.SmallData</c> is MiB.
+    /// Normalize both to GiB so VRAM used/total/free can be combined without a 1024x error.
+    /// </summary>
+    public static float NormalizeLibreHardwareMonitorDataToGigabytes(float value, bool isMegabyteScale)
+    {
+        if (value < 0)
+            return value;
+
+        return isMegabyteScale ? value / 1024f : value;
+    }
+
     public static int NormalizePowerReadingToWatts(object? value)
     {
         if (!TryConvertToDouble(value, out var raw) || raw <= 0)

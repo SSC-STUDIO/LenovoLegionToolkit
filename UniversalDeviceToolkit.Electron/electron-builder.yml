@@ -141,13 +141,11 @@ mac:
   # Mac app icon: buildResources/icon.icns (generated from icon-512.png via
   # electron-icon-builder) is auto-detected by electron-builder; no explicit
   # mac.icon needed.
-  # TODO(mac signing/notarization): uncomment once a Developer ID certificate is
-  # available (CSC_LINK + CSC_KEY_PASSWORD). Without credentials both signing and
-  # notarization fail, so they are intentionally left off:
-  #   hardenedRuntime: true
-  #   entitlements: buildResources/entitlements.mac.plist
-  #   entitlementsInherit: buildResources/entitlements.mac.plist
-  #   notarize: false   # flip to the notarize block once APPLE_ID/APPLE_PASSWORD are set
+  # Unsigned local/CI DMGs. This repo has no Developer ID, entitlements plist,
+  # or Apple notarization credentials. Do not invent certificates. Notarization
+  # is disabled; Gatekeeper will warn until a real identity is configured outside
+  # this file.
+  notarize: false
 linux:
   target:
     - target: AppImage

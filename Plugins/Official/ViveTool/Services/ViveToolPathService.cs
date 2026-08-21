@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.Core;
+using UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
@@ -158,31 +159,36 @@ public class ViveToolPathService
                 return true;
             }
 
-            if (!File.Exists(filePath))
+            if (!ViveToolPathGuard.TryNormalizeExecutablePath(filePath, out var normalizedPath))
             {
-                PluginLog.Trace($"ViveTool: Specified file does not exist: {filePath}");
+                PluginLog.Trace($"ViveTool: Specified path is not a safe executable path: {filePath}");
                 return false;
             }
 
-            // Verify it's actually vivetool.exe
-            var fileName = Path.GetFileName(filePath);
+            if (!File.Exists(normalizedPath))
+            {
+                PluginLog.Trace($"ViveTool: Specified file does not exist: {normalizedPath}");
+                return false;
+            }
+
+            var fileName = Path.GetFileName(normalizedPath);
             if (!fileName.Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase))
             {
-                PluginLog.Trace($"ViveTool: Specified file is not vivetool.exe: {filePath}");
+                PluginLog.Trace($"ViveTool: Specified file is not vivetool.exe: {normalizedPath}");
                 return false;
             }
 
-            if (!IsInstallComplete(Path.GetDirectoryName(filePath)))
+            if (!IsInstallComplete(Path.GetDirectoryName(normalizedPath)))
             {
-                PluginLog.Trace($"ViveTool: Specified path does not include the full ViVeTool runtime: {filePath}");
+                PluginLog.Trace($"ViveTool: Specified path does not include the full ViVeTool runtime: {normalizedPath}");
                 return false;
             }
 
-            _settings.ViveToolPath = filePath;
-            _cachedViveToolPath = filePath;
+            _settings.ViveToolPath = normalizedPath;
+            _cachedViveToolPath = normalizedPath;
             await _settings.SaveAsync().ConfigureAwait(false);
 
-            PluginLog.Trace($"ViveTool: Path set to: {filePath}");
+            PluginLog.Trace($"ViveTool: Path set to: {normalizedPath}");
 
             return true;
         }
@@ -234,16 +240,17 @@ public class ViveToolPathService
 
     private static bool IsTrustedViveToolPath(string? viveToolPath)
     {
-        if (string.IsNullOrWhiteSpace(viveToolPath) || !File.Exists(viveToolPath))
+        if (!ViveToolPathGuard.TryNormalizeExecutablePath(viveToolPath, out var normalizedPath) ||
+            !File.Exists(normalizedPath))
         {
             return false;
         }
 
-        if (!Path.GetFileName(viveToolPath).Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase))
+        if (!Path.GetFileName(normalizedPath).Equals(ViveToolExeName, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        return IsInstallComplete(Path.GetDirectoryName(viveToolPath));
+        return IsInstallComplete(Path.GetDirectoryName(normalizedPath));
     }
 }

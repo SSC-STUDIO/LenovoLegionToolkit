@@ -91,7 +91,8 @@ public sealed class ShellIntegrationConfigService
         }
 
         var legacyProfilePath = Path.Combine(LegacyLocalProfileRoot, "profile.json");
-        if (string.Equals(LocalProfilePath, legacyProfilePath, StringComparison.OrdinalIgnoreCase))
+        if (string.Equals(LocalProfilePath, legacyProfilePath, StringComparison.OrdinalIgnoreCase) ||
+            IsUnderLegacyLenovoRoot(LocalProfilePath))
         {
             return;
         }
@@ -104,7 +105,20 @@ public sealed class ShellIntegrationConfigService
         try
         {
             Directory.CreateDirectory(LocalProfileRoot);
-            File.Copy(legacyProfilePath, LocalProfilePath, overwrite: false);
+            // Copy only: never write the LenovoLegionToolkit source. Temp + Move
+            // so a crash cannot leave a truncated profile.json at the UDT path
+            // (which would then block remigration on the next load).
+            var tempPath = LocalProfilePath + ".tmp";
+            try
+            {
+                File.Copy(legacyProfilePath, tempPath, overwrite: true);
+                File.Move(tempPath, LocalProfilePath, overwrite: false);
+            }
+            catch
+            {
+                DeleteIfExists(tempPath);
+                throw;
+            }
         }
         catch (Exception ex)
         {
@@ -159,12 +173,17 @@ public sealed class ShellIntegrationConfigService
                     throw new ArgumentException("Profile file path is required.", nameof(filePath));
                 }
 
-                if (!File.Exists(filePath))
+                if (!TryNormalizeUserFilePath(filePath, out var normalizedPath))
                 {
-                    throw new FileNotFoundException("Profile file was not found.", filePath);
+                    throw new ArgumentException("Profile file path is invalid.", nameof(filePath));
                 }
 
-                var json = File.ReadAllText(filePath, Encoding.UTF8);
+                if (!File.Exists(normalizedPath))
+                {
+                    throw new FileNotFoundException("Profile file was not found.", normalizedPath);
+                }
+
+                var json = File.ReadAllText(normalizedPath, Encoding.UTF8);
                 var loaded = JsonSerializer.Deserialize<ShellIntegrationProfile>(json, _jsonOptions) ?? throw new InvalidDataException("Profile file is empty or invalid.");
                 profile = loaded.Normalize();
                 errorMessage = null;
@@ -186,20 +205,14 @@ public sealed class ShellIntegrationConfigService
 
         lock (_fileLock)
         {
+            if (IsUnderLegacyLenovoRoot(LocalProfilePath))
+            {
+                throw new InvalidOperationException("The legacy LenovoLegionToolkit profile is read-only and must only be copied to the UniversalDeviceToolkit path.");
+            }
+
             Directory.CreateDirectory(LocalProfileRoot);
             var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
-            // Atomic write: temp file + File.Move prevents profile corruption on crash
-            var tempPath = LocalProfilePath + ".tmp";
-            try
-            {
-                File.WriteAllText(tempPath, json, new UTF8Encoding(false));
-                File.Move(tempPath, LocalProfilePath, overwrite: true);
-            }
-            catch
-            {
-                DeleteIfExists(tempPath);
-                throw;
-            }
+            AtomicWriteAllText(LocalProfilePath, json);
         }
     }
 
@@ -230,7 +243,17 @@ public sealed class ShellIntegrationConfigService
                     throw new ArgumentException("Export file path is required.", nameof(filePath));
                 }
 
-                var directoryPath = Path.GetDirectoryName(filePath);
+                if (!TryNormalizeUserFilePath(filePath, out var normalizedPath))
+                {
+                    throw new ArgumentException("Export file path is invalid.", nameof(filePath));
+                }
+
+                if (IsUnderLegacyLenovoRoot(normalizedPath))
+                {
+                    throw new InvalidOperationException("Export must not write the legacy LenovoLegionToolkit profile.");
+                }
+
+                var directoryPath = Path.GetDirectoryName(normalizedPath);
                 if (string.IsNullOrWhiteSpace(directoryPath))
                 {
                     throw new ArgumentException("Export file path must include a directory.", nameof(filePath));
@@ -238,7 +261,7 @@ public sealed class ShellIntegrationConfigService
 
                 Directory.CreateDirectory(directoryPath);
                 var json = JsonSerializer.Serialize(profile.Normalize(), _jsonOptions);
-                File.WriteAllText(filePath, json, new UTF8Encoding(false));
+                AtomicWriteAllText(normalizedPath, json);
                 errorMessage = null;
                 return true;
             }
@@ -479,6 +502,39 @@ theme
         return UpsertManagedImportBlock(existingContent, GetRelativeManagedImportStatements());
     }
 
+    public static string RemoveManagedImportBlock(string existingContent)
+    {
+        if (string.IsNullOrWhiteSpace(existingContent))
+        {
+            return string.Empty;
+        }
+
+        var cleaned = ManagedBlockReplaceRegex.Replace(existingContent, string.Empty).TrimEnd();
+        return string.IsNullOrWhiteSpace(cleaned) ? string.Empty : cleaned + Environment.NewLine;
+    }
+
+    public bool TryRemoveManagedImportBlock(string? shellInstallPath)
+    {
+        var paths = ResolveManagedPaths(shellInstallPath);
+        if (paths is null)
+        {
+            return false;
+        }
+
+        if (!File.Exists(paths.ShellConfigPath))
+        {
+            return true;
+        }
+
+        lock (_staticFileLock)
+        {
+            var existingContent = File.ReadAllText(paths.ShellConfigPath, Encoding.UTF8);
+            WriteFileIfChangedUnlocked(paths.ShellConfigPath, RemoveManagedImportBlock(existingContent));
+        }
+
+        return true;
+    }
+
     private static string UpsertManagedImportBlock(string existingContent, IEnumerable<string> importStatements)
     {
         var block = BuildManagedImportBlock(importStatements);
@@ -601,14 +657,17 @@ theme
             return;
         }
 
+        AtomicWriteAllText(path, content);
+    }
+
+    private static void AtomicWriteAllText(string path, string content)
+    {
         var directory = Path.GetDirectoryName(path);
         if (!string.IsNullOrWhiteSpace(directory))
         {
             Directory.CreateDirectory(directory);
         }
 
-        // Atomic write: temp file + File.Move(overwrite) so a crash cannot
-        // leave a partially-written file at the target path.
         var tempPath = path + ".tmp";
         try
         {
@@ -619,6 +678,83 @@ theme
         {
             DeleteIfExists(tempPath);
             throw;
+        }
+    }
+
+    private static bool TryNormalizeUserFilePath(string? filePath, out string normalizedPath)
+    {
+        normalizedPath = string.Empty;
+        if (ContainsUnsafePathSegment(filePath))
+        {
+            return false;
+        }
+
+        try
+        {
+            var fullPath = Path.GetFullPath(filePath!);
+            if (string.IsNullOrWhiteSpace(fullPath) || ContainsUnsafePathSegment(fullPath))
+            {
+                return false;
+            }
+
+            var fileName = Path.GetFileName(fullPath);
+            if (string.IsNullOrWhiteSpace(fileName) || fileName.Contains(':', StringComparison.Ordinal))
+            {
+                return false;
+            }
+
+            normalizedPath = fullPath;
+            return true;
+        }
+        catch (Exception ex) when (ex is ArgumentException or PathTooLongException or NotSupportedException or IOException)
+        {
+            return false;
+        }
+    }
+
+    private static bool ContainsUnsafePathSegment(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            return true;
+        }
+
+        if (path.Contains('\0', StringComparison.Ordinal) ||
+            path.Contains("..", StringComparison.Ordinal))
+        {
+            return true;
+        }
+
+        return path.StartsWith(@"\\.\", StringComparison.Ordinal) ||
+               path.StartsWith(@"\\?\", StringComparison.Ordinal) ||
+               path.StartsWith("//./", StringComparison.Ordinal) ||
+               path.StartsWith("//?/", StringComparison.Ordinal);
+    }
+
+    private static bool IsUnderLegacyLenovoRoot(string path)
+    {
+        var localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        if (string.IsNullOrWhiteSpace(localAppData) || string.IsNullOrWhiteSpace(path))
+        {
+            return false;
+        }
+
+        try
+        {
+            var legacyRoot = Path.GetFullPath(Path.Combine(localAppData, "LenovoLegionToolkit"));
+            if (!legacyRoot.EndsWith(Path.DirectorySeparatorChar) &&
+                !legacyRoot.EndsWith(Path.AltDirectorySeparatorChar))
+            {
+                legacyRoot += Path.DirectorySeparatorChar;
+            }
+
+            var fullPath = Path.GetFullPath(path);
+            return fullPath.StartsWith(legacyRoot, StringComparison.OrdinalIgnoreCase) ||
+                   fullPath.Equals(legacyRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar), StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception ex) when (ex is ArgumentException or PathTooLongException or NotSupportedException or IOException)
+        {
+            return false;
         }
     }
 
@@ -647,9 +783,21 @@ theme
             return null;
         }
 
+        var languageRoot = Path.GetFullPath(languageDirectory);
+        if (!languageRoot.EndsWith(Path.DirectorySeparatorChar) &&
+            !languageRoot.EndsWith(Path.AltDirectorySeparatorChar))
+        {
+            languageRoot += Path.DirectorySeparatorChar;
+        }
+
         foreach (var candidate in GetLanguageFileCandidates(preferredCulture))
         {
-            var path = Path.Combine(languageDirectory, candidate);
+            var path = Path.GetFullPath(Path.Combine(languageDirectory, candidate));
+            if (!path.StartsWith(languageRoot, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
             if (File.Exists(path))
             {
                 return path;
@@ -666,7 +814,9 @@ theme
 
         void AddCandidate(string? name)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name) ||
+                name.Contains("..", StringComparison.Ordinal) ||
+                name.IndexOfAny(['/', '\\', '\0']) >= 0)
             {
                 return;
             }

@@ -10,7 +10,14 @@ import { createInstance } from 'i18next'
 import { I18nextProvider, initReactI18next } from 'react-i18next'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { createServer } from 'vite'
-import { createPluginsApi } from '../src/renderer/src/api/pluginsCore.ts'
+import {
+  createPluginsApi,
+  normalizePluginListResult,
+  normalizePluginOperationOutcome,
+  normalizePluginScanOutcome,
+  normalizePluginUninstallOutcome,
+  resolvePluginWebPageValue
+} from '../src/renderer/src/api/pluginsCore.ts'
 import {
   filterPlugins,
   pluginCardActions,
@@ -24,7 +31,8 @@ import {
   buildPluginPageSource,
   buildPluginPartition,
   buildPluginPreloadUrl,
-  fileUrlFromAbsolutePath
+  fileUrlFromAbsolutePath,
+  resolvePluginWebPageEntry
 } from '../src/renderer/src/components/plugins/pluginPageViewModel.ts'
 import {
   createPluginsStoreState,
@@ -252,6 +260,103 @@ test('plugin API maps renderer calls and event subscriptions to bridge contracts
   offInstalled()
   offUninstalled()
   assert.ok(subscriptions.every(({ removed }) => removed))
+})
+
+test('plugin API never treats missing or degraded outcomes as success', async () => {
+  assert.deepEqual(normalizePluginOperationOutcome(undefined), {
+    ok: false,
+    degraded: false,
+    unloadPending: false,
+    recoveryId: null,
+    recoveryPath: null,
+    error: null
+  })
+  assert.equal(normalizePluginOperationOutcome({}).ok, false)
+  assert.equal(normalizePluginOperationOutcome({ ok: true }).ok, true)
+  assert.equal(normalizePluginOperationOutcome({ ok: true, degraded: true }).ok, false)
+  assert.equal(normalizePluginOperationOutcome({ ok: true, unloadPending: true }).ok, false)
+  assert.equal(normalizePluginOperationOutcome({ Success: true, Degraded: true }).ok, false)
+  assert.equal(normalizePluginUninstallOutcome({ ok: false, dependencyBlocked: true }).ok, false)
+  assert.equal(
+    normalizePluginUninstallOutcome({ ok: false, dependencyBlocked: true }).dependencyBlocked,
+    true
+  )
+  assert.equal(normalizePluginScanOutcome({ registeredCount: 3 }).ok, false)
+  assert.equal(normalizePluginScanOutcome({ ok: true, registeredCount: 3 }).ok, true)
+  assert.equal(normalizePluginScanOutcome({ ok: true, degraded: true }).ok, false)
+
+  const invoke = async (method) => {
+    if (method === 'plugins.install') return { ok: true, degraded: true, error: 'held' }
+    if (method === 'plugins.uninstall') return { ok: true, unloadPending: true }
+    if (method === 'plugins.import') return {}
+    if (method === 'plugins.refresh') return { registeredCount: 2 }
+    return {}
+  }
+  const api = createPluginsApi(invoke, () => () => undefined)
+  assert.equal((await api.install('alpha')).ok, false)
+  assert.equal((await api.uninstall('beta')).ok, false)
+  assert.equal((await api.importFile('gamma.zip')).ok, false)
+  assert.equal((await api.refresh()).ok, false)
+})
+
+test('plugin list keeps webPage display data from strings and contribution objects', async () => {
+  assert.equal(resolvePluginWebPageValue('web/index.html'), 'web/index.html')
+  assert.equal(resolvePluginWebPageValue({ entry: 'web/index.html' }), 'web/index.html')
+  assert.equal(resolvePluginWebPageValue({ Entry: '  web/home.html  ' }), 'web/home.html')
+  assert.equal(resolvePluginWebPageValue(''), null)
+  assert.equal(resolvePluginWebPageValue({}), null)
+
+  const listed = normalizePluginListResult({
+    Online: true,
+    Plugins: [
+      {
+        Id: 'custom-mouse',
+        Name: 'Cursor',
+        State: 'Installed',
+        Directory: 'C:\\UDT\\plugins\\custom-mouse',
+        WebPage: { entry: 'web/index.html' },
+        Capabilities: { webPage: true }
+      },
+      {
+        id: 'shell',
+        name: 'Shell',
+        state: 'Installed',
+        directory: 'C:\\UDT\\plugins\\shell',
+        webPage: 'web/index.html'
+      },
+      { name: 'missing-id' }
+    ]
+  })
+  assert.equal(listed.online, true)
+  assert.equal(listed.plugins.length, 2)
+  assert.equal(listed.plugins[0].webPage, 'web/index.html')
+  assert.equal(listed.plugins[0].directory, 'C:\\UDT\\plugins\\custom-mouse')
+  assert.equal(listed.plugins[0].capabilities.webPage, true)
+  assert.equal(listed.plugins[1].webPage, 'web/index.html')
+
+  const api = createPluginsApi(async (method) => {
+    if (method === 'plugins.list') {
+      return {
+        plugins: [
+          {
+            id: 'vive',
+            name: 'Vive',
+            state: 'Installed',
+            directory: 'C:\\UDT\\plugins\\vive',
+            webPage: { Entry: 'web/index.html' }
+          }
+        ],
+        online: true
+      }
+    }
+    return {}
+  }, () => () => undefined)
+  const result = await api.list()
+  assert.equal(result.plugins[0].webPage, 'web/index.html')
+  assert.equal(
+    buildPluginPageSource(result.plugins[0].directory, result.plugins[0].webPage),
+    'file:///C:/UDT/plugins/vive/web/index.html'
+  )
 })
 
 test('plugin filters cover all states and searchable fields', () => {
@@ -660,6 +765,29 @@ test('webview URLs and partitions are deterministic and path-safe', () => {
   }
   assert.equal(fileUrlFromAbsolutePath('relative/plugin-host.js'), null)
   assert.equal(fileUrlFromAbsolutePath('C:\\UDT\\..\\outside.js'), null)
+  assert.equal(resolvePluginWebPageEntry({ entry: 'web/index.html' }), 'web/index.html')
+  assert.equal(
+    buildPluginPageSource('C:\\UDT\\plugins\\alpha', { entry: 'web/index.html' }),
+    'file:///C:/UDT/plugins/alpha/web/index.html'
+  )
+  assert.equal(
+    buildPluginPageSource(
+      '\\\\?\\C:\\UDT\\plugins\\alpha',
+      'C:\\UDT\\plugins\\alpha\\web\\index.html'
+    ),
+    'file:///C:/UDT/plugins/alpha/web/index.html'
+  )
+  assert.equal(
+    buildPluginPageSource(
+      'file:///C:/UDT/plugins/alpha',
+      'file:///C:/UDT/plugins/alpha/web/index.html'
+    ),
+    'file:///C:/UDT/plugins/alpha/web/index.html'
+  )
+  assert.equal(
+    buildPluginPageSource('C:\\UDT\\plugins\\alpha', 'file:///C:/outside/index.html'),
+    null
+  )
 
   const partition = buildPluginPartition('vendor/plugin:alpha?#')
   assert.equal(partition, 'persist:plugin-vendor%2Fplugin%3Aalpha%3F%23')
@@ -889,6 +1017,19 @@ describe('plugin renderer components', () => {
     ])
     assert.match(embeddedLoading, /Loading plugin page\.\.\./)
     assert.match(embeddedLoading, /Alpha/)
+
+    const fromContribution = renderPluginPage('alpha', [
+      plugin({
+        id: 'alpha',
+        name: 'Alpha',
+        installedVersion: '1.0.0',
+        state: 'Installed',
+        directory: 'C:\\UDT\\plugins\\alpha',
+        webPage: { entry: 'web/index.html' }
+      })
+    ])
+    assert.match(fromContribution, /Loading plugin page\.\.\./)
+    assert.doesNotMatch(fromContribution, /This plugin has no web interface\./)
   })
 
   test('PluginExtensionsPage renders counts, failures, and gated actions', () => {
@@ -919,6 +1060,13 @@ describe('plugin renderer components', () => {
         id: 'system',
         name: 'System Local',
         isSystemPlugin: true
+      }),
+      plugin({
+        id: 'delta',
+        name: 'Delta Page',
+        state: 'Installed',
+        directory: 'C:\\UDT\\plugins\\delta',
+        webPage: { entry: 'web/index.html' }
       })
     ]
     const markup = renderExtensions(plugins, 'Plugin operation failed')
@@ -926,11 +1074,12 @@ describe('plugin renderer components', () => {
       /udt-plugins-page__metric-value">(\d+)</g
     )].map((match) => Number(match[1]))
 
-    assert.deepEqual(metricValues, [4, 2, 1])
+    assert.deepEqual(metricValues, [5, 2, 1])
     assert.match(markup, /Plugin operation failed/)
     assert.match(markup, /aria-label="Configure Alpha Settings"/)
     assert.match(markup, /aria-label="Open Alpha Settings"/)
     assert.match(markup, /aria-label="Open plugin page Beta Web"/)
+    assert.match(markup, /aria-label="Open plugin page Delta Page"/)
     assert.match(markup, /aria-label="Update Beta Web"/)
     assert.match(markup, /aria-label="Install Gamma Remote"/)
     assert.doesNotMatch(markup, /aria-label="Configure Gamma Remote"/)

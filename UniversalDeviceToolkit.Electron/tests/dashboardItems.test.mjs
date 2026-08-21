@@ -4,6 +4,11 @@ import {
   DEFAULT_DASHBOARD_GROUPS,
   resolveDashboardFeature
 } from '../src/renderer/src/components/dashboard-parity/dashboardItems.ts'
+import { resolveSensorViewPhase } from '../src/renderer/src/components/dashboard/sensorViewPhase.ts'
+import {
+  createUiVisibilityGate,
+  mergeUiVisibility
+} from '../src/renderer/src/utils/uiVisibility.ts'
 
 function info(key, supported = true) {
   return { key, supported, stateType: 'TestState' }
@@ -78,4 +83,48 @@ test('unsupported features still resolve when present; special items stay null',
   assert.equal(resolveDashboardFeature('DiscreteGpu', {}), null)
   assert.equal(resolveDashboardFeature('OverclockDiscreteGpu', {}), null)
   assert.equal(resolveDashboardFeature('TurnOffMonitors', {}), null)
+})
+
+test('UI visibility is active only when document and app are both visible', () => {
+  assert.equal(mergeUiVisibility(true, true), true)
+  assert.equal(mergeUiVisibility(true, false), false)
+  assert.equal(mergeUiVisibility(false, true), false)
+  assert.equal(mergeUiVisibility(false, false), false)
+})
+
+test('visibility gate emits only when the merged documentVisible && appVisible value changes', () => {
+  const seen = []
+  const gate = createUiVisibilityGate((active) => {
+    seen.push(active)
+  })
+
+  gate.setDocumentVisible(true)
+  gate.setAppVisible(true)
+  assert.deepEqual(seen, [true])
+
+  gate.setDocumentVisible(true)
+  gate.setAppVisible(true)
+  assert.deepEqual(seen, [true])
+
+  gate.setAppVisible(false)
+  assert.deepEqual(seen, [true, false])
+
+  gate.setDocumentVisible(false)
+  assert.deepEqual(seen, [true, false])
+
+  gate.setAppVisible(true)
+  assert.deepEqual(seen, [true, false])
+
+  gate.setDocumentVisible(true)
+  assert.deepEqual(seen, [true, false, true])
+  assert.equal(gate.getActive(), true)
+})
+
+test('sensor view phase leaves a failed snapshot on error instead of perpetual loading', () => {
+  assert.equal(resolveSensorViewPhase(null, 'idle'), 'idle')
+  assert.equal(resolveSensorViewPhase(null, 'loading'), 'loading')
+  assert.equal(resolveSensorViewPhase(null, 'error'), 'error')
+  assert.equal(resolveSensorViewPhase(null, 'ready'), 'error')
+  assert.equal(resolveSensorViewPhase({ ts: '1' }, 'loading'), 'ready')
+  assert.equal(resolveSensorViewPhase({ ts: '1' }, 'error'), 'ready')
 })

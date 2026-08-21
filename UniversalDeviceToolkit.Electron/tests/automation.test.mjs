@@ -4,6 +4,7 @@ import test from 'node:test'
 import { createStore } from 'zustand/vanilla'
 import {
   appendAutomationStep,
+  commitAutomationDraft,
   createAutomationPipeline,
   formatAutomationPipelineSubtitle,
   formatAutomationPipelineTitle,
@@ -13,6 +14,7 @@ import {
   removeAutomationStep,
   splitAutomationPipelines
 } from '../src/renderer/src/components/automation/pipelineHelpers.ts'
+import { resolveAutomationDialogKey } from '../src/renderer/src/components/automation/automationDialog.ts'
 import { formatStepSummary } from '../src/renderer/src/components/automation/steps.ts'
 import { createAutomationStoreState } from '../src/renderer/src/stores/automationStoreCore.ts'
 
@@ -399,6 +401,19 @@ test('save and toggle failures stay visible without mutating store state', async
     assert.equal(refreshCount, 0)
   })
 
+  await t.test('rejected save response uses host error when provided', async () => {
+    const store = createAutomationStore(
+      createMockAutomationApi({
+        savePipelines: async () => ({ saved: false, error: 'quota exceeded' })
+      })
+    )
+    store.setState({ state: initialState })
+
+    assert.equal(await store.getState().save([], false), false)
+    assert.strictEqual(store.getState().state, initialState)
+    assert.equal(store.getState().error, 'quota exceeded')
+  })
+
   await t.test('rejected enabled toggle', async () => {
     const store = createAutomationStore(
       createMockAutomationApi({
@@ -430,6 +445,42 @@ test('run-now failures are exposed and later success clears stale errors', async
   fail = false
   assert.equal(await store.getState().runNow(PIPELINE_A), true)
   assert.equal(store.getState().error, null)
+})
+
+test('run-now rejected flag keeps store state and surfaces an explicit error', async () => {
+  const store = createAutomationStore(
+    createMockAutomationApi({
+      runNow: async () => ({ ok: false, message: 'pipeline is exclusive' })
+    })
+  )
+
+  assert.equal(await store.getState().runNow(PIPELINE_A), false)
+  assert.equal(store.getState().error, 'pipeline is exclusive')
+  store.getState().clearError()
+  assert.equal(store.getState().error, null)
+})
+
+test('failed save or revert commits keep the dirty draft', () => {
+  const draft = [pipeline(PIPELINE_A, null, [{ $type: 'notification' }], 'Draft')]
+  const canonical = [pipeline(PIPELINE_B, null, [], 'Saved')]
+
+  assert.deepEqual(commitAutomationDraft(false, draft, canonical), {
+    value: draft,
+    dirty: true
+  })
+  assert.strictEqual(commitAutomationDraft(false, draft, canonical).value, draft)
+  assert.deepEqual(commitAutomationDraft(true, draft, canonical), {
+    value: canonical,
+    dirty: false
+  })
+})
+
+test('automation dialog keys close on Escape and wrap Tab at the edges', () => {
+  assert.equal(resolveAutomationDialogKey('Escape', false, 3, 1), 'close')
+  assert.equal(resolveAutomationDialogKey('Tab', false, 3, 2), 'wrap-end')
+  assert.equal(resolveAutomationDialogKey('Tab', true, 3, 0), 'wrap-start')
+  assert.equal(resolveAutomationDialogKey('Tab', false, 3, 0), null)
+  assert.equal(resolveAutomationDialogKey('Enter', false, 3, 0), null)
 })
 
 const bridgeCalls = []

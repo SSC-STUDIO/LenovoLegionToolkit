@@ -109,11 +109,11 @@ public static class NetworkAccelerationHandlers
         {
             var service = NetworkService;
             await service.StopAsync(cancellationToken).ConfigureAwait(false);
-            RecoveryService.TryRestoreFromSnapshot(out _);
+            var restored = RecoveryService.TryRestoreFromSnapshot(out var report);
             service.Config.Mode = NetworkAccelerationMode.Off;
             await service.SaveConfigAsync(cancellationToken).ConfigureAwait(false);
 
-            return BridgeResult.Ok(new { ok = true });
+            return BridgeResult.Ok(new { ok = restored, report });
         }
         catch (Exception ex)
         {

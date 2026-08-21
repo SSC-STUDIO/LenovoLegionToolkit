@@ -14,10 +14,10 @@ _Due to large number of issues created, those that do not meet the criteria will
 
 **Development setup**
 
-1. Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) (Windows, macOS, or Linux)
-2. Install [Node.js 20+](https://nodejs.org/) (Electron client)
+1. Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). The supported product build is Windows; macOS/Linux can build portable libraries and the CrossPlatform CLI.
+2. Install [Node.js 20+](https://nodejs.org/) (Electron client; official packaging is Windows-only)
 3. Clone the repo: git clone https://github.com/SSC-STUDIO/UniversalDeviceToolkit.git
-4. Restore (CI-aligned): `dotnet restore UniversalDeviceToolkit.sln --locked-mode`
+4. Restore (CI-aligned, Windows product graph): `dotnet restore UniversalDeviceToolkit.sln --locked-mode`
 5. Build: `dotnet build -c Release -m:1 --no-restore`
 6. Run tests: `dotnet test -c Release`  
    Or CI fail-fast layers only: `pwsh ./Scripts/Run-TestFailFast.ps1`
@@ -54,9 +54,14 @@ launcher project (no-op stub exe). Set it as the **startup project** and press
 > automatically when the app starts; it never shows a window. See
 > `Docs/ARCHITECTURE.md` for the process model.
 
-**Cross-platform development (macOS / Linux)**
+**Cross-platform development (macOS / Linux, experimental)**
 
-The Electron client runs natively on Windows, macOS, and Linux:
+The supported product is Windows. Official releases (`Release.yml`) publish
+Windows NSIS installers with a win-x64 Host. macOS/Linux work is experimental:
+there is no official Electron release, and local `npm run dist:mac` /
+`npm run dist:linux` output is not a release artifact.
+
+The Electron shell can be started for UI work on macOS/Linux:
 
 ```bash
 cd UniversalDeviceToolkit.Electron
@@ -65,33 +70,30 @@ npm run dev       # dev server + Electron window (hot reload)
 npm run typecheck # TS type check
 ```
 
-On macOS/Linux the app starts in **basic mode** (full UI, plugins, system
-optimization; no Lenovo hardware control). The Host backend is Windows-first
-and must be published for the target platform before packaging:
+A portable Host (`net10.0`, `UDTWindows=false`) stubs most Windows-only RPC
+as `-32099`. Official plugins are Windows TFMs. Do not publish the default
+Windows TFM for `osx-*` / `linux-x64`.
 
 ```bash
-# macOS (Apple Silicon / Intel)
-dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    -c Release -r osx-arm64 --self-contained -o UniversalDeviceToolkit.Host/publish/osx-arm64
-dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    -c Release -r osx-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/osx-x64
+# Experimental portable Host (not a release artifact)
+UDT_PLATFORM=linux ./build.sh host
+UDT_PLATFORM=macos ./build.sh host
 
-# Linux (x64)
+# Equivalent:
 dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    -c Release -r linux-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/linux-x64
+    -c Release -r linux-x64 -p:UDTWindows=false --self-contained \
+    -o UniversalDeviceToolkit.Host/publish/linux-x64
 
-# Windows (x64) — embedded into the NSIS installer
+# Windows (x64) — shipping path embedded into the NSIS installer
 dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    -c Release -r win-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/win-x64
+    -c Release -r win-x64 --self-contained \
+    -o UniversalDeviceToolkit.Host/publish/win-x64
 ```
 
 > [!NOTE]
-> The Host project targets the Windows TFM (`net10.0-windows10.0.26100.0`),
-> so cross-platform Host publish currently requires making the Windows-only
-> dependency graph portable. Hardware control remains meaningful on Windows
-> only. See `Docs/DEPLOYMENT.md` for the full platform matrix and
-> `Docs/ARCHITECTURE.md` → "Platform Notes" for how the Electron shell adapts
-> per platform (title bar, menu bar, tray, OSD, system power).
+> Hardware control remains Windows-only. See `Docs/DEPLOYMENT.md` for the
+> Windows release path versus the experimental portable Host, and
+> `Docs/ARCHITECTURE.md` → "Platform Notes" for Electron shell chrome.
 
 NuGet restores are reproducible via committed per-project `packages.lock.json` files (`RestorePackagesWithLockFile` in `Directory.Build.props`). CI always uses `dotnet restore … --locked-mode`. Use that flag locally when validating against CI; omit it only when you intentionally refresh lock files after package version changes, then commit the updated `packages.lock.json` files. `Make.bat` and most local scripts rely on implicit restore during build/publish and do not force `--locked-mode`, so casual offline builds are not blocked by a strict lock mismatch.
 

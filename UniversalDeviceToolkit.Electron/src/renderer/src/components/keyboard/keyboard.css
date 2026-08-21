@@ -822,6 +822,16 @@
   margin: 0 0 24px;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .udt-spectrum-keyboard__zone,
+  .udt-spectrum-device__zone,
+  .udt-kb-effect-row,
+  .udt-kb-zone-card .ant-color-picker-trigger {
+    transition: none;
+    transform: none;
+  }
+}
+
 
 .udt-kb-zone-card .udt-kb-card__body {
   display: flex;

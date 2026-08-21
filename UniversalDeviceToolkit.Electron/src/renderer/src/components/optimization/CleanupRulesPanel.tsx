@@ -3,8 +3,10 @@ import { Delete24Regular, Edit24Regular, FolderAdd24Regular } from '../icons/flu
 import { message } from 'antd'
 import { useEffect, useState } from 'react'
 import { optimizationApi } from '../../api/optimization'
+import { localizeHostError } from '../../api/bridge'
 import { useCleanupStore } from '../../stores/cleanupStore'
 import EmptyState from '../EmptyState'
+import { resolveActionError, shouldShowEmptyPlaceholder } from '../../utils/optimizationPresentation'
 import './optimization.css'
 
 /**
@@ -22,7 +24,14 @@ export default function CleanupRulesPanel(): React.JSX.Element {
   const removeRule = useCleanupStore((s) => s.removeRule)
   const clearRules = useCleanupStore((s) => s.clearRules)
   const cleanupError = useCleanupStore((s) => s.error)
+  const loaded = useCleanupStore((s) => s.loaded)
   const [busyRuleId, setBusyRuleId] = useState<string | null>(null)
+
+  const reportCleanupError = (error: string | null | undefined): void => {
+    void message.error(
+      localizeHostError(resolveActionError(error, t('optimization.cleanupFailed')), t)
+    )
+  }
 
   useEffect(() => {
     void load()
@@ -42,25 +51,32 @@ export default function CleanupRulesPanel(): React.JSX.Element {
     if (!path) return
     const ok = await addRule(path)
     if (ok) message.success(t('optimization.cleanup.custom.added'))
+    else reportCleanupError(useCleanupStore.getState().error)
   }
 
   const handleEdit = async (id: string): Promise<void> => {
     const rule = rules.find((r) => r.id === id)
     if (!rule) return
     setBusyRuleId(id)
-    const path = await pickFolder()
-    setBusyRuleId(null)
-    if (!path) return
-    const ok = await updateRulePath(id, path)
-    if (ok) message.success(t('optimization.cleanup.custom.updated'))
+    try {
+      const path = await pickFolder()
+      if (!path) return
+      const ok = await updateRulePath(id, path)
+      if (ok) message.success(t('optimization.cleanup.custom.updated'))
+      else reportCleanupError(useCleanupStore.getState().error)
+    } finally {
+      setBusyRuleId(null)
+    }
   }
 
   const handleRemove = async (id: string): Promise<void> => {
-    await removeRule(id)
+    const ok = await removeRule(id)
+    if (!ok) reportCleanupError(useCleanupStore.getState().error)
   }
 
   const handleClear = async (): Promise<void> => {
-    await clearRules()
+    const ok = await clearRules()
+    if (!ok) reportCleanupError(useCleanupStore.getState().error)
   }
 
   const header = t('wpf.windowsOptimizationPagecustomCleanupheader', {
@@ -131,7 +147,12 @@ export default function CleanupRulesPanel(): React.JSX.Element {
         </div>
       )}
 
-      {!loading && rules.length === 0 && (
+      {shouldShowEmptyPlaceholder({
+        loading,
+        itemCount: rules.length,
+        error: cleanupError,
+        loaded
+      }) && (
         <EmptyState
           className="udt-cleanup-rules__empty"
           icon={<Delete24Regular />}

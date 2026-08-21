@@ -94,3 +94,33 @@ test('macro API preserves bridge failures for the store to surface', async () =>
 
   await assert.rejects(api.getState(), (error) => error === failure)
 })
+
+test('macro API forwards rejected persist payloads without rewriting them to success', async () => {
+  const api = createMacroApi(async (method) => {
+    if (method === 'macro.saveSequence' || method === 'macro.clearSequence') {
+      return { ok: false }
+    }
+    return { ok: true }
+  })
+
+  const sequence = {
+    key: 0x60,
+    repeatCount: 1,
+    ignoreDelays: false,
+    interruptOnOtherKey: false,
+    events: [
+      {
+        source: 'Keyboard',
+        direction: 'Down',
+        key: 0x41,
+        x: 0,
+        y: 0,
+        delayMs: 0
+      }
+    ]
+  }
+
+  assert.deepEqual(await api.saveSequence(sequence), { ok: false })
+  assert.deepEqual(await api.clearSequence(0x60), { ok: false })
+  assert.deepEqual(await api.play(0x60), { ok: true })
+})

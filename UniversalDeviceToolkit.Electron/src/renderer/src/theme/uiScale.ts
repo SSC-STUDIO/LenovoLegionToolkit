@@ -23,6 +23,13 @@ export const UI_SCALE_MIN = 1.1
 export const UI_SCALE_MAX = 1.36
 /** Auto snaps to 1% so the curve stays fine-grained while resizing. */
 export const UI_SCALE_AUTO_STEP = 0.01
+/**
+ * Ignore outerWidth jitter below one Auto step (~34 CSS px). Zoom-factor
+ * apply and window-frame rounding can move outerWidth by a few pixels
+ * without a user resize; treating those as real width changes retriggers
+ * Auto and feeds back into setZoomFactor / CSS zoom.
+ */
+export const UI_SCALE_AUTO_WIDTH_DEADZONE = 8
 
 const MIN_LAYOUT_WIDTH = 200
 
@@ -60,9 +67,14 @@ export function readLayoutWidth(): number {
   if (typeof window === 'undefined') return UI_SCALE_AUTO_MIN_WIDTH
   const outer = window.outerWidth
   if (Number.isFinite(outer) && outer >= MIN_LAYOUT_WIDTH) return outer
-  const inner = window.innerWidth
-  if (Number.isFinite(inner) && inner >= MIN_LAYOUT_WIDTH) return inner
+  // Never fall back to innerWidth: zoomFactor and CSS zoom shrink it, so
+  // Auto would recompute from the already-scaled viewport and loop.
   return UI_SCALE_AUTO_MIN_WIDTH
+}
+
+/** True when the new outer width is a real user resize, not zoom jitter. */
+export function layoutWidthChanged(previous: number, next: number): boolean {
+  return Math.abs(next - previous) >= UI_SCALE_AUTO_WIDTH_DEADZONE
 }
 
 export function resolveUiScale(preference: UiScalePreference): number {

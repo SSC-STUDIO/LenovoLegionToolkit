@@ -58,6 +58,19 @@ public sealed class PluginOfficialRpcContractTests
         source.Should().NotContain("ex.Message.Contains");
     }
 
+    [Fact]
+    public void PluginHandlers_SetConfig_ShouldWriteAtomicallyWithoutUpdatingCacheFirst()
+    {
+        var source = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Host", "Rpc", "Handlers", "PluginHandlers.cs");
+
+        source.Should().NotContain("File.WriteAllText(configPath");
+        source.Should().Contain("AtomicWriteAllText(configPath, json)");
+        source.Should().Contain("File.Move(tempPath, path, overwrite: true)");
+        source.Should().NotContain("_configCache");
+        source.Should().NotContain("ConfigCache");
+    }
+
     [Theory]
     [InlineData("CustomMouse", "custom-mouse", "plugin.customMouse.")]
     [InlineData("ShellIntegration", "shell-integration", "plugin.shell.")]

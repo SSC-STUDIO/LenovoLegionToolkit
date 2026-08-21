@@ -1,3 +1,5 @@
+using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading;
 using UniversalDeviceToolkit.Plugins.Core;
@@ -10,6 +12,8 @@ namespace UniversalDeviceToolkit.Plugins.SDK;
 /// </summary>
 public abstract class PluginBase : UniversalDeviceToolkit.Lib.Plugins.PluginBase
 {
+    private int _pluginDisposableInvoked;
+
     /// <summary>
     /// Gets a shared HttpClient instance for making HTTP requests.
     /// Use this instead of creating new HttpClient instances to prevent socket exhaustion.
@@ -29,8 +33,6 @@ public abstract class PluginBase : UniversalDeviceToolkit.Lib.Plugins.PluginBase
     /// </remarks>
     protected virtual CancellationToken GetRuntimeCancellationToken()
     {
-        // Base implementation returns None as safe default
-        // Derived classes with runtime implementations should override this
         return CancellationToken.None;
     }
 
@@ -40,7 +42,41 @@ public abstract class PluginBase : UniversalDeviceToolkit.Lib.Plugins.PluginBase
     /// </summary>
     protected virtual void OnSettingsChanged()
     {
-        // Default implementation does nothing
-        // Derived classes can override to handle settings changes
+    }
+
+    /// <inheritdoc />
+    public override void OnShutdown()
+    {
+        TryDisposePluginInstance();
+        base.OnShutdown();
+    }
+
+    /// <inheritdoc />
+    public override void OnUninstalled()
+    {
+        TryDisposePluginInstance();
+        base.OnUninstalled();
+    }
+
+    private void TryDisposePluginInstance()
+    {
+        if (this is not IDisposable disposable)
+        {
+            return;
+        }
+
+        if (Interlocked.Exchange(ref _pluginDisposableInvoked, 1) != 0)
+        {
+            return;
+        }
+
+        try
+        {
+            disposable.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[SDK] Plugin IDisposable.Dispose() threw: {ex.GetType().Name}: {ex.Message}");
+        }
     }
 }

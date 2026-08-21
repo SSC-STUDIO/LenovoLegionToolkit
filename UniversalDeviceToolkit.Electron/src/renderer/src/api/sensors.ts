@@ -1,4 +1,4 @@
-import { invoke, on } from './bridge'
+import { invokeObject, on } from './bridge'
 
 export interface SensorsInfo {
   cpuName?: string | null
@@ -115,20 +115,20 @@ export interface SensorsSettings {
 }
 
 export const sensorsApi = {
-  getStatus: (): Promise<SensorsStatus> => invoke<SensorsStatus>('sensors.getStatus'),
-  getSnapshot: (): Promise<SensorSnapshot> => invoke<SensorSnapshot>('sensors.getSnapshot'),
-  getDetailed: (): Promise<SensorSnapshot> => invoke<SensorSnapshot>('sensors.getDetailed'),
+  getStatus: (): Promise<SensorsStatus> => invokeObject<SensorsStatus>('sensors.getStatus'),
+  getSnapshot: (): Promise<SensorSnapshot> => invokeObject<SensorSnapshot>('sensors.getSnapshot'),
+  getDetailed: (): Promise<SensorSnapshot> => invokeObject<SensorSnapshot>('sensors.getDetailed'),
   subscribe: (intervalSec = 1): Promise<{ subscribed: boolean; effectiveIntervalSec: number }> =>
-    invoke('sensors.subscribe', { intervalSec, subscriberId: 'dashboard' }),
+    invokeObject('sensors.subscribe', { intervalSec, subscriberId: 'dashboard' }),
   unsubscribe: (): Promise<{ unsubscribed: boolean }> =>
-    invoke('sensors.unsubscribe', { subscriberId: 'dashboard' }),
-  getFps: (): Promise<FpsData> => invoke<FpsData>('sensors.getFps'),
+    invokeObject('sensors.unsubscribe', { subscriberId: 'dashboard' }),
+  getFps: (): Promise<FpsData> => invokeObject<FpsData>('sensors.getFps'),
   subscribeFps: (blacklist?: string[]): Promise<{ monitoring: boolean }> =>
-    invoke('sensors.subscribeFps', blacklist ? { blacklist } : {}),
-  unsubscribeFps: (): Promise<{ monitoring: boolean }> => invoke('sensors.unsubscribeFps'),
-  getSettings: (): Promise<SensorsSettings> => invoke<SensorsSettings>('sensors.getSettings'),
+    invokeObject('sensors.subscribeFps', blacklist ? { blacklist } : {}),
+  unsubscribeFps: (): Promise<{ monitoring: boolean }> => invokeObject('sensors.unsubscribeFps'),
+  getSettings: (): Promise<SensorsSettings> => invokeObject<SensorsSettings>('sensors.getSettings'),
   setSettings: (partial: SensorsSettings): Promise<{ saved: boolean }> =>
-    invoke('sensors.setSettings', partial),
+    invokeObject('sensors.setSettings', partial),
   onUpdated: (callback: (snapshot: SensorSnapshot) => void): (() => void) =>
     on<SensorSnapshot>('sensors.updated', callback),
   onFpsUpdated: (callback: (data: FpsData) => void): (() => void) =>

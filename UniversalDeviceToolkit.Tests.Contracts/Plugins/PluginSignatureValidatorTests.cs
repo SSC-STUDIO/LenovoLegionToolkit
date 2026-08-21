@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -21,6 +22,57 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
             "UniversalDeviceToolkit.Lib.Plugins", "PluginSignatureValidator.cs");
 
         source.Should().Contain("TrustedPluginPackageStore.IsTrustedFile");
+    }
+
+    [Fact]
+    public void IoCModule_ShouldResolveSignaturePolicyThroughCreateForRuntime()
+    {
+        var source = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Lib.Plugins", "IoCModule.cs");
+
+        source.Should().Contain("PluginSignatureSettings.CreateForRuntime");
+        source.Should().NotContain("TryCreateFromEnvironmentValue");
+        source.Should().NotContain("string.Equals(mode, \"disable\"");
+    }
+
+    [Fact]
+    public void PluginSignatureValidator_ShouldForceProductionWhenRelaxedModesDisallowed()
+    {
+        var source = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Lib.Plugins", "PluginSignatureValidator.cs");
+
+        source.Should().Contain("PluginSignatureSettings.RelaxedModesAllowed");
+        source.Should().Contain("PluginSignatureSettings.Production");
+    }
+
+    [Fact]
+    public void PluginSignatureSettings_CreateForRuntime_ShouldGateRelaxedModesOnDebug()
+    {
+        var source = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Lib.Plugins", "PluginSignatureSettings.cs");
+
+        source.Should().Contain("RelaxedModesAllowed");
+        source.Should().Contain("CreateForRuntime");
+        source.Should().Contain("#if DEBUG");
+        source.Should().Contain("if (!RelaxedModesAllowed)");
+        source.Should().Contain("return Production;");
+    }
+
+    [Fact]
+    public void PluginSignatureValidator_ShouldNotTreatInvalidAuthenticodeAsUnsigned()
+    {
+        var source = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Lib.Plugins", "PluginSignatureValidator.cs");
+        var start = source.IndexOf("if (!authenticodeOk)", StringComparison.Ordinal);
+        start.Should().BeGreaterThanOrEqualTo(0);
+        var end = source.IndexOf("ValidateCertificateAsync", start, StringComparison.Ordinal);
+        end.Should().BeGreaterThan(start);
+        var block = source[start..end];
+
+        block.Should().Contain("PluginSignatureStatus.Invalid");
+        block.Should().NotContain("PluginSignatureValidationMode.AllowUnsigned");
+        block.Should().NotContain("IsAllowedByPolicy");
+        block.Should().NotContain("PluginSignatureStatus.NotSigned");
     }
 
     #region Constructor Tests
@@ -63,7 +115,7 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
     #region ValidateAsync Tests
 
     [Fact]
-    public async Task ValidateAsync_WhenValidationDisabled_ShouldReturnValid()
+    public async Task ValidateAsync_WhenValidationDisabled_ShouldHonorDebugOnly()
     {
         // Arrange
         var settings = PluginSignatureSettings.Disabled;
@@ -75,8 +127,17 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
 
         // Assert
         result.Should().NotBeNull();
-        result.IsValid.Should().BeTrue();
-        result.Status.Should().Be(PluginSignatureStatus.Valid);
+        if (PluginSignatureSettings.RelaxedModesAllowed)
+        {
+            result.IsValid.Should().BeTrue();
+            result.Status.Should().Be(PluginSignatureStatus.Valid);
+        }
+        else
+        {
+            result.IsValid.Should().BeFalse();
+            result.Status.Should().Be(PluginSignatureStatus.NotSigned);
+            result.IsAllowedByPolicy.Should().BeFalse();
+        }
     }
 
     [Fact]
@@ -98,7 +159,7 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
     }
 
     [Fact]
-    public async Task ValidateAsync_WithUnsignedFileAndAllowUnsigned_ShouldReturnNotSignedButValid()
+    public async Task ValidateAsync_WithUnsignedFileAndAllowUnsigned_ShouldHonorDebugOnly()
     {
         // Arrange
         var settings = PluginSignatureSettings.Development;
@@ -112,8 +173,16 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
         result.Should().NotBeNull();
         result.Status.Should().Be(PluginSignatureStatus.NotSigned);
         result.ErrorMessage.Should().Contain("not signed");
-        result.IsAllowedByPolicy.Should().BeTrue();
-        result.IsValid.Should().BeTrue(); // Should be valid when AllowUnsigned policy is in effect
+        if (PluginSignatureSettings.RelaxedModesAllowed)
+        {
+            result.IsAllowedByPolicy.Should().BeTrue();
+            result.IsValid.Should().BeTrue();
+        }
+        else
+        {
+            result.IsAllowedByPolicy.Should().BeFalse();
+            result.IsValid.Should().BeFalse();
+        }
     }
 
     [Fact]
@@ -541,8 +610,16 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
         var result = await validator.ValidateAsync(nonExistentFile);
 
         // Assert
-        // When validation is disabled, it should return Valid immediately without checking file existence
-        result.IsValid.Should().BeTrue();
+        if (PluginSignatureSettings.RelaxedModesAllowed)
+        {
+            result.IsValid.Should().BeTrue();
+            result.Status.Should().Be(PluginSignatureStatus.Valid);
+        }
+        else
+        {
+            result.IsValid.Should().BeFalse();
+            result.Status.Should().Be(PluginSignatureStatus.ValidationError);
+        }
     }
 
     #endregion
@@ -706,6 +783,45 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
         settings.ValidationMode.Should().Be(PluginSignatureValidationMode.RequireSignature);
     }
 
+    [Theory]
+    [InlineData("disable", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("disabled", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("disablevalidation", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("disable-validation", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("development", PluginSignatureValidationMode.AllowUnsigned)]
+    [InlineData("allowunsigned", PluginSignatureValidationMode.AllowUnsigned)]
+    [InlineData("allow-unsigned", PluginSignatureValidationMode.AllowUnsigned)]
+    public void PluginSignatureSettings_CreateForRuntime_ShouldNotLetRelaxedAliasesBypassProduction(
+        string value,
+        PluginSignatureValidationMode debugMode)
+    {
+        var settings = PluginSignatureSettings.CreateForRuntime(value);
+
+        if (PluginSignatureSettings.RelaxedModesAllowed)
+            settings.ValidationMode.Should().Be(debugMode);
+        else
+        {
+            settings.ValidationMode.Should().Be(PluginSignatureValidationMode.RequireSignature);
+            settings.AllowTestCertificates.Should().BeFalse();
+            settings.CheckRevocationStatus.Should().BeTrue();
+        }
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData("require")]
+    [InlineData("production")]
+    [InlineData("unexpected")]
+    public void PluginSignatureSettings_CreateForRuntime_ShouldDefaultToProduction(string? value)
+    {
+        var settings = PluginSignatureSettings.CreateForRuntime(value);
+
+        settings.ValidationMode.Should().Be(PluginSignatureValidationMode.RequireSignature);
+        settings.AllowTestCertificates.Should().BeFalse();
+        settings.CheckRevocationStatus.Should().BeTrue();
+    }
+
     #endregion
 
     #region PluginSignatureStatus Enum Tests
@@ -777,6 +893,70 @@ public class PluginSignatureValidatorTests : TemporaryFileTestBase
         // Assert
         result.Should().NotBeNull();
         // It should attempt validation even for non-DLL files
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithInvalidSignatureAndAllowUnsigned_ShouldReject()
+    {
+        if (!OperatingSystem.IsWindows())
+            return;
+
+        var signedPath = TryFindEmbeddedSignedBinary();
+        if (signedPath is null)
+            return;
+
+        var tamperedPath = Path.Combine(CreateTempDirectory(), "tampered-signed.dll");
+        File.Copy(signedPath, tamperedPath, overwrite: true);
+        TamperPeImageBytes(tamperedPath);
+        if (!HasEmbeddedAuthenticode(tamperedPath))
+            return;
+
+        var validator = new PluginSignatureValidator(PluginSignatureSettings.Development);
+        var result = await validator.ValidateAsync(tamperedPath);
+
+        result.IsValid.Should().BeFalse();
+        result.IsAllowedByPolicy.Should().BeFalse();
+        result.Status.Should().Be(PluginSignatureStatus.Invalid);
+    }
+
+    private static string? TryFindEmbeddedSignedBinary()
+    {
+        foreach (var name in new[] { "kernel32.dll", "user32.dll", "advapi32.dll", "ntdll.dll" })
+        {
+            var path = Path.Combine(Environment.SystemDirectory, name);
+            if (File.Exists(path) && HasEmbeddedAuthenticode(path))
+                return path;
+        }
+
+        return null;
+    }
+
+    private static bool HasEmbeddedAuthenticode(string path)
+    {
+        try
+        {
+#pragma warning disable SYSLIB0057
+            using var certificate = new X509Certificate2(X509Certificate.CreateFromSignedFile(path));
+#pragma warning restore SYSLIB0057
+            return certificate.Handle != IntPtr.Zero;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    private static void TamperPeImageBytes(string path)
+    {
+        var bytes = File.ReadAllBytes(path);
+        if (bytes.Length < 1024)
+            throw new InvalidOperationException("Signed system binary is unexpectedly small.");
+
+        // Authenticode excludes the certificate table (typically at EOF). Flip a
+        // mid-file image byte so WinVerifyTrust fails while the cert blob remains.
+        var index = Math.Min(bytes.Length / 2, bytes.Length - 512);
+        bytes[index] ^= 0x01;
+        File.WriteAllBytes(path, bytes);
     }
 
     #endregion

@@ -43,6 +43,7 @@ public static class DriverDownloadHandlers
         public CancellationTokenSource? DownloadCts { get; set; }
         public Process? InstallProcess { get; set; }
         public string? DownloadedFilePath { get; set; }
+        public string? VerifiedSha256 { get; set; }
     }
 
     private sealed record PackageCacheEntry(Package Package, PackageDownloaderFactory.Type Source);
@@ -96,6 +97,7 @@ public static class DriverDownloadHandlers
                 downloadPath = GetEffectiveDownloadPath(store),
                 onlyShowUpdates = store.OnlyShowUpdates,
                 hiddenPackageIds = store.HiddenPackages.OrderBy(id => id, StringComparer.Ordinal).ToArray(),
+                uninstallAvailable = false,
             });
         }
         catch (Exception ex)
@@ -293,7 +295,12 @@ public static class DriverDownloadHandlers
             await Task.CompletedTask;
 
             // Lib exposes no uninstall capability (the WPF PackageControl offers none either).
-            return BridgeResult.Ok(new { ok = false, error = "not available" });
+            return BridgeResult.Ok(new
+            {
+                ok = false,
+                available = false,
+                error = "Driver uninstall is not supported.",
+            });
         }
         catch (BridgeErrorException ex)
         {
@@ -410,8 +417,17 @@ public static class DriverDownloadHandlers
                     .DownloadPackageFileAsync(entry.Package, downloadPath, progress, cts.Token)
                     .ConfigureAwait(false);
 
+                if (!TryPinVerifiedSha256(entry.Package, filePath, out var pinnedSha256, out var pinError))
+                {
+                    SetErrorState(packageId, pinError);
+                    return;
+                }
+
                 lock (SyncRoot)
+                {
                     state.DownloadedFilePath = filePath;
+                    state.VerifiedSha256 = pinnedSha256;
+                }
 
                 StartInstall(packageId, entry.Package, filePath);
             }
@@ -426,9 +442,10 @@ public static class DriverDownloadHandlers
         });
     }
 
-    /// <summary>Validates and launches the installer elevated (UAC); mirrors PackageControlViewModel.InstallPackageAsync.</summary>
+    /// <summary>Validates path, name, reparse and SHA-256, then launches the installer elevated (UAC).</summary>
     private static void StartInstall(string packageId, Package package, string filePath)
     {
+        string? expectedSha256;
         lock (SyncRoot)
         {
             var state = GetOrCreateRunState(packageId);
@@ -441,11 +458,23 @@ public static class DriverDownloadHandlers
             state.DownloadCts?.Cancel();
             state.DownloadCts?.Dispose();
             state.DownloadCts = null;
+            expectedSha256 = ResolveExpectedInstallerSha256(package, state);
+        }
+
+        if (expectedSha256 is null)
+        {
+            SetErrorState(packageId, "Installer checksum is unknown; download the package again.");
+            return;
         }
 
         var downloadPath = GetEffectiveDownloadPath(Settings.Store);
         if (!InstallerLaunchPathValidator.TryValidateForExecution(
-                filePath, downloadPath, GetActualFileName(package), out var safeInstallerPath, out var validationError))
+                filePath,
+                downloadPath,
+                GetActualFileName(package),
+                expectedSha256,
+                out var safeInstallerPath,
+                out var validationError))
         {
             SetErrorState(packageId, validationError);
             return;
@@ -582,6 +611,7 @@ public static class DriverDownloadHandlers
         status = state?.Status ?? StatusNotStarted,
         progress = state?.Progress ?? 0,
         error = state?.Error,
+        canUninstall = false,
     };
 
     private static string ToRebootTypeString(RebootType reboot) => reboot switch
@@ -645,6 +675,42 @@ public static class DriverDownloadHandlers
 
     private static string GetActualFileName(Package package) =>
         $"{SanitizeFileName(package.Title)} - {SanitizeFileName(Path.GetFileName(package.FileName))}";
+
+    private static string? ResolveExpectedInstallerSha256(Package package, PackageRunState state)
+    {
+        if (InstallerLaunchPathValidator.IsSha256Hex(package.FileCrc))
+            return package.FileCrc;
+
+        return InstallerLaunchPathValidator.IsSha256Hex(state.VerifiedSha256)
+            ? state.VerifiedSha256
+            : null;
+    }
+
+    private static bool TryPinVerifiedSha256(
+        Package package,
+        string filePath,
+        out string pinnedSha256,
+        out string failureReason)
+    {
+        pinnedSha256 = string.Empty;
+        if (!InstallerLaunchPathValidator.TryComputeSha256Hex(filePath, out var actualSha256, out failureReason))
+            return false;
+
+        if (package.FileCrc is { } catalogHash && InstallerLaunchPathValidator.IsSha256Hex(catalogHash))
+        {
+            if (!string.Equals(actualSha256, catalogHash, StringComparison.OrdinalIgnoreCase))
+            {
+                failureReason = "Installer checksum mismatch.";
+                return false;
+            }
+
+            pinnedSha256 = catalogHash;
+            return true;
+        }
+
+        pinnedSha256 = actualSha256;
+        return true;
+    }
 
     private static string SanitizeFileName(string name)
     {

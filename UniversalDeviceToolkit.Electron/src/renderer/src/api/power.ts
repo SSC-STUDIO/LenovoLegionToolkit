@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invokeObject } from './bridge'
 
 export interface PowerApi {
   restart(): Promise<{ ok: boolean }>
@@ -6,6 +6,6 @@ export interface PowerApi {
 
 export const powerApi: PowerApi = {
   async restart() {
-    return invoke<{ ok: boolean }>('power.restart', {})
+    return invokeObject<{ ok: boolean }>('power.restart', {})
   }
 }

@@ -24,6 +24,7 @@ public class AIController(
     private readonly ThrottleLastDispatcher _dispatcher = new(TimeSpan.FromSeconds(1), nameof(AIController));
 
     private readonly AsyncLock _startStopLock = new();
+    private bool _listenersAttached;
 
     public bool IsAIModeEnabled
     {
@@ -40,17 +41,17 @@ public class AIController(
         if (!await IsSupportedAndLogAsync().ConfigureAwait(false))
             return;
 
-        await StopAsync().ConfigureAwait(false);
-
-        if (!IsAIModeEnabled)
-            return;
-
         using (await _startStopLock.LockAsync().ConfigureAwait(false))
         {
-            powerModeListener.Changed += PowerModeListener_Changed;
-            powerStateListener.Changed += PowerStateListener_Changed;
+            await DetachListenersAsync().ConfigureAwait(false);
 
-            await gameAutoListener.SubscribeChangedAsync(GameAutoListener_Changed).ConfigureAwait(false);
+            if (await ShouldDisableAsync().ConfigureAwait(false))
+                await DisableAsync().ConfigureAwait(false);
+
+            if (!IsAIModeEnabled)
+                return;
+
+            await AttachListenersAsync().ConfigureAwait(false);
 
             // RefreshCoreAsync: already under _startStopLock (AsyncLock is not reentrant).
             await RefreshCoreAsync().ConfigureAwait(false);
@@ -67,10 +68,7 @@ public class AIController(
 
         using (await _startStopLock.LockAsync().ConfigureAwait(false))
         {
-            powerModeListener.Changed -= PowerModeListener_Changed;
-            powerStateListener.Changed -= PowerStateListener_Changed;
-
-            await gameAutoListener.UnsubscribeChangedAsync(GameAutoListener_Changed).ConfigureAwait(false);
+            await DetachListenersAsync().ConfigureAwait(false);
 
             if (await ShouldDisableAsync().ConfigureAwait(false))
                 await DisableAsync().ConfigureAwait(false);
@@ -78,6 +76,28 @@ public class AIController(
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"AI controller stopped");
         }
+    }
+
+    private async Task AttachListenersAsync()
+    {
+        if (_listenersAttached)
+            return;
+
+        powerModeListener.Changed += PowerModeListener_Changed;
+        powerStateListener.Changed += PowerStateListener_Changed;
+        await gameAutoListener.SubscribeChangedAsync(GameAutoListener_Changed).ConfigureAwait(false);
+        _listenersAttached = true;
+    }
+
+    private async Task DetachListenersAsync()
+    {
+        if (!_listenersAttached)
+            return;
+
+        powerModeListener.Changed -= PowerModeListener_Changed;
+        powerStateListener.Changed -= PowerStateListener_Changed;
+        await gameAutoListener.UnsubscribeChangedAsync(GameAutoListener_Changed).ConfigureAwait(false);
+        _listenersAttached = false;
     }
 
     private async Task PowerModeListener_ChangedAsync(object? sender, PowerModeListener.ChangedEventArgs e)
@@ -299,10 +319,14 @@ public class AIController(
             {
                 try
                 {
-                    if (powerModeListener is not null)
-                        powerModeListener.Changed -= PowerModeListener_Changed;
-                    if (powerStateListener is not null)
-                        powerStateListener.Changed -= PowerStateListener_Changed;
+                    if (_listenersAttached)
+                    {
+                        if (powerModeListener is not null)
+                            powerModeListener.Changed -= PowerModeListener_Changed;
+                        if (powerStateListener is not null)
+                            powerStateListener.Changed -= PowerStateListener_Changed;
+                        _listenersAttached = false;
+                    }
                     if (gameAutoListener is not null)
                     {
                         // Non-blocking, disposing-thread-safe unsubscription: do not block

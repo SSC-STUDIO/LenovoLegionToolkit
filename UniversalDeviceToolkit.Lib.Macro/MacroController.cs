@@ -33,9 +33,10 @@ public class MacroController : IMacroController, IDisposable
 
     private readonly HOOKPROC _kbProc;
     private readonly MacroSettings _settings;
-    private readonly IMainThreadDispatcher _mainThreadDispatcher;
+    private readonly object _hookSync = new();
 
     private HHOOK _kbHook;
+    private MacroHookPump? _pump;
     private bool _disposed;
 
     public event EventHandler<RecorderReceivedEventArgs>? RecorderReceived;
@@ -44,20 +45,42 @@ public class MacroController : IMacroController, IDisposable
     public bool IsEnabled => _settings.Store.IsEnabled;
 
     /// <summary>
+    /// Gets whether the playback WH_KEYBOARD_LL hook is installed on a live
+    /// message-pump thread. Distinct from <see cref="IsEnabled"/>: settings can
+    /// say enabled while the hook is not yet (or no longer) running.
+    /// </summary>
+    public bool IsHookActive
+    {
+        get
+        {
+            lock (_hookSync)
+                return _pump is { IsActive: true };
+        }
+    }
+
+    /// <summary>
     /// Gets whether the recorder currently owns an input hook.
     /// </summary>
     public bool IsRecording => _recorder.IsRecording;
 
     public MacroController(MacroSettings settings, IMainThreadDispatcher mainThreadDispatcher)
     {
+        ArgumentNullException.ThrowIfNull(settings);
+        ArgumentNullException.ThrowIfNull(mainThreadDispatcher);
+
         _settings = settings;
-
-        _mainThreadDispatcher = mainThreadDispatcher;
-
         _kbProc = LowLevelKeyboardProc;
 
         _recorder.Received += Recorder_Received;
         _recorder.Stopped += Recorder_Stopped;
+
+        // Restore a previously persisted enable flag: the headless host never
+        // calls Start() on its own, so the pump must come up with the controller.
+        if (IsEnabled && !Start())
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Macro playback hook was not installed at startup.");
+        }
     }
 
     private void Recorder_Received(object? sender, MacroRecorder.ReceivedEventArgs e) => RecorderReceived?.Invoke(this, new() { MacroEvent = e.MacroEvent });
@@ -66,15 +89,20 @@ public class MacroController : IMacroController, IDisposable
 
     public void SetEnabled(bool enabled)
     {
-        _settings.Store.IsEnabled = enabled;
-        _settings.SynchronizeStore();
-
-        // Dynamically start/stop the hook when the macro feature is toggled at
-        // runtime so no global keyboard hook stays installed while disabled.
         if (enabled)
-            Start();
-        else
-            Stop();
+        {
+            if (!Start())
+                throw new MacroHookInstallException(
+                    "Playback hook could not be installed (SetWindowsHookEx failed); try again after the host has an interactive session.");
+
+            _settings.Store.IsEnabled = true;
+            _settings.SynchronizeStore();
+            return;
+        }
+
+        _settings.Store.IsEnabled = false;
+        _settings.SynchronizeStore();
+        Stop();
     }
 
     public Dictionary<MacroIdentifier, MacroSequence> GetSequences() => _settings.Store.Sequences;
@@ -101,52 +129,67 @@ public class MacroController : IMacroController, IDisposable
         _settings.SynchronizeStore();
     }
 
-    public void Start()
+    /// <summary>
+    /// Installs the playback hook on a dedicated message-pump thread and waits
+    /// for the install result. Returns false when SetWindowsHookEx fails or the
+    /// pump does not come up in time.
+    /// </summary>
+    public bool Start()
     {
-        // Don't install a global keyboard hook when macros are disabled -- the
-        // callback would call CallNextHookEx for every keystroke for nothing.
-        if (!IsEnabled)
-            return;
-
-        if (_kbHook != default)
-            return;
-
-        // WH_KEYBOARD_LL callbacks are dispatched via the installing thread's
-        // message loop. Installing from a background thread (e.g. the Task.Run
-        // inside App.InitMacroController) leaves the hook with no message pump,
-        // so Windows times out on every keystroke system-wide. Marshal to the UI
-        // thread which pumps messages for the hook's lifetime.
-        _mainThreadDispatcher.Dispatch(() =>
+        MacroHookPump pump;
+        lock (_hookSync)
         {
-            if (_kbHook != default)
-                return;
+            if (_pump is { IsActive: true })
+                return true;
 
-            _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _kbProc, HINSTANCE.Null, 0);
-        });
+            _pump?.Dispose();
+            pump = new MacroHookPump("MacroPlaybackHook", InstallPlaybackHook, UninstallPlaybackHook);
+            _pump = pump;
+        }
+
+        if (!pump.Start(TimeSpan.FromSeconds(5)))
+        {
+            lock (_hookSync)
+            {
+                if (ReferenceEquals(_pump, pump))
+                {
+                    pump.Dispose();
+                    _pump = null;
+                }
+            }
+
+            return false;
+        }
+
+        lock (_hookSync)
+        {
+            if (!ReferenceEquals(_pump, pump) || !pump.IsActive)
+                return false;
+        }
+
+        return true;
     }
 
     public void Stop()
     {
-        if (_kbHook == default)
-            return;
+        MacroHookPump? pump;
+        lock (_hookSync)
+        {
+            pump = _pump;
+            _pump = null;
+        }
 
-        // Capture the live hook handle and clear the field BEFORE teardown so a
-        // concurrent Start() cannot re-enter and double-install the hook.
-        var hook = _kbHook;
-        _kbHook = default;
-
-        // Unhook the system-wide WH_KEYBOARD_LL hook FIRST. A throw from the recorder
-        // or player teardown must never leave the hook installed (orphan + duplicate
-        // macro firing on next Start). Each teardown step is isolated and traced (KB #8).
+        // Unhook on the installing pump thread first. A throw from recorder or
+        // player teardown must never leave the hook installed.
         try
         {
-            if (!PInvoke.UnhookWindowsHookEx(hook) && Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("MacroController.UnhookWindowsHookEx returned false (hook may already be invalid).");
+            pump?.Stop();
+            pump?.Dispose();
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("MacroController.Stop() unhook failed.", ex);
+                Log.Instance.Trace("MacroController.Stop() pump teardown failed.", ex);
         }
 
         try
@@ -167,6 +210,40 @@ public class MacroController : IMacroController, IDisposable
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace("MacroController.Stop() player teardown failed.", ex);
+        }
+    }
+
+    /// <summary>Test seam: replace SetWindowsHookEx so install failure can be forced.</summary>
+    internal static Func<bool>? HookInstallOverride { get; set; }
+
+    private bool InstallPlaybackHook()
+    {
+        if (HookInstallOverride is not null)
+            return HookInstallOverride();
+
+        if (_kbHook != default)
+            return true;
+
+        _kbHook = PInvoke.SetWindowsHookEx(WINDOWS_HOOK_ID.WH_KEYBOARD_LL, _kbProc, HINSTANCE.Null, 0);
+        return _kbHook != default;
+    }
+
+    private void UninstallPlaybackHook()
+    {
+        var hook = _kbHook;
+        _kbHook = default;
+        if (hook == default)
+            return;
+
+        try
+        {
+            if (!PInvoke.UnhookWindowsHookEx(hook) && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("MacroController.UnhookWindowsHookEx returned false (hook may already be invalid).");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("MacroController.Stop() unhook failed.", ex);
         }
     }
 

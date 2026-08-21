@@ -62,11 +62,14 @@ public class IGPUModeFeatureFlagsFeature : IFeature<IGPUModeState>
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Setting state to {state}...");
 
+        if (!Enum.IsDefined(state))
+            throw ExceptionHelper.InvalidState();
+
         var result = await WMI.LenovoOtherMethod.SetDeviceCurrentSupportFeatureAsync(1, (int)state).ConfigureAwait(false);
-        if (result == 0)
+        if (result < 1)
         {
             if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Set state to {state}, but dGPU check failed.");
+                Log.Instance.Trace($"Set state to {state}, but dGPU check failed. [status={result}]");
 
             throw new IGPUModeChangeException(state);
         }

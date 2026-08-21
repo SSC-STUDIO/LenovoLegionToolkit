@@ -279,8 +279,8 @@ Installers:
   InstallerUrl: $InstallerUrl
   InstallerSha256: $installerSha256Upper
   InstallerSwitches:
-    Silent: --silent
-    SilentWithProgress: --silent
+    Silent: /S
+    SilentWithProgress: /S
 ManifestType: installer
 ManifestVersion: 1.10.0
 "@

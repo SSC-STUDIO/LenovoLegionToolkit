@@ -16,6 +16,11 @@
 
   Reads are allowed to stay lenient (case-insensitive matching in code), but
   written artifacts must use the canonical set below.
+
+  Resource file names are checked for BCP 47 form, not catalog membership:
+    - host/app resx must use CultureInfo.Name byte-for-byte (af, en-GB, zh-Hans)
+    - plugin resx may keep legacy case (zh-hans, pt-br, nl-nl, uz-latn-uz)
+      so this gate does not require mass-renaming Official plugin files
 #>
 param(
     [string]$RepositoryRoot = ''
@@ -56,12 +61,25 @@ if ($canonicalCultures.Count -eq 0) {
 $canonicalSet = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
 foreach ($c in $canonicalCultures) { [void]$canonicalSet.Add($c) }
 
-# Cultures with valid canonical spelling that are allowed in plugin scan
+# Tokens with valid canonical spelling that are allowed in plugin scan
 # exclusion lists and satellite build matrices even without app resx.
 $extraAllowed = @('bs','ca','ko','no','tools')
 foreach ($c in $extraAllowed) { [void]$canonicalSet.Add($c) }
 
 $failures = New-Object System.Collections.Generic.List[string]
+
+function Test-PluginPath([string]$Path) {
+    return $Path -match '[\\/]Plugins[\\/]'
+}
+
+function Get-DotNetCultureName([string]$Name) {
+    try {
+        return [System.Globalization.CultureInfo]::GetCultureInfo($Name).Name
+    }
+    catch {
+        return $null
+    }
+}
 
 function Assert-Canonical([string]$Name, [string]$Where, [string]$Context) {
     if (-not $canonicalSet.Contains($Name)) {
@@ -69,24 +87,47 @@ function Assert-Canonical([string]$Name, [string]$Where, [string]$Context) {
     }
 }
 
+function Assert-ResxCultureName([string]$Name, [string]$Where, [string]$Context) {
+    if ([string]::IsNullOrWhiteSpace($Name)) {
+        return
+    }
+    if ($canonicalSet.Contains($Name)) {
+        return
+    }
+
+    $dotnetName = Get-DotNetCultureName $Name
+    if (-not [string]::IsNullOrWhiteSpace($dotnetName)) {
+        if ($Name -ceq $dotnetName) {
+            return
+        }
+        if ((Test-PluginPath $Context) -and $Name.Equals($dotnetName, [System.StringComparison]::OrdinalIgnoreCase)) {
+            return
+        }
+        $failures.Add("Non-canonical culture '$Name' in $Where ($Context). Use '$dotnetName'")
+        return
+    }
+
+    $failures.Add("Unknown culture '$Name' in $Where ($Context). Use one of: $($canonicalCultures -join ', ')")
+}
+
 # 1. resx file names
 $resxFiles = Get-ChildItem -Path (Join-Path (Resolve-RepoRoot) '.') -Recurse -Filter 'Resource.*.resx' -File -ErrorAction SilentlyContinue |
-    Where-Object { $_.FullName -notmatch '\\(obj|bin)\\' }
+    Where-Object { $_.FullName -notmatch '[\\/](obj|bin)[\\/]' }
 foreach ($file in $resxFiles) {
     $name = $file.Name
     $culture = $name.Substring('Resource.'.Length, $name.Length - 'Resource.'.Length - '.resx'.Length)
     if ($culture -eq '') { continue }
-    Assert-Canonical $culture "resx file name" $file.FullName
+    Assert-ResxCultureName $culture "resx file name" $file.FullName
 }
 
 # CLI resources use a different prefix (CLI.Resources.*.resx)
 $cliFiles = Get-ChildItem -Path (Join-Path (Resolve-RepoRoot) '.') -Recurse -Filter 'CLI.Resources.*.resx' -File -ErrorAction SilentlyContinue |
-    Where-Object { $_.FullName -notmatch '\\(obj|bin)\\' }
+    Where-Object { $_.FullName -notmatch '[\\/](obj|bin)[\\/]' }
 foreach ($file in $cliFiles) {
     $name = $file.Name
     $culture = $name.Substring('CLI.Resources.'.Length, $name.Length - 'CLI.Resources.'.Length - '.resx'.Length)
     if ($culture -eq '') { continue }
-    Assert-Canonical $culture "resx file name" $file.FullName
+    Assert-ResxCultureName $culture "resx file name" $file.FullName
 }
 
 $repo = Resolve-RepoRoot

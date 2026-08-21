@@ -43,6 +43,8 @@ public abstract class AbstractWmiFeature<T>(Func<Task<int>> getValue, Func<int, 
         var internalResult = await getValue().ConfigureAwait(false);
         cancellationToken.ThrowIfCancellationRequested();
         var result = FromInternal(internalResult);
+        if (!Enum.IsDefined(result))
+            throw ExceptionHelper.UndefinedValueReceived(result);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"State is {result} [feature={GetType().Name}]");

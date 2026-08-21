@@ -90,6 +90,16 @@ public class ShellIntegrationProfileTests
         Assert.Equal("modern", p.Normalize().ThemeName);
     }
 
+    [Theory]
+    [InlineData("bad\"name", "badname")]
+    [InlineData("bad'name", "badname")]
+    [InlineData("bad\\name", "badname")]
+    [InlineData("\"\"", "modern")]
+    public void SanitizeThemeName_StripsQuotesAndSlashes(string input, string expected)
+    {
+        Assert.Equal(expected, ShellIntegrationProfile.SanitizeThemeName(input));
+    }
+
     [Fact]
     public void Normalize_EmptyThemeName_DefaultsToModern()
     {
@@ -205,15 +215,20 @@ public class ShellIntegrationProfileTests
     // ── CreatePreset ─────────────────────────────────────────────
 
     [Theory]
-    [InlineData(ShellIntegrationPreset.Default)]
-    
-    
-    public void CreatePreset_ReturnsNonNullProfile(ShellIntegrationPreset preset)
+    [InlineData(ShellIntegrationPreset.Default, "modern", false, ShellColorScheme.Auto)]
+    [InlineData(ShellIntegrationPreset.CompactDark, "compact-dark", true, ShellColorScheme.Dark)]
+    [InlineData(ShellIntegrationPreset.MinimalLight, "minimal-light", false, ShellColorScheme.Light)]
+    public void CreatePreset_ReturnsExpectedProfile(
+        ShellIntegrationPreset preset,
+        string themeName,
+        bool useCompactView,
+        ShellColorScheme colorScheme)
     {
         var p = ShellIntegrationProfile.CreatePreset(preset);
-        Assert.NotNull(p);
+        Assert.Equal(themeName, p.ThemeName);
+        Assert.Equal(useCompactView, p.UseCompactView);
+        Assert.Equal(colorScheme, p.ColorScheme);
         Assert.True(p.EnableShellIntegration);
-        Assert.False(string.IsNullOrEmpty(p.ThemeName));
     }
 
     // ── SanitizeBackgroundEffect ─────────────────────────────────

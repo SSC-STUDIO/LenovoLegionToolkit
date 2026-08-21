@@ -23,16 +23,48 @@ public sealed class DoctorService
             : Path.Combine(repository.HostDependenciesRoot, "host-release.json");
         Add(result, File.Exists(hostReleasePath), $"Host release manifest found: {hostReleasePath}");
 
-        var hostRelease = TryReadHostRelease(hostReleasePath);
-        var hostRoot = repository.HostDependenciesRoot;
-        if (hostRelease is not null && File.Exists(baselineManifestPath))
+        if (!File.Exists(hostReleasePath))
         {
-            hostRoot = Path.Combine(hostRoot, hostRelease.HostVersion);
+            Add(result, false, "Host library found: (host release manifest missing)");
+            Add(result, repository.Plugins.Count > 0, $"Discovered {repository.Plugins.Count} plugin project(s).");
+            return result;
         }
 
-        var libName = hostRelease?.Artifacts.Lib ?? "UniversalDeviceToolkit.Lib.dll";
+        var hostRelease = TryReadHostRelease(hostReleasePath);
+        if (hostRelease is null)
+        {
+            Add(result, false, $"Host release manifest is invalid JSON: {hostReleasePath}");
+            Add(result, false, "Host library found: (host version unknown)");
+            Add(result, repository.Plugins.Count > 0, $"Discovered {repository.Plugins.Count} plugin project(s).");
+            return result;
+        }
+
+        var hostRoot = repository.HostDependenciesRoot;
+        if (File.Exists(baselineManifestPath))
+        {
+            if (string.IsNullOrWhiteSpace(hostRelease.HostVersion))
+            {
+                Add(result, false, "HostBaseline hostVersion is missing.");
+                Add(result, false, "Host library found: (host version unknown)");
+                Add(result, repository.Plugins.Count > 0, $"Discovered {repository.Plugins.Count} plugin project(s).");
+                return result;
+            }
+
+            hostRoot = Path.Combine(hostRoot, hostRelease.HostVersion);
+            Add(result, Directory.Exists(hostRoot), $"Host dependency cache found: {hostRoot}");
+        }
+
+        var libName = string.IsNullOrWhiteSpace(hostRelease.Artifacts.Lib)
+            ? "UniversalDeviceToolkit.Lib.dll"
+            : hostRelease.Artifacts.Lib;
         var libPath = Path.Combine(hostRoot, libName);
         Add(result, File.Exists(libPath), $"Host library found: {libPath}");
+
+        if (!string.IsNullOrWhiteSpace(hostRelease.Artifacts.LibPlugins))
+        {
+            var libPluginsPath = Path.Combine(hostRoot, hostRelease.Artifacts.LibPlugins);
+            Add(result, File.Exists(libPluginsPath), $"Host plugins library found: {libPluginsPath}");
+        }
 
         Add(result, repository.Plugins.Count > 0, $"Discovered {repository.Plugins.Count} plugin project(s).");
 
@@ -51,6 +83,10 @@ public sealed class DoctorService
             return PluginRepository.ReadJsonFile<HostReleaseManifest>(path);
         }
         catch (JsonException)
+        {
+            return null;
+        }
+        catch (InvalidOperationException)
         {
             return null;
         }

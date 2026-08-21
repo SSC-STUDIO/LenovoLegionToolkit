@@ -125,6 +125,33 @@ public class PluginSignatureAndAdapterTests
         settings.ValidationMode.Should().Be(PluginSignatureValidationMode.AllowUnsigned);
     }
 
+    [Theory]
+    [InlineData("disable", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("disabled", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("disable-validation", PluginSignatureValidationMode.DisableValidation)]
+    [InlineData("development", PluginSignatureValidationMode.AllowUnsigned)]
+    [InlineData("allowunsigned", PluginSignatureValidationMode.AllowUnsigned)]
+    [InlineData("allow-unsigned", PluginSignatureValidationMode.AllowUnsigned)]
+    public void CreateForRuntime_RelaxedAliases_ShouldNotBypassProductionOutsideDebug(
+        string value,
+        PluginSignatureValidationMode debugMode)
+    {
+        var settings = PluginSignatureSettings.CreateForRuntime(value);
+        if (PluginSignatureSettings.RelaxedModesAllowed)
+            settings.ValidationMode.Should().Be(debugMode);
+        else
+            settings.ValidationMode.Should().Be(PluginSignatureValidationMode.RequireSignature);
+    }
+
+    [Fact]
+    public void CreateForRuntime_UnknownValue_ShouldReturnProduction()
+    {
+        var settings = PluginSignatureSettings.CreateForRuntime("unexpected");
+        settings.ValidationMode.Should().Be(PluginSignatureValidationMode.RequireSignature);
+        settings.AllowTestCertificates.Should().BeFalse();
+        settings.CheckRevocationStatus.Should().BeTrue();
+    }
+
     #endregion
 
     #region PluginSignatureSettings SetProperties Tests

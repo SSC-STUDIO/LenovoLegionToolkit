@@ -13,7 +13,8 @@ namespace UniversalDeviceToolkit.Shared.Diagnostics;
 public static class CrashReportStore
 {
     private static readonly DateTime StartedAtUtc = DateTime.UtcNow;
-    private static readonly string CrashReportFolder = Path.Combine(Folders.AppData, "crash_reports");
+
+    private static string CrashReportFolder => Path.Combine(Folders.AppData, "crash_reports");
 
     public static string CrashReportDirectory => CrashReportFolder;
 
@@ -77,6 +78,9 @@ public static class CrashReportStore
 
     public static CrashReport? Load(string path)
     {
+        if (!IsStorePath(path))
+            return null;
+
         try
         {
             return JsonSerializer.Deserialize<CrashReport>(File.ReadAllText(path, Encoding.UTF8));
@@ -90,6 +94,9 @@ public static class CrashReportStore
 
     public static void Delete(string path)
     {
+        if (!IsStorePath(path))
+            return;
+
         try
         {
             if (File.Exists(path))
@@ -117,6 +124,9 @@ public static class CrashReportStore
             SharedLog.Warning("Failed during old crash report cleanup.", exception);
         }
     }
+
+    private static bool IsStorePath(string? path) =>
+        PathSecurity.IsPathWithinAllowedDirectory(path, CrashReportFolder, allowNonExistent: true);
 
     private static string GetAppVersion()
     {

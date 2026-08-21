@@ -38,6 +38,23 @@ public class AutomationProcessor(
 
     public bool IsEnabled => settings.Store.IsEnabled;
 
+    public bool HasHardwareSensorTriggers()
+    {
+        if (!IsEnabled)
+            return false;
+
+        foreach (var pipeline in _pipelines)
+        {
+            foreach (var trigger in pipeline.AllTriggers)
+            {
+                if (trigger is HardwareSensorAutomationPipelineTrigger)
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
     public event EventHandler<List<AutomationPipeline>>? PipelinesChanged;
 
     #region Initialization / pipeline reloading

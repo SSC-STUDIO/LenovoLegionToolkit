@@ -1062,6 +1062,17 @@ public class SensorsGroupControllerTests
     }
 
     [Fact]
+    public void ToGigabytes_WhenSensorIsSmallData_ShouldConvertMegabytesToGigabytes()
+    {
+        var smallData = CreateDataSensor("GPU Memory Used", SensorType.SmallData, 8192f);
+        var data = CreateDataSensor("GPU Memory Used", SensorType.Data, 8f);
+
+        HardwareDiscoveryService.ToGigabytes(smallData.Object).Should().BeApproximately(8f, 0.0001f);
+        HardwareDiscoveryService.ToGigabytes(data.Object).Should().BeApproximately(8f, 0.0001f);
+        HardwareDiscoveryService.ToGigabytes(null).Should().BeNull();
+    }
+
+    [Fact]
     public void ResolveGpuVramMetrics_WhenUsedIsMissing_ShouldDeriveUsedAndUtilizationFromTotalAndFree()
     {
         var result = SensorsGroupController.ResolveGpuVramMetrics(-1f, 8192f, 7168f);
@@ -1248,6 +1259,13 @@ public class SensorsGroupControllerTests
         var sensor = new Mock<ISensor>();
         sensor.SetupGet(s => s.Name).Returns(name);
         sensor.SetupGet(s => s.SensorType).Returns(sensorType);
+        return sensor;
+    }
+
+    private static Mock<ISensor> CreateDataSensor(string name, SensorType sensorType, float value)
+    {
+        var sensor = CreateSensor(name, sensorType);
+        sensor.SetupGet(s => s.Value).Returns(value);
         return sensor;
     }
 }

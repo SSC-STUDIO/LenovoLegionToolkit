@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invokeObject } from './bridge'
 
 export type DashboardGroupType = 'Power' | 'Graphics' | 'Display' | 'Other' | 'Custom'
 
@@ -46,10 +46,14 @@ export interface DashboardApi {
 
 export const dashboardApi: DashboardApi = {
   async getConfig() {
-    return invoke<DashboardConfig>('dashboard.getConfig', {})
+    return invokeObject<DashboardConfig>('dashboard.getConfig', {})
   },
 
   async saveConfig(config) {
-    return invoke<{ saved: boolean }>('dashboard.saveConfig', { config })
+    const result = await invokeObject<{ saved: boolean }>('dashboard.saveConfig', { config })
+    if (result.saved !== true) {
+      throw new Error('Dashboard configuration was not saved.')
+    }
+    return result
   },
 }

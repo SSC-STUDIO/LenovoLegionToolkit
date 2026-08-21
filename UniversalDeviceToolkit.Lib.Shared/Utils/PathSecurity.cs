@@ -79,14 +79,7 @@ public static class PathSecurity
             var fullPath = Path.GetFullPath(path);
             var fullBasePath = Path.GetFullPath(basePath);
 
-            // Ensure base path ends with separator for proper prefix checking
-            if (!fullBasePath.EndsWith(Path.DirectorySeparatorChar.ToString(), StringComparison.Ordinal) &&
-                !fullBasePath.EndsWith(Path.AltDirectorySeparatorChar.ToString(), StringComparison.Ordinal))
-            {
-                fullBasePath += Path.DirectorySeparatorChar;
-            }
-
-            if (!fullPath.StartsWith(fullBasePath, StringComparison.OrdinalIgnoreCase))
+            if (!IsUnderAllowedRoot(fullPath, fullBasePath))
                 return false;
 
             if (fullPath.Contains(".." + Path.DirectorySeparatorChar) ||
@@ -99,8 +92,11 @@ public static class PathSecurity
             // regardless of allowNonExistent.
             if (File.Exists(fullPath) || Directory.Exists(fullPath))
             {
+                var isReparsePoint = (File.GetAttributes(fullPath) & FileAttributes.ReparsePoint) != 0;
                 var resolvedPath = ResolveSymbolicLinks(fullPath);
-                if (resolvedPath != null && !resolvedPath.StartsWith(fullBasePath, StringComparison.OrdinalIgnoreCase))
+                if (isReparsePoint && resolvedPath is null)
+                    return false;
+                if (resolvedPath is not null && !IsUnderAllowedRoot(resolvedPath, fullBasePath))
                     return false;
             }
 
@@ -122,24 +118,41 @@ public static class PathSecurity
     /// Attempts to resolve the final target of a symbolic link or junction point.
     /// Returns null if the path is not a reparse point.
     /// </summary>
+    private static StringComparison PathComparison =>
+        OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
+    private static bool IsUnderAllowedRoot(string fullPath, string fullBasePath)
+    {
+        var baseWithSeparator = fullBasePath;
+        if (!baseWithSeparator.EndsWith(Path.DirectorySeparatorChar) &&
+            !baseWithSeparator.EndsWith(Path.AltDirectorySeparatorChar))
+        {
+            baseWithSeparator += Path.DirectorySeparatorChar;
+        }
+
+        if (fullPath.StartsWith(baseWithSeparator, PathComparison))
+            return true;
+
+        var trimmedBase = baseWithSeparator.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        return fullPath.Equals(trimmedBase, PathComparison);
+    }
+
     private static string? ResolveSymbolicLinks(string path)
     {
         try
         {
-            // .NET 6+: FileSystemInfo.LinkTarget resolves symlinks
-            var fileInfo = new FileInfo(path);
-            if (fileInfo.Exists && fileInfo.LinkTarget != null)
-                return Path.GetFullPath(fileInfo.LinkTarget);
+            FileSystemInfo info = File.Exists(path) ? new FileInfo(path) : new DirectoryInfo(path);
+            if (!info.Exists)
+                return null;
 
-            var dirInfo = new DirectoryInfo(path);
-            if (dirInfo.Exists && dirInfo.LinkTarget != null)
-                return Path.GetFullPath(dirInfo.LinkTarget);
+            if (info.LinkTarget is null && (info.Attributes & FileAttributes.ReparsePoint) == 0)
+                return null;
 
-            return null;
+            var target = info.ResolveLinkTarget(returnFinalTarget: true);
+            return target?.FullName;
         }
-        catch
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException or ArgumentException)
         {
-            // If we cannot resolve, return null (caller handles this gracefully)
             return null;
         }
     }
@@ -147,10 +160,12 @@ public static class PathSecurity
     /// <summary>
     /// Sanitizes a file name by removing or replacing dangerous characters.
     /// </summary>
-    public static string SanitizeFileName(string? fileName, string replacement = "_")
+    public static string SanitizeFileName(string? fileName, string? replacement = "_")
     {
         if (string.IsNullOrWhiteSpace(fileName))
             return "unnamed";
+
+        replacement = string.IsNullOrEmpty(replacement) ? "_" : replacement;
 
         // Remove directory separators first
         var sanitized = fileName.Replace("/", replacement).Replace("\\", replacement);
@@ -169,7 +184,8 @@ public static class PathSecurity
 
         // Check for reserved device names
         var nameWithoutExt = Path.GetFileNameWithoutExtension(sanitized);
-        if (ReservedDeviceNames.Any(r => nameWithoutExt.Equals(r, StringComparison.OrdinalIgnoreCase)))
+        if (!string.IsNullOrEmpty(nameWithoutExt) &&
+            ReservedDeviceNames.Any(r => nameWithoutExt.Equals(r, StringComparison.OrdinalIgnoreCase)))
         {
             sanitized = "_" + sanitized;
         }
@@ -290,7 +306,7 @@ public static class PathSecurity
         bool startsWithAllowedRoot = false;
         foreach (var root in allowedRoots)
         {
-            if (upperPath.StartsWith(root) || upperPath.StartsWith("\\" + root))
+            if (HasRegistryRoot(upperPath, root) || HasRegistryRoot(upperPath, "\\" + root))
             {
                 startsWithAllowedRoot = true;
                 break;
@@ -346,16 +362,7 @@ public static class PathSecurity
             bool inAllowedLocation = false;
             foreach (var root in AllowedDriverRoots)
             {
-                var fullRoot = Path.GetFullPath(root);
-                if (!fullRoot.EndsWith(Path.DirectorySeparatorChar) &&
-                    !fullRoot.EndsWith(Path.AltDirectorySeparatorChar))
-                {
-                    fullRoot += Path.DirectorySeparatorChar;
-                }
-
-                if (fullPath.StartsWith(fullRoot, StringComparison.OrdinalIgnoreCase) ||
-                    fullPath.Equals(fullRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar),
-                        StringComparison.OrdinalIgnoreCase))
+                if (IsUnderAllowedRoot(fullPath, Path.GetFullPath(root)))
                 {
                     inAllowedLocation = true;
                     break;
@@ -379,5 +386,13 @@ public static class PathSecurity
         {
             return false;
         }
+    }
+
+    private static bool HasRegistryRoot(string upperPath, string root)
+    {
+        if (upperPath.Length < root.Length || !upperPath.StartsWith(root, StringComparison.Ordinal))
+            return false;
+
+        return upperPath.Length == root.Length || upperPath[root.Length] == '\\';
     }
 }

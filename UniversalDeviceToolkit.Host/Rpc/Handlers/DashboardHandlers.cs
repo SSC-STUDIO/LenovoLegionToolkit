@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 using System.Text.Json;
-using System.Text.Json.Serialization;
+using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Serialization;
@@ -24,6 +24,7 @@ public static class DashboardHandlers
     {
         var options = LltJson.CreateCompactOptions();
         options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.PropertyNameCaseInsensitive = true;
         return options;
     }
 
@@ -31,48 +32,55 @@ public static class DashboardHandlers
 
     public static void Register(BridgeRpcServer rpc)
     {
-        rpc.RegisterHandler("dashboard.getConfig", (request, _) => HandleGetConfigAsync());
-        rpc.RegisterHandler("dashboard.saveConfig", (request, _) => HandleSaveConfigAsync(request));
+        rpc.RegisterHandler("dashboard.getConfig", (_, ct) => HandleGetConfigAsync(ct));
+        rpc.RegisterHandler("dashboard.saveConfig", (request, ct) => HandleSaveConfigAsync(request, ct));
     }
 
-    private static async Task<BridgeResult> HandleGetConfigAsync()
+    private static Task<BridgeResult> HandleGetConfigAsync(CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var store = GetSettings().Store;
+            HostDashboardSettings.Normalize(store);
             var node = JsonSerializer.SerializeToNode(store, store.GetType(), Options);
-
-            await Task.CompletedTask;
-            return BridgeResult.Ok(node);
+            return Task.FromResult(BridgeResult.Ok(node));
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return Task.FromResult(BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}"));
         }
     }
 
-    private static async Task<BridgeResult> HandleSaveConfigAsync(BridgeRequest request)
+    private static async Task<BridgeResult> HandleSaveConfigAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
         try
         {
-            if (!request.Parameters.TryGetProperty("config", out var configProp))
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!request.Parameters.TryGetProperty("config", out var configProp) ||
+                configProp.ValueKind is JsonValueKind.Undefined or JsonValueKind.Null)
+            {
                 throw new BridgeErrorException(-32602, "Missing 'config' parameter.");
+            }
 
             var replacement = JsonSerializer.Deserialize<HostDashboardSettings.DashboardSettingsStore>(configProp.GetRawText(), Options)
                 ?? throw new BridgeErrorException(-32603, "Deserialized dashboard config is null.");
             var settings = GetSettings();
             var store = settings.Store;
             CopyProperties(replacement, store);
+            HostDashboardSettings.Normalize(store);
 
-            // Keep the persisted layout consistent: an empty group list falls
-            // back to the built-in default groups (mirrors WPF NormalizeGroups).
-            if (store.Groups is not { Count: > 0 })
-                store.Groups = DashboardGroup.DefaultGroups;
-
-            settings.SynchronizeStore();
-
-            await Task.CompletedTask;
+            cancellationToken.ThrowIfCancellationRequested();
+            await settings.SynchronizeStoreAsync().ConfigureAwait(false);
             return BridgeResult.Ok(new { saved = true });
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (BridgeErrorException ex)
         {

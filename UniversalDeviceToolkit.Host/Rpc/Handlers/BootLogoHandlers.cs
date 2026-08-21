@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -53,14 +54,24 @@ public static class BootLogoHandlers
     {
         try
         {
-            if (!request.Parameters.TryGetProperty("filePath", out var pathProp) ||
-                pathProp.ValueKind != JsonValueKind.String ||
-                string.IsNullOrWhiteSpace(pathProp.GetString()))
+            if (request.Parameters.ValueKind != JsonValueKind.Object ||
+                !request.Parameters.TryGetProperty("filePath", out var pathProp) ||
+                pathProp.ValueKind != JsonValueKind.String)
             {
                 return BridgeResult.Error(-32602, "Missing string parameter 'filePath'.");
             }
 
-            await BootLogo.EnableAsync(pathProp.GetString()!).ConfigureAwait(false);
+            var filePath = pathProp.GetString();
+            if (string.IsNullOrWhiteSpace(filePath))
+                return BridgeResult.Error(-32602, "Missing string parameter 'filePath'.");
+
+            if (!File.Exists(filePath))
+                return BridgeResult.Error(-32602, "The selected boot-logo file does not exist.");
+
+            if (!await BootLogo.IsSupportedAsync().ConfigureAwait(false))
+                return BridgeResult.Error(BridgeErrorCodes.FeatureNotSupported, "Boot logo is not supported on this device.");
+
+            await BootLogo.EnableAsync(filePath).ConfigureAwait(false);
             return BridgeResult.Ok(new { ok = true });
         }
         catch (Exception ex)
@@ -73,6 +84,9 @@ public static class BootLogoHandlers
     {
         try
         {
+            if (!await BootLogo.IsSupportedAsync().ConfigureAwait(false))
+                return BridgeResult.Error(BridgeErrorCodes.FeatureNotSupported, "Boot logo is not supported on this device.");
+
             await BootLogo.DisableAsync().ConfigureAwait(false);
             return BridgeResult.Ok(new { ok = true });
         }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { FolderOpen24Regular, Link24Regular } from '../components/icons/fluent'
 import { useTranslation } from 'react-i18next'
 import { invoke } from '../api/bridge'
@@ -46,7 +46,7 @@ function AboutHeroPattern(): React.JSX.Element {
       className="udt-about-page__pattern"
       viewBox="0 0 720 280"
       preserveAspectRatio="xMaxYMid slice"
-      aria-hidden
+      aria-hidden="true"
     >
       <g fill="none" stroke="currentColor" strokeLinecap="round">
         <path d="M 430 36 A 122 122 0 0 1 430 248" strokeWidth="22" opacity="0.34" />
@@ -70,12 +70,26 @@ function AboutHeroPattern(): React.JSX.Element {
 export default function AboutPage(): React.JSX.Element {
   const { t, i18n } = useTranslation()
   const [appStatus, setAppStatus] = useState<AppStatus | null>(null)
+  const [statusError, setStatusError] = useState(false)
 
-  useEffect(() => {
-    void invoke<AppStatus>('app.getStatus').then(setAppStatus).catch(() => undefined)
+  const loadAppStatus = useCallback((): void => {
+    void invoke<AppStatus>('app.getStatus')
+      .then((status) => {
+        setStatusError(false)
+        setAppStatus(status)
+      })
+      .catch(() => {
+        setStatusError(true)
+      })
   }, [])
 
-  const version = appStatus?.version ?? '...'
+  useEffect(() => {
+    loadAppStatus()
+  }, [loadAppStatus])
+
+  const version = statusError
+    ? t('common.error')
+    : (appStatus?.version ?? t('common.loading'))
   const build = appStatus?.build?.trim() ?? ''
   const isEnglish = i18n.language.toLowerCase().startsWith('en')
 
@@ -102,13 +116,18 @@ export default function AboutPage(): React.JSX.Element {
             <h1 className="udt-page-title">{t('about.title')}</h1>
             <p className="udt-about-page__app-name">{t('app.name')}</p>
             <div className="udt-about-page__badges">
-              <span className="udt-about-page__badge">
+              <span className="udt-about-page__badge" aria-live="polite">
                 {t('about.version')} {version}
               </span>
               {build !== '' && (
                 <span className="udt-about-page__badge">
                   {t('about.build')} {build}
                 </span>
+              )}
+              {statusError && (
+                <button type="button" className="udt-link-button" onClick={loadAppStatus}>
+                  {t('common.retry')}
+                </button>
               )}
             </div>
             <p className="udt-about-page__copyright">

@@ -25,6 +25,7 @@ public sealed class TestLayoutGuardTests
         "UniversalDeviceToolkit.Tests",
         "UniversalDeviceToolkit.Tests.Contracts",
         "UniversalDeviceToolkit.Tests.Stateful",
+        "UniversalDeviceToolkit.Fast.Tests",
     ];
 
     private static readonly IReadOnlyDictionary<string, string[]> AggregateTypeContracts =
@@ -69,8 +70,7 @@ public sealed class TestLayoutGuardTests
                 var source = File.ReadAllText(file);
                 var relative = Path.GetRelativePath(root, file);
                 var fileName = Path.GetFileNameWithoutExtension(file);
-
-                if (fileName is "AssemblyInfo" or "GlobalUsings")
+                if (string.IsNullOrEmpty(fileName) || fileName is "AssemblyInfo" or "GlobalUsings")
                     continue;
 
                 var namespaceMatch = FileScopedNamespace.Match(source);
@@ -84,7 +84,9 @@ public sealed class TestLayoutGuardTests
                 }
 
                 var directory = Path.GetDirectoryName(relative);
-                var expectedNamespace = "UniversalDeviceToolkit.Tests";
+                var expectedNamespace = folder == "UniversalDeviceToolkit.Fast.Tests"
+                    ? "UniversalDeviceToolkit.Fast.Tests"
+                    : "UniversalDeviceToolkit.Tests";
                 if (!string.IsNullOrWhiteSpace(directory))
                 {
                     expectedNamespace += "." + directory.Replace(Path.DirectorySeparatorChar, '.');
@@ -120,7 +122,7 @@ public sealed class TestLayoutGuardTests
             .SelectMany(folder => Directory.EnumerateFiles(Path.Combine(repo, folder), "*.cs", SearchOption.AllDirectories))
             .Where(path => !IsBuildOutput(path))
             .Select(path => Path.GetFileName(path))
-            .Where(name => Regex.IsMatch(name, @"^Phase(?:[0-9A-Z]+)", RegexOptions.IgnoreCase))
+            .Where(name => name is not null && Regex.IsMatch(name, @"^Phase(?:[0-9A-Z]+)", RegexOptions.IgnoreCase))
             .ToArray();
 
         temporaryNames.Should().BeEmpty("tests should be named after the domain they verify");

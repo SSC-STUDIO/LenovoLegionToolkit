@@ -17,20 +17,24 @@ public sealed class SettingsBackupService
     public string Export(string destinationFile)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(destinationFile);
-        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(destinationFile))!);
-        if (File.Exists(destinationFile)) File.Delete(destinationFile);
+        var destinationPath = Path.GetFullPath(destinationFile);
+        Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
 
-        using var archive = ZipFile.Open(destinationFile, ZipArchiveMode.Create);
-        var files = Directory.Exists(Folders.AppData)
-            ? Directory.EnumerateFiles(Folders.AppData, "*.json", SearchOption.TopDirectoryOnly).OrderBy(Path.GetFileName)
-            : Enumerable.Empty<string>();
-        foreach (var file in files)
-            archive.CreateEntryFromFile(file, $"settings/{Path.GetFileName(file)}", CompressionLevel.Optimal);
+        AtomicReplaceFile(destinationPath, tempPath =>
+        {
+            using var archive = ZipFile.Open(tempPath, ZipArchiveMode.Create);
+            var files = Directory.Exists(Folders.AppData)
+                ? Directory.EnumerateFiles(Folders.AppData, "*.json", SearchOption.TopDirectoryOnly).OrderBy(Path.GetFileName)
+                : Enumerable.Empty<string>();
+            foreach (var file in files)
+                archive.CreateEntryFromFile(file, $"settings/{Path.GetFileName(file)}", CompressionLevel.Optimal);
 
-        var entry = archive.CreateEntry(ManifestName);
-        using var writer = new StreamWriter(entry.Open());
-        writer.Write(JsonSerializer.Serialize(new Manifest(CurrentFormatVersion, DateTimeOffset.UtcNow)));
-        return destinationFile;
+            var entry = archive.CreateEntry(ManifestName);
+            using var writer = new StreamWriter(entry.Open());
+            writer.Write(JsonSerializer.Serialize(new Manifest(CurrentFormatVersion, DateTimeOffset.UtcNow)));
+        });
+
+        return destinationPath;
     }
 
     public string Import(string sourceFile)
@@ -53,6 +57,9 @@ public sealed class SettingsBackupService
             .Where(entry => entry.FullName.StartsWith("settings/", StringComparison.Ordinal)
                             && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
             .ToArray();
+        if (settingsEntries.Length == 0)
+            throw new InvalidDataException(Resource.SettingsBackup_InvalidManifest);
+
         foreach (var entry in settingsEntries)
         {
             if (!PathSecurity.IsValidFileName(entry.Name))
@@ -71,7 +78,14 @@ public sealed class SettingsBackupService
         {
             Directory.CreateDirectory(staging);
             foreach (var entry in settingsEntries)
-                entry.ExtractToFile(Path.Combine(staging, entry.Name), overwrite: true);
+            {
+                var stagedPath = Path.Combine(staging, entry.Name);
+                if (!PathSecurity.IsPathWithinAllowedDirectory(stagedPath, staging))
+                    throw new InvalidDataException(string.Format(
+                        Resource.SettingsBackup_UnsafeEntry,
+                        entry.FullName));
+                entry.ExtractToFile(stagedPath, overwrite: true);
+            }
 
             Directory.CreateDirectory(Folders.AppData);
 
@@ -81,7 +95,7 @@ public sealed class SettingsBackupService
             foreach (var file in Directory.EnumerateFiles(staging, "*.json", SearchOption.TopDirectoryOnly))
             {
                 var name = Path.GetFileName(file);
-                File.Copy(file, Path.Combine(Folders.AppData, name), overwrite: true);
+                AtomicReplaceFromExistingFile(file, Path.Combine(Folders.AppData, name));
                 importedNames.Add(name);
             }
 
@@ -122,26 +136,86 @@ public sealed class SettingsBackupService
         Directory.CreateDirectory(Folders.AppData);
 
         var restoredNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var entry in archive.Entries.Where(entry =>
-                     entry.FullName.StartsWith("settings/", StringComparison.Ordinal)
-                     && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
+        var restoreStaging = Path.Combine(Folders.AppData, "Backups", $"restore-staging-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(restoreStaging);
+        try
         {
-            if (!PathSecurity.IsValidFileName(entry.Name))
-                continue;
-            entry.ExtractToFile(Path.Combine(Folders.AppData, entry.Name), overwrite: true);
-            restoredNames.Add(entry.Name);
-        }
-
-        // Mirror import replace semantics on rollback.
-        foreach (var existing in Directory.EnumerateFiles(Folders.AppData, "*.json", SearchOption.TopDirectoryOnly))
-        {
-            var name = Path.GetFileName(existing);
-            if (!restoredNames.Contains(name))
+            foreach (var entry in archive.Entries.Where(entry =>
+                         entry.FullName.StartsWith("settings/", StringComparison.Ordinal)
+                         && entry.Name.EndsWith(".json", StringComparison.OrdinalIgnoreCase)))
             {
-                try { File.Delete(existing); }
+                if (!PathSecurity.IsValidFileName(entry.Name))
+                    continue;
+                var stagedPath = Path.Combine(restoreStaging, entry.Name);
+                if (!PathSecurity.IsPathWithinAllowedDirectory(stagedPath, restoreStaging))
+                    continue;
+                entry.ExtractToFile(stagedPath, overwrite: true);
+                AtomicReplaceFromExistingFile(stagedPath, Path.Combine(Folders.AppData, entry.Name));
+                restoredNames.Add(entry.Name);
+            }
+
+            // Mirror import replace semantics on rollback.
+            foreach (var existing in Directory.EnumerateFiles(Folders.AppData, "*.json", SearchOption.TopDirectoryOnly))
+            {
+                var name = Path.GetFileName(existing);
+                if (!restoredNames.Contains(name))
+                {
+                    try { File.Delete(existing); }
+                    catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+                    {
+                        Log.Instance.Warning($"Failed to remove leftover settings file during restore: {existing}", ex);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            try
+            {
+                if (Directory.Exists(restoreStaging))
+                    Directory.Delete(restoreStaging, recursive: true);
+            }
+            catch (Exception ex)
+            {
+                Log.Instance.WarningOnce(
+                    "settings-backup-restore-staging-cleanup",
+                    $"Best-effort cleanup of settings restore staging failed: {restoreStaging}",
+                    ex);
+            }
+        }
+    }
+
+    private static void AtomicReplaceFromExistingFile(string sourcePath, string destinationPath)
+    {
+        AtomicReplaceFile(destinationPath, tempPath => File.Copy(sourcePath, tempPath, overwrite: true));
+    }
+
+    /// <summary>
+    /// Write to a sibling temp file, flush, then replace the destination so a crash
+    /// cannot leave a torn JSON/zip at the live path.
+    /// </summary>
+    private static void AtomicReplaceFile(string destinationPath, Action<string> writeTempFile)
+    {
+        var directory = Path.GetDirectoryName(destinationPath);
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
+
+        var tempPath = destinationPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            writeTempFile(tempPath);
+            using (var stream = new FileStream(tempPath, FileMode.Open, FileAccess.ReadWrite, FileShare.Read))
+                stream.Flush(flushToDisk: true);
+            File.Move(tempPath, destinationPath, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+            {
+                try { File.Delete(tempPath); }
                 catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
                 {
-                    Log.Instance.Warning($"Failed to remove leftover settings file during restore: {existing}", ex);
+                    Log.Instance.Warning($"Failed to delete settings temp file: {tempPath}", ex);
                 }
             }
         }

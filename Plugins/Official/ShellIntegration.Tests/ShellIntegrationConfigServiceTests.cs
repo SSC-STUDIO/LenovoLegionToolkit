@@ -109,6 +109,20 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     }
 
     [Fact]
+    public void TryLoadProfile_CorruptedFile_ReturnsFalseWithDefaultProfile()
+    {
+        var service = CreateService();
+        Directory.CreateDirectory(_testDirectory);
+        File.WriteAllText(service.LocalProfilePath, "invalid json {{");
+
+        var ok = service.TryLoadProfile(out var profile, out var errorMessage);
+
+        Assert.False(ok);
+        Assert.False(string.IsNullOrWhiteSpace(errorMessage));
+        Assert.Equal("modern", profile.ThemeName);
+    }
+
+    [Fact]
     public void LoadProfile_EmptyFile_ReturnsDefault()
     {
         var service = CreateService();
@@ -154,7 +168,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
             {
                 service.SaveProfile(profile);
             }
-            catch (UnauthorizedAccessException)
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
                 // Expected: File.Move fails because target is locked
             }
@@ -748,12 +762,12 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         var profile = new ShellIntegrationProfile
         {
             BackgroundEffect = ShellVisualEffect.Acrylic,
-            AccentColor = "#3366FF"
+            TintColor = "#DCE6FF",
+            BackgroundOpacity = 92
         };
         var rendered = ShellIntegrationConfigService.RenderTheme(profile);
 
-        Assert.Contains("effect =", rendered);
-        Assert.Contains("3", rendered); // Acrylic effect type
+        Assert.Contains("effect = [3, #DCE6FF, 92]", rendered, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -765,8 +779,7 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         };
         var rendered = ShellIntegrationConfigService.RenderTheme(profile);
 
-        Assert.Contains("effect =", rendered);
-        Assert.Contains("2", rendered); // Blur effect type
+        Assert.Contains("effect = 2", rendered, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -797,6 +810,16 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         Assert.Contains("#FF0000", rendered);
         Assert.Contains("#FFFFFF", rendered);
         Assert.Contains("#00FF00", rendered);
+    }
+
+    [Fact]
+    public void RenderTheme_SanitizesQuotedThemeName()
+    {
+        var profile = new ShellIntegrationProfile { ThemeName = "bad\"name\n" };
+        var rendered = ShellIntegrationConfigService.RenderTheme(profile);
+
+        Assert.DoesNotContain("bad\"name", rendered, StringComparison.Ordinal);
+        Assert.Contains("name = \"badname\"", rendered, StringComparison.Ordinal);
     }
 
     #endregion
@@ -911,6 +934,74 @@ public class ShellIntegrationConfigServiceTests : IDisposable
         var result = ShellIntegrationConfigService.UpsertManagedImportBlock(oldBlock);
 
         Assert.DoesNotContain("old imports", result);
+    }
+
+    [Fact]
+    public void RemoveManagedImportBlock_EmptyContent_ReturnsEmpty()
+    {
+        Assert.Equal(string.Empty, ShellIntegrationConfigService.RemoveManagedImportBlock(""));
+        Assert.Equal(string.Empty, ShellIntegrationConfigService.RemoveManagedImportBlock("   "));
+    }
+
+    [Fact]
+    public void RemoveManagedImportBlock_PreservesNonManagedContent()
+    {
+        var content = "theme { }\n\n# region UniversalDeviceToolkit.Managed\nimport 'x'\n# endregion UniversalDeviceToolkit.Managed\n\nmenu()";
+        var result = ShellIntegrationConfigService.RemoveManagedImportBlock(content);
+
+        Assert.Contains("theme { }", result);
+        Assert.Contains("menu()", result);
+        Assert.DoesNotContain("# region UniversalDeviceToolkit.Managed", result);
+        Assert.DoesNotContain("import 'x'", result);
+    }
+
+    [Fact]
+    public void RemoveManagedImportBlock_AfterUpsert_RestoresOriginalPayload()
+    {
+        var original = "settings { }\nmenu()\n";
+        var withBlock = ShellIntegrationConfigService.UpsertManagedImportBlock(original);
+        var removed = ShellIntegrationConfigService.RemoveManagedImportBlock(withBlock);
+
+        Assert.Contains("settings { }", removed);
+        Assert.Contains("menu()", removed);
+        Assert.DoesNotContain("UniversalDeviceToolkit.Managed", removed);
+    }
+
+    [Fact]
+    public void TryRemoveManagedImportBlock_AfterApplyProfile_RemovesManagedRegion()
+    {
+        var service = CreateService();
+        var installDir = Path.Combine(_testDirectory, "shell");
+        Directory.CreateDirectory(installDir);
+        File.WriteAllText(Path.Combine(installDir, "shell.nss"), "theme { }\nmenu()\n");
+
+        var paths = service.ApplyProfile(installDir, ShellIntegrationProfile.CreateDefault());
+        Assert.Contains("# region UniversalDeviceToolkit.Managed", File.ReadAllText(paths!.ShellConfigPath));
+
+        Assert.True(service.TryRemoveManagedImportBlock(installDir));
+
+        var shellContent = File.ReadAllText(paths.ShellConfigPath);
+        Assert.Contains("theme { }", shellContent);
+        Assert.Contains("menu()", shellContent);
+        Assert.DoesNotContain("# region UniversalDeviceToolkit.Managed", shellContent);
+        Assert.DoesNotContain("settings.nss", shellContent);
+    }
+
+    [Fact]
+    public void TryRemoveManagedImportBlock_NullPath_ReturnsFalse()
+    {
+        var service = CreateService();
+        Assert.False(service.TryRemoveManagedImportBlock(null));
+    }
+
+    [Fact]
+    public void TryRemoveManagedImportBlock_MissingShellConfig_ReturnsTrue()
+    {
+        var service = CreateService();
+        var installDir = Path.Combine(_testDirectory, "empty-shell");
+        Directory.CreateDirectory(installDir);
+
+        Assert.True(service.TryRemoveManagedImportBlock(installDir));
     }
 
     #endregion
@@ -1101,13 +1192,13 @@ public class ShellIntegrationConfigServiceTests : IDisposable
     public void ResolveManagedPaths_WithRootedPath_HandlesCorrectly()
     {
         var service = CreateService();
-        var rootedPath = Path.GetPathRoot(_testDirectory) ?? "C:\\";
-        Directory.CreateDirectory(rootedPath);
+        var rootedPath = Path.GetPathRoot(_testDirectory) ?? string.Empty;
+        Assert.False(string.IsNullOrWhiteSpace(rootedPath));
 
         var paths = service.ResolveManagedPaths(rootedPath);
 
-        // Should handle rooted paths gracefully
-        Assert.True(paths == null || paths.InstallDirectory != null);
+        Assert.NotNull(paths);
+        Assert.Equal(Path.GetFullPath(rootedPath), Path.GetFullPath(paths!.InstallDirectory));
     }
 
     [Fact]
@@ -1216,8 +1307,7 @@ old2
         var profile = ShellIntegrationProfile.CreateDefault();
         var expression = profile.GetViewExpression();
 
-        Assert.NotNull(expression);
-        Assert.True(expression is "view.compact" or "view.medium");
+        Assert.Equal("view.medium", expression);
     }
 
     [Fact]

@@ -4,10 +4,26 @@ export interface HostCultureResponse {
   culture: string
 }
 
+function readCultureResponse(result: HostCultureResponse, method: string): HostCultureResponse {
+  if (result == null || typeof result !== 'object' || typeof result.culture !== 'string') {
+    throw new Error(`${method} returned an invalid payload`)
+  }
+  return result
+}
+
 export const localizationApi = {
-  getCulture: () => invoke<HostCultureResponse>('localization.getCulture', {}),
-  setCulture: (culture: string) =>
-    invoke<HostCultureResponse>('localization.setCulture', { culture })
+  async getCulture() {
+    return readCultureResponse(
+      await invoke<HostCultureResponse>('localization.getCulture', {}),
+      'localization.getCulture'
+    )
+  },
+  async setCulture(culture: string) {
+    return readCultureResponse(
+      await invoke<HostCultureResponse>('localization.setCulture', { culture }),
+      'localization.setCulture'
+    )
+  }
 }
 
 /** Maps Electron's renderer codes to the canonical Host catalog names. */
@@ -32,8 +48,15 @@ export function syncCultureToHost(language: string): Promise<boolean> {
   const run = async (): Promise<boolean> => {
     if (sequence !== latestSequence) return false
 
-    const status = await getHostStatus().catch(() => null)
-    if (!status?.ready || sequence !== latestSequence) return false
+    let ready = false
+    try {
+      const status = await getHostStatus()
+      ready = status.ready
+    } catch (error) {
+      console.warn('[i18n] Host status unavailable during culture sync:', error)
+      return false
+    }
+    if (!ready || sequence !== latestSequence) return false
 
     try {
       const result = await localizationApi.setCulture(culture)

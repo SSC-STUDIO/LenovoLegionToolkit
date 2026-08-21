@@ -2,11 +2,11 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
+using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Messaging;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using UniversalDeviceToolkit.Lib.Notifications;
 using UniversalDeviceToolkit.Lib.Utils;
-using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Host.Rpc;
 
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
@@ -36,7 +36,6 @@ public static class AppIntegrationHandlers
 
         rpc.RegisterHandler("app.update.check", (request, _) => HandleUpdateCheckAsync(request));
         rpc.RegisterHandler("app.update.status", (request, _) => HandleUpdateStatusAsync(request));
-        rpc.RegisterHandler("app.setUiActive", (request, _) => HandleSetUiActiveAsync(request));
 
         var notifications = IoCContainer.Resolve<IAppNotificationService>();
         notifications.Changed += OnNotificationChanged;
@@ -44,6 +43,12 @@ public static class AppIntegrationHandlers
         // MessagingCenter.Publish is synchronous — keep the handler to a single non-blocking Publish.
         MessagingCenter.Subscribe<OsdChangedMessage>(_osdSubscriber, msg =>
             _rpc?.Publish("osd.changed", new { state = msg.State.ToString() }));
+
+        AutomationWindowVisibility.Register(action =>
+        {
+            var server = _rpc ?? throw new InvalidOperationException("Host RPC is not available for window visibility.");
+            server.Publish(AutomationWindowVisibility.HostEventName, new { action = action.ToString() });
+        });
     }
 
     // ── update handlers ─────────────────────────────────────────────────────
@@ -78,35 +83,6 @@ public static class AppIntegrationHandlers
                 status = _updateChecker.Status.ToString(),
                 disable = _updateChecker.Disable,
             });
-        }
-        catch (Exception ex)
-        {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
-        }
-    }
-
-    private static async Task<BridgeResult> HandleSetUiActiveAsync(BridgeRequest request)
-    {
-        try
-        {
-            var active = request.Parameters.ValueKind == JsonValueKind.Object
-                && request.Parameters.TryGetProperty("active", out var activeProp)
-                && activeProp.ValueKind == JsonValueKind.True;
-
-            var pid = 0;
-            if (request.Parameters.ValueKind == JsonValueKind.Object
-                && request.Parameters.TryGetProperty("pid", out var pidProp)
-                && pidProp.ValueKind == JsonValueKind.Number
-                && pidProp.TryGetInt32(out var parsedPid))
-            {
-                pid = parsedPid;
-            }
-
-            // Only the Electron UI process is throttled. The Host stays at
-            // Normal so WH_KEYBOARD_LL / automation keep their latency.
-            var applied = pid > 0 && ProcessScheduling.TrySetBackgroundEfficiency(pid, background: !active);
-            await Task.CompletedTask;
-            return BridgeResult.Ok(new { ok = true, applied, active });
         }
         catch (Exception ex)
         {

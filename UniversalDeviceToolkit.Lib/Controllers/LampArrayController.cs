@@ -812,8 +812,14 @@ public class LampArrayController : IDisposable
 
         StopRenderLoop();
 
-        _watcher?.Stop();
-        _watcher = null;
+        if (_watcher is not null)
+        {
+            _watcher.Added -= Watcher_Added;
+            _watcher.Removed -= Watcher_Removed;
+            _watcher.EnumerationCompleted -= Watcher_EnumerationCompleted;
+            _watcher.Stop();
+            _watcher = null;
+        }
 
         lock (_lampArrays)
         {

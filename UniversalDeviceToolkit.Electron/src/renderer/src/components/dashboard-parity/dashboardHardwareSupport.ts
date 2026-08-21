@@ -10,3 +10,9 @@ export function isSpecialItemSupported(
   if (item === 'OverclockDiscreteGpu') return hardware.overclockDiscreteGpu.supported
   return hardware.turnOffMonitors.supported
 }
+
+export function requireHardwareOk(result: { ok: boolean }, message: string): void {
+  if (result.ok !== true) {
+    throw new Error(message)
+  }
+}

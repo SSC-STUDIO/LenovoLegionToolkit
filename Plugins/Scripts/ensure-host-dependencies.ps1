@@ -28,6 +28,8 @@ $requiredFiles = @(
     "UniversalDeviceToolkit.Lib.Plugins.dll",
     "UniversalDeviceToolkit.Lib.Abstractions.dll",
     "UniversalDeviceToolkit.Lib.Shared.dll",
+    "UniversalDeviceToolkit.Lib.Automation.dll",
+    "UniversalDeviceToolkit.Lib.Macro.dll",
     "Serilog.dll",
     "Serilog.Sinks.Async.dll",
     "Serilog.Sinks.File.dll"

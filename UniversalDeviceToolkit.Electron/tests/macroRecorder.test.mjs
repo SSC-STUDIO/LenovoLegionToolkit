@@ -194,6 +194,31 @@ test('escape interrupts without recording itself and removes every listener', ()
   assert.deepEqual(harness.completions[0].events.map((event) => event.key), [0x42])
 })
 
+test('movement recording appends every mousemove in order without dropping earlier points', () => {
+  const harness = createHarness()
+  harness.controller.start('KeyboardMouseMovement')
+  harness.runNextTimer()
+
+  const count = 200
+  for (let index = 0; index < count; index += 1) {
+    harness.setNow(index * 2)
+    harness.target.emit('mousemove', { clientX: index, clientY: index + 1 })
+  }
+  harness.controller.stop()
+
+  const events = harness.completions[0].events
+  assert.equal(harness.completions[0].interrupted, false)
+  assert.equal(events.length, count)
+  assert.deepEqual(
+    events.map((event) => ({ x: event.x, y: event.y, delayMs: event.delayMs })),
+    Array.from({ length: count }, (_, index) => ({
+      x: index,
+      y: index + 1,
+      delayMs: index === 0 ? 0 : 2
+    }))
+  )
+})
+
 test('dispose clears preparing timers and active listeners without completing a recording', () => {
   const harness = createHarness()
 

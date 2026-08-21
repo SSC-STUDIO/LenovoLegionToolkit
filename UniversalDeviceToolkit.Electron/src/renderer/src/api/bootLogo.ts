@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invokeObject } from './bridge'
 
 /**
  * Boot logo bridge — renderer counterpart of Electron Lib/System/BootLogo.cs.
@@ -19,8 +19,8 @@ export interface BootLogoStatus {
 }
 
 export const bootLogoApi = {
-  getStatus: (): Promise<BootLogoStatus> => invoke<BootLogoStatus>('bootLogo.getStatus', {}),
+  getStatus: (): Promise<BootLogoStatus> => invokeObject<BootLogoStatus>('bootLogo.getStatus', {}),
   enable: (filePath: string): Promise<{ ok: boolean }> =>
-    invoke<{ ok: boolean }>('bootLogo.enable', { filePath }),
-  disable: (): Promise<{ ok: boolean }> => invoke<{ ok: boolean }>('bootLogo.disable', {})
+    invokeObject<{ ok: boolean }>('bootLogo.enable', { filePath }),
+  disable: (): Promise<{ ok: boolean }> => invokeObject<{ ok: boolean }>('bootLogo.disable', {})
 }

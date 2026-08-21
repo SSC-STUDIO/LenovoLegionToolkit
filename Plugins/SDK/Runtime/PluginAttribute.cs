@@ -8,16 +8,35 @@ namespace UniversalDeviceToolkit.Plugins.SDK;
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 public class PluginAttribute : Attribute
 {
+    private string _minimumHostVersion = "1.0.0";
+    private string _icon = "Apps24";
+
     public string Id { get; }
     public string Name { get; }
     public string Version { get; }
     public string Description { get; }
     public string Author { get; }
-    public string MinimumHostVersion { get; set; } = "1.0.0";
-    public string Icon { get; set; } = "Apps24";
+
+    public string MinimumHostVersion
+    {
+        get => _minimumHostVersion;
+        set => _minimumHostVersion = value ?? throw new ArgumentNullException(nameof(value));
+    }
+
+    public string Icon
+    {
+        get => _icon;
+        set => _icon = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
     public PluginAttribute(string id, string name, string version, string description, string author)
     {
+        ArgumentNullException.ThrowIfNull(id);
+        ArgumentNullException.ThrowIfNull(name);
+        ArgumentNullException.ThrowIfNull(version);
+        ArgumentNullException.ThrowIfNull(description);
+        ArgumentNullException.ThrowIfNull(author);
+
         Id = id;
         Name = name;
 
@@ -27,7 +46,6 @@ public class PluginAttribute : Attribute
         }
 
         Version = version;
-
         Description = description;
         Author = author;
     }

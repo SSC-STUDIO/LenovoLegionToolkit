@@ -20,7 +20,6 @@ internal sealed class SensorSnapshotStore
 {
     private const float INVALID_VALUE_FLOAT = -1f;
     private const double INVALID_VALUE_DOUBLE = 0.0;
-    private const float MB_PER_GB = 1024f;
     private const float MAX_VALID_CPU_POWER = 400f;
     private const float MIN_VALID_POWER_READING = 0f;
     private const int MAX_CPU_POWER_STUCK_RETRIES = 10;
@@ -172,7 +171,7 @@ internal sealed class SensorSnapshotStore
 
     internal Task<float> GetGpuVramUsedAsync()
     {
-        lock (_dataLock) return Task.FromResult(_snapshotGpuVramUsage > 0 ? _snapshotGpuVramUsage / MB_PER_GB : _snapshotGpuVramUsage);
+        lock (_dataLock) return Task.FromResult(_snapshotGpuVramUsage);
     }
 
     internal Task<float> GetGpuPcieRxThroughputAsync()

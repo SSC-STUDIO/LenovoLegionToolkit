@@ -121,21 +121,36 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
             isTraceEnabled: () => Log.Instance.IsTraceEnabled,
             trace: (message, exception) => Log.Instance.Trace(message, exception));
 
-        _settings = LoadSettings();
-        NormalizeCursorThemeSettings();
+        try
+        {
+            _settings = LoadSettings();
+            NormalizeCursorThemeSettings();
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"CustomMouse: Failed to load settings: {ex.Message}", ex);
+            _settings = MouseSettings.CreateDefault();
+        }
     }
 
     public void OnAppStarted()
     {
-        if (_settings.CursorThemeMode != CursorThemeMode.Auto)
+        try
         {
-            return;
-        }
+            if (_settings.CursorThemeMode != CursorThemeMode.Auto)
+            {
+                return;
+            }
 
-        StartThemeWatcher();
-        if (!IsCurrentThemeAlreadyApplied())
+            StartThemeWatcher();
+            if (!IsCurrentThemeAlreadyApplied())
+            {
+                RunBackgroundTask(nameof(OnAppStarted), () => ApplyCursorStyleForCurrentThemeAsync(GetRuntimeCancellationToken()));
+            }
+        }
+        catch (Exception ex)
         {
-            RunBackgroundTask(nameof(OnAppStarted), () => ApplyCursorStyleForCurrentThemeAsync(GetRuntimeCancellationToken()));
+            PluginLog.Trace($"CustomMouse: OnAppStarted failed: {ex.Message}", ex);
         }
     }
 
@@ -217,7 +232,7 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 
     public bool SetSwapButtons(bool swapButtons)
     {
-        if (!SystemParametersInfo(SpiSetMouseButtonSwap, swapButtons ? 1u : 0u, IntPtr.Zero, SpifSendChange))
+        if (!SystemParametersInfo(SpiSetMouseButtonSwap, swapButtons ? 1u : 0u, IntPtr.Zero, SpifUpdateIniFile | SpifSendChange))
         {
             return false;
         }
@@ -245,6 +260,16 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 
     public async Task<bool> SetCursorThemeModeAsync(CursorThemeMode mode)
     {
+        if (!Enum.IsDefined(typeof(CursorThemeMode), mode))
+        {
+            return false;
+        }
+
+        if (mode == CursorThemeMode.WindowsDefault)
+        {
+            return await RestoreWindowsDefaultCursorThemeAsync().ConfigureAwait(false);
+        }
+
         var previousMode = _settings.CursorThemeMode;
         var previousAutoThemeCursorStyle = _settings.AutoThemeCursorStyle;
         var previousLastAppliedTheme = _settings.LastAppliedTheme;
@@ -299,12 +324,18 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
             _settings.AutoThemeCursorStyle = false;
             _settings.CursorThemeMode = CursorThemeMode.WindowsDefault;
             _settings.LastAppliedTheme = string.Empty;
+            _themeWatcher.NotifyThemeApplied(string.Empty);
             StopThemeWatcher();
             await SaveSettingsAsync().ConfigureAwait(false);
             return true;
         }
-        catch
+        catch (OperationCanceledException)
         {
+            throw;
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"CustomMouse: Failed to restore Windows default cursor theme: {ex.Message}", ex);
             return false;
         }
     }
@@ -316,10 +347,20 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
             _settings.WindowsPointerSpeed = ReadCurrentWindowsPointerSpeed();
             _settings.SwapButtons = ReadCurrentSwapButtons();
 
+            var preserveAuto = _settings.CursorThemeMode == CursorThemeMode.Auto
+                               || _settings.AutoThemeCursorStyle;
             var detectedMode = DetectCurrentCursorThemeMode();
+
+            if (preserveAuto && detectedMode is CursorThemeMode.Light or CursorThemeMode.Dark)
+            {
+                _settings.CursorThemeMode = CursorThemeMode.Auto;
+                _settings.AutoThemeCursorStyle = true;
+                _settings.LastAppliedTheme = detectedMode == CursorThemeMode.Light ? "light" : "dark";
+                return;
+            }
+
             _settings.CursorThemeMode = detectedMode;
             _settings.AutoThemeCursorStyle = detectedMode == CursorThemeMode.Auto;
-
             _settings.LastAppliedTheme = detectedMode switch
             {
                 CursorThemeMode.Light => "light",
@@ -341,12 +382,18 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 
             if (!await TryApplyCursorThemeWithInfAsync(theme, cancellationToken).ConfigureAwait(false))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 ApplyCursorThemeFromResources(theme);
             }
 
             _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
+            _themeWatcher.NotifyThemeApplied(_settings.LastAppliedTheme);
             await SaveSettingsAsync().ConfigureAwait(false);
             return true;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -364,12 +411,18 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 
             if (!await TryApplyCursorThemeWithInfAsync(theme, cancellationToken).ConfigureAwait(false))
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 ApplyCursorThemeFromResources(theme);
             }
 
             _settings.LastAppliedTheme = theme == CursorTheme.Light ? "light" : "dark";
+            _themeWatcher.NotifyThemeApplied(_settings.LastAppliedTheme);
             await SaveSettingsAsync().ConfigureAwait(false);
             return true;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -469,26 +522,41 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
     private async Task EnableAutoThemeCursorStyleAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        var previousAuto = _settings.AutoThemeCursorStyle;
+        var previousMode = _settings.CursorThemeMode;
+
         _settings.AutoThemeCursorStyle = true;
         _settings.CursorThemeMode = CursorThemeMode.Auto;
         StartThemeWatcher();
-        await SaveSettingsAsync().ConfigureAwait(false);
 
-        if (!await ApplyCursorStyleForCurrentThemeAsync(cancellationToken).ConfigureAwait(false))
+        if (await ApplyCursorStyleForCurrentThemeAsync(cancellationToken).ConfigureAwait(false))
         {
-            throw new InvalidOperationException(CustomMouseText.StatusCursorApplyFailed);
+            return;
         }
+
+        _settings.AutoThemeCursorStyle = previousAuto;
+        _settings.CursorThemeMode = previousMode;
+        if (!previousAuto)
+        {
+            StopThemeWatcher();
+        }
+
+        throw new InvalidOperationException(CustomMouseText.StatusCursorApplyFailed);
     }
 
     private async Task DisableAutoThemeCursorStyleAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+
+        if (!TryRestoreBackedUpCursorScheme())
+        {
+            throw new InvalidOperationException(CustomMouseText.StatusRestoreWindowsDefaultFailed);
+        }
+
         _settings.AutoThemeCursorStyle = false;
         _settings.CursorThemeMode = GetExplicitCursorThemeMode();
         StopThemeWatcher();
         await SaveSettingsAsync().ConfigureAwait(false);
-
-        await RestoreBackedUpCursorSchemeAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private Task<bool> IsAutoThemeCursorStyleEnabledAsync(CancellationToken cancellationToken)
@@ -499,6 +567,7 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
 
     private async Task<bool> TryApplyCursorThemeWithInfAsync(CursorTheme theme, CancellationToken cancellationToken)
     {
+        Process? process = null;
         try
         {
             var infPath = GetInstallInfPath(theme);
@@ -513,12 +582,10 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
                 Arguments = $"setupapi.dll,InstallHinfSection DefaultInstall 132 \"{infPath}\"",
                 WorkingDirectory = Path.GetDirectoryName(infPath) ?? Environment.CurrentDirectory,
                 UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
+                CreateNoWindow = true
             };
 
-            using var process = Process.Start(startInfo);
+            process = Process.Start(startInfo);
             if (process == null)
             {
                 return false;
@@ -527,20 +594,13 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
             var waitTask = process.WaitForExitAsync(cancellationToken);
             var timeoutTask = Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
             var completedTask = await Task.WhenAny(waitTask, timeoutTask).ConfigureAwait(false);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+            }
+
             if (completedTask != waitTask)
             {
-                try
-                {
-                    if (!process.HasExited)
-                    {
-                        process.Kill(entireProcessTree: true);
-                    }
-                }
-                catch
-                {
-                    // Ignore cleanup failures and report timeout below.
-                }
-
                 return false;
             }
 
@@ -560,6 +620,14 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
         {
             PluginLog.Trace($"CustomMouse: INF installation failed: {ex.Message}", ex);
             return false;
+        }
+        finally
+        {
+            if (process != null)
+            {
+                TryKillProcess(process);
+                process.Dispose();
+            }
         }
     }
 
@@ -601,14 +669,18 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
     private Task RestoreBackedUpCursorSchemeAsync(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
+        TryRestoreBackedUpCursorScheme();
+        return Task.CompletedTask;
+    }
 
+    private bool TryRestoreBackedUpCursorScheme()
+    {
         if (!Configuration.GetValue(CursorBackupSavedFlag, false))
         {
-            return Task.CompletedTask;
+            return true;
         }
 
-        RestoreBackedUpCursorSchemeInternal();
-        return Task.CompletedTask;
+        return RestoreBackedUpCursorSchemeInternal();
     }
 
     internal bool RestoreCursorScheme(string schemeName)
@@ -618,17 +690,22 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
             return false;
         }
 
-        using var cursorKey = Registry.CurrentUser.CreateSubKey(CursorRegistryPath, true)
-                             ?? throw new InvalidOperationException("Failed to open cursor registry path.");
-        using var schemesKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cursors\Schemes", false);
-        var rawScheme = Convert.ToString(schemesKey?.GetValue(schemeName));
+        using var cursorKey = Registry.CurrentUser.CreateSubKey(CursorRegistryPath, true);
+        if (cursorKey == null)
+        {
+            PluginLog.Trace("CustomMouse: Failed to open cursor registry path.");
+            return false;
+        }
+
+        var rawScheme = ReadNamedCursorScheme(schemeName);
         if (string.IsNullOrWhiteSpace(rawScheme))
         {
             return false;
         }
 
         var parts = rawScheme.Split(',');
-        if (parts.Length < CursorSchemeOrder.Length)
+        // Classic Windows Aero schemes have 15 entries; Person/Pin were added later.
+        if (parts.Length < 15)
         {
             return false;
         }
@@ -636,7 +713,10 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
         cursorKey.SetValue(string.Empty, schemeName, RegistryValueKind.String);
         for (var i = 0; i < CursorSchemeOrder.Length; i++)
         {
-            cursorKey.SetValue(CursorSchemeOrder[i].Key, parts[i], RegistryValueKind.ExpandString);
+            var path = i < parts.Length && !string.IsNullOrWhiteSpace(parts[i])
+                ? parts[i]
+                : parts[0];
+            cursorKey.SetValue(CursorSchemeOrder[i].Key, path, RegistryValueKind.ExpandString);
         }
 
         var precisionPath = GetPrecisionCursorPath(parts);
@@ -650,27 +730,40 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
         return true;
     }
 
-    private void RestoreBackedUpCursorSchemeInternal()
+    private bool RestoreBackedUpCursorSchemeInternal()
     {
-        using var cursorKey = Registry.CurrentUser.CreateSubKey(CursorRegistryPath, true)
-                             ?? throw new InvalidOperationException("Failed to open cursor registry path.");
-
-        var defaultValue = Configuration.GetValue(GetBackupConfigKey(string.Empty), string.Empty);
-        cursorKey.SetValue(string.Empty, defaultValue, RegistryValueKind.String);
-
-        foreach (var (key, _) in CursorSchemeOrder)
+        try
         {
-            var backupValue = Configuration.GetValue(GetBackupConfigKey(key), string.Empty);
-            cursorKey.SetValue(key, backupValue, RegistryValueKind.ExpandString);
-        }
+            using var cursorKey = Registry.CurrentUser.CreateSubKey(CursorRegistryPath, true);
+            if (cursorKey == null)
+            {
+                PluginLog.Trace("CustomMouse: Failed to open cursor registry path for backup restore.");
+                return false;
+            }
 
-        foreach (var additionalKey in AdditionalCursorKeys)
+            var defaultValue = Configuration.GetValue(GetBackupConfigKey(string.Empty), string.Empty);
+            cursorKey.SetValue(string.Empty, defaultValue, RegistryValueKind.String);
+
+            foreach (var (key, _) in CursorSchemeOrder)
+            {
+                var backupValue = Configuration.GetValue(GetBackupConfigKey(key), string.Empty);
+                cursorKey.SetValue(key, backupValue, RegistryValueKind.ExpandString);
+            }
+
+            foreach (var additionalKey in AdditionalCursorKeys)
+            {
+                var backupValue = Configuration.GetValue(GetBackupConfigKey(additionalKey), string.Empty);
+                cursorKey.SetValue(additionalKey, backupValue, RegistryValueKind.ExpandString);
+            }
+
+            ApplySystemCursorRefresh();
+            return true;
+        }
+        catch (Exception ex)
         {
-            var backupValue = Configuration.GetValue(GetBackupConfigKey(additionalKey), string.Empty);
-            cursorKey.SetValue(additionalKey, backupValue, RegistryValueKind.ExpandString);
+            PluginLog.Trace($"CustomMouse: Failed to restore backed-up cursor scheme: {ex.Message}", ex);
+            return false;
         }
-
-        ApplySystemCursorRefresh();
     }
 
     private void BackupCurrentCursorSchemeIfNeeded()
@@ -798,6 +891,42 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
         return _settings.AutoThemeCursorStyle ? CursorThemeMode.Auto : GetExplicitCursorThemeMode();
     }
 
+    internal static string? ReadNamedCursorScheme(string schemeName)
+    {
+        if (string.IsNullOrWhiteSpace(schemeName))
+        {
+            return null;
+        }
+
+        using var userSchemes = Registry.CurrentUser.OpenSubKey(CursorSchemesRegistryPath, false);
+        var userValue = Convert.ToString(userSchemes?.GetValue(schemeName));
+        if (!string.IsNullOrWhiteSpace(userValue))
+        {
+            return userValue;
+        }
+
+        using var machineSchemes = Registry.LocalMachine.OpenSubKey(
+            @"SOFTWARE\Microsoft\Windows\CurrentVersion\Control Panel\Cursors\Schemes",
+            false);
+        var machineValue = Convert.ToString(machineSchemes?.GetValue(schemeName));
+        return string.IsNullOrWhiteSpace(machineValue) ? null : machineValue;
+    }
+
+    private static void TryKillProcess(Process process)
+    {
+        try
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+        }
+        catch
+        {
+            // Ignore cleanup failures; the caller reports timeout or cancellation.
+        }
+    }
+
     private static string GetBackupConfigKey(string registryValueName)
     {
         if (string.IsNullOrEmpty(registryValueName))
@@ -816,8 +945,9 @@ public class CustomMousePlugin : UniversalDeviceToolkit.Plugins.SDK.PluginBase, 
             var value = personalizeKey?.GetValue("AppsUseLightTheme");
             return value is int intValue ? intValue != 0 : true;
         }
-        catch
+        catch (Exception ex)
         {
+            PluginLog.Trace($"CustomMouse: Failed to read AppsUseLightTheme: {ex.Message}", ex);
             return true;
         }
     }

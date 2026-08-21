@@ -12,6 +12,22 @@ public static class NetworkAccelerationDefaults
     public const string HostsEndMarker = "# END UDT-NETWORK-ACCELERATION";
     public const string SnapshotFileName = "network_state_snapshot.json";
     public const string SettingsFileName = "network_acceleration.json";
+
+    /// <summary>Current on-disk snapshot schema. Unversioned legacy files deserialize as 0 and remain readable.</summary>
+    public const int SnapshotSchemaVersion = 1;
+}
+
+/// <summary>Lifecycle of a network-state snapshot used for crash/stop recovery.</summary>
+public enum NetworkSnapshotPhase
+{
+    /// <summary>Captured before a system mutation; apply has not committed.</summary>
+    Pending = 0,
+
+    /// <summary>UDT owns the live system proxy / PAC / hosts mutation.</summary>
+    Applied = 1,
+
+    /// <summary>Original state restored; the snapshot file should be consumed.</summary>
+    Restored = 2
 }
 
 /// <summary>Persisted / runtime configuration for network acceleration.</summary>
@@ -94,11 +110,28 @@ public sealed class NetworkRecoverySnapshotMetadata
 /// <summary>On-disk snapshot used by <see cref="INetworkStateRecoveryService"/> restore.</summary>
 public sealed class NetworkStateSnapshot
 {
+    public int SchemaVersion { get; set; }
+
+    public NetworkSnapshotPhase Phase { get; set; } = NetworkSnapshotPhase.Pending;
+
     public DateTimeOffset CapturedAtUtc { get; set; } = DateTimeOffset.UtcNow;
+
     public SystemProxySnapshot? SystemProxy { get; set; }
+
     public string? HostsMarkedBlock { get; set; }
+
     public string? PacFilePath { get; set; }
+
     public string? PacFileContents { get; set; }
+
+    /// <summary>Listen port recorded when the mutation was marked <see cref="NetworkSnapshotPhase.Applied"/>.</summary>
+    public int? AppliedListenPort { get; set; }
+
+    /// <summary>System proxy server string written by UDT, used to recognize UDT-owned state.</summary>
+    public string? AppliedProxyServer { get; set; }
+
+    /// <summary>PAC / AutoConfig URL written by UDT, used to recognize UDT-owned state.</summary>
+    public string? AppliedAutoConfigUrl { get; set; }
 }
 
 public sealed class SystemProxySnapshot

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -17,6 +18,18 @@ namespace UniversalDeviceToolkit.Host.Rpc;
 /// Events (host -> client, no id):
 ///   {"event":"host.ready","data":{...}}
 /// </summary>
+public enum BridgeParseStatus
+{
+    Empty,
+    Event,
+    Ok,
+    InvalidJson,
+    InvalidRequest,
+}
+
+/// <summary>
+/// Encode/decode helpers for the Host stdio bridge protocol.
+/// </summary>
 public static class BridgeProtocol
 {
     public const string EventProperty = "event";
@@ -31,33 +44,91 @@ public static class BridgeProtocol
     /// Returns null when the line is not a valid protocol message.
     /// </summary>
     public static bool TryParseRequest(string line, out BridgeRequest? request)
+        => TryParseLine(line, out request, out _) == BridgeParseStatus.Ok;
+
+    /// <summary>
+    /// Classifies one stdio line: valid request, event, empty, parse error, or
+    /// invalid request (object without a method / malformed id).
+    /// </summary>
+    public static BridgeParseStatus TryParseLine(string line, out BridgeRequest? request, out long? id)
     {
         request = null;
+        id = null;
         if (string.IsNullOrWhiteSpace(line))
+            return BridgeParseStatus.Empty;
+
+        JsonDocument doc;
+        try
+        {
+            doc = JsonDocument.Parse(line);
+        }
+        catch (JsonException)
+        {
+            return BridgeParseStatus.InvalidJson;
+        }
+
+        using (doc)
+        {
+            var root = doc.RootElement;
+            if (root.ValueKind != JsonValueKind.Object)
+                return BridgeParseStatus.InvalidRequest;
+
+            if (!TryReadId(root, out id, out var idMalformed) || idMalformed)
+                return BridgeParseStatus.InvalidRequest;
+
+            if (root.TryGetProperty(EventProperty, out _))
+                return BridgeParseStatus.Event;
+
+            if (!root.TryGetProperty("method", out var method) || method.ValueKind != JsonValueKind.String)
+                return BridgeParseStatus.InvalidRequest;
+
+            var methodName = method.GetString();
+            if (string.IsNullOrWhiteSpace(methodName))
+                return BridgeParseStatus.InvalidRequest;
+
+            var parameters = root.TryGetProperty("params", out var paramsProp)
+                ? paramsProp.Clone()
+                : default;
+
+            request = new BridgeRequest(id, methodName, parameters);
+            return BridgeParseStatus.Ok;
+        }
+    }
+
+    private static bool TryReadId(JsonElement root, out long? id, out bool malformed)
+    {
+        id = null;
+        malformed = false;
+        if (!root.TryGetProperty("id", out var idProp) || idProp.ValueKind == JsonValueKind.Null)
+            return true;
+
+        if (idProp.ValueKind == JsonValueKind.Number)
+        {
+            if (idProp.TryGetInt64(out var number))
+            {
+                id = number;
+                return true;
+            }
+
+            malformed = true;
             return false;
+        }
 
-        using var doc = JsonDocument.Parse(line);
-        var root = doc.RootElement;
-        if (root.ValueKind != JsonValueKind.Object)
+        if (idProp.ValueKind == JsonValueKind.String)
+        {
+            var text = idProp.GetString();
+            if (long.TryParse(text, out var parsed))
+            {
+                id = parsed;
+                return true;
+            }
+
+            malformed = true;
             return false;
+        }
 
-        if (root.TryGetProperty(EventProperty, out _))
-            return false;
-
-        if (!root.TryGetProperty("method", out var method) || method.ValueKind != JsonValueKind.String)
-            return false;
-
-        var id = root.TryGetProperty("id", out var idProp) && idProp.ValueKind == JsonValueKind.Number
-            ? idProp.GetInt64()
-            : (long?)null;
-
-        // Clone the params element: it must outlive the parsing document.
-        var parameters = root.TryGetProperty("params", out var paramsProp)
-            ? paramsProp.Clone()
-            : default;
-
-        request = new BridgeRequest(id, method.GetString()!, parameters);
-        return true;
+        malformed = true;
+        return false;
     }
 
     public static byte[] WriteResponse(long? id, JsonElement? result, int? errorCode = null, string? errorMessage = null)
@@ -172,14 +243,26 @@ public sealed class BridgeResult
 /// <summary>
 /// Reads requests from stdin, dispatches them to registered handlers and writes
 /// responses/events to stdout. Single writer lock keeps each JSON line atomic.
+/// Frame size, pending count and handler concurrency are bounded so a noisy
+/// renderer or plugin cannot exhaust memory or thread-pool work.
 /// </summary>
 public sealed class BridgeRpcServer : IDisposable
 {
+    public const int MaxFrameBytes = 1_048_576;
+    public const int MaxPendingRequests = 64;
+    public const int MaxConcurrentHandlers = 16;
+    private const int DrainTimeoutMs = 2000;
+
     private readonly Dictionary<string, Func<BridgeRequest, CancellationToken, Task<BridgeResult>>> _handlers = new(StringComparer.Ordinal);
     private readonly object _writeLock = new();
-    private readonly StreamReader _input;
+    private readonly object _inflightLock = new();
+    private readonly HashSet<Task> _inflight = new();
+    private readonly Stream _input;
     private readonly StreamWriter _output;
+    private readonly BoundedLineReader _lineReader;
+    private readonly SemaphoreSlim _concurrency = new(MaxConcurrentHandlers, MaxConcurrentHandlers);
     private readonly CancellationTokenSource _cts = new();
+    private int _pending;
     private int _disposed;
 
     /// <summary>Raised when the client closes the pipe (Electron exited).</summary>
@@ -187,9 +270,9 @@ public sealed class BridgeRpcServer : IDisposable
 
     public BridgeRpcServer()
     {
-        var stdin = Console.OpenStandardInput();
+        _input = Console.OpenStandardInput();
         var stdout = Console.OpenStandardOutput();
-        _input = new StreamReader(stdin, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false), detectEncodingFromByteOrderMarks: false, bufferSize: 4096, leaveOpen: false);
+        _lineReader = new BoundedLineReader(_input);
         _output = new StreamWriter(stdout, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false))
         {
             AutoFlush = true,
@@ -218,17 +301,57 @@ public sealed class BridgeRpcServer : IDisposable
         {
             while (!linked.IsCancellationRequested)
             {
-                var line = await _input.ReadLineAsync().ConfigureAwait(false);
-                if (line is null)
+                BoundedLineStatus status;
+                string? line;
+                try
+                {
+                    (status, line) = await _lineReader.ReadLineAsync(MaxFrameBytes, linked.Token)
+                        .ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+
+                if (status == BoundedLineStatus.Eof)
                     break;
 
-                if (string.IsNullOrWhiteSpace(line))
+                if (status == BoundedLineStatus.TooLarge)
+                {
+                    WriteError(null, BridgeErrorCodes.RequestTooLarge,
+                        $"Request frame exceeds {MaxFrameBytes} bytes.");
+                    continue;
+                }
+
+                if (line is null || string.IsNullOrWhiteSpace(line))
                     continue;
 
-                if (!BridgeProtocol.TryParseRequest(line, out var request) || request is null)
+                var parse = BridgeProtocol.TryParseLine(line, out var request, out var id);
+                if (parse == BridgeParseStatus.Empty || parse == BridgeParseStatus.Event)
                     continue;
 
-                _ = DispatchAsync(request, linked.Token);
+                if (parse == BridgeParseStatus.InvalidJson)
+                {
+                    WriteError(id, BridgeErrorCodes.ParseError, "Invalid JSON.");
+                    continue;
+                }
+
+                if (parse != BridgeParseStatus.Ok || request is null)
+                {
+                    WriteError(id, BridgeErrorCodes.InvalidRequest, "Invalid request.");
+                    continue;
+                }
+
+                var pending = Interlocked.Increment(ref _pending);
+                if (pending > MaxPendingRequests)
+                {
+                    Interlocked.Decrement(ref _pending);
+                    WriteError(request.Id, BridgeErrorCodes.TooManyRequests,
+                        $"Too many pending requests (limit {MaxPendingRequests}).");
+                    continue;
+                }
+
+                TrackInflight(DispatchAsync(request, linked.Token));
             }
         }
         catch (OperationCanceledException)
@@ -236,38 +359,105 @@ public sealed class BridgeRpcServer : IDisposable
             // Expected when shutdown is requested.
         }
 
+        await DrainInflightAsync().ConfigureAwait(false);
         ClientDisconnected?.Invoke();
+    }
+
+    private void TrackInflight(Task task)
+    {
+        lock (_inflightLock)
+            _inflight.Add(task);
+
+        _ = AwaitInflightAsync(task);
+    }
+
+    private async Task AwaitInflightAsync(Task task)
+    {
+        try
+        {
+            await task.ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            // DispatchAsync already converts handler failures into RPC errors.
+        }
+        finally
+        {
+            lock (_inflightLock)
+                _inflight.Remove(task);
+        }
+    }
+
+    private async Task DrainInflightAsync()
+    {
+        Task[] snapshot;
+        lock (_inflightLock)
+            snapshot = _inflight.Count == 0 ? Array.Empty<Task>() : _inflight.ToArray();
+
+        if (snapshot.Length == 0)
+            return;
+
+        try
+        {
+            var drain = Task.WhenAll(snapshot);
+            await Task.WhenAny(drain, Task.Delay(DrainTimeoutMs)).ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            // Best-effort drain.
+        }
     }
 
     private async Task DispatchAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
-        BridgeResult result;
         try
         {
-            if (!_handlers.TryGetValue(request.Method, out var handler))
+            BridgeResult result;
+            try
             {
-                result = BridgeResult.Error(BridgeErrorCodes.UnknownMethod, $"Unknown method: {request.Method}");
+                await _concurrency.WaitAsync(cancellationToken).ConfigureAwait(false);
             }
-            else
+            catch (OperationCanceledException)
             {
-                result = await handler(request, cancellationToken).ConfigureAwait(false) ?? BridgeResult.Ok(null);
+                WriteError(request.Id, BridgeErrorCodes.RequestCancelled, "Request cancelled");
+                return;
             }
-        }
-        catch (OperationCanceledException)
-        {
-            result = BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
-        }
-        catch (Exception ex)
-        {
-            result = BridgeResult.Error(BridgeErrorCodes.InternalError, $"{ex.GetType().Name}: {ex.Message}");
-        }
 
-        if (request.Id is not null)
+            try
+            {
+                if (!_handlers.TryGetValue(request.Method, out var handler))
+                {
+                    result = BridgeResult.Error(BridgeErrorCodes.UnknownMethod, $"Unknown method: {request.Method}");
+                }
+                else
+                {
+                    result = await handler(request, cancellationToken).ConfigureAwait(false) ?? BridgeResult.Ok(null);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                result = BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
+            }
+            catch (Exception ex)
+            {
+                result = BridgeResult.Error(BridgeErrorCodes.InternalError, $"{ex.GetType().Name}: {ex.Message}");
+            }
+            finally
+            {
+                _concurrency.Release();
+            }
+
+            if (request.Id is not null)
+            {
+                var payload = result.IsError
+                    ? BridgeProtocol.WriteResponse(request.Id, null, result.ErrorCode, result.ErrorMessage)
+                    : BridgeProtocol.WriteResponse(request.Id, ToElement(result.Value));
+                WriteLine(payload);
+            }
+        }
+        finally
         {
-            var payload = result.IsError
-                ? BridgeProtocol.WriteResponse(request.Id, null, result.ErrorCode, result.ErrorMessage)
-                : BridgeProtocol.WriteResponse(request.Id, ToElement(result.Value));
-            WriteLine(payload);
+            Interlocked.Decrement(ref _pending);
         }
     }
 
@@ -285,6 +475,11 @@ public sealed class BridgeRpcServer : IDisposable
     {
         var payload = BridgeProtocol.WriteEvent(name, data);
         WriteLine(payload);
+    }
+
+    private void WriteError(long? id, int code, string message)
+    {
+        WriteLine(BridgeProtocol.WriteResponse(id, null, code, message));
     }
 
     private void WriteLine(byte[] payload)
@@ -318,6 +513,7 @@ public sealed class BridgeRpcServer : IDisposable
 
         _cts.Cancel();
         _cts.Dispose();
+        _concurrency.Dispose();
         try
         {
             _output.Dispose();
@@ -326,6 +522,75 @@ public sealed class BridgeRpcServer : IDisposable
         catch (Exception)
         {
             // Best-effort disposal.
+        }
+    }
+
+    private enum BoundedLineStatus
+    {
+        Ok,
+        Eof,
+        TooLarge,
+    }
+
+    private sealed class BoundedLineReader
+    {
+        private readonly Stream _stream;
+        private readonly byte[] _buffer = new byte[4096];
+        private readonly List<byte> _line = new();
+        private int _buffered;
+        private int _offset;
+
+        public BoundedLineReader(Stream stream)
+        {
+            _stream = stream;
+        }
+
+        public async Task<(BoundedLineStatus Status, string? Line)> ReadLineAsync(
+            int maxBytes,
+            CancellationToken cancellationToken)
+        {
+            _line.Clear();
+            var overflow = false;
+
+            while (true)
+            {
+                if (_offset >= _buffered)
+                {
+                    _buffered = await _stream.ReadAsync(_buffer.AsMemory(0, _buffer.Length), cancellationToken)
+                        .ConfigureAwait(false);
+                    _offset = 0;
+                    if (_buffered == 0)
+                    {
+                        if (_line.Count == 0 && !overflow)
+                            return (BoundedLineStatus.Eof, null);
+                        return overflow
+                            ? (BoundedLineStatus.TooLarge, null)
+                            : (BoundedLineStatus.Ok, Encoding.UTF8.GetString(_line.ToArray()));
+                    }
+                }
+
+                var value = _buffer[_offset++];
+                if (value == (byte)'\n')
+                {
+                    if (overflow)
+                        return (BoundedLineStatus.TooLarge, null);
+                    if (_line.Count > 0 && _line[_line.Count - 1] == (byte)'\r')
+                        _line.RemoveAt(_line.Count - 1);
+                    return (BoundedLineStatus.Ok, Encoding.UTF8.GetString(_line.ToArray()));
+                }
+
+                if (overflow)
+                    continue;
+
+                if (_line.Count >= maxBytes)
+                {
+                    overflow = true;
+                    _line.Clear();
+                    continue;
+                }
+
+                _line.Add(value);
+            }
         }
     }
 }

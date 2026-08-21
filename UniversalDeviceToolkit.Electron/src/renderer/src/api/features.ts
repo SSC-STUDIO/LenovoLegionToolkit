@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { BridgeInvokeError, invokeObject } from './bridge'
 
 /** The 24 feature keys exposed by the host's `feature` domain. */
 export type FeatureKey =
@@ -63,27 +63,30 @@ export interface FeaturesApi {
 
 export const featuresApi: FeaturesApi = {
   async list() {
-    const result = await invoke<{ features: FeatureInfo[] }>('feature.list', {})
+    const result = await invokeObject<{ features?: FeatureInfo[] }>('feature.list', {})
+    if (!Array.isArray(result.features)) {
+      throw new BridgeInvokeError('feature.list returned an invalid payload')
+    }
     return result.features
   },
 
   async getSupported(feature) {
-    return invoke<FeatureSupportedResult>('feature.getSupported', { feature })
+    return invokeObject<FeatureSupportedResult>('feature.getSupported', { feature })
   },
 
   async getStates(feature) {
-    return invoke<FeatureStatesResult>('feature.getStates', { feature })
+    return invokeObject<FeatureStatesResult>('feature.getStates', { feature })
   },
 
   async getState(feature) {
-    return invoke<FeatureStateResult>('feature.getState', { feature })
+    return invokeObject<FeatureStateResult>('feature.getState', { feature })
   },
 
   async setState(feature, state) {
-    return invoke<SetFeatureStateResult>('feature.setState', { feature, state })
+    return invokeObject<SetFeatureStateResult>('feature.setState', { feature, state })
   },
 
   async isHdrBlocked() {
-    return invoke<{ blocked: boolean }>('feature.isHdrBlocked', {})
-  },
+    return invokeObject<{ blocked: boolean }>('feature.isHdrBlocked', {})
+  }
 }

@@ -17,6 +17,7 @@
 	     only the portable models + type converters compile for net10.0. -->
 	<ItemGroup Condition="'$(TargetFramework)' != 'net10.0-windows10.0.26100.0'">
 	  <Compile Remove="MacroController.cs" />
+	  <Compile Remove="Utils\MacroHookPump.cs" />
 	  <Compile Remove="Utils\MacroPlayer.cs" />
 	  <Compile Remove="Utils\MacroRecorder.cs" />
 	  <Compile Remove="Utils\MacroSettings.cs" />

@@ -350,6 +350,15 @@ body {
   font-size: var(--up-font-small);
 }
 
+.up-input--grow {
+  flex: 1;
+  min-width: 160px;
+}
+
+.up-input--flex {
+  flex: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .up-btn,
   .up-switch__track,

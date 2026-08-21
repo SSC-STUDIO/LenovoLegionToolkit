@@ -31,13 +31,12 @@ function emptyTrend(): SensorTrendHistory {
   }
 }
 
-function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): SensorTrendHistory {
-  const time = snapshot.ts ? new Date(snapshot.ts) : new Date()
-  const label = time.toLocaleTimeString([], { hour12: false })
-  const rateMw = snapshot.battery?.chargeRate
-  const batteryRatePoint =
-    rateMw != null && Number.isFinite(rateMw) && rateMw !== -1 ? Math.abs(rateMw) / 1000 : null
-
+function appendTrendPoint(
+  history: SensorTrendHistory,
+  snapshot: SensorSnapshot,
+  label: string,
+  batteryRatePoint: number | null
+): void {
   history.labels.push(label)
   history.cpuTemperature.push(snapshot.cpu?.temperature ?? null)
   history.cpuUsage.push(snapshot.cpu?.usage ?? null)
@@ -48,6 +47,23 @@ function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): Senso
   history.memoryUsage.push(snapshot.memory?.usage ?? null)
   history.batteryRate.push(batteryRatePoint)
   history.batteryTemperature.push(snapshot.battery?.temperature ?? null)
+}
+
+function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): SensorTrendHistory {
+  const time = snapshot.ts ? new Date(snapshot.ts) : new Date()
+  const label = time.toLocaleTimeString([], { hour12: false })
+  const rateMw = snapshot.battery?.chargeRate
+  const batteryRatePoint =
+    rateMw != null && Number.isFinite(rateMw) && rateMw !== -1 ? Math.abs(rateMw) / 1000 : null
+  const isFirstSample = history.labels.length === 0
+
+  appendTrendPoint(history, snapshot, label, batteryRatePoint)
+  // TrendChart needs two finite samples to draw a line. Gauges already show the
+  // current reading after the first snapshot, so seed a second identical point
+  // instead of leaving "Waiting for sensor data" until the next poll.
+  if (isFirstSample) {
+    appendTrendPoint(history, snapshot, label, batteryRatePoint)
+  }
 
   if (history.labels.length > TREND_POINTS) {
     history.labels.shift()

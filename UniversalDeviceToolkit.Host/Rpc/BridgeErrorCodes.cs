@@ -11,6 +11,8 @@ namespace UniversalDeviceToolkit.Host.Rpc;
 public static class BridgeErrorCodes
 {
     // Protocol-level (JSON-RPC 2.0 reserved range).
+    public const int ParseError = -32700;
+    public const int InvalidRequest = -32600;
     public const int UnknownMethod = -32601;
     public const int InvalidParams = -32602;
     public const int InternalError = -32603;
@@ -18,6 +20,12 @@ public static class BridgeErrorCodes
 
     /// <summary>Whole domain is unavailable on this platform (portable stubs).</summary>
     public const int PlatformNotSupported = -32099;
+
+    /// <summary>A single stdio frame exceeded <see cref="BridgeRpcServer.MaxFrameBytes"/>.</summary>
+    public const int RequestTooLarge = -32098;
+
+    /// <summary>In-flight plus queued requests exceeded <see cref="BridgeRpcServer.MaxPendingRequests"/>.</summary>
+    public const int TooManyRequests = -32097;
 
     /// <summary>God Mode is not supported by this device generation.</summary>
     public const int GodModeUnsupported = -32001;

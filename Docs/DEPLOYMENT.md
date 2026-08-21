@@ -10,7 +10,7 @@ Public release copy should use Universal Device Toolkit. Repository paths, assem
 
 ### Development Environment
 
-- **Operating System**: Windows 10 (1809+) or Windows 11 (full build); macOS or Linux (portable projects + Electron client)
+- **Operating System**: Windows 10 (1809+) or Windows 11 for the supported product build. macOS or Linux can build portable libraries, the CrossPlatform CLI, and an experimental Electron shell; they cannot build the full Windows solution or produce official releases.
 - **.NET SDK**: .NET 10.0 or later (all platforms)
 - **Runtime**: .NET 10.0 Desktop Runtime (x64, Windows)
 - **Node.js**: 20+ (Electron client)
@@ -119,12 +119,13 @@ dotnet build UniversalDeviceToolkit.CrossPlatform/UniversalDeviceToolkit.CrossPl
 #### Host backend (.NET) — per-platform RID
 
 The Electron client spawns the Host as a child process, so the Host must be
-published **self-contained** for the target platform. The Windows installer
-embeds the win-x64 publish output from `UniversalDeviceToolkit.Host/publish/win-x64`
+published **self-contained** for the target platform. Official releases
+(`Release.yml`) publish only the Windows win-x64 Host. The Windows installer
+embeds that output from `UniversalDeviceToolkit.Host/publish/win-x64`
 via `extraResources` in `UniversalDeviceToolkit.Electron/electron-builder.yml`.
 
 ```bash
-# Windows (x64) — embedded into the NSIS installer
+# Windows (x64) — shipping path embedded into the NSIS installer
 dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
     --configuration Release \
     --runtime win-x64 \
@@ -138,37 +139,36 @@ dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
     -PayloadPath UniversalDeviceToolkit.Host/publish/win-x64 \
     -RuntimeIdentifier win-x64 \
     -AllowedCultures 'ar;bg;cs;de;el;en;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;uz-latn-uz;vi;zh-hans;zh-hant'
+```
 
-# macOS (Apple Silicon)
-dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    --configuration Release \
-    --runtime osx-arm64 \
-    --self-contained true \
-    --output UniversalDeviceToolkit.Host/publish/osx-arm64
+**Experimental portable Host** (not a release artifact). Requires
+`UDTWindows=false` / `UDT_PLATFORM=linux|macos`. Do not publish the default
+Windows TFM for `osx-*` / `linux-x64`. `Release.yml` does not run these
+commands and does not attach macOS/Linux Host payloads.
 
-# macOS (Intel)
-dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    --configuration Release \
-    --runtime osx-x64 \
-    --self-contained true \
-    --output UniversalDeviceToolkit.Host/publish/osx-x64
+```bash
+# Linux x64
+UDT_PLATFORM=linux ./build.sh host
 
-# Linux (x64)
+# macOS (auto-detects osx-arm64 or osx-x64)
+UDT_PLATFORM=macos ./build.sh host
+
+# Equivalent:
 dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
     --configuration Release \
     --runtime linux-x64 \
+    -p:UDTWindows=false \
     --self-contained true \
     --output UniversalDeviceToolkit.Host/publish/linux-x64
 ```
 
 > [!NOTE]
-> The Host project targets the Windows TFM `net10.0-windows10.0.26100.0` and
+> The shipping Host targets the Windows TFM `net10.0-windows10.0.26100.0` and
 > depends on Windows-only libraries (WMI, registry, vendor drivers). The
-> win-x64 RID is the currently shipping configuration; the osx-arm64/osx-x64/
-> linux-x64 RIDs are the cross-platform adaptation targets and require the Host
-> (or its Windows-only dependency graph) to be made portable first. Hardware
-> control remains meaningful on Windows only; macOS/Linux runs the UI in basic
-> mode.
+> win-x64 RID is the only official release configuration. The portable
+> `net10.0` Host stubs most Windows-only RPC as `-32099`. Hardware control
+> remains Windows-only. There is no official macOS/Linux Electron product
+> until those pipelines exist.
 
 #### Electron client (UI)
 
@@ -183,28 +183,34 @@ npm run lint      # ESLint
 npm run build     # electron-vite build (outputs out/)
 
 # Package (electron-builder; runs `npm run build` first)
-npm run dist:win    # Windows NSIS installer (x64)
-npm run dist:mac    # macOS DMG (arm64 + x64)
-npm run dist:linux  # Linux AppImage (x64)
+npm run dist:win    # Windows NSIS installer (x64); official release path
+npm run dist:mac    # experimental local macOS DMG (arm64 + x64)
+npm run dist:linux  # experimental local Linux AppImage/DEB (x64)
 npm run dist        # current host platform default
 ```
+
+`npm run dist:mac` and `npm run dist:linux` are experimental local scripts.
+They expect a portable Host already published under
+`UniversalDeviceToolkit.Host/publish/osx-*` or `linux-x64`. `Release.yml`
+does not run them and does not attach DMG/AppImage/DEB assets to GitHub
+Releases.
 
 The packaging targets are defined in `UniversalDeviceToolkit.Electron/electron-builder.yml`:
 
 | Platform | Target(s) | Notes |
 |---|---|---|
-| Windows | `nsis` (Full, x64) and `nsis-web` (Online stub, x64) | Full is a complete offline installer. Online is a small web installer (asserted <= 15MB) that downloads the `.nsis.7z` payload from the GitHub Release. Both embed the self-contained Host via `extraResources`. 23 installer languages on Full; Online stays English to keep the stub small. |
-| macOS | `dmg` (arm64 + x64) | Category `public.app-category.utilities`; **unsigned/notarized only if credentials are configured** (see below) |
-| Linux | `AppImage` and `deb` (x64) | Category `Utility`; rpm can be added by extending the `linux.target` list in `electron-builder.yml` |
+| Windows (supported) | `nsis` (Full, x64) and `nsis-web` (Online stub, x64) | Official release path. Full is a complete offline installer. Online is a small web installer (asserted <= 15MB) that downloads the `.nsis.7z` payload from the GitHub Release. Both embed the self-contained Host via `extraResources`. 23 installer languages on Full; Online stays English to keep the stub small. |
+| macOS (experimental) | `dmg` (arm64 + x64) | Local packaging only. Category `public.app-category.utilities`; **unsigned/notarized only if credentials are configured** (see below). Not published by `Release.yml`. |
+| Linux (experimental) | `AppImage` and `deb` (x64) | Local packaging only. Category `Utility`. Not published by `Release.yml`. |
 
 **Artifact naming** (`artifactName` / electron-builder defaults):
 
-| Platform | Artifact |
-|---|---|
-| Windows Full | `UniversalDeviceToolkitSetup-<version>.exe` (offline NSIS) |
-| Windows Online | `UniversalDeviceToolkitOnlineSetup-<version>.exe` (nsis-web stub, <= 15MB) plus `*.nsis.7z` payload |
-| macOS | `Universal Device Toolkit-<version>-arm64.dmg` / `-x64.dmg` |
-| Linux | `Universal Device Toolkit-<version>.AppImage` |
+| Platform | Artifact | Official GitHub Release |
+|---|---|---|
+| Windows Full | `UniversalDeviceToolkitSetup-<version>.exe` (offline NSIS) | Yes |
+| Windows Online | `UniversalDeviceToolkitOnlineSetup-<version>.exe` (nsis-web stub, <= 15MB) plus `*.nsis.7z` payload | Yes |
+| macOS (experimental) | `UniversalDeviceToolkit-<version>-mac-arm64.dmg` / `-mac-x64.dmg` | No |
+| Linux (experimental) | `UniversalDeviceToolkit-<version>-linux-x64.AppImage` / `.deb` | No |
 
 #### Release footprint gate
 
@@ -224,13 +230,17 @@ content remains shipped and Chromium's built-in pages fall back to `en-US`.
 The separate custom Windows installer shell keeps only `en-US`; it embeds the
 fully audited application payload unchanged.
 
+Windows release gates apply to official `Release.yml` artifacts. linux-x64 /
+osx-* budgets are used by experimental `package-footprint.yml` CI only; they
+are not a promise that macOS/Linux products ship.
+
 | Content | Hard limit |
 |---|---:|
 | `app.asar` | 15 MiB |
 | Chromium locales | 20 MiB and the exact 24-locale set above |
-| Host (`win-x64` / `linux-x64` / `osx-*`) | 180 / 92 / 100 MiB |
-| Unpacked application (`win-x64` / `linux-x64` / `osx-*`) | 540 / 450 / 500 MiB |
-| Full ZIP, Setup, DMG, AppImage, DEB | 190 MiB each |
+| Host (`win-x64` shipping / `linux-x64` experimental / `osx-*` experimental) | 180 / 92 / 100 MiB |
+| Unpacked application (`win-x64` shipping / `linux-x64` experimental / `osx-*` experimental) | 540 / 450 / 500 MiB |
+| Full ZIP, Setup (shipping); DMG, AppImage, DEB (experimental local) | 190 MiB each |
 | Online bootstrap | 15 MiB |
 
 The post-sign Release check repeats the payload and distributable audits. It
@@ -244,34 +254,30 @@ Setup **0.61 MiB**, and Online ZIP **184.39 MiB**. The pre-change Full payload,
 ZIP, Setup, `app.asar`, and Chromium locales measured 763.27, 245.76, 214.24,
 252.93, and 46.65 MiB respectively.
 
-**macOS signing & notarization:** `electron-builder.yml` defines **no**
-`mac.identity` / `notarize` configuration, so `npm run dist:mac` produces
-**unsigned** DMGs unless you provide signing credentials via
-`CSC_LINK`/`CSC_KEY_PASSWORD` (or `mac.identity`) and add a notarization step
-(`afterSign` hook with `APPLE_ID`/`APPLE_APP_SPECIFIC_PASSWORD`/`APPLE_TEAM_ID`
-or `APPLE_API_KEY`/`APPLE_API_ISSUER`). Unsigned builds run locally
-(right-click → Open) but will trigger Gatekeeper warnings for other users and
-cannot be distributed through official channels. Windows installer signing
-uses Azure Trusted Signing in `Release.yml` (see
-[Security Considerations](#security-considerations)); local builds are
-unsigned.
+**macOS signing & notarization (experimental local packaging only):**
+`electron-builder.yml` defines **no** `mac.identity` / `notarize`
+configuration, so `npm run dist:mac` produces **unsigned** DMGs unless you
+provide signing credentials via `CSC_LINK`/`CSC_KEY_PASSWORD` (or
+`mac.identity`) and add a notarization step (`afterSign` hook with
+`APPLE_ID`/`APPLE_APP_SPECIFIC_PASSWORD`/`APPLE_TEAM_ID` or
+`APPLE_API_KEY`/`APPLE_API_ISSUER`). Unsigned builds may run locally
+(right-click → Open) but will trigger Gatekeeper warnings and are not
+official release artifacts. `Release.yml` does not produce or sign macOS
+packages. Windows installer signing uses Azure Trusted Signing in
+`Release.yml` (see [Security Considerations](#security-considerations));
+local Windows builds are unsigned.
 
-**Linux packaging:** the configured Linux target is AppImage (x64). To also
-produce a `.deb` (or `.rpm`, `.snap`, …), add the target to `linux.target` in
-`electron-builder.yml`, e.g.:
-
-```yaml
-linux:
-  target:
-    - AppImage
-    - deb
-  category: Utility
-```
+**Linux packaging (experimental local packaging only):**
+`electron-builder.yml` already lists `AppImage` and `deb` (x64) as local
+targets. Neither is published by `Release.yml`. Adding `.rpm` or `.snap`
+would still be experimental local packaging, not an official product.
 
 ### Known Platform Differences
 
-The Electron UI shell adapts to each platform (see
-[ARCHITECTURE.md](ARCHITECTURE.md#platform-notes) for the implementation map):
+The supported product is Windows. The Electron UI shell contains
+platform-specific chrome for macOS and Linux; those rows describe existing
+code, not a shipped product (see
+[ARCHITECTURE.md](ARCHITECTURE.md#platform-notes)):
 
 | Surface | Windows | macOS | Linux |
 |---|---|---|---|
@@ -286,8 +292,9 @@ The Electron UI shell adapts to each platform (see
 ### Cross-platform builds
 
 On macOS/Linux the full `UniversalDeviceToolkit.sln` cannot build (it contains
-Windows-TFM projects), but the portable parts and the Electron client work
-natively:
+Windows-TFM projects). Portable libraries and the CrossPlatform diagnostics
+CLI are the supported non-Windows build surface. The Electron shell can be
+started for experimental UI work; it is not an official product release:
 
 ```bash
 # Portable .NET libraries + CrossPlatform CLI (macOS/Linux/Windows)
@@ -298,14 +305,16 @@ natively:
 dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj \
     --configuration Release
 
-# Electron client dev on macOS/Linux
+# Experimental Electron shell on macOS/Linux (not an official product)
 cd UniversalDeviceToolkit.Electron
 npm ci
 npm run dev
 ```
 
-See `.github/workflows/linux.yml` and `CrossPlatformCli.yml` for the CI
-coverage of the cross-platform surface.
+See `.github/workflows/linux.yml` and `CrossPlatformCli.yml` for CI coverage
+of the portable libraries and diagnostics CLI. Those workflows do not
+publish a macOS/Linux Electron product. `package-footprint.yml` may exercise
+experimental local packaging; it is not `Release.yml`.
 
 ## Testing
 

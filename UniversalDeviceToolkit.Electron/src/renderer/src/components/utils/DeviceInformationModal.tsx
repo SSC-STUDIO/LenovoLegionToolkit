@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { JSX } from 'react'
 import DeviceInfoModal from '../DeviceInfoModal'
+import { useUtilsDialog } from './useUtilsDialog'
 
 /**
  * Utils-host entry for device information. The TitleBar button uses
@@ -40,5 +41,6 @@ export function openDeviceInformation(): Promise<void> {
 export default function DeviceInformationModalHost(): JSX.Element {
   const request = useDeviceInfoStore((s) => s.request)
   const settle = useDeviceInfoStore((s) => s.settle)
+  useUtilsDialog(request != null, settle, { rootSelector: '.udt-device-info-modal' })
   return <DeviceInfoModal open={request != null} onClose={settle} />
 }

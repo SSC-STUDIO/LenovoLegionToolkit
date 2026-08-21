@@ -22,9 +22,13 @@ public sealed class StoreJsonGenerator
             : Path.GetFullPath(request.AssetRoot);
 
         var releaseDate = request.ReleaseDate ?? DateTimeOffset.UtcNow;
+        var catalogStorePath = ResolveCatalogStorePath(repository.RootPath, request);
+        var existingStore = File.Exists(catalogStorePath)
+            ? PluginRepository.ReadJsonFile<StoreDocument>(catalogStorePath)
+            : null;
         // Tolerate duplicate entry IDs in store.json (manual edit, merge artifact).
         // Last-wins semantics match ReplaceOrAdd below.
-        var existingEntries = (repository.StoreDocument?.Plugins ?? [])
+        var existingEntries = (existingStore?.Plugins ?? [])
             .GroupBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(
                 group => group.Key,
@@ -34,20 +38,20 @@ public sealed class StoreJsonGenerator
         var store = new StoreDocument
         {
             LastUpdated = releaseDate.ToString("O"),
-            StoreVersion = repository.StoreDocument?.StoreVersion ?? "1.0.0",
+            StoreVersion = existingStore?.StoreVersion ?? "1.0.0",
             Plugins = [],
         };
 
-        if (request.MergeExisting && repository.StoreDocument is not null)
+        if (request.MergeExisting && existingStore is not null)
         {
-            store.LastUpdated = repository.StoreDocument.LastUpdated;
-            store.StoreVersion = string.IsNullOrWhiteSpace(repository.StoreDocument.StoreVersion)
+            store.LastUpdated = existingStore.LastUpdated;
+            store.StoreVersion = string.IsNullOrWhiteSpace(existingStore.StoreVersion)
                 ? store.StoreVersion
-                : repository.StoreDocument.StoreVersion;
+                : existingStore.StoreVersion;
             // Deduplicate by entry ID before merge — last-wins, matching ReplaceOrAdd semantics.
             // Keep only entries that belong to this catalog channel so 2.x preview
             // packages never land in the stable store.json and vice versa.
-            foreach (var cloned in repository.StoreDocument.Plugins
+            foreach (var cloned in existingStore.Plugins
                          .Where(entry => EntryMatchesChannel(entry, request.CatalogChannel))
                          .GroupBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
                          .Select(group => Clone(group.Last())))
@@ -69,8 +73,13 @@ public sealed class StoreJsonGenerator
             if (request.CatalogChannel == PluginCatalogChannel.Stable &&
                 PluginVersionSynchronizer.IsPrereleasePluginVersion(plugin.Manifest.Version))
             {
-                throw new InvalidOperationException(
-                    $"Stable catalog cannot publish prerelease plugin '{plugin.Manifest.Id}' version '{plugin.Manifest.Version}'.");
+                if (request.PluginIds.Count > 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Stable catalog cannot publish prerelease plugin '{plugin.Manifest.Id}' version '{plugin.Manifest.Version}'.");
+                }
+
+                continue;
             }
 
             var storeMetadata = plugin.UnifiedManifest.Store;
@@ -170,9 +179,7 @@ public sealed class StoreJsonGenerator
         ArgumentNullException.ThrowIfNull(request);
 
         var repository = _repository.Load(request.RepositoryRoot);
-        var outputPath = request.OutputPath is null
-            ? Path.Combine(repository.RootPath, ".build", "catalog", "store.json")
-            : Path.GetFullPath(request.OutputPath);
+        var outputPath = ResolveCatalogStorePath(repository.RootPath, request);
 
         var store = Generate(request);
         PluginRepository.WriteJsonFile(outputPath, store);
@@ -184,9 +191,7 @@ public sealed class StoreJsonGenerator
         ArgumentNullException.ThrowIfNull(request);
 
         var repository = _repository.Load(request.RepositoryRoot);
-        var storePath = request.OutputPath is null
-            ? Path.Combine(repository.RootPath, ".build", "catalog", "store.json")
-            : Path.GetFullPath(request.OutputPath);
+        var storePath = ResolveCatalogStorePath(repository.RootPath, request);
 
         if (!File.Exists(storePath))
         {
@@ -201,6 +206,13 @@ public sealed class StoreJsonGenerator
         return matches
             ? new StoreCheckResult(storePath, true, "store.json matches generator output.")
             : new StoreCheckResult(storePath, false, "store.json differs from generator output. Re-run generate-store with the same arguments to update it.");
+    }
+
+    private static string ResolveCatalogStorePath(string repositoryRoot, StoreGenerationRequest request)
+    {
+        return request.OutputPath is null
+            ? PluginRepository.GetCatalogStorePath(repositoryRoot, request.CatalogChannel)
+            : Path.GetFullPath(request.OutputPath);
     }
 
     private static string NormalizeForComparison(string value)

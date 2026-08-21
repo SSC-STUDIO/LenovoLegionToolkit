@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using UniversalDeviceToolkit.Lib.Plugins;
 
 namespace UniversalDeviceToolkit.Plugins.SDK;
@@ -42,17 +43,42 @@ public class PluginHostContextRuntime : IPluginHostContext
                 {
                     return _current;
                 }
+            }
 
-                var bridge = TryResolveHostBridge();
+            IPluginHostContext? bridge = null;
+            try
+            {
+                bridge = TryResolveHostBridge();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[SDK] Host bridge resolution failed: {ex.GetType().Name}: {ex.Message}");
+            }
+
+            lock (_contextLock)
+            {
+                if (!ReferenceEquals(_current, DefaultContext))
+                {
+                    return _current;
+                }
+
                 if (bridge is not null)
                 {
                     _current = bridge;
                     return bridge;
                 }
+
                 return DefaultContext;
             }
         }
-        set => _current = value ?? throw new ArgumentNullException(nameof(value));
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            lock (_contextLock)
+            {
+                _current = value;
+            }
+        }
     }
 
     /// <summary>
@@ -63,8 +89,13 @@ public class PluginHostContextRuntime : IPluginHostContext
     {
         ArgumentNullException.ThrowIfNull(context);
 
-        var previous = Current;
-        Current = context;
+        IPluginHostContext previous;
+        lock (_contextLock)
+        {
+            previous = _current;
+            _current = context;
+        }
+
         return new RestoreScope(previous);
     }
 
@@ -89,7 +120,6 @@ public class PluginHostContextRuntime : IPluginHostContext
 
     private static IPluginHostContext? TryResolveHostBridge()
     {
-        // Try UDT host first, then fall back to legacy LLT host
         var hostContextType = ResolveType(HostPluginHostContextTypeName, HostUdtLibAssemblyName)
                               ?? ResolveType(HostPluginHostContextTypeName, HostLibAssemblyName);
         if (hostContextType is null)
@@ -98,13 +128,12 @@ public class PluginHostContextRuntime : IPluginHostContext
         }
 
         var currentProperty = GetCachedProperty(hostContextType, "Current", BindingFlags.Public | BindingFlags.Static);
-        var hostContext = currentProperty?.GetValue(null);
-        if (hostContext is null)
+        if (currentProperty is null)
         {
             return null;
         }
 
-        var bridgedContext = new BridgedHostContext(hostContext);
+        var bridgedContext = new BridgedHostContext(currentProperty);
         return bridgedContext.IsActive ? bridgedContext : null;
     }
 
@@ -131,11 +160,7 @@ public class PluginHostContextRuntime : IPluginHostContext
             {
                 return assembly.GetType(fullTypeName, throwOnError: false, ignoreCase: false);
             }
-            catch (TypeLoadException)
-            {
-                return null;
-            }
-            catch (FileLoadException)
+            catch (Exception ex) when (ex is TypeLoadException or FileLoadException or FileNotFoundException or ArgumentException or BadImageFormatException)
             {
                 return null;
             }
@@ -146,15 +171,12 @@ public class PluginHostContextRuntime : IPluginHostContext
             var assembly = Assembly.Load(new AssemblyName(assemblyName));
             return assembly.GetType(fullTypeName, throwOnError: false, ignoreCase: false);
         }
-        catch (Exception ex) when (ex is FileNotFoundException or BadImageFormatException)
+        catch (Exception ex) when (ex is FileNotFoundException or FileLoadException or BadImageFormatException)
         {
-            // Expected: missing or invalid assembly DLL; return null.
             return null;
         }
         catch (Exception ex)
         {
-            // Unexpected load failures (version policy, SecurityException, ArgumentException).
-            // Log them so a developer can see the failure instead of a silent Preview-mode fallback.
             Debug.WriteLine($"[SDK] ResolveType(\"{fullTypeName}\", \"{assemblyName}\") failed: {ex.GetType().Name}: {ex.Message}");
             return null;
         }
@@ -162,18 +184,46 @@ public class PluginHostContextRuntime : IPluginHostContext
 
     private static PropertyInfo? GetCachedProperty(Type type, string name, BindingFlags bindingFlags)
     {
-        return _propertyCache.GetOrAdd((type, name), _ => type.GetProperty(name, bindingFlags));
+        return _propertyCache.GetOrAdd((type, name), _ =>
+        {
+            try
+            {
+                return type.GetProperty(name, bindingFlags);
+            }
+            catch (AmbiguousMatchException)
+            {
+                return null;
+            }
+        });
     }
 
     private static MethodInfo? GetCachedMethod(Type type, string name, BindingFlags bindingFlags)
     {
-        return _methodCache.GetOrAdd((type, name), _ => type.GetMethod(name, bindingFlags));
+        return _methodCache.GetOrAdd((type, name), _ =>
+        {
+            try
+            {
+                return type.GetMethod(name, bindingFlags);
+            }
+            catch (AmbiguousMatchException)
+            {
+                return null;
+            }
+        });
     }
 
     private static object? TryReadProperty(object target, string propertyName)
     {
-        var property = GetCachedProperty(target.GetType(), propertyName, BindingFlags.Public | BindingFlags.Instance);
-        return property?.GetValue(target);
+        try
+        {
+            var property = GetCachedProperty(target.GetType(), propertyName, BindingFlags.Public | BindingFlags.Instance);
+            return property?.GetValue(target);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[SDK] TryReadProperty(\"{propertyName}\") failed: {ex.GetType().Name}: {ex.Message}");
+            return null;
+        }
     }
 
     /// <summary>
@@ -183,19 +233,20 @@ public class PluginHostContextRuntime : IPluginHostContext
     /// </summary>
     private static bool? TryInvokeBoolMethod(object target, string methodName, params object?[] arguments)
     {
-        var method = GetCachedMethod(target.GetType(), methodName, BindingFlags.Public | BindingFlags.Instance);
-        if (method is null)
-        {
-            return null;
-        }
-
         try
         {
+            var method = GetCachedMethod(target.GetType(), methodName, BindingFlags.Public | BindingFlags.Instance);
+            if (method is null)
+            {
+                return null;
+            }
+
             var result = method.Invoke(target, arguments);
             return result is bool boolResult ? boolResult : null;
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine($"[SDK] TryInvokeBoolMethod(\"{methodName}\") failed: {ex.GetType().Name}: {ex.Message}");
             return null;
         }
     }
@@ -226,7 +277,7 @@ public class PluginHostContextRuntime : IPluginHostContext
         _ = dialogOrContent;
         _ = title;
         _ = icon;
-        return false;
+        return null;
     }
 
     // -----------------------------------------------------------------------
@@ -236,7 +287,7 @@ public class PluginHostContextRuntime : IPluginHostContext
     private sealed class RestoreScope : IDisposable
     {
         private readonly IPluginHostContext _previous;
-        private bool _disposed;
+        private int _disposed;
 
         public RestoreScope(IPluginHostContext previous)
         {
@@ -245,52 +296,128 @@ public class PluginHostContextRuntime : IPluginHostContext
 
         public void Dispose()
         {
-            if (_disposed)
+            if (Interlocked.Exchange(ref _disposed, 1) != 0)
             {
                 return;
             }
 
-            Current = _previous;
-            _disposed = true;
+            lock (_contextLock)
+            {
+                _current = _previous;
+            }
         }
     }
 
     private sealed class BridgedHostContext : IPluginHostContext
     {
-        private readonly object _hostContext;
+        private readonly PropertyInfo _currentProperty;
 
-        public BridgedHostContext(object hostContext)
+        public BridgedHostContext(PropertyInfo currentProperty)
         {
-            _hostContext = hostContext;
+            _currentProperty = currentProperty;
         }
 
-        public bool IsActive => AllowSystemActions || OwnerWindow is not null || Mode != PluginHostMode.Preview;
+        public bool IsActive
+        {
+            get
+            {
+                var hostContext = LiveHostContext();
+                if (hostContext is null)
+                {
+                    return false;
+                }
+
+                return ReadAllowSystemActions(hostContext)
+                    || ReadOwnerWindow(hostContext) is not null
+                    || ReadMode(hostContext) != PluginHostMode.Preview;
+            }
+        }
 
         public PluginHostMode Mode
         {
             get
             {
-                try
-                {
-                    var modeValue = TryReadProperty(_hostContext, "Mode")?.ToString();
-                    return string.Equals(modeValue, "RealRuntime", StringComparison.OrdinalIgnoreCase)
-                        ? PluginHostMode.RealRuntime
-                        : PluginHostMode.Preview;
-                }
-                catch
-                {
-                    return PluginHostMode.Preview;
-                }
+                var hostContext = LiveHostContext();
+                return hostContext is null ? PluginHostMode.Preview : ReadMode(hostContext);
             }
         }
 
-        public bool AllowSystemActions => TryReadProperty(_hostContext, "AllowSystemActions") is bool allowSystemActions && allowSystemActions;
+        public bool AllowSystemActions
+        {
+            get
+            {
+                var hostContext = LiveHostContext();
+                return hostContext is not null && ReadAllowSystemActions(hostContext);
+            }
+        }
 
-        public object? OwnerWindow => TryReadProperty(_hostContext, "OwnerWindow");
+        public object? OwnerWindow
+        {
+            get
+            {
+                var hostContext = LiveHostContext();
+                return hostContext is null ? null : ReadOwnerWindow(hostContext);
+            }
+        }
 
-        public bool OpenPluginSettings(string pluginId) => TryInvokeBoolMethod(_hostContext, "OpenPluginSettings", pluginId) ?? false;
+        public bool OpenPluginSettings(string pluginId)
+        {
+            var hostContext = LiveHostContext();
+            return hostContext is not null && (TryInvokeBoolMethod(hostContext, "OpenPluginSettings", pluginId) ?? false);
+        }
 
-        public bool? ShowDialog(object dialogOrContent, string? title = null, string? icon = null) =>
-            TryInvokeBoolMethod(_hostContext, "ShowDialog", dialogOrContent, title, icon);
+        public bool? ShowDialog(object dialogOrContent, string? title = null, string? icon = null)
+        {
+            var hostContext = LiveHostContext();
+            return hostContext is null
+                ? null
+                : TryInvokeBoolMethod(hostContext, "ShowDialog", dialogOrContent, title, icon);
+        }
+
+        private object? LiveHostContext()
+        {
+            try
+            {
+                return _currentProperty.GetValue(null);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[SDK] Host PluginHostContext.Current read failed: {ex.GetType().Name}: {ex.Message}");
+                return null;
+            }
+        }
+
+        private static PluginHostMode ReadMode(object hostContext)
+        {
+            try
+            {
+                var modeValue = TryReadProperty(hostContext, "Mode");
+                if (modeValue is PluginHostMode pluginHostMode)
+                {
+                    return pluginHostMode;
+                }
+
+                if (modeValue is int intMode)
+                {
+                    return intMode == (int)PluginHostMode.RealRuntime
+                        ? PluginHostMode.RealRuntime
+                        : PluginHostMode.Preview;
+                }
+
+                return string.Equals(modeValue?.ToString(), "RealRuntime", StringComparison.OrdinalIgnoreCase)
+                    ? PluginHostMode.RealRuntime
+                    : PluginHostMode.Preview;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[SDK] Host Mode read failed: {ex.GetType().Name}: {ex.Message}");
+                return PluginHostMode.Preview;
+            }
+        }
+
+        private static bool ReadAllowSystemActions(object hostContext) =>
+            TryReadProperty(hostContext, "AllowSystemActions") is bool allowSystemActions && allowSystemActions;
+
+        private static object? ReadOwnerWindow(object hostContext) => TryReadProperty(hostContext, "OwnerWindow");
     }
 }

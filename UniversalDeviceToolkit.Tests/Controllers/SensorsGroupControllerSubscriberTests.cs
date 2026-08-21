@@ -48,4 +48,60 @@ public class SensorsGroupControllerSubscriberTests : UnitTestBase
         controller.Stop(osd);
         controller.SubscriberCount.Should().Be(0);
     }
+
+    [Fact]
+    public void Start_WhenCalledTwiceForSameSubscriber_ShouldNotLeakSubscriptions()
+    {
+        var processManager = new Mock<IGPUProcessManager>(MockBehavior.Loose);
+        var hardwareManager = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
+        var delay = new DefaultDelayProvider();
+        using var gpu = new GPUController(processManager.Object, hardwareManager.Object, delay);
+        using var controller = new SensorsGroupController(delay, gpu);
+        var subscriber = new object();
+
+        controller.Start(subscriber, TimeSpan.FromSeconds(1));
+        controller.Start(subscriber, TimeSpan.FromMilliseconds(250));
+        controller.SubscriberCount.Should().Be(1);
+
+        controller.Stop(subscriber);
+        controller.SubscriberCount.Should().Be(0);
+    }
+
+    [Fact]
+    public void Dispose_ShouldClearSubscribersAndIgnoreLaterStart()
+    {
+        var processManager = new Mock<IGPUProcessManager>(MockBehavior.Loose);
+        var hardwareManager = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
+        var delay = new DefaultDelayProvider();
+        using var gpu = new GPUController(processManager.Object, hardwareManager.Object, delay);
+        var controller = new SensorsGroupController(delay, gpu);
+        var subscriber = new object();
+
+        controller.Start(subscriber, TimeSpan.FromHours(1));
+        controller.SubscriberCount.Should().Be(1);
+
+        controller.Dispose();
+        controller.SubscriberCount.Should().Be(0);
+
+        controller.Start(subscriber, TimeSpan.FromHours(1));
+        controller.SubscriberCount.Should().Be(0);
+    }
+
+    [Fact]
+    public void ReleaseHardwareForBackground_ShouldLeaveLibreHardwareMonitorUninitialized()
+    {
+        var processManager = new Mock<IGPUProcessManager>(MockBehavior.Loose);
+        var hardwareManager = new Mock<IGPUHardwareManager>(MockBehavior.Loose);
+        var delay = new DefaultDelayProvider();
+        using var gpu = new GPUController(processManager.Object, hardwareManager.Object, delay);
+        using var controller = new SensorsGroupController(delay, gpu);
+        var subscriber = new object();
+
+        controller.Start(subscriber, TimeSpan.FromHours(1));
+        controller.Stop(subscriber);
+        controller.ReleaseHardwareForBackground();
+
+        controller.IsLibreHardwareMonitorInitialized().Should().BeFalse();
+        controller.SubscriberCount.Should().Be(0);
+    }
 }

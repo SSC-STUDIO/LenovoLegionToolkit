@@ -8,25 +8,36 @@ namespace UniversalDeviceToolkit.Abstractions.PackageDownloader;
 /// <summary>
 /// Cross-platform information about a driver package.
 /// </summary>
-public readonly struct DriverInfo(string deviceId, string hardwareId, Version? version, DateTime? date)
+public readonly struct DriverInfo
 {
+    private readonly string? _deviceId;
+    private readonly string? _hardwareId;
+
+    public DriverInfo(string? deviceId, string? hardwareId, Version? version, DateTime? date)
+    {
+        _deviceId = deviceId;
+        _hardwareId = hardwareId;
+        Version = version;
+        Date = date;
+    }
+
     /// <summary>
     /// Gets the device identifier.
     /// </summary>
-    public string DeviceId { get; } = deviceId;
+    public string DeviceId => _deviceId ?? string.Empty;
 
     /// <summary>
     /// Gets the hardware identifier.
     /// </summary>
-    public string HardwareId { get; } = hardwareId;
+    public string HardwareId => _hardwareId ?? string.Empty;
 
     /// <summary>
     /// Gets the optional driver version.
     /// </summary>
-    public Version? Version { get; } = version;
+    public Version? Version { get; }
 
     /// <summary>
     /// Gets the optional driver date.
     /// </summary>
-    public DateTime? Date { get; } = date;
+    public DateTime? Date { get; }
 }

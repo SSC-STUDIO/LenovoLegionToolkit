@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UniversalDeviceToolkit.Plugins.ViveTool.Services;
 using UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 using Xunit;
@@ -142,10 +143,60 @@ public class ViveToolUtilsTests
     {
         var visible = new List<FeatureFlagInfo> { F(1, "A", FeatureFlagStatus.Enabled) };
         var all = new List<FeatureFlagInfo> { F(1, "A", FeatureFlagStatus.Enabled) };
-        var imported = new List<FeatureFlagInfo> { F(1, "A Updated", FeatureFlagStatus.Disabled) };
+        var imported = new List<FeatureFlagInfo> { F(1, "A Updated", FeatureFlagStatus.Disabled, "New description") };
         FeatureMerger.MergeImportedFeatures(visible, all, imported);
         Assert.Single(visible);
         Assert.Single(all);
+        Assert.Equal("A Updated", visible[0].Name);
+        Assert.Equal(FeatureFlagStatus.Disabled, visible[0].Status);
+        Assert.Equal("New description", visible[0].Description);
+        Assert.Equal("A Updated", all[0].Name);
+        Assert.Equal(FeatureFlagStatus.Disabled, all[0].Status);
+    }
+
+    [Fact]
+    public void MergeImportedFeatures_SameCollection_DoesNotDuplicate()
+    {
+        var features = new List<FeatureFlagInfo> { F(1, "A", FeatureFlagStatus.Enabled) };
+        var imported = new List<FeatureFlagInfo> { F(2, "B", FeatureFlagStatus.Disabled) };
+        FeatureMerger.MergeImportedFeatures(features, features, imported);
+        Assert.Equal(2, features.Count);
+        Assert.Equal(1, features.Count(feature => feature.Id == 2));
+    }
+
+    [Fact]
+    public void MergeImportedFeatures_SkipsInvalidIdsAndPreservesUnknownStatus()
+    {
+        var visible = new List<FeatureFlagInfo> { F(1, "A", FeatureFlagStatus.Enabled, "Existing") };
+        var all = new List<FeatureFlagInfo> { F(1, "A", FeatureFlagStatus.Enabled, "Existing") };
+        var imported = new List<FeatureFlagInfo>
+        {
+            F(0, "Zero", FeatureFlagStatus.Disabled),
+            F(-5, "Negative", FeatureFlagStatus.Disabled),
+            F(1, "Feature 1", FeatureFlagStatus.Unknown),
+        };
+        FeatureMerger.MergeImportedFeatures(visible, all, imported);
+        Assert.Single(visible);
+        Assert.Equal("A", visible[0].Name);
+        Assert.Equal(FeatureFlagStatus.Enabled, visible[0].Status);
+        Assert.Equal("Existing", visible[0].Description);
+    }
+
+    [Fact]
+    public void MergeImportedFeatures_LastWriteWinsForDuplicateImports()
+    {
+        var visible = new List<FeatureFlagInfo>();
+        var all = new List<FeatureFlagInfo>();
+        var imported = new List<FeatureFlagInfo>
+        {
+            F(9, "First", FeatureFlagStatus.Enabled),
+            F(9, "Second", FeatureFlagStatus.Disabled, "Latest"),
+        };
+        FeatureMerger.MergeImportedFeatures(visible, all, imported);
+        var feature = Assert.Single(visible);
+        Assert.Equal("Second", feature.Name);
+        Assert.Equal(FeatureFlagStatus.Disabled, feature.Status);
+        Assert.Equal("Latest", feature.Description);
     }
 
     [Fact]

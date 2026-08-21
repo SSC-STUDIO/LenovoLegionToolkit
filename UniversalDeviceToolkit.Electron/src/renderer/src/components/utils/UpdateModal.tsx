@@ -9,9 +9,9 @@ import './utils.css'
  * Port of Electron UpdateWindow: shows the newest version and its release notes
  * and offers to download/install it.
  *
- * The main process downloads the Electron installer from the GitHub latest
- * release (mirrors Electron UpdateChecker) and launches it with
- * `/SILENT /RESTARTAPPLICATIONS`, quitting the app.
+ * The main process downloads the Electron installer from the same public
+ * application release the Host selected (stable or prerelease) and launches
+ * the recorded verified path with NSIS `/S`, quitting the app.
  */
 
 export interface UpdateModalOptions {
@@ -97,9 +97,9 @@ export default function UpdateModalHost(): React.JSX.Element {
         request: {
           ...request,
           options: {
-            version: request.options.version ?? result.release.version,
-            releaseNotes: request.options.releaseNotes ?? result.release.releaseNotes,
-            releaseDate: request.options.releaseDate ?? result.release.releaseDate
+            version: result.release.version,
+            releaseNotes: result.release.releaseNotes ?? request.options.releaseNotes,
+            releaseDate: result.release.releaseDate ?? request.options.releaseDate
           }
         }
       })
@@ -153,9 +153,15 @@ export default function UpdateModalHost(): React.JSX.Element {
     if (!installerPath) return
     setDownloadState('launching')
     try {
-      await updateApi.launchInstaller(installerPath)
+      const result = await updateApi.launchInstaller(installerPath)
+      if (!result.ok) {
+        setErrorMessage(t('wpf.updateWindowlaunchFailed', { defaultValue: 'The installer could not be started.' }))
+        setDownloadState('failed')
+        return
+      }
       settle(true)
     } catch {
+      setErrorMessage(t('wpf.updateWindowlaunchFailed', { defaultValue: 'The installer could not be started.' }))
       setDownloadState('failed')
     }
   }

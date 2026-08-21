@@ -37,6 +37,44 @@ public sealed class ShippingFootprintPruneTests
     }
 
     [Fact]
+    public void PruneShippingFootprint_RemovesDebuggerDumpHelpersAndDocumentationXml()
+    {
+        var root = NewTempDirectory();
+        try
+        {
+            WriteFile(root, "createdump.exe");
+            WriteFile(root, "mscordaccore.dll");
+            WriteFile(root, "mscordaccore_amd64_amd64_10.0.0.0.dll");
+            WriteFile(root, "mscordbi.dll");
+            WriteFile(root, "dbgshim.dll");
+            WriteFile(root, "Microsoft.DiaSymReader.Native.amd64.dll");
+            WriteFile(root, "libMonoPosixHelper.dll");
+            WriteFile(root, "Mono.Posix.NETStandard.dll");
+            WriteFile(root, "UniversalDeviceToolkit.Lib.dll");
+            WriteFile(root, "UniversalDeviceToolkit.Lib.xml");
+            WriteFile(root, "keep-config.xml");
+
+            RunPrune(root, "win-x64", "en");
+
+            File.Exists(Path.Combine(root, "createdump.exe")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "mscordaccore.dll")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "mscordaccore_amd64_amd64_10.0.0.0.dll")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "mscordbi.dll")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "dbgshim.dll")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "Microsoft.DiaSymReader.Native.amd64.dll")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "libMonoPosixHelper.dll")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "Mono.Posix.NETStandard.dll")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "UniversalDeviceToolkit.Lib.xml")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "UniversalDeviceToolkit.Lib.dll")).Should().BeTrue();
+            File.Exists(Path.Combine(root, "keep-config.xml")).Should().BeTrue();
+        }
+        finally
+        {
+            Directory.Delete(root, recursive: true);
+        }
+    }
+
+    [Fact]
     public void PruneShippingFootprint_NonWindowsRid_PreservesNativeDirectoriesAndFiltersCultures()
     {
         var root = NewTempDirectory();

@@ -108,6 +108,33 @@ public sealed class DevicePackManagerTests : IDisposable
             pack.MachineTypes.Contains("83DE"));
     }
 
+    [Fact]
+    public async Task GetInstalledCatalog_ShouldIgnoreBackupAndPendingDirectories()
+    {
+        var manifestJson = """
+                           {
+                             "id": "lenovo-legion-pro-7",
+                             "displayName": "Lenovo Legion Pro 7",
+                             "vendor": "LENOVO",
+                             "machineTypes": ["83DE"]
+                           }
+                           """;
+        var zip = CreateZip(("device-pack.json", manifestJson));
+        var manager = CreateManager(zip);
+        await manager.InstallAsync("lenovo-legion-pro-7");
+
+        var backup = Path.Combine(_appDataOverride, "device-packs", "lenovo-legion-pro-7.backup");
+        Directory.CreateDirectory(backup);
+        File.WriteAllText(Path.Combine(backup, "device-pack.json"), """
+            { "id": "lenovo-legion-pro-7", "displayName": "Backup", "vendor": "LENOVO" }
+            """);
+
+        var catalog = manager.GetInstalledCatalog();
+
+        catalog.DevicePacks.Should().ContainSingle(pack => pack.Id == "lenovo-legion-pro-7");
+        catalog.DevicePacks.Should().NotContain(pack => pack.DisplayName == "Backup");
+    }
+
     public void Dispose()
     {
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previousAppDataOverride);

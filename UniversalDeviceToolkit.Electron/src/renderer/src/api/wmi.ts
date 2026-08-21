@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invokeObject } from './bridge'
 
 /**
  * WMI Lenovo feature-value bridge — mirror of the host `wmi.*` handlers
@@ -13,7 +13,7 @@ export interface GodModeFnQStatus {
 }
 
 export const wmiApi = {
-  getGodModeFnQ: (): Promise<GodModeFnQStatus> => invoke<GodModeFnQStatus>('wmi.getGodModeFnQ'),
+  getGodModeFnQ: (): Promise<GodModeFnQStatus> => invokeObject<GodModeFnQStatus>('wmi.getGodModeFnQ'),
   setGodModeFnQ: (enabled: boolean): Promise<{ ok: boolean }> =>
-    invoke<{ ok: boolean }>('wmi.setGodModeFnQ', { enabled })
+    invokeObject<{ ok: boolean }>('wmi.setGodModeFnQ', { enabled })
 }

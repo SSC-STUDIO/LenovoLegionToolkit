@@ -10,7 +10,7 @@ using UniversalDeviceToolkit.Abstractions.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Services;
 
-public class BatteryDischargeRateMonitorService : IDisposable
+public class BatteryDischargeRateMonitorService : IBatteryDischargeRateMonitorService, IDisposable
 {
     private readonly IDelayProvider _delayProvider;
     private readonly BatteryHealthAlertSettings _healthAlertSettings;
@@ -29,6 +29,15 @@ public class BatteryDischargeRateMonitorService : IDisposable
     private DateTime _lastHealthNotifyUtc = DateTime.MinValue;
     private string? _lastHealthNotifyKey;
 
+    public bool IsRunning
+    {
+        get
+        {
+            lock (_lock)
+                return _refreshTask is { IsCompleted: false };
+        }
+    }
+
     public Task StartStopIfNeededAsync()
     {
         if (!Battery.IsBatteryMonitoringSupported())
@@ -39,6 +48,9 @@ public class BatteryDischargeRateMonitorService : IDisposable
 
         lock (_lock)
         {
+            if (Volatile.Read(ref _disposed) != 0)
+                return Task.CompletedTask;
+
             if (_refreshTask != null)
                 return Task.CompletedTask;
 

@@ -110,8 +110,32 @@ public class PluginVersionSynchronizerTests : IDisposable
         Assert.Contains("<AssemblyVersion>2.0.0</AssemblyVersion>", csproj, StringComparison.Ordinal);
     }
 
-    private void WritePluginFixture(string manifestVersion, string csprojVersion, string attributeVersion)
+    [Fact]
+    public void Bump_PreservesWebPageContribution()
     {
+        WritePluginFixture(manifestVersion: "1.0.0", csprojVersion: "1.0.0", attributeVersion: "1.0.0", includeWebPage: true);
+
+        var repository = new PluginRepository();
+        var context = repository.Load(_tempRoot).Plugins["sample-plugin"];
+        Assert.Equal("web/index.html", context.UnifiedManifest.Contributes.WebPage?.Entry);
+
+        var synchronizer = new PluginVersionSynchronizer();
+        synchronizer.Bump(context, explicitVersion: "1.0.1", writeChanges: true);
+
+        var reloaded = repository.Load(_tempRoot).Plugins["sample-plugin"];
+        Assert.Equal("web/index.html", reloaded.UnifiedManifest.Contributes.WebPage?.Entry);
+        Assert.Contains("\"entry\": \"web/index.html\"", File.ReadAllText(Path.Combine(_pluginDirectory, "plugin.manifest.json")), StringComparison.Ordinal);
+    }
+
+    private void WritePluginFixture(string manifestVersion, string csprojVersion, string attributeVersion, bool includeWebPage = false)
+    {
+        var webPageJson = includeWebPage
+            ? """
+            "webPage": {
+              "entry": "web/index.html"
+            },
+            """
+            : string.Empty;
         var manifest = $$"""
         {
           "schemaVersion": 1,
@@ -130,6 +154,7 @@ public class PluginVersionSynchronizerTests : IDisposable
               "class": "UniversalDeviceToolkit.Plugins.Sample.SampleSettingsPage",
               "title": "Sample"
             },
+            {{webPageJson}}
             "runtime": null,
             "optimizationActions": []
           },

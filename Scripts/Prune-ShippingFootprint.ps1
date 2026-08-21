@@ -38,6 +38,52 @@ foreach ($pdb in $removedPdbs) {
     Write-Host "Pruned debug symbol: $($pdb.FullName)"
 }
 
+# Debugger / dump / POSIX helpers never run in the shipping Host. Documentation
+# XML next to a DLL is leftover from NuGet packages and is not loaded at runtime.
+$namedDebugArtifacts = [System.Collections.Generic.HashSet[string]]::new(
+    [string[]]@(
+        'createdump.exe',
+        'createdump',
+        'mscordbi.dll',
+        'libmscordbi.so',
+        'libmscordbi.dylib',
+        'dbgshim.dll',
+        'libdbgshim.so',
+        'libdbgshim.dylib',
+        'libmonoposixhelper.dll',
+        'libmonoposixhelper.so',
+        'mono.posix.netstandard.dll'
+    ),
+    [System.StringComparer]::OrdinalIgnoreCase
+)
+
+$removedDebugArtifacts = 0
+Get-ChildItem -LiteralPath $root -File -Recurse -Force -ErrorAction Stop | ForEach-Object {
+    $name = $_.Name
+    $remove = $false
+    if ($namedDebugArtifacts.Contains($name)) {
+        $remove = $true
+    }
+    elseif ($name.StartsWith('mscordaccore', [System.StringComparison]::OrdinalIgnoreCase)) {
+        $remove = $true
+    }
+    elseif ($name.StartsWith('Microsoft.DiaSymReader.Native', [System.StringComparison]::OrdinalIgnoreCase)) {
+        $remove = $true
+    }
+    elseif ($name.EndsWith('.xml', [System.StringComparison]::OrdinalIgnoreCase)) {
+        $siblingDll = [System.IO.Path]::ChangeExtension($_.FullName, '.dll')
+        if (Test-Path -LiteralPath $siblingDll) {
+            $remove = $true
+        }
+    }
+
+    if ($remove) {
+        Remove-Item -LiteralPath $_.FullName -Force
+        $script:removedDebugArtifacts++
+        Write-Host "Pruned debug artifact: $($_.FullName)"
+    }
+}
+
 if ($RuntimeIdentifier -eq 'win-x64') {
     $nativeDirs = @('x86', 'arm64')
     foreach ($name in $nativeDirs) {
@@ -72,4 +118,4 @@ Get-ChildItem -LiteralPath $root -Directory -ErrorAction Stop | ForEach-Object {
     }
 }
 
-Write-Host "Shipping footprint prune complete. rid=$RuntimeIdentifier pdb=$($removedPdbs.Count) satellites-kept=$kept satellites-removed=$removed root=$root"
+Write-Host "Shipping footprint prune complete. rid=$RuntimeIdentifier pdb=$($removedPdbs.Count) debug-artifacts=$removedDebugArtifacts satellites-kept=$kept satellites-removed=$removed root=$root"

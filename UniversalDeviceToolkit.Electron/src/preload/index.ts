@@ -1,4 +1,4 @@
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer, webUtils } from 'electron'
 
 import { parseInstallerSelectionArguments } from '../shared/installer-selection'
 
@@ -42,6 +42,17 @@ const bridge = {
   selectJsonFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-json-file'),
   selectExeFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-exe-file'),
   selectAudioFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-audio-file'),
+  /**
+   * Electron 32+ replacement for the removed File.path. Must run in preload
+   * (webUtils is not exposed to an isolated renderer).
+   */
+  getPathForFile: (file: object): string => {
+    try {
+      return webUtils.getPathForFile(file as never)
+    } catch {
+      return ''
+    }
+  },
   isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window:is-maximized'),
   getPluginPreloadPath: (): Promise<string> => ipcRenderer.invoke('plugin:preload-path'),
   isFullscreen: (): Promise<boolean> => ipcRenderer.invoke('window:is-fullscreen'),

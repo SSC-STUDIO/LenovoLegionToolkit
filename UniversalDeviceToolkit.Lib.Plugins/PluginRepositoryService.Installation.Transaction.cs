@@ -58,6 +58,7 @@ public partial class PluginRepositoryService
 
         if (Directory.Exists(pluginDir))
         {
+            var backupDisplaced = false;
             try
             {
                 PluginInstallationService.ValidateOwnedTransactionPath(
@@ -77,6 +78,7 @@ public partial class PluginRepositoryService
                     pluginDir,
                     "repository backup source");
                 _moveDirectory(pluginDir, backupDir);
+                backupDisplaced = true;
                 PluginInstallationService.ValidateOwnedTransactionPath(
                     transactionDir,
                     backupDir,
@@ -85,7 +87,25 @@ public partial class PluginRepositoryService
             }
             catch
             {
-                if (Directory.Exists(transactionDir))
+                if (backupDisplaced &&
+                    Directory.Exists(backupDir) &&
+                    !Directory.Exists(pluginDir))
+                {
+                    try
+                    {
+                        _moveDirectory(backupDir, pluginDir);
+                        backupDisplaced = false;
+                    }
+                    catch (Exception restoreFailure)
+                    {
+                        Log.Instance.TraceOnce(
+                            "plugin-repo-backup-restore-after-failed-displace",
+                            $"Failed to restore plugin directory after a failed backup isolation: {pluginDir}",
+                            restoreFailure);
+                    }
+                }
+
+                if (!backupDisplaced && Directory.Exists(transactionDir))
                 {
                     try
                     {
@@ -111,6 +131,12 @@ public partial class PluginRepositoryService
                             $"Failed repository transaction directory was retained: {transactionDir}",
                             cleanupFailure);
                     }
+                }
+                else if (backupDisplaced)
+                {
+                    Log.Instance.TraceOnce(
+                        "plugin-repo-failed-transaction-retained",
+                        $"Failed repository transaction directory was retained because backup restore did not complete: {transactionDir}");
                 }
                 throw;
             }

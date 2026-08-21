@@ -221,6 +221,32 @@ public class ViveToolServiceTests
                 Assert.Equal("Another test feature", feature.Description);
                 Assert.Equal(FeatureFlagStatus.Unknown, feature.Status);
             });
+
+        var searchResult = await harness.Service.SearchFeaturesAsync("Windows Feature");
+        Assert.Contains(searchResult, feature => feature.Id == 12345);
+    }
+
+    [Fact]
+    public async Task ImportFeaturesFromFileAsync_MergesIntoExistingCacheWithoutDroppingKnownFeatures()
+    {
+        await using var harness = await CreateServiceAsync();
+        SeedFeatureCache(
+            harness.Service,
+            CreateFeature(100, "AlphaFeature", "Existing feature", FeatureFlagStatus.Enabled));
+        using var tempFile = ViveToolTestFileHelper.CreateScope(".json", "vivetool-import-merge-");
+        await File.WriteAllTextAsync(
+            tempFile.FilePath,
+            """[{ "id": 200, "name": "ImportedFeature", "description": "From file" }]""");
+
+        var imported = await harness.Service.ImportFeaturesFromFileAsync(tempFile.FilePath);
+        var listed = await harness.Service.ListFeaturesAsync();
+        var searchResult = await harness.Service.SearchFeaturesAsync("importedfeature");
+
+        Assert.Single(imported);
+        Assert.Contains(listed, feature => feature.Id == 100 && feature.Status == FeatureFlagStatus.Enabled);
+        Assert.Contains(listed, feature => feature.Id == 200 && feature.Name == "ImportedFeature");
+        Assert.Single(searchResult);
+        Assert.Equal(200, searchResult[0].Id);
     }
 
     [Fact]

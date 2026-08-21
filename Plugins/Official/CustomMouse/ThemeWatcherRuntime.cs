@@ -8,7 +8,7 @@ using Microsoft.Win32;
 
 namespace UniversalDeviceToolkit.Plugins.CustomMouse;
 
-public sealed class ThemeWatcherRuntime
+public sealed class ThemeWatcherRuntime : IDisposable
 {
     private static readonly TimeSpan DebounceInterval = TimeSpan.FromMilliseconds(500);
 
@@ -23,14 +23,30 @@ public sealed class ThemeWatcherRuntime
     {
         lock (_gate)
         {
+            _lastAppliedTheme = initialLastAppliedTheme;
             if (_cts != null)
             {
                 return;
             }
 
-            _lastAppliedTheme = initialLastAppliedTheme;
             _cts = new CancellationTokenSource();
             SystemEvents.UserPreferenceChanged += OnUserPreferenceChanged;
+        }
+    }
+
+    public void NotifyThemeApplied(string? theme)
+    {
+        lock (_gate)
+        {
+            _lastAppliedTheme = theme;
+        }
+    }
+
+    internal string? PeekLastAppliedTheme()
+    {
+        lock (_gate)
+        {
+            return _lastAppliedTheme;
         }
     }
 
@@ -60,6 +76,11 @@ public sealed class ThemeWatcherRuntime
             timer?.Dispose();
             cts.Dispose();
         }
+    }
+
+    public void Dispose()
+    {
+        Stop();
     }
 
     /// <summary>
@@ -109,6 +130,8 @@ public sealed class ThemeWatcherRuntime
             }
 
             token = _cts.Token;
+            _debounceTimer?.Dispose();
+            _debounceTimer = null;
         }
 
         _ = Task.Run(async () =>
@@ -123,8 +146,6 @@ public sealed class ThemeWatcherRuntime
                     {
                         return;
                     }
-
-                    _lastAppliedTheme = currentTheme;
                 }
 
                 if (ThemeChanged != null)
@@ -149,8 +170,9 @@ public sealed class ThemeWatcherRuntime
             var value = key?.GetValue("AppsUseLightTheme");
             return value is int intValue ? intValue != 0 : true;
         }
-        catch
+        catch (Exception ex)
         {
+            PluginLog.Trace($"ThemeWatcher: Failed to read AppsUseLightTheme: {ex.Message}", ex);
             return true;
         }
     }

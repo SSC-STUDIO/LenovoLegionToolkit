@@ -11,4 +11,5 @@ public interface IDGPUNotify
     Task<bool> IsDGPUAvailableAsync();
     Task NotifyAsync(bool publish = true);
     Task NotifyLaterIfNeededAsync();
+    void InvalidateResolution();
 }

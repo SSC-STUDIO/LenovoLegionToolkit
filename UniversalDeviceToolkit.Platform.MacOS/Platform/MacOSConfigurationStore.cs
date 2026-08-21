@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using UniversalDeviceToolkit.Abstractions.Platform;
@@ -22,14 +23,28 @@ public sealed class MacOSConfigurationStore : IConfigurationStore
     };
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MacOSConfigurationStore"/> class.
+    /// Initializes a new instance of the <see cref="MacOSConfigurationStore"/> class
+    /// using the default user-local configuration path.
     /// </summary>
     public MacOSConfigurationStore()
-    {
-        _configDir = Path.Combine(
+        : this(Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "udt");
-        _configFile = Path.Combine(_configDir, "config.json");
+            "udt",
+            "config.json"))
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance that reads and writes <paramref name="configFile"/>.
+    /// </summary>
+    /// <param name="configFile">Absolute or relative path to the JSON configuration file.</param>
+    public MacOSConfigurationStore(string configFile)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(configFile);
+
+        _configFile = Path.GetFullPath(configFile);
+        _configDir = Path.GetDirectoryName(_configFile)
+            ?? throw new ArgumentException("Configuration path must include a file name.", nameof(configFile));
         _data = LoadData();
     }
 
@@ -50,10 +65,11 @@ public sealed class MacOSConfigurationStore : IConfigurationStore
     {
         lock (_syncLock)
         {
-            if (!_data.TryGetValue(section, out var sectionData))
+            var next = CloneData(_data);
+            if (!next.TryGetValue(section, out var sectionData))
             {
                 sectionData = new Dictionary<string, string>();
-                _data[section] = sectionData;
+                next[section] = sectionData;
             }
 
             if (value is null)
@@ -61,7 +77,11 @@ public sealed class MacOSConfigurationStore : IConfigurationStore
             else
                 sectionData[key] = value;
 
-            SaveData();
+            if (sectionData.Count == 0)
+                next.Remove(section);
+
+            SaveData(next);
+            _data = next;
         }
     }
 
@@ -78,32 +98,101 @@ public sealed class MacOSConfigurationStore : IConfigurationStore
 
     private Dictionary<string, Dictionary<string, string>> LoadData()
     {
+        if (!File.Exists(_configFile))
+            return new Dictionary<string, Dictionary<string, string>>();
+
         try
         {
-            if (!File.Exists(_configFile))
-                return new Dictionary<string, Dictionary<string, string>>();
-
             var json = File.ReadAllText(_configFile);
-            return JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(json, JsonOptions)
-                   ?? new Dictionary<string, Dictionary<string, string>>();
+            var parsed = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, string>>>(json, JsonOptions);
+            if (parsed is not null)
+                return parsed;
         }
-        catch
+        catch (JsonException)
         {
-            return new Dictionary<string, Dictionary<string, string>>();
         }
+        catch (IOException)
+        {
+        }
+        catch (UnauthorizedAccessException)
+        {
+        }
+
+        TryBackupTornFile();
+        return new Dictionary<string, Dictionary<string, string>>();
     }
 
-    private void SaveData()
+    private void SaveData(Dictionary<string, Dictionary<string, string>> data)
+    {
+        Directory.CreateDirectory(_configDir);
+        var json = JsonSerializer.Serialize(data, JsonOptions);
+        AtomicWriteAllText(_configFile, json);
+    }
+
+    private void TryBackupTornFile()
     {
         try
         {
-            Directory.CreateDirectory(_configDir);
-            var json = JsonSerializer.Serialize(_data, JsonOptions);
-            File.WriteAllText(_configFile, json);
+            if (!File.Exists(_configFile))
+                return;
+
+            var backupName = $"{Path.GetFileName(_configFile)}.torn-{DateTime.UtcNow:yyyyMMddHHmmssfff}";
+            File.Copy(_configFile, Path.Combine(_configDir, backupName), overwrite: false);
         }
-        catch
+        catch (IOException)
         {
-            // Silently ignore write failures (e.g. read-only filesystem)
+        }
+        catch (UnauthorizedAccessException)
+        {
+        }
+    }
+
+    private static Dictionary<string, Dictionary<string, string>> CloneData(
+        Dictionary<string, Dictionary<string, string>> source)
+    {
+        var clone = new Dictionary<string, Dictionary<string, string>>(source.Count, source.Comparer);
+        foreach (var (section, values) in source)
+            clone[section] = new Dictionary<string, string>(values, values.Comparer);
+        return clone;
+    }
+
+    /// <summary>
+    /// Write via temp + replace so a crash mid-write cannot leave a partial JSON file.
+    /// </summary>
+    private static void AtomicWriteAllText(string path, string contents)
+    {
+        var directory = Path.GetDirectoryName(path);
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
+
+        var tempPath = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            using (var stream = new FileStream(tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            using (var writer = new StreamWriter(stream, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false)))
+            {
+                writer.Write(contents);
+                writer.Flush();
+                stream.Flush(flushToDisk: true);
+            }
+
+            File.Move(tempPath, path, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+            {
+                try
+                {
+                    File.Delete(tempPath);
+                }
+                catch (IOException)
+                {
+                }
+                catch (UnauthorizedAccessException)
+                {
+                }
+            }
         }
     }
 }

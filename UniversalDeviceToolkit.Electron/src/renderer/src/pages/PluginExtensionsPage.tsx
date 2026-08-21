@@ -19,6 +19,7 @@ import { Button, Input, Popconfirm, Select, Spin, Tooltip, message } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import type { PluginView } from '../api/plugins'
+import { resolvePluginWebPageEntry } from '../components/plugins/pluginPageViewModel'
 import { SkeletonBone } from '../components/Skeleton'
 import { usePluginsStore } from '../stores/pluginsStore'
 import PluginSettingsModal from '../components/settings/PluginSettingsModal'
@@ -32,6 +33,20 @@ import {
 } from './pluginExtensionsModel'
 import type { PluginFilterValue } from './pluginExtensionsModel'
 import './pages.css'
+
+function pluginWebPageNavigable(plugin: PluginView): boolean {
+  if (resolvePluginWebPageEntry(plugin.webPage) == null) return false
+  return (
+    Boolean(plugin.directory) ||
+    Boolean(plugin.installedVersion) ||
+    plugin.state === 'Installed'
+  )
+}
+
+function operationErrorText(fallback: string): string {
+  const detail = usePluginsStore.getState().error
+  return detail != null && detail.length > 0 ? detail : fallback
+}
 
 interface ContextMenuState {
   id: string
@@ -92,6 +107,7 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
   const progress = installingIds[plugin.id] ?? 0
   const actions = pluginCardActions(plugin)
   const installed = actions.installed
+  const canOpenWebPage = actions.canOpenWebPage || pluginWebPageNavigable(plugin)
   const hasUpdateInfo =
     plugin.updateAvailable && Boolean(plugin.availableVersion || plugin.releaseDate || plugin.changelog)
   const hasExpandableContent = Boolean(plugin.details || plugin.usageGuide || hasUpdateInfo)
@@ -111,25 +127,42 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
     : null
 
   const handleUninstall = async (): Promise<void> => {
-    const result = await uninstall(plugin.id)
-    const feedback = uninstallFeedback(result)
-    if (feedback === 'dependencyBlocked') {
-      message.warning(t('plugins.dependenciesBlocked'))
-    } else if (feedback === 'failed') {
-      message.error(t('plugins.uninstallFailed'))
+    try {
+      const result = await uninstall(plugin.id)
+      const feedback = uninstallFeedback(result)
+      if (feedback === 'dependencyBlocked') {
+        message.warning(t('plugins.dependenciesBlocked'))
+        return
+      }
+      if (feedback === 'failed' || result.ok !== true) {
+        message.error(
+          operationErrorText(
+            t('plugins.uninstallFailed', { defaultValue: 'Failed to uninstall' })
+          )
+        )
+      }
+    } catch (error) {
+      message.error(
+        error instanceof Error
+          ? error.message
+          : t('plugins.uninstallFailed', { defaultValue: 'Failed to uninstall' })
+      )
     }
   }
 
   const handleInstall = async (): Promise<void> => {
-    if (await install(plugin.id)) return
-    message.error(
-      t(
-        plugin.updateAvailable
-          ? 'pluginExtensionsPageupdateFailed'
-          : 'pluginExtensionsPageinstallFailed',
-        { defaultValue: plugin.updateAvailable ? 'Update failed' : 'Installation failed' }
-      )
+    const failedText = t(
+      plugin.updateAvailable
+        ? 'pluginExtensionsPageupdateFailed'
+        : 'pluginExtensionsPageinstallFailed',
+      { defaultValue: plugin.updateAvailable ? 'Update failed' : 'Installation failed' }
     )
+    try {
+      if ((await install(plugin.id)) === true) return
+      message.error(operationErrorText(failedText))
+    } catch (error) {
+      message.error(error instanceof Error ? error.message : failedText)
+    }
   }
 
   const handleCopyId = async (): Promise<void> => {
@@ -269,7 +302,7 @@ function PluginCard({ plugin }: { plugin: PluginView }): React.JSX.Element {
                   </button>
                 </Tooltip>
               )}
-              {actions.canOpenWebPage && (
+              {canOpenWebPage && (
                 <Tooltip title={t('plugins.openPage', '打开插件页面')}>
                   <button
                     type="button"
@@ -421,7 +454,17 @@ export default function PluginExtensionsPage(): React.JSX.Element {
   } = useMemo(() => summarizePlugins(plugins), [plugins])
 
   const handleImport = async (): Promise<void> => {
-    const files = (await window.bridge?.selectPluginFiles()) ?? []
+    let files: string[]
+    try {
+      files = (await window.bridge?.selectPluginFiles()) ?? []
+    } catch (error) {
+      message.error(
+        error instanceof Error
+          ? error.message
+          : t('plugins.importFailed', { count: 1, defaultValue: 'Failed to import {{count}} plugin package(s)' })
+      )
+      return
+    }
     if (files.length === 0) {
       if (window.bridge?.platform === 'web') {
         message.warning(
@@ -448,6 +491,17 @@ export default function PluginExtensionsPage(): React.JSX.Element {
           t('plugins.importFailed', { count: failed.length, defaultValue: 'Failed to import {{count}} plugin package(s)' })
         )
       }
+      if (succeeded.length === 0 && failed.length === 0) {
+        message.error(
+          t('plugins.importFailed', { count: files.length, defaultValue: 'Failed to import {{count}} plugin package(s)' })
+        )
+      }
+    } catch (error) {
+      message.error(
+        error instanceof Error
+          ? error.message
+          : t('plugins.importFailed', { count: files.length, defaultValue: 'Failed to import {{count}} plugin package(s)' })
+      )
     } finally {
       setImporting(false)
     }
@@ -457,11 +511,27 @@ export default function PluginExtensionsPage(): React.JSX.Element {
     setBulkUpdating(true)
     try {
       const result = await runPluginOperations(installableIds, install)
-      if (result.failed.length === 0) {
+      if (result.succeeded.length > 0 && result.failed.length === 0) {
         message.success(t('plugins.installAllComplete', { count: result.succeeded.length, defaultValue: 'Installed {{count}} plugin(s)' }))
-      } else {
+      } else if (result.succeeded.length > 0) {
         message.warning(t('plugins.installAllPartial', { count: result.succeeded.length, total: installableIds.length, defaultValue: '{{count}} of {{total}} plugin operations completed' }))
+      } else {
+        message.error(
+          operationErrorText(
+            t('plugins.installAllPartial', {
+              count: 0,
+              total: installableIds.length,
+              defaultValue: '{{count}} of {{total}} plugin operations completed'
+            })
+          )
+        )
       }
+    } catch (error) {
+      message.error(
+        error instanceof Error
+          ? error.message
+          : t('pluginExtensionsPageinstallFailed', { defaultValue: 'Installation failed' })
+      )
     } finally {
       setBulkUpdating(false)
     }
@@ -471,11 +541,23 @@ export default function PluginExtensionsPage(): React.JSX.Element {
     setBulkUpdating(true)
     try {
       const result = await runPluginOperations(updatableIds, install)
-      if (result.failed.length === 0) {
+      if (result.succeeded.length > 0 && result.failed.length === 0) {
         message.success(`Updated ${result.succeeded.length} plugin${result.succeeded.length === 1 ? '' : 's'}`)
-      } else {
+      } else if (result.succeeded.length > 0) {
         message.warning(`${result.succeeded.length} of ${updatableIds.length} plugin operations completed`)
+      } else {
+        message.error(
+          operationErrorText(
+            `${result.succeeded.length} of ${updatableIds.length} plugin operations completed`
+          )
+        )
       }
+    } catch (error) {
+      message.error(
+        error instanceof Error
+          ? error.message
+          : t('pluginExtensionsPageupdateFailed', { defaultValue: 'Update failed' })
+      )
     } finally {
       setBulkUpdating(false)
     }

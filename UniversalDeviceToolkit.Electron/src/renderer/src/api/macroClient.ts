@@ -48,34 +48,57 @@ export interface MacroApi {
 
 export type MacroInvoke = <T>(method: string, params: unknown) => Promise<T>
 
+function expectInvokeObject<T extends object>(value: T | null | undefined, method: string): T {
+  if (value == null || typeof value !== 'object') {
+    throw new Error(`Host method ${method} returned an invalid result`)
+  }
+  return value
+}
+
 export function createMacroApi(invoke: MacroInvoke): MacroApi {
   return {
     async getState() {
-      return invoke<MacroState>('macro.getState', {})
+      return expectInvokeObject(await invoke<MacroState>('macro.getState', {}), 'macro.getState')
     },
 
     async setEnabled(enabled) {
-      return invoke<{ ok: boolean }>('macro.setEnabled', { enabled })
+      return expectInvokeObject(
+        await invoke<{ ok: boolean }>('macro.setEnabled', { enabled }),
+        'macro.setEnabled'
+      )
     },
 
     async play(key) {
-      return invoke<{ ok: boolean }>('macro.play', { key })
+      return expectInvokeObject(await invoke<{ ok: boolean }>('macro.play', { key }), 'macro.play')
     },
 
     async startRecording(mode, key) {
-      return invoke<{ ok: boolean }>('macro.startRecording', { mode, key })
+      return expectInvokeObject(
+        await invoke<{ ok: boolean }>('macro.startRecording', { mode, key }),
+        'macro.startRecording'
+      )
     },
 
     async stopRecording() {
-      return invoke<{ events: MacroEvent[] }>('macro.stopRecording', {})
+      const result = await invoke<{ events: MacroEvent[] }>('macro.stopRecording', {})
+      if (result == null || typeof result !== 'object' || !Array.isArray(result.events)) {
+        throw new Error('Host method macro.stopRecording returned an invalid result')
+      }
+      return result
     },
 
     async saveSequence(params) {
-      return invoke<{ ok: boolean }>('macro.saveSequence', params)
+      return expectInvokeObject(
+        await invoke<{ ok: boolean }>('macro.saveSequence', params),
+        'macro.saveSequence'
+      )
     },
 
     async clearSequence(key) {
-      return invoke<{ ok: boolean }>('macro.clearSequence', { key })
+      return expectInvokeObject(
+        await invoke<{ ok: boolean }>('macro.clearSequence', { key }),
+        'macro.clearSequence'
+      )
     }
   }
 }

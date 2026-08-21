@@ -1,6 +1,6 @@
 import { invoke } from './bridge'
 
-export type KeyboardMode = 'rgb' | 'spectrum' | 'none'
+export type KeyboardMode = 'rgb' | 'spectrum' | 'white' | 'oneLevelWhite' | 'none'
 
 export type RgbPreset = 'Off' | 'One' | 'Two' | 'Three' | 'Four'
 export type RgbEffect = 'Static' | 'Breath' | 'Smooth' | 'WaveRTL' | 'WaveLTR'
@@ -104,71 +104,176 @@ export interface KeyboardApi {
   spectrumSetProfileDesc(profile: number, effects: SpectrumEffect[]): Promise<{ ok: boolean }>
 }
 
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+    return value as Record<string, unknown>
+  }
+  return null
+}
+
+function readProp(record: Record<string, unknown> | null, ...names: string[]): unknown {
+  if (!record) return undefined
+  for (const name of names) {
+    if (Object.prototype.hasOwnProperty.call(record, name)) {
+      const value = record[name]
+      if (value !== undefined) return value
+    }
+  }
+  return undefined
+}
+
+function readFiniteNumber(value: unknown): number | undefined {
+  return typeof value === 'number' && Number.isFinite(value) ? value : undefined
+}
+
+function readOk(value: unknown): { ok: boolean } {
+  return { ok: readProp(asRecord(value), 'ok', 'Ok') === true }
+}
+
+function readRgbState(value: unknown): RgbStateResult {
+  const state = readProp(asRecord(value), 'state', 'State')
+  const record = asRecord(state)
+  if (!record) throw new Error('Invalid RGB backlight state')
+  return { state: state as RgbState }
+}
+
+function readKeyColor(value: unknown): SpectrumKeyColor | null {
+  const record = asRecord(value)
+  const key = readFiniteNumber(readProp(record, 'key', 'Key'))
+  const r = readFiniteNumber(readProp(record, 'r', 'R'))
+  const g = readFiniteNumber(readProp(record, 'g', 'G'))
+  const b = readFiniteNumber(readProp(record, 'b', 'B'))
+  if (key === undefined || r === undefined || g === undefined || b === undefined) return null
+  return { key, r, g, b }
+}
+
+function readSpectrumState(value: unknown): SpectrumStateResult {
+  const keysRaw = readProp(asRecord(value), 'keys', 'Keys')
+  if (!Array.isArray(keysRaw)) return { keys: [] }
+  const keys: SpectrumKeyColor[] = []
+  for (const item of keysRaw) {
+    const color = readKeyColor(item)
+    if (color) keys.push(color)
+  }
+  return { keys }
+}
+
+function readSpectrumLayout(value: unknown): SpectrumLayoutResult {
+  const record = asRecord(value)
+  const spectrumLayout = readProp(record, 'spectrumLayout', 'SpectrumLayout')
+  const keyboardLayout = readProp(record, 'keyboardLayout', 'KeyboardLayout')
+  const keysRaw = readProp(record, 'keys', 'Keys')
+  if (typeof spectrumLayout !== 'string' || typeof keyboardLayout !== 'string') {
+    throw new Error('Invalid Spectrum layout')
+  }
+  const keys = Array.isArray(keysRaw)
+    ? keysRaw.filter((code): code is number => typeof code === 'number' && Number.isFinite(code))
+    : []
+  return {
+    spectrumLayout: spectrumLayout as SpectrumLayoutName,
+    keyboardLayout: keyboardLayout as KeyboardLayoutName,
+    keys
+  }
+}
+
+function readProfileDescription(value: unknown): SpectrumProfileDescriptionResult {
+  const record = asRecord(value)
+  const profile = readFiniteNumber(readProp(record, 'profile', 'Profile'))
+  const effects = readProp(record, 'effects', 'Effects')
+  if (profile === undefined || !Array.isArray(effects)) {
+    throw new Error('Invalid Spectrum profile description')
+  }
+  return { profile, effects: effects as SpectrumEffect[] }
+}
+
 export const keyboardApi: KeyboardApi = {
   async detect() {
-    return invoke<{ mode: KeyboardMode }>('keyboard.detect', {})
+    const raw = await invoke<unknown>('keyboard.detect', {})
+    const mode = readProp(asRecord(raw), 'mode', 'Mode')
+    if (
+      mode !== 'rgb' &&
+      mode !== 'spectrum' &&
+      mode !== 'white' &&
+      mode !== 'oneLevelWhite' &&
+      mode !== 'none'
+    ) {
+      throw new Error('Invalid keyboard mode')
+    }
+    return { mode }
   },
 
   async getRgbState() {
-    return invoke<RgbStateResult>('rgb.getState', {})
+    return readRgbState(await invoke<unknown>('rgb.getState', {}))
   },
 
   async setRgbState(state) {
-    return invoke<{ ok: boolean }>('rgb.setState', { state })
+    return readOk(await invoke<unknown>('rgb.setState', { state }))
   },
 
   async setPreset(preset) {
-    return invoke<RgbStateResult>('rgb.setPreset', { preset })
+    return readRgbState(await invoke<unknown>('rgb.setPreset', { preset }))
   },
 
   async nextPreset() {
-    return invoke<RgbStateResult>('rgb.nextPreset', {})
+    return readRgbState(await invoke<unknown>('rgb.nextPreset', {}))
   },
 
   async takeOwnership(enable, restorePreset) {
-    return invoke<{ ok: boolean }>(
-      'rgb.takeOwnership',
-      restorePreset === undefined ? { enable } : { enable, restorePreset }
+    return readOk(
+      await invoke<unknown>(
+        'rgb.takeOwnership',
+        restorePreset === undefined ? { enable } : { enable, restorePreset }
+      )
     )
   },
 
   async spectrumGetLayout() {
-    return invoke<SpectrumLayoutResult>('spectrum.getLayout', {})
+    return readSpectrumLayout(await invoke<unknown>('spectrum.getLayout', {}))
   },
 
   async spectrumGetState() {
-    return invoke<SpectrumStateResult>('spectrum.getState', {})
+    return readSpectrumState(await invoke<unknown>('spectrum.getState', {}))
   },
 
   async spectrumGetBrightness() {
-    return invoke<{ brightness: number }>('spectrum.getBrightness', {})
+    const brightness = readFiniteNumber(
+      readProp(asRecord(await invoke<unknown>('spectrum.getBrightness', {})), 'brightness', 'Brightness')
+    )
+    if (brightness === undefined) throw new Error('Invalid Spectrum brightness')
+    return { brightness }
   },
 
   async spectrumSetBrightness(brightness) {
-    return invoke<{ ok: boolean }>('spectrum.setBrightness', { brightness })
+    return readOk(await invoke<unknown>('spectrum.setBrightness', { brightness }))
   },
 
   async spectrumGetLogo() {
-    return invoke<{ isOn: boolean }>('spectrum.getLogoStatus', {})
+    const isOn = readProp(asRecord(await invoke<unknown>('spectrum.getLogoStatus', {})), 'isOn', 'IsOn')
+    if (typeof isOn !== 'boolean') throw new Error('Invalid Spectrum logo status')
+    return { isOn }
   },
 
   async spectrumSetLogo(isOn) {
-    return invoke<{ ok: boolean }>('spectrum.setLogoStatus', { isOn })
+    return readOk(await invoke<unknown>('spectrum.setLogoStatus', { isOn }))
   },
 
   async spectrumGetProfile() {
-    return invoke<{ profile: number }>('spectrum.getProfile', {})
+    const profile = readFiniteNumber(
+      readProp(asRecord(await invoke<unknown>('spectrum.getProfile', {})), 'profile', 'Profile')
+    )
+    if (profile === undefined) throw new Error('Invalid Spectrum profile')
+    return { profile }
   },
 
   async spectrumSetProfile(profile) {
-    return invoke<{ ok: boolean }>('spectrum.setProfile', { profile })
+    return readOk(await invoke<unknown>('spectrum.setProfile', { profile }))
   },
 
   async spectrumGetProfileDesc(profile) {
-    return invoke<SpectrumProfileDescriptionResult>('spectrum.getProfileDescription', { profile })
+    return readProfileDescription(await invoke<unknown>('spectrum.getProfileDescription', { profile }))
   },
 
   async spectrumSetProfileDesc(profile, effects) {
-    return invoke<{ ok: boolean }>('spectrum.setProfileDescription', { profile, effects })
+    return readOk(await invoke<unknown>('spectrum.setProfileDescription', { profile, effects }))
   }
 }

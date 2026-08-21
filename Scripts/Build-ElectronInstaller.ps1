@@ -74,6 +74,26 @@ function Set-InstallChannel {
     Set-Content -LiteralPath $channelFile -Value $Channel -Encoding ascii -NoNewline
 }
 
+function Set-ElectronPackageVersion {
+    # electron-builder reads the version from package.json. Keep the full
+    # SemVer (including preview labels) so a v6.0.0-preview.1 release does
+    # not stamp the Electron app as stable 6.0.0.
+    $packageJsonPath = Join-Path $electronProject 'package.json'
+    $packageJsonText = [System.IO.File]::ReadAllText($packageJsonPath)
+    $versionMatch = [System.Text.RegularExpressions.Regex]::Match(
+        $packageJsonText,
+        '(?m)^(\s*"version"\s*:\s*)"[^"]*"')
+    if (-not $versionMatch.Success) {
+        throw "Electron package.json does not contain a top-level version field."
+    }
+
+    $versionReplacement = $versionMatch.Groups[1].Value + '"' + $Version + '"'
+    $updatedPackageJson = $packageJsonText.Remove($versionMatch.Index, $versionMatch.Length).
+        Insert($versionMatch.Index, $versionReplacement)
+    $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($packageJsonPath, $updatedPackageJson, $utf8WithoutBom)
+}
+
 function Invoke-ElectronWinTarget {
     param(
         [Parameter(Mandatory = $true)][string]$Target,
@@ -174,6 +194,8 @@ function Assert-ElectronZip {
 # be signed before packaging.
 Push-Location $electronProject
 try {
+    Set-ElectronPackageVersion
+
     if ($runPreparePayloads) {
         if (Test-Path -LiteralPath $distDir) {
             Remove-Item -LiteralPath $distDir -Recurse -Force
@@ -181,22 +203,6 @@ try {
         if (Test-Path -LiteralPath $payloadOutputPath) {
             Remove-Item -LiteralPath $payloadOutputPath -Recurse -Force
         }
-
-        # electron-builder reads the version from package.json; sync it with the
-        # release version resolved from Directory.Build.props.
-        $packageJsonPath = Join-Path $electronProject 'package.json'
-        $packageJsonText = [System.IO.File]::ReadAllText($packageJsonPath)
-        $versionMatch = [System.Text.RegularExpressions.Regex]::Match(
-            $packageJsonText,
-            '(?m)^(\s*"version"\s*:\s*)"[^"]*"')
-        if (-not $versionMatch.Success) {
-            throw "Electron package.json does not contain a top-level version field."
-        }
-        $versionReplacement = $versionMatch.Groups[1].Value + '"' + $Version + '"'
-        $updatedPackageJson = $packageJsonText.Remove($versionMatch.Index, $versionMatch.Length).
-            Insert($versionMatch.Index, $versionReplacement)
-        $utf8WithoutBom = New-Object System.Text.UTF8Encoding($false)
-        [System.IO.File]::WriteAllText($packageJsonPath, $updatedPackageJson, $utf8WithoutBom)
 
         npm run build
         if ($LASTEXITCODE -ne 0) {

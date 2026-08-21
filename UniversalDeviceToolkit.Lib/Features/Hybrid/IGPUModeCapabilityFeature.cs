@@ -45,6 +45,8 @@ public class IGPUModeCapabilityFeature : IFeature<IGPUModeState>
             throw CreateUnavailableException(CapabilityID.IGPUMode);
         cancellationToken.ThrowIfCancellationRequested();
         var result = (IGPUModeState)value;
+        if (!Enum.IsDefined(result))
+            throw ExceptionHelper.UndefinedValueReceived(result);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"State is {result}");

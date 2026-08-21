@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +15,7 @@ internal readonly struct RegistryKeyPackageRule : IPackageRule
     {
         var key = node?.SelectSingleNode("Key")?.InnerText;
 
-        if (key is null)
+        if (key is null || !RegistryRulePath.TrySplit(key, out _, out _))
         {
             value = default;
             return false;
@@ -32,10 +31,7 @@ internal readonly struct RegistryKeyPackageRule : IPackageRule
 
     private Task<bool> KeyExists()
     {
-        var hive = Key.Split('\\').FirstOrDefault();
-        var path = string.Join('\\', Key.Split('\\').Skip(1));
-
-        if (hive is null || string.IsNullOrEmpty(path))
+        if (!RegistryRulePath.TrySplit(Key, out var hive, out var path))
             return Task.FromResult(false);
 
         var result = Registry.KeyExists(hive, path);

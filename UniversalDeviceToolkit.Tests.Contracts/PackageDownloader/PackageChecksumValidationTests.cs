@@ -18,105 +18,181 @@ namespace UniversalDeviceToolkit.Tests.PackageDownloader;
 public sealed class PackageChecksumValidationTests
 {
     [Fact]
-    public async Task TryValidateChecksum_WithGnuStyleSidecar_ShouldAcceptValidDownload()
+    public async Task ValidateCatalogChecksum_WhenCatalogHashMatches_ShouldAcceptDownload()
     {
         var packageBytes = "package-payload"u8.ToArray();
         var hash = Convert.ToHexString(SHA256.HashData(packageBytes));
-        var sidecar = $"{hash}  package.exe";
 
         var package = new Package
         {
             Title = "Test",
             FileName = "package.exe",
-            FileLocation = "https://example.test/package.exe",
+            FileLocation = "https://download.lenovo.com/package.exe",
+            FileCrc = hash
+        };
+
+        await InvokeValidateAsync(package, packageBytes).Should().NotThrowAsync();
+    }
+
+    [Fact]
+    public async Task ValidateCatalogChecksum_WhenCatalogHashMissing_ShouldRejectEvenIfSidecarWouldMatch()
+    {
+        var packageBytes = "package-payload"u8.ToArray();
+
+        var package = new Package
+        {
+            Title = "Test",
+            FileName = "package.exe",
+            FileLocation = "https://download.lenovo.com/package.exe",
             FileCrc = string.Empty
         };
 
-        var handler = new StaticResponseHandler(new Dictionary<string, HttpResponseMessage>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["https://example.test/package.exe.sha256"] = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(sidecar)
-            }
-        });
+        await InvokeValidateAsync(package, packageBytes).Should().ThrowAsync<Exception>();
+    }
 
-        var tempPath = Path.Combine(Path.GetTempPath(), $"udt-checksum-{Guid.NewGuid():N}.bin");
-        await File.WriteAllBytesAsync(tempPath, packageBytes);
+    [Fact]
+    public async Task ValidateCatalogChecksum_WhenCatalogHashMismatches_ShouldReject()
+    {
+        var packageBytes = "package-payload"u8.ToArray();
+        var wrongCatalogHash = new string('0', 64);
+
+        var package = new Package
+        {
+            Title = "Test",
+            FileName = "package.exe",
+            FileLocation = "https://download.lenovo.com/package.exe",
+            FileCrc = wrongCatalogHash
+        };
+
+        await InvokeValidateAsync(package, packageBytes).Should().ThrowAsync<Exception>();
+    }
+
+    [Fact]
+    public async Task ValidateCatalogChecksum_WhenCatalogHashIsNotSha256_ShouldReject()
+    {
+        var packageBytes = "package-payload"u8.ToArray();
+
+        var package = new Package
+        {
+            Title = "Test",
+            FileName = "package.exe",
+            FileLocation = "https://download.lenovo.com/package.exe",
+            FileCrc = "ABCD1234"
+        };
+
+        await InvokeValidateAsync(package, packageBytes).Should().ThrowAsync<Exception>();
+    }
+
+    [Fact]
+    public async Task DownloadPackageFileAsync_WithDisallowedHost_ShouldRejectBeforeWrite()
+    {
+        var location = Path.Combine(Path.GetTempPath(), $"udt-dl-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(location);
 
         try
         {
-            var method = typeof(AbstractPackageDownloader).GetMethod(
-                "TryValidateChecksum",
-                BindingFlags.NonPublic | BindingFlags.Static);
-            method.Should().NotBeNull();
+            var downloader = new TestPackageDownloader(new StaticResponseFactory());
+            var package = new Package
+            {
+                Title = "Test",
+                FileName = "package.exe",
+                FileLocation = "https://evil.example/package.exe",
+                FileCrc = new string('0', 64)
+            };
 
-            using var httpClient = new HttpClient(handler, disposeHandler: true);
-            var action = async () => await (Task)method!.Invoke(null, [package, tempPath, httpClient, CancellationToken.None])!;
-
-            await action.Should().NotThrowAsync();
+            var act = async () => await downloader.DownloadPackageFileAsync(package, location);
+            await act.Should().ThrowAsync<InvalidOperationException>();
+            Directory.GetFiles(location).Should().BeEmpty();
         }
         finally
         {
-            if (File.Exists(tempPath))
-                File.Delete(tempPath);
+            if (Directory.Exists(location))
+                Directory.Delete(location, true);
         }
     }
 
     [Fact]
-    public async Task TryValidateChecksum_WhenCatalogHashMismatches_ShouldRejectEvenIfSidecarMatches()
+    public async Task DownloadPackageFileAsync_WithTraversalFileName_ShouldStayInsideLocation()
     {
         var packageBytes = "package-payload"u8.ToArray();
-        var realHash = Convert.ToHexString(SHA256.HashData(packageBytes));
-        var wrongCatalogHash = new string('0', 64);
-        var sidecar = $"{realHash}  package.exe";
-
-        var package = new Package
-        {
-            Title = "Test",
-            FileName = "package.exe",
-            FileLocation = "https://example.test/package.exe",
-            FileCrc = wrongCatalogHash
-        };
-
-        var handler = new StaticResponseHandler(new Dictionary<string, HttpResponseMessage>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["https://example.test/package.exe.sha256"] = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StringContent(sidecar)
-            }
-        });
-
-        var tempPath = Path.Combine(Path.GetTempPath(), $"udt-checksum-{Guid.NewGuid():N}.bin");
-        await File.WriteAllBytesAsync(tempPath, packageBytes);
+        var hash = Convert.ToHexString(SHA256.HashData(packageBytes));
+        var location = Path.Combine(Path.GetTempPath(), $"udt-dl-{Guid.NewGuid():N}");
+        Directory.CreateDirectory(location);
 
         try
         {
-            var method = typeof(AbstractPackageDownloader).GetMethod(
-                "TryValidateChecksum",
-                BindingFlags.NonPublic | BindingFlags.Static);
-            method.Should().NotBeNull();
+            var downloader = new TestPackageDownloader(new StaticResponseFactory(packageBytes));
+            var package = new Package
+            {
+                Title = "Test",
+                FileName = @"..\..\windows\system32\evil.exe",
+                FileLocation = "https://download.lenovo.com/package.exe",
+                FileCrc = hash
+            };
 
-            using var httpClient = new HttpClient(handler, disposeHandler: true);
-            var action = async () => await (Task)method!.Invoke(null, [package, tempPath, httpClient, CancellationToken.None])!;
-
-            await action.Should().ThrowAsync<Exception>();
+            var finalPath = await downloader.DownloadPackageFileAsync(package, location);
+            Path.GetFullPath(finalPath).Should().StartWith(Path.GetFullPath(location));
+            File.Exists(finalPath).Should().BeTrue();
         }
         finally
         {
-            if (File.Exists(tempPath))
-                File.Delete(tempPath);
+            if (Directory.Exists(location))
+                Directory.Delete(location, true);
         }
     }
 
-    private sealed class StaticResponseHandler(IReadOnlyDictionary<string, HttpResponseMessage> responses) : HttpMessageHandler
+    private static Func<Task> InvokeValidateAsync(Package package, byte[] packageBytes)
+    {
+        return async () =>
+        {
+            var method = typeof(AbstractPackageDownloader).GetMethod(
+                "ValidateCatalogChecksumAsync",
+                BindingFlags.NonPublic | BindingFlags.Static);
+            method.Should().NotBeNull();
+
+            var tempPath = Path.Combine(Path.GetTempPath(), $"udt-checksum-{Guid.NewGuid():N}.bin");
+            await File.WriteAllBytesAsync(tempPath, packageBytes);
+            try
+            {
+                await (Task)method!.Invoke(null, [package, tempPath, CancellationToken.None])!;
+            }
+            finally
+            {
+                if (File.Exists(tempPath))
+                    File.Delete(tempPath);
+            }
+        };
+    }
+
+    private sealed class TestPackageDownloader(HttpClientFactory factory) : AbstractPackageDownloader(factory)
+    {
+        public override Task<List<Package>> GetPackagesAsync(string machineType, OS os, IProgress<float>? progress = null, CancellationToken token = default)
+            => Task.FromResult(new List<Package>());
+    }
+
+    private sealed class StaticResponseFactory(byte[]? payload = null) : HttpClientFactory
+    {
+        public override HttpClient Create() => new(new StaticResponseHandler(payload ?? []), disposeHandler: true);
+    }
+
+    private sealed class StaticResponseHandler(byte[] payload) : HttpMessageHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var key = request.RequestUri?.ToString() ?? string.Empty;
-            if (responses.TryGetValue(key, out var response))
-                return Task.FromResult(response);
+            var uri = request.RequestUri?.ToString() ?? string.Empty;
+            if (uri.StartsWith("https://download.lenovo.com/", StringComparison.OrdinalIgnoreCase))
+            {
+                return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new ByteArrayContent(payload),
+                    RequestMessage = request
+                });
+            }
 
-            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound));
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.NotFound)
+            {
+                RequestMessage = request
+            });
         }
     }
 }

@@ -1,5 +1,8 @@
+using System;
+using System.IO;
 using System.Text.Json;
 using UniversalDeviceToolkit.Abstractions.Localization;
+using UniversalDeviceToolkit.Host.Rpc;
 
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 
@@ -18,13 +21,45 @@ public static class LocalizationHandlers
 
         rpc.RegisterHandler("localization.setCulture", async request =>
         {
-            if (!TryGetCultureName(request.Parameters, out var cultureName))
-                return BridgeResult.Error(-32602, "Expected parameter: culture (string).");
+            try
+            {
+                if (!TryGetCultureName(request.Parameters, out var cultureName))
+                    return BridgeResult.Error(-32602, "Expected parameter: culture (string).");
 
-            var culture = await LocalizationRuntime.SetCultureAsync(cultureName, persist: true)
-                .ConfigureAwait(false);
-            return BridgeResult.Ok(new { culture = culture.Name });
+                var culture = await LocalizationRuntime.SetCultureAsync(cultureName, persist: true)
+                    .ConfigureAwait(false);
+
+                if (!IsPersistedCulture(culture.Name))
+                {
+                    return BridgeResult.Error(
+                        -32603,
+                        "Failed to persist the culture preference.");
+                }
+
+                return BridgeResult.Ok(new { culture = culture.Name });
+            }
+            catch (Exception ex)
+            {
+                return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            }
         });
+    }
+
+    private static bool IsPersistedCulture(string expectedCultureName)
+    {
+        try
+        {
+            var path = LocalizationRuntime.LanguageFilePath;
+            if (!File.Exists(path))
+                return false;
+
+            var stored = File.ReadAllText(path).Trim();
+            return stored.Equals(expectedCultureName, StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 
     private static bool TryGetCultureName(JsonElement parameters, out string cultureName)

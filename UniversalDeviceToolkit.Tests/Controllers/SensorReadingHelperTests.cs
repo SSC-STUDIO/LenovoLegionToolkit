@@ -23,6 +23,21 @@ public class SensorReadingHelperTests
     }
 
     [Theory]
+    [InlineData(8192f, true, 8f)]
+    [InlineData(8f, false, 8f)]
+    [InlineData(-1f, true, -1f)]
+    [InlineData(0f, true, 0f)]
+    public void NormalizeLibreHardwareMonitorDataToGigabytes_ShouldConvertSmallDataOnly(
+        float value,
+        bool isMegabyteScale,
+        float expected)
+    {
+        var result = SensorReadingHelper.NormalizeLibreHardwareMonitorDataToGigabytes(value, isMegabyteScale);
+
+        result.Should().BeApproximately(expected, 0.0001f);
+    }
+
+    [Theory]
     [InlineData(3002, 27)]
     [InlineData(3232, 50)]
     [InlineData("3532", 80)]

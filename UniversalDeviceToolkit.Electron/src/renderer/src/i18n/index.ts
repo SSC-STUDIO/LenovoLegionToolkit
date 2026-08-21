@@ -45,10 +45,14 @@ export const LANGUAGES: LanguageOption[] = [
 
 export const supportedLanguages: string[] = LANGUAGES.map((language) => language.code)
 export type SupportedLanguage = (typeof supportedLanguages)[number]
+export type LanguageDirection = 'rtl' | 'ltr'
 
 const DEFAULT_LANGUAGE: SupportedLanguage = 'zh-CN'
 export const LANGUAGE_STORAGE_KEY = 'udt-language'
 export const LEGACY_LANGUAGE_STORAGE_KEY = 'udt.lang'
+
+/** Selectable RTL cultures. Keep in sync with LANGUAGES (currently Arabic only). */
+const RTL_LANGUAGE_CODES = new Set(['ar'])
 
 type LocaleBundle = { translation: Record<string, unknown> }
 
@@ -80,6 +84,29 @@ const LEGACY_ALIASES: Record<string, string> = {
 function normalizeLanguage(lng: string): string {
   const normalized = LEGACY_ALIASES[lng] ?? lng
   return supportedLanguages.includes(normalized as SupportedLanguage) ? normalized : 'en'
+}
+
+/**
+ * True when `lng` (or its legacy alias) is a right-to-left UI language.
+ * Exported so ConfigProvider / layout code can set direction without
+ * duplicating the Arabic check. Does not write document.dir itself.
+ */
+export function isRtlLanguage(lng: string): boolean {
+  const raw = (LEGACY_ALIASES[lng] ?? lng).toLowerCase()
+  if (RTL_LANGUAGE_CODES.has(raw)) return true
+  const dash = raw.indexOf('-')
+  return dash > 0 && RTL_LANGUAGE_CODES.has(raw.slice(0, dash))
+}
+
+export function getLanguageDirection(lng: string): LanguageDirection {
+  return isRtlLanguage(lng) ? 'rtl' : 'ltr'
+}
+
+function applyDocumentLanguage(lng: string): void {
+  if (typeof document === 'undefined') return
+  const normalized = normalizeLanguage(lng)
+  document.documentElement.lang = normalized
+  document.documentElement.dir = getLanguageDirection(normalized)
 }
 
 function persistLanguage(lng: string): void {
@@ -165,6 +192,9 @@ void i18n.use(initReactI18next).init({
     escapeValue: false
   }
 })
+
+i18n.on('languageChanged', applyDocumentLanguage)
+applyDocumentLanguage(resolveInitialLanguage())
 
 // Load the initial language bundle before rendering (keeps first paint correct).
 const initialLanguage = resolveInitialLanguage()

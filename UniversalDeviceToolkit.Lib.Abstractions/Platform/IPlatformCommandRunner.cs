@@ -22,6 +22,11 @@ public sealed class ProcessPlatformCommandRunner : IPlatformCommandRunner
 {
     public PlatformCommandResult Run(string fileName, params string[] arguments)
     {
+        if (string.IsNullOrWhiteSpace(fileName))
+            return new PlatformCommandResult(-1, string.Empty, "File name is required.");
+
+        arguments ??= [];
+
         try
         {
             using var process = Process.Start(new ProcessStartInfo(fileName)
@@ -43,7 +48,9 @@ public sealed class ProcessPlatformCommandRunner : IPlatformCommandRunner
                 return new PlatformCommandResult(-1, string.Empty, "Process timed out.");
             }
 
-            Task.WhenAll(output, error).Wait(5000);
+            if (!Task.WhenAll(output, error).Wait(5000))
+                return new PlatformCommandResult(process.ExitCode, string.Empty, "Timed out reading process output.");
+
             return new PlatformCommandResult(process.ExitCode, output.Result, error.Result);
         }
         catch (Exception ex)

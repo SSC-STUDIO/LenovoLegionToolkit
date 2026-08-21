@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invokeObject } from './bridge'
 
 export interface AiStatus {
   supported: boolean
@@ -6,7 +6,7 @@ export interface AiStatus {
 }
 
 export const aiApi = {
-  getStatus: (): Promise<AiStatus> => invoke<AiStatus>('ai.getStatus', {}),
+  getStatus: (): Promise<AiStatus> => invokeObject<AiStatus>('ai.getStatus', {}),
   setEnabled: (enabled: boolean): Promise<{ ok: boolean }> =>
-    invoke<{ ok: boolean }>('ai.setEnabled', { enabled })
+    invokeObject<{ ok: boolean }>('ai.setEnabled', { enabled })
 }

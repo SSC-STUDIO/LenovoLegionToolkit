@@ -29,6 +29,8 @@ export interface Bridge {
   selectJsonFile: () => Promise<string | null>
   selectExeFile: () => Promise<string | null>
   selectAudioFile: () => Promise<string | null>
+  /** Resolves a renderer File from a file input to a real filesystem path. */
+  getPathForFile?: (file: { name: string; size: number; type: string }) => string
   isMaximized: () => Promise<boolean>
   getPluginPreloadPath: () => Promise<string>
   onMaximizedChanged: (callback: (maximized: boolean) => void) => () => void

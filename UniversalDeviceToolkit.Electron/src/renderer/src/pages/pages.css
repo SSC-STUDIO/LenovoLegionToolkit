@@ -185,6 +185,7 @@
 
 .udt-about-page__identity {
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .udt-about-page__hero .udt-page-title {
@@ -197,6 +198,7 @@
   font-size: var(--udt-font-display-section);
   font-weight: 600;
   line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .udt-about-page__badges {
@@ -224,6 +226,7 @@
   color: var(--udt-text-secondary);
   font-size: var(--udt-font-caption);
   line-height: 1.45;
+  overflow-wrap: anywhere;
 }
 
 .udt-about-page__credit {
@@ -254,6 +257,7 @@
   align-items: center;
   gap: 12px;
   width: 100%;
+  min-width: 0;
   margin: 0 0 8px;
   padding: 10px 12px;
   border: 1px solid transparent;
@@ -581,28 +585,20 @@
   min-width: 142px;
   flex: 0 0 auto;
   height: var(--udt-control-height);
+  min-height: var(--udt-control-height);
 }
 
-.udt-plugins-page__filter .ant-select-selector {
-  box-sizing: border-box;
-  height: var(--udt-control-height) !important;
-  min-height: var(--udt-control-height) !important;
-  padding-block: 0 !important;
-  border-color: var(--udt-control-stroke-default) !important;
-  border-radius: var(--udt-radius-control) !important;
-  background: var(--udt-control-fill-default) !important;
-  box-shadow: none !important;
-}
-
-.udt-plugins-page__filter.ant-select-focused .ant-select-selector {
+.udt-plugins-page__filter.ant-select-focused,
+.udt-plugins-page__filter.ant-select-open {
   border-color: var(--udt-accent) !important;
 }
 
+.udt-plugins-page__filter .ant-select-content,
+.udt-plugins-page__filter .ant-select-placeholder,
 .udt-plugins-page__filter .ant-select-selection-item,
 .udt-plugins-page__filter .ant-select-selection-placeholder {
   font-size: var(--udt-font-caption);
   color: var(--udt-text-primary);
-  line-height: calc(var(--udt-control-height) - 2px) !important;
 }
 
 .udt-plugins-page__toolbar .ant-btn {

@@ -85,6 +85,8 @@ public static class LocalizationCatalog
 
     public static string GetDisplayName(CultureInfo culture)
     {
+        ArgumentNullException.ThrowIfNull(culture);
+
         if (culture.Name.Equals("uz-Latn-UZ", StringComparison.OrdinalIgnoreCase))
             return "Uzbek (Latin)";
 
@@ -99,9 +101,10 @@ public static class LocalizationCatalog
     public static bool IsRightToLeft(CultureInfo? culture) =>
         NormalizeCulture(culture).TextInfo.IsRightToLeft;
 
-    public static string GetString(ResourceManager manager, string key, string fallback, CultureInfo? culture = null)
+    public static string GetString(ResourceManager manager, string key, string? fallback = "", CultureInfo? culture = null)
     {
         ArgumentNullException.ThrowIfNull(manager);
+        fallback ??= string.Empty;
 
         if (string.IsNullOrWhiteSpace(key))
             return fallback;
@@ -117,7 +120,7 @@ public static class LocalizationCatalog
             }
             catch (MissingManifestResourceException)
             {
-                break;
+                continue;
             }
         }
 

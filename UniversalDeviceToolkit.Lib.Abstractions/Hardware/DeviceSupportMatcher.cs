@@ -96,10 +96,13 @@ public static class DeviceSupportMatcher
 
         var modelSignals = ModelSignals(identity).ToArray();
         var machineTypes = pack.MachineTypes;
-        if (machineTypes.Count > 0 && !string.IsNullOrWhiteSpace(identity.MachineType))
+        var identityMachineTypes = EnumerateMachineTypeTokens(identity, modelSignals).ToArray();
+        if (machineTypes.Count > 0 && identityMachineTypes.Length > 0)
         {
-            if (machineTypes.Any(machineType => machineType.Equals(identity.MachineType, StringComparison.OrdinalIgnoreCase)))
-                return VendorScore(pack) + 5000 + identity.MachineType.Length;
+            var matchedMachineType = machineTypes.FirstOrDefault(machineType =>
+                identityMachineTypes.Any(token => token.Equals(machineType, StringComparison.OrdinalIgnoreCase)));
+            if (!string.IsNullOrWhiteSpace(matchedMachineType))
+                return VendorScore(pack) + 5000 + matchedMachineType.Length;
         }
 
         var constrained = pack.ModelPrefixes.Count > 0 ||
@@ -131,7 +134,10 @@ public static class DeviceSupportMatcher
         var matchScore = Math.Max(keywordScore, Math.Max(prefixScore, familyScore));
         if (matchScore < 0)
         {
-            if (!pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase) && pack.Id.EndsWith("-basic", StringComparison.OrdinalIgnoreCase))
+            // Only vendor catch-all packs (asus-basic, hp-basic) may match on vendor
+            // alone. Line-specific packs (lenovo-thinkpad-basic) must not steal
+            // every machine from the same vendor.
+            if (IsVendorCatchAllBasic(pack))
                 return VendorScore(pack);
 
             return -1;
@@ -140,8 +146,57 @@ public static class DeviceSupportMatcher
         return VendorScore(pack) + matchScore;
     }
 
+    private static bool IsVendorCatchAllBasic(DevicePackDefinition pack) =>
+        !pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase) &&
+        pack.Id.EndsWith("-basic", StringComparison.OrdinalIgnoreCase) &&
+        pack.Id.Count(character => character == '-') == 1;
+
     private static int VendorScore(DevicePackDefinition pack) =>
         pack.Vendor.Equals("*", StringComparison.OrdinalIgnoreCase) ? 0 : 10000;
+
+    public static string? ExtractMachineTypeToken(string? value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return null;
+
+        const string mtMarker = "_MT_";
+        var mtIndex = value.IndexOf(mtMarker, StringComparison.OrdinalIgnoreCase);
+        if (mtIndex >= 0 && value.Length >= mtIndex + mtMarker.Length + 4)
+        {
+            var token = value.Substring(mtIndex + mtMarker.Length, 4);
+            if (IsLikelyMachineType(token))
+                return token.ToUpperInvariant();
+        }
+
+        var trimmed = value.Trim();
+        if (trimmed.Length >= 4)
+        {
+            var head = trimmed[..4];
+            if (IsLikelyMachineType(head))
+                return head.ToUpperInvariant();
+        }
+
+        return null;
+    }
+
+    private static IEnumerable<string> EnumerateMachineTypeTokens(DeviceIdentity identity, IReadOnlyCollection<string> modelSignals)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var candidate in new[] { identity.MachineType }.Concat(modelSignals))
+        {
+            var token = ExtractMachineTypeToken(candidate);
+            if (token is null || !seen.Add(token))
+                continue;
+
+            yield return token;
+        }
+    }
+
+    private static bool IsLikelyMachineType(string token) =>
+        token.Length == 4 &&
+        char.IsDigit(token[0]) &&
+        char.IsDigit(token[1]) &&
+        token.Skip(2).All(character => char.IsLetterOrDigit(character));
 
     private static int KeywordScore(string keyword) =>
         IsPlaceholderKeyword(keyword) ? 500 + keyword.Length : 3000 + keyword.Length;

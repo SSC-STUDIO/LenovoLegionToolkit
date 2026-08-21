@@ -31,6 +31,7 @@ The authoritative manifest is published in [SSC-STUDIO/scoop-bucket](https://git
 
 ## Notes
 
-- The manifest consumes the Full Electron ZIP, uses `innosetup: false`, and targets `UniversalDeviceToolkit.exe`.
+- The manifest consumes the Full Electron ZIP and uses `innosetup: false`.
+- Shortcuts must target `UniversalDeviceToolkit.exe`. Keep the shortcut display name `Universal Device Toolkit`.
 - 6.x is a package-manager breaking change; the legacy package ID is not upgraded in place.
 - Do not invent or prefill a SHA256 before the release asset exists.

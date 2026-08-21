@@ -21,9 +21,50 @@ export interface HostStatus {
   readyPayload: unknown
 }
 
-const bridge = window.bridge
-
 const HOST_ERROR_CODE = /\[UDT:(-?\d+)\]/
+
+export class BridgeInvokeError extends Error implements BridgeError {
+  readonly code: number
+
+  constructor(message: string, code = -32603, options?: { cause?: unknown }) {
+    super(message, options)
+    this.name = 'BridgeInvokeError'
+    this.code = code
+  }
+}
+
+function getBridge(): typeof window.bridge {
+  return window.bridge
+}
+
+function requireBridge(): NonNullable<typeof window.bridge> {
+  const api = getBridge()
+  if (api == null) {
+    throw new BridgeInvokeError('Bridge is not available')
+  }
+  return api
+}
+
+function isHostStatus(value: unknown): value is HostStatus {
+  if (value == null || typeof value !== 'object' || Array.isArray(value)) return false
+  const record = value as Record<string, unknown>
+  return (
+    typeof record.running === 'boolean' &&
+    typeof record.ready === 'boolean' &&
+    (record.lastError === null || typeof record.lastError === 'string')
+  )
+}
+
+function isFatalHostFailure(status: HostStatus): boolean {
+  return Boolean(status.lastError) && !status.running && !status.ready
+}
+
+function toBridgeInvokeError(error: unknown): BridgeInvokeError {
+  if (error instanceof BridgeInvokeError) return error
+  const message = sanitizeBridgeError(error)
+  const hostCode = parseHostErrorCode(message)
+  return new BridgeInvokeError(message, hostCode ?? -32603, { cause: error })
+}
 
 /** Strip Electron's verbose ipcRenderer.invoke wrapper from Error.message. */
 export function sanitizeBridgeError(error: unknown): string {
@@ -47,7 +88,7 @@ export function stripHostErrorPrefix(message: string): string {
 }
 
 export function isHostUnavailableError(message: string): boolean {
-  return /host is not running|host did not become ready|host exited|host spawn failed|host executable not found/i.test(
+  return /host is not running|host did not become ready|host exited|host spawn failed|host executable not found|bridge is not available/i.test(
     message
   )
 }
@@ -81,59 +122,64 @@ export function localizeHostError(
 
 /** Typed invoke wrapper over the preload bridge. */
 export async function invoke<T = JsonValue>(method: string, params: JsonValue = {}): Promise<T> {
-  if (!bridge) {
-    throw new Error('Bridge is not available')
-  }
+  const api = requireBridge()
   try {
-    const result = (await bridge.invoke(method, params)) as T
-    return result
+    const result: unknown = await api.invoke(method, params)
+    if (result instanceof Error) {
+      throw result
+    }
+    return result as T
   } catch (error) {
-    throw new Error(sanitizeBridgeError(error))
+    throw toBridgeInvokeError(error)
   }
+}
+
+/** Invoke that rejects when the Host returns a non-object payload. */
+export async function invokeObject<T extends object>(
+  method: string,
+  params: JsonValue = {}
+): Promise<T> {
+  const result = await invoke<unknown>(method, params)
+  if (result == null || typeof result !== 'object') {
+    throw new BridgeInvokeError(`Host method ${method} returned an invalid result`)
+  }
+  return result as T
 }
 
 /** Subscribe to a host event; returns an unsubscribe function. */
 export function on<T = JsonValue>(event: string, callback: (data: T) => void): () => void {
-  if (!bridge) {
+  const api = getBridge()
+  if (api == null) {
     return () => undefined
   }
-  return bridge.on(event, callback as (data: unknown) => void)
+  return api.on(event, callback as (data: unknown) => void)
 }
 
 export async function getHostStatus(): Promise<HostStatus> {
-  if (!bridge?.getHostStatus) {
-    return { running: false, ready: false, lastError: 'Bridge is not available', readyPayload: null }
+  const api = getBridge()
+  if (api?.getHostStatus == null) {
+    throw new BridgeInvokeError('Bridge is not available')
   }
-  return bridge.getHostStatus()
+  const status: unknown = await api.getHostStatus()
+  if (!isHostStatus(status)) {
+    throw new BridgeInvokeError('Host status response is invalid')
+  }
+  return status
 }
 
 /**
  * Wait until the Host has published {@code host.ready} (or is already ready).
- * Prefers the synchronous status snapshot so a fast Host boot is not missed.
+ * Subscribes first, then reads the status snapshot so a just-emitted ready
+ * event cannot be missed between the check and the listener.
  */
 export async function waitForHostReady(timeoutMs = 45000): Promise<void> {
-  const status = await getHostStatus().catch(() => null)
-  if (status?.ready) return
-  if (status?.lastError && !status.running) {
-    throw new Error(status.lastError)
-  }
+  requireBridge()
 
   await new Promise<void>((resolve, reject) => {
     let settled = false
-    const timer = window.setTimeout(() => {
-      finish(() =>
-        reject(new Error(status?.lastError ?? 'Host did not become ready in time'))
-      )
-    }, timeoutMs)
-
-    const offReady = on('host.ready', () => {
-      finish(() => resolve())
-    })
-    const offError = on<{ message?: string; fatal?: boolean }>('host.error', (data) => {
-      if (data?.fatal) {
-        finish(() => reject(new Error(data.message ?? 'Host failed to start')))
-      }
-    })
+    let timer = 0
+    let offReady = (): void => undefined
+    let offError = (): void => undefined
 
     const finish = (action: () => void): void => {
       if (settled) return
@@ -144,14 +190,54 @@ export async function waitForHostReady(timeoutMs = 45000): Promise<void> {
       action()
     }
 
-    // Re-check after subscribing to close the race with a just-emitted host.ready.
-    void getHostStatus()
-      .then((latest) => {
-        if (latest.ready) finish(() => resolve())
-        else if (latest.lastError && !latest.running) {
-          finish(() => reject(new Error(latest.lastError ?? 'Host failed to start')))
+    const rejectWith = (message: string): void => {
+      finish(() => reject(new BridgeInvokeError(message)))
+    }
+
+    const applyHostStatus = async (): Promise<void> => {
+      try {
+        const latest = await getHostStatus()
+        if (latest.ready) {
+          finish(() => resolve())
+          return
         }
-      })
-      .catch(() => undefined)
+        if (isFatalHostFailure(latest)) {
+          rejectWith(latest.lastError ?? 'Host failed to start')
+        }
+      } catch (error) {
+        rejectWith(sanitizeBridgeError(error))
+      }
+    }
+
+    offReady = on('host.ready', () => {
+      finish(() => resolve())
+    })
+    offError = on<{ message?: string; fatal?: boolean }>('host.error', (data) => {
+      if (data?.fatal) {
+        const message =
+          typeof data.message === 'string' && data.message.trim().length > 0
+            ? data.message
+            : 'Host failed to start'
+        rejectWith(message)
+        return
+      }
+      void applyHostStatus()
+    })
+
+    timer = window.setTimeout(() => {
+      void getHostStatus()
+        .then((latest) => {
+          if (latest.ready) {
+            finish(() => resolve())
+            return
+          }
+          rejectWith(latest.lastError ?? 'Host did not become ready in time')
+        })
+        .catch((error: unknown) => {
+          rejectWith(sanitizeBridgeError(error) || 'Host did not become ready in time')
+        })
+    }, timeoutMs)
+
+    void applyHostStatus()
   })
 }

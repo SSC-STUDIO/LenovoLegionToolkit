@@ -39,6 +39,7 @@ public class GPUController : IDisposable
     private int _disposed = 0;
 
     private Task? _refreshTask;
+    private Task? _stoppingTask;
     private CancellationTokenSource? _refreshCancellationTokenSource;
     private readonly object _startStopLock = new();
 
@@ -126,8 +127,50 @@ public class GPUController : IDisposable
 
     public Task StartAsync(int delay = 1_000, int interval = 5_000)
     {
+        Task? leftover;
         lock (_startStopLock)
         {
+            if (Volatile.Read(ref _disposed) != 0)
+                return Task.CompletedTask;
+
+            if (_refreshTask is { IsCompleted: false })
+                return Task.CompletedTask;
+
+            leftover = _stoppingTask;
+            _stoppingTask = null;
+        }
+
+        if (leftover is { IsCompleted: false })
+            return StartAfterLeftoverAsync(leftover, delay, interval);
+
+        return StartCore(delay, interval);
+    }
+
+    private async Task StartAfterLeftoverAsync(Task leftover, int delay, int interval)
+    {
+        try
+        {
+            await leftover.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+        }
+        catch (TimeoutException)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Previous GPU refresh loop did not stop in time; starting a new loop.");
+        }
+        catch (OperationCanceledException)
+        {
+        }
+
+        await StartCore(delay, interval).ConfigureAwait(false);
+    }
+
+    private Task StartCore(int delay, int interval)
+    {
+        lock (_startStopLock)
+        {
+            if (Volatile.Read(ref _disposed) != 0)
+                return Task.CompletedTask;
+
             if (_refreshTask is { IsCompleted: false })
                 return Task.CompletedTask;
 
@@ -147,6 +190,7 @@ public class GPUController : IDisposable
 
     public async Task StopAsync(bool waitForFinish = false)
     {
+        CancellationTokenSource? ctsToDispose = null;
         Task? taskToWait = null;
 
         lock (_startStopLock)
@@ -156,14 +200,20 @@ public class GPUController : IDisposable
 
             Log.Instance.Info($"GPU monitoring stopped [controller={nameof(GPUController)}]");
 
-            if (_refreshCancellationTokenSource is not null)
-            {
-                _refreshCancellationTokenSource.Cancel();
-                taskToWait = _refreshTask;
-            }
-
+            ctsToDispose = _refreshCancellationTokenSource;
             _refreshCancellationTokenSource = null;
+            taskToWait = _refreshTask;
             _refreshTask = null;
+            if (taskToWait is { IsCompleted: false })
+                _stoppingTask = taskToWait;
+
+            try
+            {
+                ctsToDispose?.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
         }
 
         if (waitForFinish && taskToWait is not null)
@@ -176,7 +226,15 @@ public class GPUController : IDisposable
             {
                 // Expected when GPU service is stopped, no action needed
             }
+
+            lock (_startStopLock)
+            {
+                if (ReferenceEquals(_stoppingTask, taskToWait))
+                    _stoppingTask = null;
+            }
         }
+
+        ctsToDispose?.Dispose();
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"GPU service stopped");
@@ -453,12 +511,24 @@ public class GPUController : IDisposable
         {
             try
             {
-                if (_refreshCancellationTokenSource != null)
+                CancellationTokenSource? ctsToDispose;
+                lock (_startStopLock)
                 {
-                    _refreshCancellationTokenSource.Cancel();
-                    _refreshCancellationTokenSource.Dispose();
+                    ctsToDispose = _refreshCancellationTokenSource;
                     _refreshCancellationTokenSource = null;
+                    _refreshTask = null;
+                    _stoppingTask = null;
                 }
+
+                try
+                {
+                    ctsToDispose?.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+
+                ctsToDispose?.Dispose();
 
                 if (_processes != null)
                 {

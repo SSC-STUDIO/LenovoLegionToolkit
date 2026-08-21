@@ -119,6 +119,7 @@ public class ViveToolService : IViveToolService, IDisposable
     public async Task<List<FeatureFlagInfo>> ImportFeaturesFromFileAsync(string filePath)
     {
         var features = await _downloadService.ImportFeaturesFromFileAsync(filePath).ConfigureAwait(false);
+        await MergeImportedFeaturesAsync(features).ConfigureAwait(false);
 
         PluginLog.Trace($"ViveTool: Imported {features.Count} features from file: {filePath}");
 
@@ -131,10 +132,30 @@ public class ViveToolService : IViveToolService, IDisposable
     public async Task<List<FeatureFlagInfo>> ImportFeaturesFromUrlAsync(string url)
     {
         var features = await _downloadService.ImportFeaturesFromUrlAsync(url).ConfigureAwait(false);
+        await MergeImportedFeaturesAsync(features).ConfigureAwait(false);
 
         PluginLog.Trace($"ViveTool: Imported {features.Count} features from URL: {url}");
 
         return features;
+    }
+
+    private async Task MergeImportedFeaturesAsync(List<FeatureFlagInfo> features)
+    {
+        if (features.Count == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            _ = await _featureService.ListFeaturesAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ViveTool: Feature list refresh before import merge failed: {ex.Message}", ex);
+        }
+
+        _featureService.MergeImportedFeatures(features);
     }
 
     /// <summary>

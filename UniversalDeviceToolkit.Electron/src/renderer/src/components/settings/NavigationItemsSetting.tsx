@@ -6,6 +6,7 @@ import { keyboardApi } from '../../api/keyboard'
 import { settingsApi } from '../../api/settings'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { SettingsCard } from './SettingsCard'
+import { SettingsLoadError } from './SettingsLoadError'
 
 /**
  * Inline navigation-item toggles — port of Electron NavigationItemsSettingsWindow.
@@ -24,12 +25,17 @@ const NAVIGATION_ITEMS: Array<{ key: string; labelKey: string }> = [
 export default function NavigationItemsSetting(): React.JSX.Element {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
+  const [reloadToken, setReloadToken] = useState(0)
   const [visibility, setVisibility] = useState<Record<string, boolean>>({})
   const [keyboardSupported, setKeyboardSupported] = useState(false)
+  const [itemsReady, setItemsReady] = useState(false)
 
   useEffect(() => {
     let cancelled = false
     setLoading(true)
+    setLoadError(null)
+    setItemsReady(false)
     void (async () => {
       try {
         const [settingsResult, keyboardMode, infos] = await Promise.all([
@@ -54,8 +60,11 @@ export default function NavigationItemsSetting(): React.JSX.Element {
             NAVIGATION_ITEMS.map((item) => [item.key, stored[item.key] !== false])
           )
         )
+        setItemsReady(true)
       } catch (reason) {
-        if (!cancelled) void message.error((reason as Error).message)
+        if (cancelled) return
+        setItemsReady(false)
+        setLoadError(reason instanceof Error ? reason.message : String(reason))
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -63,7 +72,7 @@ export default function NavigationItemsSetting(): React.JSX.Element {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [reloadToken])
 
   const visibleItems = useMemo(
     () =>
@@ -72,6 +81,7 @@ export default function NavigationItemsSetting(): React.JSX.Element {
   )
 
   const handleToggle = async (key: string, checked: boolean): Promise<void> => {
+    if (!itemsReady) return
     const previous = visibility
     const next = { ...visibility, [key]: checked }
     setVisibility(next)
@@ -103,6 +113,11 @@ export default function NavigationItemsSetting(): React.JSX.Element {
         <div className="udt-settings-inline-loading">
           <Spin size="small" />
         </div>
+      ) : loadError != null || !itemsReady ? (
+        <SettingsLoadError
+          message={loadError}
+          onRetry={() => setReloadToken((value) => value + 1)}
+        />
       ) : (
         <div className="udt-settings-toggle-grid" role="list">
           {visibleItems.map((item) => (

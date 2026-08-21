@@ -16,6 +16,40 @@ function linuxAutostartFilePath(): string {
   return join(app.getPath('home'), '.config', 'autostart', AUTOSTART_FILE_NAME)
 }
 
+/** AppImage extracts under /tmp/.mount_*; that path dies when the session ends. */
+function isEphemeralAppImageMount(filePath: string): boolean {
+  return /(?:^|[/\\])tmp[/\\]\.mount_/i.test(filePath)
+}
+
+/**
+ * Login-item Exec must survive reboot. The AppImage runtime sets APPIMAGE to
+ * the persistent .AppImage file; process.execPath is the FUSE mount binary.
+ */
+function linuxPersistentExecPath(): string {
+  const appImage = process.env.APPIMAGE
+  if (typeof appImage === 'string') {
+    const persistent = appImage.trim()
+    if (
+      persistent.length > 0 &&
+      !isEphemeralAppImageMount(persistent) &&
+      existsSync(persistent)
+    ) {
+      return persistent
+    }
+  }
+  const execPath = process.execPath
+  if (isEphemeralAppImageMount(execPath)) {
+    throw new Error(
+      'Cannot enable autostart: AppImage is running from an ephemeral mount and APPIMAGE is unset or invalid.'
+    )
+  }
+  return execPath
+}
+
+function quoteDesktopExec(filePath: string): string {
+  return `"${filePath.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
+}
+
 export function applyAutorun(enabled: boolean): void {
   if (process.platform === 'linux') {
     const filePath = linuxAutostartFilePath()
@@ -29,7 +63,7 @@ export function applyAutorun(enabled: boolean): void {
           '[Desktop Entry]',
           'Type=Application',
           'Name=Universal Device Toolkit',
-          `Exec="${process.execPath}"`,
+          `Exec=${quoteDesktopExec(linuxPersistentExecPath())}`,
           'X-GNOME-Autostart-enabled=true'
         ].join('\n') + '\n',
         'utf8'

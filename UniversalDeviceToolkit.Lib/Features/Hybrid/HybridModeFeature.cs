@@ -17,6 +17,7 @@ public class HybridModeFeature(
 {
     private readonly IDelayProvider _delayProvider = delayProvider ?? new DefaultDelayProvider();
     private CancellationTokenSource? _ensureDGPUEjectedIfNeededCts = new();
+    private int _disposed;
 
     public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
     {
@@ -70,11 +71,31 @@ public class HybridModeFeature(
 
     public async Task SetStateAsync(HybridModeState state, CancellationToken cancellationToken = default)
     {
+        ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) != 0, this);
         cancellationToken.ThrowIfCancellationRequested();
 
         // Serialize CTS swap so concurrent SetStateAsync cannot double-dispose.
         var newCts = new CancellationTokenSource();
         var previousCts = Interlocked.Exchange(ref _ensureDGPUEjectedIfNeededCts, newCts);
+        if (Volatile.Read(ref _disposed) != 0)
+        {
+            Interlocked.CompareExchange(ref _ensureDGPUEjectedIfNeededCts, null, newCts);
+            newCts.Dispose();
+            if (previousCts is not null)
+            {
+                try
+                {
+                    await previousCts.CancelAsync().ConfigureAwait(false);
+                    previousCts.Dispose();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+            }
+
+            throw new ObjectDisposedException(nameof(HybridModeFeature));
+        }
+
         if (previousCts is not null)
         {
             try
@@ -114,12 +135,12 @@ public class HybridModeFeature(
             }
             catch (IGPUModeChangeException ex)
             {
-                // GSync may already have been applied; do not silently swallow partial hybrid state.
+                // GSync may already have been applied; still fail the hybrid set so callers
+                // do not treat a partial GPU mode change as success.
                 Log.Instance.Warning(
                     $"iGPU mode change failed during hybrid set (gSyncChanged={gSyncChanged}). Hybrid mode may be partial.",
                     ex);
-                if (!gSyncChanged)
-                    throw;
+                throw;
             }
             finally
             {
@@ -140,14 +161,27 @@ public class HybridModeFeature(
     {
         gSyncFeature.InvalidateResolution();
         igpuModeFeature.InvalidateResolution();
+        dgpuNotify.InvalidateResolution();
     }
 
     public async Task EnsureDGPUEjectedIfNeededAsync()
     {
+        if (Volatile.Read(ref _disposed) != 0)
+            return;
+
         if (!await igpuModeFeature.IsSupportedAsync().ConfigureAwait(false) || !await dgpuNotify.IsSupportedAsync().ConfigureAwait(false))
             return;
 
-        var token = _ensureDGPUEjectedIfNeededCts?.Token ?? CancellationToken.None;
+        var cts = Volatile.Read(ref _ensureDGPUEjectedIfNeededCts);
+        CancellationToken token;
+        try
+        {
+            token = cts?.Token ?? CancellationToken.None;
+        }
+        catch (ObjectDisposedException)
+        {
+            return;
+        }
 
         Task.Run(async () =>
         {
@@ -226,7 +260,21 @@ public class HybridModeFeature(
 
     public void Dispose()
     {
-        _ensureDGPUEjectedIfNeededCts?.Cancel();
-        _ensureDGPUEjectedIfNeededCts?.Dispose();
+        if (Interlocked.Exchange(ref _disposed, 1) != 0)
+            return;
+
+        var cts = Interlocked.Exchange(ref _ensureDGPUEjectedIfNeededCts, null);
+        if (cts is null)
+            return;
+
+        try
+        {
+            cts.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+
+        cts.Dispose();
     }
 }

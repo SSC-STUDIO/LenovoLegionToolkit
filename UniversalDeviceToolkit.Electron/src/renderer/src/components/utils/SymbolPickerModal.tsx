@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
 import { SYMBOL_CATALOG } from './symbolIcons'
+import { useUtilsDialog } from './useUtilsDialog'
 import './utils.css'
 
 /**
@@ -50,6 +51,7 @@ export default function SymbolPickerModalHost(): React.JSX.Element {
   const [filtered, setFiltered] = useState(SYMBOL_CATALOG)
   const inputRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef<number | undefined>(undefined)
+  const { dialogRef, titleId, dialogProps } = useUtilsDialog(request != null, () => settle(null))
 
   useEffect(() => {
     if (!request) return
@@ -81,16 +83,19 @@ export default function SymbolPickerModalHost(): React.JSX.Element {
   return (
     <div className="udt-utils-backdrop" onClick={() => settle(null)}>
       <div
+        ref={dialogRef}
         className="udt-utils-modal"
         style={{ width: 760, height: 560 }}
         onClick={(event) => event.stopPropagation()}
+        {...dialogProps}
       >
-        <div className="udt-utils-modal__title" style={{ paddingBottom: 8 }}>
+        <div className="udt-utils-modal__title" id={titleId} style={{ paddingBottom: 8 }}>
           {t('wpf.symbolRegularPickertitle')}
         </div>
         <div className="udt-utils-modal__body" style={{ paddingTop: 0 }}>
           <input
             ref={inputRef}
+            data-utils-initial-focus=""
             className="udt-utils-input"
             value={filter}
             placeholder={t('wpf.filter')}

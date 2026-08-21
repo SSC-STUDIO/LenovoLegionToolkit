@@ -133,7 +133,7 @@ export default function SpectrumKeyboard({
   }, [fixedScale, stageWidth, stageHeight])
 
   const scale = fixedScale ?? fitScale
-  const deviceSet = new Set(deviceKeys)
+  const deviceSet = useMemo(() => new Set(deviceKeys), [deviceKeys])
 
   const keyCenters = useMemo(() => {
     const present = new Set(deviceKeys)

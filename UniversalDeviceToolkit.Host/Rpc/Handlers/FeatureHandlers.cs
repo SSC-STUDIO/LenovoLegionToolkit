@@ -12,6 +12,7 @@ using UniversalDeviceToolkit.Lib.Features.InstantBoot;
 using UniversalDeviceToolkit.Lib.Features.OverDrive;
 using UniversalDeviceToolkit.Lib.Features.PanelLogo;
 using UniversalDeviceToolkit.Lib.Features.WhiteKeyboardBacklight;
+using UniversalDeviceToolkit.Lib.System.Management;
 using UniversalDeviceToolkit.Host.Rpc;
 
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
@@ -29,6 +30,11 @@ public static class FeatureHandlers
     private const int UndefinedState = BridgeErrorCodes.UndefinedState;
 
     private static readonly Dictionary<string, IFeatureEntry> Features = new(StringComparer.Ordinal);
+
+    private static readonly JsonSerializerOptions WireOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
 
     public static void Register(BridgeRpcServer rpc)
     {
@@ -57,25 +63,30 @@ public static class FeatureHandlers
         RegisterFeature("winKey", IoCContainer.Resolve<WinKeyFeature>());
         RegisterFeature("oneLevelWhiteKeyboard", IoCContainer.Resolve<OneLevelWhiteKeyboardBacklightFeature>());
 
-        rpc.RegisterHandler("feature.list", (request, _) => HandleListAsync());
-        rpc.RegisterHandler("feature.getSupported", (request, _) => HandleGetSupportedAsync(request));
-        rpc.RegisterHandler("feature.getStates", (request, _) => HandleGetStatesAsync(request));
-        rpc.RegisterHandler("feature.getState", (request, _) => HandleGetStateAsync(request));
-        rpc.RegisterHandler("feature.setState", (request, _) => HandleSetStateAsync(request));
-        rpc.RegisterHandler("feature.isHdrBlocked", (_, _) => HandleIsHdrBlockedAsync());
+        rpc.RegisterHandler("feature.list", (_, cancellationToken) => HandleListAsync(cancellationToken));
+        rpc.RegisterHandler("feature.getSupported", (request, cancellationToken) => HandleGetSupportedAsync(request, cancellationToken));
+        rpc.RegisterHandler("feature.getStates", (request, cancellationToken) => HandleGetStatesAsync(request, cancellationToken));
+        rpc.RegisterHandler("feature.getState", (request, cancellationToken) => HandleGetStateAsync(request, cancellationToken));
+        rpc.RegisterHandler("feature.setState", (request, cancellationToken) => HandleSetStateAsync(request, cancellationToken));
+        rpc.RegisterHandler("feature.isHdrBlocked", (_, cancellationToken) => HandleIsHdrBlockedAsync(cancellationToken));
     }
 
     /// <summary>
     /// Mirrors HDRControl.OnRefreshAsync: HDR is disabled (with a warning) while
     /// Windows settings block it (e.g. display configuration conflicts).
     /// </summary>
-    private static async Task<BridgeResult> HandleIsHdrBlockedAsync()
+    internal static async Task<BridgeResult> HandleIsHdrBlockedAsync(CancellationToken cancellationToken = default)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var hdr = IoCContainer.Resolve<HDRFeature>();
             var blocked = await hdr.IsHdrBlockedAsync().ConfigureAwait(false);
             return BridgeResult.Ok(new { blocked });
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception)
         {
@@ -83,6 +94,11 @@ public static class FeatureHandlers
             return BridgeResult.Ok(new { blocked = false });
         }
     }
+
+    internal static void ResetFeaturesForTests() => Features.Clear();
+
+    internal static void RegisterFeatureForTests<T>(string key, IFeature<T> feature) where T : struct
+        => RegisterFeature(key, feature);
 
     private static void RegisterFeature<T>(string key, IFeature<T> feature) where T : struct
     {
@@ -97,10 +113,10 @@ public static class FeatureHandlers
     {
         Type FeatureType { get; }
         object? Instance { get; }
-        Task<bool> IsSupportedAsync();
-        Task<object> GetStateAsObjectAsync();
-        Task<object[]> GetAllStatesAsObjectsAsync();
-        Task SetStateFromJsonAsync(JsonElement state);
+        Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default);
+        Task<object> GetStateAsObjectAsync(CancellationToken cancellationToken = default);
+        Task<object[]> GetAllStatesAsObjectsAsync(CancellationToken cancellationToken = default);
+        Task SetStateFromJsonAsync(JsonElement state, CancellationToken cancellationToken = default);
     }
 
     private sealed class FeatureEntry<T> : IFeatureEntry where T : struct
@@ -113,11 +129,15 @@ public static class FeatureHandlers
 
         public object? Instance => _feature;
 
-        public async Task<bool> IsSupportedAsync()
+        public async Task<bool> IsSupportedAsync(CancellationToken cancellationToken = default)
         {
             try
             {
-                return await _feature.IsSupportedAsync().ConfigureAwait(false);
+                return await _feature.IsSupportedAsync(cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception)
             {
@@ -125,25 +145,25 @@ public static class FeatureHandlers
             }
         }
 
-        public async Task<object> GetStateAsObjectAsync()
+        public async Task<object> GetStateAsObjectAsync(CancellationToken cancellationToken = default)
         {
-            var state = await _feature.GetStateAsync().ConfigureAwait(false);
+            var state = await _feature.GetStateAsync(cancellationToken).ConfigureAwait(false);
             return ToWireObject(state);
         }
 
-        public async Task<object[]> GetAllStatesAsObjectsAsync()
+        public async Task<object[]> GetAllStatesAsObjectsAsync(CancellationToken cancellationToken = default)
         {
-            var states = await _feature.GetAllStatesAsync().ConfigureAwait(false);
+            var states = await _feature.GetAllStatesAsync(cancellationToken).ConfigureAwait(false);
             var result = new object[states.Length];
             for (var i = 0; i < states.Length; i++)
                 result[i] = ToWireObject(states[i]);
             return result;
         }
 
-        public async Task SetStateFromJsonAsync(JsonElement state)
+        public async Task SetStateFromJsonAsync(JsonElement state, CancellationToken cancellationToken = default)
         {
             var parsed = FromWireObject(state);
-            await _feature.SetStateAsync(parsed).ConfigureAwait(false);
+            await _feature.SetStateAsync(parsed, cancellationToken).ConfigureAwait(false);
             _feature.InvalidateResolution();
         }
 
@@ -154,50 +174,75 @@ public static class FeatureHandlers
             return JsonSerializer.SerializeToElement(state);
         }
 
-        private static T FromWireObject(JsonElement state)
+        internal static T FromWireObject(JsonElement state)
         {
             if (typeof(T).IsEnum)
             {
                 if (state.ValueKind != JsonValueKind.String)
                     throw new ArgumentException($"State for {typeof(T).Name} must be a string (enum name), got {state.ValueKind}.");
-                return (T)Enum.Parse(typeof(T), state.GetString()!, ignoreCase: true);
+                var name = state.GetString();
+                if (string.IsNullOrWhiteSpace(name) ||
+                    !Enum.TryParse(typeof(T), name, ignoreCase: true, out var parsed) ||
+                    parsed is null ||
+                    !Enum.IsDefined(typeof(T), parsed))
+                    throw new ArgumentException($"State for {typeof(T).Name} is not a defined enum name.");
+                return (T)parsed;
             }
 
             if (state.ValueKind != JsonValueKind.Object)
                 throw new ArgumentException($"State for {typeof(T).Name} must be an object, got {state.ValueKind}.");
-            var deserialized = JsonSerializer.Deserialize<T>(state.GetRawText());
-            if (deserialized.Equals(default))
+
+            T deserialized;
+            try
+            {
+                deserialized = JsonSerializer.Deserialize<T>(state.GetRawText(), WireOptions);
+            }
+            catch (JsonException ex)
+            {
+                throw new ArgumentException($"State for {typeof(T).Name} could not be deserialized.", ex);
+            }
+
+            if (deserialized.Equals(default(T)))
                 throw new ArgumentException($"State for {typeof(T).Name} could not be deserialized.");
             return deserialized;
         }
     }
 
-    private static async Task<BridgeResult> HandleListAsync()
+    internal static async Task<BridgeResult> HandleListAsync(CancellationToken cancellationToken = default)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var tasks = Features.Select(async kv => new
             {
                 key = kv.Key,
-                supported = await kv.Value.IsSupportedAsync().ConfigureAwait(false),
+                supported = await kv.Value.IsSupportedAsync(cancellationToken).ConfigureAwait(false),
                 stateType = kv.Value.FeatureType.Name,
             });
             var features = await Task.WhenAll(tasks).ConfigureAwait(false);
 
             return BridgeResult.Ok(new { features });
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
         }
     }
 
-    private static async Task<BridgeResult> HandleGetSupportedAsync(BridgeRequest request)
+    internal static async Task<BridgeResult> HandleGetSupportedAsync(BridgeRequest request, CancellationToken cancellationToken = default)
     {
         try
         {
             var entry = GetFeature(request);
-            return BridgeResult.Ok(new { supported = await entry.IsSupportedAsync().ConfigureAwait(false) });
+            return BridgeResult.Ok(new { supported = await entry.IsSupportedAsync(cancellationToken).ConfigureAwait(false) });
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (BridgeErrorException ex)
         {
@@ -209,33 +254,18 @@ public static class FeatureHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleGetStatesAsync(BridgeRequest request)
+    internal static async Task<BridgeResult> HandleGetStatesAsync(BridgeRequest request, CancellationToken cancellationToken = default)
     {
         try
         {
             var entry = GetFeature(request);
-            var states = await entry.GetAllStatesAsObjectsAsync().ConfigureAwait(false);
+            var states = await entry.GetAllStatesAsObjectsAsync(cancellationToken).ConfigureAwait(false);
 
             return BridgeResult.Ok(new { states });
         }
-        catch (BridgeErrorException ex)
+        catch (OperationCanceledException)
         {
-            return BridgeResult.Error(ex.Code, ex.Message);
-        }
-        catch (Exception ex)
-        {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
-        }
-    }
-
-    private static async Task<BridgeResult> HandleGetStateAsync(BridgeRequest request)
-    {
-        try
-        {
-            var entry = GetFeature(request);
-            var state = await entry.GetStateAsObjectAsync().ConfigureAwait(false);
-
-            return BridgeResult.Ok(new { state });
+            throw;
         }
         catch (BridgeErrorException ex)
         {
@@ -251,7 +281,34 @@ public static class FeatureHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleSetStateAsync(BridgeRequest request)
+    internal static async Task<BridgeResult> HandleGetStateAsync(BridgeRequest request, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var entry = GetFeature(request);
+            var state = await entry.GetStateAsObjectAsync(cancellationToken).ConfigureAwait(false);
+
+            return BridgeResult.Ok(new { state });
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (BridgeErrorException ex)
+        {
+            return BridgeResult.Error(ex.Code, ex.Message);
+        }
+        catch (NotSupportedException)
+        {
+            return BridgeResult.Error(NotSupported, "NOT_SUPPORTED");
+        }
+        catch (Exception ex)
+        {
+            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    internal static async Task<BridgeResult> HandleSetStateAsync(BridgeRequest request, CancellationToken cancellationToken = default)
     {
         try
         {
@@ -260,40 +317,42 @@ public static class FeatureHandlers
             if (!request.Parameters.TryGetProperty("state", out var stateProp))
                 throw new BridgeErrorException(-32602, "Missing 'state' parameter.");
 
-            await entry.SetStateFromJsonAsync(stateProp).ConfigureAwait(false);
+            await entry.SetStateFromJsonAsync(stateProp, cancellationToken).ConfigureAwait(false);
 
-            return BridgeResult.Ok(new { ok = true, partial = (bool?)null });
+            return BridgeResult.Ok(new { ok = true, partial = false });
         }
-        catch (BridgeErrorException ex)
+        catch (OperationCanceledException)
         {
-            return BridgeResult.Error(ex.Code, ex.Message);
-        }
-        catch (PowerModeUnavailableWithoutACException)
-        {
-            return BridgeResult.Error(AcRequired, "AC_REQUIRED: PowerMode state requires AC power.");
-        }
-        catch (NotSupportedException)
-        {
-            return BridgeResult.Error(NotSupported, "NOT_SUPPORTED");
-        }
-        catch (ArgumentException)
-        {
-            return BridgeResult.Error(UndefinedState, "UNDEFINED_STATE");
+            throw;
         }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return MapSetStateException(ex);
         }
     }
 
-    private static IFeatureEntry GetFeature(BridgeRequest request)
+    internal static BridgeResult MapSetStateException(Exception ex) => ex switch
+    {
+        BridgeErrorException bridge => BridgeResult.Error(bridge.Code, bridge.Message),
+        PowerModeUnavailableWithoutACException => BridgeResult.Error(AcRequired, "AC_REQUIRED: PowerMode state requires AC power."),
+        IGPUModeChangeException igpu => BridgeResult.Error(-32603, $"{igpu.GetType().Name}: {igpu.Message}"),
+        NotSupportedException => BridgeResult.Error(NotSupported, "NOT_SUPPORTED"),
+        ArgumentException => BridgeResult.Error(UndefinedState, "UNDEFINED_STATE"),
+        WmiWriteIndeterminateException wmi => BridgeResult.Error(-32603, $"{wmi.GetType().Name}: {wmi.Message}"),
+        WmiWriteBusyException wmi => BridgeResult.Error(-32603, $"{wmi.GetType().Name}: {wmi.Message}"),
+        WmiWriteUnavailableException wmi => BridgeResult.Error(-32603, $"{wmi.GetType().Name}: {wmi.Message}"),
+        WmiWriteFailedIndeterminateException wmi => BridgeResult.Error(-32603, $"{wmi.GetType().Name}: {wmi.Message}"),
+        _ => BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}"),
+    };
+
+    internal static IFeatureEntry GetFeature(BridgeRequest request)
     {
         if (!request.Parameters.TryGetProperty("feature", out var featureProp) ||
             featureProp.ValueKind != JsonValueKind.String)
             throw new BridgeErrorException(-32602, "Missing string parameter 'feature'.");
 
-        var key = featureProp.GetString()!;
-        if (!Features.TryGetValue(key, out var entry))
+        var key = featureProp.GetString();
+        if (string.IsNullOrWhiteSpace(key) || !Features.TryGetValue(key, out var entry))
             throw new BridgeErrorException(-32602, $"Unknown feature '{key}'.");
 
         return entry;

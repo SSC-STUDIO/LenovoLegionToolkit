@@ -29,8 +29,6 @@ jobs:
   build:
     permissions:
       contents: write
-      pages: write
-      id-token: write
 
     runs-on: windows-2022
     env:
@@ -187,10 +185,12 @@ jobs:
       run: |
         Remove-Item -Recurse -Force $env:BUILD_OUTPUT, $env:ONLINE_BUILD_OUTPUT, $env:INSTALLER_OUTPUT, $env:RELEASE_OUTPUT, $env:PAGES_OUTPUT -ErrorAction SilentlyContinue
 
-        dotnet publish UniversalDeviceToolkit.CLI/UniversalDeviceToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:BUILD_VERSION
+        # FileVersion stays numeric (6.0.0). Version/InformationalVersion keep the
+        # full SemVer so a v6.0.0-preview.1 tag does not ship a stable 6.0.0 Host.
+        dotnet publish UniversalDeviceToolkit.CLI/UniversalDeviceToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:VERSION
         if ($LASTEXITCODE -ne 0) { throw "CLI publish failed." }
 
-        dotnet publish UniversalDeviceToolkit.NetworkProxy/UniversalDeviceToolkit.NetworkProxy.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:BUILD_VERSION
+        dotnet publish UniversalDeviceToolkit.NetworkProxy/UniversalDeviceToolkit.NetworkProxy.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:VERSION
         if ($LASTEXITCODE -ne 0) { throw "NetworkProxy publish failed." }
 
         $prunePaths = @(
@@ -222,7 +222,7 @@ jobs:
           --runtime win-x64 `
           --self-contained true `
           --output $env:HOST_BUILD_OUTPUT `
-          /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:BUILD_VERSION
+          /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:VERSION
         if ($LASTEXITCODE -ne 0) { throw "Host publish failed." }
 
         # Keep every supported satellite culture in the Host publish until
@@ -232,6 +232,17 @@ jobs:
         ./Scripts/Prune-ShippingFootprint.ps1 `
           -PayloadPath $env:HOST_BUILD_OUTPUT `
           -AllowedCultures 'ar;bg;cs;de;el;en;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;uz-latn-uz;vi;zh-hans;zh-hant'
+
+    - name: Build plugin runtime assets
+      shell: pwsh
+      run: |
+        ./Scripts/Build-PluginRuntimeAssets.ps1 `
+          -PluginsRepositoryRoot "$env:GITHUB_WORKSPACE/Plugins" `
+          -HostSourceDir $env:HOST_BUILD_OUTPUT `
+          -DestinationPath $env:BUILD_OUTPUT `
+          -Configuration Release
+        if ($LASTEXITCODE -ne 0) { throw "Plugin runtime staging failed." }
+        ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
 
     - name: Sign Host payload
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
@@ -251,17 +262,6 @@ jobs:
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
       shell: pwsh
       run: ./Scripts/Assert-AuthenticodeSignatures.ps1 -Path $env:HOST_BUILD_OUTPUT
-
-    - name: Build plugin runtime assets
-      shell: pwsh
-      run: |
-        ./Scripts/Build-PluginRuntimeAssets.ps1 `
-          -PluginsRepositoryRoot "$env:GITHUB_WORKSPACE/Plugins" `
-          -HostSourceDir $env:HOST_BUILD_OUTPUT `
-          -DestinationPath $env:BUILD_OUTPUT `
-          -Configuration Release
-        if ($LASTEXITCODE -ne 0) { throw "Plugin runtime staging failed." }
-        ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
 
     - name: Sign release payload
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
@@ -306,8 +306,8 @@ jobs:
         if ($LASTEXITCODE -ne 0) {
           throw "CLI version failed with exit code $LASTEXITCODE`n$version"
         }
-        if (-not $version.StartsWith($env:BUILD_VERSION)) {
-          throw "CLI version '$version' does not start with expected '$env:BUILD_VERSION'."
+        if (-not $version.StartsWith($env:VERSION) -and -not $version.StartsWith($env:BUILD_VERSION)) {
+          throw "CLI version '$version' does not start with expected '$env:VERSION'."
         }
 
     - name: Prepare release and Pages resources
@@ -326,7 +326,7 @@ jobs:
         # Stage the final Full and Online win-unpacked trees before wrapping
         # them so every executable embedded in the release can be signed.
         ./Scripts/Build-ElectronInstaller.ps1 `
-          -Version $env:BUILD_VERSION `
+          -Version $env:VERSION `
           -InstallerOutput $env:INSTALLER_OUTPUT `
           -PayloadOutput $env:INSTALLER_PAYLOAD_OUTPUT `
           -PreparePayloadsOnly
@@ -360,7 +360,7 @@ jobs:
         # The portable wrapper extracts this shell and the installer copies it
         # as uninstall.exe, so it must be signed before the wrapper is built.
         ./Scripts/Build-ElectronInstaller.ps1 `
-          -Version $env:BUILD_VERSION `
+          -Version $env:VERSION `
           -InstallerOutput $env:INSTALLER_OUTPUT `
           -PayloadOutput $env:INSTALLER_PAYLOAD_OUTPUT `
           -PrepareInstallerShellOnly
@@ -394,7 +394,7 @@ jobs:
       shell: pwsh
       run: |
         ./Scripts/Build-ElectronInstaller.ps1 `
-          -Version $env:BUILD_VERSION `
+          -Version $env:VERSION `
           -InstallerOutput $env:INSTALLER_OUTPUT `
           -PayloadOutput $env:INSTALLER_PAYLOAD_OUTPUT `
           -PackagePreparedPayloads
@@ -538,16 +538,10 @@ jobs:
           --repo "${{ github.repository }}" `
           --notes-file $notesPath
 
-    - name: Setup Pages
-      uses: actions/configure-pages@v6
-
-    - name: Upload Pages artifact
-      uses: actions/upload-pages-artifact@v4
-      with:
-        path: release-assets/pages
-
-    - name: Deploy Pages resources
-      uses: actions/deploy-pages@v4
+    # Do not deploy GitHub Pages from Release. pages.yml owns the live site;
+    # a second deploy-pages here would replace that artifact and 404 catalogs.
+    # Language-pack resources are still generated and uploaded as a regular
+    # artifact for the Pages workflow to assemble.
 
     - name: Upload release artifact
       uses: actions/upload-artifact@v7

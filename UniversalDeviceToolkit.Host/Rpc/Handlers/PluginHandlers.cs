@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Plugins;
@@ -25,6 +27,7 @@ public static class PluginHandlers
 
     private static BridgeRpcServer? _rpc;
     private static string? _activeInstallPluginId;
+    private static readonly SemaphoreSlim InstallSessionGate = new(1, 1);
 
     public static void Register(BridgeRpcServer rpc)
     {
@@ -156,42 +159,50 @@ public static class PluginHandlers
             var manifest = available.FirstOrDefault(m => string.Equals(m.Id, pluginId, StringComparison.OrdinalIgnoreCase))
                 ?? throw new BridgeErrorException(-32603, $"Plugin '{pluginId}' was not found in the online store.");
 
-            _repository.DownloadProgressChanged += OnDownloadProgressChanged;
-            _repository.DownloadCompleted += OnDownloadCompleted;
-            _repository.DownloadFailed += OnDownloadFailed;
-            _activeInstallPluginId = pluginId;
+            await InstallSessionGate.WaitAsync().ConfigureAwait(false);
             try
             {
-                var outcome = await _repository
-                    .DownloadAndInstallPluginWithOutcomeAsync(manifest)
-                    .ConfigureAwait(false);
-                if (!outcome.Success)
+                _repository.DownloadProgressChanged += OnDownloadProgressChanged;
+                _repository.DownloadCompleted += OnDownloadCompleted;
+                _repository.DownloadFailed += OnDownloadFailed;
+                _activeInstallPluginId = pluginId;
+                try
                 {
+                    var outcome = await _repository
+                        .DownloadAndInstallPluginWithOutcomeAsync(manifest)
+                        .ConfigureAwait(false);
+                    if (!outcome.Success)
+                    {
+                        return BridgeResult.Ok(new
+                        {
+                            ok = false,
+                            degraded = outcome.Degraded,
+                            unloadPending = outcome.UnloadPending,
+                            recoveryId = outcome.RecoveryId,
+                            recoveryPath = outcome.RecoveryPath,
+                            error = outcome.Error,
+                        });
+                    }
+
+                    PublishEvent("plugins.installed", new { pluginId });
                     return BridgeResult.Ok(new
                     {
-                        ok = false,
-                        degraded = outcome.Degraded,
-                        unloadPending = outcome.UnloadPending,
-                        recoveryId = outcome.RecoveryId,
-                        recoveryPath = outcome.RecoveryPath,
-                        error = outcome.Error,
+                        ok = true,
+                        degraded = false,
+                        unloadPending = false,
                     });
                 }
-
-                PublishEvent("plugins.installed", new { pluginId });
-                return BridgeResult.Ok(new
+                finally
                 {
-                    ok = true,
-                    degraded = false,
-                    unloadPending = false,
-                });
+                    _activeInstallPluginId = null;
+                    _repository.DownloadProgressChanged -= OnDownloadProgressChanged;
+                    _repository.DownloadCompleted -= OnDownloadCompleted;
+                    _repository.DownloadFailed -= OnDownloadFailed;
+                }
             }
             finally
             {
-                _activeInstallPluginId = null;
-                _repository.DownloadProgressChanged -= OnDownloadProgressChanged;
-                _repository.DownloadCompleted -= OnDownloadCompleted;
-                _repository.DownloadFailed -= OnDownloadFailed;
+                InstallSessionGate.Release();
             }
         }
         catch (BridgeErrorException ex)
@@ -312,6 +323,8 @@ public static class PluginHandlers
     // read/written directly on the plugin's own config.json instead. Isolation
     // is inherent: every plugin only ever touches {pluginDir}/config.json.
     private static readonly object ConfigFileGate = new();
+    private static readonly JsonSerializerOptions ConfigJsonOptions = new() { WriteIndented = true };
+    private static readonly Encoding ConfigUtf8 = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
 
     private static async Task<BridgeResult> HandleGetConfigAsync(BridgeRequest request)
     {
@@ -321,6 +334,7 @@ public static class PluginHandlers
                 throw new BridgeErrorException(-32602, "Missing or invalid string parameter 'pluginId'.");
 
             var validPluginId = pluginId!;
+            var configPath = ResolvePluginConfigPath(validPluginId);
 
             string? key = null;
             if (request.Parameters.ValueKind == JsonValueKind.Object
@@ -332,11 +346,13 @@ public static class PluginHandlers
                     throw new BridgeErrorException(-32602, "Invalid string parameter 'key'.");
             }
 
-            Dictionary<string, JsonElement> config;
-            lock (ConfigFileGate)
+            var config = await Task.Run(() =>
             {
-                config = ReadConfigMap(ResolvePluginConfigPath(validPluginId));
-            }
+                lock (ConfigFileGate)
+                {
+                    return ReadConfigMap(configPath);
+                }
+            }).ConfigureAwait(false);
 
             if (key is not null)
             {
@@ -381,9 +397,6 @@ public static class PluginHandlers
             var key = keyProperty.GetString()!;
             var value = valueProperty.Clone();
             var configPath = ResolvePluginConfigPath(validPluginId);
-            var configDirectory = Path.GetDirectoryName(configPath);
-            if (!string.IsNullOrWhiteSpace(configDirectory))
-                Directory.CreateDirectory(configDirectory);
 
             await Task.Run(() =>
             {
@@ -391,8 +404,8 @@ public static class PluginHandlers
                 {
                     var config = ReadConfigMap(configPath);
                     config[key] = value;
-                    var json = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
-                    File.WriteAllText(configPath, json);
+                    var json = JsonSerializer.Serialize(config, ConfigJsonOptions);
+                    AtomicWriteAllText(configPath, json);
                 }
             }).ConfigureAwait(false);
 
@@ -414,15 +427,59 @@ public static class PluginHandlers
         if (!File.Exists(configPath))
             return map;
 
-        using var stream = File.OpenRead(configPath);
-        using var document = JsonDocument.Parse(stream);
-        if (document.RootElement.ValueKind != JsonValueKind.Object)
+        try
+        {
+            using var stream = File.OpenRead(configPath);
+            using var document = JsonDocument.Parse(stream);
+            if (document.RootElement.ValueKind != JsonValueKind.Object)
+                return map;
+
+            foreach (var property in document.RootElement.EnumerateObject())
+                map[property.Name] = property.Value.Clone();
+
             return map;
+        }
+        catch (JsonException ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"plugins config: ignoring unreadable JSON at {configPath}.", ex);
+            return map;
+        }
+    }
 
-        foreach (var property in document.RootElement.EnumerateObject())
-            map[property.Name] = property.Value.Clone();
+    /// <summary>
+    /// Persist via temp + replace so a crash mid-write cannot leave a torn
+    /// config.json. Disk is the only store: the in-memory map is a local
+    /// read-modify copy and is never published as a cache before this I/O
+    /// succeeds.
+    /// </summary>
+    private static void AtomicWriteAllText(string path, string contents)
+    {
+        var directory = Path.GetDirectoryName(path);
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
 
-        return map;
+        var tempPath = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            File.WriteAllText(tempPath, contents, ConfigUtf8);
+            File.Move(tempPath, path, overwrite: true);
+        }
+        finally
+        {
+            if (File.Exists(tempPath))
+            {
+                try
+                {
+                    File.Delete(tempPath);
+                }
+                catch (Exception ex)
+                {
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"plugins config: failed to delete temp file '{tempPath}'.", ex);
+                }
+            }
+        }
     }
 
     private static string ResolvePluginConfigPath(string pluginId)

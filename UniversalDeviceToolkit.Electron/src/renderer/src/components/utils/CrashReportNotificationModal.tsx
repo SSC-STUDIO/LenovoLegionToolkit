@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
 import { Delete24Regular, FolderOpen24Regular, Warning24Regular } from '../icons/fluent'
+import { useUtilsDialog } from './useUtilsDialog'
 import './utils.css'
 
 /**
@@ -92,6 +93,7 @@ export default function CrashReportNotificationModalHost(): React.JSX.Element {
   const { t } = useTranslation()
   const request = useCrashReportStore((s) => s.request)
   const settle = useCrashReportStore((s) => s.settle)
+  const { dialogRef, titleId, dialogProps } = useUtilsDialog(request != null, () => settle(false))
 
   const details = useMemo(() => (request ? formatDetails(request.report, t) : ''), [request, t])
 
@@ -112,11 +114,13 @@ export default function CrashReportNotificationModalHost(): React.JSX.Element {
   return (
     <div className="udt-utils-backdrop" onClick={() => settle(false)}>
       <div
+        ref={dialogRef}
         className="udt-utils-modal"
         style={{ width: 640, minHeight: 420 }}
         onClick={(event) => event.stopPropagation()}
+        {...dialogProps}
       >
-        <div className="udt-utils-modal__title">{t('wpf.crashReportNotificationtitle')}</div>
+        <div className="udt-utils-modal__title" id={titleId}>{t('wpf.crashReportNotificationtitle')}</div>
         <div className="udt-utils-modal__body">
           <div className="udt-utils-banner">
             <Warning24Regular className="udt-utils-banner__icon" />

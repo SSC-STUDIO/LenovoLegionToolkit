@@ -20,6 +20,7 @@ internal readonly struct DriverPackageRule : IPackageRule
         var hardwareIds = node?.SelectNodes("HardwareID")?
             .OfType<XmlNode>()
             .Select(n => n.InnerText)
+            .Where(HardwareIdMatch.IsSpecificHardwareId)
             .ToArray() ?? [];
         var dateString = node?.SelectSingleNode("Date")?.InnerText;
         var versionString = node?.SelectSingleNode("Version")?.InnerText;
@@ -46,18 +47,17 @@ internal readonly struct DriverPackageRule : IPackageRule
     {
         var driverInfo = FindMatchingDriverInfo(HardwareIds, driverInfoCache);
 
-        if (string.IsNullOrEmpty(driverInfo.HardwareId))
+        if (string.IsNullOrEmpty(driverInfo.HardwareId) && string.IsNullOrEmpty(driverInfo.DeviceId))
             return Task.FromResult(false);
 
-        var result = !VerifyByDateVersion(driverInfo);
-        return Task.FromResult(result);
+        return Task.FromResult(true);
     }
 
     public Task<bool> DetectInstallNeededAsync(List<DriverInfo> driverInfoCache, HttpClient _1, CancellationToken _2)
     {
         var driverInfo = FindMatchingDriverInfo(HardwareIds, driverInfoCache);
 
-        if (string.IsNullOrEmpty(driverInfo.HardwareId))
+        if (string.IsNullOrEmpty(driverInfo.HardwareId) && string.IsNullOrEmpty(driverInfo.DeviceId))
             return Task.FromResult(false);
 
         var result = VerifyByDateVersion(driverInfo);
@@ -92,11 +92,6 @@ internal readonly struct DriverPackageRule : IPackageRule
 
     private static DriverInfo FindMatchingDriverInfo(IEnumerable<string> hardwareIds, IEnumerable<DriverInfo> driverInfoCache)
     {
-        return driverInfoCache.FirstOrDefault(di => hardwareIds.Any(hardwareId =>
-        {
-            var result = di.DeviceId.StartsWith(hardwareId, StringComparison.OrdinalIgnoreCase);
-            result |= di.HardwareId.StartsWith(hardwareId, StringComparison.OrdinalIgnoreCase);
-            return result;
-        }));
+        return driverInfoCache.FirstOrDefault(di => HardwareIdMatch.MatchesAny(di, hardwareIds));
     }
 }

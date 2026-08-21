@@ -686,7 +686,7 @@ public class StoreJsonGeneratorTests : IDisposable
             description: "Mouse customization plugin.",
             version: "2.0.0-preview.1");
 
-        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
+        var storePath = PluginRepository.GetCatalogStorePath(_tempRoot, PluginCatalogChannel.Preview);
         Directory.CreateDirectory(Path.GetDirectoryName(storePath)!);
         File.WriteAllText(
             storePath,

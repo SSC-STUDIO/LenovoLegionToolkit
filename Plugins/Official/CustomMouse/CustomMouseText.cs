@@ -9,9 +9,9 @@ public static class CustomMouseText
 {
     public static CultureInfo Culture => Resources.Resource.Culture ?? CultureInfo.CurrentUICulture;
 
-    public static string PluginName => Resources.Resource.PluginName;
+    public static string PluginName => T(nameof(PluginName), "Cursor & Pointer");
     public static string PluginDescription => T(nameof(PluginDescription), "Customize mouse cursor style behavior and mouse settings.");
-    public static string SettingsPageTitle => "Cursor & Pointer";
+    public static string SettingsPageTitle => T(nameof(SettingsPageTitle), "Cursor & Pointer");
     public static string ProfileStatusLabel => T(nameof(ProfileStatusLabel), "Profile State");
     public static string ProfileReady => T(nameof(ProfileReady), "Ready to apply");
     public static string ApplyButton => T(nameof(ApplyButton), "Apply");

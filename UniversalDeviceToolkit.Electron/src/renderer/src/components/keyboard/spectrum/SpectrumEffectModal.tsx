@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Delete24Regular, Add24Regular } from '../../icons/fluent'
 import { Button, Select, Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
@@ -8,12 +8,15 @@ import type {
   SpectrumDirection,
   SpectrumEffect,
   SpectrumEffectType,
+  SpectrumKeyColor,
   SpectrumSpeed
 } from '../../../api/keyboard'
 import { keyboardApi } from '../../../api/keyboard'
 import ColorPicker from '../../ColorPicker'
 import SpectrumKeyboard from './SpectrumKeyboard'
 import { normalizeKeyboardLayout } from './keyboardLayouts'
+import { useKeyboardStore } from '../../../stores/keyboardStore'
+import { subscribeUiVisibility } from '../../../utils/uiVisibility'
 
 export interface SpectrumEffectModalProps {
   effect: SpectrumEffect | null
@@ -188,57 +191,101 @@ export default function SpectrumEffectModal({
   // Live backlight preview — Electron SpectrumKeyboardBacklightEditEffectWindow
   // polls GetStateAsync every 50ms and repaints the keycaps.
   const [previewColors, setPreviewColors] = useState<Map<number, string> | undefined>(undefined)
-  const previewInFlightRef = useRef(false)
+  const simulated = useKeyboardStore((state) => state.simulated)
   const shownPreview = previewEnabled ? previewColors : undefined
 
   useEffect(() => {
-    if (!previewEnabled) return
+    if (!previewEnabled || simulated) {
+      setPreviewColors(undefined)
+      return
+    }
+
     let cancelled = false
-    const timer = window.setInterval(() => {
-      if (previewInFlightRef.current) return
-      previewInFlightRef.current = true
+    let inFlight = false
+    let generation = 0
+    let timer: number | null = null
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let reducedMotion = motionQuery.matches
+
+    const applyState = (keys: SpectrumKeyColor[]): void => {
+      if (keys.length === 0) {
+        setPreviewColors(undefined)
+        return
+      }
+      const map = new Map<number, string>()
+      for (const keyColor of keys) {
+        map.set(keyColor.key, `#${toByteHex(keyColor.r)}${toByteHex(keyColor.g)}${toByteHex(keyColor.b)}`)
+      }
+      // 20 Hz poll: keep the previous map (and skip the keycap repaint)
+      // when the palette did not actually change between ticks.
+      setPreviewColors((previous) => {
+        if (previous && previous.size === map.size) {
+          let unchanged = true
+          for (const [key, color] of map) {
+            if (previous.get(key) !== color) {
+              unchanged = false
+              break
+            }
+          }
+          if (unchanged) return previous
+        }
+        return map
+      })
+    }
+
+    const tick = (): void => {
+      if (cancelled || inFlight || document.hidden) return
+      inFlight = true
+      const requestId = ++generation
       keyboardApi
         .spectrumGetState()
         .then((result) => {
-          if (cancelled) return
-          const keys = result.keys ?? []
-          if (keys.length === 0) {
-            setPreviewColors(undefined)
-            return
-          }
-          const map = new Map<number, string>()
-          for (const keyColor of keys) {
-            map.set(keyColor.key, `#${toByteHex(keyColor.r)}${toByteHex(keyColor.g)}${toByteHex(keyColor.b)}`)
-          }
-          // 20 Hz poll: keep the previous map (and skip the keycap repaint)
-          // when the palette did not actually change between ticks.
-          setPreviewColors((previous) => {
-            if (previous && previous.size === map.size) {
-              let unchanged = true
-              for (const [key, color] of map) {
-                if (previous.get(key) !== color) {
-                  unchanged = false
-                  break
-                }
-              }
-              if (unchanged) return previous
-            }
-            return map
-          })
+          if (cancelled || requestId !== generation) return
+          applyState(result.keys)
         })
         .catch(() => {
-          if (!cancelled) setPreviewColors(undefined)
+          if (!cancelled && requestId === generation) setPreviewColors(undefined)
         })
         .finally(() => {
-          previewInFlightRef.current = false
+          if (requestId === generation) inFlight = false
         })
-    }, 50)
+    }
+
+    const start = (): void => {
+      if (cancelled) return
+      tick()
+      if (reducedMotion || timer !== null) return
+      timer = window.setInterval(tick, 50)
+    }
+
+    const stop = (): void => {
+      generation += 1
+      inFlight = false
+      if (timer !== null) {
+        window.clearInterval(timer)
+        timer = null
+      }
+    }
+
+    if (!document.hidden) start()
+    const unsubscribeVisibility = subscribeUiVisibility((active) => {
+      if (active) start()
+      else stop()
+    })
+    const onMotionChange = (): void => {
+      reducedMotion = motionQuery.matches
+      stop()
+      if (!document.hidden) start()
+    }
+    motionQuery.addEventListener('change', onMotionChange)
+
     return () => {
       cancelled = true
-      window.clearInterval(timer)
-      previewInFlightRef.current = false
+      motionQuery.removeEventListener('change', onMotionChange)
+      stop()
+      unsubscribeVisibility()
     }
-  }, [previewEnabled])
+  }, [previewEnabled, simulated])
 
   const allLights = isAllLights(draft.Type)
   const wholeKeyboard = isWholeKeyboard(draft.Type)

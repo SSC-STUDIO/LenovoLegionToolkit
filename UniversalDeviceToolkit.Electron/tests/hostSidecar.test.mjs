@@ -1,5 +1,10 @@
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
+import { createRequire } from 'node:module'
 import test from 'node:test'
+import { fileURLToPath } from 'node:url'
+import vm from 'node:vm'
+import ts from 'typescript'
 import {
   hostSidecarPath,
   isDevHostLayoutReady,
@@ -62,4 +67,256 @@ test('isDevHostLayoutReady requires Host and NetworkProxy sidecars', () => {
   present.add('C:\\out\\UniversalDeviceToolkit.NetworkProxy.runtimeconfig.json')
   present.add('C:\\out\\UniversalDeviceToolkit.NetworkProxy.deps.json')
   assert.equal(isDevHostLayoutReady(host, exists, 'win32'), true)
+})
+
+const nodeRequire = createRequire(import.meta.url)
+const hostClientUrl = new URL('../src/main/host-client.ts', import.meta.url)
+
+function compileModule(fileUrl) {
+  const fileName = fileURLToPath(fileUrl)
+  const result = ts.transpileModule(readFileSync(fileUrl, 'utf8'), {
+    fileName,
+    reportDiagnostics: true,
+    compilerOptions: {
+      module: ts.ModuleKind.CommonJS,
+      target: ts.ScriptTarget.ES2022
+    }
+  })
+  const errors = (result.diagnostics ?? []).filter(
+    (diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error
+  )
+  if (errors.length > 0) {
+    throw new Error(errors.map((diagnostic) => ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')).join('\n'))
+  }
+  return result.outputText
+}
+
+function loadHostClient(mocks = {}) {
+  const module = { exports: {} }
+  const sourcePath = fileURLToPath(hostClientUrl)
+  vm.runInNewContext(compileModule(hostClientUrl), {
+    exports: module.exports,
+    module,
+    require(specifier) {
+      if (Object.prototype.hasOwnProperty.call(mocks, specifier)) return mocks[specifier]
+      return nodeRequire(specifier)
+    },
+    console,
+    Buffer,
+    setTimeout,
+    clearTimeout
+  }, { filename: sourcePath })
+  return module.exports
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+function waitForEvent(client, eventName) {
+  return new Promise((resolve) => {
+    const unsubscribe = client.on(eventName, (data) => {
+      unsubscribe()
+      resolve(data)
+    })
+  })
+}
+
+function waitForHostFailure(client) {
+  return new Promise((resolve) => {
+    const unsubscribe = client.onAny((event, data) => {
+      if (event !== 'host.error' && event !== 'host.exited') return
+      unsubscribe()
+      resolve({ event, data })
+    })
+  })
+}
+
+class FakeHostProcess {
+  constructor() {
+    this.killed = false
+    this.listeners = new Map()
+    this.stdin = {
+      writable: true,
+      write: () => true
+    }
+    this.stdout = {
+      on() {},
+      resume() {},
+      pause() {}
+    }
+    this.stderr = {
+      on: (event, callback) => {
+        this.on(event === 'data' ? 'stderr-data' : event, callback)
+        return this
+      }
+    }
+  }
+
+  on(event, callback) {
+    if (!this.listeners.has(event)) this.listeners.set(event, [])
+    this.listeners.get(event).push(callback)
+    return this
+  }
+
+  once(event, callback) {
+    const wrap = (...args) => {
+      this.off(event, wrap)
+      callback(...args)
+    }
+    return this.on(event, wrap)
+  }
+
+  off(event, callback) {
+    const list = this.listeners.get(event)
+    if (!list) return this
+    const index = list.indexOf(callback)
+    if (index >= 0) list.splice(index, 1)
+    return this
+  }
+
+  emit(event, ...args) {
+    const list = [...(this.listeners.get(event) ?? [])]
+    for (const callback of list) callback(...args)
+  }
+
+  kill() {
+    this.killed = true
+    this.emit('exit', 1, null)
+  }
+}
+
+function createFakeHostRuntime() {
+  const children = []
+  const lines = []
+  let closed = 0
+
+  const childProcess = {
+    spawn() {
+      const child = new FakeHostProcess()
+      children.push(child)
+      return child
+    }
+  }
+
+  const readline = {
+    createInterface() {
+      return {
+        on(event, callback) {
+          if (event === 'line') lines.push(callback)
+        },
+        close() {
+          closed += 1
+        }
+      }
+    }
+  }
+
+  return {
+    children,
+    closed: () => closed,
+    emitLine(line) {
+      for (const callback of lines) callback(line)
+    },
+    mocks: { child_process: childProcess, readline }
+  }
+}
+
+const missingHostPath = process.platform === 'win32'
+  ? 'C:\\udt-missing-host-spawn-lifecycle.exe'
+  : '/tmp/udt-missing-host-spawn-lifecycle'
+
+test('spawn error finalizes the phantom child so start can run again', async () => {
+  const { HostClient } = loadHostClient()
+  const client = new HostClient({ readyTimeoutMs: 2_000, restartDelayMs: 60_000, stopGraceMs: 50 })
+  const failed = waitForHostFailure(client)
+
+  client.start(missingHostPath)
+  await failed
+  assert.equal(client.isRunning, false)
+  assert.match(String(client.lastFailure), /spawn failed|exited/i)
+  await assert.rejects(client.waitUntilReady(200), /spawn failed|exited/i)
+
+  client.start(missingHostPath)
+  await waitForHostFailure(client)
+  assert.equal(client.isRunning, false)
+  await client.stop()
+})
+
+test('spawn error then exit is idempotent and does not leave a running handle', async () => {
+  const runtime = createFakeHostRuntime()
+  const { HostClient } = loadHostClient(runtime.mocks)
+  const client = new HostClient({ readyTimeoutMs: 2_000, restartDelayMs: 60_000, stopGraceMs: 50 })
+  const events = []
+  client.onAny((event) => events.push(event))
+
+  client.start('C:\\fake-host.exe')
+  assert.equal(runtime.children.length, 1)
+  const child = runtime.children[0]
+
+  child.emit('error', new Error('ENOENT'))
+  assert.equal(client.isRunning, false)
+  assert.equal(runtime.closed(), 1)
+  assert.equal(events.filter((event) => event === 'host.error').length, 1)
+
+  child.emit('exit', 1, null)
+  child.emit('error', new Error('ENOENT'))
+  assert.equal(client.isRunning, false)
+  assert.equal(runtime.closed(), 1)
+  assert.equal(events.filter((event) => event === 'host.error').length, 1)
+  assert.equal(events.filter((event) => event === 'host.exited').length, 0)
+  await client.stop()
+})
+
+test('boot watchdog kills a Host that never becomes ready', async () => {
+  const { HostClient } = loadHostClient()
+  const client = new HostClient({ readyTimeoutMs: 250, restartDelayMs: 60_000, stopGraceMs: 50 })
+  const failed = waitForEvent(client, 'host.error')
+
+  client.start(process.execPath, ['-e', 'setInterval(() => {}, 1000)'])
+  const payload = await failed
+  assert.match(String(payload.message), /did not become ready in time/)
+  assert.equal(client.isRunning, false)
+  await assert.rejects(client.waitUntilReady(200), /did not become ready in time/)
+  await client.stop()
+})
+
+test('host.ready disarms the boot watchdog', async () => {
+  const runtime = createFakeHostRuntime()
+  const { HostClient } = loadHostClient(runtime.mocks)
+  const client = new HostClient({ readyTimeoutMs: 120, restartDelayMs: 60_000, stopGraceMs: 50 })
+
+  client.start('C:\\fake-host.exe')
+  const child = runtime.children[0]
+  runtime.emitLine(JSON.stringify({ event: 'host.ready', data: { version: 'test' } }))
+
+  assert.equal(client.isReady, true)
+  await delay(200)
+  assert.equal(child.killed, false)
+  assert.equal(client.isRunning, true)
+  await client.stop()
+})
+
+test('late exit from a finalized child does not drop the next child', async () => {
+  const runtime = createFakeHostRuntime()
+  const { HostClient } = loadHostClient(runtime.mocks)
+  const client = new HostClient({ readyTimeoutMs: 2_000, restartDelayMs: 60_000, stopGraceMs: 50 })
+
+  client.start('C:\\fake-host-one.exe')
+  const first = runtime.children[0]
+  first.emit('error', new Error('ENOENT'))
+  assert.equal(client.isRunning, false)
+
+  client.start('C:\\fake-host-two.exe')
+  assert.equal(runtime.children.length, 2)
+  const second = runtime.children[1]
+  runtime.emitLine(JSON.stringify({ event: 'host.ready', data: { generation: 2 } }))
+  assert.equal(client.isReady, true)
+
+  first.emit('exit', 1, null)
+  first.kill()
+  assert.equal(client.isRunning, true)
+  assert.equal(client.isReady, true)
+  assert.equal(second.killed, false)
+  await client.stop()
 })

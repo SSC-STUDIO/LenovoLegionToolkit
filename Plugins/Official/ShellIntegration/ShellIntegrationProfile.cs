@@ -139,7 +139,7 @@ public sealed class ShellIntegrationProfile
             ItemRadius = Clamp(ItemRadius, 0, 3),
             BorderRadius = Clamp(BorderRadius, 0, 3),
             TipTimeSeconds = Math.Clamp(TipTimeSeconds, 0.2, 4.0),
-            ThemeName = string.IsNullOrWhiteSpace(ThemeName) ? "modern" : ThemeName.Trim(),
+            ThemeName = SanitizeThemeName(ThemeName),
             AccentColor = NormalizeHexColor(AccentColor, "#4F7CFF"),
             BackgroundColor = NormalizeHexColor(BackgroundColor, "#F7F8FC"),
             HoverColor = NormalizeHexColor(HoverColor, "#E8EEFF"),
@@ -182,6 +182,24 @@ public sealed class ShellIntegrationProfile
         }
 
         return fallback;
+    }
+
+    public static string SanitizeThemeName(string? raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return "modern";
+        }
+
+        var value = raw.Trim()
+            .Replace("\"", string.Empty, StringComparison.Ordinal)
+            .Replace("'", string.Empty, StringComparison.Ordinal)
+            .Replace("\\", string.Empty, StringComparison.Ordinal)
+            .Replace("\r", string.Empty, StringComparison.Ordinal)
+            .Replace("\n", string.Empty, StringComparison.Ordinal)
+            .Trim();
+
+        return string.IsNullOrWhiteSpace(value) ? "modern" : value;
     }
 
     public string GetColorSchemeExpression() => ColorScheme switch

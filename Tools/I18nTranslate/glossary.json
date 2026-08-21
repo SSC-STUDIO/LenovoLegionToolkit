@@ -1,0 +1,898 @@
+[
+    {
+        "source":  "1% Low",
+        "target":  "1% Low",
+        "keep":  true,
+        "note":  "OSD percentile label; gold zh-Hans keeps 1% Low"
+    },
+    {
+        "source":  "ACPI",
+        "target":  "ACPI",
+        "keep":  true,
+        "note":  "firmware power interface; keep Latin; do not expand unless source already uses Advanced Configuration and Power Interface"
+    },
+    {
+        "source":  "Acrylic",
+        "target":  "Acrylic",
+        "keep":  true,
+        "note":  "Windows UI material name"
+    },
+    {
+        "source":  "AMD",
+        "target":  "AMD",
+        "keep":  true,
+        "note":  "CPU/GPU vendor brand"
+    },
+    {
+        "source":  "APU",
+        "target":  "APU",
+        "keep":  true,
+        "note":  "accelerated processing unit; keep Latin (gold: APU 慢速功耗追踪限制)"
+    },
+    {
+        "source":  "BIOS",
+        "target":  "BIOS",
+        "keep":  true,
+        "note":  "keep Latin (gold: BIOS 版本); do not use 基本输入输出系统 in labels"
+    },
+    {
+        "source":  "CPU",
+        "target":  "CPU",
+        "keep":  true,
+        "note":  "central processor; keep Latin in all locales (gold: CPU 风扇)"
+    },
+    {
+        "source":  "cTGP",
+        "target":  "cTGP",
+        "keep":  true,
+        "note":  "configurable TGP shorthand; keep Latin; surrounding words may localize"
+    },
+    {
+        "source":  "custom-mouse",
+        "target":  "custom-mouse",
+        "keep":  true,
+        "note":  "plugin id"
+    },
+    {
+        "source":  "custom.mouse",
+        "target":  "custom.mouse",
+        "keep":  true,
+        "note":  "optimization action id"
+    },
+    {
+        "source":  "CustomMouse",
+        "target":  "CustomMouse",
+        "keep":  true,
+        "note":  "plugin code name; do not translate the concatenated identifier"
+    },
+    {
+        "source":  "DeviceIoControl",
+        "target":  "DeviceIoControl",
+        "keep":  true,
+        "note":  "Win32 API identifier; never translate"
+    },
+    {
+        "source":  "dGPU",
+        "target":  "dGPU",
+        "keep":  true,
+        "note":  "HybridModeState_Off. Hardware acronym; gold stays dGPU. Do not translate as discrete GPU / 独显 in this short state label."
+    },
+    {
+        "source":  "DPI",
+        "target":  "DPI",
+        "keep":  true,
+        "note":  "display scaling; keep Latin (gold: DPI 缩放)"
+    },
+    {
+        "source":  "Dynamic Boost",
+        "target":  "Dynamic Boost",
+        "keep":  true,
+        "note":  "vendor power-sharing name; gold keeps English (GPU 至 CPU Dynamic Boost)"
+    },
+    {
+        "source":  "EFI",
+        "target":  "EFI",
+        "keep":  true,
+        "note":  "firmware partition / interface name"
+    },
+    {
+        "source":  "Electron",
+        "target":  "Electron",
+        "keep":  true,
+        "note":  "UI shell framework name"
+    },
+    {
+        "source":  "Fn+Q",
+        "target":  "Fn+Q",
+        "keep":  true,
+        "note":  "hardware shortcut; keep Fn and Q Latin; do not insert spaces unless source has them"
+    },
+    {
+        "source":  "FPS",
+        "target":  "FPS",
+        "keep":  true,
+        "note":  "frames per second; keep Latin (gold OsdItem_Fps: FPS)"
+    },
+    {
+        "source":  "G-Sync",
+        "target":  "G-Sync",
+        "keep":  true,
+        "note":  "NVIDIA VRR brand; keep Latin hyphenation"
+    },
+    {
+        "source":  "Geek",
+        "target":  "Geek",
+        "keep":  true,
+        "note":  "Lenovo ITS mode official name"
+    },
+    {
+        "source":  "GHz",
+        "target":  "GHz",
+        "keep":  true,
+        "note":  "SI symbol; keep Latin (gold gHz: GHz)"
+    },
+    {
+        "source":  "GitHub",
+        "target":  "GitHub",
+        "keep":  true,
+        "note":  "service brand"
+    },
+    {
+        "source":  "God Mode",
+        "target":  "God Mode",
+        "keep":  true,
+        "note":  "Internal/exception token only. Gold keeps English God Mode in Exception_NoGodModePresetAvailable / Exception_NoGodModePresetCreated (没有可用的 God Mode 预设 / 无法创建任何 God Mode 预设). Never use God Mode as the user-facing power-mode label; that label is Custom."
+    },
+    {
+        "source":  "GPU",
+        "target":  "GPU",
+        "keep":  true,
+        "note":  "Hardware acronym. Keep GPU except where gold already uses a localized noun (Hybrid GPU preview: 混合显卡)."
+    },
+    {
+        "source":  "GSync",
+        "target":  "GSync",
+        "keep":  true,
+        "note":  "UI short title; keep this spelling when source has no hyphen"
+    },
+    {
+        "source":  "HDD",
+        "target":  "HDD",
+        "keep":  true,
+        "note":  "hard disk drive; keep Latin; do not replace with HDD-native spellings"
+    },
+    {
+        "source":  "HDMI",
+        "target":  "HDMI",
+        "keep":  true,
+        "note":  "display connector; keep Latin"
+    },
+    {
+        "source":  "HDR",
+        "target":  "HDR",
+        "keep":  true,
+        "note":  "keep Latin even in CJK/RTL (gold: 当 HDR 开启时); expand only if source already says high dynamic range"
+    },
+    {
+        "source":  "I/O",
+        "target":  "I/O",
+        "keep":  true,
+        "note":  "input/output acronym; keep slash form; expand only if source says Input/Output"
+    },
+    {
+        "source":  "iGPU",
+        "target":  "iGPU",
+        "keep":  true,
+        "note":  "Hardware acronym inside Hybrid-iGPU and related copy. Keep iGPU."
+    },
+    {
+        "source":  "ImController",
+        "target":  "ImController",
+        "keep":  true,
+        "note":  "Lenovo Vantage service process name"
+    },
+    {
+        "source":  "Intel",
+        "target":  "Intel",
+        "keep":  true,
+        "note":  "CPU vendor brand"
+    },
+    {
+        "source":  "Intelligent Cooling",
+        "target":  "Intelligent Cooling",
+        "keep":  true,
+        "note":  "Lenovo ITS mode official name"
+    },
+    {
+        "source":  "IRX9",
+        "target":  "IRX9",
+        "keep":  true,
+        "note":  "device model suffix"
+    },
+    {
+        "source":  "ITS",
+        "target":  "ITS",
+        "keep":  true,
+        "note":  "Lenovo Intelligent Thermal Solution acronym"
+    },
+    {
+        "source":  "JSON",
+        "target":  "JSON",
+        "keep":  true,
+        "note":  "file/format name; keep Latin"
+    },
+    {
+        "source":  "kHz",
+        "target":  "kHz",
+        "keep":  true,
+        "note":  "SI symbol; keep Latin and lowercase k"
+    },
+    {
+        "source":  "Legion",
+        "target":  "Legion",
+        "keep":  true,
+        "note":  "Lenovo product line; do not translate"
+    },
+    {
+        "source":  "Legion AI",
+        "target":  "Legion AI",
+        "keep":  true,
+        "note":  "Lenovo feature brand; surrounding words may be translated"
+    },
+    {
+        "source":  "Legion Toolkit",
+        "target":  "Legion Toolkit",
+        "keep":  true,
+        "note":  "historical product name; keep English"
+    },
+    {
+        "source":  "Legion Y9000P IRX9",
+        "target":  "Legion Y9000P IRX9",
+        "keep":  true,
+        "note":  "device model string; keep entire token"
+    },
+    {
+        "source":  "Legion Zone",
+        "target":  "Legion Zone",
+        "keep":  true,
+        "note":  "Lenovo companion app"
+    },
+    {
+        "source":  "Lenovo",
+        "target":  "Lenovo",
+        "keep":  true,
+        "note":  "OEM brand"
+    },
+    {
+        "source":  "Lenovo Hotkeys",
+        "target":  "Lenovo Hotkeys",
+        "keep":  true,
+        "note":  "Lenovo Fn-key utility"
+    },
+    {
+        "source":  "Lenovo Support",
+        "target":  "Lenovo Support",
+        "keep":  true,
+        "note":  "Lenovo support portal brand"
+    },
+    {
+        "source":  "Lenovo Vantage",
+        "target":  "Lenovo Vantage",
+        "keep":  true,
+        "note":  "Lenovo companion app"
+    },
+    {
+        "source":  "Linux",
+        "target":  "Linux",
+        "keep":  true,
+        "note":  "OS brand"
+    },
+    {
+        "source":  "macOS",
+        "target":  "macOS",
+        "keep":  true,
+        "note":  "OS brand; keep this capitalization"
+    },
+    {
+        "source":  "MHz",
+        "target":  "MHz",
+        "keep":  true,
+        "note":  "SI symbol; keep Latin; do not use 兆赫 for the symbol"
+    },
+    {
+        "source":  "Nilesoft",
+        "target":  "Nilesoft",
+        "keep":  true,
+        "note":  "vendor brand"
+    },
+    {
+        "source":  "Nilesoft Shell",
+        "target":  "Nilesoft Shell",
+        "keep":  true,
+        "note":  "third-party shell product"
+    },
+    {
+        "source":  "Nilesoft Shell Manager",
+        "target":  "Nilesoft Shell Manager",
+        "keep":  true,
+        "note":  "UDT plugin display name for Nilesoft Shell"
+    },
+    {
+        "source":  "NVIDIA",
+        "target":  "NVIDIA",
+        "keep":  true,
+        "note":  "GPU vendor brand"
+    },
+    {
+        "source":  "NVMe",
+        "target":  "NVMe",
+        "keep":  true,
+        "note":  "NVM Express storage; keep Latin; do not expand unless source already says Non-Volatile Memory Express"
+    },
+    {
+        "source":  "OSD",
+        "target":  "OSD",
+        "keep":  true,
+        "note":  "on-screen display; keep Latin (gold: 显示 OSD, OSD 设置)"
+    },
+    {
+        "source":  "Overdrive",
+        "target":  "Overdrive",
+        "keep":  true,
+        "note":  "Panel response-time feature name. Lib gold only has OverdriveState On/Off = 开启/关闭. Established zh-CN UI keeps Over Drive as the title. Do not invent 超频 as the feature name."
+    },
+    {
+        "source":  "PCI",
+        "target":  "PCI",
+        "keep":  true,
+        "note":  "Peripheral Component Interconnect; keep Latin; do not write PCI-E when source is PCI"
+    },
+    {
+        "source":  "PCIe",
+        "target":  "PCIe",
+        "keep":  true,
+        "note":  "PCI Express; keep this spelling (gold: PCIe 吞吐); do not rewrite as PCI-E unless source uses PCI-E"
+    },
+    {
+        "source":  "PL1",
+        "target":  "PL1",
+        "keep":  true,
+        "note":  "Intel long-term power limit; keep Latin in parentheses (gold: 长时负载功耗限制 (PL1))"
+    },
+    {
+        "source":  "PL2",
+        "target":  "PL2",
+        "keep":  true,
+        "note":  "Intel short-term power limit; keep Latin (gold: 短时睿频功耗限制 (PL2))"
+    },
+    {
+        "source":  "RAM",
+        "target":  "RAM",
+        "keep":  true,
+        "note":  "system memory acronym; keep Latin; the English word Memory localizes separately (zh-Hans 内存)"
+    },
+    {
+        "source":  "RGB",
+        "target":  "RGB",
+        "keep":  true,
+        "note":  "keyboard backlight; keep Latin (gold: RGB 键盘)"
+    },
+    {
+        "source":  "RPM",
+        "target":  "RPM",
+        "keep":  true,
+        "note":  "fan-speed unit symbol; keep Latin; do not replace with 转 in format strings"
+    },
+    {
+        "source":  "SATA",
+        "target":  "SATA",
+        "keep":  true,
+        "note":  "storage bus; keep Latin"
+    },
+    {
+        "source":  "services.msc",
+        "target":  "services.msc",
+        "keep":  true,
+        "note":  "Windows MMC snap-in filename"
+    },
+    {
+        "source":  "SHA256",
+        "target":  "SHA256",
+        "keep":  true,
+        "note":  "hash algorithm; keep Latin in exception strings"
+    },
+    {
+        "source":  "shell-integration",
+        "target":  "shell-integration",
+        "keep":  true,
+        "note":  "plugin id"
+    },
+    {
+        "source":  "shell.integration",
+        "target":  "shell.integration",
+        "keep":  true,
+        "note":  "optimization action id"
+    },
+    {
+        "source":  "ShellIntegration",
+        "target":  "ShellIntegration",
+        "keep":  true,
+        "note":  "plugin code name; do not translate the concatenated identifier"
+    },
+    {
+        "source":  "SoC",
+        "target":  "SoC",
+        "keep":  true,
+        "note":  "system on chip; keep Latin"
+    },
+    {
+        "source":  "Spectrum",
+        "target":  "Spectrum",
+        "keep":  true,
+        "note":  "Lenovo keyboard lighting brand. Keep Spectrum. CLI gold keeps the token (控制 Spectrum 背光 / 正在读取 Spectrum 配置文件). Localize other words only."
+    },
+    {
+        "source":  "sPPT",
+        "target":  "sPPT",
+        "keep":  true,
+        "note":  "slow package power tracking; keep Latin (gold: APU 慢速功耗追踪限制（sPPT）)"
+    },
+    {
+        "source":  "SSC-STUDIO",
+        "target":  "SSC-STUDIO",
+        "keep":  true,
+        "note":  "publisher / GitHub org"
+    },
+    {
+        "source":  "SSD",
+        "target":  "SSD",
+        "keep":  true,
+        "note":  "solid-state drive; keep Latin (gold: SSD 温度)"
+    },
+    {
+        "source":  "Steam",
+        "target":  "Steam",
+        "keep":  true,
+        "note":  "game store brand"
+    },
+    {
+        "source":  "Superfetch",
+        "target":  "Superfetch",
+        "keep":  true,
+        "note":  "legacy Windows service name for SysMain"
+    },
+    {
+        "source":  "SysMain",
+        "target":  "SysMain",
+        "keep":  true,
+        "note":  "Windows service name"
+    },
+    {
+        "source":  "TDP",
+        "target":  "TDP",
+        "keep":  true,
+        "note":  "thermal design power; keep Latin; do not expand unless source already says thermal design power"
+    },
+    {
+        "source":  "TGP",
+        "target":  "TGP",
+        "keep":  true,
+        "note":  "total graphics power; keep Latin (gold: 可配置 TGP)"
+    },
+    {
+        "source":  "UDT",
+        "target":  "UDT",
+        "keep":  true,
+        "note":  "brand acronym; do not expand or localize"
+    },
+    {
+        "source":  "UEFI",
+        "target":  "UEFI",
+        "keep":  true,
+        "note":  "keep Latin (gold: 无法从 UEFI 读取变量)"
+    },
+    {
+        "source":  "UniversalDeviceToolkit",
+        "target":  "UniversalDeviceToolkit",
+        "keep":  true,
+        "note":  "concatenated product identifier; never translate, split, or insert spaces"
+    },
+    {
+        "source":  "UniversalDeviceToolkit.NetworkProxy.exe",
+        "target":  "UniversalDeviceToolkit.NetworkProxy.exe",
+        "keep":  true,
+        "note":  "worker binary filename"
+    },
+    {
+        "source":  "USB",
+        "target":  "USB",
+        "keep":  true,
+        "note":  "keep Latin; never 优盘/通用串行总线 in UI labels"
+    },
+    {
+        "source":  "USB PD",
+        "target":  "USB PD",
+        "keep":  true,
+        "note":  "USB Power Delivery acronym; keep both tokens Latin (gold: 电源适配器与 USB PD)"
+    },
+    {
+        "source":  "USB-C",
+        "target":  "USB-C",
+        "keep":  true,
+        "note":  "connector name; keep Latin hyphenated form; do not write USB C or Type-C unless source does"
+    },
+    {
+        "source":  "Vantage",
+        "target":  "Vantage",
+        "keep":  true,
+        "note":  "short form of Lenovo Vantage"
+    },
+    {
+        "source":  "vive-tool",
+        "target":  "vive-tool",
+        "keep":  true,
+        "note":  "plugin id"
+    },
+    {
+        "source":  "ViVeTool",
+        "target":  "ViVeTool",
+        "keep":  true,
+        "note":  "third-party Windows feature-flag tool; keep this spelling"
+    },
+    {
+        "source":  "ViveTool",
+        "target":  "ViveTool",
+        "keep":  true,
+        "note":  "plugin code name (no camel i); UI product spelling is ViVeTool"
+    },
+    {
+        "source":  "ViVeTool.exe",
+        "target":  "ViVeTool.exe",
+        "keep":  true,
+        "note":  "executable filename"
+    },
+    {
+        "source":  "vivetool.exe",
+        "target":  "vivetool.exe",
+        "keep":  true,
+        "note":  "executable filename as shown in file dialogs"
+    },
+    {
+        "source":  "Windows",
+        "target":  "Windows",
+        "keep":  true,
+        "note":  "OS brand; surrounding words may be translated"
+    },
+    {
+        "source":  "Windows 10",
+        "target":  "Windows 10",
+        "keep":  true,
+        "note":  "OS product version"
+    },
+    {
+        "source":  "Windows 11",
+        "target":  "Windows 11",
+        "keep":  true,
+        "note":  "OS product version"
+    },
+    {
+        "source":  "Windows 7",
+        "target":  "Windows 7",
+        "keep":  true,
+        "note":  "OS product version"
+    },
+    {
+        "source":  "Windows 8",
+        "target":  "Windows 8",
+        "keep":  true,
+        "note":  "OS product version"
+    },
+    {
+        "source":  "Windows Management Instrumentation",
+        "target":  "Windows Management Instrumentation",
+        "keep":  true,
+        "note":  "official service name; keep English when quoted; WMI acronym stays Latin"
+    },
+    {
+        "source":  "Windows Search",
+        "target":  "Windows Search",
+        "keep":  true,
+        "note":  "Windows service product name"
+    },
+    {
+        "source":  "Windows Update",
+        "target":  "Windows Update",
+        "keep":  true,
+        "note":  "Microsoft product name"
+    },
+    {
+        "source":  "WMI",
+        "target":  "WMI",
+        "keep":  true,
+        "note":  "Windows Management Instrumentation; keep Latin in errors and tips"
+    },
+    {
+        "source":  "Y9000P",
+        "target":  "Y9000P",
+        "keep":  true,
+        "note":  "device model code"
+    },
+    {
+        "source":  "°C",
+        "target":  "°C",
+        "keep":  true,
+        "note":  "celsius symbol; keep the degree sign and Latin C (gold: 100 °C)"
+    },
+    {
+        "target":  "Aktif",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "On",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Pareuman",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Off",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Dipareuman",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Powered Off",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Khusus",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Custom",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Batal",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Cancel",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Tutup",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Close",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Buka",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Open",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Simpen",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Save",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Hapus",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Delete",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Kasalahan",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Error",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Larapkeun",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Apply",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Standar",
+        "locales":  [
+                        "su"
+                    ],
+        "source":  "Default",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Фаъол",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "On",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Ғайрифаъол",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Off",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Махсус",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Custom",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Бекор кардан",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Cancel",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Пӯшидан",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Close",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Кушодан",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Open",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Нигоҳ доштан",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Save",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Ҳазф кардан",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Delete",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Хатогӣ",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Error",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Татбиқ кардан",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Apply",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Пешфарз",
+        "locales":  [
+                        "tg"
+                    ],
+        "source":  "Default",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Uključeno",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "On",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Isključeno",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Off",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Prilagođeno",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Custom",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Otkaži",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Cancel",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Zatvori",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Close",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Otvori",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Open",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Sačuvaj",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Save",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Obriši",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Delete",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Greška",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Error",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Primeni",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Apply",
+        "mode":  "translate"
+    },
+    {
+        "target":  "Podrazumevano",
+        "locales":  [
+                        "sr-Latn"
+                    ],
+        "source":  "Default",
+        "mode":  "translate"
+    }
+]

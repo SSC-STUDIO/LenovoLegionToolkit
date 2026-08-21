@@ -38,8 +38,9 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
         if (!Directory.Exists(DevicePacksRoot))
             return new DeviceSupportCatalog();
 
-        var packs = Directory.EnumerateFiles(DevicePacksRoot, ManifestFileName, SearchOption.AllDirectories)
-            .Select(ReadInstalledPack)
+        var packs = Directory.EnumerateDirectories(DevicePacksRoot)
+            .Where(IsInstalledPackDirectory)
+            .Select(directory => ReadInstalledPack(Path.Combine(directory, ManifestFileName)))
             .Where(pack => pack is not null)
             .Cast<DevicePack>()
             .ToArray();
@@ -147,6 +148,14 @@ public sealed class DevicePackManager(OnlineResourceCatalogClient resourceCatalo
         var options = LltJson.CreateSettingsOptions();
         options.PropertyNameCaseInsensitive = true;
         return options;
+    }
+
+    private static bool IsInstalledPackDirectory(string directory)
+    {
+        var name = Path.GetFileName(directory);
+        return PathSecurity.IsValidPluginId(name) &&
+               !name.EndsWith(".pending", StringComparison.OrdinalIgnoreCase) &&
+               !name.EndsWith(".backup", StringComparison.OrdinalIgnoreCase);
     }
 
     private string GetInstalledPackDirectory(string packId) =>

@@ -54,7 +54,12 @@ const {
   collectRecommendedActionKeys,
   getActionSelectionPresentation,
   getNetworkSelectedTargetCount,
-  isOptimizationPlayDisabled
+  isFailedCleanupEstimate,
+  isOptimizationPlayDisabled,
+  presentActionNotification,
+  resolveActionError,
+  runExclusivePoll,
+  shouldShowEmptyPlaceholder
 } = await import('../src/renderer/src/utils/optimizationPresentation.ts')
 
 function action(key, applied, recommended = false) {
@@ -518,9 +523,81 @@ test('network save, start, and stop failures are exposed through store error sta
   }
 })
 
+test('exclusive poll skips overlapping runs and releases the lock afterwards', async () => {
+  const inFlight = { current: false }
+  let active = 0
+  let maxActive = 0
+  let runs = 0
+  const poll = async () => {
+    active += 1
+    maxActive = Math.max(maxActive, active)
+    runs += 1
+    await new Promise((resolve) => setTimeout(resolve, 20))
+    active -= 1
+  }
+
+  const first = runExclusivePoll(inFlight, poll)
+  const skipped = runExclusivePoll(inFlight, poll)
+  assert.equal(await skipped, false)
+  assert.equal(await first, true)
+  assert.equal(runs, 1)
+  assert.equal(maxActive, 1)
+  assert.equal(inFlight.current, false)
+  assert.equal(await runExclusivePoll(inFlight, poll), true)
+  assert.equal(runs, 2)
+})
+
+test('cleanup estimate treats 0-plus-error as failure, not a successful size', () => {
+  assert.equal(isFailedCleanupEstimate(0, '[UDT:-1012] estimate refused'), true)
+  assert.equal(isFailedCleanupEstimate(0, null), false)
+  assert.equal(isFailedCleanupEstimate(0, ''), false)
+  assert.equal(isFailedCleanupEstimate(128, 'stale error'), false)
+  assert.equal(isFailedCleanupEstimate(Number.NaN, null), true)
+  assert.equal(isFailedCleanupEstimate(-1, null), true)
+})
+
+test('action errors keep the host message and fall back when the store is silent', () => {
+  assert.equal(resolveActionError('[UDT:-1012] refused', 'Failed'), '[UDT:-1012] refused')
+  assert.equal(resolveActionError('  ', 'Failed'), 'Failed')
+  assert.equal(resolveActionError(null, 'Failed'), 'Failed')
+  assert.equal(resolveActionError(undefined, 'Failed'), 'Failed')
+})
+
+test('empty placeholders stay hidden while loading, unloaded, or after an error', () => {
+  assert.equal(
+    shouldShowEmptyPlaceholder({ loading: false, itemCount: 0, error: null, loaded: true }),
+    true
+  )
+  assert.equal(
+    shouldShowEmptyPlaceholder({ loading: true, itemCount: 0, error: null, loaded: true }),
+    false
+  )
+  assert.equal(
+    shouldShowEmptyPlaceholder({ loading: false, itemCount: 0, error: null, loaded: false }),
+    false
+  )
+  assert.equal(
+    shouldShowEmptyPlaceholder({
+      loading: false,
+      itemCount: 0,
+      error: 'load failed',
+      loaded: true
+    }),
+    false
+  )
+  assert.equal(
+    shouldShowEmptyPlaceholder({ loading: false, itemCount: 2, error: null, loaded: true }),
+    false
+  )
+})
+
 test('host error localization uses stable codes and readable unknown-code fallbacks', () => {
   const translations = new Map([
-    ['optimization.network.hostsModeRefused', 'Hosts mode is unavailable']
+    ['optimization.network.hostsModeRefused', 'Hosts mode is unavailable'],
+    [
+      'optimization.network.startRefused',
+      'Acceleration did not start. Check that it is enabled and at least one target is selected.'
+    ]
   ])
   const translate = (key, { defaultValue } = { defaultValue: key }) =>
     translations.get(key) ?? defaultValue
@@ -535,6 +612,10 @@ test('host error localization uses stable codes and readable unknown-code fallba
     'Hosts mode is unavailable'
   )
   assert.equal(
+    localizeHostError('[UDT:-1012] Failed to start network acceleration.', translate),
+    'Acceleration did not start. Check that it is enabled and at least one target is selected.'
+  )
+  assert.equal(
     localizeHostError('[UDT:-3999] Detailed host fallback', translate),
     'Detailed host fallback'
   )
@@ -542,4 +623,24 @@ test('host error localization uses stable codes and readable unknown-code fallba
     localizeHostError('Plain host failure', translate),
     'Plain host failure'
   )
+})
+
+test('action notifications keep a short title and put the host detail in the message', () => {
+  assert.deepEqual(
+    presentActionNotification(
+      'Acceleration did not start. Check that it is enabled and at least one target is selected.',
+      'Failed to start'
+    ),
+    {
+      title: 'Failed to start',
+      message:
+        'Acceleration did not start. Check that it is enabled and at least one target is selected.'
+    }
+  )
+  assert.deepEqual(presentActionNotification('Failed to start', 'Failed to start'), {
+    title: 'Failed to start'
+  })
+  assert.deepEqual(presentActionNotification('  Host detail  ', '  '), {
+    title: 'Host detail'
+  })
 })

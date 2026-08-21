@@ -10,6 +10,7 @@ import { SettingsCard } from './SettingsCard'
 interface WindowBackdropSettingProps {
   application: Record<string, unknown>
   persist: (patch: Record<string, unknown>) => void
+  disabled?: boolean
 }
 
 const PLATFORM: string = window.bridge?.platform ?? 'win32'
@@ -20,7 +21,8 @@ const OPTIONS: WindowBackdropStyle[] =
 
 export default function WindowBackdropSetting({
   application,
-  persist
+  persist,
+  disabled = false
 }: WindowBackdropSettingProps): React.JSX.Element {
   const { t } = useTranslation()
   const labels: Record<WindowBackdropStyle, string> = {
@@ -39,6 +41,7 @@ export default function WindowBackdropSetting({
         <Select<WindowBackdropStyle>
           className="udt-settings-select"
           value={style}
+          disabled={disabled}
           onChange={(value) => {
             applyWindowBackdrop(value)
             persist({ WindowBackdropStyle: value })

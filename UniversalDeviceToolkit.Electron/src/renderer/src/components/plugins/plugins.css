@@ -135,3 +135,15 @@
 .udt-plugin-page__webview--ready {
   opacity: 1;
 }
+
+.udt-plugin-page__webview:not(.udt-plugin-page__webview--ready) {
+  pointer-events: none;
+}
+
+.udt-plugin-page__host > .udt-plugin-page__empty {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  background: var(--udt-surface-card, rgba(255, 255, 255, 0.03));
+}

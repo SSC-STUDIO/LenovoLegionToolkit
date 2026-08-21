@@ -35,6 +35,39 @@ public class ViveToolFeatureMergeRegressionTests
     }
 
     [Fact]
+    public void MergeImportedFeatures_UpdatesExistingFeatureAndKeepsItSearchable()
+    {
+        var existing = new FeatureFlagInfo
+        {
+            Id = 100,
+            Name = "BaseFeature",
+            Description = "Existing feature",
+            Status = FeatureFlagStatus.Default,
+        };
+        var visibleFeatures = new List<FeatureFlagInfo> { existing };
+        var allFeatures = visibleFeatures;
+        var importedFeature = new FeatureFlagInfo
+        {
+            Id = 100,
+            Name = "RenamedFeature",
+            Description = "Updated after import",
+            Status = FeatureFlagStatus.Enabled,
+        };
+
+        FeatureMerger.MergeImportedFeatures(visibleFeatures, allFeatures, new[] { importedFeature });
+
+        var searchResults = FeatureFilter.FilterFeatures(allFeatures, "renamedfeature");
+
+        Assert.Single(visibleFeatures);
+        Assert.Same(existing, visibleFeatures[0]);
+        Assert.Equal("RenamedFeature", existing.Name);
+        Assert.Equal("Updated after import", existing.Description);
+        Assert.Equal(FeatureFlagStatus.Enabled, existing.Status);
+        Assert.Single(searchResults);
+        Assert.Same(existing, searchResults.Single());
+    }
+
+    [Fact]
     public void FilterFeatures_ToleratesNullNameAndDescription()
     {
         var allFeatures = new List<FeatureFlagInfo>

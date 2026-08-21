@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invoke, invokeObject } from './bridge'
 
 export type NetworkAccelerationMode = 'Off' | 'SystemProxy' | 'Hosts' | 'DiagnosticsOnly'
 
@@ -236,47 +236,47 @@ export interface OptimizationApi {
 
 export const optimizationApi: OptimizationApi = {
   async getCategories() {
-    return invoke<{ categories: OptimizationCategoryDefinition[] }>('optimization.getCategories', {})
+    return invokeObject<{ categories: OptimizationCategoryDefinition[] }>('optimization.getCategories', {})
   },
 
   async apply(actionKeys) {
-    return invoke<{ applied: boolean }>('optimization.apply', { actionKeys })
+    return invokeObject<{ applied: boolean }>('optimization.apply', { actionKeys })
   },
 
   async revert(actionKeys) {
-    return invoke<{ reverted: boolean }>('optimization.revert', { actionKeys })
+    return invokeObject<{ reverted: boolean }>('optimization.revert', { actionKeys })
   },
 
   async applyRecommended() {
-    return invoke<{ applied: boolean }>('optimization.applyRecommended', {})
+    return invokeObject<{ applied: boolean }>('optimization.applyRecommended', {})
   },
 
   async getActionStatus(actionKey) {
-    return invoke<{ applied: boolean | null }>('optimization.getActionStatus', { actionKey })
+    return invokeObject<{ applied: boolean | null }>('optimization.getActionStatus', { actionKey })
   },
 
   async estimateCleanup(actionKeys) {
-    return invoke<{ bytes: number }>('cleanup.estimate', { actionKeys })
+    return invokeObject<{ bytes: number }>('cleanup.estimate', { actionKeys })
   },
 
   async runCleanup(actionKeys) {
-    return invoke<{ done: boolean }>('cleanup.run', { actionKeys })
+    return invokeObject<{ done: boolean }>('cleanup.run', { actionKeys })
   },
 
   async networkGetStatus() {
-    return invoke<NetworkAccelerationStatus>('network.getStatus', {})
+    return invokeObject<NetworkAccelerationStatus>('network.getStatus', {})
   },
 
   async networkSaveConfig(config) {
-    return invoke<{ saved: boolean }>('network.saveConfig', { config })
+    return invokeObject<{ saved: boolean }>('network.saveConfig', { config })
   },
 
   async networkStart() {
-    return invoke<{ ok: boolean }>('network.start', {})
+    return invokeObject<{ ok: boolean }>('network.start', {})
   },
 
   async networkStop() {
-    return invoke<{ ok: boolean }>('network.stop', {})
+    return invokeObject<{ ok: boolean }>('network.stop', {})
   },
 
   async networkGetTrafficSnapshot() {
@@ -288,27 +288,27 @@ export const optimizationApi: OptimizationApi = {
   },
 
   async networkRestore() {
-    return invoke<{ ok: boolean }>('network.restore', {})
+    return invokeObject<{ ok: boolean }>('network.restore', {})
   },
 
   async networkDetectNat(stunServer) {
-    return invoke<NetworkNatDetectionResult>('network.detectNat', { stunServer })
+    return invokeObject<NetworkNatDetectionResult>('network.detectNat', { stunServer })
   },
 
   async networkDetectDns(params) {
-    return invoke<NetworkDnsDetectionResult>('network.detectDns', params)
+    return invokeObject<NetworkDnsDetectionResult>('network.detectDns', params)
   },
 
   async networkDetectIpv6() {
-    return invoke<NetworkIpv6DetectionResult>('network.detectIpv6', {})
+    return invokeObject<NetworkIpv6DetectionResult>('network.detectIpv6', {})
   },
 
   async getCustomCleanupRules() {
-    return invoke<{ rules: CustomCleanupRule[] }>('cleanup.getCustomRules', {})
+    return invokeObject<{ rules: CustomCleanupRule[] }>('cleanup.getCustomRules', {})
   },
 
   async saveCustomCleanupRules(rules) {
-    return invoke<{ saved: boolean }>('cleanup.saveCustomRules', { rules })
+    return invokeObject<{ saved: boolean }>('cleanup.saveCustomRules', { rules })
   },
 
   async selectFolder() {
@@ -316,52 +316,52 @@ export const optimizationApi: OptimizationApi = {
   },
 
   async openPath(path) {
-    return invoke<{ ok: boolean }>('dialog:open-path', { path })
+    return invokeObject<{ ok: boolean }>('dialog:open-path', { path })
   },
 
   async openUrl(url) {
-    return invoke<{ ok: boolean }>('dialog:open-url', { url })
+    return invokeObject<{ ok: boolean }>('dialog:open-url', { url })
   },
 
   async driverGetSettings() {
-    return invoke<DriverDownloadSettings>('driver.getSettings', {})
+    return invokeObject<DriverDownloadSettings>('driver.getSettings', {})
   },
 
   async driverGetPackages(params) {
-    return invoke<{ packages: DriverPackageDefinition[] }>('driver.getPackages', params)
+    return invokeObject<{ packages: DriverPackageDefinition[] }>('driver.getPackages', params)
   },
 
   async driverGetPackageStatuses(packageIds) {
-    return invoke<{ packages: DriverPackageDefinition[] }>('driver.getPackageStatuses', {
+    return invokeObject<{ packages: DriverPackageDefinition[] }>('driver.getPackageStatuses', {
       packageIds
     })
   },
 
   async driverStartPackage(packageId) {
-    return invoke<{ ok: boolean }>('driver.start', { packageId })
+    return invokeObject<{ ok: boolean }>('driver.start', { packageId })
   },
 
   async driverPausePackage(packageId) {
-    return invoke<{ ok: boolean }>('driver.pause', { packageId })
+    return invokeObject<{ ok: boolean }>('driver.pause', { packageId })
   },
 
   async driverInstallPackage(packageId) {
-    return invoke<{ ok: boolean }>('driver.install', { packageId })
+    return invokeObject<{ ok: boolean }>('driver.install', { packageId })
   },
 
   async driverUninstallPackage(packageId) {
-    return invoke<{ ok: boolean }>('driver.uninstall', { packageId })
+    return invokeObject<{ ok: boolean }>('driver.uninstall', { packageId })
   },
 
   async driverSetDownloadPath(path) {
-    return invoke<{ saved: boolean }>('driver.setDownloadPath', { path })
+    return invokeObject<{ saved: boolean }>('driver.setDownloadPath', { path })
   },
 
   async driverSetOnlyShowUpdates(enabled) {
-    return invoke<{ saved: boolean }>('driver.setOnlyShowUpdates', { enabled })
+    return invokeObject<{ saved: boolean }>('driver.setOnlyShowUpdates', { enabled })
   },
 
   async driverSetHiddenPackageIds(packageIds) {
-    return invoke<{ saved: boolean }>('driver.setHiddenPackageIds', { packageIds })
+    return invokeObject<{ saved: boolean }>('driver.setHiddenPackageIds', { packageIds })
   }
 }

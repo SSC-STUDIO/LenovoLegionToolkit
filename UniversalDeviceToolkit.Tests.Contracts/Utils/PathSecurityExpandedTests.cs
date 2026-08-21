@@ -68,6 +68,16 @@ public class PathSecurityExpandedTests
         PathSecurity.IsValidRegistryPath("HKCU\0\\evil").Should().BeFalse();
     }
 
+    [Theory]
+    [InlineData("HKCUFOO\\Software")]
+    [InlineData("HKEY_CURRENT_USER_EVIL\\Software")]
+    [InlineData("HKEY_USERS2\\DEFAULT")]
+    [InlineData("HKLMX\\SOFTWARE")]
+    public void IsValidRegistryPath_WithPrefixSiblingRoot_ShouldReturnFalse(string path)
+    {
+        PathSecurity.IsValidRegistryPath(path).Should().BeFalse();
+    }
+
     #endregion
 
     #region IsValidDriverPath
@@ -111,6 +121,12 @@ public class PathSecurityExpandedTests
     public void SanitizeFileName_WithCleanNames_ShouldReturnSame(string name)
     {
         PathSecurity.SanitizeFileName(name).Should().Be(name);
+    }
+
+    [Fact]
+    public void SanitizeFileName_WithNullReplacement_ShouldUseDefault()
+    {
+        PathSecurity.SanitizeFileName("file/name", null!).Should().Be("file_name");
     }
 
     #endregion
@@ -174,6 +190,53 @@ public class PathSecurityExpandedTests
         var basePath = "C:\\Plugins";
         var path = "C:\\Plugins\\test.dll";
         PathSecurity.IsPathWithinAllowedDirectory(path, basePath).Should().BeTrue();
+    }
+
+    [Fact]
+    public void IsPathWithinAllowedDirectory_WithBaseDirectoryItself_ShouldReturnTrue()
+    {
+        var basePath = Path.Combine(Path.GetTempPath(), "udt-pathsec-base-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(basePath);
+        try
+        {
+            PathSecurity.IsPathWithinAllowedDirectory(basePath, basePath).Should().BeTrue();
+        }
+        finally
+        {
+            Directory.Delete(basePath, recursive: true);
+        }
+    }
+
+    [SkippableFact]
+    public void IsPathWithinAllowedDirectory_WithRelativeSymlinkEscape_ShouldReturnFalse()
+    {
+        var basePath = Path.Combine(Path.GetTempPath(), "udt-pathsec-" + Guid.NewGuid().ToString("N"));
+        var outside = Path.Combine(Path.GetTempPath(), "udt-pathsec-out-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(basePath);
+        Directory.CreateDirectory(outside);
+        var link = Path.Combine(basePath, "escape-link");
+        try
+        {
+            try
+            {
+                Directory.CreateSymbolicLink(link, Path.GetRelativePath(basePath, outside));
+            }
+            catch (Exception ex) when (ex is UnauthorizedAccessException or IOException or PlatformNotSupportedException)
+            {
+                throw new SkipException("Creating symbolic links requires privilege on this host.");
+            }
+
+            PathSecurity.IsPathWithinAllowedDirectory(link, basePath).Should().BeFalse();
+        }
+        finally
+        {
+            if (Directory.Exists(link) || File.Exists(link))
+                Directory.Delete(link);
+            if (Directory.Exists(basePath))
+                Directory.Delete(basePath, recursive: true);
+            if (Directory.Exists(outside))
+                Directory.Delete(outside, recursive: true);
+        }
     }
 
     [Theory]

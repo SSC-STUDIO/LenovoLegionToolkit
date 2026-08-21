@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace UniversalDeviceToolkit.Lib.Settings;
 
@@ -13,6 +14,20 @@ public sealed class BatteryHealthAlertSettings()
     public const int DefaultCriticalHealthThreshold = 60;
 
     protected override BatteryHealthAlertStore Default => new();
+
+    public override BatteryHealthAlertStore? LoadStore()
+    {
+        var store = base.LoadStore();
+        store?.Normalize();
+        return store;
+    }
+
+    public override async Task<BatteryHealthAlertStore?> LoadStoreAsync()
+    {
+        var store = await base.LoadStoreAsync().ConfigureAwait(false);
+        store?.Normalize();
+        return store;
+    }
 
     public sealed class BatteryHealthAlertStore
     {

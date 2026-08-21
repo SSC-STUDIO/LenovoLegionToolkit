@@ -1,6 +1,11 @@
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import test from 'node:test'
+import {
+  createPluginsApi,
+  normalizePluginOperationOutcome
+} from '../src/renderer/src/api/pluginsCore.ts'
+import { buildPluginPageSource } from '../src/renderer/src/components/plugins/pluginPageViewModel.ts'
 
 const contract = JSON.parse(
   readFileSync(
@@ -78,6 +83,42 @@ test('plugins.list projections include directory and webPage', () => {
   assert.match(listHandler, /directory = ResolvePluginDirectory\(metadata\)/)
   assert.match(listHandler, /webPage = webPage is \{ Entry\.Length: > 0 \}/)
   assert.match(listHandler, /private static object ProjectInstalledOnlyView/)
+})
+
+test('renderer maps Host webPage data into a displayable file URL', async () => {
+  const api = createPluginsApi(async (method) => {
+    if (method !== 'plugins.list') return {}
+    return {
+      plugins: [
+        {
+          id: 'custom-mouse',
+          name: 'Cursor',
+          state: 'Installed',
+          directory: 'C:\\UDT\\plugins\\custom-mouse',
+          webPage: { entry: 'web/index.html' },
+          capabilities: { webPage: true }
+        }
+      ],
+      online: true
+    }
+  }, () => () => undefined)
+
+  const { plugins } = await api.list()
+  assert.equal(plugins[0]?.webPage, 'web/index.html')
+  assert.equal(plugins[0]?.directory, 'C:\\UDT\\plugins\\custom-mouse')
+  assert.equal(
+    buildPluginPageSource(plugins[0]?.directory, plugins[0]?.webPage),
+    'file:///C:/UDT/plugins/custom-mouse/web/index.html'
+  )
+})
+
+test('renderer install and uninstall outcomes require explicit success', () => {
+  assert.equal(normalizePluginOperationOutcome({ ok: true }).ok, true)
+  assert.equal(normalizePluginOperationOutcome({}).ok, false)
+  assert.equal(normalizePluginOperationOutcome({ ok: true, degraded: true }).ok, false)
+  assert.equal(normalizePluginOperationOutcome({ ok: true, unloadPending: true }).ok, false)
+  assert.match(listHandler, /ok = outcome\.Success/)
+  assert.match(listHandler, /ok = removed/)
 })
 
 test('plugin webviews can open and save files through Electron dialogs', () => {

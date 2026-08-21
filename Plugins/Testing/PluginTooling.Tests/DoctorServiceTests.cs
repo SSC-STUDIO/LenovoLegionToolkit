@@ -16,7 +16,7 @@ public class DoctorServiceTests
         return tempDir;
     }
 
-    private static void WriteHostRelease(string hostDir, string wpfName)
+    private static void WriteHostRelease(string hostDir, string hostName)
     {
         var json = $$"""
         {
@@ -25,7 +25,7 @@ public class DoctorServiceTests
           "artifacts": {
             "lib": "UniversalDeviceToolkit.Lib.dll",
             "libPlugins": "UniversalDeviceToolkit.Lib.Plugins.dll",
-            "wpf": "{{wpfName}}",
+            "host": "{{hostName}}",
             "package": "UniversalDeviceToolkit_v5.0.0_win-x64.zip",
             "transitiveDependencies": []
           }
@@ -136,6 +136,129 @@ public class DoctorServiceTests
             var libCheck = result.Checks.First(c => c.Message.Contains("Host library", StringComparison.OrdinalIgnoreCase));
             Assert.Equal("PASS", libCheck.Status);
             Assert.Contains("UniversalDeviceToolkit.Lib.dll", libCheck.Message);
+        }
+        finally
+        {
+            if (Directory.Exists(repoDir))
+            {
+                Directory.Delete(repoDir, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public void Run_HostBaselineUsesVersionedHostCache()
+    {
+        var repoDir = CreateMinimalRepo();
+        var baselineDir = Path.Combine(repoDir, "HostBaseline");
+        var versionedHostDir = Path.Combine(repoDir, ".host", "5.0.0");
+        Directory.CreateDirectory(baselineDir);
+        Directory.CreateDirectory(versionedHostDir);
+
+        try
+        {
+            WriteHostRelease(baselineDir, "UniversalDeviceToolkit.Host.dll");
+            CreateDummyDll(versionedHostDir, "UniversalDeviceToolkit.Lib.dll");
+            CreateDummyDll(versionedHostDir, "UniversalDeviceToolkit.Lib.Plugins.dll");
+
+            var service = new DoctorService();
+            var result = service.Run(repoDir);
+
+            var cacheCheck = result.Checks.First(c => c.Message.Contains("Host dependency cache found", StringComparison.OrdinalIgnoreCase));
+            Assert.Equal("PASS", cacheCheck.Status);
+            Assert.Contains(Path.Combine(".host", "5.0.0"), cacheCheck.Message, StringComparison.OrdinalIgnoreCase);
+
+            var libCheck = result.Checks.First(c => c.Message.Contains("Host library found", StringComparison.OrdinalIgnoreCase));
+            Assert.Equal("PASS", libCheck.Status);
+            Assert.Contains(Path.Combine(".host", "5.0.0", "UniversalDeviceToolkit.Lib.dll"), libCheck.Message, StringComparison.OrdinalIgnoreCase);
+
+            var pluginsLibCheck = result.Checks.First(c => c.Message.Contains("Host plugins library found", StringComparison.OrdinalIgnoreCase));
+            Assert.Equal("PASS", pluginsLibCheck.Status);
+        }
+        finally
+        {
+            if (Directory.Exists(repoDir))
+            {
+                Directory.Delete(repoDir, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public void Run_HostBaselineIgnoresFlatHostCache()
+    {
+        var repoDir = CreateMinimalRepo();
+        var baselineDir = Path.Combine(repoDir, "HostBaseline");
+        var flatHostDir = Path.Combine(repoDir, ".host");
+        Directory.CreateDirectory(baselineDir);
+
+        try
+        {
+            WriteHostRelease(baselineDir, "UniversalDeviceToolkit.Host.dll");
+            CreateDummyDll(flatHostDir, "UniversalDeviceToolkit.Lib.dll");
+            CreateDummyDll(flatHostDir, "UniversalDeviceToolkit.Lib.Plugins.dll");
+
+            var service = new DoctorService();
+            var result = service.Run(repoDir);
+
+            var libCheck = result.Checks.First(c => c.Message.Contains("Host library found", StringComparison.OrdinalIgnoreCase));
+            Assert.Equal("FAIL", libCheck.Status);
+            Assert.Contains(Path.Combine(".host", "5.0.0"), libCheck.Message, StringComparison.OrdinalIgnoreCase);
+        }
+        finally
+        {
+            if (Directory.Exists(repoDir))
+            {
+                Directory.Delete(repoDir, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public void Run_InvalidHostReleaseJsonFails()
+    {
+        var repoDir = CreateMinimalRepo();
+        var hostDir = Path.Combine(repoDir, ".host");
+
+        try
+        {
+            File.WriteAllText(Path.Combine(hostDir, "host-release.json"), "{ not-json");
+
+            var service = new DoctorService();
+            var result = service.Run(repoDir);
+
+            Assert.Contains(result.Checks, c =>
+                c.Status == "FAIL" &&
+                c.Message.Contains("invalid JSON", StringComparison.OrdinalIgnoreCase));
+            Assert.Contains(result.Checks, c =>
+                c.Status == "FAIL" &&
+                c.Message.Contains("host version unknown", StringComparison.OrdinalIgnoreCase));
+        }
+        finally
+        {
+            if (Directory.Exists(repoDir))
+            {
+                Directory.Delete(repoDir, recursive: true);
+            }
+        }
+    }
+
+    [Fact]
+    public void Run_LibPluginsMissingFails()
+    {
+        var repoDir = CreateMinimalRepo();
+        var hostDir = Path.Combine(repoDir, ".host");
+
+        try
+        {
+            WriteHostRelease(hostDir, "UniversalDeviceToolkit.Host.dll");
+            CreateDummyDll(hostDir, "UniversalDeviceToolkit.Lib.dll");
+
+            var service = new DoctorService();
+            var result = service.Run(repoDir);
+
+            var pluginsLibCheck = result.Checks.First(c => c.Message.Contains("Host plugins library found", StringComparison.OrdinalIgnoreCase));
+            Assert.Equal("FAIL", pluginsLibCheck.Status);
         }
         finally
         {

@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -10,11 +11,13 @@ using Microsoft.Win32;
 namespace UniversalDeviceToolkit.Lib.Network;
 
 /// <summary>
-/// Snapshot / restore for system proxy, UDT-marked hosts block, and PAC path.
-/// Restore is implemented carefully; apply/capture of live proxy may be best-effort.
+/// Versioned snapshot / restore for system proxy, UDT-marked hosts block, and PAC path.
+/// Restore writes back only UDT-owned mutations and consumes the snapshot on success.
 /// </summary>
 public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
 {
+    internal const string UdtPacFileName = "udt-network-acceleration.pac";
+
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         WriteIndented = true,
@@ -64,30 +67,127 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
             .ConfigureAwait(false);
     }
 
-    public async Task SaveSnapshotAsync(NetworkStateSnapshot snapshot, CancellationToken cancellationToken = default)
+    public Task SaveSnapshotAsync(NetworkStateSnapshot snapshot, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(snapshot);
-        Directory.CreateDirectory(_snapshotDirectory);
-        await using var stream = File.Create(SnapshotPath);
-        await JsonSerializer.SerializeAsync(stream, snapshot, JsonOptions, cancellationToken).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        SaveSnapshotCore(snapshot);
+        return Task.CompletedTask;
     }
 
     public async Task<NetworkStateSnapshot> CaptureSnapshotAsync(CancellationToken cancellationToken = default)
     {
         var hosts = _readHosts();
         HostsMarkedBlock.TryExtract(hosts, out var block);
+        var proxy = _readSystemProxy();
+
+        string? pacPath = null;
+        string? pacContents = null;
+        if (TryResolveLocalPacPath(proxy?.AutoConfigUrl, out var resolved) && File.Exists(resolved))
+        {
+            pacPath = resolved;
+            if (!IsUdtPacFile(resolved))
+            {
+                try
+                {
+                    pacContents = File.ReadAllText(resolved);
+                }
+                catch (Exception ex)
+                {
+                    Log.Instance.TraceOnce(
+                        "network-snapshot-pac-read",
+                        "Failed to capture original PAC file contents.",
+                        ex);
+                }
+            }
+        }
 
         var snapshot = new NetworkStateSnapshot
         {
+            SchemaVersion = NetworkAccelerationDefaults.SnapshotSchemaVersion,
+            Phase = NetworkSnapshotPhase.Pending,
             CapturedAtUtc = DateTimeOffset.UtcNow,
-            SystemProxy = _readSystemProxy(),
+            SystemProxy = proxy,
             HostsMarkedBlock = block,
-            PacFilePath = _readSystemProxy()?.AutoConfigUrl,
-            PacFileContents = null
+            PacFilePath = pacPath,
+            PacFileContents = pacContents
         };
 
         await SaveSnapshotAsync(snapshot, cancellationToken).ConfigureAwait(false);
         return snapshot;
+    }
+
+    public bool TryMarkPhase(NetworkSnapshotPhase phase, out string report, int? listenPort = null)
+    {
+        try
+        {
+            if (!TryReadSnapshotFile(out var snapshot, out var readReport) || snapshot is null)
+            {
+                report = string.IsNullOrEmpty(readReport)
+                    ? "snapshot: none (cannot mark phase)."
+                    : readReport;
+                return false;
+            }
+
+            if (!IsSupportedSchemaVersion(snapshot.SchemaVersion))
+            {
+                report = $"snapshot: unsupported schema {snapshot.SchemaVersion} (cannot mark phase).";
+                return false;
+            }
+
+            snapshot.Phase = phase;
+            if (phase == NetworkSnapshotPhase.Applied)
+            {
+                var current = _readSystemProxy();
+                snapshot.AppliedListenPort = listenPort ?? snapshot.AppliedListenPort;
+                snapshot.AppliedProxyServer = current?.Server;
+                snapshot.AppliedAutoConfigUrl = current?.AutoConfigUrl;
+            }
+
+            SaveSnapshotCore(snapshot);
+            report = $"snapshot: phase {phase}.";
+            return true;
+        }
+        catch (Exception ex)
+        {
+            report = $"snapshot: mark phase failed ({ex.GetType().Name}: {ex.Message}).";
+            return false;
+        }
+    }
+
+    public bool TryConsumeSnapshot(out string report)
+    {
+        try
+        {
+            if (!File.Exists(SnapshotPath))
+            {
+                report = "snapshot: already consumed.";
+                return true;
+            }
+
+            File.Delete(SnapshotPath);
+            report = "snapshot: consumed.";
+            return true;
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                if (TryReadSnapshotFile(out var snapshot, out _) && snapshot is not null)
+                {
+                    snapshot.Phase = NetworkSnapshotPhase.Restored;
+                    SaveSnapshotCore(snapshot);
+                }
+            }
+            catch (Exception markEx)
+            {
+                report =
+                    $"snapshot: consume failed ({ex.GetType().Name}: {ex.Message}); mark restored failed ({markEx.GetType().Name}: {markEx.Message}).";
+                return false;
+            }
+
+            report = $"snapshot: consume failed ({ex.GetType().Name}: {ex.Message}); marked restored.";
+            return false;
+        }
     }
 
     public bool TryRestoreFromSnapshot(out string report)
@@ -96,29 +196,28 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
         sb.AppendLine("Network state recovery report");
         sb.AppendLine("----------------------------------------");
 
-        NetworkStateSnapshot? snapshot = null;
+        NetworkStateSnapshot? snapshot;
         try
         {
-            if (!File.Exists(SnapshotPath))
+            if (!TryReadSnapshotFile(out snapshot, out var readReport))
             {
-                sb.AppendLine("snapshot: none (idempotent no-op).");
+                sb.AppendLine(readReport);
+                sb.AppendLine("----------------------------------------");
+                sb.AppendLine("Result: PARTIAL");
+                report = sb.ToString();
+                return false;
+            }
+
+            if (snapshot is null)
+            {
+                sb.AppendLine(string.IsNullOrEmpty(readReport)
+                    ? "snapshot: none (idempotent no-op)."
+                    : readReport);
                 sb.AppendLine("----------------------------------------");
                 sb.AppendLine("Result: OK");
                 report = sb.ToString();
                 return true;
             }
-
-            var json = File.ReadAllText(SnapshotPath);
-            if (string.IsNullOrWhiteSpace(json))
-            {
-                sb.AppendLine("snapshot: empty file (idempotent no-op).");
-                sb.AppendLine("----------------------------------------");
-                sb.AppendLine("Result: OK");
-                report = sb.ToString();
-                return true;
-            }
-
-            snapshot = JsonSerializer.Deserialize<NetworkStateSnapshot>(json, JsonOptions);
         }
         catch (Exception ex)
         {
@@ -129,33 +228,41 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
             return false;
         }
 
-        if (snapshot is null)
+        if (!IsSupportedSchemaVersion(snapshot.SchemaVersion))
         {
-            sb.AppendLine("snapshot: null after deserialize (idempotent no-op).");
+            sb.AppendLine($"snapshot: unsupported schema {snapshot.SchemaVersion} (left untouched).");
             sb.AppendLine("----------------------------------------");
-            sb.AppendLine("Result: OK");
+            sb.AppendLine("Result: PARTIAL");
             report = sb.ToString();
-            return true;
+            return false;
+        }
+
+        if (snapshot.Phase == NetworkSnapshotPhase.Restored)
+        {
+            var consumed = TryConsumeSnapshot(out var consumeReport);
+            sb.AppendLine("snapshot: already restored (no re-apply).");
+            sb.AppendLine(consumeReport);
+            sb.AppendLine("----------------------------------------");
+            sb.AppendLine(consumed ? "Result: OK" : "Result: PARTIAL");
+            report = sb.ToString();
+            return consumed;
         }
 
         var success = true;
+        var proxyWasUdtOwned = false;
 
         try
         {
-            if (snapshot.SystemProxy is null)
+            var current = _readSystemProxy();
+            proxyWasUdtOwned = IsUdtOwnedProxy(current, snapshot);
+            if (!proxyWasUdtOwned)
             {
-                // No proxy recorded — clear UDT-managed proxy leftovers carefully by writing disabled state only
-                // when current server points at loopback UDT port. Otherwise leave user proxy alone.
-                var current = _readSystemProxy();
-                if (LooksLikeUdtProxy(current))
-                {
-                    _writeSystemProxy(new SystemProxySnapshot { Enabled = false });
-                    sb.AppendLine("system proxy: cleared UDT loopback proxy.");
-                }
-                else
-                {
-                    sb.AppendLine("system proxy: skipped (no snapshot proxy; current is not UDT loopback).");
-                }
+                sb.AppendLine("system proxy: skipped (current is not UDT-owned).");
+            }
+            else if (snapshot.SystemProxy is null)
+            {
+                _writeSystemProxy(new SystemProxySnapshot { Enabled = false });
+                sb.AppendLine("system proxy: cleared UDT-owned proxy.");
             }
             else
             {
@@ -199,12 +306,14 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
             sb.AppendLine($"hosts: failure ({ex.GetType().Name}: {ex.Message}).");
         }
 
-        if (!string.IsNullOrWhiteSpace(snapshot.PacFilePath) &&
-            !string.IsNullOrWhiteSpace(snapshot.PacFileContents))
+        if (proxyWasUdtOwned &&
+            !string.IsNullOrWhiteSpace(snapshot.PacFilePath) &&
+            !string.IsNullOrWhiteSpace(snapshot.PacFileContents) &&
+            !IsUdtPacFile(snapshot.PacFilePath))
         {
             try
             {
-                var pacPath = snapshot.PacFilePath!;
+                var pacPath = snapshot.PacFilePath;
                 var directory = Path.GetDirectoryName(pacPath);
                 if (!string.IsNullOrEmpty(directory))
                     Directory.CreateDirectory(directory);
@@ -219,7 +328,21 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
         }
         else
         {
-            sb.AppendLine("pac: skipped (no path/contents in snapshot).");
+            sb.AppendLine("pac: skipped (no original PAC file, UDT PAC, or not UDT-owned).");
+        }
+
+        if (success)
+        {
+            if (TryConsumeSnapshot(out var consumeReport))
+            {
+                sb.AppendLine(consumeReport);
+            }
+            else
+            {
+                TryMarkPhase(NetworkSnapshotPhase.Restored, out var markReport);
+                sb.AppendLine(consumeReport);
+                sb.AppendLine(markReport);
+            }
         }
 
         sb.AppendLine("----------------------------------------");
@@ -228,14 +351,176 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
         return success;
     }
 
-    private static bool LooksLikeUdtProxy(SystemProxySnapshot? proxy)
+    internal static bool IsSupportedSchemaVersion(int version) =>
+        version is 0 or NetworkAccelerationDefaults.SnapshotSchemaVersion;
+
+    internal static bool IsUdtOwnedProxy(SystemProxySnapshot? current, NetworkStateSnapshot? snapshot = null)
     {
-        if (proxy?.Server is null)
+        if (current is null)
             return false;
-        var server = proxy.Server;
+
+        if (!string.IsNullOrWhiteSpace(current.AutoConfigUrl) &&
+            current.AutoConfigUrl.Contains(UdtPacFileName, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!string.IsNullOrWhiteSpace(snapshot?.AppliedAutoConfigUrl) &&
+            string.Equals(current.AutoConfigUrl, snapshot.AppliedAutoConfigUrl, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (!string.IsNullOrWhiteSpace(snapshot?.AppliedProxyServer) &&
+            string.Equals(current.Server, snapshot.AppliedProxyServer, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        var port = snapshot?.AppliedListenPort ?? NetworkAccelerationDefaults.DefaultListenPort;
+        return IsUdtLoopbackPort(current.Server, port);
+    }
+
+    internal static bool IsUdtLoopbackPort(string? server, int port)
+    {
+        if (string.IsNullOrWhiteSpace(server) || port is <= 0 or > 65535)
+            return false;
+
+        var portToken = ":" + port.ToString(CultureInfo.InvariantCulture);
+        if (!server.Contains(portToken, StringComparison.Ordinal))
+            return false;
+
         return server.Contains("127.0.0.1", StringComparison.OrdinalIgnoreCase)
                || server.Contains("[::1]", StringComparison.OrdinalIgnoreCase)
                || server.Contains("localhost", StringComparison.OrdinalIgnoreCase);
+    }
+
+    internal static bool IsUdtPacFile(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return false;
+
+        if (string.Equals(Path.GetFileName(path), UdtPacFileName, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        try
+        {
+            return string.Equals(
+                Path.GetFullPath(path),
+                Path.GetFullPath(SystemProxyApplicator.PacFilePath),
+                StringComparison.OrdinalIgnoreCase);
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    internal static bool TryResolveLocalPacPath(string? autoConfigUrl, out string path)
+    {
+        path = string.Empty;
+        if (string.IsNullOrWhiteSpace(autoConfigUrl))
+            return false;
+
+        var value = autoConfigUrl.Trim();
+        if (value.StartsWith("file:", StringComparison.OrdinalIgnoreCase))
+        {
+            if (Uri.TryCreate(value, UriKind.Absolute, out var uri) && uri.IsFile)
+            {
+                path = uri.LocalPath;
+                return path.Length > 0;
+            }
+
+            return false;
+        }
+
+        if (value.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            value.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (value.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+            return false;
+
+        try
+        {
+            path = Path.GetFullPath(value);
+            return true;
+        }
+        catch (Exception)
+        {
+            path = string.Empty;
+            return false;
+        }
+    }
+
+    private bool TryReadSnapshotFile(out NetworkStateSnapshot? snapshot, out string report)
+    {
+        snapshot = null;
+        report = string.Empty;
+
+        if (!File.Exists(SnapshotPath))
+        {
+            report = "snapshot: none (idempotent no-op).";
+            return true;
+        }
+
+        var json = File.ReadAllText(SnapshotPath);
+        if (string.IsNullOrWhiteSpace(json))
+        {
+            report = "snapshot: empty file (idempotent no-op).";
+            return true;
+        }
+
+        try
+        {
+            snapshot = JsonSerializer.Deserialize<NetworkStateSnapshot>(json, JsonOptions);
+        }
+        catch (JsonException ex)
+        {
+            report = $"snapshot: failed to load ({ex.GetType().Name}: {ex.Message}).";
+            return false;
+        }
+
+        if (snapshot is null)
+        {
+            report = "snapshot: null after deserialize (idempotent no-op).";
+            return true;
+        }
+
+        return true;
+    }
+
+    private void SaveSnapshotCore(NetworkStateSnapshot snapshot)
+    {
+        ArgumentNullException.ThrowIfNull(snapshot);
+        if (snapshot.SchemaVersion <= 0)
+            snapshot.SchemaVersion = NetworkAccelerationDefaults.SnapshotSchemaVersion;
+
+        Directory.CreateDirectory(_snapshotDirectory);
+        var tempPath = SnapshotPath + ".tmp";
+        try
+        {
+            using (var stream = File.Create(tempPath))
+            {
+                JsonSerializer.Serialize(stream, snapshot, JsonOptions);
+                stream.Flush();
+            }
+
+            File.Move(tempPath, SnapshotPath, overwrite: true);
+        }
+        catch
+        {
+            try
+            {
+                if (File.Exists(tempPath))
+                    File.Delete(tempPath);
+            }
+            catch (Exception cleanupEx)
+            {
+                Log.Instance.TraceOnce(
+                    "network-snapshot-tmp-cleanup",
+                    "Failed to delete leftover snapshot temp file.",
+                    cleanupEx);
+            }
+
+            throw;
+        }
     }
 
     private static string ReadHostsFile()
@@ -282,6 +567,7 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
         if (snapshot is null)
         {
             key.SetValue("ProxyEnable", 0);
+            SystemProxyApplicator.NotifyWinInetChanged();
             return;
         }
 
@@ -294,5 +580,7 @@ public sealed class NetworkStateRecoveryService : INetworkStateRecoveryService
             key.SetValue("AutoConfigURL", snapshot.AutoConfigUrl);
         else if (key.GetValue("AutoConfigURL") is not null && string.IsNullOrEmpty(snapshot.AutoConfigUrl))
             key.DeleteValue("AutoConfigURL", throwOnMissingValue: false);
+
+        SystemProxyApplicator.NotifyWinInetChanged();
     }
 }

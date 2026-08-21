@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -31,13 +32,19 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
 
     public abstract Task<bool> IsSupportedAsync();
 
+    public virtual void InvalidateResolution()
+    {
+    }
+
     public async Task<bool> IsDGPUAvailableAsync()
     {
         try
         {
             var dgpuHardwareId = await GetDGPUHardwareIdAsync().ConfigureAwait(false);
-            var isAvailable = IsDGPUAvailable(dgpuHardwareId);
-            return isAvailable;
+            if (IsHardwareIdMissing(dgpuHardwareId))
+                return false;
+
+            return IsDGPUAvailable(dgpuHardwareId);
         }
         catch (Exception ex)
         {
@@ -48,15 +55,17 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
 
     public async Task NotifyAsync(bool publish = true)
     {
-        lock (_lock)
-        {
-            _notifyLaterCancellationTokenSource?.Cancel();
-            _notifyLaterCancellationTokenSource = null;
-        }
+        CancelNotifyLater();
 
         try
         {
             var dgpuHardwareId = await GetDGPUHardwareIdAsync().ConfigureAwait(false);
+            if (IsHardwareIdMissing(dgpuHardwareId))
+            {
+                Log.Instance.Warning("Cannot notify dGPU status because hardware id is unavailable.");
+                return;
+            }
+
             var isAvailable = IsDGPUAvailable(dgpuHardwareId);
             await NotifyDGPUStatusAsync(isAvailable).ConfigureAwait(false);
 
@@ -78,7 +87,7 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
 
         lock (_lock)
         {
-            _notifyLaterCancellationTokenSource?.Cancel();
+            CancelNotifyLaterLocked();
             _notifyLaterCancellationTokenSource = new();
 
             token = _notifyLaterCancellationTokenSource.Token;
@@ -116,16 +125,61 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
 
     protected abstract Task<HardwareId> GetDGPUHardwareIdAsync();
 
+    private void CancelNotifyLater()
+    {
+        lock (_lock)
+            CancelNotifyLaterLocked();
+    }
+
+    private void CancelNotifyLaterLocked()
+    {
+        var previous = _notifyLaterCancellationTokenSource;
+        _notifyLaterCancellationTokenSource = null;
+        if (previous is null)
+            return;
+
+        try
+        {
+            previous.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+
+        previous.Dispose();
+    }
+
+    internal static bool IsHardwareIdMissing(HardwareId hardwareId) =>
+        string.IsNullOrEmpty(hardwareId.Vendor) || string.IsNullOrEmpty(hardwareId.Device);
+
+    internal static bool HardwareIdsEqual(HardwareId left, HardwareId right) =>
+        TryParseHexId(left.Vendor, out var leftVendor)
+        && TryParseHexId(left.Device, out var leftDevice)
+        && TryParseHexId(right.Vendor, out var rightVendor)
+        && TryParseHexId(right.Device, out var rightDevice)
+        && leftVendor == rightVendor
+        && leftDevice == rightDevice;
+
+    private static bool TryParseHexId(string? value, out int id)
+    {
+        id = 0;
+        return !string.IsNullOrEmpty(value)
+               && int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out id);
+    }
+
     private unsafe bool IsDGPUAvailable(HardwareId dgpuHardwareId)
     {
-        if (dgpuHardwareId == HardwareId.Empty)
+        if (IsHardwareIdMissing(dgpuHardwareId))
             return false;
 
         var guidDisplayDeviceArrival = PInvoke.GUID_DISPLAY_DEVICE_ARRIVAL;
-        var deviceHandle = PInvoke.SetupDiGetClassDevs(guidDisplayDeviceArrival,
+        using var deviceHandle = PInvoke.SetupDiGetClassDevs(guidDisplayDeviceArrival,
             null,
             HWND.Null,
             SETUP_DI_GET_CLASS_DEVS_FLAGS.DIGCF_DEVICEINTERFACE | SETUP_DI_GET_CLASS_DEVS_FLAGS.DIGCF_PRESENT | SETUP_DI_GET_CLASS_DEVS_FLAGS.DIGCF_PROFILE);
+
+        if (deviceHandle.IsInvalid)
+            return false;
 
         uint index = 0;
         while (true)
@@ -174,7 +228,7 @@ public abstract partial class AbstractDGPUNotify : IDGPUNotify
             if (!devicePath.Contains(guidDisplayDeviceArrival.ToString()))
                 continue;
 
-            if (dgpuHardwareId != HardwareIdFromDevicePath(devicePath))
+            if (!HardwareIdsEqual(dgpuHardwareId, HardwareIdFromDevicePath(devicePath)))
                 continue;
 
             if (PInvoke.CM_Get_DevNode_Status(out var status, out _, deviceInfoData.DevInst, 0) != 0)

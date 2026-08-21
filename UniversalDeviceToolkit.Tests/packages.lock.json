@@ -350,6 +350,17 @@
       "universaldevicetoolkit.cli.lib": {
         "type": "Project"
       },
+      "universaldevicetoolkit.host": {
+        "type": "Project",
+        "dependencies": {
+          "UniversalDeviceToolkit.Lib": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Automation": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Macro": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Plugins": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Shared": "[6.0.0, )"
+        }
+      },
       "universaldevicetoolkit.lib": {
         "type": "Project",
         "dependencies": {

@@ -16,7 +16,12 @@ import './notifications.css'
 
 let unsubscribe: (() => void) | undefined
 
-function showNotification(data: AppNotificationRequest): void {
+/**
+ * Renderer-originated toast. Same pipeline as host `notifications.changed`
+ * (suppression, duration, merge, sound) so UI errors share the notification
+ * center instead of a one-off overlay.
+ */
+export function notify(data: AppNotificationRequest): void {
   const prefs = readNotificationPreferences()
   // Electron AppNotificationHost.ShouldSuppress.
   if (prefs.suppressed) return
@@ -33,7 +38,7 @@ export function initNotifications(): () => void {
   if (unsubscribe) {
     return unsubscribe
   }
-  unsubscribe = on<AppNotificationRequest>('notifications.changed', showNotification)
+  unsubscribe = on<AppNotificationRequest>('notifications.changed', notify)
   initPluginInstallToast()
   return unsubscribe
 }
@@ -43,7 +48,7 @@ export function initNotifications(): () => void {
  * pipeline so the toast host can be exercised without the C# host.
  */
 export function notifyTest(overrides: Partial<AppNotificationRequest> = {}): void {
-  showNotification({
+  notify({
     title: 'Test Notification',
     message: 'This is a test notification.',
     severity: 'Info',

@@ -16,21 +16,43 @@ public interface IPlatformProbe
 
 public sealed class PhysicalPlatformProbe : IPlatformProbe
 {
-    public bool FileExists(string path) => File.Exists(path);
+    public bool FileExists(string path) =>
+        !string.IsNullOrWhiteSpace(path) && File.Exists(path);
 
-    public bool DirectoryExists(string path) => Directory.Exists(path);
+    public bool DirectoryExists(string path) =>
+        !string.IsNullOrWhiteSpace(path) && Directory.Exists(path);
 
-    public IReadOnlyList<string> EnumerateFiles(string path, string searchPattern, bool recursive = false) =>
-        Directory.Exists(path)
-            ? Directory.EnumerateFiles(
+    public IReadOnlyList<string> EnumerateFiles(string path, string searchPattern, bool recursive = false)
+    {
+        if (string.IsNullOrWhiteSpace(path) || string.IsNullOrWhiteSpace(searchPattern) || !Directory.Exists(path))
+            return [];
+
+        try
+        {
+            return Directory.EnumerateFiles(
                     path,
                     searchPattern,
                     recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
-                .ToArray()
-            : [];
+                .ToArray();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return [];
+        }
+    }
 
-    public IReadOnlyList<string> EnumerateDirectories(string path) =>
-        Directory.Exists(path)
-            ? Directory.EnumerateDirectories(path).ToArray()
-            : [];
+    public IReadOnlyList<string> EnumerateDirectories(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
+            return [];
+
+        try
+        {
+            return Directory.EnumerateDirectories(path).ToArray();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or ArgumentException)
+        {
+            return [];
+        }
+    }
 }

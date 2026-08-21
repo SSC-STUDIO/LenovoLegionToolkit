@@ -34,6 +34,7 @@ export function effectiveZoom(): number {
 
 /** Clamps, stores and applies the user scale. Returns the applied value. */
 export function setUiScale(scale: number): number {
+  if (!Number.isFinite(scale) || scale <= 0) return uiScale
   uiScale = Math.min(MAX_UI_SCALE, Math.max(MIN_UI_SCALE, scale))
   applyZoomToAllSurfaces()
   return uiScale
@@ -43,7 +44,7 @@ export function setUiScale(scale: number): number {
 export function applyZoomTo(contents: WebContents): void {
   if (contents.isDestroyed()) return
   const zoom = effectiveZoom()
-  if (contents.getZoomFactor() !== zoom) {
+  if (Math.abs(contents.getZoomFactor() - zoom) > 0.0001) {
     contents.setZoomFactor(zoom)
   }
 }

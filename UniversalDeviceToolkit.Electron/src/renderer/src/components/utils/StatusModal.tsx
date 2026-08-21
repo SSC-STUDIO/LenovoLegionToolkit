@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
+import { useUtilsDialog } from './useUtilsDialog'
 import { Flash24Regular, Phone24Regular, ArrowSync24Regular } from '../icons/fluent'
 import { featuresApi } from '../../api/features'
 import { dashboardHardwareApi, type DiscreteGpuState } from '../../api/dashboardHardware'
@@ -146,6 +147,7 @@ export default function StatusModalHost(): React.JSX.Element {
   const { t } = useTranslation()
   const request = useStatusStore((s) => s.request)
   const settle = useStatusStore((s) => s.settle)
+  const { dialogRef, titleId, dialogProps } = useUtilsDialog(request != null, settle)
   const [data, setData] = useState<StatusData | null>(null)
 
   const load = useCallback(async (): Promise<void> => {
@@ -299,11 +301,13 @@ export default function StatusModalHost(): React.JSX.Element {
   return (
     <div className="udt-utils-backdrop" onClick={settle}>
       <div
+        ref={dialogRef}
         className="udt-utils-modal"
         style={{ width: 380, minWidth: 300 }}
         onClick={(event) => event.stopPropagation()}
+        {...dialogProps}
       >
-        <div className="udt-utils-modal__title" style={{ paddingBottom: 8 }}>
+        <div className="udt-utils-modal__title" id={titleId} style={{ paddingBottom: 8 }}>
           {t('app.name')}
         </div>
         <div className="udt-utils-modal__body" style={{ paddingTop: 0 }}>

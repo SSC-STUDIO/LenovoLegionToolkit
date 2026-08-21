@@ -14,9 +14,9 @@ internal readonly struct PnPIdPackageRule : IPackageRule
 
     public static bool TryCreate(XmlNode? node, out PnPIdPackageRule value)
     {
-        var hardwareId = node?.InnerText;
+        var hardwareId = node?.InnerText?.Trim();
 
-        if (hardwareId is null)
+        if (hardwareId is null || !HardwareIdMatch.IsSpecificHardwareId(hardwareId))
         {
             value = default;
             return false;
@@ -40,10 +40,6 @@ internal readonly struct PnPIdPackageRule : IPackageRule
     private static bool MatchingDriverInfoExists(string hardwareId, IEnumerable<DriverInfo> driverInfoCache)
     {
         return driverInfoCache.Any(di =>
-        {
-            var result = di.DeviceId.StartsWith(hardwareId, StringComparison.OrdinalIgnoreCase);
-            result |= di.HardwareId.StartsWith(hardwareId, StringComparison.OrdinalIgnoreCase);
-            return result;
-        });
+            HardwareIdMatch.Matches(di.DeviceId, hardwareId) || HardwareIdMatch.Matches(di.HardwareId, hardwareId));
     }
 }

@@ -22,7 +22,7 @@ public sealed class PluginRepository
         var solutionPath = Path.Combine(rootPath, "UniversalDeviceToolkit.Plugins.sln");
         var pluginsRoot = Path.Combine(rootPath, "Official");
         var hostDependenciesRoot = Path.Combine(rootPath, ".host");
-        var storePath = Path.Combine(rootPath, ".build", "catalog", "store.json");
+        var storePath = GetCatalogStorePath(rootPath, PluginCatalogChannel.Stable);
 
         var plugins = DiscoverPlugins(rootPath, pluginsRoot)
             .OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase)
@@ -33,6 +33,14 @@ public sealed class PluginRepository
             : null;
 
         return new RepositoryContext(rootPath, solutionPath, pluginsRoot, hostDependenciesRoot, plugins, storeDocument);
+    }
+
+    public static string GetCatalogStorePath(string repositoryRoot, PluginCatalogChannel channel)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(repositoryRoot);
+
+        var folder = channel == PluginCatalogChannel.Preview ? "catalog-preview" : "catalog";
+        return Path.Combine(Path.GetFullPath(repositoryRoot), ".build", folder, "store.json");
     }
 
     public static string FindRepositoryRoot(string startPath)

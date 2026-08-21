@@ -334,6 +334,56 @@ public class HybridModeFeatureTests : FeatureTestBase
         VerifyStateChange(_mockIGPUModeFeature, IGPUModeState.IGPUOnly, Times.Once());
     }
 
+    [Fact]
+    public async Task SetStateAsync_WhenIGPUModeChangeFailsWithoutGSyncChange_ShouldThrow()
+    {
+        SetupMockFeatureState(_mockGSyncFeature, true, Enum.GetValues<GSyncState>(), GSyncState.Off);
+        SetupMockFeatureState(_mockIGPUModeFeature, true, Enum.GetValues<IGPUModeState>(), IGPUModeState.IGPUOnly);
+        _mockIGPUModeFeature
+            .Setup(feature => feature.SetStateAsync(IGPUModeState.Default, It.IsAny<System.Threading.CancellationToken>()))
+            .ThrowsAsync(new IGPUModeChangeException(IGPUModeState.Default));
+
+        var act = () => _hybridModeFeature.SetStateAsync(HybridModeState.On);
+
+        await act.Should().ThrowAsync<IGPUModeChangeException>();
+        _mockGSyncFeature.Verify(feature => feature.SetStateAsync(It.IsAny<GSyncState>(), It.IsAny<System.Threading.CancellationToken>()), Times.Never());
+    }
+
+    [Fact]
+    public async Task SetStateAsync_WhenIGPUModeChangeFailsAfterGSyncChange_ShouldStillThrow()
+    {
+        SetupMockFeatureState(_mockGSyncFeature, true, Enum.GetValues<GSyncState>(), GSyncState.On);
+        SetupMockFeatureState(_mockIGPUModeFeature, true, Enum.GetValues<IGPUModeState>(), IGPUModeState.IGPUOnly);
+        _mockIGPUModeFeature
+            .Setup(feature => feature.SetStateAsync(IGPUModeState.Default, It.IsAny<System.Threading.CancellationToken>()))
+            .ThrowsAsync(new IGPUModeChangeException(IGPUModeState.Default));
+
+        var act = () => _hybridModeFeature.SetStateAsync(HybridModeState.On);
+
+        await act.Should().ThrowAsync<IGPUModeChangeException>();
+        VerifyStateChange(_mockGSyncFeature, GSyncState.Off, Times.Once());
+    }
+
+    [Fact]
+    public async Task SetStateAsync_WhenDisposed_ShouldThrow()
+    {
+        _hybridModeFeature.Dispose();
+
+        var act = () => _hybridModeFeature.SetStateAsync(HybridModeState.On);
+
+        await act.Should().ThrowAsync<ObjectDisposedException>();
+    }
+
+    [Fact]
+    public void InvalidateResolution_ShouldInvalidateDgpuNotify()
+    {
+        _hybridModeFeature.InvalidateResolution();
+
+        _mockGSyncFeature.Verify(feature => feature.InvalidateResolution(), Times.Once());
+        _mockIGPUModeFeature.Verify(feature => feature.InvalidateResolution(), Times.Once());
+        _mockDGPUNotify.Verify(notify => notify.InvalidateResolution(), Times.Once());
+    }
+
     #endregion
 
     #region GetAllStatesAsync Tests

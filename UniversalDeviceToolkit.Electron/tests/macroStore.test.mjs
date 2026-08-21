@@ -199,3 +199,60 @@ test('rejected and thrown API failures set an actionable store error', async () 
   assert.equal(store.getState().error, 'host unavailable')
   assert.equal(store.getState().loading, false)
 })
+
+test('rejected persist results do not clear the slot or report success', async () => {
+  const backend = createBackend({ isEnabled: true, slots: [savedSlot] })
+  const store = createMacroStore(backend.api)
+
+  let reloads = 0
+  const originalGetState = backend.api.getState
+  backend.api.getState = async () => {
+    reloads += 1
+    return originalGetState()
+  }
+  await store.getState().load()
+  assert.equal(reloads, 1)
+
+  backend.api.saveSequence = async (params) => {
+    backend.calls.push({ method: 'saveSequence', params: clone(params) })
+    return { ok: false }
+  }
+
+  assert.equal(
+    await store.getState().saveSequence({
+      key: 0x60,
+      repeatCount: 2,
+      ignoreDelays: false,
+      interruptOnOtherKey: false,
+      events: [keyboardEvent(0x42), keyboardEvent(0x42, 'Up', 20)]
+    }),
+    false
+  )
+  assert.equal(store.getState().error, 'Macro sequence save was rejected.')
+  assert.deepEqual(store.getState().state.slots, [savedSlot])
+  assert.equal(reloads, 1)
+
+  backend.api.clearSequence = async (key) => {
+    backend.calls.push({ method: 'clearSequence', key })
+    return { ok: false }
+  }
+
+  assert.equal(await store.getState().clearSequence(0x60), false)
+  assert.equal(store.getState().error, 'Macro sequence clear was rejected.')
+  assert.deepEqual(store.getState().state.slots, [savedSlot])
+  assert.equal(reloads, 1)
+
+  assert.equal(
+    await store.getState().saveSequence({
+      key: 0x60,
+      repeatCount: 10,
+      ignoreDelays: true,
+      interruptOnOtherKey: true,
+      events: []
+    }),
+    false
+  )
+  assert.equal(store.getState().error, 'Macro sequence clear was rejected.')
+  assert.deepEqual(store.getState().state.slots, [savedSlot])
+  assert.equal(reloads, 1)
+})

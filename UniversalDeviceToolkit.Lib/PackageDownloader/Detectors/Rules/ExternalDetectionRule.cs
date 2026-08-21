@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -18,7 +19,7 @@ internal readonly struct ExternalDetectionRule : IPackageRule
 
     private static readonly HashSet<string> AllowedExtensions = new(StringComparer.OrdinalIgnoreCase)
     {
-        ".exe", ".dll", ".msi", ".bat", ".cmd", ".ps1"
+        ".exe"
     };
 
     private static readonly HashSet<string> AllowedDownloadHosts = new(StringComparer.OrdinalIgnoreCase)
@@ -32,6 +33,7 @@ internal readonly struct ExternalDetectionRule : IPackageRule
     private string Url { get; init; }
     private string FileName { get; init; }
     private string PackageName { get; init; }
+    private string? ExpectedSha256 { get; init; }
 
     public static bool TryCreate(XmlNode? node, XmlDocument document, string baseLocation, out ExternalDetectionRule value)
     {
@@ -46,12 +48,22 @@ internal readonly struct ExternalDetectionRule : IPackageRule
             .ToArray() ?? [];
         var externalFile = document.SelectSingleNode("/Package/Files/External/File/Name")?.InnerText;
         var packageName = document.SelectSingleNode("/Package/@id")?.InnerText;
+        var externalCrc = document.SelectSingleNode("/Package/Files/External/File/CRC")?.InnerText;
 
-        if (command is null || returnCodes.IsEmpty() || externalFile is null || packageName is null)
+        if (command is null
+            || returnCodes.IsEmpty()
+            || externalFile is null
+            || packageName is null
+            || !PathSecurity.IsValidFileName(externalFile)
+            || !PathSecurity.IsValidFileName(packageName)
+            || !PackageDownloadSecurity.TryParseSha256Hex(externalCrc, out _)
+            || !PackageDownloadSecurity.IsAllowedPackageDownloadUrl($"{baseLocation}/{externalFile}"))
         {
             value = default;
             return false;
         }
+
+        var expectedSha256 = externalCrc!.Trim();
 
         value = new ExternalDetectionRule
         {
@@ -59,7 +71,8 @@ internal readonly struct ExternalDetectionRule : IPackageRule
             ReturnCodes = returnCodes,
             Url = $"{baseLocation}/{externalFile}",
             FileName = externalFile,
-            PackageName = packageName
+            PackageName = packageName,
+            ExpectedSha256 = expectedSha256
         };
         return true;
     }
@@ -70,11 +83,18 @@ internal readonly struct ExternalDetectionRule : IPackageRule
 
     private async Task<bool> CheckExternalDependency(HttpClient httpClient, CancellationToken token)
     {
-        var packagePath = Path.Combine(Folders.Temp, TEMP_FOLDER_SUB_FOLDER, PackageName);
-        var filePath = Path.Combine(packagePath, FileName);
+        var detectionRoot = Path.Combine(Folders.Temp, TEMP_FOLDER_SUB_FOLDER);
+        Directory.CreateDirectory(detectionRoot);
 
-        if (!Directory.Exists(packagePath))
-            Directory.CreateDirectory(packagePath);
+        var packagePath = Path.Combine(detectionRoot, PathSecurity.SanitizeFileName(PackageName));
+        if (!PathSecurity.IsPathWithinAllowedDirectory(packagePath, detectionRoot))
+            return false;
+
+        Directory.CreateDirectory(packagePath);
+
+        var filePath = PathSecurity.CreateSafeFilePath(packagePath, FileName);
+        if (filePath is null)
+            return false;
 
         if (!File.Exists(filePath))
         {
@@ -91,8 +111,18 @@ internal readonly struct ExternalDetectionRule : IPackageRule
                 return false;
             }
 
-            using var fileStream = File.OpenWrite(filePath);
-            await httpClient.DownloadAsync(Url, fileStream, null, token).ConfigureAwait(false);
+            await using (var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                await httpClient.DownloadAsync(Url, fileStream, null, token).ConfigureAwait(false);
+
+            if (!await ValidateDownloadedFileAsync(filePath, token).ConfigureAwait(false))
+            {
+                try { File.Delete(filePath); } catch (IOException) { }
+                return false;
+            }
+        }
+        else if (!await ValidateDownloadedFileAsync(filePath, token).ConfigureAwait(false))
+        {
+            return false;
         }
 
         var parsed = ParseCommand(Command, packagePath);
@@ -102,11 +132,19 @@ internal readonly struct ExternalDetectionRule : IPackageRule
         if (string.IsNullOrWhiteSpace(executable))
             return false;
 
-        var resolvedExecutable = Path.GetFullPath(executable);
-        var resolvedPackagePath = Path.GetFullPath(packagePath);
-        if (!resolvedExecutable.StartsWith(resolvedPackagePath, StringComparison.OrdinalIgnoreCase))
+        string resolvedExecutable;
+        try
         {
-            Log.Instance.Warning($"Rejecting executable '{resolvedExecutable}': path escapes package directory '{resolvedPackagePath}'");
+            resolvedExecutable = Path.GetFullPath(executable);
+        }
+        catch (Exception ex) when (ex is ArgumentException or NotSupportedException or PathTooLongException)
+        {
+            return false;
+        }
+
+        if (!PathSecurity.IsPathWithinAllowedDirectory(resolvedExecutable, packagePath))
+        {
+            Log.Instance.Warning($"Rejecting executable '{resolvedExecutable}': path escapes package directory '{packagePath}'");
             return false;
         }
 
@@ -130,15 +168,30 @@ internal readonly struct ExternalDetectionRule : IPackageRule
         return result;
     }
 
+    private async Task<bool> ValidateDownloadedFileAsync(string filePath, CancellationToken token)
+    {
+        if (string.IsNullOrEmpty(ExpectedSha256))
+        {
+            Log.Instance.Warning($"Rejecting external detection file '{FileName}': catalog SHA-256 is missing");
+            return false;
+        }
+
+        await using var fileStream = File.OpenRead(filePath);
+        using var sha256 = SHA256.Create();
+        var hash = Convert.ToHexString(await sha256.ComputeHashAsync(fileStream, token).ConfigureAwait(false));
+        if (PackageDownloadSecurity.Sha256Equals(hash, ExpectedSha256))
+            return true;
+
+        Log.Instance.Warning($"Rejecting external detection file '{FileName}': catalog SHA-256 mismatch");
+        return false;
+    }
+
     private static bool IsAllowedDownloadUrl(string url)
     {
-        if (string.IsNullOrWhiteSpace(url))
+        if (!PackageDownloadSecurity.IsAllowedPackageDownloadUrl(url))
             return false;
 
         if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
-            return false;
-
-        if (uri.Scheme != Uri.UriSchemeHttp && uri.Scheme != Uri.UriSchemeHttps)
             return false;
 
         return AllowedDownloadHosts.Contains(uri.Host);

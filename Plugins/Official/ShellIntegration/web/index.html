@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
   <title>Nilesoft Shell Manager</title>
-  <link rel="stylesheet" href="plugin-ui.css" />
+  <link rel="stylesheet" href="./plugin-ui.css" />
 </head>
 <body>
   <h1 class="up-title" data-i18n="title">Nilesoft Shell Manager</h1>
@@ -107,13 +108,40 @@
     const status = document.getElementById('status')
     const yes = zh ? '是' : 'Yes'
     const no = zh ? '否' : 'No'
+    const hostUnavailable = zh ? '插件宿主不可用' : 'Plugin host is unavailable'
 
     function setStatus(text, isError) {
       status.textContent = text
       status.style.color = isError ? 'var(--up-danger)' : ''
     }
 
+    function invoke(method, params) {
+      if (!bridge || typeof bridge.invoke !== 'function') {
+        return Promise.reject(new Error(hostUnavailable))
+      }
+      return bridge.invoke(method, params || {})
+    }
+
+    function asPath(value) {
+      if (typeof value === 'string' && value.trim()) return value
+      if (value && typeof value === 'object') {
+        if (typeof value.path === 'string' && value.path.trim()) return value.path
+        if (typeof value.filePath === 'string' && value.filePath.trim()) return value.filePath
+      }
+      return ''
+    }
+
+    function resultFailed(result) {
+      return Boolean(result && result.ok === false)
+    }
+
+    function resultMessage(result) {
+      if (!resultFailed(result)) return zh ? '完成' : 'Done'
+      return typeof result.error === 'string' && result.error ? result.error : (zh ? '失败' : 'Failed')
+    }
+
     function applyStatus(data) {
+      if (!data) return
       document.getElementById('installed').textContent = data.installed ? yes : no
       document.getElementById('registered').textContent = data.registered ? yes : no
       document.getElementById('version').textContent = data.version || '—'
@@ -121,15 +149,15 @@
     }
 
     async function refresh() {
-      const data = await bridge.invoke('plugin.shell.getStatus', {})
+      const data = await invoke('plugin.shell.getStatus', {})
       applyStatus(data)
     }
 
     async function run(method, params) {
       try {
-        const result = await bridge.invoke(method, params || {})
+        const result = await invoke(method, params || {})
         await refresh()
-        setStatus(result && result.ok === false ? (zh ? '失败' : 'Failed') : (zh ? '完成' : 'Done'), result && result.ok === false)
+        setStatus(resultMessage(result), resultFailed(result))
       } catch (error) {
         setStatus(error.message, true)
       }
@@ -148,10 +176,10 @@
 
     document.getElementById('export').addEventListener('click', async () => {
       try {
-        const path = await bridge.invoke('dialog:save-file', {
+        const path = asPath(await invoke('dialog:save-file', {
           title: zh ? '导出 Shell 配置' : 'Export Shell profile',
           filters: [{ name: 'JSON', extensions: ['json'] }]
-        })
+        }))
         if (!path) return
         await run('plugin.shell.exportProfile', { path })
       } catch (error) {
@@ -161,10 +189,10 @@
 
     document.getElementById('import').addEventListener('click', async () => {
       try {
-        const path = await bridge.invoke('dialog:open-file', {
+        const path = asPath(await invoke('dialog:open-file', {
           title: zh ? '导入 Shell 配置' : 'Import Shell profile',
           filters: [{ name: 'JSON', extensions: ['json'] }]
-        })
+        }))
         if (!path) return
         await run('plugin.shell.importProfile', { path })
       } catch (error) {

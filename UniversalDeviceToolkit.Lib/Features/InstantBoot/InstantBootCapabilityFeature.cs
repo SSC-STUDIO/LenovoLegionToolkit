@@ -68,7 +68,8 @@ public class InstantBootCapabilityFeature : IFeature<InstantBootState>
             InstantBootState.AcAdapterAndUsbPowerDelivery => (State.On, State.On),
             InstantBootState.AcAdapter => (State.On, State.Off),
             InstantBootState.UsbPowerDelivery => (State.Off, State.On),
-            _ => (State.Off, State.Off)
+            InstantBootState.Off => (State.Off, State.Off),
+            _ => throw ExceptionHelper.InvalidState()
         };
 
         await _ac.SetStateAsync(ac, cancellationToken).ConfigureAwait(false);

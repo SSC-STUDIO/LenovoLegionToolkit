@@ -82,6 +82,13 @@ function mergeKey(request: AppNotificationRequest): string {
   return `${request.severity}\u001f${request.title}`
 }
 
+function dropOverflow(items: NotificationItem[]): void {
+  while (items.length > MAX_NOTIFICATIONS) {
+    const dropped = items.shift()
+    if (dropped?.timer !== undefined) window.clearTimeout(dropped.timer)
+  }
+}
+
 function scheduleAutoClose(items: NotificationItem[], id: string): NotificationItem[] {
   return items.map((item) => {
     if (item.id !== id) return item
@@ -138,7 +145,7 @@ export const useNotificationCenter = create<NotificationCenterState>((set, get) 
     }
     let items = [...get().items, item]
     // Electron TrimIfNeeded: hard cap on live toasts.
-    while (items.length > MAX_NOTIFICATIONS) items.shift()
+    dropOverflow(items)
     set({ items: scheduleAutoClose(items, id) })
   },
 
@@ -158,7 +165,7 @@ export const useNotificationCenter = create<NotificationCenterState>((set, get) 
       createdAt: Date.now()
     }
     let items = [...get().items, item]
-    while (items.length > MAX_NOTIFICATIONS) items.shift()
+    dropOverflow(items)
     set({ items })
     return id
   },

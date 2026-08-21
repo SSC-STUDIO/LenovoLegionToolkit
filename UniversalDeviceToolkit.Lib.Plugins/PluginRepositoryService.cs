@@ -467,6 +467,7 @@ public partial class PluginRepositoryService : IDisposable
         var merged = CloneContributions(installed)!;
         merged.FeaturePage ??= ClonePageContribution(store?.FeaturePage);
         merged.SettingsPage ??= ClonePageContribution(store?.SettingsPage);
+        merged.WebPage ??= CloneWebContribution(store?.WebPage);
         merged.Runtime ??= store?.Runtime is null
             ? null
             : new PluginManifestRuntimeContribution { Class = store.Runtime.Class };

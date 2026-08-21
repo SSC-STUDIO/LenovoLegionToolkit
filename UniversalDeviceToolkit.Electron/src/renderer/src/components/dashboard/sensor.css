@@ -328,11 +328,6 @@
   text-align: center;
 }
 
-.udt-sensor-panel__warnings--after-chart {
-  margin-top: 10px;
-  margin-bottom: 2px;
-}
-
 .udt-sensor-panel__warning {
   color: var(--udt-status-warning);
   font-size: var(--udt-font-caption);
@@ -648,14 +643,6 @@
   font-variant-numeric: tabular-nums;
   line-height: 1.4;
   white-space: nowrap;
-}
-
-.udt-sensor-panel__warning--low-power {
-  margin-top: 8px;
-  text-align: center;
-  color: var(--udt-status-warning);
-  font-size: var(--udt-font-caption);
-  font-weight: 500;
 }
 
 /* Panel footer (e.g. status at the bottom). */

@@ -16,6 +16,11 @@ internal class VantagePackageUpdateDetector
     public async Task BuildDriverInfoCache()
     {
         var driverInfo = await WMI.Win32.PnpSignedDriver.ReadAsync().ConfigureAwait(false);
+        ReplaceDriverInfoCache(driverInfo);
+    }
+
+    internal void ReplaceDriverInfoCache(IEnumerable<DriverInfo> driverInfo)
+    {
         _driverInfoCache.Clear();
         _driverInfoCache.AddRange(driverInfo);
     }
@@ -47,7 +52,7 @@ internal class VantagePackageUpdateDetector
     {
         var node = document.SelectSingleNode("/Package/DetectInstall");
         if (node is null || !node.HasChildNodes)
-            return true;
+            return false;
 
         var rules = CreateRules(node, document, baseLocation);
         if (!AndPackageRule.TryCreate(rules, out var rule))

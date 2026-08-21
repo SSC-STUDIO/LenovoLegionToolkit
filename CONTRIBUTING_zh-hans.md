@@ -50,9 +50,11 @@ npm run typecheck # TS 类型检查（web + main/preload）
 > JSON-RPC 后端（基于 stdio），由 Electron 启动时自动拉起，从不显示窗口。
 > 进程模型见 `Docs/ARCHITECTURE.md`。
 
-**跨平台开发（macOS / Linux）**
+**跨平台开发（macOS / Linux，实验性）**
 
-Electron 客户端原生支持 Windows、macOS 与 Linux：
+正式产品以 Windows 为准。官方发布（`Release.yml`）只出 Windows NSIS 安装包和 win-x64 Host。macOS/Linux 仍是实验路径：没有官方 Electron 发行物，本地 `npm run dist:mac` / `npm run dist:linux` 也不是发布产物。
+
+Electron 壳可以在 macOS/Linux 上做界面开发：
 
 ```bash
 cd UniversalDeviceToolkit.Electron
@@ -61,31 +63,28 @@ npm run dev       # 开发服务器 + Electron 窗口（热重载）
 npm run typecheck # TS 类型检查
 ```
 
-macOS/Linux 上应用以**基础模式**启动（完整界面、插件、系统优化；无联想硬件控制）。
-Host 后端以 Windows 为主，打包前需按目标平台发布：
+可移植 Host（`net10.0`，`UDTWindows=false`）会把多数 Windows 专用 RPC 标成 `-32099`。官方插件仍是 Windows TFM。不要把默认 Windows TFM 发到 `osx-*` / `linux-x64`。
 
 ```bash
-# macOS（Apple Silicon / Intel）
-dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    -c Release -r osx-arm64 --self-contained -o UniversalDeviceToolkit.Host/publish/osx-arm64
-dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    -c Release -r osx-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/osx-x64
+# 实验性可移植 Host（不是发布产物）
+UDT_PLATFORM=linux ./build.sh host
+UDT_PLATFORM=macos ./build.sh host
 
-# Linux（x64）
+# 等价写法：
 dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    -c Release -r linux-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/linux-x64
+    -c Release -r linux-x64 -p:UDTWindows=false --self-contained \
+    -o UniversalDeviceToolkit.Host/publish/linux-x64
 
-# Windows（x64）— 内嵌进 NSIS 安装包
+# Windows（x64）— 装进 NSIS 安装包的正式路径
 dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
-    -c Release -r win-x64 --self-contained -o UniversalDeviceToolkit.Host/publish/win-x64
+    -c Release -r win-x64 --self-contained \
+    -o UniversalDeviceToolkit.Host/publish/win-x64
 ```
 
 > [!NOTE]
-> Host 项目目标框架为 Windows TFM（`net10.0-windows10.0.26100.0`），因此跨平台
-> Host 发布目前需先将 Windows 专属依赖图可移植化；硬件控制仅在 Windows 上有实际
-> 意义。完整平台矩阵见 `Docs/DEPLOYMENT.md`，Electron 界面壳按平台适配方式
-> （标题栏、菜单栏、托盘、OSD、系统电源）见 `Docs/ARCHITECTURE.md` →
-> 「Platform Notes」。
+> 硬件控制仍只在 Windows 上可用。Windows 发布路径与实验性可移植 Host 见
+> `Docs/DEPLOYMENT.md`；Electron 界面壳（标题栏、菜单栏、托盘、OSD、系统电源）
+> 见 `Docs/ARCHITECTURE.md` → 「Platform Notes」。
 
 **测试分层**见 [Docs/TEST_DIAGNOSTICS.md](Docs/TEST_DIAGNOSTICS.md)。宿主测试按工程拆分：`Tests.Contracts`（Guard/Security，fail-fast）→ `Fast.Tests` → `Tests`（并行单元）→ `Tests.Stateful`（Localization/Settings/ProcessState/PowerMode，集合不并行）。`TestCategories` 仅保留 `Security` / `Guard` / `Unit`，每个类最多一个 Category；CI 按工程选择，不再使用 `Coverage` / `Plugin` / `Smoke` 过滤。插件本体测试在 `Plugins/Official/*.Tests`（独立 CI）；Electron 为 `npm test`。官方插件 RPC 名单：`Plugins/Official/plugin-rpc-contract.json`。
 

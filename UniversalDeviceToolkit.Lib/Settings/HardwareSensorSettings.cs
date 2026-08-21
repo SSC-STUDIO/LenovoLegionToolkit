@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 
 namespace UniversalDeviceToolkit.Lib.Settings;
 
@@ -21,5 +22,20 @@ public class HardwareSensorSettings()
 
     protected override HardwareSensorSettingsStore Default => new();
 
+    public override HardwareSensorSettingsStore? LoadStore() => Normalize(base.LoadStore());
+
+    public override async Task<HardwareSensorSettingsStore?> LoadStoreAsync() =>
+        Normalize(await base.LoadStoreAsync().ConfigureAwait(false));
+
     public void NotifySectionsChanged() => SectionsChanged?.Invoke(this, EventArgs.Empty);
+
+    private static HardwareSensorSettingsStore? Normalize(HardwareSensorSettingsStore? store)
+    {
+        if (store is null)
+            return null;
+
+        store.VisibleSections ??= ["CPU", "Battery", "GPU"];
+        store.SectionOrder ??= ["CPU", "Battery", "GPU"];
+        return store;
+    }
 }

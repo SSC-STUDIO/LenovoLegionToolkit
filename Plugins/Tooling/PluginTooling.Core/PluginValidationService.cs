@@ -117,7 +117,7 @@ public sealed class PluginValidationService
 
         if (request.Profile == PluginValidationProfile.OfficialRelease)
         {
-            ValidateStoreJsonAlignment(repository, plugin, state);
+            ValidateStoreJsonAlignment(repository, plugin, request, state);
         }
 
         if (state.Failures == 0)
@@ -153,6 +153,10 @@ public sealed class PluginValidationService
         if (string.IsNullOrWhiteSpace(plugin.Manifest.Version))
         {
             state.Fail("Runtime manifest is missing version.");
+        }
+        else if (!PluginVersionSynchronizer.IsPluginVersion(plugin.Manifest.Version))
+        {
+            state.Fail("Runtime manifest version is not a valid plugin SemVer string.");
         }
         else
         {
@@ -200,6 +204,7 @@ public sealed class PluginValidationService
 
         ValidateContributionType(plugin, manifest.Contributes.FeaturePage, "featurePage", state);
         ValidateContributionType(plugin, manifest.Contributes.SettingsPage, "settingsPage", state);
+        ValidateWebPageContribution(manifest.Contributes.WebPage, state);
         ValidateContributionType(plugin, manifest.Contributes.Runtime, "runtime", state);
 
         foreach (var action in manifest.Contributes.OptimizationActions ?? [])
@@ -213,6 +218,30 @@ public sealed class PluginValidationService
                 state.Pass($"optimization action '{action.Id}' found.");
             }
         }
+    }
+
+    private static void ValidateWebPageContribution(PluginWebPageContribution? contribution, ValidationState state)
+    {
+        if (contribution is null)
+            return;
+
+        var entry = contribution.Entry.Trim();
+        if (entry.Length == 0)
+        {
+            state.Fail("webPage contribution is missing entry.");
+            return;
+        }
+
+        if (entry.Contains("..", StringComparison.Ordinal) ||
+            Path.IsPathRooted(entry) ||
+            entry.Contains(':') ||
+            entry.Contains('\\'))
+        {
+            state.Fail("webPage.entry must be a relative package path without traversal.");
+            return;
+        }
+
+        state.Pass($"webPage entry '{entry}' found.");
     }
 
     private static void ValidateContributionType(PluginContext plugin, PluginPageContribution? contribution, string contributionName, ValidationState state)
@@ -321,8 +350,11 @@ public sealed class PluginValidationService
 
         var document = XDocument.Load(plugin.ProjectPath, LoadOptions.None);
         ValidateEqual(ReadProperty(document, "Version"), plugin.Manifest.Version, "Project Version does not match plugin.manifest.json version.", state);
-        ValidateEqual(ReadProperty(document, "FileVersion"), plugin.Manifest.Version, "Project FileVersion does not match plugin.manifest.json version.", state);
-        ValidateEqual(ReadProperty(document, "AssemblyVersion"), plugin.Manifest.Version, "Project AssemblyVersion does not match plugin.manifest.json version.", state);
+        var expectedNumericVersion = PluginVersionSynchronizer.IsPluginVersion(plugin.Manifest.Version)
+            ? PluginVersionSynchronizer.ToNumericVersion(plugin.Manifest.Version)
+            : plugin.Manifest.Version;
+        ValidateEqual(ReadProperty(document, "FileVersion"), expectedNumericVersion, "Project FileVersion does not match plugin.manifest.json numeric version.", state);
+        ValidateEqual(ReadProperty(document, "AssemblyVersion"), expectedNumericVersion, "Project AssemblyVersion does not match plugin.manifest.json numeric version.", state);
         ValidateEqual(ReadProperty(document, "AssemblyName"), plugin.ExpectedAssemblyName, $"AssemblyName must be '{plugin.ExpectedAssemblyName}'.", state);
 
         var attributeVersion = PluginVersionSynchronizer.ReadPluginAttributeVersion(plugin.DirectoryPath);
@@ -481,15 +513,33 @@ public sealed class PluginValidationService
         }
     }
 
-    private static void ValidateStoreJsonAlignment(RepositoryContext repository, PluginContext plugin, ValidationState state)
+    private static void ValidateStoreJsonAlignment(
+        RepositoryContext repository,
+        PluginContext plugin,
+        ValidationRequest request,
+        ValidationState state)
     {
-        if (repository.StoreDocument is null)
+        if (request.CatalogChannel == PluginCatalogChannel.Stable &&
+            PluginVersionSynchronizer.IsPrereleasePluginVersion(plugin.Manifest.Version))
         {
-            state.Fail("store.json is missing for official-release validation.");
+            state.Fail("Stable official-release validation cannot accept a prerelease plugin version.");
             return;
         }
 
-        var existingEntry = repository.StoreDocument.Plugins.FirstOrDefault(entry =>
+        var storePath = PluginRepository.GetCatalogStorePath(repository.RootPath, request.CatalogChannel);
+        var storeDocument = File.Exists(storePath)
+            ? PluginRepository.ReadJsonFile<StoreDocument>(storePath)
+            : null;
+
+        if (storeDocument is null)
+        {
+            state.Fail(request.CatalogChannel == PluginCatalogChannel.Preview
+                ? "catalog-preview/store.json is missing for official-release validation."
+                : "store.json is missing for official-release validation.");
+            return;
+        }
+
+        var existingEntry = storeDocument.Plugins.FirstOrDefault(entry =>
             string.Equals(entry.Id, plugin.Manifest.Id, StringComparison.OrdinalIgnoreCase));
 
         if (existingEntry is null)
@@ -514,6 +564,31 @@ public sealed class PluginValidationService
         else
         {
             state.Pass("store.json name matches plugin.manifest.json.");
+        }
+
+        if (!string.Equals(existingEntry.MinLltVersion, plugin.Manifest.MinLltVersion, StringComparison.OrdinalIgnoreCase))
+        {
+            state.Fail("store.json minLLTVersion does not match plugin.manifest.json minHostVersion.");
+        }
+        else
+        {
+            state.Pass("store.json minLLTVersion matches plugin.manifest.json.");
+        }
+
+        var downloadUrl = existingEntry.DownloadUrl ?? string.Empty;
+        var isPreviewUrl = downloadUrl.Contains("plugin-catalog-preview", StringComparison.OrdinalIgnoreCase);
+        var isStableUrl = downloadUrl.Contains("/download/plugin-catalog/", StringComparison.OrdinalIgnoreCase) && !isPreviewUrl;
+        if (request.CatalogChannel == PluginCatalogChannel.Stable && isPreviewUrl)
+        {
+            state.Fail("store.json downloadUrl uses plugin-catalog-preview on the stable channel.");
+        }
+        else if (request.CatalogChannel == PluginCatalogChannel.Preview && isStableUrl)
+        {
+            state.Fail("store.json downloadUrl uses plugin-catalog on the preview channel.");
+        }
+        else if (!string.IsNullOrWhiteSpace(downloadUrl))
+        {
+            state.Pass("store.json downloadUrl matches the catalog channel.");
         }
     }
 

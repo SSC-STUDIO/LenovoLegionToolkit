@@ -102,6 +102,7 @@ public class SettingsManager<T> : IDisposable where T : class, new()
     {
         lock (_lock)
         {
+            var settingsFilePath = _useMessagePack ? _settingsFilePathMpck : _settingsFilePath;
             try
             {
                 if (_cachedSettings != null)
@@ -111,29 +112,37 @@ public class SettingsManager<T> : IDisposable where T : class, new()
 
                 EnsureLegacySettingsMigrated();
 
-                var settingsFilePath = _useMessagePack ? _settingsFilePathMpck : _settingsFilePath;
-                if (!File.Exists(settingsFilePath))
+                // Prefer the configured format, but fall back to the other file so
+                // legacy JSON migration and format switches do not drop settings.
+                if (_useMessagePack && File.Exists(_settingsFilePathMpck))
                 {
-                    _logger?.LogInformation("Settings file not found, creating default settings");
-                    return _cachedSettings = new T();
-                }
-
-                if (_useMessagePack)
-                {
+                    settingsFilePath = _settingsFilePathMpck;
                     using var stream = File.OpenRead(_settingsFilePathMpck);
                     var settings = MessagePackSerializer.Deserialize<T>(stream, _messagePackOptions);
                     return _cachedSettings = settings ?? new T();
                 }
-                else
+
+                if (File.Exists(_settingsFilePath))
                 {
+                    settingsFilePath = _settingsFilePath;
                     var json = File.ReadAllText(_settingsFilePath);
                     var settings = JsonSerializer.Deserialize<T>(json);
                     return _cachedSettings = settings ?? new T();
                 }
+
+                if (File.Exists(_settingsFilePathMpck))
+                {
+                    settingsFilePath = _settingsFilePathMpck;
+                    using var stream = File.OpenRead(_settingsFilePathMpck);
+                    var settings = MessagePackSerializer.Deserialize<T>(stream, _messagePackOptions);
+                    return _cachedSettings = settings ?? new T();
+                }
+
+                _logger?.LogInformation("Settings file not found, creating default settings");
+                return _cachedSettings = new T();
             }
             catch (Exception ex)
             {
-                var settingsFilePath = _useMessagePack ? _settingsFilePathMpck : _settingsFilePath;
                 _logger?.LogError(ex, "Failed to load settings from {FilePath} \u2014 returning defaults and backing up corrupted file", settingsFilePath);
                 try
                 {
@@ -278,7 +287,13 @@ public class SettingsManager<T> : IDisposable where T : class, new()
     /// </summary>
     public bool SaveWithDebounce(T settings)
     {
-        if (!(_saveDebounceTimer != null))
+        if (settings == null)
+        {
+            _logger?.LogError("Cannot save null settings");
+            return false;
+        }
+
+        if (_saveDebounceTimer == null)
         {
             // Debounce not enabled, save immediately
             return Save(settings);
@@ -286,6 +301,11 @@ public class SettingsManager<T> : IDisposable where T : class, new()
 
         lock (_lock)
         {
+            if (_disposed)
+            {
+                return false;
+            }
+
             _pendingSettings = settings;
             _saveDebounceTimer.Change(_debounceDelayMs, Timeout.Infinite);
             _logger?.LogTrace("Save debounced, will execute in {Delay}ms", _debounceDelayMs);
@@ -311,12 +331,12 @@ public class SettingsManager<T> : IDisposable where T : class, new()
         // Phase 1: memory transaction under _lock (re-entrant with Update/Load)
         byte[]? mpckBytes = null;
         string? indentedJson = null;
+        string? currentSig = null;
         lock (_lock)
         {
             try
             {
                 // Pre-serialize once for both comparison and writing.
-                string? currentSig = null;
                 if (_useMessagePack)
                 {
                     mpckBytes = MessagePackSerializer.Serialize(settings, _messagePackOptions);
@@ -328,26 +348,18 @@ public class SettingsManager<T> : IDisposable where T : class, new()
                     {
                         WriteIndented = true
                     });
+                    currentSig = JsonSerializer.Serialize(settings);
                 }
 
                 // Memory transaction: skip save if settings unchanged.
-                if (_lastSavedJson != null)
+                // Do not assign _lastSavedJson until the file write succeeds;
+                // otherwise a failed Phase 2 write would make the next Save skip
+                // and leave the on-disk file stale.
+                if (_lastSavedJson != null && string.Equals(currentSig, _lastSavedJson, StringComparison.Ordinal))
                 {
-                    var sigForCompare = _useMessagePack
-                        ? currentSig
-                        : JsonSerializer.Serialize(settings);
-                    if (string.Equals(sigForCompare, _lastSavedJson, StringComparison.Ordinal))
-                    {
-                        _logger?.LogTrace("Settings unchanged, skipping save ({Mode})", _useMessagePack ? "MessagePack" : "JSON");
-                        return true;
-                    }
-                    _lastSavedJson = sigForCompare;
-                }
-                else
-                {
-                    _lastSavedJson = _useMessagePack
-                        ? currentSig
-                        : JsonSerializer.Serialize(settings);
+                    _logger?.LogTrace("Settings unchanged, skipping save ({Mode})", _useMessagePack ? "MessagePack" : "JSON");
+                    _cachedSettings = settings;
+                    return true;
                 }
 
                 Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath)!);
@@ -394,6 +406,7 @@ public class SettingsManager<T> : IDisposable where T : class, new()
 
             lock (_lock)
             {
+                _lastSavedJson = currentSig;
                 _cachedSettings = settings;
             }
 
@@ -470,17 +483,30 @@ public class SettingsManager<T> : IDisposable where T : class, new()
     /// </summary>
     public void Dispose()
     {
-        if (_disposed)
+        Timer? timer;
+        lock (_lock)
         {
-            return;
+            if (_disposed)
+            {
+                return;
+            }
+
+            _disposed = true;
+            timer = _saveDebounceTimer;
         }
 
-        _disposed = true;
-
-        if (_saveDebounceTimer != null)
+        if (timer != null)
         {
-            _saveDebounceTimer.Change(Timeout.Infinite, Timeout.Infinite);
-            _saveDebounceTimer.Dispose();
+            // Wait for any in-flight timer callback to finish before disposing
+            // _semaphore. Timer.Dispose() alone does not wait, so a callback
+            // already past the _disposed check could still call Save().
+            using (var disposedEvent = new ManualResetEvent(false))
+            {
+                if (timer.Dispose(disposedEvent))
+                {
+                    disposedEvent.WaitOne();
+                }
+            }
 
             T? pending;
             lock (_lock)

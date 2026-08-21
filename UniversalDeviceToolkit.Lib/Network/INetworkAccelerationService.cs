@@ -61,10 +61,20 @@ public interface INetworkStateRecoveryService
 
     /// <summary>
     /// Restores system proxy / UDT hosts block / PAC path from the last snapshot.
+    /// Only UDT-owned proxy state is written back. On full success the snapshot is consumed.
     /// Idempotent when no snapshot exists (returns success with a skipped report).
     /// </summary>
     bool TryRestoreFromSnapshot(out string report);
 
-    /// <summary>Captures current state into a snapshot file. Apply paths may be stubbed.</summary>
+    /// <summary>Captures current state into a versioned pending snapshot file.</summary>
     Task<NetworkStateSnapshot> CaptureSnapshotAsync(CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Persists a lifecycle phase onto the current snapshot.
+    /// When marking <see cref="NetworkSnapshotPhase.Applied"/>, records UDT-owned fingerprints.
+    /// </summary>
+    bool TryMarkPhase(NetworkSnapshotPhase phase, out string report, int? listenPort = null);
+
+    /// <summary>Deletes the snapshot file after a successful restore. Missing file is success.</summary>
+    bool TryConsumeSnapshot(out string report);
 }

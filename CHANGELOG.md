@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Shipping Host/CLI/NetworkProxy now use Workstation GC with `GCConserveMemory=5` and DATAS, strip debugger/hot-reload/HTTP-activity IL from Release publishes, and prune `createdump`, DAC/DBI, DiaSymReader, Mono.Posix helpers, and sibling documentation XML from the payload.
+- Host sensor producers pause while Electron reports no visible UI surface (`app.setUiActive`), so LibreHardwareMonitor / vendor WMI are not polled into a tray-only session.
+- Electron disables unused Chromium features (translate, media router, autofill, spare renderer, breakpad), turns off spellcheck, loads Ant Design locales on demand, and splits vendor/icon/chart chunks from the actual module graph instead of barrel package entries.
 - Electron release packaging now keeps renderer-only packages out of production dependencies, limits application Chromium locales to the supported 24-locale set, removes shipping Host PDB files, and audits `app.asar`, locales, Host, unpacked directories, and final artifacts. Windows x64 unsigned local output: `app.asar` 10.08 MiB, Full Setup 181.99 MiB, Full ZIP 186.99 MiB, Online Setup 0.61 MiB, and Online ZIP 184.39 MiB (previous Full Setup/ZIP: 214.24/245.76 MiB).
 - Source version train is **6.0.0** (`Directory.Build.props`). First ship tag is `v6.0.0-preview.1` (hyphen = GitHub prerelease; winget skipped). Official plugins are **2.0.0-preview.1** with `minHostVersion` **6.0.0**. Vendored plugin host baseline stays **5.0.2** until a v6 ZIP exists.
 - Host tests are split into `Tests.Contracts` (Guard/Security), `Tests` (parallel unit), `Tests.Stateful` (collection-bound), and existing `Fast.Tests`. Plugin tests run in `plugins-validate.yml`; Electron `npm test` runs with typecheck.

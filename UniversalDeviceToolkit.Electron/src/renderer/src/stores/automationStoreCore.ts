@@ -16,6 +16,7 @@ export interface AutomationStore {
   setEnabled: (enabled: boolean) => Promise<boolean>
   save: (pipelines: AutomationPipeline[], isEnabled?: boolean) => Promise<boolean>
   runNow: (pipelineId: string) => Promise<boolean>
+  clearError: () => void
 }
 
 type AutomationStoreApi = Pick<
@@ -39,6 +40,18 @@ function errorMessage(error: unknown, fallback: string): string {
   if (error instanceof Error && error.message.trim() !== '') return error.message
   const text = String(error ?? '').trim()
   return text === '' ? fallback : text
+}
+
+function resultError(
+  result: { error?: string; message?: string },
+  fallback: string
+): string {
+  const explicit = result.error?.trim() || result.message?.trim() || ''
+  return explicit === '' ? fallback : explicit
+}
+
+function accepted(flag: boolean | undefined): boolean {
+  return flag === true
 }
 
 export function createAutomationStoreState(
@@ -73,8 +86,8 @@ export function createAutomationStoreState(
       set({ error: null })
       try {
         const result = await dependencies.api.setEnabled(enabled)
-        if (!result.ok) {
-          set({ error: FAILURE_MESSAGES.setEnabled })
+        if (!accepted(result.ok)) {
+          set({ error: resultError(result, FAILURE_MESSAGES.setEnabled) })
           return false
         }
         set({ state: { ...get().state, isEnabled: enabled } })
@@ -89,8 +102,8 @@ export function createAutomationStoreState(
       set({ error: null })
       try {
         const result = await dependencies.api.savePipelines(pipelines, isEnabled)
-        if (!result.saved) {
-          set({ error: FAILURE_MESSAGES.save })
+        if (!accepted(result.saved)) {
+          set({ error: resultError(result, FAILURE_MESSAGES.save) })
           return false
         }
         if (!(await get().load())) return false
@@ -106,8 +119,8 @@ export function createAutomationStoreState(
       set({ error: null })
       try {
         const result = await dependencies.api.runNow(pipelineId)
-        if (!result.ok) {
-          set({ error: FAILURE_MESSAGES.runNow })
+        if (!accepted(result.ok)) {
+          set({ error: resultError(result, FAILURE_MESSAGES.runNow) })
           return false
         }
         return true
@@ -115,6 +128,10 @@ export function createAutomationStoreState(
         set({ error: errorMessage(error, FAILURE_MESSAGES.runNow) })
         return false
       }
+    },
+
+    clearError() {
+      set({ error: null })
     }
   })
 }

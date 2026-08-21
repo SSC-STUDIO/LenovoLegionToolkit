@@ -107,9 +107,6 @@
           "UniversalDeviceToolkit.Platform.Windows.Core": "[6.0.0, )"
         }
       },
-      "universaldevicetoolkit.avalonia": {
-        "type": "Project"
-      },
       "universaldevicetoolkit.lib.abstractions": {
         "type": "Project"
       },

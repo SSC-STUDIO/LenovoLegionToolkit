@@ -99,6 +99,9 @@ public sealed class PluginContributions
     [JsonPropertyName("settingsPage")]
     public PluginPageContribution? SettingsPage { get; set; }
 
+    [JsonPropertyName("webPage")]
+    public PluginWebPageContribution? WebPage { get; set; }
+
     [JsonPropertyName("runtime")]
     public PluginRuntimeContribution? Runtime { get; set; }
 
@@ -113,6 +116,12 @@ public sealed class PluginPageContribution
 
     [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
+}
+
+public sealed class PluginWebPageContribution
+{
+    [JsonPropertyName("entry")]
+    public string Entry { get; set; } = string.Empty;
 }
 
 public sealed class PluginRuntimeContribution
@@ -303,6 +312,7 @@ public sealed class ValidationRequest
     public bool SkipBuild { get; init; }
     public bool SkipTests { get; init; }
     public PluginValidationProfile Profile { get; init; } = PluginValidationProfile.Contributor;
+    public PluginCatalogChannel CatalogChannel { get; init; } = PluginCatalogChannel.Stable;
     public IReadOnlyList<string> PluginIds { get; init; } = Array.Empty<string>();
 }
 

@@ -5,11 +5,13 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
-using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Automation;
 using UniversalDeviceToolkit.Lib.Controllers.Sensors;
 using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.System;
+using UniversalDeviceToolkit.Lib.Utils;
+using UniversalDeviceToolkit.Host;
 using UniversalDeviceToolkit.Host.Rpc;
 
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
@@ -27,28 +29,165 @@ public static class SensorsHandlers
 
     private static readonly object SubscribeLock = new();
     private static readonly HashSet<string> VendorSubscriberIds = new(StringComparer.Ordinal);
+    private static readonly HashSet<string> LhmSubscriberIds = new(StringComparer.Ordinal);
     private static readonly Dictionary<string, double> VendorIntervals = new(StringComparer.Ordinal);
     private static readonly object FpsLock = new();
     private static int _fpsSubscriberCount;
     private static SensorsGroupController? _subscribedGroup;
     private static BridgeRpcServer? _sensorsRpc;
     private static System.Threading.Timer? _vendorPollTimer;
+    private static CancellationTokenSource? _vendorPollCts;
     private static double _vendorPollIntervalSec = 1.0;
+    private static double _lhmIntervalSec = 1.0;
+    private static bool _uiActivityHooked;
     private static FpsSensorController? _subscribedFpsController;
     private static BridgeRpcServer? _fpsRpc;
 
     public static void Register(BridgeRpcServer rpc)
     {
-        rpc.RegisterHandler("sensors.getStatus", (request, _) => HandleGetStatusAsync(request));
-        rpc.RegisterHandler("sensors.getSnapshot", (request, _) => HandleGetSnapshotAsync(request));
-        rpc.RegisterHandler("sensors.getDetailed", (request, _) => HandleGetDetailedAsync(request));
-        rpc.RegisterHandler("sensors.subscribe", (request, _) => HandleSubscribeAsync(request, rpc));
-        rpc.RegisterHandler("sensors.unsubscribe", (request, _) => HandleUnsubscribeAsync(request));
-        rpc.RegisterHandler("sensors.getSettings", (request, _) => HandleGetSettingsAsync(request));
-        rpc.RegisterHandler("sensors.setSettings", (request, _) => HandleSetSettingsAsync(request, rpc));
-        rpc.RegisterHandler("sensors.getFps", (request, _) => HandleGetFpsAsync(request));
-        rpc.RegisterHandler("sensors.subscribeFps", (request, _) => HandleSubscribeFpsAsync(request, rpc));
-        rpc.RegisterHandler("sensors.unsubscribeFps", (request, _) => HandleUnsubscribeFpsAsync(request));
+        EnsureUiActivityHook();
+        rpc.RegisterHandler("sensors.getStatus", (_, ct) => HandleGetStatusAsync(ct));
+        rpc.RegisterHandler("sensors.getSnapshot", (_, ct) => HandleGetSnapshotAsync(ct));
+        rpc.RegisterHandler("sensors.getDetailed", (_, ct) => HandleGetDetailedAsync(ct));
+        rpc.RegisterHandler("sensors.subscribe", (request, ct) => HandleSubscribeAsync(request, rpc, ct));
+        rpc.RegisterHandler("sensors.unsubscribe", (request, ct) => HandleUnsubscribeAsync(request, ct));
+        rpc.RegisterHandler("sensors.getSettings", (_, ct) => HandleGetSettingsAsync(ct));
+        rpc.RegisterHandler("sensors.setSettings", (request, ct) => HandleSetSettingsAsync(request, rpc, ct));
+        rpc.RegisterHandler("sensors.getFps", (_, ct) => HandleGetFpsAsync(ct));
+        rpc.RegisterHandler("sensors.subscribeFps", (request, ct) => HandleSubscribeFpsAsync(request, rpc, ct));
+        rpc.RegisterHandler("sensors.unsubscribeFps", (_, ct) => HandleUnsubscribeFpsAsync(ct));
+    }
+
+    private static void EnsureUiActivityHook()
+    {
+        if (_uiActivityHooked)
+            return;
+        _uiActivityHooked = true;
+        HostUiActivity.Changed += OnUiActivityChanged;
+    }
+
+    private static void OnUiActivityChanged(bool active)
+    {
+        if (active)
+        {
+            _ = ResumeAfterBackgroundAsync();
+            return;
+        }
+
+        PauseFpsForBackground();
+
+        if (AutomationNeedsHardwareSensors())
+        {
+            // Keep the LHM producer so automation reads fresh cached snapshots.
+            // sensors.updated is already suppressed while HostUiActivity is false.
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Optimized, blocking: false);
+            return;
+        }
+
+        lock (SubscribeLock)
+            PauseSensorProductionLocked();
+
+        try
+        {
+            IoCContainer.TryResolve<SensorsGroupController>()?.ReleaseHardwareForBackground();
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"background hardware release failed: {ex.Message}", ex);
+        }
+
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Optimized, blocking: false);
+    }
+
+    private static bool AutomationNeedsHardwareSensors()
+    {
+        try
+        {
+            var processor = IoCContainer.TryResolve<AutomationProcessor>();
+            return processor?.HasHardwareSensorTriggers() == true;
+        }
+        catch
+        {
+            return true;
+        }
+    }
+
+    private static async Task ResumeAfterBackgroundAsync()
+    {
+        try
+        {
+            var group = IoCContainer.TryResolve<SensorsGroupController>();
+            if (group is not null && !group.IsLibreHardwareMonitorInitialized())
+                _ = await group.EnsureHardwareAfterBackgroundAsync().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"background hardware restore failed: {ex.Message}", ex);
+        }
+
+        lock (SubscribeLock)
+            ResumeSensorProductionLocked();
+
+        ResumeFpsAfterBackground();
+    }
+
+    private static void PauseFpsForBackground()
+    {
+        lock (FpsLock)
+        {
+            if (_subscribedFpsController is { } controller)
+            {
+                controller.FpsDataUpdated -= OnFpsDataUpdated;
+                controller.StopMonitoring();
+            }
+        }
+    }
+
+    private static void ResumeFpsAfterBackground()
+    {
+        FpsSensorController? controller;
+        lock (FpsLock)
+        {
+            if (_fpsSubscriberCount <= 0 || _subscribedFpsController is null)
+                return;
+            controller = _subscribedFpsController;
+            controller.FpsDataUpdated -= OnFpsDataUpdated;
+            controller.FpsDataUpdated += OnFpsDataUpdated;
+        }
+
+        _ = controller.StartMonitoringAsync();
+    }
+
+    private static void PauseSensorProductionLocked()
+    {
+        if (_subscribedGroup is not null)
+        {
+            foreach (var id in LhmSubscriberIds)
+                _subscribedGroup.Stop(SensorSubscriber.Named(id));
+            _subscribedGroup.SensorsUpdated -= OnSensorsUpdated;
+        }
+
+        CancelVendorTimer();
+    }
+
+    private static void ResumeSensorProductionLocked()
+    {
+        if (!HostUiActivity.IsActive)
+            return;
+
+        if (LhmSubscriberIds.Count > 0 && _subscribedGroup is not null)
+        {
+            _subscribedGroup.SensorsUpdated -= OnSensorsUpdated;
+            _subscribedGroup.SensorsUpdated += OnSensorsUpdated;
+            var interval = TimeSpan.FromSeconds(_lhmIntervalSec);
+            foreach (var id in LhmSubscriberIds)
+                _subscribedGroup.Start(SensorSubscriber.Named(id), interval);
+        }
+
+        if (VendorSubscriberIds.Count > 0 && _sensorsRpc is not null)
+            StartOrUpdateVendorTimer(_sensorsRpc);
     }
 
     private static SensorsGroupController GetSensorsGroup()
@@ -62,8 +201,9 @@ public static class SensorsHandlers
 
     // ── snapshot assembly ───────────────────────────────────────────────────
 
-    private static async Task<object> BuildSnapshotAsync()
+    private static async Task<object> BuildSnapshotAsync(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var group = GetSensorsGroup();
         var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
 
@@ -73,15 +213,20 @@ public static class SensorsHandlers
             {
                 await group.IsSupportedAsync().ConfigureAwait(false);
             }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
             catch
             {
                 // Initialization failed; fall back to the vendor path below.
             }
         }
 
+        cancellationToken.ThrowIfCancellationRequested();
         if (group.IsLibreHardwareMonitorInitialized())
         {
-            var snapshot = await BuildLhmSnapshotAsync(group).ConfigureAwait(false);
+            var snapshot = await BuildLhmSnapshotAsync(group, cancellationToken).ConfigureAwait(false);
             if (snapshot is not null)
                 return snapshot;
             // LibreHardwareMonitor initialized but exposed no CPU/GPU sensors
@@ -89,11 +234,12 @@ public static class SensorsHandlers
             // vendor snapshot instead of rendering empty panels.
         }
 
-        return await BuildVendorSnapshotAsync().ConfigureAwait(false);
+        return await BuildVendorSnapshotAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private static async Task<object?> BuildLhmSnapshotAsync(SensorsGroupController group)
+    private static async Task<object?> BuildLhmSnapshotAsync(SensorsGroupController group, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var cpuTempTask = group.GetCpuTemperatureAsync();
         var cpuUsageTask = group.GetCpuUsageAsync();
         var cpuFanTask = group.GetCpuFanSpeedAsync();
@@ -135,12 +281,14 @@ public static class SensorsHandlers
             gpuVramUsedTask, gpuVramTotalTask, gpuPcieRxTask, gpuPcieTxTask, gpuFanTask,
             memUsageTask, memUsedTask, memTotalTask, memMaxTempTask, motherboardMaxTempTask,
             ssdTempsTask, cpuNameTask, gpuNameTask, gpuIsIntegratedTask).ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
 
         var ssdTemps = ssdTempsTask.Result;
-        var battery = await BuildBatteryAsync().ConfigureAwait(false);
+        var battery = await BuildBatteryAsync(cancellationToken).ConfigureAwait(false);
         var (cpuName, gpuName) = await MergeHardwareNamesAsync(
             NullIf(cpuNameTask.Result, "UNKNOWN"),
-            NullIf(gpuNameTask.Result, "UNKNOWN")).ConfigureAwait(false);
+            NullIf(gpuNameTask.Result, "UNKNOWN"),
+            cancellationToken).ConfigureAwait(false);
 
         // LibreHardwareMonitor may initialize without exposing any CPU/GPU
         // sensors (e.g. without administrator rights). Treat that as "no data"
@@ -203,12 +351,12 @@ public static class SensorsHandlers
                 // LHM SensorType.Data is GiB; bridge fields are MiB.
                 usedMb = GigabytesToMegabytes(memUsedTask.Result),
                 totalMb = GigabytesToMegabytes(memTotalTask.Result),
-                highestTemperature = NullIf(memMaxTempTask.Result),
+                highestTemperature = NullIfTemperature(memMaxTempTask.Result),
             },
             battery,
             motherboard = new
             {
-                highestTemperature = NullIf(motherboardMaxTempTask.Result),
+                highestTemperature = NullIfTemperature(motherboardMaxTempTask.Result),
             },
             storage = new
             {
@@ -217,77 +365,107 @@ public static class SensorsHandlers
         };
     }
 
-    private static async Task<object> BuildVendorSnapshotAsync()
+    private static async Task<object> BuildVendorSnapshotAsync(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         SensorsData data;
         try
         {
             data = await GetVendorSensors().GetDataAsync(detailed: true).ConfigureAwait(false);
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch
         {
-            var batteryOnly = await BuildBatteryAsync().ConfigureAwait(false);
-            return new { ts = DateTime.UtcNow, source = "vendor", initialized = false, battery = batteryOnly };
+            var batteryOnly = await BuildBatteryAsync(cancellationToken).ConfigureAwait(false);
+            return CreateSnapshot(
+                source: "vendor",
+                initialized: false,
+                isHybrid: false,
+                cpuName: null,
+                gpuName: null,
+                gpuIsIntegrated: false,
+                cpu: CreateEmptyCpu(),
+                gpu: CreateEmptyGpu(),
+                memory: CreateEmptyMemory(),
+                battery: batteryOnly);
         }
 
-        var battery = await BuildBatteryAsync().ConfigureAwait(false);
+        cancellationToken.ThrowIfCancellationRequested();
+        var battery = await BuildBatteryAsync(cancellationToken).ConfigureAwait(false);
         var group = GetSensorsGroup();
-        var (cpuName, gpuName) = await MergeHardwareNamesAsync(null, null).ConfigureAwait(false);
+        var (cpuName, gpuName) = await MergeHardwareNamesAsync(null, null, cancellationToken).ConfigureAwait(false);
         var gpuIsIntegrated = false;
         try
         {
             if (group.IsLibreHardwareMonitorInitialized())
                 gpuIsIntegrated = await group.IsCurrentGpuIntegratedAsync().ConfigureAwait(false);
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch
         {
             // Best-effort; vendor snapshot still returns sensor readings.
         }
 
-        return new
-        {
-            ts = DateTime.UtcNow,
-            source = "vendor",
-            initialized = true,
-            isHybrid = false,
-            info = new { cpuName, gpuName, gpuIsIntegrated },
-            cpu = new
+        return CreateSnapshot(
+            source: "vendor",
+            initialized: true,
+            isHybrid: false,
+            cpuName,
+            gpuName,
+            gpuIsIntegrated,
+            cpu: new
             {
                 temperature = NullIf(data.CPU.Temperature),
                 usage = NullIf(data.CPU.Utilization),
                 fanSpeed = NullIf(data.CPU.FanSpeed),
                 power = NullIf(data.CPU.Wattage),
-                voltage = NullIf(data.CPU.Voltage),
+                powerCores = (float?)null,
+                powerMemory = (float?)null,
+                powerPlatform = (float?)null,
+                voltage = NullIfVoltage(data.CPU.Voltage),
                 coreClockMax = NullIf(data.CPU.CoreClock),
+                coreClockAvg = (float?)null,
                 pCoreClock = (int?)null,
                 eCoreClock = (int?)null,
             },
-            gpu = new
+            gpu: new
             {
-                temperature = NullIf(data.GPU.Temperature),
                 usage = NullIf(data.GPU.Utilization),
+                temperature = NullIf(data.GPU.Temperature),
                 coreClock = NullIf(data.GPU.CoreClock),
                 memoryClock = NullIf(data.GPU.MemoryClock),
                 power = NullIf(data.GPU.Wattage),
-                voltage = NullIf(data.GPU.Voltage),
+                voltage = NullIfVoltage(data.GPU.Voltage),
+                vramTemperature = (float?)null,
+                hotSpotTemperature = (float?)null,
+                vramUtilization = (float?)null,
+                vramUsedMb = (float?)null,
+                vramTotalMb = (float?)null,
+                pcieRxThroughput = (float?)null,
+                pcieTxThroughput = (float?)null,
                 fanSpeed = NullIf(data.GPU.FanSpeed),
             },
-            memory = new { usage = (int?)null, usedMb = (int?)null, totalMb = (int?)null, highestTemperature = (double?)null },
-            battery,
-            motherboard = new { highestTemperature = (double?)null },
-            storage = new { temperatures = new int?[] { null, null } },
-        };
+            memory: CreateEmptyMemory(),
+            battery);
     }
 
     /// <summary>
     /// Avalonia SensorsControl.RefreshBattery parity: Battery.GetBatteryInformation +
     /// Power.IsPowerAdapterConnectedAsync for low-wattage adapter warning.
     /// Health is 0..1 (BatteryHealth is already 0..100 percent).
+    /// Charge/discharge rates stay in milliwatts to match Electron formatRate.
     /// </summary>
-    private static async Task<object?> BuildBatteryAsync()
+    private static async Task<object?> BuildBatteryAsync(CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var info = Battery.GetBatteryInformation();
             var adapter = await Power.IsPowerAdapterConnectedAsync().ConfigureAwait(false);
             return new
@@ -299,6 +477,7 @@ public static class SensorsHandlers
                 chargeRate = info.DischargeRate,
                 minDischargeRate = info.MinDischargeRate == int.MaxValue ? null : (int?)info.MinDischargeRate,
                 maxDischargeRate = (int?)info.MaxDischargeRate,
+                voltage = (double?)null,
                 designCapacity = info.DesignCapacity > 0 ? (int?)info.DesignCapacity : null,
                 fullChargeCapacity = info.FullChargeCapacity > 0 ? (int?)info.FullChargeCapacity : null,
                 cycleCount = info.CycleCount >= 0 ? (int?)info.CycleCount : null,
@@ -310,6 +489,10 @@ public static class SensorsHandlers
                 modelName = string.IsNullOrWhiteSpace(info.ModelName) ? null : info.ModelName,
             };
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch
         {
             return null;
@@ -318,10 +501,11 @@ public static class SensorsHandlers
 
     // ── handlers ────────────────────────────────────────────────────────────
 
-    private static async Task<BridgeResult> HandleGetStatusAsync(BridgeRequest request)
+    private static async Task<BridgeResult> HandleGetStatusAsync(CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var group = GetSensorsGroup();
             var initialized = group.IsLibreHardwareMonitorInitialized();
             string? cpuName = null;
@@ -334,7 +518,7 @@ public static class SensorsHandlers
                 gpuIsIntegrated = await group.IsCurrentGpuIntegratedAsync().ConfigureAwait(false);
             }
 
-            (cpuName, gpuName) = await MergeHardwareNamesAsync(cpuName, gpuName).ConfigureAwait(false);
+            (cpuName, gpuName) = await MergeHardwareNamesAsync(cpuName, gpuName, cancellationToken).ConfigureAwait(false);
 
             return BridgeResult.Ok(new
             {
@@ -346,55 +530,45 @@ public static class SensorsHandlers
                 initialState = group.InitialState.ToString(),
             });
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
         }
     }
 
-    private static async Task<BridgeResult> HandleGetSnapshotAsync(BridgeRequest request)
+    private static async Task<BridgeResult> HandleGetSnapshotAsync(CancellationToken cancellationToken)
     {
         try
         {
-            var snapshot = await BuildSnapshotAsync().ConfigureAwait(false);
+            var snapshot = await BuildSnapshotAsync(cancellationToken).ConfigureAwait(false);
             return BridgeResult.Ok(snapshot);
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
         }
     }
 
-    private static async Task<BridgeResult> HandleGetDetailedAsync(BridgeRequest request)
+    private static async Task<BridgeResult> HandleGetDetailedAsync(CancellationToken cancellationToken)
     {
         try
         {
-            var data = await GetVendorSensors().GetDataAsync(detailed: true).ConfigureAwait(false);
-            return BridgeResult.Ok(new
-            {
-                source = "vendor",
-                cpu = new
-                {
-                    utilization = NullIf(data.CPU.Utilization),
-                    coreClock = NullIf(data.CPU.CoreClock),
-                    temperature = NullIf(data.CPU.Temperature),
-                    wattage = NullIf(data.CPU.Wattage),
-                    voltage = NullIf(data.CPU.Voltage),
-                    fanSpeed = NullIf(data.CPU.FanSpeed),
-                    minTemperature = NullIf(data.CPU.MinTemperature),
-                    maxTemperature = NullIf(data.CPU.MaxTemperatureRecord),
-                },
-                gpu = new
-                {
-                    utilization = NullIf(data.GPU.Utilization),
-                    coreClock = NullIf(data.GPU.CoreClock),
-                    memoryClock = NullIf(data.GPU.MemoryClock),
-                    temperature = NullIf(data.GPU.Temperature),
-                    wattage = NullIf(data.GPU.Wattage),
-                    voltage = NullIf(data.GPU.Voltage),
-                    fanSpeed = NullIf(data.GPU.FanSpeed),
-                },
-            });
+            // Electron types this as SensorSnapshot; return the vendor snapshot
+            // with the same field names (usage/power) rather than utilization/wattage.
+            var snapshot = await BuildVendorSnapshotAsync(cancellationToken).ConfigureAwait(false);
+            return BridgeResult.Ok(snapshot);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -416,8 +590,9 @@ public static class SensorsHandlers
         return "ui";
     }
 
-    private static async Task EnsureLibreHardwareMonitorAsync()
+    private static async Task EnsureLibreHardwareMonitorAsync(CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
         if (!applicationSettings.Store.EnableHardwareSensors)
             return;
@@ -429,6 +604,10 @@ public static class SensorsHandlers
         try
         {
             _ = await group.IsSupportedAsync().ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch
         {
@@ -442,9 +621,17 @@ public static class SensorsHandlers
         {
             if (VendorSubscriberIds.Count > 0)
                 return;
-            _vendorPollTimer?.Dispose();
-            _vendorPollTimer = null;
+            CancelVendorTimer();
         }
+    }
+
+    private static void CancelVendorTimer()
+    {
+        _vendorPollCts?.Cancel();
+        _vendorPollCts?.Dispose();
+        _vendorPollCts = null;
+        _vendorPollTimer?.Dispose();
+        _vendorPollTimer = null;
     }
 
     private static void StartOrUpdateVendorTimer(BridgeRpcServer rpc)
@@ -453,23 +640,30 @@ public static class SensorsHandlers
         {
             if (VendorSubscriberIds.Count == 0)
             {
-                _vendorPollTimer?.Dispose();
-                _vendorPollTimer = null;
+                CancelVendorTimer();
                 return;
             }
 
             _vendorPollIntervalSec = VendorIntervals.Values.Min();
             _sensorsRpc = rpc;
-            _vendorPollTimer?.Dispose();
+            CancelVendorTimer();
+            _vendorPollCts = new CancellationTokenSource();
+            var pollToken = _vendorPollCts.Token;
             _vendorPollTimer = new System.Threading.Timer(
                 async _ =>
                 {
                     var rpcRef = _sensorsRpc;
-                    if (rpcRef is null) return;
+                    if (rpcRef is null || pollToken.IsCancellationRequested || !HostUiActivity.IsActive)
+                        return;
                     try
                     {
-                        var snapshot = await BuildSnapshotAsync().ConfigureAwait(false);
+                        var snapshot = await BuildSnapshotAsync(pollToken).ConfigureAwait(false);
+                        if (pollToken.IsCancellationRequested)
+                            return;
                         rpcRef.Publish("sensors.updated", snapshot);
+                    }
+                    catch (OperationCanceledException)
+                    {
                     }
                     catch (Exception ex)
                     {
@@ -483,10 +677,11 @@ public static class SensorsHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleSubscribeAsync(BridgeRequest request, BridgeRpcServer rpc)
+    private static async Task<BridgeResult> HandleSubscribeAsync(BridgeRequest request, BridgeRpcServer rpc, CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var intervalSec = 1.0;
             if (request.Parameters.TryGetProperty("intervalSec", out var intervalProp) &&
                 intervalProp.ValueKind == JsonValueKind.Number)
@@ -494,11 +689,14 @@ public static class SensorsHandlers
                 intervalSec = intervalProp.GetDouble();
             }
 
+            if (!double.IsFinite(intervalSec))
+                intervalSec = 1.0;
             intervalSec = Math.Clamp(intervalSec, 0.5, 30.0);
+            _lhmIntervalSec = intervalSec;
             var subscriberId = ReadSubscriberId(request);
             var subscriber = SensorSubscriber.Named(subscriberId);
 
-            await EnsureLibreHardwareMonitorAsync().ConfigureAwait(false);
+            await EnsureLibreHardwareMonitorAsync(cancellationToken).ConfigureAwait(false);
 
             var group = GetSensorsGroup();
 
@@ -508,10 +706,11 @@ public static class SensorsHandlers
             // (e.g. NVAPI/performance counters unavailable) — in that case the
             // vendor fallback below is stable, whereas the LHM loop would
             // publish nothing but null frames.
-            if (group.IsLibreHardwareMonitorInitialized() && await LhmHasSensorDataAsync(group).ConfigureAwait(false))
+            if (group.IsLibreHardwareMonitorInitialized() && await LhmHasSensorDataAsync(group, cancellationToken).ConfigureAwait(false))
             {
                 lock (SubscribeLock)
                 {
+                    LhmSubscriberIds.Add(subscriberId);
                     VendorSubscriberIds.Remove(subscriberId);
                     VendorIntervals.Remove(subscriberId);
                 }
@@ -521,22 +720,32 @@ public static class SensorsHandlers
                 _sensorsRpc = rpc;
                 group.SensorsUpdated -= OnSensorsUpdated;
                 group.SensorsUpdated += OnSensorsUpdated;
-                group.Start(subscriber, TimeSpan.FromSeconds(intervalSec));
+                if (HostUiActivity.IsActive)
+                    group.Start(subscriber, TimeSpan.FromSeconds(intervalSec));
 
-                await Task.CompletedTask;
                 return BridgeResult.Ok(new { subscribed = true, effectiveIntervalSec = intervalSec });
             }
 
+            group.Stop(subscriber);
             lock (SubscribeLock)
             {
+                LhmSubscriberIds.Remove(subscriberId);
                 VendorSubscriberIds.Add(subscriberId);
                 VendorIntervals[subscriberId] = intervalSec;
+                if (LhmSubscriberIds.Count == 0)
+                {
+                    group.SensorsUpdated -= OnSensorsUpdated;
+                    _subscribedGroup = null;
+                }
             }
-            _subscribedGroup = null;
-            StartOrUpdateVendorTimer(rpc);
+            if (HostUiActivity.IsActive)
+                StartOrUpdateVendorTimer(rpc);
 
-            await Task.CompletedTask;
             return BridgeResult.Ok(new { subscribed = true, effectiveIntervalSec = intervalSec });
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -544,10 +753,11 @@ public static class SensorsHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleUnsubscribeAsync(BridgeRequest request)
+    private static Task<BridgeResult> HandleUnsubscribeAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var subscriberId = ReadSubscriberId(request);
             var subscriber = SensorSubscriber.Named(subscriberId);
             var group = GetSensorsGroup();
@@ -556,33 +766,39 @@ public static class SensorsHandlers
             {
                 VendorSubscriberIds.Remove(subscriberId);
                 VendorIntervals.Remove(subscriberId);
-                if (VendorSubscriberIds.Count == 0 && !group.IsLibreHardwareMonitorInitialized())
+                LhmSubscriberIds.Remove(subscriberId);
+                if (LhmSubscriberIds.Count == 0)
                 {
                     group.SensorsUpdated -= OnSensorsUpdated;
                     _subscribedGroup = null;
-                    _sensorsRpc = null;
                 }
+
+                if (VendorSubscriberIds.Count == 0 && LhmSubscriberIds.Count == 0)
+                    _sensorsRpc = null;
             }
             StopVendorTimerIfIdle();
             if (VendorSubscriberIds.Count > 0 && _sensorsRpc is not null)
                 StartOrUpdateVendorTimer(_sensorsRpc);
-            await Task.CompletedTask;
-            return BridgeResult.Ok(new { unsubscribed = true });
+            return Task.FromResult(BridgeResult.Ok(new { unsubscribed = true }));
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return Task.FromResult(BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}"));
         }
     }
 
     private static void OnSensorsUpdated(object? sender, EventArgs args)
     {
-        if (_subscribedGroup is null || _sensorsRpc is null)
+        if (!HostUiActivity.IsActive || _subscribedGroup is null || _sensorsRpc is null)
             return;
 
         try
         {
-            var snapshot = BuildLhmSnapshotAsync(_subscribedGroup).GetAwaiter().GetResult();
+            var snapshot = BuildLhmSnapshotAsync(_subscribedGroup, CancellationToken.None).GetAwaiter().GetResult();
             // LibreHardwareMonitor may briefly report no CPU/GPU data after a
             // re-subscribe (data recovering). Publish nothing in that case so
             // the renderer keeps the last good frame instead of receiving null.
@@ -597,15 +813,16 @@ public static class SensorsHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleGetSettingsAsync(BridgeRequest request)
+    private static Task<BridgeResult> HandleGetSettingsAsync(CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
             var osdSettings = IoCContainer.Resolve<OsdSettings>();
             var hardwareSensorSettings = IoCContainer.Resolve<HardwareSensorSettings>();
 
-            return BridgeResult.Ok(new
+            return Task.FromResult(BridgeResult.Ok(new
             {
                 enableHardwareSensors = applicationSettings.Store.EnableHardwareSensors,
                 osdRefreshIntervalSec = osdSettings.Store.OsdRefreshInterval,
@@ -614,65 +831,101 @@ public static class SensorsHandlers
                 displayMemoryInGigabytes = hardwareSensorSettings.Store.DisplayMemoryInGigabytes,
                 visibleSections = hardwareSensorSettings.Store.VisibleSections,
                 sectionOrder = hardwareSensorSettings.Store.SectionOrder,
-            });
+            }));
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return Task.FromResult(BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}"));
         }
     }
 
-    private static async Task<BridgeResult> HandleSetSettingsAsync(BridgeRequest request, BridgeRpcServer rpc)
+    private static async Task<BridgeResult> HandleSetSettingsAsync(BridgeRequest request, BridgeRpcServer rpc, CancellationToken cancellationToken)
     {
         try
         {
-            var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
+            cancellationToken.ThrowIfCancellationRequested();
             var hardwareSensorSettings = IoCContainer.Resolve<HardwareSensorSettings>();
+            var osdSettings = IoCContainer.Resolve<OsdSettings>();
 
-            var changed = false;
+            var applicationChanged = false;
+            var hardwareChanged = false;
+            var osdChanged = false;
 
-            if (request.Parameters.TryGetProperty("enableHardwareSensors", out var enableProp) &&
-                enableProp.ValueKind == JsonValueKind.True ||
-                request.Parameters.TryGetProperty("enableHardwareSensors", out enableProp) &&
-                enableProp.ValueKind == JsonValueKind.False)
+            if (TryGetBoolean(request, "enableHardwareSensors", out var enabled))
             {
-                var enabled = enableProp.GetBoolean();
                 var feature = IoCContainer.Resolve<HardwareSensorsFeature>();
-                await feature.SetStateAsync(enabled ? HardwareSensorsState.On : HardwareSensorsState.Off).ConfigureAwait(false);
-                changed = true;
+                await feature.SetStateAsync(enabled ? HardwareSensorsState.On : HardwareSensorsState.Off, cancellationToken).ConfigureAwait(false);
+                applicationChanged = true;
             }
 
-            if (request.Parameters.TryGetProperty("selectedGpuIsIgpu", out var igpuProp) &&
-                igpuProp.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            if (TryGetBoolean(request, "selectedGpuIsIgpu", out var selectedGpuIsIgpu))
             {
-                hardwareSensorSettings.Store.SelectedGpuIsIgpu = igpuProp.GetBoolean();
-                GetSensorsGroup().SelectedGpuIsIgpu = igpuProp.GetBoolean();
-                changed = true;
+                hardwareSensorSettings.Store.SelectedGpuIsIgpu = selectedGpuIsIgpu;
+                GetSensorsGroup().SelectedGpuIsIgpu = selectedGpuIsIgpu;
+                hardwareChanged = true;
             }
 
-            if (request.Parameters.TryGetProperty("showCpuAverageFrequency", out var avgFreqProp) &&
-                avgFreqProp.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            if (TryGetBoolean(request, "showCpuAverageFrequency", out var showCpuAverageFrequency))
             {
-                hardwareSensorSettings.Store.ShowCpuAverageFrequency = avgFreqProp.GetBoolean();
-                GetSensorsGroup().ShowAverageCpuFrequency = avgFreqProp.GetBoolean();
-                changed = true;
+                hardwareSensorSettings.Store.ShowCpuAverageFrequency = showCpuAverageFrequency;
+                GetSensorsGroup().ShowAverageCpuFrequency = showCpuAverageFrequency;
+                hardwareChanged = true;
             }
 
-            if (request.Parameters.TryGetProperty("displayMemoryInGigabytes", out var memGigabytesProp) &&
-                memGigabytesProp.ValueKind is JsonValueKind.True or JsonValueKind.False)
+            if (TryGetBoolean(request, "displayMemoryInGigabytes", out var displayMemoryInGigabytes))
             {
-                hardwareSensorSettings.Store.DisplayMemoryInGigabytes = memGigabytesProp.GetBoolean();
-                changed = true;
+                hardwareSensorSettings.Store.DisplayMemoryInGigabytes = displayMemoryInGigabytes;
+                hardwareChanged = true;
             }
 
-            if (changed)
+            if (TryGetDouble(request, "osdRefreshIntervalSec", out var osdRefreshIntervalSec))
+            {
+                osdSettings.Store.OsdRefreshInterval = Math.Clamp(osdRefreshIntervalSec, 0.1, 10);
+                osdChanged = true;
+            }
+
+            if (TryGetStringArray(request, "visibleSections", out var visibleSections))
+            {
+                hardwareSensorSettings.Store.VisibleSections = visibleSections.Length > 0
+                    ? visibleSections
+                    : ["CPU", "Battery", "GPU"];
+                hardwareChanged = true;
+            }
+
+            if (TryGetStringArray(request, "sectionOrder", out var sectionOrder))
+            {
+                hardwareSensorSettings.Store.SectionOrder = sectionOrder.Length > 0
+                    ? sectionOrder
+                    : ["CPU", "Battery", "GPU"];
+                hardwareChanged = true;
+            }
+
+            if (hardwareChanged)
             {
                 hardwareSensorSettings.SynchronizeStore();
                 hardwareSensorSettings.NotifySectionsChanged();
+                rpc.Publish("settings.changed", new { scope = "hardwareSensors", reason = "set" });
             }
 
-            await Task.CompletedTask;
-            return BridgeResult.Ok(new { saved = true });
+            if (osdChanged)
+            {
+                osdSettings.SynchronizeStore();
+                rpc.Publish("settings.changed", new { scope = "osd", reason = "set" });
+            }
+
+            if (applicationChanged)
+                rpc.Publish("settings.changed", new { scope = "application", reason = "set" });
+
+            var saved = applicationChanged || hardwareChanged || osdChanged;
+            return BridgeResult.Ok(new { saved });
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -680,25 +933,32 @@ public static class SensorsHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleGetFpsAsync(BridgeRequest request)
+    private static Task<BridgeResult> HandleGetFpsAsync(CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var data = GetFpsController().GetCurrentFpsData();
-            return BridgeResult.Ok(MapFpsData(data));
+            return Task.FromResult(BridgeResult.Ok(MapFpsData(data)));
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return Task.FromResult(BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}"));
         }
     }
 
-    private static async Task<BridgeResult> HandleSubscribeFpsAsync(BridgeRequest request, BridgeRpcServer rpc)
+    private static async Task<BridgeResult> HandleSubscribeFpsAsync(BridgeRequest request, BridgeRpcServer rpc, CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var controller = GetFpsController();
             var blacklist = ParseFpsBlacklist(request.Parameters);
+            var shouldStart = false;
 
             lock (FpsLock)
             {
@@ -709,14 +969,37 @@ public static class SensorsHandlers
                     TryApplyFpsBlacklist(controller, blacklist);
                     controller.FpsDataUpdated -= OnFpsDataUpdated;
                     controller.FpsDataUpdated += OnFpsDataUpdated;
-                    _ = controller.StartMonitoringAsync();
+                    shouldStart = true;
                 }
-
-                _fpsSubscriberCount++;
             }
 
-            await Task.CompletedTask;
+            if (shouldStart)
+            {
+                try
+                {
+                    await controller.StartMonitoringAsync().ConfigureAwait(false);
+                }
+                catch
+                {
+                    lock (FpsLock)
+                    {
+                        controller.FpsDataUpdated -= OnFpsDataUpdated;
+                        _subscribedFpsController = null;
+                        _fpsRpc = null;
+                    }
+
+                    throw;
+                }
+            }
+
+            lock (FpsLock)
+                _fpsSubscriberCount++;
+
             return BridgeResult.Ok(new { monitoring = true });
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
@@ -724,35 +1007,41 @@ public static class SensorsHandlers
         }
     }
 
-    private static async Task<BridgeResult> HandleUnsubscribeFpsAsync(BridgeRequest request)
+    private static Task<BridgeResult> HandleUnsubscribeFpsAsync(CancellationToken cancellationToken)
     {
         try
         {
-            var controller = GetFpsController();
+            cancellationToken.ThrowIfCancellationRequested();
+            var monitoring = false;
 
             lock (FpsLock)
             {
                 _fpsSubscriberCount = Math.Max(0, _fpsSubscriberCount - 1);
-                if (_fpsSubscriberCount == 0)
+                monitoring = _fpsSubscriberCount > 0;
+                if (!monitoring && _subscribedFpsController is { } controller)
                 {
                     controller.FpsDataUpdated -= OnFpsDataUpdated;
                     controller.StopMonitoring();
                     _subscribedFpsController = null;
+                    _fpsRpc = null;
                 }
             }
 
-            await Task.CompletedTask;
-            return BridgeResult.Ok(new { monitoring = false });
+            return Task.FromResult(BridgeResult.Ok(new { monitoring }));
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch (Exception ex)
         {
-            return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+            return Task.FromResult(BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}"));
         }
     }
 
     private static void OnFpsDataUpdated(object? sender, FpsSensorController.FpsData data)
     {
-        if (_fpsRpc is null)
+        if (!HostUiActivity.IsActive || _fpsRpc is null)
             return;
 
         try
@@ -831,15 +1120,20 @@ public static class SensorsHandlers
     /// Returns false when LHM is initialized but has no readable data, so the
     /// caller can fall back to the stable vendor snapshot path.
     /// </summary>
-    private static async Task<bool> LhmHasSensorDataAsync(SensorsGroupController group)
+    private static async Task<bool> LhmHasSensorDataAsync(SensorsGroupController group, CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             var cpuTemp = await group.GetCpuTemperatureAsync().ConfigureAwait(false);
             var cpuUsage = await group.GetCpuUsageAsync().ConfigureAwait(false);
             var gpuTemp = await group.GetGpuTemperatureAsync().ConfigureAwait(false);
             var gpuUsage = await group.GetGpuUsageAsync().ConfigureAwait(false);
             return HasValue(cpuTemp) || HasValue(cpuUsage) || HasValue(gpuTemp) || HasValue(gpuUsage);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch
         {
@@ -849,16 +1143,22 @@ public static class SensorsHandlers
 
     private static async Task<(string? CpuName, string? GpuName)> MergeHardwareNamesAsync(
         string? cpuName,
-        string? gpuName)
+        string? gpuName,
+        CancellationToken cancellationToken)
     {
         if (!string.IsNullOrWhiteSpace(cpuName) && !string.IsNullOrWhiteSpace(gpuName))
             return (cpuName, gpuName);
 
+        cancellationToken.ThrowIfCancellationRequested();
         try
         {
             var inventory = await HardwareInventoryProvider.ReadAsync().ConfigureAwait(false);
             cpuName ??= NullIfBlank(inventory.PrimaryProcessorName);
             gpuName ??= NullIfBlank(inventory.PrimaryVideoControllerName);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
         }
         catch
         {
@@ -877,8 +1177,121 @@ public static class SensorsHandlers
     internal static float? GigabytesToMegabytes(float gigabytes)
         => HasValue(gigabytes) ? gigabytes * 1024f : null;
 
+    private static object CreateSnapshot(
+        string source,
+        bool initialized,
+        bool isHybrid,
+        string? cpuName,
+        string? gpuName,
+        bool gpuIsIntegrated,
+        object cpu,
+        object gpu,
+        object memory,
+        object? battery) => new
+    {
+        ts = DateTime.UtcNow,
+        source,
+        initialized,
+        isHybrid,
+        info = new { cpuName, gpuName, gpuIsIntegrated },
+        cpu,
+        gpu,
+        memory,
+        battery,
+        motherboard = new { highestTemperature = (double?)null },
+        storage = new { temperatures = new float?[] { null, null } },
+    };
+
+    private static object CreateEmptyCpu() => new
+    {
+        temperature = (float?)null,
+        usage = (float?)null,
+        fanSpeed = (float?)null,
+        power = (float?)null,
+        powerCores = (float?)null,
+        powerMemory = (float?)null,
+        powerPlatform = (float?)null,
+        voltage = (float?)null,
+        coreClockMax = (float?)null,
+        coreClockAvg = (float?)null,
+        pCoreClock = (int?)null,
+        eCoreClock = (int?)null,
+    };
+
+    private static object CreateEmptyGpu() => new
+    {
+        usage = (float?)null,
+        temperature = (float?)null,
+        coreClock = (float?)null,
+        memoryClock = (float?)null,
+        power = (float?)null,
+        voltage = (float?)null,
+        vramTemperature = (float?)null,
+        hotSpotTemperature = (float?)null,
+        vramUtilization = (float?)null,
+        vramUsedMb = (float?)null,
+        vramTotalMb = (float?)null,
+        pcieRxThroughput = (float?)null,
+        pcieTxThroughput = (float?)null,
+        fanSpeed = (float?)null,
+    };
+
+    private static object CreateEmptyMemory() => new
+    {
+        usage = (int?)null,
+        usedMb = (int?)null,
+        totalMb = (int?)null,
+        highestTemperature = (double?)null,
+    };
+
+    private static bool TryGetBoolean(BridgeRequest request, string name, out bool value)
+    {
+        value = false;
+        if (!request.Parameters.TryGetProperty(name, out var property) ||
+            property.ValueKind is not JsonValueKind.True and not JsonValueKind.False)
+        {
+            return false;
+        }
+
+        value = property.GetBoolean();
+        return true;
+    }
+
+    private static bool TryGetDouble(BridgeRequest request, string name, out double value)
+    {
+        value = 0;
+        if (!request.Parameters.TryGetProperty(name, out var property) ||
+            property.ValueKind != JsonValueKind.Number ||
+            !property.TryGetDouble(out value) ||
+            !double.IsFinite(value))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool TryGetStringArray(BridgeRequest request, string name, out string[] value)
+    {
+        value = [];
+        if (!request.Parameters.TryGetProperty(name, out var property) ||
+            property.ValueKind != JsonValueKind.Array)
+        {
+            return false;
+        }
+
+        value = property.EnumerateArray()
+            .Where(item => item.ValueKind == JsonValueKind.String)
+            .Select(item => item.GetString())
+            .Where(item => !string.IsNullOrWhiteSpace(item))
+            .Select(item => item!.Trim())
+            .ToArray();
+        return true;
+    }
+
     private static float? NullIf(float value) => HasValue(value) ? value : null;
-    private static double? NullIf(double value) => value <= 0 ? null : value;
+    private static double? NullIfVoltage(double value) => value <= 0 || double.IsNaN(value) || double.IsInfinity(value) ? null : value;
+    private static double? NullIfTemperature(double value) => value <= 0 || double.IsNaN(value) || double.IsInfinity(value) ? null : value;
     private static int? NullIf(int value) => value < 0 ? null : value;
     private static string? NullIf(string value, string sentinel) => value == sentinel ? null : value;
 }

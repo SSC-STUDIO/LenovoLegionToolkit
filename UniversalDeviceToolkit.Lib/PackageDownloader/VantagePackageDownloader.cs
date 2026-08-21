@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,6 +25,9 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
 
     public override async Task<List<Package>> GetPackagesAsync(string machineType, OS os, IProgress<float>? progress = null, CancellationToken token = default)
     {
+        if (!PackageDownloadSecurity.IsValidMachineType(machineType))
+            throw new ArgumentException("Machine type is invalid.", nameof(machineType));
+
         progress?.Report(0);
 
         var osString = os switch
@@ -37,14 +41,14 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
 
         using var httpClient = HttpClientFactory.Create();
 
-        var packageDefinitions = await GetPackageDefinitionsAsync(httpClient, $"{CATALOG_BASE_URL}/{machineType}_{osString}.xml", token).ConfigureAwait(false);
+        var packageDefinitions = await GetPackageDefinitionsAsync(httpClient, $"{CATALOG_BASE_URL}{machineType}_{osString}.xml", token).ConfigureAwait(false);
 
         var updateDetector = new VantagePackageUpdateDetector();
         try
         {
             await updateDetector.BuildDriverInfoCache().ConfigureAwait(false);
         }
-        catch (Exception ex) when (ex is global::System.TimeoutException or global::System.Runtime.InteropServices.COMException)
+        catch (Exception ex) when (ex is TimeoutException or global::System.Runtime.InteropServices.COMException)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Failed to build driver info cache, continuing without it. [message={ex.Message}]", ex);
@@ -69,9 +73,7 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
             }
 
             count++;
-
-            // ReSharper disable once PossibleLossOfFraction
-            progress?.Report(count * 100 / totalCount);
+            progress?.Report(totalCount == 0 ? 100 : count * 100 / totalCount);
         }
 
         return packages;
@@ -90,10 +92,7 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
             throw new UpdateCatalogNotFoundException(ex.Message, ex);
         }
 
-        var document = new XmlDocument();
-        // SECURITY FIX: Disable DTD processing to prevent XXE attacks
-        document.XmlResolver = null;
-        document.LoadXml(catalogString);
+        var document = LoadXmlWithoutDtd(catalogString);
 
         var packageNodes = document.SelectNodes("/packages/package");
         if (packageNodes is null)
@@ -110,6 +109,9 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
             if (string.IsNullOrWhiteSpace(pLocation) || string.IsNullOrWhiteSpace(pCategory))
                 continue;
 
+            if (!PackageDownloadSecurity.IsAllowedPackageDownloadUrl(pLocation))
+                continue;
+
             packageDefinitions.Add(new(pLocation, pCategory));
         }
 
@@ -119,14 +121,14 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
     private static async Task<Package?> GetPackage(HttpClient httpClient, VantagePackageUpdateDetector updateDetector, PackageDefinition packageDefinition, CancellationToken token)
     {
         var location = packageDefinition.Location;
-        var baseLocation = location.Remove(location.LastIndexOf("/", StringComparison.OrdinalIgnoreCase));
+        if (!Uri.TryCreate(location, UriKind.Absolute, out var packageUri)
+            || !PackageDownloadSecurity.IsAllowedPackageDownloadUrl(location))
+        {
+            return null;
+        }
 
         var packageString = await httpClient.GetStringAsync(location, token).ConfigureAwait(false);
-
-        var document = new XmlDocument();
-        // SECURITY FIX: Disable DTD processing to prevent XXE attacks
-        document.XmlResolver = null;
-        document.LoadXml(packageString);
+        var document = LoadXmlWithoutDtd(packageString);
 
         var id = document.SelectSingleNode("/Package/@id")?.InnerText;
         var title = document.SelectSingleNode("/Package/Title/Desc")?.InnerText;
@@ -141,20 +143,32 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
             string.IsNullOrWhiteSpace(fileName) ||
             string.IsNullOrWhiteSpace(fileSizeNode) ||
             string.IsNullOrWhiteSpace(releaseDateString) ||
+            !PathSecurity.IsValidFileName(fileName) ||
             !int.TryParse(fileSizeNode, out var fileSizeBytes) ||
             !DateTime.TryParse(releaseDateString, out var releaseDate))
         {
             return null;
         }
 
-        var fileCrc = document.SelectSingleNode("/Package/Files/Installer/File/CRC")?.InnerText;
+        var fileUri = new Uri(packageUri, fileName);
+        if (!PackageDownloadSecurity.IsAllowedPackageDownloadUrl(fileUri.ToString()))
+            return null;
+
+        var fileCrcRaw = document.SelectSingleNode("/Package/Files/Installer/File/CRC")?.InnerText;
+        var fileCrc = PackageDownloadSecurity.TryParseSha256Hex(fileCrcRaw, out _) ? fileCrcRaw!.Trim() : null;
         var fileSize = $"{fileSizeBytes / 1024.0 / 1024.0:0.00} MB";
         var readmeName = document.SelectSingleNode("/Package/Files/Readme/File/Name")?.InnerText;
-        // null (not "") so UI can hide the Readme button when missing
-        var readme = string.IsNullOrWhiteSpace(readmeName) ? null : $"{baseLocation}/{readmeName}";
-        var fileLocation = $"{baseLocation}/{fileName}";
+        string? readme = null;
+        if (!string.IsNullOrWhiteSpace(readmeName) && PathSecurity.IsValidFileName(readmeName))
+        {
+            var readmeUri = new Uri(packageUri, readmeName);
+            if (PackageDownloadSecurity.IsAllowedPackageDownloadUrl(readmeUri.ToString()))
+                readme = readmeUri.ToString();
+        }
+
         var rebootString = document.SelectSingleNode("/Package/Reboot/@type")?.InnerText ?? string.Empty;
         var reboot = int.TryParse(rebootString, out var rebootInt) ? (RebootType)rebootInt : RebootType.NotRequired;
+        var baseLocation = new Uri(packageUri, "./").ToString().TrimEnd('/');
 
         var isUpdate = false;
         try
@@ -181,9 +195,23 @@ public class VantagePackageDownloader(HttpClientFactory httpClientFactory)
             FileCrc = fileCrc,
             ReleaseDate = releaseDate,
             Readme = readme,
-            FileLocation = fileLocation,
+            FileLocation = fileUri.ToString(),
             IsUpdate = isUpdate,
             Reboot = reboot
         };
+    }
+
+    private static XmlDocument LoadXmlWithoutDtd(string xml)
+    {
+        var settings = new XmlReaderSettings
+        {
+            DtdProcessing = DtdProcessing.Prohibit,
+            XmlResolver = null
+        };
+
+        using var reader = XmlReader.Create(new StringReader(xml), settings);
+        var document = new XmlDocument { XmlResolver = null };
+        document.Load(reader);
+        return document;
     }
 }

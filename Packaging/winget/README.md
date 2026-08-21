@@ -51,4 +51,4 @@ The repository keeps generated 6.x manifests only after real release assets exis
 - Use the GitHub Release installer, not local build output.
 - Do not point winget at mirror URLs. Mirrors can be listed in community posts, but winget should use the authoritative GitHub Release URL.
 - 6.x is a package-manager breaking change. Do not expect an in-place upgrade from the legacy package ID.
-- The generated `exe` manifest uses the Electron NSIS `--silent` switch. Do not reuse Inno Setup switches such as `/VERYSILENT`.
+- The generated `exe` manifest uses the electron-builder NSIS `/S` switch. Do not reuse `--silent`, `/SILENT`, or Inno Setup `/VERYSILENT`.

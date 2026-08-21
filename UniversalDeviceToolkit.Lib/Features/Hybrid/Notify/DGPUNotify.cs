@@ -16,7 +16,20 @@ public class DGPUNotify(DGPUGamezoneNotify gamezoneNotify, DGPUCapabilityNotify 
     private DGPUFeatureFlagsNotify FeatureFlagsNotify => featureFlagsNotify;
     private DGPUGamezoneNotify GamezoneNotify => gamezoneNotify;
 
-    public bool ExperimentalGPUWorkingMode { get; set; }
+    private bool _experimentalGPUWorkingMode;
+
+    public bool ExperimentalGPUWorkingMode
+    {
+        get => _experimentalGPUWorkingMode;
+        set
+        {
+            if (_experimentalGPUWorkingMode == value)
+                return;
+
+            _experimentalGPUWorkingMode = value;
+            InvalidateResolution();
+        }
+    }
 
     public event EventHandler<bool>? Notified
     {
@@ -84,6 +97,17 @@ public class DGPUNotify(DGPUGamezoneNotify gamezoneNotify, DGPUCapabilityNotify 
 
         return null;
     }
+
+    public void InvalidateResolution()
+    {
+        using (_lock.Lock())
+        {
+            _resolved = false;
+            _dgpuNotify = null;
+        }
+    }
+
+    internal IDGPUNotify? ResolvedBackendForTests => _dgpuNotify;
 
     private async Task<IDGPUNotify?> ResolveInternalAsync()
     {

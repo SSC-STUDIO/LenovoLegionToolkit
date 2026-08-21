@@ -70,7 +70,8 @@ public class GenericSensorsControllerTests : UnitTestBase
         protected override int GetCpuUtilization(int maxUtilization) => -1;
         protected override int GetCpuCoreClock() => -1;
         protected override Task<GPUInfo> GetGPUInfoAsync() => Task.FromResult(GPUInfo.Empty);
-        protected override Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsAsync() =>
+        protected override Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsAsync(
+            CancellationToken cancellationToken = default) =>
             Task.FromResult<LibreHardwareMonitorReadings?>(new LibreHardwareMonitorReadings(
                 _cpuUtilization,
                 _cpuTemperature,

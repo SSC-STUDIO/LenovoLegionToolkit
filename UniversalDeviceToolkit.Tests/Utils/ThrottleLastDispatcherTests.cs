@@ -182,7 +182,7 @@ public class ThrottleLastDispatcherTests
         var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(100));
         var executionCount = 0;
 
-        // Act �?sequential triggers spaced apart; await the last dispatch so completion does not race wall-clock sleeps (flaky on some runners).
+        // Act: sequential triggers spaced apart; await the last dispatch so completion does not race wall-clock sleeps (flaky on some runners).
         Task? last = null;
         for (var i = 0; i < 3; i++)
         {
@@ -197,7 +197,7 @@ public class ThrottleLastDispatcherTests
 
         await last!;
 
-        // Assert �?only the winning dispatch runs the callback
+        // Assert: only the winning dispatch runs the callback
         executionCount.Should().Be(1);
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -7,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.Core;
+using UniversalDeviceToolkit.Plugins.ViveTool.Utils;
 
 namespace UniversalDeviceToolkit.Plugins.ViveTool.Services;
 
@@ -83,6 +85,25 @@ public class ViveToolFeatureService : IDisposable
         }
     }
 
+    /// <summary>
+    /// Merge imported features into the in-memory cache so they stay searchable
+    /// until the next explicit refresh.
+    /// </summary>
+    public void MergeImportedFeatures(IEnumerable<FeatureFlagInfo> importedFeatures)
+    {
+        ArgumentNullException.ThrowIfNull(importedFeatures);
+
+        lock (_cacheSync)
+        {
+            var current = _cachedFeatures is null
+                ? []
+                : new List<FeatureFlagInfo>(_cachedFeatures);
+            FeatureMerger.MergeImportedFeatures(current, current, importedFeatures);
+            _cachedFeatures = current;
+            _cachedFeaturesTimestamp = DateTime.UtcNow;
+        }
+    }
+
     public async Task<bool> EnableFeatureAsync(int featureId)
     {
         // Validate feature ID (must be positive)
@@ -101,7 +122,9 @@ public class ViveToolFeatureService : IDisposable
 
         try
         {
-            var result = await _processService.ExecuteCommandAsync(viveToolPath, $"/enable /id:{featureId}").ConfigureAwait(false);
+            var result = await _processService.ExecuteCommandAsync(
+                viveToolPath,
+                "/enable /id:" + featureId.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
             if (result.Success)
             {
                 ClearFeatureCache();
@@ -134,7 +157,9 @@ public class ViveToolFeatureService : IDisposable
 
         try
         {
-            var result = await _processService.ExecuteCommandAsync(viveToolPath, $"/disable /id:{featureId}").ConfigureAwait(false);
+            var result = await _processService.ExecuteCommandAsync(
+                viveToolPath,
+                "/disable /id:" + featureId.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
             if (result.Success)
             {
                 ClearFeatureCache();
@@ -166,7 +191,9 @@ public class ViveToolFeatureService : IDisposable
 
         try
         {
-            var result = await _processService.ExecuteCommandAsync(viveToolPath, $"/query /id:{featureId}").ConfigureAwait(false);
+            var result = await _processService.ExecuteCommandAsync(
+                viveToolPath,
+                "/query /id:" + featureId.ToString(CultureInfo.InvariantCulture)).ConfigureAwait(false);
             if (!result.Success)
             {
                 return null;
@@ -263,7 +290,7 @@ public class ViveToolFeatureService : IDisposable
 
         var lowerKeyword = keyword.ToLowerInvariant();
         return allFeatures.Where(f =>
-            f.Id.ToString().Contains(lowerKeyword) ||
+            f.Id.ToString(CultureInfo.InvariantCulture).Contains(lowerKeyword, StringComparison.Ordinal) ||
             f.Name.ToLowerInvariant().Contains(lowerKeyword) ||
             f.Description.ToLowerInvariant().Contains(lowerKeyword)
         ).ToList();
@@ -361,7 +388,7 @@ public class ViveToolFeatureService : IDisposable
 
             var name = rawLine[..separatorIndex].Trim();
             var idText = rawLine[(separatorIndex + 1)..].Trim();
-            if (!int.TryParse(idText, out var id) || id <= 0 || !seenIds.Add(id))
+            if (!TryParseFeatureId(idText, out var id) || !seenIds.Add(id))
             {
                 continue;
             }
@@ -493,7 +520,7 @@ public class ViveToolFeatureService : IDisposable
         // ID with no trailing segment (would otherwise throw IndexOutOfRangeException).
         for (int i = 1; i + 1 < featureSections.Length; i += 2)
         {
-            if (int.TryParse(featureSections[i], out int id))
+            if (TryParseFeatureId(featureSections[i], out int id))
             {
                 string section = featureSections[i + 1];
                 string name = $"Feature {id}";
@@ -568,7 +595,7 @@ public class ViveToolFeatureService : IDisposable
     private bool TryParseFormat2(string line, ref int id, ref string name, ref FeatureFlagStatus status)
     {
         var idMatch = Format2IdRegex.Match(line);
-        if (idMatch.Success && int.TryParse(idMatch.Groups[1].Value, out id))
+        if (idMatch.Success && TryParseFeatureId(idMatch.Groups[1].Value, out id))
         {
             var nameMatch = Format2NameRegex.Match(line);
             name = nameMatch.Success ? nameMatch.Groups[1].Value.Trim() : $"Feature {id}";
@@ -582,7 +609,7 @@ public class ViveToolFeatureService : IDisposable
     private bool TryParseFormat3(string line, ref int id, ref string name, ref FeatureFlagStatus status)
     {
         var colonMatch = Format3Regex.Match(line);
-        if (colonMatch.Success && int.TryParse(colonMatch.Groups[1].Value, out id))
+        if (colonMatch.Success && TryParseFeatureId(colonMatch.Groups[1].Value, out id))
         {
             var rest = colonMatch.Groups[2].Value.Trim();
             if (!string.IsNullOrWhiteSpace(rest))
@@ -607,7 +634,7 @@ public class ViveToolFeatureService : IDisposable
 
     private bool TryParseFormat4(string line, ref int id, ref string name)
     {
-        if (int.TryParse(line.Trim(), out id))
+        if (TryParseFeatureId(line.Trim(), out id))
         {
             name = $"Feature {id}";
             return true;
@@ -664,6 +691,11 @@ public class ViveToolFeatureService : IDisposable
         }
 
         return FeatureFlagStatus.Unknown;
+    }
+
+    private static bool TryParseFeatureId(string? text, out int id)
+    {
+        return int.TryParse(text, NumberStyles.None, CultureInfo.InvariantCulture, out id) && id > 0;
     }
 
     private FeatureFlagInfo CreateFeatureFlagInfo(int id, string name, FeatureFlagStatus status)

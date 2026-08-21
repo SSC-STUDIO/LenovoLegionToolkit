@@ -50,6 +50,13 @@ public static class AiHandlers
                 (enabledProp.ValueKind != JsonValueKind.True && enabledProp.ValueKind != JsonValueKind.False))
                 throw new BridgeErrorException(-32602, "Missing or invalid boolean parameter 'enabled'.");
 
+            if (!await IsSupportedAsync().ConfigureAwait(false))
+            {
+                return BridgeResult.Error(
+                    BridgeErrorCodes.FeatureNotSupported,
+                    "AI mode is not supported on this device.");
+            }
+
             var controller = IoCContainer.Resolve<AIController>();
             var enabled = enabledProp.GetBoolean();
 
@@ -60,6 +67,13 @@ public static class AiHandlers
                     await controller.StartIfNeededAsync().ConfigureAwait(false);
                 else
                     await controller.StopAsync().ConfigureAwait(false);
+            }
+
+            if (controller.IsAIModeEnabled != enabled)
+            {
+                return BridgeResult.Error(
+                    -32603,
+                    $"AI mode preference was not persisted (enabled={controller.IsAIModeEnabled}).");
             }
 
             return BridgeResult.Ok(new { ok = true });

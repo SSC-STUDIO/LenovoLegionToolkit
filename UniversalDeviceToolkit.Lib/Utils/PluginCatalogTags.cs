@@ -19,6 +19,26 @@ public static class PluginCatalogTags
         string.Equals(tag, Preview, StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
+    /// True when a GitHub release is a public application update: not a draft,
+    /// not a rolling plugin-catalog tag, and not a prerelease unless requested.
+    /// SemVer hyphens are treated as prerelease even if the GitHub flag is off.
+    /// </summary>
+    public static bool IsPublicApplicationRelease(
+        string? tagName,
+        bool draft,
+        bool prerelease,
+        bool includePrerelease)
+    {
+        if (draft || IsCatalogTag(tagName))
+            return false;
+
+        if (!includePrerelease && (prerelease || IsPrereleaseApplicationVersion(tagName)))
+            return false;
+
+        return true;
+    }
+
+    /// <summary>
     /// True when the version label contains a SemVer prerelease hyphen, matching
     /// <c>Release.yml</c> (tags such as <c>v6.0.0-preview.1</c>). Build metadata
     /// after <c>+</c> is ignored.

@@ -18,6 +18,7 @@ public sealed class ReleaseSigningGuardTests
         var job = workflow.Job("build");
         var payloadSigning = job.Step("Sign release payload");
         var payloadVerification = job.Step("Verify release payload signatures");
+        var pluginStaging = job.Step("Build plugin runtime assets");
         var hostSigning = job.Step("Sign Host payload");
         var hostVerification = job.Step("Verify Host payload signatures");
         var prepareAssets = job.Step("Prepare release and Pages resources");
@@ -35,11 +36,13 @@ public sealed class ReleaseSigningGuardTests
         installerSigning.Uses.Should().Be("azure/trusted-signing-action@v0.5");
         payloadSigning.WithValue("files-folder").Should().Be("${{ env.BUILD_OUTPUT }}");
         payloadSigning.WithValue("files-folder-filter").Should().Be("exe,dll");
+        payloadSigning.WithValue("files-folder-recurse").Should().Be("true");
         hostSigning.Uses.Should().Be("azure/trusted-signing-action@v0.5");
         hostSigning.WithValue("files-folder").Should().Be("${{ env.HOST_BUILD_OUTPUT }}");
         hostSigning.WithValue("files-folder-filter").Should().Be("exe,dll");
         hostSigning.WithValue("files-folder-recurse").Should().Be("true");
         hostVerification.Run.Should().Contain("Assert-AuthenticodeSignatures.ps1");
+        hostVerification.Run.Should().Contain("$env:HOST_BUILD_OUTPUT");
         electronPayloadSigning.Uses.Should().Be("azure/trusted-signing-action@v0.5");
         electronPayloadSigning.WithValue("files-folder").Should().Be("${{ env.INSTALLER_PAYLOAD_OUTPUT }}");
         electronPayloadSigning.WithValue("files-folder-filter").Should().Be("exe,dll");
@@ -63,11 +66,13 @@ public sealed class ReleaseSigningGuardTests
         installerSigning.WithValue("files-folder").Should().Be("${{ env.INSTALLER_OUTPUT }}");
         installerSigning.WithValue("files-folder-filter").Should().Be("exe");
         payloadVerification.Run.Should().Contain("Assert-AuthenticodeSignatures.ps1");
+        payloadVerification.Run.Should().Contain("$env:BUILD_OUTPUT");
         installerVerification.Run.Should().Contain("Assert-AuthenticodeSignatures.ps1");
         script.Should().Contain("Get-AuthenticodeSignature");
         script.Should().Contain("Status -ne 'Valid'");
-        job.Steps.IndexOf(hostSigning).Should().BeLessThan(job.Steps.IndexOf(payloadSigning));
+        job.Steps.IndexOf(pluginStaging).Should().BeLessThan(job.Steps.IndexOf(hostSigning));
         job.Steps.IndexOf(hostSigning).Should().BeLessThan(job.Steps.IndexOf(hostVerification));
+        job.Steps.IndexOf(hostVerification).Should().BeLessThan(job.Steps.IndexOf(payloadSigning));
         job.Steps.IndexOf(hostVerification).Should().BeLessThan(job.Steps.IndexOf(prepareAssets));
         job.Steps.IndexOf(hostVerification).Should().BeLessThan(job.Steps.IndexOf(buildInstaller));
         job.Steps.IndexOf(prepareElectronPayloads).Should().BeLessThan(job.Steps.IndexOf(electronPayloadSigning));

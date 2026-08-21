@@ -45,7 +45,9 @@ public partial class PluginRepositoryService
             ReleaseDate = manifest.ReleaseDate,
             Changelog = manifest.Changelog,
             Tags = manifest.Tags?.ToArray(),
-            IsSystemPlugin = manifest.IsSystemPlugin
+            IsSystemPlugin = manifest.IsSystemPlugin,
+            Status = manifest.Status,
+            InternalMigrationOnly = manifest.InternalMigrationOnly
         };
 
     private static PluginManifestStore? CloneStore(PluginManifestStore? store) =>
@@ -123,6 +125,7 @@ public partial class PluginRepositoryService
             {
                 FeaturePage = ClonePageContribution(contributes.FeaturePage),
                 SettingsPage = ClonePageContribution(contributes.SettingsPage),
+                WebPage = CloneWebContribution(contributes.WebPage),
                 Runtime = contributes.Runtime is null
                     ? null
                     : new PluginManifestRuntimeContribution
@@ -139,6 +142,15 @@ public partial class PluginRepositoryService
                         Title = action.Title
                     })
                     .ToList()
+            };
+
+    private static PluginManifestWebContribution? CloneWebContribution(
+        PluginManifestWebContribution? contribution) =>
+        contribution is null
+            ? null
+            : new PluginManifestWebContribution
+            {
+                Entry = contribution.Entry
             };
 
     private static PluginManifestPageContribution? ClonePageContribution(PluginManifestPageContribution? contribution) =>

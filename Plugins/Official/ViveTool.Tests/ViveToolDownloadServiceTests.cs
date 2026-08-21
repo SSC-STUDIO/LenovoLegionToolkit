@@ -66,6 +66,54 @@ public class ViveToolDownloadServiceTests
     }
 
     [Fact]
+    public void DefaultDownloadUrl_IsPinnedReleaseAsset()
+    {
+        Assert.Equal(
+            "https://github.com/thebookisclosed/ViVe/releases/download/v0.3.4/ViVeTool-v0.3.4-IntelAmd.zip",
+            ViveToolDownloadService.DefaultViveToolDownloadUrl);
+        Assert.DoesNotContain("/latest/", ViveToolDownloadService.DefaultViveToolDownloadUrl, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ImportFeaturesFromFileAsync_WithTraversalPathToExistingFile_ReturnsEmptyList()
+    {
+        var (_, service) = CreateService();
+        using var tempFile = ViveToolTestFileHelper.CreateScope(".json");
+        await File.WriteAllTextAsync(tempFile.FilePath, """[{ "id": 12345, "name": "Hidden" }]""");
+        var traversalPath = Path.Combine(Path.GetDirectoryName(tempFile.FilePath)!, "..", Path.GetFileName(Path.GetDirectoryName(tempFile.FilePath))!, Path.GetFileName(tempFile.FilePath));
+
+        var result = await service.ImportFeaturesFromFileAsync(traversalPath);
+
+        Assert.True(File.Exists(Path.GetFullPath(traversalPath)));
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task ImportFeaturesFromFileAsync_WithNegativeIds_ReturnsEmptyList()
+    {
+        var (_, service) = CreateService();
+        using var tempFile = ViveToolTestFileHelper.CreateScope(".json");
+        await File.WriteAllTextAsync(tempFile.FilePath, """[{ "id": -12, "name": "Negative" }, { "id": 0, "name": "Zero" }]""");
+
+        var result = await service.ImportFeaturesFromFileAsync(tempFile.FilePath);
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
+    public async Task ExportFeaturesToFileAsync_WithTraversalPath_ReturnsFalse()
+    {
+        var (_, service) = CreateService();
+        using var tempFile = ViveToolTestFileHelper.CreateScope(".json", "vivetool-export-");
+        var traversalPath = Path.Combine(Path.GetDirectoryName(tempFile.FilePath)!, "..", Path.GetFileName(tempFile.FilePath));
+
+        var result = await service.ExportFeaturesToFileAsync(traversalPath, Array.Empty<FeatureFlagInfo>());
+
+        Assert.False(result);
+        Assert.False(File.Exists(Path.GetFullPath(traversalPath)));
+    }
+
+    [Fact]
     public void GetBuiltInViveToolPath_TargetsAppDataRuntimeLocation()
     {
         var (pathService, _) = CreateService();
@@ -263,6 +311,12 @@ public class ViveToolDownloadServiceTests
     [InlineData("https://192.168.1.10/features.json")]
     [InlineData("https://169.254.1.10/features.json")]
     [InlineData("https://0.0.0.0/features.json")]
+    [InlineData("https://[fc00::1]/features.json")]
+    [InlineData("https://[fd12:3456:789a::1]/features.json")]
+    [InlineData("https://[::ffff:127.0.0.1]/features.json")]
+    [InlineData("https://[::ffff:10.0.0.1]/features.json")]
+    [InlineData("https://user:pass@example.com/features.json")]
+    [InlineData("https://100.64.0.1/features.json")]
     public async Task ImportFeaturesFromUrlAsync_WithRejectedUri_ReturnsEmptyList(string? url)
     {
         var (_, service) = CreateService();

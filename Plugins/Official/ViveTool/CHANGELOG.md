@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed / 修复
+- Rejected path-traversal, device, and Windows-directory paths for ViVeTool path assignment, feature import, and feature export / 拒绝路径穿越、设备路径和 Windows 目录路径用于 ViVeTool 路径设置、功能导入与导出
+- Pinned ViVeTool download to the v0.3.4 release asset, enforced ZIP/file hash and size limits, and extracted only required runtime files / 将 ViVeTool 下载固定到 v0.3.4 发布资源，强制 ZIP/文件哈希与体积限制，并只解压必需运行时文件
+- Merged imported features into the in-memory cache without duplicating same-collection entries or dropping existing searchable flags / 将导入的功能合并进内存缓存，避免同一集合重复添加，也不丢弃已有可搜索标志
+
 ## [2.0.0-preview.1] - 2026-08-13
 
 ### Changed / 变更

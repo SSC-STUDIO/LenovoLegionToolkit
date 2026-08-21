@@ -208,6 +208,7 @@ public sealed class PrereleaseCatalogContractTests : IDisposable
         string expectedPluginId)
     {
         WriteExistingStore(
+            channel,
             new StorePluginEntry
             {
                 Id = "stable-only",
@@ -241,6 +242,7 @@ public sealed class PrereleaseCatalogContractTests : IDisposable
     public void Write_PreviewOutput_DoesNotOverwriteStableCatalogFile()
     {
         WriteExistingStore(
+            PluginCatalogChannel.Stable,
             new StorePluginEntry
             {
                 Id = "stable-only",
@@ -344,7 +346,150 @@ public sealed class PrereleaseCatalogContractTests : IDisposable
             step =>
                 string.Equals(step.Status, "FAIL", StringComparison.Ordinal) &&
                 (step.Message.Contains("minHostVersion does not match", StringComparison.Ordinal) ||
-                 step.Message.Contains("minLLTVersion does not match", StringComparison.Ordinal)));
+                 step.Message.Contains("minLLTVersion does not match", StringComparison.Ordinal) ||
+                 step.Message.Contains("FileVersion", StringComparison.Ordinal) ||
+                 step.Message.Contains("AssemblyVersion", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public async Task Validation_AcceptsNumericFileAndAssemblyVersionForPrerelease()
+    {
+        CreatePluginFolder(
+            folderName: "NumericAssembly",
+            pluginId: "numeric-assembly",
+            version: PreviewVersion);
+
+        var report = await ValidateAsync("numeric-assembly");
+
+        Assert.Contains(
+            report.Steps,
+            step =>
+                string.Equals(step.Status, "PASS", StringComparison.Ordinal) &&
+                step.Message.Contains("FileVersion", StringComparison.Ordinal));
+        Assert.Contains(
+            report.Steps,
+            step =>
+                string.Equals(step.Status, "PASS", StringComparison.Ordinal) &&
+                step.Message.Contains("AssemblyVersion", StringComparison.Ordinal));
+        Assert.DoesNotContain(
+            report.Steps,
+            step =>
+                string.Equals(step.Status, "FAIL", StringComparison.Ordinal) &&
+                (step.Message.Contains("FileVersion", StringComparison.Ordinal) ||
+                 step.Message.Contains("AssemblyVersion", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public async Task Validation_OfficialReleaseStable_RejectsPrereleaseVersion()
+    {
+        CreatePluginFolder(
+            folderName: "PreviewOnly",
+            pluginId: "preview-only",
+            version: PreviewVersion);
+
+        var report = await ValidateAsync(
+            "preview-only",
+            PluginValidationProfile.OfficialRelease,
+            PluginCatalogChannel.Stable);
+        var failureMessages = report.Steps
+            .Where(step => string.Equals(step.Status, "FAIL", StringComparison.Ordinal))
+            .Select(step => step.Message)
+            .ToArray();
+
+        Assert.Contains(
+            failureMessages,
+            message => message.Contains(
+                "Stable official-release validation cannot accept a prerelease plugin version",
+                StringComparison.Ordinal));
+    }
+
+    [Fact]
+    public async Task Validation_OfficialReleasePreview_AlignsWithPreviewCatalog()
+    {
+        CreatePluginFolder(
+            folderName: "PreviewSample",
+            pluginId: "preview-sample",
+            version: PreviewVersion);
+        WriteExistingStore(
+            PluginCatalogChannel.Preview,
+            new StorePluginEntry
+            {
+                Id = "preview-sample",
+                Name = "PreviewSample Plugin",
+                Version = PreviewVersion,
+                MinLltVersion = MinimumHostVersion,
+                DownloadUrl = $"{PreviewCatalogUrl}/preview-sample-v{PreviewVersion}.zip",
+            });
+
+        var report = await ValidateAsync(
+            "preview-sample",
+            PluginValidationProfile.OfficialRelease,
+            PluginCatalogChannel.Preview);
+
+        Assert.Contains(
+            report.Steps,
+            step =>
+                string.Equals(step.Status, "PASS", StringComparison.Ordinal) &&
+                step.Message.Contains("store.json version matches", StringComparison.Ordinal));
+        Assert.Contains(
+            report.Steps,
+            step =>
+                string.Equals(step.Status, "PASS", StringComparison.Ordinal) &&
+                step.Message.Contains("store.json minLLTVersion matches", StringComparison.Ordinal));
+        Assert.DoesNotContain(
+            report.Steps,
+            step =>
+                string.Equals(step.Status, "FAIL", StringComparison.Ordinal) &&
+                (step.Message.Contains("store.json is missing", StringComparison.Ordinal) ||
+                 step.Message.Contains("catalog-preview/store.json is missing", StringComparison.Ordinal) ||
+                 step.Message.Contains("prerelease plugin version", StringComparison.Ordinal)));
+    }
+
+    [Fact]
+    public void Write_PreviewChannel_DefaultsToCatalogPreviewPath()
+    {
+        CreatePluginFolder(
+            folderName: "PreviewSample",
+            pluginId: "preview-sample",
+            version: PreviewVersion);
+        var stablePath = PluginRepository.GetCatalogStorePath(_tempRoot, PluginCatalogChannel.Stable);
+        const string stableSentinel = """
+            {
+              "lastUpdated": "2026-08-13T00:00:00.0000000+00:00",
+              "storeVersion": "9.9.9",
+              "plugins": []
+            }
+            """;
+        Directory.CreateDirectory(Path.GetDirectoryName(stablePath)!);
+        File.WriteAllText(stablePath, stableSentinel);
+
+        var writtenPath = new StoreJsonGenerator().Write(
+            CreateStoreRequest(
+                PluginCatalogChannel.Preview,
+                PreviewCatalogUrl,
+                pluginIds: ["preview-sample"]));
+
+        Assert.Equal(
+            PluginRepository.GetCatalogStorePath(_tempRoot, PluginCatalogChannel.Preview),
+            writtenPath);
+        Assert.Equal(stableSentinel, File.ReadAllText(stablePath));
+        var previewStore = PluginRepository.ReadJsonFile<StoreDocument>(writtenPath);
+        var previewEntry = Assert.Single(previewStore.Plugins);
+        Assert.Equal("preview-sample", previewEntry.Id);
+        Assert.Equal(PreviewVersion, previewEntry.Version);
+    }
+
+    [Fact]
+    public void Generate_StableChannel_SkipsPrereleaseWhenSelectingAll()
+    {
+        CreatePluginFolder(
+            folderName: "PreviewSample",
+            pluginId: "preview-sample",
+            version: PreviewVersion);
+
+        var store = Generate(PluginCatalogChannel.Stable, StableCatalogUrl);
+
+        Assert.Empty(store.Plugins);
     }
 
     [Fact]
@@ -522,10 +667,10 @@ public sealed class PrereleaseCatalogContractTests : IDisposable
         };
     }
 
-    private void WriteExistingStore(params StorePluginEntry[] entries)
+    private void WriteExistingStore(PluginCatalogChannel channel, params StorePluginEntry[] entries)
     {
         PluginRepository.WriteJsonFile(
-            Path.Combine(_tempRoot, ".build", "catalog", "store.json"),
+            PluginRepository.GetCatalogStorePath(_tempRoot, channel),
             new StoreDocument
             {
                 LastUpdated = "2026-08-13T00:00:00.0000000+00:00",
@@ -534,7 +679,10 @@ public sealed class PrereleaseCatalogContractTests : IDisposable
             });
     }
 
-    private async Task<ValidationReport> ValidateAsync(string pluginId)
+    private async Task<ValidationReport> ValidateAsync(
+        string pluginId,
+        PluginValidationProfile profile = PluginValidationProfile.Contributor,
+        PluginCatalogChannel catalogChannel = PluginCatalogChannel.Stable)
     {
         return await new PluginValidationService(_ => { }).RunAsync(
             new ValidationRequest
@@ -542,7 +690,8 @@ public sealed class PrereleaseCatalogContractTests : IDisposable
                 RepositoryRoot = _tempRoot,
                 SkipBuild = true,
                 SkipTests = true,
-                Profile = PluginValidationProfile.Contributor,
+                Profile = profile,
+                CatalogChannel = catalogChannel,
                 PluginIds = [pluginId],
             });
     }

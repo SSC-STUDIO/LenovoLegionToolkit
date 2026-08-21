@@ -292,6 +292,47 @@ public class ViveToolPathServiceTests
     }
 
     [Fact]
+    public async Task SetViveToolPathAsync_WithTraversalPathToValidRuntime_ReturnsFalse()
+    {
+        await using var harness = await CreateHarnessAsync();
+        await using var runtime = await ViveToolTestRuntimeHelper.CreateCompleteRuntimeScopeAsync();
+        var parentDirectory = Path.GetDirectoryName(runtime.DirectoryPath);
+        Assert.False(string.IsNullOrWhiteSpace(parentDirectory));
+        var traversalPath = Path.Combine(
+            parentDirectory!,
+            "..",
+            Path.GetFileName(parentDirectory)!,
+            Path.GetFileName(runtime.DirectoryPath),
+            ViveToolPathService.ViveToolExeName);
+
+        var result = await harness.Service.SetViveToolPathAsync(traversalPath);
+
+        Assert.True(File.Exists(Path.GetFullPath(traversalPath)));
+        Assert.False(result);
+        Assert.Null(harness.Service.CachedPath);
+    }
+
+    [Fact]
+    public async Task GetViveToolPathAsync_WithTraversalCachedPath_FallsBackToBundledPath()
+    {
+        await using var harness = await CreateHarnessAsync();
+        await harness.ClearPersistedOverrideAsync();
+        await using var runtime = await ViveToolTestRuntimeHelper.CreateCompleteRuntimeScopeAsync();
+        var parentDirectory = Path.GetDirectoryName(runtime.DirectoryPath);
+        Assert.False(string.IsNullOrWhiteSpace(parentDirectory));
+        harness.Service.CachedPath = Path.Combine(
+            parentDirectory!,
+            "..",
+            Path.GetFileName(parentDirectory)!,
+            Path.GetFileName(runtime.DirectoryPath),
+            ViveToolPathService.ViveToolExeName);
+
+        var result = await harness.Service.GetViveToolPathAsync();
+
+        Assert.Equal(harness.Service.GetBundledViveToolPath(), result);
+    }
+
+    [Fact]
     public void ViveToolExeName_IsCorrect()
     {
         Assert.Equal("ViVeTool.exe", ViveToolPathService.ViveToolExeName);

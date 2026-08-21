@@ -35,6 +35,7 @@
     <ProjectReference Include="..\UniversalDeviceToolkit.CLI\UniversalDeviceToolkit.CLI.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.SpectrumTester\UniversalDeviceToolkit.SpectrumTester.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
+    <ProjectReference Include="..\UniversalDeviceToolkit.Host\UniversalDeviceToolkit.Host.csproj" />
   </ItemGroup>
 
   <ItemGroup>

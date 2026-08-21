@@ -2,6 +2,7 @@ using UniversalDeviceToolkit.Plugins.CustomMouse;
 using UniversalDeviceToolkit.Plugins.SDK;
 using Microsoft.Win32;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
@@ -27,7 +28,15 @@ public class CustomMousePluginTests
     public void OnInstalled_ResetsToDefaultSettings()
     {
         var plugin = new CustomMousePlugin();
-        Assert.Empty(plugin.Settings.ButtonMappings);
+        try
+        {
+            plugin.OnInstalled();
+            Assert.Empty(plugin.Settings.ButtonMappings);
+        }
+        finally
+        {
+            plugin.Stop();
+        }
     }
 
     [Fact]
@@ -35,16 +44,23 @@ public class CustomMousePluginTests
     {
         var plugin = new CustomMousePlugin();
 
-        plugin.OnInstalled();
-        Assert.Null(plugin.GetSettingsPage());
-        var category = plugin.GetOptimizationCategory();
+        try
+        {
+            plugin.OnInstalled();
+            Assert.Null(plugin.GetSettingsPage());
+            var category = plugin.GetOptimizationCategory();
 
-        Assert.NotNull(category);
-        Assert.Equal("custom.mouse", category!.Key);
-        Assert.Equal(plugin.Id, category.PluginId);
-        Assert.Equal(2, category.Actions.Count);
-        Assert.Equal("custom.mouse.cursor.auto-theme.enable", category.Actions[0].Key);
-        Assert.Equal("custom.mouse.cursor.auto-theme.disable", category.Actions[1].Key);
+            Assert.NotNull(category);
+            Assert.Equal("custom.mouse", category!.Key);
+            Assert.Equal(plugin.Id, category.PluginId);
+            Assert.Equal(2, category.Actions.Count);
+            Assert.Equal("custom.mouse.cursor.auto-theme.enable", category.Actions[0].Key);
+            Assert.Equal("custom.mouse.cursor.auto-theme.disable", category.Actions[1].Key);
+        }
+        finally
+        {
+            plugin.Stop();
+        }
     }
 
     [Fact]
@@ -69,8 +85,14 @@ public class CustomMousePluginTests
             Environment.SetEnvironmentVariable(overrideEnvironmentVariable, pluginsDirectoryPath);
 
             var plugin = new CustomMousePlugin();
-
-            Assert.Equal(Path.GetFullPath(resourceRoot), Path.GetFullPath(plugin.GetResourceRoot()));
+            try
+            {
+                Assert.Equal(Path.GetFullPath(resourceRoot), Path.GetFullPath(plugin.GetResourceRoot()));
+            }
+            finally
+            {
+                plugin.Stop();
+            }
         }
         finally
         {
@@ -87,12 +109,19 @@ public class CustomMousePluginTests
     {
         var plugin = new CustomMousePlugin();
 
-        var changedToDisabled = plugin.SetAutoThemeCursorStyle(false);
-        var changedToEnabled = plugin.SetAutoThemeCursorStyle(true);
+        try
+        {
+            var changedToDisabled = plugin.SetAutoThemeCursorStyle(false);
+            var changedToEnabled = plugin.SetAutoThemeCursorStyle(true);
 
-        Assert.True(changedToDisabled);
-        Assert.True(changedToEnabled);
-        Assert.True(plugin.Settings.AutoThemeCursorStyle);
+            Assert.True(changedToDisabled);
+            Assert.True(changedToEnabled);
+            Assert.True(plugin.Settings.AutoThemeCursorStyle);
+        }
+        finally
+        {
+            plugin.Stop();
+        }
     }
 
     [Fact]
@@ -101,11 +130,18 @@ public class CustomMousePluginTests
         var plugin = new CustomMousePlugin();
         plugin.Settings.LastAppliedTheme = "dark";
 
-        var changed = plugin.SetAutoThemeCursorStyle(true);
+        try
+        {
+            var changed = plugin.SetAutoThemeCursorStyle(true);
 
-        Assert.True(changed);
-        Assert.True(plugin.Settings.AutoThemeCursorStyle);
-        Assert.Equal(CursorThemeMode.Auto, plugin.Settings.CursorThemeMode);
+            Assert.True(changed);
+            Assert.True(plugin.Settings.AutoThemeCursorStyle);
+            Assert.Equal(CursorThemeMode.Auto, plugin.Settings.CursorThemeMode);
+        }
+        finally
+        {
+            plugin.Stop();
+        }
     }
 
     [Theory]
@@ -116,39 +152,168 @@ public class CustomMousePluginTests
         var plugin = new CustomMousePlugin();
         plugin.Settings.LastAppliedTheme = lastAppliedTheme;
 
-        var changed = plugin.SetAutoThemeCursorStyle(false);
+        try
+        {
+            var changed = plugin.SetAutoThemeCursorStyle(false);
 
-        Assert.True(changed);
-        Assert.False(plugin.Settings.AutoThemeCursorStyle);
-        Assert.Equal(expectedMode, plugin.Settings.CursorThemeMode);
+            Assert.True(changed);
+            Assert.False(plugin.Settings.AutoThemeCursorStyle);
+            Assert.Equal(expectedMode, plugin.Settings.CursorThemeMode);
+        }
+        finally
+        {
+            plugin.Stop();
+        }
     }
 
     [Fact]
     public async Task RestoreWindowsDefaultCursorThemeAsync_SetsWindowsDefaultMode()
     {
         var plugin = new CustomMousePlugin();
-        var backupKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Cursors", true);
-        Assert.NotNull(backupKey);
+        using var snapshot = CursorRegistrySnapshot.Capture();
+        using var settingsSnapshot = PluginSettingsFileSnapshot.Capture();
+        using var schemesKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Cursors\Schemes", true);
+        Assert.NotNull(schemesKey);
 
-        var originalDefault = Convert.ToString(backupKey!.GetValue(string.Empty));
-        var originalArrow = Convert.ToString(backupKey.GetValue("Arrow"));
+        var schemeName = CustomMousePlugin.WindowsDefaultCursorSchemeName;
+        var originalScheme = schemesKey!.GetValue(schemeName);
+        var originalKind = originalScheme is null
+            ? RegistryValueKind.ExpandString
+            : schemesKey.GetValueKind(schemeName);
+        var parts = new string[15];
+        for (var i = 0; i < parts.Length; i++)
+        {
+            parts[i] = $@"C:\Windows\cursors\aero_{i}.cur";
+        }
 
         try
         {
-            backupKey.SetValue(string.Empty, "UDT Custom Mouse Dark");
-            backupKey.SetValue("Arrow", @"D:\fake\dark\Pointer.cur");
+            using (var backupKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Cursors", true))
+            {
+                Assert.NotNull(backupKey);
+                backupKey!.SetValue(string.Empty, "UDT Custom Mouse Dark");
+                backupKey.SetValue("Arrow", @"D:\fake\dark\Pointer.cur");
+            }
+
+            schemesKey.SetValue(schemeName, string.Join(",", parts), RegistryValueKind.ExpandString);
 
             var restored = await plugin.RestoreWindowsDefaultCursorThemeAsync();
 
             Assert.True(restored);
             Assert.Equal(CursorThemeMode.WindowsDefault, plugin.Settings.CursorThemeMode);
             Assert.False(plugin.Settings.AutoThemeCursorStyle);
+            Assert.Equal(string.Empty, plugin.Settings.LastAppliedTheme);
         }
         finally
         {
-            backupKey.SetValue(string.Empty, originalDefault ?? string.Empty);
-            backupKey.SetValue("Arrow", originalArrow ?? string.Empty);
-            backupKey.Dispose();
+            if (originalScheme is null)
+            {
+                schemesKey.DeleteValue(schemeName, throwOnMissingValue: false);
+            }
+            else
+            {
+                schemesKey.SetValue(schemeName, originalScheme, originalKind);
+            }
+
+            snapshot.Restore();
+            plugin.Stop();
+        }
+    }
+
+    [Fact]
+    public async Task SetCursorThemeModeAsync_WindowsDefault_DoesNotApplyDarkWhenRestoreFails()
+    {
+        var plugin = new CustomMousePlugin();
+        plugin.Settings.CursorThemeMode = CursorThemeMode.Light;
+        plugin.Settings.AutoThemeCursorStyle = false;
+        plugin.Settings.LastAppliedTheme = "light";
+        using var snapshot = CursorRegistrySnapshot.Capture();
+        using var settingsSnapshot = PluginSettingsFileSnapshot.Capture();
+        using var schemesKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Cursors\Schemes", true);
+        Assert.NotNull(schemesKey);
+
+        var schemeName = CustomMousePlugin.WindowsDefaultCursorSchemeName;
+        var originalScheme = schemesKey!.GetValue(schemeName);
+        var originalKind = originalScheme is null
+            ? RegistryValueKind.ExpandString
+            : schemesKey.GetValueKind(schemeName);
+
+        try
+        {
+            // HKCU is consulted first and shadows HKLM, so a too-short scheme forces restore failure.
+            schemesKey.SetValue(schemeName, "invalid", RegistryValueKind.ExpandString);
+
+            var applied = await plugin.SetCursorThemeModeAsync(CursorThemeMode.WindowsDefault);
+
+            Assert.False(applied);
+            Assert.Equal(CursorThemeMode.Light, plugin.Settings.CursorThemeMode);
+            Assert.Equal("light", plugin.Settings.LastAppliedTheme);
+            Assert.False(plugin.Settings.AutoThemeCursorStyle);
+        }
+        finally
+        {
+            if (originalScheme is null)
+            {
+                schemesKey.DeleteValue(schemeName, throwOnMissingValue: false);
+            }
+            else
+            {
+                schemesKey.SetValue(schemeName, originalScheme, originalKind);
+            }
+
+            snapshot.Restore();
+            plugin.Stop();
+        }
+    }
+
+    [Fact]
+    public async Task SetCursorThemeModeAsync_InvalidMode_ReturnsFalseWithoutMutating()
+    {
+        var plugin = new CustomMousePlugin();
+        plugin.Settings.CursorThemeMode = CursorThemeMode.Light;
+        plugin.Settings.AutoThemeCursorStyle = false;
+        plugin.Settings.LastAppliedTheme = "light";
+
+        var applied = await plugin.SetCursorThemeModeAsync((CursorThemeMode)999);
+
+        Assert.False(applied);
+        Assert.Equal(CursorThemeMode.Light, plugin.Settings.CursorThemeMode);
+        Assert.Equal("light", plugin.Settings.LastAppliedTheme);
+        Assert.False(plugin.Settings.AutoThemeCursorStyle);
+    }
+
+    [Fact]
+    public void RestoreCursorScheme_WithFifteenPartUserScheme_Succeeds()
+    {
+        var plugin = new CustomMousePlugin();
+        var schemeName = $"UDT-Test-Aero-{Guid.NewGuid():N}";
+        var parts = new string[15];
+        for (var i = 0; i < parts.Length; i++)
+        {
+            parts[i] = $@"C:\Windows\cursors\test_{i}.cur";
+        }
+
+        using var snapshot = CursorRegistrySnapshot.Capture();
+        using var schemesKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Cursors\Schemes", true);
+        Assert.NotNull(schemesKey);
+
+        try
+        {
+            schemesKey!.SetValue(schemeName, string.Join(",", parts), RegistryValueKind.ExpandString);
+
+            var restored = plugin.RestoreCursorScheme(schemeName);
+
+            Assert.True(restored);
+            using var cursorKey = Registry.CurrentUser.OpenSubKey(@"Control Panel\Cursors", false);
+            Assert.NotNull(cursorKey);
+            Assert.Equal(parts[0], Convert.ToString(cursorKey!.GetValue("Arrow")));
+            Assert.Equal(parts[0], Convert.ToString(cursorKey.GetValue("Person")));
+            Assert.Equal(parts[0], Convert.ToString(cursorKey.GetValue("Pin")));
+        }
+        finally
+        {
+            schemesKey.DeleteValue(schemeName, throwOnMissingValue: false);
+            snapshot.Restore();
         }
     }
 
@@ -191,44 +356,32 @@ public class CustomMousePluginTests
     [Fact]
     public async Task SaveSettingsAsync_RetriesOnException_WhenSettingsFileTemporarilyLocked()
     {
-        // Regression test: SaveSettingsAsync retry loop must catch I/O exceptions
-        // (IOException and UnauthorizedAccessException) when the settings file is
-        // temporarily locked, then succeed once the lock is released.
-        // This verifies the retry mechanism without timing assertions.
+        var settingsFile = PluginSettingsFileSnapshot.SettingsFilePath;
+        using var settingsSnapshot = PluginSettingsFileSnapshot.Capture();
         var plugin = new CustomMousePlugin();
 
-        // Step 1: Save once to ensure the settings file exists.
-        await plugin.SaveSettingsAsync();
-
-        // Step 2: Locate the settings file and lock it exclusively.
-        var settingsDir = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-            "UniversalDeviceToolkit", "plugin-config");
-        var settingsFile = Path.Combine(settingsDir, "custom-mouse.json");
-
-        Assert.True(File.Exists(settingsFile), "Settings file should exist after initial save.");
-
-        // Step 3: Lock the file, then release it after a short delay.
-        // The retry loop (50ms + 100ms delays) will wait, then succeed once unlocked.
-        var lockStream = new FileStream(
-            settingsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
-
-        // Release the lock after 20ms — before the first retry delay (50ms).
-        // This ensures the retry loop catches the IOException, waits 50ms,
-        // then succeeds on the second attempt when the lock is released.
-        _ = Task.Run(async () =>
+        try
         {
-            await Task.Delay(20);
-            lockStream.Dispose();
-        });
+            await plugin.SaveSettingsAsync();
+            Assert.True(File.Exists(settingsFile), "Settings file should exist after initial save.");
 
-        // Step 4: SaveSettingsAsync should succeed after retries (no exception).
-        // Without the retry catch, this would throw IOException immediately.
-        await plugin.SaveSettingsAsync();
+            var uniqueMarker = $"retry-{Guid.NewGuid():N}";
+            plugin.Settings.LastAppliedTheme = uniqueMarker;
 
-        // Verify the file is still valid JSON after the retry save.
-        var content = File.ReadAllText(settingsFile);
-        Assert.NotEmpty(content);
+            using (new FileStream(settingsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+            {
+                await plugin.SaveSettingsAsync();
+            }
+
+            Assert.DoesNotContain(uniqueMarker, File.ReadAllText(settingsFile), StringComparison.Ordinal);
+
+            await plugin.SaveSettingsAsync();
+            Assert.Contains(uniqueMarker, File.ReadAllText(settingsFile), StringComparison.Ordinal);
+        }
+        finally
+        {
+            plugin.Stop();
+        }
     }
 
     [Theory]
@@ -275,5 +428,117 @@ public class CustomMousePluginTests
     {
         var result = CustomMousePlugin.SanitizeWindowsPointerSpeed(validValue);
         Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void ReloadSettingsFromSystem_WhenAutoAndCustomLightCursors_KeepsAuto()
+    {
+        var plugin = new CustomMousePlugin();
+        plugin.Settings.CursorThemeMode = CursorThemeMode.Auto;
+        plugin.Settings.AutoThemeCursorStyle = true;
+        plugin.Settings.LastAppliedTheme = "dark";
+
+        using var mouseKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Mouse", true);
+        using var cursorKey = Registry.CurrentUser.CreateSubKey(@"Control Panel\Cursors", true);
+        Assert.NotNull(mouseKey);
+        Assert.NotNull(cursorKey);
+
+        var originalSensitivity = Convert.ToString(mouseKey!.GetValue("MouseSensitivity"));
+        var originalSwap = Convert.ToString(mouseKey.GetValue("SwapMouseButtons"));
+        var originalDefault = Convert.ToString(cursorKey!.GetValue(string.Empty));
+        var originalArrow = Convert.ToString(cursorKey.GetValue("Arrow"));
+
+        try
+        {
+            mouseKey.SetValue("MouseSensitivity", "11");
+            mouseKey.SetValue("SwapMouseButtons", "0");
+            cursorKey.SetValue(string.Empty, "UDT Custom Mouse Light");
+            cursorKey.SetValue("Arrow", @"C:\plugins\W11-CC-V2.2-HDPI\Light\Regular\Base\Pointer.cur");
+
+            plugin.ReloadSettingsFromSystem();
+
+            Assert.Equal(11, plugin.Settings.WindowsPointerSpeed);
+            Assert.False(plugin.Settings.SwapButtons);
+            Assert.Equal(CursorThemeMode.Auto, plugin.Settings.CursorThemeMode);
+            Assert.True(plugin.Settings.AutoThemeCursorStyle);
+            Assert.Equal("light", plugin.Settings.LastAppliedTheme);
+        }
+        finally
+        {
+            mouseKey.SetValue("MouseSensitivity", originalSensitivity ?? "10");
+            mouseKey.SetValue("SwapMouseButtons", originalSwap ?? "0");
+            cursorKey.SetValue(string.Empty, originalDefault ?? string.Empty);
+            cursorKey.SetValue("Arrow", originalArrow ?? string.Empty);
+        }
+    }
+}
+
+internal sealed class CursorRegistrySnapshot : IDisposable
+{
+    private const string CursorPath = @"Control Panel\Cursors";
+    private readonly Dictionary<string, (object? Value, RegistryValueKind Kind)> _values = new(StringComparer.OrdinalIgnoreCase);
+
+    private CursorRegistrySnapshot()
+    {
+    }
+
+    public static CursorRegistrySnapshot Capture()
+    {
+        var snapshot = new CursorRegistrySnapshot();
+        using var key = Registry.CurrentUser.OpenSubKey(CursorPath, false);
+        if (key is null)
+        {
+            return snapshot;
+        }
+
+        snapshot._values[string.Empty] = (key.GetValue(string.Empty), RegistryValueKind.String);
+        foreach (var name in key.GetValueNames())
+        {
+            var value = key.GetValue(name);
+            snapshot._values[name] = (value, value is null ? RegistryValueKind.String : key.GetValueKind(name));
+        }
+
+        return snapshot;
+    }
+
+    public void Restore()
+    {
+        using var key = Registry.CurrentUser.CreateSubKey(CursorPath, true);
+        if (key is null)
+        {
+            return;
+        }
+
+        foreach (var name in key.GetValueNames())
+        {
+            if (!_values.ContainsKey(name))
+            {
+                key.DeleteValue(name, throwOnMissingValue: false);
+            }
+        }
+
+        foreach (var (name, (value, kind)) in _values)
+        {
+            if (value is null)
+            {
+                if (string.IsNullOrEmpty(name))
+                {
+                    key.SetValue(string.Empty, string.Empty, RegistryValueKind.String);
+                }
+                else
+                {
+                    key.DeleteValue(name, throwOnMissingValue: false);
+                }
+
+                continue;
+            }
+
+            key.SetValue(string.IsNullOrEmpty(name) ? string.Empty : name, value, kind);
+        }
+    }
+
+    public void Dispose()
+    {
+        Restore();
     }
 }

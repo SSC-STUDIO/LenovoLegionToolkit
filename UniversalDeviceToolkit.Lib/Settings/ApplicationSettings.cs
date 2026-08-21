@@ -30,8 +30,9 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public bool NotificationSound { get; set; }
 
         /// <summary>
-        /// Optional per-category policies (enable / persist / severity).
-        /// When absent for a key, legacy bool toggles above remain authoritative for enable.
+        /// Optional per-category policies (persist / severity). Enable follows the
+        /// legacy bool toggles above — the settings UI writes those flags, not this map.
+        /// Missing keys are filled on load from those toggles.
         /// </summary>
         public Dictionary<string, NotificationTypePolicy> TypePolicies { get; set; } = NotificationTypePolicyStore.CreateDefaults();
     }
@@ -148,7 +149,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         store.PowerPlans ??= [];
         store.PowerModes ??= [];
         store.Notifications ??= new();
-        store.Notifications.TypePolicies ??= NotificationTypePolicyStore.CreateDefaults();
+        NotificationTypePolicyStore.EnsurePolicies(store.Notifications);
         store.ExcludedRefreshRates ??= [];
         store.SmartKeySinglePressActionList ??= [];
         store.SmartKeyDoublePressActionList ??= [];

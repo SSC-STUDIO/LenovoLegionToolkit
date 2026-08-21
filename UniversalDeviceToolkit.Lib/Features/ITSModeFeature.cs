@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Messaging;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
+using UniversalDeviceToolkit.Lib.Resources;
 using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Lib.Features;
@@ -82,16 +83,7 @@ public partial class ITSModeFeature : IFeature<ITSMode>
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        try
-        {
-            return await GetItsModeInternalAsync(cancellationToken).ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Trace($"Failed to get ITS mode", ex);
-
-            return ITSMode.None;
-        }
+        return await GetItsModeInternalAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task SetStateAsync(ITSMode state, CancellationToken cancellationToken = default)
@@ -139,7 +131,7 @@ public partial class ITSModeFeature : IFeature<ITSMode>
                 "feature-its-dll",
                 "ITS mode native library missing; treating as unsupported.",
                 ex);
-            return ITSMode.None;
+            throw;
         }
     }
 
@@ -151,6 +143,7 @@ public partial class ITSModeFeature : IFeature<ITSMode>
 
         Log.Instance.Trace($"GetDispatcherMode() executed. Error Code: {errorCode}");
         LogSupportedModes(supportFlag);
+        ThrowIfNativeFailed(errorCode, nameof(GetDispatcherMode));
 
         return mode;
     }
@@ -163,6 +156,7 @@ public partial class ITSModeFeature : IFeature<ITSMode>
 
         Log.Instance.Trace($"GetITSMode() executed. Error Code: {errorCode}");
         Log.Instance.Trace($"ITS Version: {version}");
+        ThrowIfNativeFailed(errorCode, nameof(GetITSMode));
         return mode;
     }
 
@@ -176,7 +170,8 @@ public partial class ITSModeFeature : IFeature<ITSMode>
         var dispatcherVersion = GetDispatcherVersion(ref instance);
 
         int errorCode;
-        if (dispatcherVersion >= DISPATCHER_VERSION_3)
+        var useDispatcher = dispatcherVersion >= DISPATCHER_VERSION_3;
+        if (useDispatcher)
         {
             errorCode = SetDispatcherMode(ref instance, ref state, isThinkBook ? 1 : 0);
             Log.Instance.Trace($"Using SetDispatcherMode()");
@@ -189,16 +184,28 @@ public partial class ITSModeFeature : IFeature<ITSMode>
             Log.Instance.Trace($"SetITSMode executed. Error Code: {errorCode}");
         }
 
-        VerifyModeChange(ref instance, state);
+        ThrowIfNativeFailed(errorCode, useDispatcher ? nameof(SetDispatcherMode) : nameof(SetITSMode));
+        VerifyModeChange(ref instance, state, isThinkBook, useDispatcher);
     }
 
-    private void VerifyModeChange(ref CIntelligentCooling instance, ITSMode expectedMode)
+    private void VerifyModeChange(ref CIntelligentCooling instance, ITSMode expectedMode, bool isThinkBook, bool useDispatcher)
     {
-        var version = 0;
-        var currentMode = ITSMode.None;
-        GetITSMode(ref instance, ref version, ref currentMode);
+        var currentMode = useDispatcher
+            ? GetDispatcherModeInternal(ref instance, isThinkBook)
+            : GetStandardModeInternal(ref instance);
 
         Log.Instance.Trace($"Mode verification - Expected: {expectedMode}, Actual: {currentMode}, Match: {expectedMode == currentMode}");
+
+        if (currentMode != expectedMode)
+            throw new InvalidOperationException(string.Format(Resource.Exception_FailedVerifyState, nameof(ITSModeFeature), expectedMode));
+    }
+
+    private static void ThrowIfNativeFailed(int errorCode, string operation)
+    {
+        if (errorCode == 0)
+            return;
+
+        throw new InvalidOperationException($"{operation} failed with status {errorCode}.");
     }
 
     private void LogSupportedModes(int supportFlag)

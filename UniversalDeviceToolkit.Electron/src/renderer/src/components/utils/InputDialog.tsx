@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
+import { useUtilsDialog } from './useUtilsDialog'
 import './utils.css'
 
 /**
@@ -62,6 +63,7 @@ export default function InputDialogHost(): React.JSX.Element {
   const [confirmEnabled, setConfirmEnabled] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef<number | undefined>(undefined)
+  const { dialogRef, titleId, dialogProps } = useUtilsDialog(request != null, () => settle(null))
 
   useEffect(() => {
     if (!request) return
@@ -107,17 +109,20 @@ export default function InputDialogHost(): React.JSX.Element {
   return (
     <div className="udt-utils-backdrop" onClick={handleCancel}>
       <div
+        ref={dialogRef}
         className="udt-utils-modal"
         style={{ width: 420, maxWidth: 'min(92vw, 520px)' }}
         onClick={(event) => event.stopPropagation()}
+        {...dialogProps}
       >
-        <div className="udt-utils-modal__title">{title}</div>
+        <div className="udt-utils-modal__title" id={titleId}>{title}</div>
         <div className="udt-utils-modal__body">
           <p className="udt-utils-text" style={{ marginTop: 0 }}>
             {message}
           </p>
           <input
             ref={inputRef}
+            data-utils-initial-focus=""
             className="udt-utils-input"
             value={value}
             maxLength={maxLength}

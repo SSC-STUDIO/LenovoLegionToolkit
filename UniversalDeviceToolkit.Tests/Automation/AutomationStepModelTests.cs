@@ -73,10 +73,10 @@ public class AutomationStepModelTests
     }
 
     [Fact]
-    public async Task NotificationAutomationStep_IsSupported_ShouldReturnTrue()
+    public async Task NotificationAutomationStep_IsSupported_WithoutService_ShouldReturnFalse()
     {
         var step = new NotificationAutomationStep("test");
-        (await step.IsSupportedAsync()).Should().BeTrue();
+        (await step.IsSupportedAsync()).Should().BeFalse();
     }
 
     [Fact]

@@ -189,20 +189,19 @@ public class TokenManipulatorTests
     #region Edge Cases Tests
 
     [Fact]
-    public void AddPrivileges_WithNullInArray_ShouldHandleGracefully()
+    public void AddPrivileges_WithNullArray_ShouldThrowArgumentNullException()
     {
-        // Arrange & Act - Should handle null gracefully or throw
-        // The implementation doesn't check for null, so this will likely fail
-        try
-        {
-            var result = TokenManipulator.AddPrivileges(null!);
-            // If it doesn't throw, it should return false
-            result.Should().BeFalse();
-        }
-        catch (ArgumentNullException)
-        {
-            // If it throws, that's acceptable behavior too
-        }
+        var act = () => TokenManipulator.AddPrivileges(null!);
+
+        act.Should().Throw<ArgumentNullException>().WithParameterName("privileges");
+    }
+
+    [Fact]
+    public void RemovePrivileges_WithNullArray_ShouldThrowArgumentNullException()
+    {
+        var act = () => TokenManipulator.RemovePrivileges(null!);
+
+        act.Should().Throw<ArgumentNullException>().WithParameterName("privileges");
     }
 
     [Fact]

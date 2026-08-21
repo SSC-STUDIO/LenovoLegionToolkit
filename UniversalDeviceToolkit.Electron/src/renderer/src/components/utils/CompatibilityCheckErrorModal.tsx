@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
 import { FolderOpen24Regular, Warning24Regular } from '../icons/fluent'
+import { useUtilsDialog } from './useUtilsDialog'
 import './utils.css'
 
 /**
@@ -90,6 +91,7 @@ export default function CompatibilityCheckErrorModalHost(): React.JSX.Element {
   const { t } = useTranslation()
   const request = useCompatibilityErrorStore((s) => s.request)
   const settle = useCompatibilityErrorStore((s) => s.settle)
+  const { dialogRef, titleId, dialogProps } = useUtilsDialog(request != null, settle)
 
   const details = useMemo(() => (request ? formatDetails(request.info) : ''), [request])
 
@@ -102,11 +104,13 @@ export default function CompatibilityCheckErrorModalHost(): React.JSX.Element {
   return (
     <div className="udt-utils-backdrop" onClick={settle}>
       <div
+        ref={dialogRef}
         className="udt-utils-modal"
         style={{ width: 720, minHeight: 420 }}
         onClick={(event) => event.stopPropagation()}
+        {...dialogProps}
       >
-        <div className="udt-utils-modal__title">{t('wpf.compatibilityCheckErrorWindowtitle')}</div>
+        <div className="udt-utils-modal__title" id={titleId}>{t('wpf.compatibilityCheckErrorWindowtitle')}</div>
         <div className="udt-utils-modal__body">
           <div className="udt-utils-banner">
             <Warning24Regular className="udt-utils-banner__icon" />

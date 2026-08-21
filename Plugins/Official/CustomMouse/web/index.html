@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'unsafe-inline'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'" />
   <title>Cursor &amp; Pointer</title>
-  <link rel="stylesheet" href="plugin-ui.css" />
+  <link rel="stylesheet" href="./plugin-ui.css" />
 </head>
 <body>
   <h1 class="up-title" data-i18n="title">Cursor &amp; Pointer</h1>
@@ -94,6 +95,7 @@
     const speedValue = document.getElementById('speed-value')
     const swap = document.getElementById('swap')
     const mode = document.getElementById('mode')
+    let busy = false
 
     function setStatus(text, isError) {
       status.textContent = text
@@ -108,9 +110,27 @@
       mode.value = String(state.cursorThemeMode ?? 0)
     }
 
+    function failed(result) {
+      return Boolean(result && result.ok === false)
+    }
+
+    async function withBusy(action) {
+      if (busy) return
+      busy = true
+      try {
+        await action()
+      } finally {
+        busy = false
+      }
+    }
+
     speed.addEventListener('input', () => { speedValue.textContent = speed.value })
 
     async function load() {
+      if (!bridge || typeof bridge.invoke !== 'function') {
+        setStatus(zh ? '插件桥接不可用' : 'Plugin bridge unavailable', true)
+        return
+      }
       try {
         const state = await bridge.invoke('plugin.customMouse.getState', {})
         applyState(state)
@@ -120,37 +140,51 @@
       }
     }
 
-    document.getElementById('apply-windows').addEventListener('click', async () => {
+    document.getElementById('apply-windows').addEventListener('click', () => void withBusy(async () => {
       try {
         const result = await bridge.invoke('plugin.customMouse.applyWindows', {
           speed: Number(speed.value),
           swapButtons: swap.checked
         })
-        setStatus(result && result.ok === false ? (zh ? '应用失败' : 'Apply failed') : (zh ? '已应用' : 'Applied'), result && result.ok === false)
+        setStatus(failed(result) ? (zh ? '应用失败' : 'Apply failed') : (zh ? '已应用' : 'Applied'), failed(result))
       } catch (error) {
         setStatus(error.message, true)
       }
-    })
+    }))
 
-    mode.addEventListener('change', async () => {
+    mode.addEventListener('change', () => void withBusy(async () => {
       try {
         const result = await bridge.invoke('plugin.customMouse.setCursorThemeMode', { mode: Number(mode.value) })
-        setStatus(result && result.ok === false ? (zh ? '主题失败' : 'Theme failed') : (zh ? '主题已更新' : 'Theme updated'), result && result.ok === false)
+        if (failed(result)) {
+          await load()
+          setStatus(zh ? '主题失败' : 'Theme failed', true)
+          return
+        }
+        setStatus(zh ? '主题已更新' : 'Theme updated')
       } catch (error) {
+        await load()
         setStatus(error.message, true)
       }
-    })
+    }))
 
-    document.getElementById('apply-theme').addEventListener('click', async () => {
+    document.getElementById('apply-theme').addEventListener('click', () => void withBusy(async () => {
       try {
-        await bridge.invoke('plugin.customMouse.applyCursorThemeNow', {})
+        const selected = Number(mode.value)
+        const result = selected === 0
+          ? await bridge.invoke('plugin.customMouse.applyCursorThemeNow', {})
+          : await bridge.invoke('plugin.customMouse.setCursorThemeMode', { mode: selected })
+        if (failed(result)) {
+          await load()
+          setStatus(zh ? '主题失败' : 'Theme failed', true)
+          return
+        }
         setStatus(zh ? '已应用当前主题' : 'Applied current theme')
       } catch (error) {
         setStatus(error.message, true)
       }
-    })
+    }))
 
-    document.getElementById('sync').addEventListener('click', async () => {
+    document.getElementById('sync').addEventListener('click', () => void withBusy(async () => {
       try {
         const state = await bridge.invoke('plugin.customMouse.syncFromWindows', {})
         applyState(state)
@@ -158,17 +192,21 @@
       } catch (error) {
         setStatus(error.message, true)
       }
-    })
+    }))
 
-    document.getElementById('restore').addEventListener('click', async () => {
+    document.getElementById('restore').addEventListener('click', () => void withBusy(async () => {
       try {
-        await bridge.invoke('plugin.customMouse.restoreWindowsDefault', {})
+        const result = await bridge.invoke('plugin.customMouse.restoreWindowsDefault', {})
         await load()
+        if (failed(result)) {
+          setStatus(zh ? '还原失败' : 'Restore failed', true)
+          return
+        }
         setStatus(zh ? '已还原 Windows 默认光标' : 'Restored Windows default cursor')
       } catch (error) {
         setStatus(error.message, true)
       }
-    })
+    }))
 
     void load()
   </script>

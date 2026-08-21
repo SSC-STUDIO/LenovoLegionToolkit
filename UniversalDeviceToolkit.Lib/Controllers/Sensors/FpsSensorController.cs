@@ -41,6 +41,7 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
         private Process? _currentMonitoredProcess;
         private readonly Lock _lockObject = new Lock();
         private volatile bool _isRunning = false;
+        private bool _disposed;
         private bool _monitoringLoopErrorLogged;
         private CancellationTokenSource? _currentProcessTokenSource;
         private readonly IDelayProvider _delayProvider;
@@ -54,75 +55,115 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
 
         public Task StartMonitoringAsync()
         {
-            if (_isRunning) return Task.CompletedTask;
-
-            _isRunning = true;
-            var oldCts = _cancellationTokenSource;
-            _cancellationTokenSource = new CancellationTokenSource();
-            try { oldCts?.Dispose(); } catch (Exception ex) { if (Log.Instance.IsTraceEnabled) Log.Instance.Trace($"Failed to dispose old CancellationTokenSource in {nameof(StartMonitoringAsync)}.", ex); }
-
-            _ = Task.Run(async () =>
+            CancellationToken token;
+            lock (_lockObject)
             {
-                Process? lastProcess = null;
+                if (_disposed || _isRunning)
+                    return Task.CompletedTask;
 
-                while (!_cancellationTokenSource.Token.IsCancellationRequested)
-                {
-                    try
-                    {
-                        var currentProcess = GetForegroundProcess();
+                _isRunning = true;
+                _cancellationTokenSource?.Dispose();
+                _cancellationTokenSource = new CancellationTokenSource();
+                token = _cancellationTokenSource.Token;
+            }
 
-                        if (currentProcess != null && currentProcess.Id != lastProcess?.Id)
-                        {
-                            StopProcessMonitoring();
-
-                            if (!currentProcess.HasExited)
-                            {
-                                await StartProcessMonitoringAsync(currentProcess).ConfigureAwait(false);
-                            }
-                            lastProcess?.Dispose();
-                            lastProcess = currentProcess.HasExited ? null : currentProcess;
-                        }
-                        else if (_currentMonitoredProcess != null
-                                 && (currentProcess == null
-                                     || (currentProcess.Id == _currentMonitoredProcess.Id && _currentMonitoredProcess.HasExited)))
-                        {
-                            StopProcessMonitoring();
-                            lastProcess?.Dispose();
-                            lastProcess = null;
-                        }
-                        else
-                        {
-                            currentProcess?.Dispose();
-                        }
-
-                        _monitoringLoopErrorLogged = false;
-                        await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), _cancellationTokenSource.Token).ConfigureAwait(false);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        break;
-                    }
-                    catch (Exception ex)
-                    {
-                        if (!_monitoringLoopErrorLogged)
-                        {
-                            Log.Instance.Warning($"Monitoring loop error: {ex.Message}");
-                            _monitoringLoopErrorLogged = true;
-                        }
-
-                        await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), _cancellationTokenSource.Token).ConfigureAwait(false);
-                    }
-                }
-            }, _cancellationTokenSource.Token);
-
+            _ = Task.Run(() => MonitorForegroundProcessAsync(token), token);
             return Task.CompletedTask;
         }
 
         public void StopMonitoring()
         {
-            _isRunning = false;
-            _cancellationTokenSource?.Cancel();
-            StopProcessMonitoring();
+            CancellationTokenSource? cts;
+            lock (_lockObject)
+            {
+                _isRunning = false;
+                cts = _cancellationTokenSource;
+                _cancellationTokenSource = null;
+                CancelProcessMonitoring();
+                _currentMonitoredProcess = null;
+                _currentFpsData = new FpsData();
+            }
+
+            try
+            {
+                cts?.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+
+            try
+            {
+                cts?.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+
+            FpsDataUpdated?.Invoke(this, GetCurrentFpsData());
+        }
+
+        private async Task MonitorForegroundProcessAsync(CancellationToken token)
+        {
+            Process? lastProcess = null;
+
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    var currentProcess = GetForegroundProcess();
+
+                    if (currentProcess != null && currentProcess.Id != lastProcess?.Id)
+                    {
+                        StopProcessMonitoring();
+
+                        if (!currentProcess.HasExited)
+                        {
+                            await StartProcessMonitoringAsync(currentProcess).ConfigureAwait(false);
+                        }
+                        lastProcess?.Dispose();
+                        lastProcess = currentProcess.HasExited ? null : currentProcess;
+                    }
+                    else if (_currentMonitoredProcess != null
+                             && (currentProcess == null
+                                 || (currentProcess.Id == _currentMonitoredProcess.Id && _currentMonitoredProcess.HasExited)))
+                    {
+                        StopProcessMonitoring();
+                        lastProcess?.Dispose();
+                        lastProcess = null;
+                    }
+                    else
+                    {
+                        currentProcess?.Dispose();
+                    }
+
+                    _monitoringLoopErrorLogged = false;
+                    await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), token).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    if (!_monitoringLoopErrorLogged)
+                    {
+                        Log.Instance.Warning($"Monitoring loop error: {ex.Message}");
+                        _monitoringLoopErrorLogged = true;
+                    }
+
+                    try
+                    {
+                        await _delayProvider.Delay(TimeSpan.FromMilliseconds(1000), token).ConfigureAwait(false);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            lastProcess?.Dispose();
         }
 
         public FpsData GetCurrentFpsData()
@@ -191,13 +232,36 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
         {
             try
             {
-                _currentProcessTokenSource = new CancellationTokenSource();
-                _currentMonitoredProcess = process;
+                CancellationTokenSource? oldProcessCts;
+                CancellationToken processToken;
+                CancellationToken monitorToken;
+                lock (_lockObject)
+                {
+                    oldProcessCts = _currentProcessTokenSource;
+                    _currentProcessTokenSource = new CancellationTokenSource();
+                    _currentMonitoredProcess = process;
+                    processToken = _currentProcessTokenSource.Token;
+                    monitorToken = _cancellationTokenSource?.Token ?? CancellationToken.None;
+                }
+
+                try
+                {
+                    oldProcessCts?.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
+
+                try
+                {
+                    oldProcessCts?.Dispose();
+                }
+                catch (ObjectDisposedException)
+                {
+                }
 
                 var request = new FpsRequest((uint)process.Id);
-                var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(
-                    _currentProcessTokenSource.Token,
-                    _cancellationTokenSource?.Token ?? CancellationToken.None);
+                var linkedTokenSource = CancellationTokenSource.CreateLinkedTokenSource(processToken, monitorToken);
 
                 var monitoringTask = Task.Run(async () =>
                 {
@@ -253,12 +317,9 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
         {
             try
             {
-                _currentProcessTokenSource?.Cancel();
-                _currentProcessTokenSource?.Dispose();
-                _currentProcessTokenSource = null;
-
                 lock (_lockObject)
                 {
+                    CancelProcessMonitoring();
                     if (_currentMonitoredProcess != null)
                     {
                         _currentMonitoredProcess = null;
@@ -271,6 +332,27 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
             catch (Exception ex)
             {
                 Log.Instance.Trace($"Error stopping process monitoring", ex);
+            }
+        }
+
+        private void CancelProcessMonitoring()
+        {
+            var processCts = _currentProcessTokenSource;
+            _currentProcessTokenSource = null;
+            try
+            {
+                processCts?.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+
+            try
+            {
+                processCts?.Dispose();
+            }
+            catch (ObjectDisposedException)
+            {
             }
         }
 
@@ -298,9 +380,14 @@ namespace UniversalDeviceToolkit.Lib.Controllers.Sensors
 
         public void Dispose()
         {
+            lock (_lockObject)
+            {
+                if (_disposed)
+                    return;
+                _disposed = true;
+            }
+
             StopMonitoring();
-            _cancellationTokenSource?.Dispose();
-            _currentProcessTokenSource?.Dispose();
         }
     }
 }

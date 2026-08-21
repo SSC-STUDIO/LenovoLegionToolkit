@@ -493,11 +493,9 @@
 
 .udt-network-config__fields {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 12px 24px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
   min-width: 0;
   width: 100%;
 }
@@ -505,21 +503,16 @@
 .udt-network-field {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   gap: 12px;
-  flex: 0 1 auto;
+  width: 100%;
   min-width: 0;
-  max-width: 100%;
   min-height: 36px;
   color: var(--udt-text-primary);
   /* Caption, not body: the Select value is capped at --udt-font-caption by the
-     global .ant-select-selection-item override, and the label must match it
+     global .ant-select override, and the label must match it
      (same pairing as .udt-settings-row__label). */
   font-size: var(--udt-font-caption);
-}
-
-.udt-network-field--switch {
-  flex: 0 0 auto;
 }
 
 .udt-network-field__label {
@@ -531,43 +524,13 @@
   flex: 0 0 auto;
 }
 
-/* antd Select: same reset as .udt-driver-select (no native .udt-select chrome). */
+/* Ant Design 6: chrome is on the root .ant-select (global.css). Sizing only. */
 .udt-network-select.ant-select {
-  display: flex;
-  flex: 0 1 var(--udt-content-control-width);
+  flex: 0 0 auto;
   width: var(--udt-content-control-width);
   min-width: 0;
   max-width: 100%;
-  height: auto;
   min-height: var(--udt-control-height);
-  padding: 0;
-  border: none;
-  background: none;
-  box-shadow: none;
-}
-
-.udt-network-select.ant-select .ant-select-selector {
-  width: 100%;
-  height: var(--udt-control-height) !important;
-  min-height: var(--udt-control-height) !important;
-  padding: 0 11px;
-  border: 1px solid var(--udt-control-stroke-default) !important;
-  border-radius: var(--udt-radius-control) !important;
-  background: var(--udt-control-fill-default) !important;
-}
-
-.udt-network-select.ant-select-focused .ant-select-selector,
-.udt-network-select.ant-select-open .ant-select-selector {
-  border-color: var(--udt-accent) !important;
-}
-
-.udt-network-select.ant-select .ant-select-selection-item,
-.udt-network-select.ant-select .ant-select-selection-placeholder {
-  line-height: calc(var(--udt-control-height) - 2px);
-}
-
-.udt-network-select.ant-select .ant-select-selection-search-input {
-  color: transparent;
 }
 
 .udt-network-config__actions {
@@ -668,7 +631,7 @@
 
   /* Network basic config: keep enable+mode grouped; wrap rather than stretch */
   .udt-network-config__fields {
-    gap: 10px 16px;
+    gap: 10px;
   }
 
   .udt-network-select.ant-select {
@@ -936,43 +899,13 @@
   font-weight: 500;
 }
 
-/* antd Select must not use native .udt-select chrome (border + CSS chevron),
-   or the inner .ant-select-selector / .ant-select-arrow ghost on top of it. */
+/* Ant Design 6: chrome is on the root .ant-select (global.css). Do not set
+   border: none / background: none here — that strips the only visible box. */
 .udt-driver-select.ant-select {
-  display: flex;
   width: 100%;
   min-width: 0;
   max-width: none;
-  height: auto;
   min-height: var(--udt-control-height);
-  padding: 0;
-  border: none;
-  background: none;
-  box-shadow: none;
-}
-
-.udt-driver-select.ant-select .ant-select-selector {
-  width: 100%;
-  height: var(--udt-control-height) !important;
-  min-height: var(--udt-control-height) !important;
-  padding: 0 11px;
-  border: 1px solid var(--udt-control-stroke-default) !important;
-  border-radius: var(--udt-radius-control) !important;
-  background: var(--udt-control-fill-default) !important;
-}
-
-.udt-driver-select.ant-select-focused .ant-select-selector,
-.udt-driver-select.ant-select-open .ant-select-selector {
-  border-color: var(--udt-accent) !important;
-}
-
-.udt-driver-select.ant-select .ant-select-selection-item,
-.udt-driver-select.ant-select .ant-select-selection-placeholder {
-  line-height: calc(var(--udt-control-height) - 2px);
-}
-
-.udt-driver-select.ant-select .ant-select-selection-search-input {
-  color: transparent;
 }
 
 .udt-driver-toolbar .udt-driver-select.ant-select {

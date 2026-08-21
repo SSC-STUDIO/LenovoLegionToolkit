@@ -262,6 +262,17 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
                 }
             }
 
+            // Heal any leftover snapshot before capturing a new baseline.
+            if (File.Exists(_recovery.SnapshotPath) &&
+                !_recovery.TryRestoreFromSnapshot(out var healReport))
+            {
+                Log.Instance.Warning(
+                    "NetworkAcceleration Start refused: previous snapshot could not be restored. " + healReport);
+                lock (_gate)
+                    _isRunning = false;
+                return false;
+            }
+
             // Capture pre-mutation state for crash/stop recovery.
             var snapshot = await _recovery.CaptureSnapshotAsync(cancellationToken).ConfigureAwait(false);
             Config.LastRecoverySnapshot = new NetworkRecoverySnapshotMetadata
@@ -282,6 +293,7 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
             if (!startResult.Success)
             {
                 await _launcher.StopAsync(cancellationToken).ConfigureAwait(false);
+                TryHealSnapshotAfterFailedStart();
                 lock (_gate)
                     _isRunning = false;
                 return false;
@@ -297,6 +309,7 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
                     Log.Instance.Warning(
                         "NetworkAcceleration SystemProxy Start aborted after worker start: no enabled domains; worker stopped, system proxy not mutated.");
                     await _launcher.StopAsync(cancellationToken).ConfigureAwait(false);
+                    TryHealSnapshotAfterFailedStart();
                     lock (_gate)
                         _isRunning = false;
                     return false;
@@ -320,13 +333,26 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
                 }
 
                 await _launcher.StopAsync(cancellationToken).ConfigureAwait(false);
+                TryHealSnapshotAfterFailedStart();
                 lock (_gate)
                     _isRunning = false;
                 return false;
             }
 
-            ApplySystemSideEffects(Config.ListenPort);
-            _appliedSystemMutation = Config.Mode is NetworkAccelerationMode.SystemProxy;
+            if (!TryApplySystemMutationOrRollback(
+                    _recovery,
+                    () => ApplySystemSideEffects(Config.ListenPort),
+                    Config.ListenPort,
+                    ref _appliedSystemMutation,
+                    out var applyReport))
+            {
+                Log.Instance.Warning(
+                    "NetworkAcceleration system mutation failed and was rolled back. " + applyReport);
+                await _launcher.StopAsync(cancellationToken).ConfigureAwait(false);
+                lock (_gate)
+                    _isRunning = false;
+                return false;
+            }
 
             lock (_gate)
                 _isRunning = true;
@@ -336,7 +362,15 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
         {
             Log.Instance.Warning("NetworkAcceleration StartAsync failed.", ex);
             try { await _launcher.StopAsync(cancellationToken).ConfigureAwait(false); }
-            catch { /* ignore */ }
+            catch (Exception stopEx)
+            {
+                Log.Instance.TraceOnce(
+                    "network-accel-start-stop",
+                    "Stop after StartAsync failure failed.",
+                    stopEx);
+            }
+
+            TryHealSnapshotAfterFailedStart();
             lock (_gate)
                 _isRunning = false;
             return false;
@@ -367,8 +401,17 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
 
             if (_appliedSystemMutation)
             {
-                _recovery.TryRestoreFromSnapshot(out _);
-                _appliedSystemMutation = false;
+                var restored = _recovery.TryRestoreFromSnapshot(out var restoreReport);
+                if (restored)
+                {
+                    _appliedSystemMutation = false;
+                }
+                else
+                {
+                    Log.Instance.Warning(
+                        "NetworkAcceleration StopAsync restore failed; applied flag retained for retry. " +
+                        restoreReport);
+                }
             }
         }
         catch (Exception ex)
@@ -382,7 +425,7 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
         }
     }
 
-    private void ApplySystemSideEffects(int port)
+    private bool ApplySystemSideEffects(int port)
     {
         switch (Config.Mode)
         {
@@ -394,19 +437,79 @@ public sealed class NetworkAccelerationService : INetworkAccelerationService, IA
                 {
                     Log.Instance.Warning(
                         "SystemProxy apply refused: no enabled domains (full loopback proxy is not used).");
-                    return;
+                    return false;
                 }
 
                 SystemProxyApplicator.Apply(SystemProxyApplicator.CreatePacProxy(port, domains.ToArray()));
-                break;
+                return true;
             }
             case NetworkAccelerationMode.Hosts:
             {
                 // Defense-in-depth: StartAsync refuses Hosts mode. Do not map domains to 127.0.0.1.
                 Log.Instance.Warning(
                     "Hosts mode system apply is disabled until a local TLS origin exists; hosts file not modified.");
-                break;
+                return false;
             }
+            default:
+                return false;
+        }
+    }
+
+    private void TryHealSnapshotAfterFailedStart()
+    {
+        if (_recovery.TryRestoreFromSnapshot(out var report))
+        {
+            _appliedSystemMutation = false;
+            return;
+        }
+
+        Log.Instance.Warning(
+            "NetworkAcceleration Start failure left an unrestored snapshot. " + report);
+    }
+
+    /// <summary>
+    /// Applies a system mutation. On throw, restores the snapshot and only
+    /// clears <paramref name="appliedSystemMutation"/> when restore succeeds.
+    /// </summary>
+    internal static bool TryApplySystemMutationOrRollback(
+        INetworkStateRecoveryService recovery,
+        Func<bool> apply,
+        int listenPort,
+        ref bool appliedSystemMutation,
+        out string report)
+    {
+        ArgumentNullException.ThrowIfNull(recovery);
+        ArgumentNullException.ThrowIfNull(apply);
+
+        try
+        {
+            var mutated = apply();
+            if (!mutated)
+            {
+                var unusedPendingHandled = recovery.TryRestoreFromSnapshot(out report);
+                appliedSystemMutation = false;
+                if (!unusedPendingHandled)
+                    report = "apply: no mutation; pending snapshot not consumed. " + report;
+                return true;
+            }
+
+            if (!recovery.TryMarkPhase(NetworkSnapshotPhase.Applied, out var markReport, listenPort))
+            {
+                appliedSystemMutation = true;
+                report = markReport;
+                return true;
+            }
+
+            appliedSystemMutation = true;
+            report = markReport;
+            return true;
+        }
+        catch (Exception ex)
+        {
+            var restored = recovery.TryRestoreFromSnapshot(out var restoreReport);
+            appliedSystemMutation = !restored;
+            report = $"apply: failure ({ex.GetType().Name}: {ex.Message}). {restoreReport}";
+            return false;
         }
     }
 

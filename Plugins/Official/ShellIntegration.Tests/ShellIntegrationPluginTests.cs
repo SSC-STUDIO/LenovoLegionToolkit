@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 using UniversalDeviceToolkit.Plugins.ShellIntegration;
@@ -127,5 +128,16 @@ public class ShellIntegrationPluginTests
     public void ParseShellRegistrationStatus_WithUnrelatedOutput_ReturnsNull()
     {
         Assert.Null(ParseShellRegistrationStatus("Shell command completed successfully."));
+    }
+
+    [Fact]
+    public void GetBridgeStatus_ExposesInstallationAndRegistrationFields()
+    {
+        var plugin = new ShellIntegrationPlugin();
+        var json = System.Text.Json.JsonSerializer.Serialize(plugin.GetBridgeStatus());
+
+        Assert.Contains("\"installed\"", json, StringComparison.Ordinal);
+        Assert.Contains("\"registered\"", json, StringComparison.Ordinal);
+        Assert.Contains("\"installPath\"", json, StringComparison.Ordinal);
     }
 }

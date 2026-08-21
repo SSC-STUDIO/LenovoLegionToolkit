@@ -5,37 +5,134 @@ on:
     branches: [master]
     paths:
       - 'site/**'
+      - 'resources/**'
       - '.github/workflows/pages.yml'
       - 'Assets/Logo.png'
       - 'Assets/Screenshot_main.png'
   workflow_dispatch:
+  workflow_run:
+    workflows: [Release]
+    types: [completed]
 
 permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
 
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build-deploy:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: windows-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v7
-      - name: Copy assets into site
+
+      - name: Assemble site and resources
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_RUN_ID: ${{ github.event.workflow_run.id }}
+          RELEASE_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
         run: |
-          Copy-Item Assets\Logo.png site\
-          Copy-Item Assets\Screenshot_main.png site\
+          Set-StrictMode -Version Latest
+          $ErrorActionPreference = 'Stop'
+
+          $workspace = $env:GITHUB_WORKSPACE
+          $out = Join-Path $workspace '_pages_site'
+          if (Test-Path -LiteralPath $out) {
+            Remove-Item -LiteralPath $out -Recurse -Force
+          }
+          New-Item -ItemType Directory -Path $out | Out-Null
+
+          # Seed from the newest Release Pages artifact so a site-only deploy
+          # cannot wipe versioned language/device packs.
+          $releaseRunId = $env:RELEASE_RUN_ID
+          if ([string]::IsNullOrWhiteSpace($releaseRunId) -or $env:RELEASE_CONCLUSION -ne 'success') {
+            $listed = & gh run list --repo "${{ github.repository }}" --workflow 'Release.yml' --status success --limit 1 --json databaseId
+            if ($LASTEXITCODE -eq 0 -and -not [string]::IsNullOrWhiteSpace([string]$listed) -and [string]$listed -ne '[]') {
+              $releaseRunId = [string](@($listed | ConvertFrom-Json)[0].databaseId)
+            }
+            else {
+              $releaseRunId = ''
+            }
+          }
+          if (-not [string]::IsNullOrWhiteSpace($releaseRunId)) {
+            $merge = Join-Path $env:RUNNER_TEMP 'udt-release-pages'
+            New-Item -ItemType Directory -Path $merge -Force | Out-Null
+            & gh run download $releaseRunId --repo "${{ github.repository }}" --dir $merge
+            if ($LASTEXITCODE -eq 0) {
+              $releasePages = @(Get-ChildItem -LiteralPath $merge -Directory -ErrorAction SilentlyContinue |
+                Where-Object { $_.Name -like 'pages-resources-v*' })
+              if ($releasePages.Count -eq 0) {
+                Write-Warning 'No pages-resources-v* artifact was found; assembling from the repository.'
+              }
+              foreach ($artifactDir in $releasePages) {
+                Copy-Item -Path (Join-Path $artifactDir.FullName '*') -Destination $out -Recurse -Force
+              }
+            }
+            else {
+              Write-Warning 'Release Pages artifact was not downloaded; assembling from the repository.'
+            }
+          }
+
+          $siteRoot = Join-Path $workspace 'site'
+          if (-not (Test-Path -LiteralPath $siteRoot)) {
+            throw "Site source is missing at '$siteRoot'."
+          }
+          Copy-Item -Path (Join-Path $siteRoot '*') -Destination $out -Recurse -Force
+
+          $assetsOut = Join-Path $out 'Assets'
+          New-Item -ItemType Directory -Path $assetsOut -Force | Out-Null
+          $logo = Join-Path $workspace 'Assets\Logo.png'
+          $screenshot = Join-Path $workspace 'Assets\Screenshot_main.png'
+          if (-not (Test-Path -LiteralPath $logo)) {
+            throw "Required asset is missing: $logo"
+          }
+          if (-not (Test-Path -LiteralPath $screenshot)) {
+            throw "Required asset is missing: $screenshot"
+          }
+          Copy-Item -LiteralPath $logo -Destination (Join-Path $out 'Logo.png') -Force
+          Copy-Item -LiteralPath $logo -Destination (Join-Path $assetsOut 'Logo.png') -Force
+          Copy-Item -LiteralPath $screenshot -Destination (Join-Path $out 'Screenshot_main.png') -Force
+          Copy-Item -LiteralPath $screenshot -Destination (Join-Path $assetsOut 'Screenshot_main.png') -Force
+
+          $resourcesSource = Join-Path $workspace 'resources'
+          $resourcesOut = Join-Path $out 'resources'
+          if (-not (Test-Path -LiteralPath $resourcesSource)) {
+            throw "Repository resources are missing at '$resourcesSource'."
+          }
+          New-Item -ItemType Directory -Path $resourcesOut -Force | Out-Null
+          Copy-Item -Path (Join-Path $resourcesSource '*') -Destination $resourcesOut -Recurse -Force
+
+          $stableCatalog = Join-Path $resourcesOut 'stable\catalog.json'
+          if (-not (Test-Path -LiteralPath $stableCatalog)) {
+            throw 'Assembled Pages artifact is missing resources/stable/catalog.json (StableResourceCatalogUrl).'
+          }
+
+          $compatStable = Join-Path $out 'stable'
+          New-Item -ItemType Directory -Path $compatStable -Force | Out-Null
+          Copy-Item -LiteralPath $stableCatalog -Destination (Join-Path $compatStable 'catalog.json') -Force
+
+          if (-not (Test-Path -LiteralPath (Join-Path $out 'index.html'))) {
+            throw 'Assembled Pages artifact is missing index.html.'
+          }
+
+          Write-Host 'Assembled Pages artifact (site + resources):'
+          Get-ChildItem -LiteralPath $out | ForEach-Object { Write-Host ("  {0}" -f $_.Name) }
+          Write-Host "Stable catalog: $stableCatalog"
+
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: site
+          path: _pages_site
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

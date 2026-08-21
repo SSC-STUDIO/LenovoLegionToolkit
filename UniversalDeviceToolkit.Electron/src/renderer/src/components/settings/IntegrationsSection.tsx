@@ -13,11 +13,13 @@ export function IntegrationsSection(): React.JSX.Element {
     void load()
   }, [load])
 
-  const integrations = (scopes.integrations ?? {}) as Record<string, unknown>
+  const editorsEnabled = typeof scopes.integrations === 'object' && scopes.integrations !== null
+  const integrations = (editorsEnabled ? scopes.integrations : {}) as Record<string, unknown>
   const hwinfoEnabled = (integrations['HWiNFO'] as boolean | undefined) ?? false
   const cliEnabled = (integrations['CLI'] as boolean | undefined) ?? false
 
   const persistIntegrations = async (patch: Record<string, unknown>): Promise<void> => {
+    if (!editorsEnabled) return
     const current = (scopes.integrations ?? {}) as Record<string, unknown>
     const next = { ...current, ...patch }
     setScope('integrations', next)
@@ -39,6 +41,7 @@ export function IntegrationsSection(): React.JSX.Element {
           <Switch
             className="udt-settings-switch"
             checked={hwinfoEnabled}
+            disabled={!editorsEnabled}
             onChange={(checked) => void persistIntegrations({ HWiNFO: checked })}
           />
         }
@@ -50,6 +53,7 @@ export function IntegrationsSection(): React.JSX.Element {
           <Switch
             className="udt-settings-switch"
             checked={cliEnabled}
+            disabled={!editorsEnabled}
             onChange={(checked) => void persistIntegrations({ CLI: checked })}
           />
         }

@@ -59,7 +59,7 @@ export default function SpectrumDevicePanel({
   }, [deviceLayout.width])
 
   const scale = fitScale
-  const deviceSet = new Set(deviceKeys)
+  const deviceSet = useMemo(() => new Set(deviceKeys), [deviceKeys])
 
   const keyCenters = useMemo(() => {
     const present = new Set(deviceKeys)

@@ -55,9 +55,11 @@ public class UpdateChecker
         ArgumentNullException.ThrowIfNull(releases);
 
         return releases
-            .Where(r => !r.Draft &&
-                        (includePrerelease || !r.Prerelease) &&
-                        !PluginCatalogTags.IsCatalogTag(r.TagName))
+            .Where(r => PluginCatalogTags.IsPublicApplicationRelease(
+                r.TagName,
+                r.Draft,
+                r.Prerelease,
+                includePrerelease))
             .ToArray();
     }
 
@@ -220,7 +222,6 @@ public class UpdateChecker
     {
         using (await _updateSemaphore.LockAsync(cancellationToken).ConfigureAwait(false))
         {
-            var tempPath = Path.Combine(Folders.Temp, $"{AppIdentity.CompactName}Setup_{Guid.NewGuid()}.exe");
             var latestUpdate = _updates.OrderByDescending(u => u.Version).FirstOrDefault();
 
             if (latestUpdate.Equals(default))
@@ -229,16 +230,42 @@ public class UpdateChecker
             if (latestUpdate.Url is null)
                 throw ExceptionHelper.SetupFileUrlNotFound();
 
-            using var httpClient = _httpClientFactory.Create();
+            var fileId = $"{AppIdentity.CompactName}Setup_{Guid.NewGuid():N}";
+            var finalPath = Path.Combine(Folders.Temp, $"{fileId}.exe");
+            var partialPath = Path.Combine(Folders.Temp, $"{fileId}.exe.partial");
 
-            // Fully close the write handle before integrity validation (OpenRead / delete on failure).
-            using (var fileStream = File.OpenWrite(tempPath))
-                await httpClient.DownloadAsync(latestUpdate.Url, fileStream, progress, cancellationToken).ConfigureAwait(false);
+            try
+            {
+                using var httpClient = _httpClientFactory.Create();
 
-            // Validate SHA256 integrity after download (security check)
-            await ValidateUpdatePackageAsync(tempPath, latestUpdate, httpClient, cancellationToken).ConfigureAwait(false);
+                // Write the payload to a sibling .partial file, then rename after SHA256.
+                using (var fileStream = File.OpenWrite(partialPath))
+                    await httpClient.DownloadAsync(latestUpdate.Url, fileStream, progress, cancellationToken).ConfigureAwait(false);
 
-            return tempPath;
+                await ValidateUpdatePackageAsync(partialPath, latestUpdate, httpClient, cancellationToken).ConfigureAwait(false);
+
+                File.Move(partialPath, finalPath);
+                return finalPath;
+            }
+            catch
+            {
+                TryDeleteFile(partialPath);
+                TryDeleteFile(finalPath);
+                throw;
+            }
+        }
+    }
+
+    private static void TryDeleteFile(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+                File.Delete(path);
+        }
+        catch
+        {
+            // Best-effort cleanup of a rejected partial or final installer.
         }
     }
 

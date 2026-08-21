@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invokeObject } from './bridge'
 
 /**
  * Windows power-plan bridge — renderer counterpart of Electron
@@ -16,8 +16,8 @@ export const DEFAULT_POWER_PLAN_GUID = '00000000-0000-0000-0000-000000000000'
 
 export const powerPlansApi = {
   getList: (): Promise<{ plans: WindowsPowerPlan[] }> =>
-    invoke<{ plans: WindowsPowerPlan[] }>('powerPlans.getList', {}),
+    invokeObject<{ plans: WindowsPowerPlan[] }>('powerPlans.getList', {}),
   /** Activates a power plan immediately via `powercfg /setactive` (main process). */
   setActive: (guid: string): Promise<{ ok: boolean }> =>
-    invoke<{ ok: boolean }>('powerPlans.setActive', { guid })
+    invokeObject<{ ok: boolean }>('powerPlans.setActive', { guid })
 }

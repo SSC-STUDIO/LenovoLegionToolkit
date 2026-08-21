@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using UniversalDeviceToolkit.Abstractions.Platform;
 
 namespace UniversalDeviceToolkit.Abstractions.Localization;
 
@@ -22,27 +23,7 @@ public static class LocalizationRuntime
         }
     }
 
-    public static string LanguageFilePath => Path.Combine(GetAppDataDirectory(), "lang");
-
-    private static string GetAppDataDirectory()
-    {
-        var overridePath = Environment.GetEnvironmentVariable("UDT_APPDATA_OVERRIDE");
-        if (!string.IsNullOrWhiteSpace(overridePath))
-            return Path.GetFullPath(overridePath);
-
-        if (OperatingSystem.IsWindows())
-        {
-            return Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "UniversalDeviceToolkit");
-        }
-
-        var xdg = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
-        var configHome = !string.IsNullOrWhiteSpace(xdg)
-            ? xdg
-            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".config");
-        return Path.Combine(configHome, "UniversalDeviceToolkit");
-    }
+    public static string LanguageFilePath => Path.Combine(ApplicationDataPaths.GetRoot(), "lang");
 
     public static CultureInfo Initialize(CultureInfo? preferred = null, bool persist = false)
     {
@@ -105,10 +86,14 @@ public static class LocalizationRuntime
         {
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(LanguageFilePath)!);
-                File.WriteAllText(LanguageFilePath, culture.Name, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+                var directory = Path.GetDirectoryName(LanguageFilePath);
+                if (!string.IsNullOrEmpty(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                    File.WriteAllText(LanguageFilePath, culture.Name, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+                }
             }
-            catch
+            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or NotSupportedException)
             {
                 // A language preference must never prevent the application from starting.
             }
@@ -119,8 +104,14 @@ public static class LocalizationRuntime
     }
 }
 
-public sealed class CultureChangedEventArgs(CultureInfo previousCulture, CultureInfo culture) : EventArgs
+public sealed class CultureChangedEventArgs : EventArgs
 {
-    public CultureInfo PreviousCulture { get; } = previousCulture;
-    public CultureInfo Culture { get; } = culture;
+    public CultureChangedEventArgs(CultureInfo previousCulture, CultureInfo culture)
+    {
+        PreviousCulture = previousCulture ?? throw new ArgumentNullException(nameof(previousCulture));
+        Culture = culture ?? throw new ArgumentNullException(nameof(culture));
+    }
+
+    public CultureInfo PreviousCulture { get; }
+    public CultureInfo Culture { get; }
 }

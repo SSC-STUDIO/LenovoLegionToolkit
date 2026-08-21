@@ -329,4 +329,25 @@ public class SettingsStoreModelsTests
     }
 
     #endregion
+
+    #region BatteryHealthAlertStore Tests
+
+    [Fact]
+    public void BatteryHealthAlertStore_Normalize_ShouldClampInvalidThresholds()
+    {
+        var store = new BatteryHealthAlertSettings.BatteryHealthAlertStore
+        {
+            LowHealthThreshold = 250,
+            CriticalHealthThreshold = -5,
+            TemperatureThresholdC = 200
+        };
+
+        store.Normalize();
+
+        store.LowHealthThreshold.Should().Be(BatteryHealthAlertSettings.DefaultLowHealthThreshold);
+        store.CriticalHealthThreshold.Should().Be(Math.Max(0, BatteryHealthAlertSettings.DefaultLowHealthThreshold - 20));
+        store.TemperatureThresholdC.Should().Be(0);
+    }
+
+    #endregion
 }

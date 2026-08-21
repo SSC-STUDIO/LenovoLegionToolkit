@@ -1,5 +1,6 @@
 /* Shared styling for the Utils modals (ports of Electron Windows/Utils). */
 
+/* Above LoadingOverlay (1000), TitleBar (1000), notification stack (1001). */
 .udt-utils-backdrop {
   position: fixed;
   inset: 0;
@@ -201,13 +202,7 @@
 
 .udt-utils-select.ant-select {
   height: 40px;
-  padding: 0;
-  border: none;
-  background: transparent;
-}
-
-.udt-utils-select.ant-select .ant-select-selector {
-  height: 40px !important;
+  min-height: 40px;
   border-radius: var(--udt-radius-control, 12px) !important;
   background: var(--udt-surface-window, #202020) !important;
   border-color: rgba(128, 128, 128, 0.4) !important;
@@ -221,6 +216,7 @@
 }
 
 .udt-device-setup-select-dropdown.ant-select-dropdown {
+  z-index: 2500;
   overflow: hidden;
   padding: 4px;
   border: 1px solid rgba(128, 128, 128, 0.35);

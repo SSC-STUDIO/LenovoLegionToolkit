@@ -112,6 +112,10 @@ public static class OptimizationHandlers
                 }).ToArray(),
             });
         }
+        catch (OperationCanceledException)
+        {
+            return BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
+        }
         catch (Exception ex)
         {
             return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
@@ -126,6 +130,9 @@ public static class OptimizationHandlers
             if (!TryGetActionKeys(request, out var actionKeys))
                 throw new BridgeErrorException(-32602, "Missing or invalid array parameter 'actionKeys'.");
 
+            EnsureNonEmptyActionKeys(actionKeys);
+            EnsureKnownActionKeys(actionKeys, cleanup: false);
+
             await ExecuteOptimizationMutationsAsync(actionKeys, apply: true, cancellationToken).ConfigureAwait(false);
 
             return BridgeResult.Ok(new { applied = true });
@@ -136,7 +143,7 @@ public static class OptimizationHandlers
         }
         catch (Exception ex)
         {
-            return ToElevationError(ex, "optimization.apply");
+            return MapMutationError(ex, "optimization.apply");
         }
     }
 
@@ -148,6 +155,9 @@ public static class OptimizationHandlers
             if (!TryGetActionKeys(request, out var actionKeys))
                 throw new BridgeErrorException(-32602, "Missing or invalid array parameter 'actionKeys'.");
 
+            EnsureNonEmptyActionKeys(actionKeys);
+            EnsureKnownActionKeys(actionKeys, cleanup: false);
+
             await ExecuteOptimizationMutationsAsync(actionKeys, apply: false, cancellationToken).ConfigureAwait(false);
 
             return BridgeResult.Ok(new { reverted = true });
@@ -158,7 +168,7 @@ public static class OptimizationHandlers
         }
         catch (Exception ex)
         {
-            return ToElevationError(ex, "optimization.revert");
+            return MapMutationError(ex, "optimization.revert");
         }
     }
 
@@ -168,7 +178,9 @@ public static class OptimizationHandlers
         try
         {
             var recommendedKeys = OptimizationService.GetCategories()
-                .Where(category => !string.Equals(category.Key, WindowsOptimizationService.CleanupCategoryKey, StringComparison.OrdinalIgnoreCase))
+                .Where(category =>
+                    !category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(category.Key, WindowsOptimizationService.CleanupCategoryKey, StringComparison.OrdinalIgnoreCase))
                 .SelectMany(category => category.Actions.Where(action => action.Recommended).Select(action => action.Key))
                 .ToList();
 
@@ -182,7 +194,7 @@ public static class OptimizationHandlers
         }
         catch (Exception ex)
         {
-            return ToElevationError(ex, "optimization.applyRecommended");
+            return MapMutationError(ex, "optimization.applyRecommended");
         }
     }
 
@@ -192,12 +204,15 @@ public static class OptimizationHandlers
         try
         {
             if (!request.Parameters.TryGetProperty("actionKey", out var keyProp) ||
-                keyProp.ValueKind != JsonValueKind.String ||
-                string.IsNullOrWhiteSpace(keyProp.GetString()))
+                keyProp.ValueKind != JsonValueKind.String)
+                throw new BridgeErrorException(-32602, "Missing or invalid string parameter 'actionKey'.");
+
+            var actionKey = keyProp.GetString();
+            if (string.IsNullOrWhiteSpace(actionKey))
                 throw new BridgeErrorException(-32602, "Missing or invalid string parameter 'actionKey'.");
 
             var applied = await OptimizationService
-                .TryGetActionAppliedAsync(keyProp.GetString()!, cancellationToken)
+                .TryGetActionAppliedAsync(actionKey, cancellationToken)
                 .ConfigureAwait(false);
 
             return BridgeResult.Ok(new { applied });
@@ -205,6 +220,14 @@ public static class OptimizationHandlers
         catch (BridgeErrorException ex)
         {
             return BridgeResult.Error(ex.Code, ex.Message);
+        }
+        catch (ArgumentException ex)
+        {
+            return BridgeResult.Error(-32602, ex.Message);
+        }
+        catch (OperationCanceledException)
+        {
+            return BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
         }
         catch (Exception ex)
         {
@@ -220,8 +243,14 @@ public static class OptimizationHandlers
             if (!TryGetActionKeys(request, out var actionKeys))
                 throw new BridgeErrorException(-32602, "Missing or invalid array parameter 'actionKeys'.");
 
+            if (actionKeys.Count == 0)
+                return BridgeResult.Ok(new { bytes = 0L });
+
+            EnsureKnownActionKeys(actionKeys, cleanup: true);
+
             var service = CleanupService;
             long totalBytes = 0;
+            var failed = 0;
             foreach (var key in actionKeys)
             {
                 try
@@ -234,16 +263,24 @@ public static class OptimizationHandlers
                 }
                 catch (Exception ex)
                 {
+                    failed++;
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Failed to estimate cleanup size. [action={key}]", ex);
                 }
             }
+
+            if (failed == actionKeys.Count)
+                throw new BridgeErrorException(-32603, "Failed to estimate cleanup size for every selected action.");
 
             return BridgeResult.Ok(new { bytes = totalBytes });
         }
         catch (BridgeErrorException ex)
         {
             return BridgeResult.Error(ex.Code, ex.Message);
+        }
+        catch (OperationCanceledException)
+        {
+            return BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
         }
         catch (Exception ex)
         {
@@ -253,9 +290,9 @@ public static class OptimizationHandlers
 
     /// <summary>
     /// Runs cleanup. The selected cleanup actions (cleanup.temp, cleanup.custom, …)
-    /// execute in the elevated worker; custom-cleanup "extra folders" ride along
-    /// in-process (permission-tolerant) unless cleanup.custom was already selected.
-    /// Failures map to -1006 when the elevation channel is unavailable.
+    /// execute in the elevated worker; custom-cleanup extra folders ride along
+    /// in-process unless cleanup.custom was already selected.
+    /// Elevation-channel failures map to -1006; other failures stay -32603 / -32800.
     /// </summary>
     private static async Task<BridgeResult> HandleRunCleanupAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
@@ -264,26 +301,23 @@ public static class OptimizationHandlers
             if (!TryGetActionKeys(request, out var actionKeys))
                 throw new BridgeErrorException(-32602, "Missing or invalid array parameter 'actionKeys'.");
 
-            if (actionKeys.Count > 0)
+            EnsureNonEmptyActionKeys(actionKeys);
+            EnsureKnownActionKeys(actionKeys, cleanup: true);
+            CleanupRulesHandlers.EnsureStoredCleanupRulesAreSafe();
+
+            if (!WindowsOptimizationElevationBridge.IsAvailable)
             {
-                if (!WindowsOptimizationElevationBridge.IsAvailable)
-                {
-                    LogElevationUnavailable("cleanup.run");
-                    throw new BridgeErrorException(
-                        ElevationRequiredErrorCode,
-                        "The optimization elevation executor is not registered; cleanup requires elevation and the bridge host is not elevated.");
-                }
-
-                await WindowsOptimizationElevationBridge.ExecuteCleanupAsync(actionKeys, cancellationToken).ConfigureAwait(false);
-
-                // Extra folders from custom cleanup rules (renderer CleanupRulesPanel).
-                if (!actionKeys.Contains(WindowsOptimizationService.CustomCleanupActionKey, StringComparer.OrdinalIgnoreCase))
-                    await CleanupService.ExecuteCustomCleanupAsync(cancellationToken).ConfigureAwait(false);
+                LogElevationUnavailable("cleanup.run");
+                throw new BridgeErrorException(
+                    ElevationRequiredErrorCode,
+                    "The optimization elevation executor is not registered; cleanup requires elevation and the bridge host is not elevated.");
             }
-            else
-            {
+
+            await WindowsOptimizationElevationBridge.ExecuteCleanupAsync(actionKeys, cancellationToken).ConfigureAwait(false);
+
+            // Extra folders from custom cleanup rules (renderer CleanupRulesPanel).
+            if (!actionKeys.Contains(WindowsOptimizationService.CustomCleanupActionKey, StringComparer.OrdinalIgnoreCase))
                 await CleanupService.ExecuteCustomCleanupAsync(cancellationToken).ConfigureAwait(false);
-            }
 
             return BridgeResult.Ok(new { done = true });
         }
@@ -293,7 +327,7 @@ public static class OptimizationHandlers
         }
         catch (Exception ex)
         {
-            return ToElevationError(ex, "cleanup.run");
+            return MapMutationError(ex, "cleanup.run");
         }
     }
 
@@ -328,6 +362,8 @@ public static class OptimizationHandlers
             var replacement = JsonSerializer.Deserialize<NetworkAccelerationConfig>(configProp.GetRawText(), NetworkJsonOptions)
                 ?? throw new BridgeErrorException(-32603, "Deserialized network config is null.");
 
+            ValidateNetworkConfig(replacement);
+
             var service = NetworkService;
             CopyProperties(replacement, service.Config);
             await service.SaveConfigAsync(cancellationToken).ConfigureAwait(false);
@@ -337,6 +373,14 @@ public static class OptimizationHandlers
         catch (BridgeErrorException ex)
         {
             return BridgeResult.Error(ex.Code, ex.Message);
+        }
+        catch (JsonException ex)
+        {
+            return BridgeResult.Error(-32602, $"Invalid 'config' payload. {ex.Message}");
+        }
+        catch (OperationCanceledException)
+        {
+            return BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
         }
         catch (Exception ex)
         {
@@ -374,6 +418,10 @@ public static class OptimizationHandlers
 
             return BridgeResult.Ok(new { ok = true });
         }
+        catch (OperationCanceledException)
+        {
+            return BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
+        }
         catch (Exception ex)
         {
             return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
@@ -384,8 +432,16 @@ public static class OptimizationHandlers
     {
         try
         {
-            await NetworkService.StopAsync(cancellationToken).ConfigureAwait(false);
+            var service = NetworkService;
+            await service.StopAsync(cancellationToken).ConfigureAwait(false);
+            if (service.IsRunning)
+                throw new InvalidOperationException("Network acceleration is still running after stop.");
+
             return BridgeResult.Ok(new { ok = true });
+        }
+        catch (OperationCanceledException)
+        {
+            return BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
         }
         catch (Exception ex)
         {
@@ -405,7 +461,10 @@ public static class OptimizationHandlers
         {
             if (item.ValueKind != JsonValueKind.String)
                 return false;
-            keys.Add(item.GetString()!);
+            var key = item.GetString();
+            if (string.IsNullOrWhiteSpace(key))
+                return false;
+            keys.Add(key.Trim());
         }
 
         actionKeys = keys;
@@ -498,6 +557,13 @@ public static class OptimizationHandlers
                         await service.ApplyActionAsync(key, cancellationToken).ConfigureAwait(false);
                     else
                         await service.RevertActionAsync(key, cancellationToken).ConfigureAwait(false);
+
+                    var applied = await service.TryGetActionAppliedAsync(key, cancellationToken).ConfigureAwait(false);
+                    if (applied.HasValue && applied.Value != apply)
+                    {
+                        throw new InvalidOperationException(
+                            $"Plugin action '{key}' could not be verified after {(apply ? "apply" : "revert")}.");
+                    }
                 }
                 catch (UnauthorizedAccessException ex)
                 {
@@ -551,14 +617,94 @@ public static class OptimizationHandlers
             "(WindowsOptimizationElevationIoCModule missing from the Host IoC container).");
     }
 
-    private static BridgeResult ToElevationError(Exception ex, string method)
+    private static BridgeResult MapMutationError(Exception ex, string method)
     {
+        if (ex is OperationCanceledException)
+            return BridgeResult.Error(BridgeErrorCodes.RequestCancelled, "Request cancelled");
+
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Optimization bridge operation failed. [method={method}]", ex);
 
-        return BridgeResult.Error(
-            ElevationRequiredErrorCode,
-            $"{method} requires elevation; the bridge host is not elevated. {ex.GetType().Name}: {ex.Message}");
+        if (IsElevationFailure(ex))
+        {
+            return BridgeResult.Error(
+                ElevationRequiredErrorCode,
+                $"{method} requires elevation; the bridge host is not elevated. {ex.GetType().Name}: {ex.Message}");
+        }
+
+        return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
+    }
+
+    private static bool IsElevationFailure(Exception ex)
+    {
+        for (var current = ex; current is not null; current = current.InnerException)
+        {
+            if (current is InvalidOperationException &&
+                (current.Message.Contains("elevation executor is not registered", StringComparison.OrdinalIgnoreCase) ||
+                 current.Message.Contains("is not elevated", StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static void EnsureNonEmptyActionKeys(IReadOnlyList<string> actionKeys)
+    {
+        if (actionKeys.Count == 0)
+            throw new BridgeErrorException(-32602, "Parameter 'actionKeys' must contain at least one action key.");
+    }
+
+    private static void EnsureKnownActionKeys(IReadOnlyList<string> actionKeys, bool cleanup)
+    {
+        var known = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var category in OptimizationService.GetCategories())
+        {
+            var isCleanup = category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase)
+                || string.Equals(category.Key, WindowsOptimizationService.CleanupCategoryKey, StringComparison.OrdinalIgnoreCase);
+            if (cleanup != isCleanup)
+                continue;
+            foreach (var action in category.Actions)
+                known.Add(action.Key);
+        }
+
+        foreach (var key in actionKeys)
+        {
+            if (!known.Contains(key))
+            {
+                throw new BridgeErrorException(
+                    -32602,
+                    cleanup
+                        ? $"Unknown cleanup action key '{key}'."
+                        : $"Unknown optimization action key '{key}'.");
+            }
+        }
+    }
+
+    private static void ValidateNetworkConfig(NetworkAccelerationConfig config)
+    {
+        if (config.ListenPort is < 1 or > 65535)
+            throw new BridgeErrorException(-32602, "Network config listenPort must be between 1 and 65535.");
+
+        if (!Enum.IsDefined(config.Mode))
+            throw new BridgeErrorException(-32602, "Network config mode is invalid.");
+
+        config.DomainGroups ??= [];
+
+        if (!string.IsNullOrWhiteSpace(config.DohUrl) &&
+            (!Uri.TryCreate(config.DohUrl, UriKind.Absolute, out var dohUri) ||
+             (dohUri.Scheme != Uri.UriSchemeHttps && dohUri.Scheme != Uri.UriSchemeHttp)))
+        {
+            throw new BridgeErrorException(-32602, "Network config dohUrl must be an http(s) URL.");
+        }
+
+        var snapshotPath = config.LastRecoverySnapshot?.SnapshotPath;
+        if (!string.IsNullOrWhiteSpace(snapshotPath) &&
+            (snapshotPath.Contains("..", StringComparison.Ordinal) || snapshotPath.IndexOf('\0') >= 0))
+        {
+            throw new BridgeErrorException(-32602, "Network config lastRecoverySnapshot.snapshotPath is invalid.");
+        }
     }
 
     private static void CopyProperties(object source, object target)

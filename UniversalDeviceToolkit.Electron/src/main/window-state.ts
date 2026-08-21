@@ -6,7 +6,7 @@
  */
 import { app } from 'electron'
 import { join } from 'path'
-import { mkdirSync, readFileSync, writeFileSync } from 'fs'
+import { mkdirSync, readFileSync, renameSync, unlinkSync, writeFileSync } from 'fs'
 
 export interface PersistedWindowState {
   x?: number
@@ -46,12 +46,28 @@ export function readWindowState(): PersistedWindowState {
   return cachedState
 }
 
+function writeStateFileAtomic(contents: string): void {
+  const dest = stateFilePath()
+  mkdirSync(app.getPath('userData'), { recursive: true })
+  const temp = `${dest}.${process.pid}.tmp`
+  try {
+    writeFileSync(temp, contents, 'utf8')
+    renameSync(temp, dest)
+  } catch (error) {
+    try {
+      unlinkSync(temp)
+    } catch {
+      // temp may not exist if writeFileSync failed
+    }
+    throw error
+  }
+}
+
 export function updateWindowState(partial: PersistedWindowState): void {
   const next = { ...readWindowState(), ...partial }
   cachedState = next
   try {
-    mkdirSync(app.getPath('userData'), { recursive: true })
-    writeFileSync(stateFilePath(), JSON.stringify(next, null, 2), 'utf8')
+    writeStateFileAtomic(JSON.stringify(next, null, 2))
   } catch (error) {
     console.error('[main] failed to persist window state:', error)
   }

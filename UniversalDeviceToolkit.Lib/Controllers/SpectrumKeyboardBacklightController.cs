@@ -49,6 +49,7 @@ public class SpectrumKeyboardBacklightController : IDisposable
 
     private SafeFileHandle? _deviceHandle;
 
+    private readonly AsyncLock _auroraLock = new();
     private CancellationTokenSource? _auroraRefreshCancellationTokenSource;
     private Task? _auroraRefreshTask;
     private bool _auroraCaptureFailureLogged;
@@ -316,70 +317,79 @@ private async Task Listener_ChangedAsync(object? sender, SpecialKeyListener.Chan
     {
         await ThrowIfVantageEnabled().ConfigureAwait(false);
 
-        await StopAuroraIfNeededAsync().ConfigureAwait(false);
+        using (await _auroraLock.LockAsync().ConfigureAwait(false))
+        {
+            await StopAuroraCoreAsync().ConfigureAwait(false);
 
-        profile ??= await GetProfileAsync().ConfigureAwait(false);
-        var (_, effects) = await GetProfileDescriptionAsync(profile.Value).ConfigureAwait(false);
+            profile ??= await GetProfileAsync().ConfigureAwait(false);
+            var (_, effects) = await GetProfileDescriptionAsync(profile.Value).ConfigureAwait(false);
 
-        if (!effects.Any(e => e.Type == SpectrumKeyboardBacklightEffectType.AuroraSync))
-            return false;
+            if (!effects.Any(e => e.Type == SpectrumKeyboardBacklightEffectType.AuroraSync))
+                return false;
 
-        _auroraRefreshCancellationTokenSource = new();
-        var token = _auroraRefreshCancellationTokenSource.Token;
-        _auroraRefreshTask = Task.Run(() => AuroraRefreshAsync(profile.Value, token), token);
+            _auroraRefreshCancellationTokenSource = new();
+            var token = _auroraRefreshCancellationTokenSource.Token;
+            _auroraRefreshTask = Task.Run(() => AuroraRefreshAsync(profile.Value, token), token);
 
-        if (Log.Instance.IsTraceEnabled)
-            Log.Instance.Trace($"Aurora started (profile={profile})");
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Aurora started (profile={profile})");
 
-        return true;
+            return true;
+        }
     }
 
     public async Task StopAuroraIfNeededAsync()
     {
         try
         {
-            var sw = global::System.Diagnostics.Stopwatch.StartNew();
-
             await ThrowIfVantageEnabled().ConfigureAwait(false);
 
-            if (_auroraRefreshCancellationTokenSource is not null)
-                await _auroraRefreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
-
-            var orphanedTask = _auroraRefreshTask;
-            _auroraRefreshTask = null;
-
-            if (_auroraRefreshCancellationTokenSource is not null)
-            {
-                _auroraRefreshCancellationTokenSource.Dispose();
-                _auroraRefreshCancellationTokenSource = null;
-            }
-
-            if (orphanedTask is not null)
-            {
-                try
-                {
-                    await orphanedTask.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
-                }
-                catch (TimeoutException)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Aurora task did not complete within 5 seconds, abandoning.");
-                }
-                catch (OperationCanceledException)
-                {
-                    // Expected when task is cancelled
-                }
-            }
-
-            sw.Stop();
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Aurora stopped in {sw.ElapsedMilliseconds}ms.");
+            using (await _auroraLock.LockAsync().ConfigureAwait(false))
+                await StopAuroraCoreAsync().ConfigureAwait(false);
         }
         catch (Exception ex)
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Error stopping Aurora: {ex.Message}");
         }
+    }
+
+    private async Task StopAuroraCoreAsync()
+    {
+        var sw = global::System.Diagnostics.Stopwatch.StartNew();
+
+        if (_auroraRefreshCancellationTokenSource is not null)
+            await _auroraRefreshCancellationTokenSource.CancelAsync().ConfigureAwait(false);
+
+        var orphanedTask = _auroraRefreshTask;
+        _auroraRefreshTask = null;
+
+        if (_auroraRefreshCancellationTokenSource is not null)
+        {
+            _auroraRefreshCancellationTokenSource.Dispose();
+            _auroraRefreshCancellationTokenSource = null;
+        }
+
+        if (orphanedTask is not null)
+        {
+            try
+            {
+                await orphanedTask.WaitAsync(TimeSpan.FromSeconds(5)).ConfigureAwait(false);
+            }
+            catch (TimeoutException)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace($"Aurora task did not complete within 5 seconds, abandoning.");
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected when task is cancelled
+            }
+        }
+
+        sw.Stop();
+        if (Log.Instance.IsTraceEnabled)
+            Log.Instance.Trace($"Aurora stopped in {sw.ElapsedMilliseconds}ms.");
     }
 
     public async Task<Dictionary<ushort, RGBColor>> GetStateAsync(bool skipVantageCheck = false)

@@ -1,6 +1,8 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Security;
+using UniversalDeviceToolkit.Abstractions.Platform;
 using UniversalDeviceToolkit.Shared.Logging;
 
 namespace UniversalDeviceToolkit.Shared.Utils;
@@ -13,7 +15,7 @@ namespace UniversalDeviceToolkit.Shared.Utils;
 /// </summary>
 public static class Folders
 {
-    public static string AppDataOverrideEnvironmentVariable => string.Concat("UDT", "_APPDATA", "_OVERRIDE");
+    public static string AppDataOverrideEnvironmentVariable => ApplicationDataPaths.OverrideEnvironmentVariable;
     private const string LegacyMigrationMarkerFileName = ".legacy-appdata-migrated";
 
     public static string Program => AppDomain.CurrentDomain.SetupInformation.ApplicationBase ?? string.Empty;
@@ -39,18 +41,11 @@ public static class Folders
     {
         get
         {
-#if UDT_TEST_HOOKS
-            var overridePath = Environment.GetEnvironmentVariable(AppDataOverrideEnvironmentVariable);
-            if (!string.IsNullOrWhiteSpace(overridePath))
-            {
-                var fullOverridePath = Path.GetFullPath(overridePath);
-                Directory.CreateDirectory(fullOverridePath);
-                return fullOverridePath;
-            }
-#endif
-
-            var folderPath = Path.Combine(ConfigHome, AppIdentity.CompactName);
+            var folderPath = ApplicationDataPaths.GetRoot();
             Directory.CreateDirectory(folderPath);
+
+            if (ApplicationDataPaths.IsOverridden)
+                return folderPath;
 
             // Legacy migration is Windows-only — LLT was a Windows-only application.
             if (OperatingSystem.IsWindows())
@@ -70,31 +65,20 @@ public static class Folders
         }
     }
 
-    /// <summary>
-    /// Platform-appropriate configuration home directory.
-    /// On Linux/macOS: <c>$XDG_CONFIG_HOME</c> or <c>~/.config</c>.
-    /// On Windows: <c>%LOCALAPPDATA%</c>.
-    /// </summary>
-    private static string ConfigHome
-    {
-        get
-        {
-            if (OperatingSystem.IsWindows())
-                return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-
-            // XDG Base Directory Specification: $XDG_CONFIG_HOME, fallback to ~/.config
-            var xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
-            if (!string.IsNullOrWhiteSpace(xdgConfigHome))
-                return xdgConfigHome;
-
-            var home = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            return Path.Combine(home, ".config");
-        }
-    }
-
     public static string GetAppDataSubdirectory(string subdirectory)
     {
-        var targetDirectory = Path.Combine(AppData, subdirectory);
+        ArgumentException.ThrowIfNullOrWhiteSpace(subdirectory);
+
+        var segments = subdirectory.Split(
+            [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar],
+            StringSplitOptions.RemoveEmptyEntries);
+        if (segments.Length == 0 || segments.Any(static segment => !PathSecurity.IsValidFileName(segment)))
+            throw new ArgumentException($"Invalid AppData subdirectory: '{subdirectory}'.", nameof(subdirectory));
+
+        var targetDirectory = Path.Combine(AppData, Path.Combine(segments));
+        if (!PathSecurity.IsPathWithinAllowedDirectory(targetDirectory, AppData))
+            throw ExceptionHelper.SettingsPathEscapesAllowedDir(targetDirectory);
+
         Directory.CreateDirectory(targetDirectory);
 
         // Legacy subdirectory migration is Windows-only.
@@ -176,7 +160,9 @@ public static class Folders
                 if (File.Exists(destinationPath))
                     continue;
 
-                Directory.CreateDirectory(Path.GetDirectoryName(destinationPath)!);
+                var destinationDirectoryName = Path.GetDirectoryName(destinationPath);
+                if (!string.IsNullOrEmpty(destinationDirectoryName))
+                    Directory.CreateDirectory(destinationDirectoryName);
                 File.Copy(file, destinationPath, false);
             }
         }

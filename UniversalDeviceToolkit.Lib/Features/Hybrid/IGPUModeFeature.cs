@@ -31,7 +31,20 @@ public class IGPUModeFeature : AbstractCompositeFeature<IGPUModeState>, IIGPUMod
         _featureFlagsFeature = featureFlagsFeature;
     }
 
-    public bool ExperimentalGPUWorkingMode { get; set; }
+    private bool _experimentalGPUWorkingMode;
+
+    public bool ExperimentalGPUWorkingMode
+    {
+        get => _experimentalGPUWorkingMode;
+        set
+        {
+            if (_experimentalGPUWorkingMode == value)
+                return;
+
+            _experimentalGPUWorkingMode = value;
+            InvalidateResolution();
+        }
+    }
 
     protected override async Task<IFeature<IGPUModeState>?> ResolveAsync(CancellationToken cancellationToken = default)
     {

@@ -1,5 +1,76 @@
 /* TitleBar polish + DeviceInfoModal styles (Electron DeviceInformationWindow port). */
 
+/* High-scale overflow: keep the title in flow so it ellipsizes against the
+   real chrome width instead of a guessed 300px absolute inset. */
+.udt-titlebar.udt-titlebar--original {
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.udt-titlebar.udt-titlebar--original .udt-titlebar__title {
+  position: relative;
+  inset: auto;
+  flex: 1 1 80px;
+  min-width: 80px;
+  padding-inline: 12px 8px;
+}
+
+.udt-titlebar.udt-titlebar--original .udt-titlebar__title-text {
+  display: block;
+  max-width: 100%;
+}
+
+.udt-titlebar.udt-titlebar--original .udt-titlebar__chrome {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.udt-titlebar.udt-titlebar--original .udt-titlebar__trailing {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.udt-titlebar.udt-titlebar--original .udt-titlebar__log-button {
+  flex: 0 0 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.udt-titlebar__device-slot {
+  display: flex;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 260px;
+}
+
+.udt-titlebar__device-slot > * {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
+
+.udt-titlebar.udt-titlebar--original .udt-titlebar__device-button {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.udt-titlebar.udt-titlebar--original .udt-titlebar__window-controls {
+  flex-shrink: 0;
+}
+
+/* overflow:hidden on the trailing cluster would clip the global 2px offset ring. */
+.udt-titlebar__log-button:focus-visible,
+.udt-titlebar__device-button:focus-visible,
+.udt-titlebar__window-controls button:focus-visible {
+  outline-offset: -2px;
+}
+
 /* Electron TitleBarDeviceInfoButtonStyle triggers: pressed → tertiary fill. */
 .udt-titlebar__device-button:active {
   background: var(--udt-control-fill-tertiary, rgba(128, 128, 128, 0.2));
@@ -69,6 +140,7 @@
   display: flex;
   align-items: baseline;
   gap: 12px;
+  min-width: 0;
   padding: 10px 14px;
   border-bottom: 1px solid rgba(128, 128, 128, 0.22);
   cursor: pointer;
@@ -83,9 +155,11 @@
 }
 
 .udt-device-info-row__label {
-  flex: 0 0 34%;
+  flex: 0 1 34%;
+  min-width: 0;
   font-size: 14px;
   color: var(--udt-text-secondary);
+  overflow-wrap: anywhere;
 }
 
 .udt-device-info-row__value {
@@ -186,6 +260,8 @@
    inset the title so it does not overlap the lights. */
 .udt-titlebar--mac {
   height: 44px;
+  box-sizing: border-box;
+  padding-left: 78px;
 }
 
 .udt-titlebar--mac .udt-titlebar__window-controls {
@@ -193,7 +269,7 @@
 }
 
 .udt-titlebar--mac .udt-titlebar__title {
-  left: 78px;
-  right: 16px;
+  left: auto;
+  right: auto;
   text-align: left;
 }

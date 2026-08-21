@@ -126,8 +126,10 @@ test('Ant Design locale map covers every selectable language', () => {
     const escaped = code.replaceAll('-', '\\-')
     assert.match(antd, new RegExp(`(?:['"]${escaped}['"]|${escaped}):`), `${code} needs an Ant Design locale mapping`)
   }
-  assert.match(antd, /'uz-Latn-UZ': uzUZ/)
+  assert.match(antd, /'uz-Latn-UZ': \(\) => import\('antd\/locale\/uz_UZ'\)/)
   assert.match(antd, /getAntDesignLocale\(language: string\): AntDesignLocale/)
+  assert.match(antd, /loadAntDesignLocale\(language: string\): Promise<AntDesignLocale>/)
+  assert.doesNotMatch(antd, /import arEG from 'antd\/locale\/ar_EG'/)
 })
 
 test('Host culture synchronization and UI date formatting use explicit contracts', () => {

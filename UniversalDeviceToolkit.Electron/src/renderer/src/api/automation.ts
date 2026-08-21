@@ -22,9 +22,12 @@ export interface AutomationState {
 
 export interface AutomationApi {
   getState(): Promise<AutomationState>
-  setEnabled(enabled: boolean): Promise<{ ok: boolean }>
-  savePipelines(pipelines: AutomationPipeline[], isEnabled?: boolean): Promise<{ saved: boolean }>
-  runNow(pipelineId: string): Promise<{ ok: boolean }>
+  setEnabled(enabled: boolean): Promise<{ ok: boolean; error?: string; message?: string }>
+  savePipelines(
+    pipelines: AutomationPipeline[],
+    isEnabled?: boolean
+  ): Promise<{ saved: boolean; error?: string; message?: string }>
+  runNow(pipelineId: string): Promise<{ ok: boolean; error?: string; message?: string }>
   getSupportedSteps(): Promise<{ steps: string[] }>
   /** Open a native file picker for a backlight profile (.json); null when cancelled. */
   selectProfileJson(): Promise<string | null>

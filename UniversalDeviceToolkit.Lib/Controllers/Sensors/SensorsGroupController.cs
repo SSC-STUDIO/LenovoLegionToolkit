@@ -61,6 +61,7 @@ public class SensorsGroupController : IDisposable
     private readonly Dictionary<object, TimeSpan> _subscribers = [];
     private CancellationTokenSource? _producerCts;
     private bool _producerLoopErrorLogged;
+    private int _disposed;
     public event EventHandler? SensorsUpdated;
 
     #endregion
@@ -230,7 +231,7 @@ public class SensorsGroupController : IDisposable
         {
             var dGpu = _hardware.GpuHardware ?? _hardware.AmdGpuHardware;
             float total = ShouldUseIntegratedGpuSnapshot(dGpu) ? _hardware.CachedIGpuVramTotal : _hardware.CachedGpuVramTotal;
-            return Task.FromResult(total > 0 ? total / 1024f : INVALID_VALUE_FLOAT);
+            return Task.FromResult(total > 0 ? total : INVALID_VALUE_FLOAT);
         }
     }
 
@@ -266,8 +267,12 @@ public class SensorsGroupController : IDisposable
 
     private async Task<LibreHardwareMonitorInitialState> InitializeAsync(
         HardwareDiscoveryService.InitializationMode requestedMode,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default,
+        bool persistFailureToSettings = true)
     {
+        if (Volatile.Read(ref _disposed) != 0)
+            return LibreHardwareMonitorInitialState.Fail;
+
         if (_initialized && _hardware.Mode >= requestedMode)
         {
             InitialState = _hardware.HardwareCount == 0
@@ -279,6 +284,9 @@ public class SensorsGroupController : IDisposable
         await _initSemaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
         try
         {
+            if (Volatile.Read(ref _disposed) != 0)
+                return LibreHardwareMonitorInitialState.Fail;
+
             if (_initialized && _hardware.Mode >= requestedMode)
             {
                 InitialState = _hardware.HardwareCount == 0
@@ -299,13 +307,13 @@ public class SensorsGroupController : IDisposable
         }
         catch (DllNotFoundException)
         {
-            HandleInitException("DLL Not Found", mutateSettings: requestedMode == HardwareDiscoveryService.InitializationMode.Full);
+            HandleInitException("DLL Not Found", mutateSettings: persistFailureToSettings && requestedMode == HardwareDiscoveryService.InitializationMode.Full);
             InitialState = LibreHardwareMonitorInitialState.PawnIONotInstalled;
             return InitialState;
         }
         catch (Exception ex)
         {
-            HandleInitException(ex.Message, mutateSettings: requestedMode == HardwareDiscoveryService.InitializationMode.Full);
+            HandleInitException(ex.Message, mutateSettings: persistFailureToSettings && requestedMode == HardwareDiscoveryService.InitializationMode.Full);
             if (requestedMode == HardwareDiscoveryService.InitializationMode.FanOnly)
                 return LibreHardwareMonitorInitialState.Fail;
             throw;
@@ -371,50 +379,104 @@ public class SensorsGroupController : IDisposable
     public bool IsLibreHardwareMonitorInitialized() =>
         InitialState is LibreHardwareMonitorInitialState.Initialized or LibreHardwareMonitorInitialState.Success;
 
+    /// <summary>
+    /// Close LibreHardwareMonitor while the UI is tray-only. Chart polling is
+    /// already stopped; this releases the native Computer graph. Re-open via
+    /// <see cref="EnsureHardwareAfterBackgroundAsync"/> before UI resume.
+    /// </summary>
+    public void ReleaseHardwareForBackground()
+    {
+        lock (_subscribers)
+            CancelProducerLoop();
+
+        _hardware.CloseHardwareForUpgrade();
+        _initialized = false;
+        InitialState = LibreHardwareMonitorInitialState.Fail;
+        lock (_dataLock)
+        {
+            _cachedCpuName = string.Empty;
+            _cachedGpuName = string.Empty;
+        }
+    }
+
+    public Task<LibreHardwareMonitorInitialState> EnsureHardwareAfterBackgroundAsync(
+        CancellationToken cancellationToken = default) =>
+        InitializeAsync(
+            HardwareDiscoveryService.InitializationMode.Full,
+            cancellationToken,
+            persistFailureToSettings: false);
+
     #endregion
 
     #region Producer / Subscriber
 
     public void Start(object subscriber, TimeSpan interval)
     {
+        ArgumentNullException.ThrowIfNull(subscriber);
+
         lock (_subscribers)
         {
+            if (Volatile.Read(ref _disposed) != 0)
+                return;
+
             _subscribers[subscriber] = interval;
-            UpdateProducerLoop();
+            EnsureProducerLoop();
         }
     }
 
     public void Stop(object subscriber)
     {
+        if (subscriber is null)
+            return;
+
         lock (_subscribers)
         {
             if (_subscribers.Remove(subscriber))
-            {
-                UpdateProducerLoop();
-            }
+                EnsureProducerLoop();
         }
     }
 
-    private void UpdateProducerLoop()
+    private void EnsureProducerLoop()
     {
-        if (_subscribers.Count == 0)
+        if (Volatile.Read(ref _disposed) != 0 || _subscribers.Count == 0)
         {
-            StopProducerLoop();
+            CancelProducerLoop();
             return;
         }
 
-        StopProducerLoop();
+        // The loop re-reads the minimum interval each tick. Restarting on every
+        // Start/Stop races the old loop against a disposed CancellationTokenSource.
+        if (_producerCts is { IsCancellationRequested: false })
+            return;
 
+        CancelProducerLoop();
         _producerCts = new CancellationTokenSource();
         var token = _producerCts.Token;
         _ = Task.Run(() => ProducerLoop(token), token);
     }
 
-    private void StopProducerLoop()
+    private void CancelProducerLoop()
     {
-        _producerCts?.Cancel();
-        _producerCts?.Dispose();
+        var cts = _producerCts;
         _producerCts = null;
+        if (cts is null)
+            return;
+
+        try
+        {
+            cts.Cancel();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
+
+        try
+        {
+            cts.Dispose();
+        }
+        catch (ObjectDisposedException)
+        {
+        }
     }
 
     private async Task ProducerLoop(CancellationToken token)
@@ -480,7 +542,16 @@ public class SensorsGroupController : IDisposable
 
     public void Dispose()
     {
-        StopProducerLoop();
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+            return;
+
+        lock (_subscribers)
+        {
+            _subscribers.Clear();
+            CancelProducerLoop();
+        }
+
+        SensorsUpdated = null;
         _hardware.Close();
         _initialized = false;
         _initSemaphore.Dispose();

@@ -180,6 +180,44 @@ public sealed class NetworkProxyIpcContractTests
     }
 
     [Fact]
+    public async Task IpcServer_ShouldReturnEmptyTrafficWhenHostDoesNotExposeSnapshots()
+    {
+        var pipeName = $"udt-fast-{Guid.NewGuid():N}";
+        var token = NetworkProxySessionToken.Create();
+        await using var server = new NetworkProxyIpcServer(pipeName, token, new NoopProxyHost());
+        using var cancellation = new CancellationTokenSource();
+        var serverTask = server.RunAsync(cancellation.Token);
+
+        try
+        {
+            using (var status = await SendAsync(pipeName, token, "status"))
+            {
+                status.RootElement.GetProperty("data").GetProperty("bytesUploaded").GetString().Should().Be("0");
+                status.RootElement.GetProperty("data").GetProperty("bytesDownloaded").GetString().Should().Be("0");
+                status.RootElement.GetProperty("data").GetProperty("activeConnections").GetString().Should().Be("0");
+                status.RootElement.GetProperty("data").GetProperty("totalConnections").GetString().Should().Be("0");
+            }
+
+            using (var connections = await SendAsync(pipeName, token, "connections"))
+            {
+                JsonDocument.Parse(connections.RootElement.GetProperty("data").GetProperty("items").GetString()!)
+                    .RootElement.GetArrayLength().Should().Be(0);
+            }
+
+            using (var destinations = await SendAsync(pipeName, token, "destinations"))
+            {
+                JsonDocument.Parse(destinations.RootElement.GetProperty("data").GetProperty("items").GetString()!)
+                    .RootElement.GetArrayLength().Should().Be(0);
+            }
+        }
+        finally
+        {
+            cancellation.Cancel();
+            await serverTask.WaitAsync(TimeSpan.FromSeconds(5));
+        }
+    }
+
+    [Fact]
     public async Task IpcServer_ShouldStopWhenCanceledBeforeFirstConnection()
     {
         var pipeName = $"udt-fast-{Guid.NewGuid():N}";
@@ -219,20 +257,34 @@ public sealed class NetworkProxyIpcContractTests
                 status.RootElement.GetProperty("success").GetBoolean().Should().BeTrue();
                 status.RootElement.GetProperty("data").GetProperty("running").GetString().Should().Be("false");
                 status.RootElement.GetProperty("data").GetProperty("health").GetString().Should().Be("stopped");
+                status.RootElement.GetProperty("data").GetProperty("bytesUploaded").GetString().Should().Be("12");
+                status.RootElement.GetProperty("data").GetProperty("bytesDownloaded").GetString().Should().Be("34");
+                status.RootElement.GetProperty("data").GetProperty("activeConnections").GetString().Should().Be("0");
+                status.RootElement.GetProperty("data").GetProperty("totalConnections").GetString().Should().Be("1");
             }
 
             using (var connections = await SendAsync(pipeName, token, "connections"))
             {
                 connections.RootElement.GetProperty("success").GetBoolean().Should().BeTrue();
-                JsonDocument.Parse(connections.RootElement.GetProperty("data").GetProperty("items").GetString()!)
-                    .RootElement.GetArrayLength().Should().Be(0);
+                using var items = JsonDocument.Parse(
+                    connections.RootElement.GetProperty("data").GetProperty("items").GetString()!);
+                items.RootElement.GetArrayLength().Should().Be(1);
+                items.RootElement[0].GetProperty("host").GetString().Should().Be("example.com");
+                items.RootElement[0].GetProperty("port").GetInt32().Should().Be(443);
+                items.RootElement[0].GetProperty("protocol").GetString().Should().Be("CONNECT");
+                items.RootElement[0].GetProperty("state").GetString().Should().Be("completed");
             }
 
             using (var destinations = await SendAsync(pipeName, token, "destinations"))
             {
                 destinations.RootElement.GetProperty("success").GetBoolean().Should().BeTrue();
-                JsonDocument.Parse(destinations.RootElement.GetProperty("data").GetProperty("items").GetString()!)
-                    .RootElement.GetArrayLength().Should().Be(0);
+                using var items = JsonDocument.Parse(
+                    destinations.RootElement.GetProperty("data").GetProperty("items").GetString()!);
+                items.RootElement.GetArrayLength().Should().Be(1);
+                items.RootElement[0].GetProperty("host").GetString().Should().Be("example.com");
+                items.RootElement[0].GetProperty("port").GetInt32().Should().Be(443);
+                items.RootElement[0].GetProperty("lastState").GetString().Should().Be("completed");
+                items.RootElement[0].GetProperty("totalConnections").GetInt64().Should().Be(1);
             }
 
             using (var invalidRules = await SendAsync(pipeName, token, "rules", "not-json"))
@@ -332,14 +384,48 @@ public sealed class NetworkProxyIpcContractTests
         }
     }
 
-    private sealed class RecordingProxyHost : INetworkProxyHost
+    private sealed class RecordingProxyHost : INetworkProxyHost, INetworkProxyTrafficSource
     {
+        private readonly NetworkProxyConnectionSnapshot[] _connections =
+        [
+            new()
+            {
+                Id = 1,
+                Host = "example.com",
+                Port = 443,
+                Protocol = "CONNECT",
+                State = "completed",
+                BytesUploaded = 12,
+                BytesDownloaded = 34,
+                StartedAtUtc = DateTime.UnixEpoch,
+            }
+        ];
+
+        private readonly NetworkProxyDestinationSnapshot[] _destinations =
+        [
+            new()
+            {
+                Host = "example.com",
+                Port = 443,
+                TotalConnections = 1,
+                ActiveConnections = 0,
+                BytesUploaded = 12,
+                BytesDownloaded = 34,
+                LastState = "completed",
+                LastUpdatedAtUtc = DateTime.UnixEpoch,
+            }
+        ];
+
         public bool IsRunning { get; private set; }
         public int ListenPort => 3128;
         public string StatusSummary => IsRunning ? "running" : "stopped";
         public int StartCalls { get; private set; }
         public int StopCalls { get; private set; }
         public IReadOnlyList<string>? LastAllowlist { get; private set; }
+        public long BytesUploaded => 12;
+        public long BytesDownloaded => 34;
+        public int ActiveConnections => 0;
+        public long TotalConnections => 1;
 
         public ValueTask DisposeAsync() => ValueTask.CompletedTask;
 
@@ -361,5 +447,11 @@ public sealed class NetworkProxyIpcContractTests
         {
             LastAllowlist = domains?.ToArray();
         }
+
+        public IReadOnlyList<NetworkProxyConnectionSnapshot> GetConnectionSnapshots(int maxItems = 40) =>
+            _connections.Take(maxItems).ToArray();
+
+        public IReadOnlyList<NetworkProxyDestinationSnapshot> GetDestinationSnapshots(int maxItems = 40) =>
+            _destinations.Take(maxItems).ToArray();
     }
 }

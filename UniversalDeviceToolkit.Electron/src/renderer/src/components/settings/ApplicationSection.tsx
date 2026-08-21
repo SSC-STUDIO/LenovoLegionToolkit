@@ -70,8 +70,9 @@ const TOGGLE_ITEMS: ToggleItem[] = [
   }
 ]
 
-function readBoolean(app: AppSettings, key: string): boolean {
-  return app[key] === true
+function readBoolean(app: AppSettings, key: string, fallback = false): boolean {
+  const value = app[key]
+  return typeof value === 'boolean' ? value : fallback
 }
 
 /** Electron SettingsApplicationBehaviorControl software disabler cards. */
@@ -152,14 +153,15 @@ export default function ApplicationSection(): React.JSX.Element {
   }
 
   const rawApp = scopes.application
-  const app: AppSettings =
-    typeof rawApp === 'object' && rawApp !== null ? (rawApp as AppSettings) : {}
+  const editorsEnabled = typeof rawApp === 'object' && rawApp !== null
+  const app: AppSettings = editorsEnabled ? (rawApp as AppSettings) : {}
 
   useEffect(() => {
     void load()
   }, [load])
 
   const handleToggle = (field: string, checked: boolean): void => {
+    if (!editorsEnabled) return
     const next: AppSettings = { ...app, [field]: checked }
     setScope('application', next)
     settingsApi
@@ -214,10 +216,8 @@ export default function ApplicationSection(): React.JSX.Element {
       message.error(t('settings.saveFailed'))
     })
   }
-  const dashboardScope =
-    typeof scopes.dashboard === 'object' && scopes.dashboard !== null
-      ? (scopes.dashboard as AppSettings)
-      : {}
+  const dashboardReady = typeof scopes.dashboard === 'object' && scopes.dashboard !== null
+  const dashboardScope = dashboardReady ? (scopes.dashboard as AppSettings) : {}
   const sensorRefreshInterval =
     typeof dashboardScope['SensorsRefreshIntervalSeconds'] === 'number' &&
     Number.isFinite(dashboardScope['SensorsRefreshIntervalSeconds']) &&
@@ -226,6 +226,7 @@ export default function ApplicationSection(): React.JSX.Element {
       : 1
 
   const handleSensorIntervalChange = (value: number): void => {
+    if (!dashboardReady) return
     const next: AppSettings = { ...dashboardScope, SensorsRefreshIntervalSeconds: value }
     setScope('dashboard', next)
     settingsApi
@@ -259,7 +260,7 @@ export default function ApplicationSection(): React.JSX.Element {
             className="udt-settings-select"
             value={autorunLoaded ? autorunState : undefined}
             loading={!autorunLoaded}
-            disabled={!autorunAvailable}
+            disabled={!autorunAvailable || !editorsEnabled}
             onChange={handleAutorunChange}
             options={autorunOptionsFor(platform).map((option) => ({
               value: option.value,
@@ -276,7 +277,8 @@ export default function ApplicationSection(): React.JSX.Element {
           action={
             <Switch
               className="udt-settings-switch"
-              checked={readBoolean(app, item.field)}
+              checked={readBoolean(app, item.field, item.field === 'MinimizeToTray')}
+              disabled={!editorsEnabled}
               onChange={(value) => handleToggle(item.field, value)}
             />
           }
@@ -286,14 +288,15 @@ export default function ApplicationSection(): React.JSX.Element {
         title={t('settings.application.animationsEnabled')}
         description={t('settings.application.animationsEnabledDesc')}
         action={
-          <Switch
-            className="udt-settings-switch"
-            checked={readBoolean(app, 'AnimationsEnabled')}
-            onChange={(value) => {
-              handleToggle('AnimationsEnabled', value)
-              document.documentElement.classList.toggle('udt-animations-off', !value)
-            }}
-          />
+            <Switch
+              className="udt-settings-switch"
+              checked={readBoolean(app, 'AnimationsEnabled', true)}
+              disabled={!editorsEnabled}
+              onChange={(value) => {
+                handleToggle('AnimationsEnabled', value)
+                document.documentElement.classList.toggle('udt-animations-off', !value)
+              }}
+            />
         }
       />
 
@@ -307,6 +310,7 @@ export default function ApplicationSection(): React.JSX.Element {
             <Switch
               className="udt-settings-switch"
               checked={readBoolean(app, item.field)}
+              disabled={!editorsEnabled}
               onChange={(value) => handleToggle(item.field, value)}
             />
           }
@@ -315,7 +319,9 @@ export default function ApplicationSection(): React.JSX.Element {
       <SettingsCard
         title={t('settings.application.sensorSections')}
         description={t('settings.application.sensorSectionsDesc')}
-        onClick={hardwareSensorsEnabled ? () => setSensorSectionsOpen(true) : undefined}
+        onClick={
+          editorsEnabled && hardwareSensorsEnabled ? () => setSensorSectionsOpen(true) : undefined
+        }
       />
       <SettingsCard
         title={t('settings.application.sensorRefreshInterval')}
@@ -324,6 +330,7 @@ export default function ApplicationSection(): React.JSX.Element {
           <Select<number>
             className="udt-settings-select"
             value={sensorRefreshInterval}
+            disabled={!dashboardReady}
             onChange={handleSensorIntervalChange}
             options={SENSOR_REFRESH_INTERVALS.map((seconds) => ({
               value: seconds,
@@ -348,6 +355,7 @@ export default function ApplicationSection(): React.JSX.Element {
             <Switch
               className="udt-settings-switch"
               checked={readBoolean(app, item.field)}
+              disabled={!editorsEnabled}
               onChange={(value) => handleToggle(item.field, value)}
             />
           }

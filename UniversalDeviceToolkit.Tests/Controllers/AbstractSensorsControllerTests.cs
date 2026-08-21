@@ -145,6 +145,42 @@ public class AbstractSensorsControllerTests
         data.GPU.FanSpeed.Should().Be(-1);
     }
 
+    private sealed class SlowSensorsController(GPUController gpuController) : AbstractSensorsController(gpuController)
+    {
+        protected override int SensorReadTimeoutSeconds => 1;
+
+        public override Task<bool> IsSupportedAsync() => Task.FromResult(true);
+        protected override int GetCpuUtilization(int maxUtilization) => 10;
+        protected override int GetCpuCoreClock() => 3000;
+        protected override Task<GPUInfo> GetGPUInfoAsync() => Task.FromResult(GPUInfo.Empty);
+        protected override async Task<int> GetCpuCurrentTemperatureAsync()
+        {
+            await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
+            return 50;
+        }
+        protected override Task<int> GetGpuCurrentTemperatureAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuCurrentFanSpeedAsync() => Task.FromResult(1000);
+        protected override Task<int> GetGpuCurrentFanSpeedAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuMaxFanSpeedAsync() => Task.FromResult(3000);
+        protected override Task<int> GetGpuMaxFanSpeedAsync() => Task.FromResult(-1);
+        protected override Task<int> GetCpuMaxCoreClockAsync() => Task.FromResult(4000);
+    }
+
+    [Fact]
+    public async Task GetDataAsync_WhenReadExceedsTimeout_ShouldReturnWithoutWaitingForSlowProbes()
+    {
+        var gpuController = new GPUController(new Mock<IGPUProcessManager>().Object, new Mock<IGPUHardwareManager>().Object, new DefaultDelayProvider());
+        var controller = new SlowSensorsController(gpuController);
+
+        var started = DateTime.UtcNow;
+        var data = await controller.GetDataAsync();
+        var elapsed = DateTime.UtcNow - started;
+
+        elapsed.Should().BeLessThan(TimeSpan.FromSeconds(4));
+        data.CPU.Temperature.Should().Be(-1);
+        data.GPU.Temperature.Should().Be(-1);
+    }
+
     [Fact]
     public async Task GetDataAsync_DetailedCall_ShouldBypassRecentSummaryCache()
     {

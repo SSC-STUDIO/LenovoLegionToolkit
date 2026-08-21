@@ -5,6 +5,7 @@ using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Extensions;
+using UniversalDeviceToolkit.Lib.Utils;
 
 namespace UniversalDeviceToolkit.Lib.PackageDownloader;
 
@@ -15,6 +16,9 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
 
     public override async Task<List<Package>> GetPackagesAsync(string machineType, OS os, IProgress<float>? progress = null, CancellationToken token = default)
     {
+        if (!PackageDownloadSecurity.IsValidMachineType(machineType))
+            throw new ArgumentException("Machine type is invalid.", nameof(machineType));
+
         var osString = os switch
         {
             OS.Windows11 => "Windows 11",
@@ -79,11 +83,16 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
             return null;
 
         var fileLocation = mainFileNode["URL"]?.ToString();
-        if (fileLocation is null) return null;
+        if (fileLocation is null || !PackageDownloadSecurity.IsAllowedPackageDownloadUrl(fileLocation))
+            return null;
 
-        var fileName = new Uri(fileLocation).Segments.LastOrDefault("file");
+        if (!Uri.TryCreate(fileLocation, UriKind.Absolute, out var fileUri))
+            return null;
+
+        var fileName = PathSecurity.SanitizeFileName(Uri.UnescapeDataString(fileUri.Segments.LastOrDefault("file")));
         var fileSize = mainFileNode["Size"]?.ToString() ?? string.Empty;
-        var fileCrc = mainFileNode["SHA256"]?.ToString();
+        var fileCrcRaw = mainFileNode["SHA256"]?.ToString();
+        var fileCrc = PackageDownloadSecurity.TryParseSha256Hex(fileCrcRaw, out _) ? fileCrcRaw!.Trim() : null;
 
         var dateUnixStr = mainFileNode["Date"]?["Unix"]?.ToString();
         var releaseDate = dateUnixStr is not null && long.TryParse(dateUnixStr, out var unix)
@@ -94,7 +103,9 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
                               ?? filesNode.FirstOrDefault(n => n?["TypeString"]?.ToString().Equals("html", StringComparison.OrdinalIgnoreCase) == true);
 
         var readmeRaw = readmeFileNode?["URL"]?.ToString();
-        var readme = string.IsNullOrWhiteSpace(readmeRaw) ? null : readmeRaw.Trim();
+        var readme = !string.IsNullOrWhiteSpace(readmeRaw) && PackageDownloadSecurity.IsAllowedPackageDownloadUrl(readmeRaw)
+            ? readmeRaw.Trim()
+            : null;
 
         return new()
         {
@@ -120,7 +131,7 @@ public class PCSupportPackageDownloader(HttpClientFactory httpClientFactory)
             return true;
 
         foreach (var operatingSystem in operatingSystems)
-            if (operatingSystem is not null && operatingSystem.ToString().StartsWith(osString, StringComparison.CurrentCultureIgnoreCase))
+            if (operatingSystem is not null && operatingSystem.ToString().StartsWith(osString, StringComparison.OrdinalIgnoreCase))
                 return true;
 
         return false;

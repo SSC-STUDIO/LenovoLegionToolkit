@@ -408,6 +408,137 @@ public class PluginInstallationServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task ExtractAndInstallPluginAsync_ShouldRejectBackslashTraversalManifestIdWithoutTouchingSibling()
+    {
+        const string manifestPluginId = @"..\victim";
+        var sandbox = CreateTempDirectory();
+        var pluginsRoot = Path.Combine(sandbox, "plugins");
+        var victimDirectory = Path.Combine(pluginsRoot, "victim");
+        var sentinelPath = Path.Combine(victimDirectory, "sentinel.txt");
+        Directory.CreateDirectory(victimDirectory);
+        File.WriteAllText(sentinelPath, "preserve");
+
+        var manifest = JsonSerializer.Serialize(new
+        {
+            id = manifestPluginId,
+            name = "Invalid Traversal Plugin",
+            version = "1.0.0"
+        });
+        var zipPath = CreatePluginZipPackage("safe-plugin", manifestContent: manifest);
+        var pluginManager = CreatePluginManagerMock(pluginsRoot);
+        var service = new PluginInstallationService(pluginManager.Object);
+
+        Func<Task> action = () => service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
+
+        await action.Should().ThrowAsync<InvalidDataException>()
+            .WithMessage("*invalid plugin ID*");
+        File.ReadAllText(sentinelPath).Should().Be("preserve");
+        Directory.Exists(Path.Combine(pluginsRoot, "local")).Should().BeFalse();
+        pluginManager.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public async Task ExtractAndInstallPluginAsync_ShouldRejectParentEscapeManifestIdWithoutTouchingOutside()
+    {
+        const string manifestPluginId = @"..\..\outside";
+        var sandbox = CreateTempDirectory();
+        var pluginsRoot = Path.Combine(sandbox, "plugins");
+        var outsideDirectory = Path.Combine(sandbox, "outside");
+        var sentinelPath = Path.Combine(outsideDirectory, "sentinel.txt");
+        Directory.CreateDirectory(pluginsRoot);
+        Directory.CreateDirectory(outsideDirectory);
+        File.WriteAllText(sentinelPath, "preserve");
+
+        var manifest = JsonSerializer.Serialize(new
+        {
+            id = manifestPluginId,
+            name = "Invalid Parent Escape Plugin",
+            version = "1.0.0"
+        });
+        var zipPath = CreatePluginZipPackage("safe-plugin", manifestContent: manifest);
+        var pluginManager = CreatePluginManagerMock(pluginsRoot);
+        var service = new PluginInstallationService(pluginManager.Object);
+
+        Func<Task> action = () => service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
+
+        await action.Should().ThrowAsync<InvalidDataException>()
+            .WithMessage("*invalid plugin ID*");
+        File.ReadAllText(sentinelPath).Should().Be("preserve");
+        Directory.GetFileSystemEntries(outsideDirectory).Should().Equal(sentinelPath);
+        pluginManager.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public async Task ExtractAndInstallPluginAsync_ShouldRejectTraversalManifestIdWithoutTouchingExistingLocalPlugin()
+    {
+        const string existingPluginId = "legit-plugin";
+        var sandbox = CreateTempDirectory();
+        var pluginsRoot = Path.Combine(sandbox, "plugins");
+        var existingDirectory = CreateExistingPlugin(pluginsRoot, existingPluginId, "preserve-local");
+
+        var manifest = JsonSerializer.Serialize(new
+        {
+            id = "../" + existingPluginId,
+            name = "Invalid Traversal Plugin",
+            version = "1.0.0"
+        });
+        var zipPath = CreatePluginZipPackage("safe-plugin", manifestContent: manifest);
+        var pluginManager = CreatePluginManagerMock(pluginsRoot);
+        var service = new PluginInstallationService(pluginManager.Object);
+
+        Func<Task> action = () => service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
+
+        await action.Should().ThrowAsync<InvalidDataException>()
+            .WithMessage("*invalid plugin ID*");
+        File.ReadAllText(Path.Combine(existingDirectory, "original.txt")).Should().Be("preserve-local");
+        Directory.Exists(existingDirectory).Should().BeTrue();
+        Directory.GetDirectories(Path.Combine(pluginsRoot, "local"), $"{existingPluginId}_backup_*")
+            .Should().BeEmpty();
+        pluginManager.VerifyNoOtherCalls();
+    }
+
+    [Fact]
+    public async Task ExtractAndInstallPluginAsync_ShouldRejectTraversalManifestIdInWrapperDirectory()
+    {
+        const string manifestPluginId = "../victim";
+        var sandbox = CreateTempDirectory();
+        var pluginsRoot = Path.Combine(sandbox, "plugins");
+        var victimDirectory = Path.Combine(pluginsRoot, "victim");
+        var sentinelPath = Path.Combine(victimDirectory, "sentinel.txt");
+        Directory.CreateDirectory(victimDirectory);
+        File.WriteAllText(sentinelPath, "preserve");
+
+        var zipPath = CreateArchive(archive =>
+        {
+            var manifestEntry = archive.CreateEntry("safe-wrapper/plugin.json");
+            using (var writer = new StreamWriter(manifestEntry.Open()))
+            {
+                writer.Write(JsonSerializer.Serialize(new
+                {
+                    id = manifestPluginId,
+                    name = "Invalid Traversal Plugin",
+                    version = "1.0.0"
+                }));
+            }
+
+            var dllEntry = archive.CreateEntry("safe-wrapper/UniversalDeviceToolkit.Plugins.SafePlugin.dll");
+            using var source = File.OpenRead(Assembly.GetExecutingAssembly().Location);
+            using var destination = dllEntry.Open();
+            source.CopyTo(destination);
+        });
+        var pluginManager = CreatePluginManagerMock(pluginsRoot);
+        var service = new PluginInstallationService(pluginManager.Object);
+
+        Func<Task> action = () => service.ExtractAndInstallPluginAsync(zipPath, pluginsRoot);
+
+        await action.Should().ThrowAsync<InvalidDataException>()
+            .WithMessage("*invalid plugin ID*");
+        File.ReadAllText(sentinelPath).Should().Be("preserve");
+        Directory.Exists(Path.Combine(pluginsRoot, "local")).Should().BeFalse();
+        pluginManager.VerifyNoOtherCalls();
+    }
+
+    [Fact]
     public async Task ExtractAndInstallPluginAsync_ShouldFailPackageWhenAnyArchiveEntryIsInvalid()
     {
         const string pluginId = "test-local-plugin";

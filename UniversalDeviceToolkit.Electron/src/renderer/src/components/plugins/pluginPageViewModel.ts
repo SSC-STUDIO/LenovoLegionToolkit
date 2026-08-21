@@ -1,6 +1,7 @@
 const WINDOWS_ABSOLUTE_PATH = /^([a-zA-Z]):\/(.*)$/
 const URI_SCHEME = /^[a-zA-Z][a-zA-Z0-9+.-]*:/
 const SAFE_UNC_HOST = /^[a-zA-Z0-9._-]+$/
+const EXTENDED_PATH_PREFIX = /^\/\/\?\//
 
 export interface PluginWebviewEventTarget {
   addEventListener: (type: string, listener: () => void) => void
@@ -25,9 +26,40 @@ function encodedPathSegments(segments: readonly string[]): string[] | null {
   return encoded
 }
 
+function sanitizeFileUrl(value: string): string | null {
+  if (containsControlCharacter(value) || value.includes('..')) return null
+  try {
+    const parsed = new URL(value)
+    if (parsed.protocol !== 'file:') return null
+    return parsed.href
+  } catch {
+    return null
+  }
+}
+
+export function resolvePluginWebPageEntry(webPage: unknown): string | null {
+  if (typeof webPage === 'string') {
+    const trimmed = webPage.trim()
+    return trimmed.length > 0 ? trimmed : null
+  }
+  if (webPage == null || typeof webPage !== 'object') return null
+  const record = webPage as Record<string, unknown>
+  for (const key of ['entry', 'Entry', 'webPage', 'WebPage']) {
+    const value = record[key]
+    if (typeof value === 'string' && value.trim().length > 0) return value.trim()
+  }
+  return null
+}
+
 export function fileUrlFromAbsolutePath(path: string): string | null {
   if (path.length === 0 || containsControlCharacter(path)) return null
-  const normalized = path.replace(/\\/g, '/')
+  let normalized = path.replace(/\\/g, '/')
+  if (EXTENDED_PATH_PREFIX.test(normalized)) {
+    normalized = normalized.slice(4)
+  }
+  if (/^file:/i.test(normalized)) {
+    return sanitizeFileUrl(normalized)
+  }
 
   const windowsPath = normalized.match(WINDOWS_ABSOLUTE_PATH)
   if (windowsPath != null) {
@@ -63,14 +95,39 @@ function encodedRelativePath(path: string): string | null {
   return segments.join('/')
 }
 
+function isFileUrlInsideDirectory(directoryUrl: string, fileUrl: string): boolean {
+  const prefix = (directoryUrl.endsWith('/') ? directoryUrl : `${directoryUrl}/`).toLowerCase()
+  const target = fileUrl.toLowerCase()
+  return target === directoryUrl.toLowerCase() || target.startsWith(prefix)
+}
+
 export function buildPluginPageSource(
   directory: string | null | undefined,
-  webPage: string | null | undefined
+  webPage: unknown
 ): string | null {
-  if (directory == null || webPage == null) return null
-  const directoryUrl = fileUrlFromAbsolutePath(directory)
-  const relativePath = encodedRelativePath(webPage)
-  if (directoryUrl == null || relativePath == null) return null
+  const entry = resolvePluginWebPageEntry(webPage)
+  if (entry == null) return null
+
+  const directoryText =
+    typeof directory === 'string' && directory.trim().length > 0 ? directory.trim() : null
+  const directoryUrl = directoryText != null ? fileUrlFromAbsolutePath(directoryText) : null
+
+  if (/^file:/i.test(entry)) {
+    const entryUrl = sanitizeFileUrl(entry)
+    if (entryUrl == null) return null
+    if (directoryUrl != null && !isFileUrlInsideDirectory(directoryUrl, entryUrl)) return null
+    return entryUrl
+  }
+
+  const absoluteEntryUrl = fileUrlFromAbsolutePath(entry)
+  if (absoluteEntryUrl != null) {
+    if (directoryUrl == null) return null
+    return isFileUrlInsideDirectory(directoryUrl, absoluteEntryUrl) ? absoluteEntryUrl : null
+  }
+
+  if (directoryUrl == null) return null
+  const relativePath = encodedRelativePath(entry)
+  if (relativePath == null) return null
   const separator = directoryUrl.endsWith('/') ? '' : '/'
   return `${directoryUrl}${separator}${relativePath}`
 }

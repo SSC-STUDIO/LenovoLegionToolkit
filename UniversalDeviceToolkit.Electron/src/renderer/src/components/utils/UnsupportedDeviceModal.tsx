@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { create } from 'zustand'
 import { useTranslation } from 'react-i18next'
 import { ErrorCircle24Filled, Link24Regular } from '../icons/fluent'
+import { useUtilsDialog } from './useUtilsDialog'
 import './utils.css'
 
 /**
@@ -56,6 +57,7 @@ export default function UnsupportedDeviceModalHost(): React.JSX.Element {
   const request = useUnsupportedDeviceStore((s) => s.request)
   const settle = useUnsupportedDeviceStore((s) => s.settle)
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS)
+  const { dialogRef, titleId, dialogProps } = useUtilsDialog(request != null, null)
 
   useEffect(() => {
     if (!request) return
@@ -85,11 +87,13 @@ export default function UnsupportedDeviceModalHost(): React.JSX.Element {
   return (
     <div className="udt-utils-backdrop">
       <div
+        ref={dialogRef}
         className="udt-utils-modal"
         style={{ width: 650, maxWidth: 'min(92vw, 650px)', maxHeight: 'min(88vh, 420px)' }}
         onClick={(event) => event.stopPropagation()}
+        {...dialogProps}
       >
-        <div className="udt-utils-modal__title">{t('wpf.unsupportedWindowtitle')}</div>
+        <div className="udt-utils-modal__title" id={titleId}>{t('wpf.unsupportedWindowtitle')}</div>
         <div className="udt-utils-modal__body">
           <div style={{ display: 'flex', gap: 16 }}>
             <ErrorCircle24Filled style={{ fontSize: 44, color: '#e05656', flexShrink: 0 }} />
@@ -126,7 +130,7 @@ export default function UnsupportedDeviceModalHost(): React.JSX.Element {
           </div>
         </div>
         <div className="udt-utils-modal__actions">
-          <button type="button" className="udt-utils-button udt-utils-button--primary" onClick={exit}>
+          <button type="button" className="udt-utils-button udt-utils-button--primary" data-utils-initial-focus="" onClick={exit}>
             {t('wpf.exit')}
           </button>
           <button

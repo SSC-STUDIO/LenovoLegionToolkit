@@ -192,10 +192,13 @@ internal sealed class HardwareDiscoveryService
     internal void NeedRefreshHardware(string hardwareId)
     {
         if (!_hardwareInitialized || _computer == null || hardwareId != HARDWARE_ID_NVIDIA_GPU) return;
+
+        // ResetSensors acquires _hardwareLock. System.Threading.Lock is not reentrant,
+        // so calling it while already holding that lock deadlocks the sensor pipeline.
+        ResetSensors();
+
         lock (_hardwareLock)
         {
-            ResetSensors();
-
             try { NVAPI.Initialize(); }
             catch
             {
@@ -277,13 +280,13 @@ internal sealed class HardwareDiscoveryService
                     // GPU selection
                     shouldUseIntegratedGpu, gpuInactive,
                     // iGPU
-                    IGpuVramTotalSensor?.Value, IGpuD3DVramUsedSensor?.Value, IGpuVramFreeSensor?.Value,
+                    ToGigabytes(IGpuVramTotalSensor), ToGigabytes(IGpuD3DVramUsedSensor), ToGigabytes(IGpuVramFreeSensor),
                     IGpuPowerSensor?.Value, IGpuUsageSensor?.Value, IGpuTempSensor?.Value,
                     IGpuCoreVoltageSensor?.Value,
                     IGpuClockSensor?.Value, IGpuMemoryClockSensor?.Value,
                     IGpuPcieRxSensor?.Value, IGpuPcieTxSensor?.Value,
                     // dGPU
-                    GpuVramTotalSensor?.Value, GpuD3DVramUsedSensor?.Value, GpuVramFreeSensor?.Value,
+                    ToGigabytes(GpuVramTotalSensor), ToGigabytes(GpuD3DVramUsedSensor), ToGigabytes(GpuVramFreeSensor),
                     GpuPowerSensor?.Value, GpuCoreVoltageSensor?.Value,
                     GpuVramTemperatureSensor?.Value, GpuHotSpotSensor?.Value,
                     GpuUsageSensor?.Value, GpuTempSensor?.Value,
@@ -660,6 +663,16 @@ internal sealed class HardwareDiscoveryService
             foreach (var child in EnumerateHardwareTree(item.SubHardware ?? []))
                 yield return child;
         }
+    }
+
+    internal static float? ToGigabytes(ISensor? sensor)
+    {
+        if (sensor?.Value is not { } value)
+            return null;
+
+        return SensorReadingHelper.NormalizeLibreHardwareMonitorDataToGigabytes(
+            value,
+            sensor.SensorType == SensorType.SmallData);
     }
 
     internal static string StripName(string name)

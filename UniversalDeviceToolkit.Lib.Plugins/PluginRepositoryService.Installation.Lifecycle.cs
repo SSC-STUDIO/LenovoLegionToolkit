@@ -125,11 +125,6 @@ public partial class PluginRepositoryService
                 transaction.InstalledMainDll,
                 mutationLease,
                 transaction.PackageAuthorization);
-
-            if (!IsInstalledPluginUsable(manifest))
-                throw new InvalidOperationException(
-                    string.Format(Resource.Plugin_Error_Repository_NotLoadable, manifest.Id));
-
             _pluginManager.PreparePluginInstallation(manifest.Id, mutationLease);
             installationPrepared = true;
             ActivateRepositoryRuntimeStrictWithoutAsyncRetention(
@@ -138,6 +133,11 @@ public partial class PluginRepositoryService
                 transaction.InstalledMainDll,
                 mutationLease,
                 transaction.PackageAuthorization);
+
+            if (!IsInstalledPluginUsable(manifest))
+                throw new InvalidOperationException(
+                    string.Format(Resource.Plugin_Error_Repository_NotLoadable, manifest.Id));
+
             _pluginManager.CommitPluginInstallation(
                 manifest.Id,
                 mutationLease,
@@ -359,12 +359,6 @@ public partial class PluginRepositoryService
         {
             return ex.ToString();
         }
-    }
-
-    private Task RemoveUnusableInstalledPayloadAsync(string pluginId)
-    {
-        TrustedPluginPackageStore.RemoveStrict(pluginId);
-        return RestorePluginDirectoryAsync(Path.Combine(_pluginsDirectory, pluginId), backupDir: null, pluginId);
     }
 
     private static void CleanupInstallationArtifacts(string tempFilePath, string extractPath)

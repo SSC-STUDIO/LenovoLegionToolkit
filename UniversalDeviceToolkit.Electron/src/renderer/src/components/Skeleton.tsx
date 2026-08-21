@@ -76,6 +76,8 @@ export interface SkeletonCardProps {
   accessory?: SkeletonCardAccessory
   className?: string
   staggerBase?: number
+  /** When false, a parent already exposes role=status (avoid nested live regions). */
+  announce?: boolean
 }
 
 export function SkeletonCard({
@@ -83,7 +85,8 @@ export function SkeletonCard({
   withIcon = false,
   accessory = 'none',
   className,
-  staggerBase = 0
+  staggerBase = 0,
+  announce = true
 }: SkeletonCardProps): React.JSX.Element {
   const { t } = useTranslation()
   const count = Math.max(1, lines)
@@ -91,7 +94,12 @@ export function SkeletonCard({
   const accessoryStep = lineStart + count
 
   return (
-    <div className={joinClass('udt-skeleton-card', className)} role="status" aria-label={t('common.loading')}>
+    <div
+      className={joinClass('udt-skeleton-card', className)}
+      role={announce ? 'status' : undefined}
+      aria-label={announce ? t('common.loading') : undefined}
+      aria-hidden={announce ? undefined : true}
+    >
       {withIcon && <SkeletonBone delay={staggerBase} variant="on-card" className="udt-skeleton-icon" />}
       <div className="udt-skeleton-card__copy">
         {Array.from({ length: count }, (_, index) => (
@@ -161,6 +169,7 @@ export function SkeletonList({
           withIcon={withIcon}
           accessory={accessory}
           staggerBase={index * LIST_ROW_ELEMENTS}
+          announce={false}
         />
       ))}
     </div>

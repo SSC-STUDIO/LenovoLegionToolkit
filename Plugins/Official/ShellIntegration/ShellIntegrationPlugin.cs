@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Reflection;
 using UniversalDeviceToolkit.Lib.Optimization;
 using UniversalDeviceToolkit.Plugins.Core;
 using UniversalDeviceToolkit.Plugins.ShellIntegration.Resources;
@@ -28,6 +27,14 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
     private const string PluginId = "shell-integration";
     private const string ShellClsid = "{BAE3934B-8A6A-4BFB-81BD-3FC599A1BAF1}";
     private const string DisabledClsid = "{00000000-0000-0000-0000-000000000000}";
+    // Nilesoft APP_SIG is "\u0020@nilesoft.shell" so the handler sorts first.
+    private const string ShellHandlerKeyName = "\u0020@nilesoft.shell";
+    private const string LegacyUnspacedShellHandlerKeyName = "@nilesoft.shell";
+    private static readonly string[] ShellHandlerKeyNames =
+    [
+        ShellHandlerKeyName,
+        LegacyUnspacedShellHandlerKeyName
+    ];
     private static readonly TimeSpan ShellCommandTimeout = TimeSpan.FromSeconds(Constants.ProcessTimeoutSeconds);
     private static readonly string GlobalLanguagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "UniversalDeviceToolkit", "lang");
     private static readonly string LegacyGlobalLanguagePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "LenovoLegionToolkit", "lang");
@@ -378,32 +385,61 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
 
     private async Task EnableShellAsync(CancellationToken cancellationToken)
     {
-        await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
+        if (!IsShellInstalled())
+        {
+            PluginLog.Trace("ShellIntegration: Enable skipped because Nilesoft Shell is not installed.");
+            return;
+        }
+
+        ClearUserRegistryOverrides();
 
         if (!string.IsNullOrWhiteSpace(GetShellExePath()))
         {
             await RunShellCommandAsync("-register -treat -restart", cancellationToken).ConfigureAwait(false);
-            await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
-            return;
+        }
+        else
+        {
+            await ApplyShellRegistryOverrideAsync(enable: true, cancellationToken).ConfigureAwait(false);
         }
 
-        await ApplyShellRegistryOverrideAsync(enable: true, cancellationToken).ConfigureAwait(false);
-        await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
+        if (!await SyncManagedConfigurationAsync().ConfigureAwait(false))
+        {
+            PluginLog.Trace("ShellIntegration: Registered, but managed configuration sync failed.");
+        }
     }
 
     private async Task DisableShellAsync(CancellationToken cancellationToken)
     {
-        await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
-
         if (!string.IsNullOrWhiteSpace(GetShellExePath()))
         {
-            await RunShellCommandAsync("-unregister -restart", cancellationToken).ConfigureAwait(false);
-            await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
-            return;
+            try
+            {
+                await RunShellCommandAsync("-unregister -restart", cancellationToken).ConfigureAwait(false);
+                ClearUserRegistryOverrides();
+            }
+            catch (Exception ex) when (ex is not OperationCanceledException)
+            {
+                PluginLog.Trace($"ShellIntegration: shell.exe unregister failed, applying registry override: {ex.Message}", ex);
+                await ApplyShellRegistryOverrideAsync(enable: false, cancellationToken).ConfigureAwait(false);
+            }
+        }
+        else if (!string.IsNullOrWhiteSpace(GetShellDllPath()))
+        {
+            await ApplyShellRegistryOverrideAsync(enable: false, cancellationToken).ConfigureAwait(false);
+        }
+        else
+        {
+            ClearUserRegistryOverrides();
         }
 
-        await ApplyShellRegistryOverrideAsync(enable: false, cancellationToken).ConfigureAwait(false);
-        await EnsureManagedConfigurationSynchronizedAsync().ConfigureAwait(false);
+        try
+        {
+            _configService.TryRemoveManagedImportBlock(GetShellInstallPath());
+        }
+        catch (Exception ex)
+        {
+            PluginLog.Trace($"ShellIntegration: Failed to remove managed import block: {ex.Message}", ex);
+        }
     }
 
     private async Task<bool> IsShellRegisteredAsync(CancellationToken cancellationToken)
@@ -595,12 +631,22 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
 
     private static bool IsShellRegisteredInMergedClasses()
     {
-        return ShellContextHandlerParentSubKeys.All(parentSubKey =>
+        return ShellContextHandlerParentSubKeys.All(IsHandlerRegisteredUnderParent);
+    }
+
+    private static bool IsHandlerRegisteredUnderParent(string parentSubKey)
+    {
+        foreach (var handlerName in ShellHandlerKeyNames)
         {
-            using var key = OpenMergedHandlerKey(parentSubKey);
-            var value = Convert.ToString(key?.GetValue(string.Empty)) ?? string.Empty;
-            return value.Equals(ShellClsid, StringComparison.OrdinalIgnoreCase);
-        });
+            using var key = Registry.ClassesRoot.OpenSubKey($@"{parentSubKey}\{handlerName}", false);
+            var value = Convert.ToString(key?.GetValue(string.Empty), CultureInfo.InvariantCulture) ?? string.Empty;
+            if (value.Equals(ShellClsid, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static Task ApplyShellRegistryOverrideAsync(bool enable, CancellationToken cancellationToken)
@@ -613,25 +659,34 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (enable)
+            foreach (var handlerName in ShellHandlerKeyNames)
             {
-                DeleteUserOverrideKeyIfExists($@"{classesRoot}\{parentSubKey}\ @nilesoft.shell");
-                DeleteUserOverrideKeyIfExists($@"{classesRoot}\{parentSubKey}\@nilesoft.shell");
-            }
-            else
-            {
-                SetUserOverrideValue($@"{classesRoot}\{parentSubKey}\ @nilesoft.shell", DisabledClsid);
-                SetUserOverrideValue($@"{classesRoot}\{parentSubKey}\@nilesoft.shell", DisabledClsid);
+                var userKey = $@"{classesRoot}\{parentSubKey}\{handlerName}";
+                if (enable)
+                {
+                    DeleteUserOverrideKeyIfExists(userKey);
+                }
+                else
+                {
+                    SetUserOverrideValue(userKey, DisabledClsid);
+                }
             }
         }
 
         return Task.CompletedTask;
     }
 
-    private static RegistryKey? OpenMergedHandlerKey(string parentSubKey)
+    private static void ClearUserRegistryOverrides()
     {
-        return Registry.ClassesRoot.OpenSubKey($@"{parentSubKey}\ @nilesoft.shell", false)
-               ?? Registry.ClassesRoot.OpenSubKey($@"{parentSubKey}\@nilesoft.shell", false);
+        const string classesRoot = @"Software\Classes";
+
+        foreach (var parentSubKey in ShellContextHandlerParentSubKeys)
+        {
+            foreach (var handlerName in ShellHandlerKeyNames)
+            {
+                DeleteUserOverrideKeyIfExists($@"{classesRoot}\{parentSubKey}\{handlerName}");
+            }
+        }
     }
 
     private static void SetUserOverrideValue(string userSubKey, string value)
@@ -706,11 +761,7 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
             return false;
         }
 
-        if (!_configService.TryLoadProfile(out var profile, out var errorMessage))
-        {
-            PluginLog.Trace($"ShellIntegration: Failed to load profile: {errorMessage}");
-            return false;
-        }
+        var profile = _configService.LoadProfile();
 
         try
         {
@@ -720,14 +771,6 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
         {
             PluginLog.Trace($"ShellIntegration: Failed to sync managed configuration: {ex.Message}", ex);
             return false;
-        }
-    }
-
-    private async Task EnsureManagedConfigurationSynchronizedAsync()
-    {
-        if (!await SyncManagedConfigurationAsync().ConfigureAwait(false))
-        {
-            throw new InvalidOperationException("Failed to synchronize managed shell configuration.");
         }
     }
 
@@ -751,7 +794,7 @@ public class ShellIntegrationPlugin : UniversalDeviceToolkit.Plugins.SDK.PluginB
             }
 
             var name = File.ReadAllText(languagePath).Trim();
-            return string.IsNullOrWhiteSpace(name) ? null : new CultureInfo(name);
+            return string.IsNullOrWhiteSpace(name) ? null : CultureInfo.GetCultureInfo(name);
         }
         catch
         {

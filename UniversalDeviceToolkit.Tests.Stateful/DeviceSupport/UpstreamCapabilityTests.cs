@@ -76,6 +76,67 @@ public sealed class UpstreamCapabilityTests : IDisposable
         new SettingsBackupService().Invoking(service => service.Import(backup)).Should().Throw<NotSupportedException>();
     }
 
+    [Fact]
+    public void SettingsBackup_RejectsManifestOnlyBackupWithoutDeletingExistingJson()
+    {
+        File.WriteAllText(Path.Combine(_temp, "settings.json"), "{\"value\":1}");
+        var backup = Path.Combine(_temp, "empty.udtbackup");
+        using (var archive = ZipFile.Open(backup, ZipArchiveMode.Create))
+        using (var writer = new StreamWriter(archive.CreateEntry("udt-settings-backup.json").Open()))
+            writer.Write("{\"FormatVersion\":1,\"CreatedAtUtc\":\"2026-08-16T00:00:00Z\"}");
+
+        new SettingsBackupService().Invoking(service => service.Import(backup)).Should().Throw<InvalidDataException>();
+        File.ReadAllText(Path.Combine(_temp, "settings.json")).Should().Contain("1");
+    }
+
+    [Fact]
+    public void SettingsBackup_ExportOverwritesExistingDestinationAtomically()
+    {
+        File.WriteAllText(Path.Combine(_temp, "settings.json"), "{\"value\":1}");
+        var service = new SettingsBackupService();
+        var backup = Path.Combine(_temp, "export.udtbackup");
+        File.WriteAllText(backup, "stale-not-a-zip");
+
+        service.Export(backup);
+
+        ZipFile.OpenRead(backup).Dispose();
+        File.Exists(backup + ".tmp").Should().BeFalse();
+        using var archive = ZipFile.OpenRead(backup);
+        archive.GetEntry("udt-settings-backup.json").Should().NotBeNull();
+        archive.GetEntry("settings/settings.json").Should().NotBeNull();
+    }
+
+    [Fact]
+    public void BatteryHealthAlertSettings_LoadStore_NormalizesInvalidThresholds()
+    {
+        File.WriteAllText(
+            Path.Combine(_temp, "battery_health_alerts.json"),
+            """{"AlertsEnabled":true,"LowHealthThreshold":250,"CriticalHealthThreshold":-5,"TemperatureThresholdC":200}""");
+
+        var settings = new BatteryHealthAlertSettings();
+        var store = settings.LoadStore();
+
+        store.Should().NotBeNull();
+        store!.LowHealthThreshold.Should().Be(BatteryHealthAlertSettings.DefaultLowHealthThreshold);
+        store.CriticalHealthThreshold.Should().BeLessThan(store.LowHealthThreshold);
+        store.TemperatureThresholdC.Should().Be(0);
+    }
+
+    [Fact]
+    public void HardwareSensorSettings_LoadStore_ReplacesNullSectionArrays()
+    {
+        File.WriteAllText(
+            Path.Combine(_temp, "hardware_sensors.json"),
+            """{"SelectedGpuIsIgpu":false,"VisibleSections":null,"SectionOrder":null}""");
+
+        var settings = new HardwareSensorSettings();
+        var store = settings.LoadStore();
+
+        store.Should().NotBeNull();
+        store!.VisibleSections.Should().Equal("CPU", "Battery", "GPU");
+        store.SectionOrder.Should().Equal("CPU", "Battery", "GPU");
+    }
+
     public void Dispose()
     {
         Environment.SetEnvironmentVariable(Folders.AppDataOverrideEnvironmentVariable, _previous);

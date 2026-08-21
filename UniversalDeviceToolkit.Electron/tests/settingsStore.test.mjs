@@ -222,6 +222,27 @@ test('loading remains true until concurrent rejected requests settle', async () 
   assert.equal(useSettingsStore.getState().loading, false)
 })
 
+test('save without scopes persists only scopes already in the store', async () => {
+  const saved = []
+  const settingsApi = {
+    ...createSettingsApi(async () => ({ scopes: { application: { AnimationsEnabled: true } } })),
+    save: async (scopes) => {
+      saved.push(scopes)
+      return { saved: scopes ?? [] }
+    }
+  }
+  const { useSettingsStore } = await loadSettingsStore(settingsApi)
+  useSettingsStore.setState({
+    scopes: {
+      application: { AnimationsEnabled: true }
+    }
+  })
+
+  await useSettingsStore.getState().save()
+
+  assert.deepEqual(saved, [['application']])
+})
+
 test('settings sync loads valid uncached scopes and ignores invalid scopes', async () => {
   const requestedScopes = []
   let emitChanged = () => {

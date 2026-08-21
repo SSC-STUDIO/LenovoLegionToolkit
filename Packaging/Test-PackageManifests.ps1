@@ -182,8 +182,30 @@ Assert-Equal 'winget InstallerType' (Read-YamlScalar -Lines $wingetLines -Key 'I
 Assert-Equal 'winget Scope' (Read-YamlScalar -Lines $wingetLines -Key 'Scope') 'machine'
 Assert-Equal 'winget InstallerUrl' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerUrl') $expectedInstallerUrl
 Assert-Equal 'winget InstallerSha256' (Read-YamlScalar -Lines $wingetLines -Key 'InstallerSha256').ToUpperInvariant() $expectedInstallerSha256Upper
-Assert-Equal 'winget Silent switch' (Read-YamlScalar -Lines $wingetLines -Key 'Silent') '--silent'
-Assert-Equal 'winget SilentWithProgress switch' (Read-YamlScalar -Lines $wingetLines -Key 'SilentWithProgress') '--silent'
+Assert-Equal 'winget Silent switch' (Read-YamlScalar -Lines $wingetLines -Key 'Silent') '/S'
+Assert-Equal 'winget SilentWithProgress switch' (Read-YamlScalar -Lines $wingetLines -Key 'SilentWithProgress') '/S'
+
+$prepareScriptPath = Join-Path $PSScriptRoot 'Prepare-PackageManifests.ps1'
+if (-not (Test-Path -LiteralPath $prepareScriptPath)) {
+    throw "Package manifest generator not found at '$prepareScriptPath'."
+}
+
+$prepareScript = Get-Content -Raw -LiteralPath $prepareScriptPath
+if ($prepareScript -notlike '*Silent: /S*' -or $prepareScript -notlike '*SilentWithProgress: /S*') {
+    throw "Winget generator must emit electron-builder NSIS Silent switch /S."
+}
+if ($prepareScript -like '*--silent*' -or $prepareScript -like '*/SILENT*' -or $prepareScript -like '*/VERYSILENT*') {
+    throw "Winget generator must not emit --silent, /SILENT, or /VERYSILENT."
+}
+if ($prepareScript -notlike '*"innosetup": false*') {
+    throw "Scoop generator Get-ScoopManifestContent must emit innosetup: false."
+}
+if ($prepareScript -notlike '*"UniversalDeviceToolkit.exe"*') {
+    throw "Scoop generator Get-ScoopManifestContent must emit shortcut UniversalDeviceToolkit.exe."
+}
+if ($prepareScript -like '*"Universal Device Toolkit.exe"*') {
+    throw "Scoop generator Get-ScoopManifestContent must not emit WPF shortcut Universal Device Toolkit.exe."
+}
 
 if ($ScoopManifestPaths.Count -eq 0) {
     $defaultScoopPaths = @(
@@ -211,6 +233,14 @@ foreach ($scoopManifestPath in $ScoopManifestPaths) {
     Assert-Equal "Scoop version in '$scoopManifestPath'" ([string]$scoopManifest.version) $Version
     Assert-Equal "Scoop URL in '$scoopManifestPath'" ([string]$scoopManifest.architecture.'64bit'.url) $expectedPortableUrl
     Assert-Equal "Scoop hash in '$scoopManifestPath'" ([string]$scoopManifest.architecture.'64bit'.hash) $expectedPortableSha256Lower
+
+    $scoopFileName = [System.IO.Path]::GetFileName($resolvedScoopManifestPath)
+    $isHistoricalWpfScoopManifest = $scoopFileName -like 'lenovolegiontoolkit*'
+    $isDraftScoopManifest = $scoopFileName -like '*.draft.json'
+    if ($isHistoricalWpfScoopManifest -or -not $isDraftScoopManifest) {
+        continue
+    }
+
     Assert-Equal "Scoop innosetup in '$scoopManifestPath'" ([string]$scoopManifest.innosetup) 'False'
     if ([string]$scoopManifest.shortcuts[0][0] -cne $expectedShortcutExecutable) {
         throw "Scoop shortcut in '$scoopManifestPath' must target $expectedShortcutExecutable from electron-builder executableName."

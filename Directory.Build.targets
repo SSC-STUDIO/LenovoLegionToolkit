@@ -27,6 +27,21 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 
+  <!-- Desktop companion process: Workstation GC + DATAS + conserve-memory so the
+       self-contained Host returns unused heap to the OS instead of holding a
+       server-GC reservation. Applies to Host / CLI / NetworkProxy. -->
+  <PropertyGroup Condition="'$(IsUdtShippingApp)' == 'true'">
+    <ServerGarbageCollection>false</ServerGarbageCollection>
+    <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+    <RetainVMGarbageCollection>false</RetainVMGarbageCollection>
+    <TieredCompilation>true</TieredCompilation>
+    <TieredPGO>true</TieredPGO>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(IsUdtShippingApp)' == 'true'">
+    <RuntimeHostConfigurationOption Include="System.GC.ConserveMemory" Value="5" Trim="false" />
+    <RuntimeHostConfigurationOption Include="System.GC.DynamicAdaptationMode" Value="1" Trim="false" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(IsUdtShippingApp)' == 'true' and '$(Configuration)' == 'Release'">
     <!-- Prefer size over local symbols; CI/Make already pass DebugType=None on publish. -->
     <DebugType>none</DebugType>
@@ -34,6 +49,10 @@
     <CopyDebugSymbolFilesFromPackages>false</CopyDebugSymbolFilesFromPackages>
     <PublishDocumentationFile>false</PublishDocumentationFile>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DebuggerSupport>false</DebuggerSupport>
+    <EnableUnsafeBinaryFormatterSerialization>false</EnableUnsafeBinaryFormatterSerialization>
+    <MetadataUpdaterSupport>false</MetadataUpdaterSupport>
+    <HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>
   </PropertyGroup>
 
   <Target Name="RejectShippingAppPublishWithTestHooks" BeforeTargets="BeforeBuild;SetGenerateManifests;PrepareForPublish">

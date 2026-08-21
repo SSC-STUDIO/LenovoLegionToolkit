@@ -14,11 +14,13 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// Macro bridge: enable state, slot/sequence read/write, explicit playback and
 /// recording.
 ///
-/// Recording runs on a dedicated pump thread (see <see cref="GlobalInputHook"/>):
-/// the Lib MacroController installs its WH_KEYBOARD_LL / WH_MOUSE_LL hooks on
-/// that thread and a GetMessage loop keeps the callbacks flowing, so capture
-/// works without a UI thread. Captured events are streamed to the client as
-/// "macro.recorderEvent" and returned in bulk by macro.stopRecording.
+/// Playback hotkeys are owned by <see cref="MacroController"/> on a dedicated
+/// message-pump thread. Recording runs on a separate pump thread (see
+/// <see cref="GlobalInputHook"/>): the Lib recorder installs WH_KEYBOARD_LL /
+/// WH_MOUSE_LL on that thread and a GetMessage loop keeps the callbacks
+/// flowing, so capture works without a UI thread. Captured events are streamed
+/// to the client as "macro.recorderEvent" and returned in bulk by
+/// macro.stopRecording.
 /// </summary>
 public static class MacroHandlers
 {
@@ -84,12 +86,14 @@ public static class MacroHandlers
                 enabledProp.ValueKind is not (JsonValueKind.True or JsonValueKind.False))
                 throw new BridgeErrorException(-32602, "Missing boolean parameter 'enabled'.");
 
-            // Persists IsEnabled and starts/stops the global keyboard hook.
-            // In the headless host the hook is installed without a message pump,
-            // so automatic playback is inert — explicit macro.play still works.
             Controller.SetEnabled(enabledProp.GetBoolean());
 
+            await Task.CompletedTask;
             return BridgeResult.Ok(new { ok = true });
+        }
+        catch (MacroHookInstallException ex)
+        {
+            return BridgeResult.Error(BridgeErrorCodes.MacroHooksFailed, ex.Message);
         }
         catch (BridgeErrorException ex)
         {

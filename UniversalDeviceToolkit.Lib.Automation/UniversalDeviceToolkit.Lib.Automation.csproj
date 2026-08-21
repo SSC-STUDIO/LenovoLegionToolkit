@@ -29,6 +29,7 @@
   <Compile Remove="AutomationContext.cs" />
   <Compile Remove="AutomationEnvironment.cs" />
   <Compile Remove="AutomationProcessor.cs" />
+  <Compile Remove="AutomationWindowVisibility.cs" />
   <Compile Remove="CLI/Features/FeatureRegistration.cs" />
   <Compile Remove="CLI/Features/FeatureRegistry.cs" />
   <Compile Remove="CLI/Features/IFeatureRegistration.cs" />

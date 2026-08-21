@@ -18,10 +18,13 @@ public static class AppHostHelpers
 
             await action().ConfigureAwait(false);
         }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Couldn't initialize {operationName}.", ex);
+            Log.Instance.Warning($"Couldn't initialize {operationName}.", ex);
         }
     }
 }

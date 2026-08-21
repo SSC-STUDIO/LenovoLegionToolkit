@@ -11,7 +11,7 @@ public class IoCModule : Module
     /// <summary>
     /// Optional environment override for plugin signature validation
     /// (require | development | disable). Defaults to Production (require).
-    /// Intended for local plugin development with unsigned builds.
+    /// Relaxed aliases are honored only in DEBUG; Release always uses Production.
     /// </summary>
     public const string SignatureModeEnvironmentVariable = "UDT_PLUGIN_SIGNATURE_MODE";
 
@@ -20,20 +20,7 @@ public class IoCModule : Module
         builder.Register(_ =>
             {
                 var mode = global::System.Environment.GetEnvironmentVariable(SignatureModeEnvironmentVariable);
-
-#if !DEBUG
-                // In release builds, never allow signature verification to be disabled.
-                // Force production settings if someone tries to set "disable" outside debug.
-                if (string.Equals(mode, "disable", global::System.StringComparison.OrdinalIgnoreCase))
-                {
-                    mode = null;
-                }
-#endif
-
-                return new PluginSignatureValidator(
-                    PluginSignatureSettings.TryCreateFromEnvironmentValue(mode, out var settings)
-                        ? settings
-                        : PluginSignatureSettings.Production);
+                return new PluginSignatureValidator(PluginSignatureSettings.CreateForRuntime(mode));
             })
             .As<IPluginSignatureValidator>()
             .SingleInstance();

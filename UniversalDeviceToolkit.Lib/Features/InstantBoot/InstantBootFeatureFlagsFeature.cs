@@ -72,11 +72,12 @@ public class InstantBootFeatureFlagsFeature : IFeature<InstantBootState>
             InstantBootState.AcAdapterAndUsbPowerDelivery => (1, 1),
             InstantBootState.AcAdapter => (1, 0),
             InstantBootState.UsbPowerDelivery => (0, 1),
-            _ => (0, 0)
+            InstantBootState.Off => (0, 0),
+            _ => throw ExceptionHelper.InvalidState()
         };
 
-        await WMI.LenovoOtherMethod.SetDeviceCurrentSupportFeatureAsync(AC_INDEX, acAdapter).ConfigureAwait(false);
-        await WMI.LenovoOtherMethod.SetDeviceCurrentSupportFeatureAsync(USB_POWER_DELIVERY_INDEX, usbPowerDelivery).ConfigureAwait(false);
+        await SetSupportFeatureAsync(AC_INDEX, acAdapter).ConfigureAwait(false);
+        await SetSupportFeatureAsync(USB_POWER_DELIVERY_INDEX, usbPowerDelivery).ConfigureAwait(false);
 
         if (Log.Instance.IsTraceEnabled)
             Log.Instance.Trace($"Set state to {state}");
@@ -84,5 +85,12 @@ public class InstantBootFeatureFlagsFeature : IFeature<InstantBootState>
 
     public void InvalidateResolution()
     {
+    }
+
+    private static async Task SetSupportFeatureAsync(int functionId, int value)
+    {
+        var result = await WMI.LenovoOtherMethod.SetDeviceCurrentSupportFeatureAsync(functionId, value).ConfigureAwait(false);
+        if (result < 1)
+            throw new InvalidOperationException($"Set_Device_Current_Support_Feature({functionId}) failed with status {result}.");
     }
 }

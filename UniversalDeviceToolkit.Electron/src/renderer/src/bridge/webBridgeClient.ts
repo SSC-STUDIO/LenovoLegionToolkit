@@ -2,6 +2,36 @@ import type { Bridge } from '../../../preload/index.d'
 
 type EventCallback = (data: unknown) => void
 
+type HostStatusSnapshot = {
+  running: boolean
+  ready: boolean
+  lastError: string | null
+  readyPayload: unknown
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return value != null && typeof value === 'object' && !Array.isArray(value)
+}
+
+function isHostStatusSnapshot(value: unknown): value is HostStatusSnapshot {
+  if (!isRecord(value)) return false
+  return (
+    typeof value.running === 'boolean' &&
+    typeof value.ready === 'boolean' &&
+    (value.lastError === null || typeof value.lastError === 'string')
+  )
+}
+
+async function readJson(response: Response, context: string): Promise<unknown> {
+  try {
+    return await response.json()
+  } catch {
+    throw new Error(
+      response.ok ? `${context} returned invalid JSON` : `${context} failed (${response.status})`
+    )
+  }
+}
+
 /**
  * Browser dev shim: talks to scripts/dev-bridge-server.mjs over HTTP + SSE.
  * Electron-only APIs are stubbed so UI code can run without crashing.
@@ -43,8 +73,8 @@ export function createWebBridge(baseUrl: string): Bridge {
     eventSource = new EventSource(`${normalizedBase}/events`)
     eventSource.onmessage = (message) => {
       try {
-        const payload = JSON.parse(message.data) as { event?: string; data?: unknown }
-        if (typeof payload.event === 'string') {
+        const payload: unknown = JSON.parse(message.data)
+        if (isRecord(payload) && typeof payload.event === 'string') {
           dispatch(payload.event, payload.data)
         }
       } catch (error) {
@@ -93,30 +123,43 @@ export function createWebBridge(baseUrl: string): Bridge {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ method, params: params ?? {} })
       })
-      const body = (await response.json()) as {
-        result?: unknown
-        error?: { code?: number; message?: string }
+      const body = await readJson(response, `Bridge invoke ${method}`)
+      if (!isRecord(body)) {
+        throw new Error(`Bridge invoke ${method} returned an invalid payload`)
       }
-      if (body.error) {
-        const code = typeof body.error.code === 'number' ? body.error.code : -32603
-        const text = body.error.message?.trim() || 'Bridge invoke failed'
+      const error = isRecord(body.error) ? body.error : null
+      if (error != null) {
+        const code = typeof error.code === 'number' ? error.code : -32603
+        const text =
+          typeof error.message === 'string' && error.message.trim().length > 0
+            ? error.message.trim()
+            : 'Bridge invoke failed'
         throw new Error(`[UDT:${code}] ${text}`)
+      }
+      if (!response.ok) {
+        throw new Error(`Bridge invoke ${method} failed (${response.status})`)
       }
       return body.result
     },
     getHostStatus: async () => {
       const response = await fetch(`${normalizedBase}/status`)
-      return (await response.json()) as {
-        running: boolean
-        ready: boolean
-        lastError: string | null
-        readyPayload: unknown
+      const body = await readJson(response, 'Host status')
+      if (!response.ok) {
+        throw new Error(`Host status request failed (${response.status})`)
       }
+      if (!isHostStatusSnapshot(body)) {
+        throw new Error('Host status response is invalid')
+      }
+      return body
     },
     on: (event: string, callback: EventCallback): (() => void) => {
-      if (!listeners.has(event)) listeners.set(event, new Set())
-      listeners.get(event)!.add(callback)
-      return () => listeners.get(event)?.delete(callback)
+      let set = listeners.get(event)
+      if (set == null) {
+        set = new Set()
+        listeners.set(event, set)
+      }
+      set.add(callback)
+      return () => set.delete(callback)
     },
     minimize: noop,
     maximizeToggle: noop,

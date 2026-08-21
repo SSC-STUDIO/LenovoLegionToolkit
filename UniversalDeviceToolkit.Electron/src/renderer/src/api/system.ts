@@ -1,4 +1,4 @@
-import { invoke } from './bridge'
+import { invokeObject } from './bridge'
 
 /**
  * Machine information — mirror of the host `system.info` handler
@@ -26,14 +26,14 @@ export interface SystemAccentColor {
 }
 
 export const systemApi = {
-  info: (): Promise<SystemInfo> => invoke<SystemInfo>('system.info'),
+  info: (): Promise<SystemInfo> => invokeObject<SystemInfo>('system.info'),
   /** Power adapter connection state (PowerModeControl warning parity). */
   powerAdapterStatus: (): Promise<{ status: PowerAdapterStatus }> =>
-    invoke<{ status: PowerAdapterStatus }>('system.powerAdapterStatus'),
+    invokeObject<{ status: PowerAdapterStatus }>('system.powerAdapterStatus'),
   /** Current Windows accent (SystemTheme.GetAccentColor). */
   getAccentColor: (): Promise<SystemAccentColor> =>
-    invoke<SystemAccentColor>('system.accentColor.get'),
+    invokeObject<SystemAccentColor>('system.accentColor.get'),
   /** Write Windows accent when ApplyAccentColorToSystem is enabled. */
   setAccentColor: (color: SystemAccentColor): Promise<{ applied: boolean }> =>
-    invoke<{ applied: boolean }>('system.accentColor.set', color)
+    invokeObject<{ applied: boolean }>('system.accentColor.set', color)
 }

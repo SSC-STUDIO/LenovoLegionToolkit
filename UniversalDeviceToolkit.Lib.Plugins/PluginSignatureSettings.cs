@@ -89,6 +89,17 @@ public class PluginSignatureSettings
         CheckRevocationStatus = false
     };
 
+    /// <summary>
+    /// Relaxed modes (AllowUnsigned / DisableValidation) are Debug-only.
+    /// Release builds always enforce Production regardless of environment aliases.
+    /// </summary>
+    public static bool RelaxedModesAllowed =>
+#if DEBUG
+        true;
+#else
+        false;
+#endif
+
     public static bool TryCreateFromEnvironmentValue(string? value, out PluginSignatureSettings settings)
     {
         switch (value?.Trim().ToLowerInvariant())
@@ -114,5 +125,19 @@ public class PluginSignatureSettings
                 settings = Production;
                 return false;
         }
+    }
+
+    /// <summary>
+    /// Resolve host runtime policy from <c>UDT_PLUGIN_SIGNATURE_MODE</c>.
+    /// Release builds ignore every relaxed alias and return Production.
+    /// </summary>
+    public static PluginSignatureSettings CreateForRuntime(string? environmentValue)
+    {
+        if (!RelaxedModesAllowed)
+            return Production;
+
+        return TryCreateFromEnvironmentValue(environmentValue, out var settings)
+            ? settings
+            : Production;
     }
 }

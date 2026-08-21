@@ -16,7 +16,7 @@ internal readonly struct WindowsBuildVersionPackageRule : IPackageRule
     {
         var versionString = node?.SelectSingleNode("BuildVersion")?.InnerText;
 
-        if (versionString is null || !int.TryParse(RemoveNonVersionCharacters(versionString), out var version))
+        if (!TryParseBuildVersion(versionString, out var version))
         {
             value = default;
             return false;
@@ -36,6 +36,32 @@ internal readonly struct WindowsBuildVersionPackageRule : IPackageRule
         var buildNumber = int.TryParse(buildNumberString, out var bn) ? bn : 0;
         var result = Version <= buildNumber;
         return result;
+    }
+
+    private static bool TryParseBuildVersion(string? versionString, out int version)
+    {
+        version = 0;
+        if (string.IsNullOrWhiteSpace(versionString))
+            return false;
+
+        var cleaned = RemoveNonVersionCharacters(versionString);
+        if (string.IsNullOrEmpty(cleaned))
+            return false;
+
+        if (int.TryParse(cleaned, out version) && version > 0)
+            return true;
+
+        var parts = cleaned.Split('.', StringSplitOptions.RemoveEmptyEntries);
+        for (var i = parts.Length - 1; i >= 0; i--)
+        {
+            if (int.TryParse(parts[i], out var part) && part >= 1000)
+            {
+                version = part;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static string RemoveNonVersionCharacters(string? versionString)

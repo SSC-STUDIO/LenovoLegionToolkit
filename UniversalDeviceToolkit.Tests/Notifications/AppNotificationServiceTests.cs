@@ -74,4 +74,37 @@ public class AppNotificationServiceTests
         var act = () => service.Show(new AppNotificationRequest { Title = "  " });
         act.Should().Throw<ArgumentException>();
     }
+
+    [Fact]
+    public void Dismiss_ShouldClearMergeKeySoNextShowGetsNewId()
+    {
+        var service = new AppNotificationService();
+        var firstId = service.ShowSuccess("Optimized", "Applied", mergeKey: "opt:test");
+        service.Dismiss(firstId);
+
+        Guid? secondId = null;
+        var mergeCount = 0;
+        service.Changed += (_, e) =>
+        {
+            if (e.IsDismiss)
+                return;
+            secondId = e.Notification.Id;
+            mergeCount = e.MergeCount;
+        };
+
+        service.ShowSuccess("Optimized", "Applied", mergeKey: "opt:test");
+
+        secondId.Should().NotBeNull();
+        secondId.Should().NotBe(firstId);
+        mergeCount.Should().Be(1);
+    }
+
+    [Fact]
+    public void Show_TrimsMergeKeyBeforeMatching()
+    {
+        var service = new AppNotificationService();
+        var firstId = service.ShowSuccess("Optimized", "Applied", mergeKey: "opt:test");
+        var secondId = service.ShowSuccess("Optimized", "Applied", mergeKey: "  opt:test  ");
+        secondId.Should().Be(firstId);
+    }
 }

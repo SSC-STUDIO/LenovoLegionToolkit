@@ -163,6 +163,33 @@ public class ViveToolFeatureServiceTests
         Assert.Equal(DateTime.MinValue, (DateTime)CachedFeaturesTimestampField.GetValue(service)!);
     }
 
+    [Fact]
+    public async Task MergeImportedFeatures_KeepsImportedFeatureSearchable()
+    {
+        var service = CreateServiceWithCachedFeatures(CreateFeature(100, "Alpha", "Existing"));
+
+        service.MergeImportedFeatures(
+        [
+            CreateFeature(200, "ImportedFeature", "From import", FeatureFlagStatus.Enabled)
+        ]);
+
+        var listed = await service.ListFeaturesAsync();
+        var searchResult = await service.SearchFeaturesAsync("importedfeature");
+
+        Assert.Contains(listed, feature => feature.Id == 100);
+        Assert.Contains(listed, feature => feature.Id == 200 && feature.Name == "ImportedFeature");
+        Assert.Single(searchResult);
+        Assert.Equal(200, searchResult[0].Id);
+    }
+
+    [Fact]
+    public void MergeImportedFeatures_NullArgument_Throws()
+    {
+        var service = CreateService();
+
+        Assert.Throws<ArgumentNullException>(() => service.MergeImportedFeatures(null!));
+    }
+
     #endregion
 
     #region EnableFeatureAsync Tests

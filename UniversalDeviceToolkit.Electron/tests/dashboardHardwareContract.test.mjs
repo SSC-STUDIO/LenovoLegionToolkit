@@ -35,3 +35,17 @@ test('special dashboard items remain represented by dedicated cards', () => {
     assert.match(cards, new RegExp(item))
   }
 })
+
+test('dashboard saveConfig rejects a missing saved flag', () => {
+  const dashboard = readFileSync(new URL('../src/renderer/src/api/dashboard.ts', import.meta.url), 'utf8')
+  assert.match(dashboard, /result\.saved !== true/)
+})
+
+test('hardware mutation callers reject ok !== true', () => {
+  const support = readFileSync(new URL('../src/renderer/src/components/dashboard-parity/dashboardHardwareSupport.ts', import.meta.url), 'utf8')
+  const special = readFileSync(new URL('../src/renderer/src/components/dashboard-parity/DashboardSpecialCard.tsx', import.meta.url), 'utf8')
+  const overclock = readFileSync(new URL('../src/renderer/src/components/dashboard-parity/OverclockProfilesModal.tsx', import.meta.url), 'utf8')
+  assert.match(support, /result\.ok !== true/)
+  assert.match(special, /requireHardwareOk/)
+  assert.match(overclock, /requireHardwareOk/)
+})

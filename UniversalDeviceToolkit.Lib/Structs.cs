@@ -412,10 +412,10 @@ public readonly struct GPUStatus(GPUState state, string? performanceState, IRead
 
 public readonly struct HardwareId(string vendor, string device)
 {
-    public static readonly HardwareId Empty = new();
+    public static readonly HardwareId Empty = new(string.Empty, string.Empty);
 
-    public string Vendor { get; } = vendor;
-    public string Device { get; } = device;
+    public string Vendor { get; } = vendor ?? string.Empty;
+    public string Device { get; } = device ?? string.Empty;
 
     #region Equality
 
@@ -424,10 +424,10 @@ public readonly struct HardwareId(string vendor, string device)
         if (obj is not HardwareId other)
             return false;
 
-        if (!Vendor.Equals(other.Vendor, StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(Vendor, other.Vendor, StringComparison.OrdinalIgnoreCase))
             return false;
 
-        if (!Device.Equals(other.Device, StringComparison.OrdinalIgnoreCase))
+        if (!string.Equals(Device, other.Device, StringComparison.OrdinalIgnoreCase))
             return false;
 
         return true;

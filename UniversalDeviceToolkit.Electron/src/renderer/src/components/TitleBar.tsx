@@ -94,30 +94,33 @@ export default function TitleBar(): React.JSX.Element {
     <>
       <div className={`udt-titlebar udt-titlebar--original${isMac ? ' udt-titlebar--mac' : ''}`}>
         <span className="udt-titlebar__title" style={DRAG_STYLE} onDoubleClick={toggleMaximize}>
-          <span className="udt-titlebar__title-text">{windowTitle}</span>
+          <span className="udt-titlebar__title-text" title={windowTitle}>{windowTitle}</span>
         </span>
-        {/* Right chrome: Log + device stay immediately before caption buttons (Electron parity).
-            Title is absolutely positioned, so this group needs margin-left:auto or it packs left. */}
+        {/* Right chrome: Log + device stay immediately before caption buttons (Electron parity). */}
         <div className="udt-titlebar__chrome" style={NO_DRAG_STYLE}>
           <div className="udt-titlebar__trailing">
             <Tooltip title={t('titlebar.openLogs')}>
               <button
                 type="button"
                 className="udt-titlebar__log-button"
+                aria-label={t('titlebar.openLogs')}
                 onClick={openLogFolder}
               >
                 {t('titlebar.log')}
               </button>
             </Tooltip>
-            <Tooltip title={t('titlebar.deviceInfo')}>
-              <button
-                type="button"
-                className="udt-titlebar__device-button"
-                onClick={() => setDeviceInfoOpen(true)}
-              >
-                {deviceModel ?? t('titlebar.deviceName')}
-              </button>
-            </Tooltip>
+            <div className="udt-titlebar__device-slot">
+              <Tooltip title={t('titlebar.deviceInfo')}>
+                <button
+                  type="button"
+                  className="udt-titlebar__device-button"
+                  aria-label={t('titlebar.deviceInfo')}
+                  onClick={() => setDeviceInfoOpen(true)}
+                >
+                  {deviceModel ?? t('titlebar.deviceName')}
+                </button>
+              </Tooltip>
+            </div>
           </div>
           {!isMac && (
           <div className="udt-titlebar__window-controls">
@@ -126,7 +129,7 @@ export default function TitleBar(): React.JSX.Element {
               aria-label={t('common.minimize')}
               onClick={() => window.bridge?.minimize()}
             >
-              <svg width="11" height="11" viewBox="0 0 11 11">
+              <svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true">
                 <rect x="1" y="5" width="9" height="1" fill="currentColor" />
               </svg>
             </button>
@@ -136,12 +139,12 @@ export default function TitleBar(): React.JSX.Element {
               onClick={toggleMaximize}
             >
               {isMaximized ? (
-                <svg width="11" height="11" viewBox="0 0 11 11">
+                <svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true">
                   <rect x="1" y="3" width="7" height="7" fill="none" stroke="currentColor" />
                   <path d="M 3 3 L 3 1 L 10 1 L 10 8 L 8 8" fill="none" stroke="currentColor" />
                 </svg>
               ) : (
-                <svg width="11" height="11" viewBox="0 0 11 11">
+                <svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true">
                   <rect x="1" y="1" width="9" height="9" fill="none" stroke="currentColor" />
                 </svg>
               )}
@@ -152,7 +155,7 @@ export default function TitleBar(): React.JSX.Element {
               className="udt-titlebar__close"
               onClick={() => window.bridge?.closeWindow()}
             >
-              <svg width="11" height="11" viewBox="0 0 11 11">
+              <svg width="11" height="11" viewBox="0 0 11 11" aria-hidden="true">
                 <path d="M 1 1 L 10 10 M 10 1 L 1 10" stroke="currentColor" />
               </svg>
             </button>

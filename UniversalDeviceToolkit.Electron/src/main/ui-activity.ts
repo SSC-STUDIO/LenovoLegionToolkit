@@ -4,6 +4,8 @@
  *
  * Auxiliary BrowserWindows (OSD / tray flyout / status) are destroyed after a
  * short idle instead of staying hidden — each one is a Chromium renderer.
+ * The main window is destroyed immediately on tray-only background
+ * (`enterBackground` in index.ts) and recreated on restore.
  */
 
 export type UiSurface = 'main' | 'osd' | 'trayPopup' | 'status'

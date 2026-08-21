@@ -14,6 +14,8 @@ public static class MessagingCenter
 {
     public static void Publish<T>(T data) where T : IMessage
     {
+        ArgumentNullException.ThrowIfNull(data);
+
         try
         {
             Messenger.Instance.Publish(data);
@@ -26,6 +28,9 @@ public static class MessagingCenter
 
     public static void Subscribe<T>(object subscriber, Action<T> handler) where T : IMessage
     {
+        ArgumentNullException.ThrowIfNull(subscriber);
+        ArgumentNullException.ThrowIfNull(handler);
+
         Messenger.Instance.Subscribe<T>(subscriber, msg =>
         {
             try
@@ -41,6 +46,9 @@ public static class MessagingCenter
 
     public static void Subscribe<T>(object subscriber, Action handler) where T : IMessage
     {
+        ArgumentNullException.ThrowIfNull(subscriber);
+        ArgumentNullException.ThrowIfNull(handler);
+
         Messenger.Instance.Subscribe<T>(subscriber, _ =>
         {
             try
@@ -55,10 +63,16 @@ public static class MessagingCenter
     }
 
     public static void Unsubscribe<T>(object subscriber) where T : IMessage
-        => Messenger.Instance.Unsubscribe<T>(subscriber);
+    {
+        ArgumentNullException.ThrowIfNull(subscriber);
+        Messenger.Instance.Unsubscribe<T>(subscriber);
+    }
 
     public static void Unsubscribe(object subscriber)
-        => Messenger.Instance.UnsubscribeAll(subscriber);
+    {
+        ArgumentNullException.ThrowIfNull(subscriber);
+        Messenger.Instance.UnsubscribeAll(subscriber);
+    }
 }
 
 internal sealed class Messenger

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -72,31 +73,93 @@ internal class MacroPlayer
         _playTask = Task.Run(async () =>
         {
             _isPlayingInterruptableSequence.Value = sequence.InterruptOnOtherKey;
+            var heldKeys = new HashSet<uint>();
+            var heldMouseButtons = new HashSet<uint>();
+            var repeats = sequence.RepeatCount < 1 ? 1 : sequence.RepeatCount;
 
-            for (var i = 0; i < sequence.RepeatCount; i++)
+            try
             {
-                foreach (var macroEvent in sequence.Events ?? [])
+                for (var i = 0; i < repeats; i++)
                 {
-                    if (!sequence.IgnoreDelays)
-                        await _delayProvider.Delay(macroEvent.Delay, token).ConfigureAwait(false);
-
-                    token.ThrowIfCancellationRequested();
-
-                    try
+                    foreach (var macroEvent in sequence.Events ?? [])
                     {
-                        var input = ToInput(macroEvent, GetPrimaryWorkingArea());
-                        var result = PInvoke.SendInput(MemoryMarshal.CreateSpan(ref input, 1), Marshal.SizeOf<INPUT>());
-                        if (result == 0)
-                            PInvokeExtensions.ThrowIfWin32Error($"Failed to send input. Return code was {result}.");
-                    }
-                    catch (Exception ex)
-                    {
-                        if (Log.Instance.IsTraceEnabled)
-                            Log.Instance.Trace($"Failed to send input for event {macroEvent}", ex);
+                        if (!sequence.IgnoreDelays)
+                            await _delayProvider.Delay(macroEvent.Delay, token).ConfigureAwait(false);
+
+                        token.ThrowIfCancellationRequested();
+
+                        try
+                        {
+                            var input = ToInput(macroEvent, GetPrimaryWorkingArea());
+                            var result = PInvoke.SendInput(MemoryMarshal.CreateSpan(ref input, 1), Marshal.SizeOf<INPUT>());
+                            if (result == 0)
+                                PInvokeExtensions.ThrowIfWin32Error($"Failed to send input. Return code was {result}.");
+                            TrackHeldInput(macroEvent, heldKeys, heldMouseButtons);
+                        }
+                        catch (Exception ex)
+                        {
+                            if (Log.Instance.IsTraceEnabled)
+                                Log.Instance.Trace($"Failed to send input for event {macroEvent}", ex);
+                        }
                     }
                 }
             }
+            catch (OperationCanceledException)
+            {
+                ReleaseHeldInputs(heldKeys, heldMouseButtons);
+                throw;
+            }
+            finally
+            {
+                _isPlayingInterruptableSequence.Value = false;
+            }
         }, token);
+    }
+
+    private static void TrackHeldInput(MacroEvent macroEvent, HashSet<uint> heldKeys, HashSet<uint> heldMouseButtons)
+    {
+        switch (macroEvent.Source)
+        {
+            case MacroSource.Keyboard:
+                if (macroEvent.Direction == MacroDirection.Down)
+                    heldKeys.Add(macroEvent.Key);
+                else if (macroEvent.Direction == MacroDirection.Up)
+                    heldKeys.Remove(macroEvent.Key);
+                break;
+            case MacroSource.Mouse:
+                if (macroEvent.Direction == MacroDirection.Down)
+                    heldMouseButtons.Add(macroEvent.Key);
+                else if (macroEvent.Direction == MacroDirection.Up)
+                    heldMouseButtons.Remove(macroEvent.Key);
+                break;
+        }
+    }
+
+    private static void ReleaseHeldInputs(HashSet<uint> heldKeys, HashSet<uint> heldMouseButtons)
+    {
+        var screenArea = GetPrimaryWorkingArea();
+        foreach (var key in heldKeys)
+            TrySendRelease(new MacroEvent { Source = MacroSource.Keyboard, Direction = MacroDirection.Up, Key = key }, screenArea);
+        foreach (var button in heldMouseButtons)
+            TrySendRelease(new MacroEvent { Source = MacroSource.Mouse, Direction = MacroDirection.Up, Key = button }, screenArea);
+        heldKeys.Clear();
+        heldMouseButtons.Clear();
+    }
+
+    private static void TrySendRelease(MacroEvent macroEvent, Rectangle screenArea)
+    {
+        try
+        {
+            var input = ToInput(macroEvent, screenArea);
+            var result = PInvoke.SendInput(MemoryMarshal.CreateSpan(ref input, 1), Marshal.SizeOf<INPUT>());
+            if (result == 0 && Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to release held input {macroEvent}.");
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to release held input {macroEvent}.", ex);
+        }
     }
 
     private static INPUT ToInput(MacroEvent macroEvent, Rectangle screenArea) => macroEvent.Source switch

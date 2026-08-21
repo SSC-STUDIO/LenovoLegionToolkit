@@ -108,6 +108,9 @@ function toHostStore(store: OsdSettingsStore): Record<string, unknown> {
 export const osdApi = {
   async get(): Promise<OsdSettingsStore> {
     const result = await settingsApi.get('osd')
+    if (result.value != null && (typeof result.value !== 'object' || Array.isArray(result.value))) {
+      throw new Error('osd settings payload is invalid')
+    }
     const raw = (result.value ?? {}) as Record<string, unknown>
     const merged: OsdSettingsStore = { ...DEFAULT_OSD_SETTINGS }
     const pascal = (key: string): string => key.charAt(0).toUpperCase() + key.slice(1)

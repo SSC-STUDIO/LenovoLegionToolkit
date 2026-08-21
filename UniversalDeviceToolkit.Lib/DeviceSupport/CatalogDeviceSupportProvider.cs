@@ -74,7 +74,7 @@ public class CatalogDeviceSupportProvider(
         var pack = _installedCatalog?.DevicePacks is { Count: > 0 } installedPacks
             ? FindSharedMatch(installedPacks, machineInformation) ?? FindSharedMatch(devicePacks, machineInformation)
             : FindSharedMatch(devicePacks, machineInformation);
-        if (pack is null)
+        if (pack is null || pack.Id.Equals(GenericBasicPackId, StringComparison.OrdinalIgnoreCase))
             return BasicMode();
 
         return FromPack(pack);
@@ -130,9 +130,35 @@ public class CatalogDeviceSupportProvider(
 
         var definitions = devicePacks.Select(ToDefinition).ToArray();
         var support = DeviceSupportMatcher.Evaluate(ToDeviceIdentity(machineInformation), definitions);
+        if (support.DevicePackId.Equals(GenericBasicPackId, StringComparison.OrdinalIgnoreCase))
+            return null;
+
         return devicePacks.FirstOrDefault(pack =>
             pack.Id.Equals(support.DevicePackId, StringComparison.OrdinalIgnoreCase));
     }
+
+    private static IEnumerable<string> ModelMatchSignals(MachineInformation machineInformation, HardwareInventory hardware)
+    {
+        yield return machineInformation.Model;
+        yield return hardware.ComputerSystem.Model;
+        yield return hardware.ComputerSystem.SystemFamily;
+        yield return hardware.ComputerSystem.ChassisSkuNumber;
+        yield return hardware.BaseBoard.Product;
+        yield return hardware.BaseBoard.Version;
+
+        foreach (var chassisTypeName in hardware.Chassis.ChassisTypeNames)
+        {
+            if (IsFormFactorClassifier(chassisTypeName))
+                yield return chassisTypeName;
+        }
+    }
+
+    private static bool IsFormFactorClassifier(string name) =>
+        name.Equals("Desktop", StringComparison.OrdinalIgnoreCase) ||
+        name.Equals("Low Profile Desktop", StringComparison.OrdinalIgnoreCase) ||
+        name.Equals("Mini Tower", StringComparison.OrdinalIgnoreCase) ||
+        name.Equals("Tower", StringComparison.OrdinalIgnoreCase) ||
+        name.Equals("All-in-One", StringComparison.OrdinalIgnoreCase);
 
     private static DevicePackDefinition ToDefinition(DevicePack pack) =>
         new()
@@ -157,15 +183,14 @@ public class CatalogDeviceSupportProvider(
             hardware.ComputerSystem.Manufacturer,
             hardware.BaseBoard.Manufacturer,
             hardware.Chassis.Manufacturer);
-        var modelSignals = new[] { machineInformation.Model }
-            .Concat(hardware.MatchSignals)
+        var modelSignals = ModelMatchSignals(machineInformation, hardware)
             .Where(signal => !string.IsNullOrWhiteSpace(signal))
             .Select(signal => signal.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
         var model = FirstPresent(new[] { machineInformation.Model }.Concat(modelSignals).ToArray());
-        var machineType = ExtractMachineTypeToken(machineInformation.MachineType) ??
-                          modelSignals.Select(ExtractMachineTypeToken).FirstOrDefault(token => token is not null) ??
+        var machineType = DeviceSupportMatcher.ExtractMachineTypeToken(machineInformation.MachineType) ??
+                          modelSignals.Select(DeviceSupportMatcher.ExtractMachineTypeToken).FirstOrDefault(token => token is not null) ??
                           machineInformation.MachineType?.Trim() ??
                           string.Empty;
 
@@ -182,39 +207,6 @@ public class CatalogDeviceSupportProvider(
             MachineType = machineType,
         };
     }
-
-    private static string? ExtractMachineTypeToken(string? value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-            return null;
-
-        // LENOVO_MT_83DF_BU_...
-        const string mtMarker = "_MT_";
-        var mtIndex = value.IndexOf(mtMarker, StringComparison.OrdinalIgnoreCase);
-        if (mtIndex >= 0 && value.Length >= mtIndex + mtMarker.Length + 4)
-        {
-            var token = value.Substring(mtIndex + mtMarker.Length, 4);
-            if (IsLikelyMachineType(token))
-                return token.ToUpperInvariant();
-        }
-
-        // Bare 4-char MTM (83DF)
-        var trimmed = value.Trim();
-        if (trimmed.Length >= 4)
-        {
-            var head = trimmed[..4];
-            if (IsLikelyMachineType(head) && (trimmed.Length == 4 || !char.IsLetterOrDigit(trimmed[4])))
-                return head.ToUpperInvariant();
-        }
-
-        return null;
-    }
-
-    private static bool IsLikelyMachineType(string token) =>
-        token.Length == 4 &&
-        char.IsDigit(token[0]) &&
-        char.IsDigit(token[1]) &&
-        token.Skip(2).All(c => char.IsLetterOrDigit(c));
 
     private static string FirstPresent(params string?[] values) =>
         values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value))?.Trim() ?? string.Empty;

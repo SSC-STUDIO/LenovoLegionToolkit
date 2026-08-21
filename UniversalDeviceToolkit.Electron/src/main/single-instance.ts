@@ -1,9 +1,14 @@
 import { app, BrowserWindow } from 'electron'
 
 let getMainWindow: () => BrowserWindow | null = () => null
+let restoreMainWindow: (() => void) | null = null
 
 export function setMainWindowRef(getter: () => BrowserWindow | null): void {
   getMainWindow = getter
+}
+
+export function setMainWindowRestore(restore: () => void): void {
+  restoreMainWindow = restore
 }
 
 export function initSingleInstance(): boolean {
@@ -14,7 +19,10 @@ export function initSingleInstance(): boolean {
 
   app.on('second-instance', () => {
     const window = getMainWindow()
-    if (!window || window.isDestroyed()) return
+    if (!window || window.isDestroyed()) {
+      restoreMainWindow?.()
+      return
+    }
     if (window.isMinimized()) window.restore()
     window.show()
     window.focus()
