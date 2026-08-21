@@ -351,16 +351,45 @@ UDT currently does not support installation for multiple users, so if you need t
 
 The app allows to:
 
-- Change settings like power mode, battery charging mode, etc. that are available only through Vantage.
-- Spectrum RGB, 4-zone RGB and White backlight keyboards support.
-- Monitor dGPU activity (NVIDIA only).
-- Define Actions that will run when the laptop is i.e. connected to AC power.
-- View battery statistics.
-- Control laptop features from command line
-- Check for driver and software updates.
-- Check warranty status.
-- Disable/enable Lenovo Vantage, Legion Zone and Lenovo Hotkeys service without uninstalling them.
-- ... and more!
+- **Deep System Junk & Shader Cache Cleaning**: Scan and clean DirectX/Vulkan shader caches, WeChat/QQ temp caches, package manager caches (npm/yarn/pnpm/cargo/pip), and Windows thumbnail/temp files.
+- **Battery Health & Wear Level Real-Time Monitoring**: Accurately calculate design capacity, full charge capacity, cycle count, and wear percentage with health ratings.
+- **Automation Preset Templates & Cross-Device Sharing**: Built-in presets for battery conservation, gaming performance, and quiet work; full JSON export/import and clipboard sharing.
+- **Enhanced Tray Quick Controls Flyout**: Capsule segmented power mode switcher, battery percentage badge, and instant hardware status.
+- **Hardware Modes & Fan Curves**: Change performance modes, battery conservation/rapid charge, and customize fan curves on 2022+ models.
+- **Full Keyboard & Lighting Control**: Spectrum per-key RGB, 4-zone RGB, white backlight, logo light, and rear port lighting.
+- **Dedicated GPU Hybrid Mode & Kill Switch**: Switch between Hybrid/dGPU-only modes, track active GPU processes, and forcefully sleep inactive NVIDIA dGPUs.
+- **Automation Pipeline & Macro Sequences**: Automate triggers based on AC power, active applications, external displays, Wi-Fi, time of day, and custom hotkeys.
+- **Zero Background Services**: Disable Lenovo Vantage / Legion Zone services cleanly without uninstallation.
+
+### Deep System Junk & Shader Cache Cleaning
+
+Located under **Windows Optimization → System & Storage**:
+
+- 🎮 **DirectX & Vulkan Shader Caches**: Safely purge DirectX D3DSCache and NV_Cache to resolve corrupted shader stutters or reclaim multiple gigabytes of disk space.
+- 💬 **Instant Messaging Caches (WeChat / QQ)**: One-click clean temporary media, avatar caches, and discarded file transfers.
+- 💻 **Package Manager Caches**: Clean global cache bloat for `npm`, `pnpm`, `yarn`, `cargo`, and `pip` development environments.
+- 🧹 **System Thumbnails & Temp Files**: Clear Windows thumbnail database caches and orphaned temporary directories.
+
+### Battery Health & Wear Level Monitoring
+
+Located under **Dashboard → Battery Details**:
+
+- **Real-Time Health Rating**: Dynamically evaluates current battery capacity against original factory design capacity (Excellent ≥ 90%, Good ≥ 80%, Service Recommended < 80%).
+- **Multi-Metric Telemetry**: Real-time charge/discharge rate (mW/W), ambient temperature, cycle counts, manufacture date, and first-use timestamp.
+
+### Automation Preset Templates & Macro Sharing
+
+Located under **Automation** and **Keyboard Macro**:
+
+- **Built-in Standard Presets**: Instantly apply tested automation workflows (e.g. "Auto Switch to Quiet & 60Hz on Battery", "High Refresh Rate & Beast Mode on AC").
+- **Cross-Device Config Sharing**: Export/import automation pipelines and macro sequences as JSON, or share directly via clipboard copy/paste.
+
+### Enhanced Tray Quick Controls
+
+- Click the taskbar tray icon for an instant, responsive flyout:
+  - **Segmented Capsule Controls**: Instant 1-click switching between Quiet, Balance, and Beast modes.
+  - **Battery Badge**: Live battery percentage, conservation mode status, and charging rate.
+  - **Zero-Resident Idle**: Unloads completely when closed, leaving zero persistent memory footprint.
 
 ### Plugin Extensions
 
