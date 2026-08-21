@@ -28,10 +28,10 @@ function toMebibytes(bytes) {
 }
 
 export function expectedRuntimeIdentifier(platform, architecture) {
-  const normalizedArchitecture = architecture === 3 || architecture === '3' ? 'arm64' : architecture === 1 || architecture === '1' ? 'x64' : architecture
-  if (platform === 'win32') return 'win-x64'
+  const normalizedArchitecture = architecture === 3 || architecture === '3' || architecture === 'arm64' ? 'arm64' : architecture === 1 || architecture === '1' || architecture === 'x64' ? 'x64' : architecture
+  if (platform === 'win32' || platform === 'win' || platform === 'windows') return 'win-x64'
   if (platform === 'linux') return 'linux-x64'
-  if (platform === 'darwin' && (normalizedArchitecture === 'x64' || normalizedArchitecture === 'arm64')) return `osx-${normalizedArchitecture}`
+  if ((platform === 'darwin' || platform === 'mac' || platform === 'osx') && (normalizedArchitecture === 'x64' || normalizedArchitecture === 'arm64')) return `osx-${normalizedArchitecture}`
   throw new Error(`Unsupported Electron package target: platform=${platform} arch=${architecture}`)
 }
 
@@ -60,6 +60,18 @@ async function resolveResourcesDirectory(appOutDirectory) {
     join(appOutDirectory, 'resources'),
     join(appOutDirectory, 'Contents', 'Resources')
   ]
+  if (!candidates.some(existsSync)) {
+    try {
+      const entries = await readdir(appOutDirectory, { withFileTypes: true })
+      for (const entry of entries) {
+        if (entry.isDirectory() && entry.name.endsWith('.app')) {
+          candidates.push(join(appOutDirectory, entry.name, 'Contents', 'Resources'))
+        }
+      }
+    } catch {
+      /* ignore */
+    }
+  }
   const resourcesDirectory = candidates.find(existsSync)
   if (!resourcesDirectory) throw new Error(`Packaged application has no resources directory: ${appOutDirectory}`)
   return resourcesDirectory
