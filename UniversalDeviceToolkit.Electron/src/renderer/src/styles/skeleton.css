@@ -6,7 +6,6 @@
 
 :root {
   --udt-anim-shimmer: 1.7s;
-  --udt-skeleton-breathe-floor: 0.85;
   --udt-skeleton-base: var(--udt-control-fill-secondary);
   --udt-skeleton-base-muted: var(--udt-control-fill-tertiary);
   /* Bones on card surfaces: --udt-control-fill-default can equal
