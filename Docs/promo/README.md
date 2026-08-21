@@ -1,41 +1,44 @@
-# Universal Device Toolkit 宣传片
+# Universal Device Toolkit promo (real UI recording)
 
-Cinematic stills + ffmpeg Ken Burns trailer for **Universal Device Toolkit**.
+The deliverable is a screen recording of the **running Universal Device Toolkit window**, with visible mouse clicks through the real sidebar and pages. It is not Ken Burns motion on generated stills.
 
-Deliverable (not committed; rebuild locally):
+Outputs (not committed; rebuild locally):
 
-- `/opt/cursor/artifacts/udt-promo.mp4` (~32 s, 1920x1080 H.264)
-- `/opt/cursor/artifacts/udt-promo-poster.png`
+- `/opt/cursor/artifacts/udt-promo.mp4` (about 43 s, 1920x1080 H.264 yuv420p, `+faststart`)
+- `/opt/cursor/artifacts/udt-promo-poster.png` (one real frame)
 
-A 1080p poster frame is also stored here as `udt-promo-poster.png` for docs previews. The MP4 is typically ~30 MB at ~8 Mbps, so it stays out of git.
+`udt-promo-poster.png` in this folder is a copy of that real frame for docs previews. The MP4 stays out of git (`*.mp4` in `.gitignore`).
 
-## Storyboard (~32 s, 8 beats)
+`stills/` may remain as design references. Do not rebuild the promo from those PNGs.
 
-Chinese titles are burned with `drawtext` (Noto Sans CJK). Stills are English-first so generated UI type stays legible; the product name **Universal Device Toolkit** is on the title and end cards.
+## What was captured
 
-| # | File | Length | Camera | On-screen punch | Subtitle |
-|---|------|--------|--------|-----------------|----------|
-| 1 | `stills/promo-01-title.png` | 4.5 s | Slow zoom in | 开源硬件工具套件 | 不用账号 · 不碰遥测 |
-| 2 | `stills/promo-02-dashboard.png` | 4.5 s | Pan + zoom | 硬件掌控 | CPU / 电池 / GPU 实时仪表 |
-| 3 | `stills/promo-03-power.png` | 4.5 s | Pan | 实时传感器 | 电源 · 电池养护 · 低功率适配器感知 |
-| 4 | `stills/promo-04-optimize.png` | 4.5 s | Zoom in | 网络加速 | 系统优化 · 加速模式 |
-| 5 | `stills/promo-05-automation.png` | 4.5 s | Pan | 自动化 | 触发器 · 流水线 · 自定义宏 |
-| 6 | `stills/promo-06-plugins.png` | 4.5 s | Zoom in | 插件 | CustomMouse · ShellIntegration · ViveTool |
-| 7 | `stills/promo-07-tray.png` | 4.5 s | Zoom in | 托盘后台 | 通知中心 · 简体中文 · English |
-| 8 | `stills/promo-08-end.png` | 4.5 s | Slow zoom in | 掌控你的硬件 | 开源 · 无遥测 · 无账号 |
+Source capture: 1920x1200 XFCE desktop, Electron window `universal-device-toolkit`, title `Universal Device Toolkit - ...`.
 
-Crossfade 0.6 s between beats. Timeline:
+The Electron client is gone from `master`. Recording used a worktree of `origin/electron` (commit `2ed697e6d`) at `/tmp/udt-electron`. The Windows Host sidecar does not run on Linux; empty sensors, "this device does not support this feature", and the Linux network-acceleration banner are real UI states, not mocked success.
 
-`8 * 4.5 - 7 * 0.6 = 31.8 s`
+Click-through (see `record-clickthrough.py`):
 
-Audio is a quiet synthesized drone (`aevalsrc`), not a third-party track.
+| Screen | Shown |
+|---|---|
+| Dashboard (控制台) | CPU / battery / GPU gauges, power and graphics cards |
+| Windows optimization (系统优化) | Category checklists |
+| Network acceleration (网络与加速) | Honest Host-unavailable banner on Linux |
+| Automation (自动化) | Empty pipeline list |
+| Macro (自定义宏) | Numpad editor |
+| Plugins (插件扩展) | Cursor and Pointer, Nilesoft Shell Manager, ViVeTool |
+| Settings (设置) | Appearance (language, theme) |
+| About (关于) | Version and project links |
 
-## Rebuild
+Keyboard page and a custom tray popup were not part of this pass. The XFCE/Plank dock shows the running Electron icon.
+
+## Rebuild from a recording
 
 Dependencies: `ffmpeg`, Noto Sans CJK (`fonts-noto-cjk`).
 
 ```bash
 sudo apt-get install -y ffmpeg fonts-noto-cjk
+cp /path/to/capture.mp4 /opt/cursor/artifacts/udt-real-ui-source.mp4
 ./Docs/promo/build-promo.sh
 ```
 
@@ -47,14 +50,25 @@ Optional output paths:
 
 The script:
 
-1. Ken Burns (slow zoom/pan) each still to 1920x1080 @ 30 fps
-2. Crossfade clips
-3. Lower-third Chinese titles
-4. Quiet pad + fade in/out
-5. H.264 `yuv420p`, ~10 Mbps, `+faststart`
+1. Loads the raw capture (`UDT_PROMO_RAW`, `Docs/promo/recordings/udt-real-ui-demo.mp4`, or `/opt/cursor/artifacts/udt-real-ui-source.mp4`)
+2. Trims the click-through (default start 10 s, duration 43 s)
+3. Crops 1920x1200 to 1920x1080 (top of the frame, keeps the title bar)
+4. Burns light Chinese lower-thirds (function names only)
+5. Writes H.264 `yuv420p` `+faststart` and a poster frame
 
-## Visual notes
+If you recapture, set `UDT_PROMO_START` / `UDT_PROMO_DURATION` and optionally `UDT_PROMO_LABELS` (CSV lines `start,end,label` in output time).
 
-Stills follow the real dark UI: charcoal cards, rounded controls, blue/green/amber gauges, Fluent-like icons. Do not add Lenovo/Legion branding, fake benchmarks, or AI claims.
+## Recapture the Electron UI
 
-Generated stills are 1536x1024 (model output). The build crops/scales them to 16:9 1920x1080.
+1. Worktree a revision that still has `UniversalDeviceToolkit.Electron` (for example `origin/electron`). Do not merge that tree into the promo branch unless you only need it to launch the app.
+2. In that client: `npm install`, then start the renderer. Example:
+
+   ```bash
+   DISPLAY=:1 ELECTRON_DISABLE_SANDBOX=1 npx electron-vite dev -- --no-sandbox --disable-dev-shm-usage --ozone-platform=x11
+   ```
+
+3. Host/hardware may fail on Linux. That is expected. Record the real shell anyway.
+4. Record the desktop (full 1920x1080 or native), then run `record-clickthrough.py` (or click the same nav items by hand) so the mouse is visible.
+5. Point `build-promo.sh` at the new MP4.
+
+Do not add Lenovo or Legion branding. Do not replace the MP4 with generated UI mockups.
