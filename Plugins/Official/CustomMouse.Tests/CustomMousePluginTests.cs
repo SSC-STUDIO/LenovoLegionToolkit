@@ -1,3 +1,4 @@
+using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Plugins.CustomMouse;
 using UniversalDeviceToolkit.Plugins.SDK;
 using Microsoft.Win32;
@@ -470,6 +471,58 @@ public class CustomMousePluginTests
             cursorKey.SetValue(string.Empty, originalDefault ?? string.Empty);
             cursorKey.SetValue("Arrow", originalArrow ?? string.Empty);
         }
+    }
+}
+
+internal sealed class PluginSettingsFileSnapshot : IDisposable
+{
+    public static string SettingsFilePath =>
+        Path.Combine(Folders.GetAppDataSubdirectory("plugin-config"), "custom-mouse.json");
+
+    private readonly bool _existed;
+    private readonly string? _originalContent;
+
+    private PluginSettingsFileSnapshot(bool existed, string? originalContent)
+    {
+        _existed = existed;
+        _originalContent = originalContent;
+    }
+
+    public static PluginSettingsFileSnapshot Capture()
+    {
+        var path = SettingsFilePath;
+        if (!File.Exists(path))
+        {
+            return new PluginSettingsFileSnapshot(false, null);
+        }
+
+        return new PluginSettingsFileSnapshot(true, File.ReadAllText(path));
+    }
+
+    public void Restore()
+    {
+        var path = SettingsFilePath;
+        if (_existed)
+        {
+            var directory = Path.GetDirectoryName(path);
+            if (!string.IsNullOrEmpty(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            File.WriteAllText(path, _originalContent ?? string.Empty);
+            return;
+        }
+
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
+
+    public void Dispose()
+    {
+        Restore();
     }
 }
 

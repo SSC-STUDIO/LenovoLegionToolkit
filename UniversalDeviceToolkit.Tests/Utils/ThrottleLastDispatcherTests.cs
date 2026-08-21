@@ -156,20 +156,22 @@ public class ThrottleLastDispatcherTests
         var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(100));
         var executionOrder = new System.Collections.Generic.List<int>();
 
-        // Act
+        // Act: keep a handle to the last dispatch and await it so a loaded CI
+        // runner cannot finish the wall-clock sleep before the winning callback.
+        Task? last = null;
         for (int i = 0; i < 5; i++)
         {
             var value = i;
-            _ = dispatcher.DispatchAsync(async () =>
+            last = dispatcher.DispatchAsync(async () =>
             {
                 await Task.Delay(50);
                 executionOrder.Add(value);
             });
-            await Task.Delay(10);
+            if (i < 4)
+                await Task.Delay(10);
         }
 
-        // Wait for completion
-        await Task.Delay(200);
+        await last!;
 
         // Assert - Only the last call should have executed
         executionOrder.Should().ContainSingle().Which.Should().Be(4);
