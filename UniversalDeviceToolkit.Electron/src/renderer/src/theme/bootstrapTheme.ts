@@ -1,4 +1,5 @@
 import type { ThemeMode, ThemePreference } from '../stores/themeStore'
+import { applyAppFont, getStoredAppFont } from '../utils/fonts'
 
 const THEME_STORAGE_KEY = 'udt.theme'
 
@@ -19,8 +20,8 @@ function resolveThemeMode(preference: ThemePreference): ThemeMode {
 }
 
 /**
- * Apply theme attributes before the first React paint so browser dev / cold
- * start does not flash a light nav rail over a dark content surface.
+ * Apply theme attributes and custom font before the first React paint so browser
+ * dev / cold start does not flash an unstyled theme or mismatched typography.
  */
 export function bootstrapThemeDocument(): void {
   const root = document.documentElement
@@ -28,4 +29,5 @@ export function bootstrapThemeDocument(): void {
   root.setAttribute('data-theme', mode)
   root.dataset.backdrop = 'none'
   root.style.colorScheme = mode
+  applyAppFont(getStoredAppFont())
 }

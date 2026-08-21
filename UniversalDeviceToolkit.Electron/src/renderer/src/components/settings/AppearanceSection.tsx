@@ -13,6 +13,7 @@ import {
   type UiScalePreference
 } from '../../stores/themeStore'
 import { storeAccentPreference } from '../../theme/useTheme'
+import { FONT_PRESETS, applyAppFont, getStoredAppFont } from '../../utils/fonts'
 import { SettingsCard } from './SettingsCard'
 
 type AppSettings = Record<string, unknown>
@@ -367,6 +368,16 @@ export default function AppearanceSection(): React.JSX.Element {
     return a.label.localeCompare(b.label, undefined, { sensitivity: 'base' })
   })
 
+  const [selectedFont, setSelectedFont] = useState<string>(() => getStoredAppFont())
+
+  useEffect(() => {
+    const backendFont = app['FontFamily']
+    if (typeof backendFont === 'string' && backendFont.trim() !== '') {
+      setSelectedFont(backendFont)
+      applyAppFont(backendFont)
+    }
+  }, [app['FontFamily']])
+
   const persistApplication = (next: AppSettings): void => {
     if (!editorsEnabled) return
     setScope('application', next)
@@ -374,6 +385,13 @@ export default function AppearanceSection(): React.JSX.Element {
       .set('application', next)
       .then(() => settingsApi.save(['application']))
       .catch(() => message.error(t('settings.saveFailed')))
+  }
+
+  const handleFontChange = (fontValue: string): void => {
+    setSelectedFont(fontValue)
+    applyAppFont(fontValue)
+    const next: AppSettings = { ...app, FontFamily: fontValue }
+    persistApplication(next)
   }
 
   /**
@@ -619,6 +637,22 @@ export default function AppearanceSection(): React.JSX.Element {
             )}
             disabled={!editorsEnabled}
             onChange={handleUiScaleChange}
+          />
+        }
+      />
+      <SettingsCard
+        title={t('settings.appearance.font', { defaultValue: 'Interface Font (界面字体)' })}
+        description={t('settings.appearance.fontDesc', { defaultValue: 'Choose a font family for the interface typography' })}
+        action={
+          <Select<string>
+            className="udt-settings-select udt-settings-select--font"
+            value={selectedFont}
+            options={FONT_PRESETS.map((preset) => ({
+              value: preset.value,
+              label: t(preset.labelKey, { defaultValue: preset.defaultLabel })
+            }))}
+            disabled={!editorsEnabled}
+            onChange={handleFontChange}
           />
         }
       />

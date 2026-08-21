@@ -390,6 +390,13 @@ function createAppearanceFixture({
       '../../stores/settingsStore': settingsStoreModule,
       '../../stores/themeStore': themeStoreModule,
       '../../theme/useTheme': { storeAccentPreference: () => undefined },
+      '../../utils/fonts': {
+        FONT_PRESETS: [
+          { value: 'system', labelKey: 'settings.appearance.fontPresets.system', defaultLabel: 'System Default' }
+        ],
+        applyAppFont: () => undefined,
+        getStoredAppFont: () => 'system'
+      },
       '../ColorPicker': { __esModule: true, default: ColorPicker },
       './SettingsCard': { SettingsCard },
       '@fluentui/react-icons': {},

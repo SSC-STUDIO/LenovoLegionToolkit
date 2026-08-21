@@ -396,6 +396,16 @@ export default withEnglishFallback({
           light: 'Sáng',
           dark: 'Tối',
         },
+        font: 'Interface Font',
+        fontDesc: 'Choose a font family for the interface typography, applied live.',
+        fontPresets: {
+          system: 'System Default (Segoe UI / YaHei)',
+          yahei: 'Microsoft YaHei UI',
+          segoe: 'Segoe UI Variable',
+          noto: 'Noto Sans SC / PingFang SC',
+          harmony: 'HarmonyOS Sans',
+          cascadia: 'Cascadia Code / Consolas (Monospace)',
+        },
       },
       application: {
         minimizeToTray: 'Thu nhỏ vào khay',

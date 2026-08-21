@@ -391,6 +391,16 @@ export default withEnglishFallback({
         appScale: '界面缩放',
         appScaleDesc: '统一放大或缩小应用内的文本与整个界面，独立于 Windows 显示缩放。选择“自动”时随窗口大小调整。',
         appScaleAuto: '自动',
+        font: '界面字体',
+        fontDesc: '自定义应用界面使用的排版字体系列，即时生效。',
+        fontPresets: {
+          system: '系统默认 (Segoe UI / 微软雅黑)',
+          yahei: 'Microsoft YaHei UI (微软雅黑)',
+          segoe: 'Segoe UI Variable',
+          noto: 'Noto Sans SC (思源黑体 / 苹方)',
+          harmony: 'HarmonyOS Sans (鸿蒙黑体)',
+          cascadia: 'Cascadia Code / Consolas (等宽极客)',
+        },
         themeOptions: {
           system: '跟随系统',
           light: '亮色',

@@ -424,6 +424,16 @@ const enUS = {
         appScaleDesc:
           'Uniformly scale text and the entire interface, independent of the Windows display scaling. Auto follows the window size.',
         appScaleAuto: 'Auto',
+        font: 'Interface Font',
+        fontDesc: 'Choose a font family for the interface typography, applied live.',
+        fontPresets: {
+          system: 'System Default (Segoe UI / YaHei)',
+          yahei: 'Microsoft YaHei UI',
+          segoe: 'Segoe UI Variable',
+          noto: 'Noto Sans SC / PingFang SC',
+          harmony: 'HarmonyOS Sans',
+          cascadia: 'Cascadia Code / Consolas (Monospace)',
+        },
         themeOptions: {
           system: 'System',
           light: 'Light',
