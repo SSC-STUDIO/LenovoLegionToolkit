@@ -3,6 +3,9 @@
   "productName": "Universal Device Toolkit",
   "version": "6.0.0",
   "description": "Universal Device Toolkit - Electron desktop client",
+  "author": "Universal Device Toolkit Contributors",
+  "homepage": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit",
+  "license": "GPL-3.0-or-later",
   "main": "out/main/index.js",
   "private": true,
   "scripts": {
