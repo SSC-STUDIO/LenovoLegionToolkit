@@ -546,7 +546,7 @@ internal sealed class CursorRegistrySnapshot : IDisposable
 internal sealed class PluginSettingsFileSnapshot : IDisposable
 {
     private static readonly string SettingsDir = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         "UniversalDeviceToolkit",
         "plugin-config");
 
