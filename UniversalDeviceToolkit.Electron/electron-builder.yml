@@ -149,7 +149,7 @@ mac:
   # or Apple notarization credentials. Do not invent certificates. Notarization
   # is disabled; Gatekeeper will warn until a real identity is configured outside
   # this file.
-  notarize: false
+  identity: null
 linux:
   target:
     - target: AppImage
