@@ -548,10 +548,9 @@ internal sealed class PluginSettingsFileSnapshot : IDisposable
     private static readonly string SettingsDir = Path.Combine(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "UniversalDeviceToolkit",
-        "Plugins",
-        "CustomMouse");
+        "plugin-config");
 
-    public static string SettingsFilePath => Path.Combine(SettingsDir, "settings.json");
+    public static string SettingsFilePath => Path.Combine(SettingsDir, "custom-mouse.json");
 
     private readonly string? _originalContent;
     private readonly bool _originallyExisted;

@@ -146,6 +146,8 @@ public sealed class ThemeWatcherRuntime : IDisposable
                     {
                         return;
                     }
+
+                    _lastAppliedTheme = currentTheme;
                 }
 
                 if (ThemeChanged != null)
