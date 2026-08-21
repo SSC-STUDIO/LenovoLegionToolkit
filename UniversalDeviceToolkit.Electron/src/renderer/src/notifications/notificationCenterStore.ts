@@ -10,7 +10,7 @@ import { create } from 'zustand'
 /** Wire shape of the host `notifications.changed` event. */
 export interface AppNotificationRequest {
   title: string
-  message: string
+  message?: string
   severity: 'Success' | 'Info' | 'Warning' | 'Error'
   isPersistent?: boolean
   progressPercent?: number
