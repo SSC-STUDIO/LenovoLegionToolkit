@@ -134,7 +134,11 @@ mac:
   # osx-arm64 / osx-x64. ${os} expands to "mac" (not "osx"), so only the arch
   # suffix is templated here.
   extraResources:
-    - from: ../UniversalDeviceToolkit.Host/publish/osx-${arch}
+    - from: ../UniversalDeviceToolkit.Host/publish/osx-arm64
+      to: host
+      filter:
+        - "**/*"
+    - from: ../UniversalDeviceToolkit.Host/publish/osx-x64
       to: host
       filter:
         - "**/*"
