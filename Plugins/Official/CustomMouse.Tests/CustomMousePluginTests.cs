@@ -368,14 +368,19 @@ public class CustomMousePluginTests
             var uniqueMarker = $"retry-{Guid.NewGuid():N}";
             plugin.Settings.LastAppliedTheme = uniqueMarker;
 
-            using (File.Open(settingsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+            // Hold temporary lock for 60ms so initial save attempt encounters IOException and retries
+            var lockAcquired = new ManualResetEventSlim(false);
+            var lockTask = Task.Run(() =>
             {
-                await plugin.SaveSettingsAsync();
-            }
-
-            Assert.DoesNotContain(uniqueMarker, File.ReadAllText(settingsFile), StringComparison.Ordinal);
+                using var stream = File.Open(settingsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None);
+                lockAcquired.Set();
+                Thread.Sleep(60);
+            });
+            lockAcquired.Wait(TimeSpan.FromSeconds(5));
 
             await plugin.SaveSettingsAsync();
+            await lockTask;
+
             Assert.Contains(uniqueMarker, File.ReadAllText(settingsFile), StringComparison.Ordinal);
         }
         finally
