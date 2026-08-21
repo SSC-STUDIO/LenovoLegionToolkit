@@ -188,6 +188,50 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             "https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json");
     }
 
+    [Fact]
+    public async Task FetchAvailablePluginsAsync_ShouldPreserveWebPageContributionThroughCacheClone()
+    {
+        const string storeJson = """
+        {
+          "lastUpdated": "2026-08-16T00:00:00Z",
+          "plugins": [
+            {
+              "id": "custom-mouse",
+              "name": "Custom Mouse",
+              "version": "1.0.0",
+              "minimumHostVersion": "1.0.0",
+              "status": "Active",
+              "contributes": {
+                "webPage": { "entry": "web/index.html" },
+                "settingsPage": { "class": "CustomMouse.Settings", "title": "Mouse" }
+              }
+            }
+          ]
+        }
+        """;
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.OK)
+        {
+            Content = new StringContent(storeJson)
+        });
+
+        var plugins = await service.FetchAvailablePluginsAsync(forceRefresh: true);
+
+        plugins.Should().ContainSingle();
+        plugins[0].Status.Should().Be("Active");
+        plugins[0].Contributes.Should().NotBeNull();
+        plugins[0].Contributes!.WebPage.Should().NotBeNull();
+        plugins[0].Contributes!.WebPage!.Entry.Should().Be("web/index.html");
+        plugins[0].Contributes!.SettingsPage!.Class.Should().Be("CustomMouse.Settings");
+
+        service.TryGetCachedAvailablePlugins(out var cached).Should().BeTrue();
+        cached.Should().ContainSingle();
+        cached![0].Contributes!.WebPage!.Entry.Should().Be("web/index.html");
+
+        plugins[0].Contributes!.WebPage!.Entry = "mutated.html";
+        service.TryGetCachedAvailablePlugins(out var cachedAgain).Should().BeTrue();
+        cachedAgain![0].Contributes!.WebPage!.Entry.Should().Be("web/index.html");
+    }
+
     [Theory]
     [InlineData("")]
     [InlineData("{not-json")]
@@ -1137,6 +1181,179 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
     }
 
     [Fact]
+    public async Task RepositoryUpdate_WhenStrictLoadFails_ShouldRestoreOriginal()
+    {
+        const string pluginId = "load-rollback";
+        var target = CreateExistingRepositoryPlugin(pluginId);
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
+        _pluginManager
+            .Setup(manager => manager.LoadPluginRuntimeStrictAsync(
+                pluginId,
+                It.IsAny<string>(),
+                It.IsAny<IDisposable?>(),
+                It.IsAny<PluginPackageAuthorization?>()))
+            .ThrowsAsync(new InvalidOperationException("replacement load failed"));
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        var outcome = await service.DownloadAndInstallPluginWithOutcomeAsync(manifest);
+
+        outcome.Success.Should().BeFalse();
+        outcome.Degraded.Should().BeFalse();
+        outcome.Error.Should().Contain("replacement load failed");
+        File.ReadAllText(Path.Combine(target, "original.txt")).Should().Be("original");
+        _pluginManager.Verify(
+            manager => manager.CommitPluginInstallation(
+                pluginId,
+                It.IsAny<IDisposable?>(),
+                It.IsAny<Action?>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task RepositoryUpdate_ShouldKeepBackupUntilRuntimeValidationCompletes()
+    {
+        const string pluginId = "upgrade-backup-lifetime";
+        var target = CreateExistingRepositoryPlugin(pluginId);
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
+        var activatedPlugin = TestMockFactory.CreateMockPlugin(id: pluginId);
+        _pluginManager.Setup(manager => manager.TryGetPlugin(pluginId, out activatedPlugin)).Returns(true);
+
+        var backupPresentDuringLoad = false;
+        var backupPresentDuringActivation = false;
+        var backupDeletedBeforeCommitInstallation = false;
+        var commitInstallationStarted = false;
+        var deletedPaths = new List<string>();
+
+        _pluginManager
+            .Setup(manager => manager.LoadPluginRuntimeStrictAsync(
+                pluginId,
+                It.IsAny<string>(),
+                It.IsAny<IDisposable?>(),
+                It.IsAny<PluginPackageAuthorization?>()))
+            .Callback(() => backupPresentDuringLoad = BackupContainsOriginal())
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.ActivatePluginRuntimeStrictAsync(
+                pluginId,
+                It.IsAny<string>(),
+                It.IsAny<IDisposable?>(),
+                It.IsAny<PluginPackageAuthorization?>()))
+            .Callback(() => backupPresentDuringActivation = BackupContainsOriginal())
+            .Returns(Task.CompletedTask);
+        _pluginManager
+            .Setup(manager => manager.CommitPluginInstallation(
+                pluginId,
+                It.IsAny<IDisposable?>(),
+                It.IsAny<Action?>()))
+            .Returns((string id, IDisposable? _, Action? coordinatedCommit) =>
+            {
+                commitInstallationStarted = true;
+                backupDeletedBeforeCommitInstallation = !BackupContainsOriginal();
+                coordinatedCommit?.Invoke();
+                return new PluginInstallationStateSnapshot(id, false, false);
+            });
+
+        using var service = CreateService(
+            _ => new HttpResponseMessage(HttpStatusCode.NotFound),
+            deleteDirectory: path =>
+            {
+                deletedPaths.Add(path);
+                Directory.Delete(path, recursive: true);
+            });
+
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        installed.Should().BeTrue();
+        backupPresentDuringLoad.Should().BeTrue();
+        backupPresentDuringActivation.Should().BeTrue();
+        commitInstallationStarted.Should().BeTrue();
+        backupDeletedBeforeCommitInstallation.Should().BeFalse();
+        deletedPaths.Should().Contain(path =>
+            Path.GetFileName(path).Equals("backup", StringComparison.OrdinalIgnoreCase));
+        Directory.Exists(target).Should().BeTrue();
+        Directory.GetFiles(target, "*.dll").Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task RepositoryUpdate_WhenReplacementIsNotUsableAfterActivation_ShouldRestoreOriginal()
+    {
+        const string pluginId = "unusable-after-activation";
+        var target = CreateExistingRepositoryPlugin(pluginId);
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
+        _pluginManager
+            .Setup(manager => manager.TryGetPlugin(pluginId, out It.Ref<IPlugin?>.IsAny))
+            .Returns(false);
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        var outcome = await service.DownloadAndInstallPluginWithOutcomeAsync(manifest);
+
+        outcome.Success.Should().BeFalse();
+        File.ReadAllText(Path.Combine(target, "original.txt")).Should().Be("original");
+        _pluginManager.Verify(
+            manager => manager.ActivatePluginRuntimeStrictAsync(
+                pluginId,
+                It.IsAny<string>(),
+                It.IsAny<IDisposable?>(),
+                It.IsAny<PluginPackageAuthorization?>()),
+            Times.Once);
+        _pluginManager.Verify(
+            manager => manager.CommitPluginInstallation(
+                pluginId,
+                It.IsAny<IDisposable?>(),
+                It.IsAny<Action?>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_ShouldPersistWebPageFromPackageWhenStoreOmitsIt()
+    {
+        const string pluginId = "webpage-from-package";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false, includeWebPage: true);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
+        var plugin = TestMockFactory.CreateMockPlugin(id: pluginId);
+        _pluginManager.Setup(manager => manager.TryGetPlugin(pluginId, out plugin)).Returns(true);
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        installed.Should().BeTrue();
+        ReadInstalledWebPageEntry(pluginId).Should().Be("web/index.html");
+    }
+
+    [Fact]
+    public async Task DownloadAndInstallPluginAsync_ShouldPersistWebPageFromStoreWhenPackageOmitsIt()
+    {
+        const string pluginId = "webpage-from-store";
+        var packagePath = CreatePluginPackage(pluginId, includeOptimizationAction: false);
+        var manifest = CreateInstallManifest(pluginId, packagePath);
+        manifest.Contributes = new PluginManifestContributions
+        {
+            WebPage = new PluginManifestWebContribution { Entry = "web/index.html" }
+        };
+        manifest.ZipHash = await PluginPackageIntegrity.ComputeSha256HexAsync(packagePath);
+        manifest.FileHash = await ComputePackageDllHashAsync(packagePath, pluginId);
+        var plugin = TestMockFactory.CreateMockPlugin(id: pluginId);
+        _pluginManager.Setup(manager => manager.TryGetPlugin(pluginId, out plugin)).Returns(true);
+        using var service = CreateService(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
+
+        var installed = await service.DownloadAndInstallPluginAsync(manifest);
+
+        installed.Should().BeTrue();
+        ReadInstalledWebPageEntry(pluginId).Should().Be("web/index.html");
+    }
+
+    [Fact]
     public async Task RepositoryUpdate_WhenBackupFingerprintChanges_ShouldNotMutateRollbackPayloads()
     {
         const string pluginId = "tampered-repository-backup";
@@ -1445,6 +1662,41 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         return target;
     }
 
+    private static bool BackupContainsOriginal()
+    {
+        var pluginsParent = Path.GetDirectoryName(PluginPaths.GetPluginsDirectory());
+        if (string.IsNullOrWhiteSpace(pluginsParent))
+            return false;
+
+        var transactionRoot = Path.Combine(pluginsParent, ".udt-plugin-transactions");
+        if (!Directory.Exists(transactionRoot))
+            return false;
+
+        return Directory.GetDirectories(transactionRoot, "backup", SearchOption.AllDirectories)
+            .Any(backupDirectory =>
+            {
+                var sentinel = Path.Combine(backupDirectory, "original.txt");
+                return File.Exists(sentinel) && File.ReadAllText(sentinel) == "original";
+            });
+    }
+
+    private static string? ReadInstalledWebPageEntry(string pluginId)
+    {
+        var manifestPath = Path.Combine(PluginPaths.GetPluginDirectory(pluginId), "plugin.manifest.json");
+        if (!File.Exists(manifestPath))
+            return null;
+
+        using var document = JsonDocument.Parse(File.ReadAllText(manifestPath));
+        if (!document.RootElement.TryGetProperty("contributes", out var contributes) ||
+            !contributes.TryGetProperty("webPage", out var webPage) ||
+            !webPage.TryGetProperty("entry", out var entry))
+        {
+            return null;
+        }
+
+        return entry.GetString();
+    }
+
     [Fact]
     public void RepositoryMainDllMatcher_ShouldAcceptOfficialShellIntegrationName()
     {
@@ -1572,7 +1824,10 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         }
     }
 
-    private string CreatePluginPackage(string pluginId, bool includeOptimizationAction)
+    private string CreatePluginPackage(
+        string pluginId,
+        bool includeOptimizationAction,
+        bool includeWebPage = false)
     {
         var packageDirectory = CreateTempDirectory();
         var pluginDirectory = Path.Combine(packageDirectory, pluginId);
@@ -1581,7 +1836,7 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         File.WriteAllText(Path.Combine(pluginDirectory, $"{pluginId}.dll"), "fake plugin dll");
         File.WriteAllText(
             Path.Combine(pluginDirectory, "plugin.json"),
-            CreateManifestJson(pluginId, includeOptimizationAction));
+            CreateManifestJson(pluginId, includeOptimizationAction, includeWebPage));
 
         var packagePath = Path.Combine(packageDirectory, $"{pluginId}.zip");
         ZipFile.CreateFromDirectory(pluginDirectory, packagePath);
@@ -1624,9 +1879,12 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
         return manifest;
     }
 
-    private static string CreateManifestJson(string pluginId, bool includeOptimizationAction)
+    private static string CreateManifestJson(
+        string pluginId,
+        bool includeOptimizationAction,
+        bool includeWebPage = false)
     {
-        if (!includeOptimizationAction)
+        if (!includeOptimizationAction && !includeWebPage)
         {
             return $$"""
             {
@@ -1637,18 +1895,35 @@ public class PluginRepositoryServiceTests : TemporaryFileTestBase
             """;
         }
 
+        var contributions = new List<string>();
+        if (includeWebPage)
+        {
+            contributions.Add("""
+                "webPage": {
+                  "entry": "web/index.html"
+                }
+            """);
+        }
+
+        if (includeOptimizationAction)
+        {
+            contributions.Add("""
+                "optimizationActions": [
+                  {
+                    "id": "apply-test",
+                    "title": "Apply test"
+                  }
+                ]
+            """);
+        }
+
         return $$"""
         {
           "id": "{{pluginId}}",
           "name": "{{pluginId}}",
           "description": "Test plugin",
           "contributes": {
-            "optimizationActions": [
-              {
-                "id": "apply-test",
-                "title": "Apply test"
-              }
-            ]
+            {{string.Join(",\n            ", contributions)}}
           }
         }
         """;

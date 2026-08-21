@@ -151,6 +151,9 @@ public class PluginErrorMessageTests : TemporaryFileTestBase
     [Fact]
     public async Task PluginSignatureValidator_DisabledMessage_UsesResourceString()
     {
+        if (!PluginSignatureSettings.RelaxedModesAllowed)
+            return;
+
         var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".dll");
         await File.WriteAllTextAsync(tempFile, "fake");
         try

@@ -208,6 +208,9 @@ public class HybridGpuCapabilityFallbackTests
         capabilityFeature
             .Setup(feature => feature.IsSupportedAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
+        gameZoneFeature.Setup(feature => feature.InvalidateResolution());
+        capabilityFeature.Setup(feature => feature.InvalidateResolution());
+        featureFlagsFeature.Setup(feature => feature.InvalidateResolution());
         var feature = new IGPUModeFeature(
             gameZoneFeature.Object,
             capabilityFeature.Object,
@@ -226,6 +229,37 @@ public class HybridGpuCapabilityFallbackTests
         featureFlagsFeature.Verify(
             candidate => candidate.IsSupportedAsync(It.IsAny<CancellationToken>()),
             Times.Never);
+    }
+
+    [Fact]
+    public async Task ExperimentalGpuWorkingMode_WhenToggledAfterResolve_ShouldInvalidateCachedBackend()
+    {
+        var gameZoneFeature = new Mock<IFeature<IGPUModeState>>(MockBehavior.Strict);
+        var capabilityFeature = new Mock<IFeature<IGPUModeState>>(MockBehavior.Strict);
+        var featureFlagsFeature = new Mock<IFeature<IGPUModeState>>(MockBehavior.Strict);
+        gameZoneFeature
+            .Setup(feature => feature.IsSupportedAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        capabilityFeature
+            .Setup(feature => feature.IsSupportedAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+        gameZoneFeature.Setup(feature => feature.InvalidateResolution());
+        capabilityFeature.Setup(feature => feature.InvalidateResolution());
+        featureFlagsFeature.Setup(feature => feature.InvalidateResolution());
+        var feature = new IGPUModeFeature(
+            gameZoneFeature.Object,
+            capabilityFeature.Object,
+            featureFlagsFeature.Object);
+
+        (await feature.IsSupportedAsync()).Should().BeTrue();
+        gameZoneFeature.Verify(candidate => candidate.IsSupportedAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+        capabilityFeature.Verify(candidate => candidate.IsSupportedAsync(It.IsAny<CancellationToken>()), Times.Never);
+
+        feature.ExperimentalGPUWorkingMode = true;
+
+        (await feature.IsSupportedAsync()).Should().BeTrue();
+        capabilityFeature.Verify(candidate => candidate.IsSupportedAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
+        gameZoneFeature.Verify(candidate => candidate.IsSupportedAsync(It.IsAny<CancellationToken>()), Times.Exactly(2));
     }
 
     [Fact]

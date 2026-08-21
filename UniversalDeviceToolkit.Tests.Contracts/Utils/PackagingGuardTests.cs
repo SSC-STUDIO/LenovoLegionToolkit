@@ -74,6 +74,27 @@ public sealed class PackagingGuardTests
     }
 
     [Fact]
+    public void ShippingApps_ShouldUseWorkstationGcAndStripUnusedRuntimeFeatures()
+    {
+        var targets = RepositoryPaths.ReadFile("Directory.Build.targets");
+        var prune = RepositoryPaths.ReadFile("Scripts", "Prune-ShippingFootprint.ps1");
+
+        targets.Should().Contain("<ServerGarbageCollection>false</ServerGarbageCollection>");
+        targets.Should().Contain("<ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>");
+        targets.Should().Contain("<RetainVMGarbageCollection>false</RetainVMGarbageCollection>");
+        targets.Should().Contain("<TieredPGO>true</TieredPGO>");
+        targets.Should().Contain("System.GC.ConserveMemory");
+        targets.Should().Contain("System.GC.DynamicAdaptationMode");
+        targets.Should().Contain("<DebuggerSupport>false</DebuggerSupport>");
+        targets.Should().Contain("<MetadataUpdaterSupport>false</MetadataUpdaterSupport>");
+        targets.Should().Contain("<HttpActivityPropagationSupport>false</HttpActivityPropagationSupport>");
+        prune.Should().Contain("createdump.exe");
+        prune.Should().Contain("mscordaccore");
+        prune.Should().Contain("Microsoft.DiaSymReader.Native");
+        prune.Should().Contain("libmonoposixhelper.dll");
+    }
+
+    [Fact]
     public void FootprintWorkflow_ShouldBuildNativePackagesOnSupportedRunners()
     {
         var workflow = RepositoryPaths.ReadFile(".github", "workflows", "package-footprint.yml");

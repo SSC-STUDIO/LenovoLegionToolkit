@@ -269,7 +269,7 @@ public class ThrottleFirstDispatcherTests
     public async Task DispatchAsync_WhenTaskThrows_ShouldStillRecordExecutionTime()
     {
         // Arrange
-        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromMilliseconds(50));
+        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromMilliseconds(500));
         var executionCount = 0;
 
         // Act

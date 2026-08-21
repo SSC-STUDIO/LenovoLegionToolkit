@@ -13,6 +13,8 @@ public sealed class ReleaseAssetScriptTests
     private const string HostPluginLibFile = "UniversalDeviceToolkit.Lib.Plugins.dll";
     private const string HostAbstractionsFile = "UniversalDeviceToolkit.Lib.Abstractions.dll";
     private const string HostSharedFile = "UniversalDeviceToolkit.Lib.Shared.dll";
+    private const string HostAutomationFile = "UniversalDeviceToolkit.Lib.Automation.dll";
+    private const string HostMacroFile = "UniversalDeviceToolkit.Lib.Macro.dll";
     private const string SerilogFile = "Serilog.dll";
     private const string SerilogAsyncFile = "Serilog.Sinks.Async.dll";
     private const string SerilogFileSinkFile = "Serilog.Sinks.File.dll";
@@ -33,6 +35,8 @@ public sealed class ReleaseAssetScriptTests
         HostPluginLibFile,
         HostAbstractionsFile,
         HostSharedFile,
+        HostAutomationFile,
+        HostMacroFile,
         SerilogFile,
         SerilogAsyncFile,
         SerilogFileSinkFile,

@@ -76,7 +76,9 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
     private const int SENSOR_READ_TIMEOUT_SECONDS = 3;
     protected virtual int SensorReadTimeoutSeconds => SENSOR_READ_TIMEOUT_SECONDS;
 
-    private bool _disposed;
+    private int _disposed;
+    private Task<SensorsData>? _inFlightRead;
+    private bool _inFlightDetailed;
 
     protected async Task<bool> CanReadSensorSnapshotAsync()
     {
@@ -114,8 +116,8 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
 
     public void Dispose()
     {
-        if (_disposed) return;
-        _disposed = true;
+        if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+            return;
 
         _percentProcessorPerformanceCounter.Dispose();
         _percentProcessorUtilityCounter.Dispose();
@@ -142,29 +144,52 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
 
     public async Task<SensorsData> GetDataAsync(bool detailed = false)
     {
-        // Check if cache is valid, return cached data if it is.
-        // Detailed snapshots can satisfy summary callers; summary cannot satisfy detailed.
-        var now = DateTime.UtcNow;
+        Task<SensorsData> readTask;
         lock (_cacheLock)
         {
+            if (Volatile.Read(ref _disposed) != 0)
+                return _cachedSensorsData ?? new SensorsData(new SensorData(), new SensorData());
+
+            // Detailed snapshots can satisfy summary callers; summary cannot satisfy detailed.
+            var now = DateTime.UtcNow;
             if (_cachedSensorsData.HasValue
                 && (now - _lastCacheUpdateTime).TotalMilliseconds < CACHE_EXPIRATION_MS
                 && (!detailed || _cachedSensorsDetailed))
             {
                 return _cachedSensorsData.Value;
             }
+
+            if (_inFlightRead is { IsCompleted: false } && (!detailed || _inFlightDetailed))
+            {
+                readTask = _inFlightRead;
+            }
+            else
+            {
+                readTask = ReadSensorsAndUpdateCacheAsync(detailed);
+                _inFlightRead = readTask;
+                _inFlightDetailed = detailed;
+            }
         }
 
-        // Apply a hard timeout to prevent slow sensor reads from blocking
-        // the UI. We use a CancellationTokenSource that fires after
-        // SENSOR_READ_TIMEOUT_SECONDS and pass the token into
-        // GetSensorSnapshotAsync so the underlying work is actually
-        // cancelled (and observed via ThrowIfCancellationRequested) instead
-        // of being left running as a "task leak" the way the previous
-        // Task.WhenAny + Task.Delay pattern would. Declared in the outer
-        // scope so the cancellation-aware catch clause can inspect
-        // IsCancellationRequested to distinguish a timeout from a genuine
-        // OperationCanceledException thrown by the caller.
+        try
+        {
+            return await readTask.ConfigureAwait(false);
+        }
+        finally
+        {
+            lock (_cacheLock)
+            {
+                if (ReferenceEquals(_inFlightRead, readTask))
+                    _inFlightRead = null;
+            }
+        }
+    }
+
+    private async Task<SensorsData> ReadSensorsAndUpdateCacheAsync(bool detailed)
+    {
+        // Timeout must cancel the wait itself. Passing a token into GetSensorSnapshotAsync
+        // is not enough: the parallel WMI/NVAPI probes do not observe it, so WhenAll
+        // would otherwise run past SENSOR_READ_TIMEOUT_SECONDS.
         using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(SensorReadTimeoutSeconds));
 
         try
@@ -178,7 +203,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
             {
                 _cachedSensorsData = result;
                 _cachedSensorsDetailed = detailed;
-                _lastCacheUpdateTime = now;
+                _lastCacheUpdateTime = DateTime.UtcNow;
             }
 
             return result;
@@ -197,7 +222,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
                     return _cachedSensorsData.Value;
             }
 
-            return new SensorsData(new SensorData(), new SensorData());
+            return new SensorsData(SensorData.Empty, SensorData.Empty);
         }
         catch (Exception ex)
         {
@@ -213,7 +238,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
                     return _cachedSensorsData.Value;
             }
 
-            return new SensorsData(new SensorData(), new SensorData());
+            return new SensorsData(SensorData.Empty, SensorData.Empty);
         }
     }
 
@@ -223,7 +248,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
         const int GENERIC_MAX_TEMPERATURE = 100;
         Task<LibreHardwareMonitorReadings?>? libreHardwareMonitorReadingsTask = null;
         Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsOnceAsync() =>
-            libreHardwareMonitorReadingsTask ??= GetLibreHardwareMonitorReadingsAsync();
+            libreHardwareMonitorReadingsTask ??= GetLibreHardwareMonitorReadingsAsync(cancellationToken);
 
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -256,7 +281,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
             gpuFanTask,
             gpuMaxFanTask,
             cpuVoltageTask ?? Task.CompletedTask,
-            cpuWattageTask ?? Task.CompletedTask).ConfigureAwait(false);
+            cpuWattageTask ?? Task.CompletedTask).WaitAsync(cancellationToken).ConfigureAwait(false);
 
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -340,27 +365,29 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
         if (gpuMaxMemoryClock < 0 && gpuMemoryClock >= 0)
             gpuMaxMemoryClock = gpuMemoryClock;
 
-        // Update Min/Max records
-        if (cpuVoltage > 0)
+        lock (_cacheLock)
         {
-            if (cpuVoltage < _cpuMinVoltage) _cpuMinVoltage = cpuVoltage;
-            if (cpuVoltage > _cpuMaxVoltage) _cpuMaxVoltage = cpuVoltage;
-        }
-        if (cpuCurrentTemperature > 0)
-        {
-            if (cpuCurrentTemperature < _cpuMinTemp) _cpuMinTemp = cpuCurrentTemperature;
-            if (cpuCurrentTemperature > _cpuMaxTemp) _cpuMaxTemp = cpuCurrentTemperature;
-        }
+            if (cpuVoltage > 0)
+            {
+                if (cpuVoltage < _cpuMinVoltage) _cpuMinVoltage = cpuVoltage;
+                if (cpuVoltage > _cpuMaxVoltage) _cpuMaxVoltage = cpuVoltage;
+            }
+            if (cpuCurrentTemperature > 0)
+            {
+                if (cpuCurrentTemperature < _cpuMinTemp) _cpuMinTemp = cpuCurrentTemperature;
+                if (cpuCurrentTemperature > _cpuMaxTemp) _cpuMaxTemp = cpuCurrentTemperature;
+            }
 
-        if (gpuVoltage > 0)
-        {
-            if (gpuVoltage < _gpuMinVoltage) _gpuMinVoltage = gpuVoltage;
-            if (gpuVoltage > _gpuMaxVoltage) _gpuMaxVoltage = gpuVoltage;
-        }
-        if (gpuCurrentTemperature > 0)
-        {
-            if (gpuCurrentTemperature < _gpuMinTemp) _gpuMinTemp = gpuCurrentTemperature;
-            if (gpuCurrentTemperature > _gpuMaxTemp) _gpuMaxTemp = gpuCurrentTemperature;
+            if (gpuVoltage > 0)
+            {
+                if (gpuVoltage < _gpuMinVoltage) _gpuMinVoltage = gpuVoltage;
+                if (gpuVoltage > _gpuMaxVoltage) _gpuMaxVoltage = gpuVoltage;
+            }
+            if (gpuCurrentTemperature > 0)
+            {
+                if (gpuCurrentTemperature < _gpuMinTemp) _gpuMinTemp = gpuCurrentTemperature;
+                if (gpuCurrentTemperature > _gpuMaxTemp) _gpuMaxTemp = gpuCurrentTemperature;
+            }
         }
 
         var cpu = new SensorData(cpuUtilization,
@@ -425,10 +452,13 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
 
     protected virtual Task<int> GetPchMaxFanSpeedAsync() => Task.FromResult(-1);
 
-    protected virtual async Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsAsync()
+    protected virtual async Task<LibreHardwareMonitorReadings?> GetLibreHardwareMonitorReadingsAsync(
+        CancellationToken cancellationToken = default)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (IoCContainer.TryResolve<SensorsGroupController>() is not { } sensorsGroupController)
                 return null;
 
@@ -437,7 +467,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
                 var fullSensorsEnabled = IoCContainer.TryResolve<ApplicationSettings>()?.Store.EnableHardwareSensors == true;
                 _ = fullSensorsEnabled
                     ? await sensorsGroupController.IsSupportedAsync().ConfigureAwait(false)
-                    : await sensorsGroupController.EnsureFanSensorsAvailableAsync().ConfigureAwait(false)
+                    : await sensorsGroupController.EnsureFanSensorsAvailableAsync(cancellationToken).ConfigureAwait(false)
                         ? LibreHardwareMonitorInitialState.Success
                         : LibreHardwareMonitorInitialState.Fail;
             }
@@ -446,6 +476,7 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
                 return null;
 
             await sensorsGroupController.UpdateAsync().ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
 
             return new LibreHardwareMonitorReadings(
                 NormalizeLibreHardwareMonitorMetric(await sensorsGroupController.GetCpuUsageAsync().ConfigureAwait(false)),
