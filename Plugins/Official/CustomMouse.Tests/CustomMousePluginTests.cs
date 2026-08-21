@@ -368,7 +368,7 @@ public class CustomMousePluginTests
             var uniqueMarker = $"retry-{Guid.NewGuid():N}";
             plugin.Settings.LastAppliedTheme = uniqueMarker;
 
-            using (new FileStream(settingsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+            using (File.Open(settingsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
             {
                 await plugin.SaveSettingsAsync();
             }
@@ -534,6 +534,59 @@ internal sealed class CursorRegistrySnapshot : IDisposable
             }
 
             key.SetValue(string.IsNullOrEmpty(name) ? string.Empty : name, value, kind);
+        }
+    }
+
+    public void Dispose()
+    {
+        Restore();
+    }
+}
+
+internal sealed class PluginSettingsFileSnapshot : IDisposable
+{
+    private static readonly string SettingsDir = Path.Combine(
+        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+        "UniversalDeviceToolkit",
+        "Plugins",
+        "CustomMouse");
+
+    public static string SettingsFilePath => Path.Combine(SettingsDir, "settings.json");
+
+    private readonly string? _originalContent;
+    private readonly bool _originallyExisted;
+
+    private PluginSettingsFileSnapshot()
+    {
+        _originallyExisted = File.Exists(SettingsFilePath);
+        if (_originallyExisted)
+        {
+            _originalContent = File.ReadAllText(SettingsFilePath);
+        }
+    }
+
+    public static PluginSettingsFileSnapshot Capture()
+    {
+        return new PluginSettingsFileSnapshot();
+    }
+
+    public void Restore()
+    {
+        if (_originallyExisted && _originalContent is not null)
+        {
+            Directory.CreateDirectory(SettingsDir);
+            File.WriteAllText(SettingsFilePath, _originalContent);
+        }
+        else if (File.Exists(SettingsFilePath))
+        {
+            try
+            {
+                File.Delete(SettingsFilePath);
+            }
+            catch
+            {
+                // ignored
+            }
         }
     }
 

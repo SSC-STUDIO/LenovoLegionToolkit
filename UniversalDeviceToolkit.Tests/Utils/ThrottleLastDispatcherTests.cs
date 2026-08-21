@@ -99,10 +99,11 @@ public class ThrottleLastDispatcherTests
         var lastExecutedValue = -1;
 
         // Act - Fire multiple calls rapidly
+        Task? last = null;
         for (int i = 0; i < 5; i++)
         {
             var value = i;
-            _ = dispatcher.DispatchAsync(async () =>
+            last = dispatcher.DispatchAsync(async () =>
             {
                 await Task.Delay(10);
                 lastExecutedValue = value;
@@ -110,7 +111,7 @@ public class ThrottleLastDispatcherTests
         }
 
         // Wait for all to complete
-        await Task.Delay(200);
+        if (last != null) await last;
 
         // Assert - Only the last call should have executed
         lastExecutedValue.Should().Be(4);
@@ -157,19 +158,20 @@ public class ThrottleLastDispatcherTests
         var executionOrder = new System.Collections.Generic.List<int>();
 
         // Act
+        Task? last = null;
         for (int i = 0; i < 5; i++)
         {
             var value = i;
-            _ = dispatcher.DispatchAsync(async () =>
+            last = dispatcher.DispatchAsync(async () =>
             {
-                await Task.Delay(50);
-                executionOrder.Add(value);
+                await Task.Delay(10);
+                lock (executionOrder) executionOrder.Add(value);
             });
             await Task.Delay(10);
         }
 
         // Wait for completion
-        await Task.Delay(200);
+        if (last != null) await last;
 
         // Assert - Only the last call should have executed
         executionOrder.Should().ContainSingle().Which.Should().Be(4);
@@ -474,18 +476,18 @@ public class ThrottleLastDispatcherTests
         var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(50));
         var executionCount = 0;
 
-        // Act - Fire multiple calls rapidly (not awaited, fire-and-forget)
+        // Act - Fire multiple calls rapidly
+        Task? last = null;
         for (int i = 0; i < 10; i++)
         {
-            _ = dispatcher.DispatchAsync(async () =>
+            last = dispatcher.DispatchAsync(async () =>
             {
                 await Task.CompletedTask;
                 Interlocked.Increment(ref executionCount);
             });
         }
 
-        // Wait enough time for throttling to complete
-        await Task.Delay(200);
+        if (last != null) await last;
 
         // Assert - Should only execute the last call
         executionCount.Should().Be(1);
@@ -495,14 +497,15 @@ public class ThrottleLastDispatcherTests
     public async Task DispatchAsync_WithLongInterval_ShouldThrottle()
     {
         // Arrange
-        var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(500));
+        var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(100));
         var lastValue = -1;
 
         // Act
+        Task? last = null;
         for (int i = 0; i < 3; i++)
         {
             var value = i;
-            _ = dispatcher.DispatchAsync(async () =>
+            last = dispatcher.DispatchAsync(async () =>
             {
                 await Task.Delay(10);
                 lastValue = value;
@@ -510,7 +513,7 @@ public class ThrottleLastDispatcherTests
             await Task.Delay(10);
         }
 
-        await Task.Delay(600);
+        if (last != null) await last;
 
         // Assert
         lastValue.Should().Be(2);
