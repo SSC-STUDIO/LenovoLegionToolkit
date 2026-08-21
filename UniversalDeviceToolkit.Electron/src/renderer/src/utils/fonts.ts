@@ -73,7 +73,7 @@ export function applyAppFont(fontValue?: string): void {
   if (typeof document.documentElement.style?.setProperty === 'function') {
     document.documentElement.style.setProperty('--udt-font-family', fontStack)
   } else if (document.documentElement.style) {
-    ;(document.documentElement.style as unknown as Record<string, unknown>)['--udt-font-family'] = fontStack
+    ;(document.documentElement.style as Record<string, unknown>)['--udt-font-family'] = fontStack
   }
   try {
     if (fontValue && fontValue !== 'system') {

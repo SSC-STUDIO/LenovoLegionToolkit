@@ -581,7 +581,7 @@ export default function SensorSection(): React.JSX.Element {
     if (isLowPowerAdapter) {
       if (lowPowerAdapterNotified) return
       lowPowerAdapterNotified = true
-      notify({ title, message: '', severity: 'Warning', isPersistent: true })
+      notify({ title, severity: 'Warning', isPersistent: true })
       return
     }
     if (!lowPowerAdapterNotified) return
@@ -656,10 +656,6 @@ export default function SensorSection(): React.JSX.Element {
       if (cancelled) return
       savedIntervalRef.current = readSavedRefreshInterval(useSettingsStore.getState().scopes)
       await loadFirstSnapshot()
-      if (cancelled) return
-      if (uiActive) {
-        void startPolls()
-      }
     })()
 
     const unsubscribeVisibility = subscribeUiVisibility((active) => {

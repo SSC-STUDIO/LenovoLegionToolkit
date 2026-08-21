@@ -77,6 +77,7 @@
     <Compile Remove="Rpc\Handlers\AppIntegrationHandlers.cs" />
     <Compile Remove="Rpc\Handlers\AiHandlers.cs" />
     <Compile Remove="Rpc\Handlers\GodModeHandlers.cs" />
+    <Compile Remove="Rpc\Handlers\GameBoostHandlers.cs" />
     <Compile Remove="Settings\HostDashboardSettings.cs" />
   </ItemGroup>
 

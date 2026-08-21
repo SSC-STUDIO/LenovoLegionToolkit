@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Shared page chrome mirroring the Electron client (AppPageTitleTextBlockStyle,
  * AppSubsectionTitleTextBlockStyle, AppPageDescriptionTextBlockStyle,
  * CardControl, Badge, EmptyState, PluginExtensionsPage styles).
@@ -128,35 +128,20 @@
   );
 }
 
-.udt-about-page__hero::after {
-  content: '';
-  position: absolute;
-  width: 340px;
-  height: 340px;
-  right: -50px;
-  bottom: -100px;
-  pointer-events: none;
-  background: radial-gradient(
-    circle,
-    color-mix(in srgb, var(--udt-accent) 16%, transparent) 0%,
-    transparent 70%
-  );
-}
-
 .udt-about-page__pattern {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   color: var(--udt-accent);
-  opacity: 0.68;
+  opacity: 0.55;
   pointer-events: none;
   transform: translateZ(0);
   animation: udt-about-drift 28s var(--udt-ease-cubic-out, ease-in-out) infinite alternate;
 }
 
 :root[data-theme='light'] .udt-about-page__pattern {
-  opacity: 0.48;
+  opacity: 0.42;
 }
 
 @keyframes udt-about-drift {

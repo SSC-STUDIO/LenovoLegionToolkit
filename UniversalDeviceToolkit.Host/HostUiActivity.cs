@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 
 namespace UniversalDeviceToolkit.Host;
 
@@ -13,15 +12,6 @@ internal static class HostUiActivity
 {
     private static readonly object Gate = new();
     private static bool _active = true;
-    private static readonly Timer PeriodicTrimTimer = new(
-        _ =>
-        {
-            if (IsActive)
-                TrimMemory();
-        },
-        null,
-        TimeSpan.FromSeconds(30),
-        TimeSpan.FromSeconds(30));
 
     public static event Action<bool>? Changed;
 
