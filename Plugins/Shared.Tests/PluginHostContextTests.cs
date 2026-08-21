@@ -40,7 +40,7 @@ public sealed class PluginHostContextTests : IDisposable
         Assert.False(PluginHostContextRuntime.Current.AllowSystemActions);
         Assert.Null(PluginHostContextRuntime.Current.OwnerWindow);
         Assert.False(PluginHostContextRuntime.Current.OpenPluginSettings("test-plugin"));
-        Assert.False(PluginHostContextRuntime.Current.ShowDialog(new object()));
+        Assert.Null(PluginHostContextRuntime.Current.ShowDialog(new object()));
     }
 
     [Fact]
