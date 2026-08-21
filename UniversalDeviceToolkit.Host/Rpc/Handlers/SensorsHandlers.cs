@@ -177,13 +177,15 @@ public static class SensorsHandlers
         if (!HostUiActivity.IsActive)
             return;
 
-        if (LhmSubscriberIds.Count > 0 && _subscribedGroup is not null)
+        if (LhmSubscriberIds.Count > 0)
         {
-            _subscribedGroup.SensorsUpdated -= OnSensorsUpdated;
-            _subscribedGroup.SensorsUpdated += OnSensorsUpdated;
+            var group = _subscribedGroup ?? GetSensorsGroup();
+            _subscribedGroup = group;
+            group.SensorsUpdated -= OnSensorsUpdated;
+            group.SensorsUpdated += OnSensorsUpdated;
             var interval = TimeSpan.FromSeconds(_lhmIntervalSec);
             foreach (var id in LhmSubscriberIds)
-                _subscribedGroup.Start(SensorSubscriber.Named(id), interval);
+                group.Start(SensorSubscriber.Named(id), interval);
         }
 
         if (VendorSubscriberIds.Count > 0 && _sensorsRpc is not null)
@@ -791,17 +793,15 @@ public static class SensorsHandlers
         }
     }
 
-    private static void OnSensorsUpdated(object? sender, EventArgs args)
+    private static async void OnSensorsUpdated(object? sender, EventArgs args)
     {
         if (!HostUiActivity.IsActive || _subscribedGroup is null || _sensorsRpc is null)
             return;
 
         try
         {
-            var snapshot = BuildLhmSnapshotAsync(_subscribedGroup, CancellationToken.None).GetAwaiter().GetResult();
-            // LibreHardwareMonitor may briefly report no CPU/GPU data after a
-            // re-subscribe (data recovering). Publish nothing in that case so
-            // the renderer keeps the last good frame instead of receiving null.
+            var snapshot = await BuildLhmSnapshotAsync(_subscribedGroup, CancellationToken.None).ConfigureAwait(false)
+                           ?? await BuildVendorSnapshotAsync(CancellationToken.None).ConfigureAwait(false);
             if (snapshot is null)
                 return;
             _sensorsRpc.Publish("sensors.updated", snapshot);

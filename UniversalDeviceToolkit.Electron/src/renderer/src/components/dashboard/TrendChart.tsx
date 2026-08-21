@@ -249,13 +249,10 @@ export default function TrendChart({
     if (base.key !== skeletonKey(series, isDark)) {
       chart.setOption(base.option, { notMerge: true })
     }
-    chart.setOption(
-      {
-        xAxis: { data: labels },
-        series: dataBySeries.map((data, index) => ({ name: series[index]?.name, data }))
-      },
-      { lazyUpdate: true }
-    )
+    chart.setOption({
+      xAxis: { data: labels },
+      series: dataBySeries.map((data, index) => ({ name: series[index]?.name, data }))
+    })
   }, [series, labels, isDark])
 
   const waiting = emptyLabel != null && emptyLabel !== '' && !hasDrawableLine(series)

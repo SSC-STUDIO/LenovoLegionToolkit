@@ -90,7 +90,7 @@ app.commandLine.appendSwitch('no-pings')
 app.commandLine.appendSwitch('no-first-run')
 app.commandLine.appendSwitch('no-default-browser-check')
 app.commandLine.appendSwitch('disk-cache-size', '4194304')
-app.commandLine.appendSwitch('media-cache-size', '4194304')
+app.commandLine.appendSwitch('memory-model', 'low')
 app.commandLine.appendSwitch('js-flags', '--optimize-for-size --max-old-space-size=96 --expose_gc --initial-heap-size=4')
 app.commandLine.appendSwitch('renderer-process-limit', '1')
 // --single-process merges renderers into the main process so memory usage can be
@@ -533,6 +533,15 @@ async function trimChromiumCaches(): Promise<void> {
         global.gc()
       } catch {
         // Optional V8 garbage collection
+      }
+    }
+    for (const wc of webContents.getAllWebContents()) {
+      if (!wc.isDestroyed()) {
+        try {
+          void wc.executeJavaScript('if (typeof window.gc === "function") { window.gc(); }').catch(() => undefined)
+        } catch {
+          // ignore
+        }
       }
     }
     const proc = process as unknown as { trimWorkingSet?: () => void }
@@ -1172,6 +1181,9 @@ app.whenReady().then(() => {
     void trimChromiumCaches()
     void logMemoryUsage('after startup')
   }, 5000)
+  setInterval(() => {
+    void trimChromiumCaches()
+  }, 30_000)
   initTray(() => mainWindow, trayOpts)
   if (flags.minimized) {
     // Start tray-only: no main renderer until the user restores from the tray.
