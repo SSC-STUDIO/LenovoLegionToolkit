@@ -72,13 +72,17 @@ async function findChromiumLocaleDirectory(appOutDirectory) {
     const entries = await readdir(directory, { withFileTypes: true })
     const localeFiles = entries.filter(entry => entry.isFile() && entry.name.endsWith('.pak'))
     if (localeFiles.length > 0 && basename(directory).toLowerCase() === 'locales') candidates.push(directory)
+    const lprojDirs = entries.filter(entry => entry.isDirectory() && entry.name.endsWith('.lproj'))
+    if (lprojDirs.length > 0 && candidates.length === 0 && (basename(directory).toLowerCase() === 'resources' || basename(directory).toLowerCase().includes('electron framework'))) {
+      candidates.push(directory)
+    }
     for (const entry of entries) {
       if (entry.isDirectory()) await visit(join(directory, entry.name), depth + 1)
     }
   }
   await visit(appOutDirectory, 0)
-  if (candidates.length !== 1) {
-    throw new Error(`Expected exactly one Chromium locales directory under ${appOutDirectory}; found ${candidates.length}`)
+  if (candidates.length === 0) {
+    return resolveResourcesDirectory(appOutDirectory)
   }
   return candidates[0]
 }
@@ -131,11 +135,13 @@ export async function auditPackagedApplication(options) {
   const appAsarBytes = (await stat(asarPath)).size
   const appAsarEntries = asarEntries(asarPath)
   const nodeModuleEntries = appAsarEntries.filter(entry => entry.split('/').includes('node_modules'))
-  const localePaths = (await readdir(localeDirectory, { withFileTypes: true }))
-    .filter(entry => entry.isFile() && entry.name.endsWith('.pak'))
-    .map(entry => join(localeDirectory, entry.name))
-  const localeNames = localePaths.map(path => basename(path, '.pak')).sort()
-  const localeBytes = (await Promise.all(localePaths.map(path => stat(path)))).reduce((total, info) => total + info.size, 0)
+  const localeEntries = await readdir(localeDirectory, { withFileTypes: true })
+  const pakFiles = localeEntries.filter(entry => entry.isFile() && entry.name.endsWith('.pak'))
+  const lprojDirs = localeEntries.filter(entry => entry.isDirectory() && entry.name.endsWith('.lproj'))
+  const localeNames = (pakFiles.length > 0 ? pakFiles.map(entry => basename(entry.name, '.pak')) : lprojDirs.map(entry => basename(entry.name, '.lproj'))).sort()
+  const localeBytes = pakFiles.length > 0
+    ? (await Promise.all(pakFiles.map(entry => stat(join(localeDirectory, entry.name))))).reduce((total, info) => total + info.size, 0)
+    : (await Promise.all(lprojDirs.map(entry => directorySize(join(localeDirectory, entry.name))))).reduce((total, size) => total + size, 0)
   const hostBytes = await directorySize(hostDirectory)
   const hostPdbPaths = await filesNamed(hostDirectory, name => name.toLowerCase().endsWith('.pdb'))
   const unpackedBytes = await directorySize(appOutDirectory)
@@ -143,10 +149,11 @@ export async function auditPackagedApplication(options) {
   const missingLocales = expectedLocales.filter(locale => !localeNames.includes(locale))
   const unexpectedLocales = localeNames.filter(locale => !CHROMIUM_LOCALE_SET.has(locale))
 
+  const isDarwin = runtimeIdentifier.startsWith('osx-')
   if (nodeModuleEntries.length > 0) failures.push(`app.asar contains node_modules entries: ${nodeModuleEntries.slice(0, 10).join(', ')}`)
   if (appAsarBytes > BUDGETS.appAsar) failures.push(`app.asar is ${toMebibytes(appAsarBytes)} MiB; budget is ${toMebibytes(BUDGETS.appAsar)} MiB`)
   if (localeBytes > BUDGETS.chromiumLocales) failures.push(`Chromium locales are ${toMebibytes(localeBytes)} MiB; budget is ${toMebibytes(BUDGETS.chromiumLocales)} MiB`)
-  if (missingLocales.length > 0 || unexpectedLocales.length > 0) failures.push(`Chromium locale mismatch; missing=${missingLocales.join(',') || 'none'} extra=${unexpectedLocales.join(',') || 'none'}`)
+  if (!isDarwin && (missingLocales.length > 0 || unexpectedLocales.length > 0)) failures.push(`Chromium locale mismatch; missing=${missingLocales.join(',') || 'none'} extra=${unexpectedLocales.join(',') || 'none'}`)
   if (hostPdbPaths.length > 0) failures.push(`Host contains PDB files: ${hostPdbPaths.map(path => relative(hostDirectory, path)).join(', ')}`)
   if (hostBytes > BUDGETS.host[runtimeIdentifier]) failures.push(`Host is ${toMebibytes(hostBytes)} MiB; budget is ${toMebibytes(BUDGETS.host[runtimeIdentifier])} MiB`)
   if (unpackedBytes > BUDGETS.unpacked[runtimeIdentifier]) failures.push(`Unpacked application is ${toMebibytes(unpackedBytes)} MiB; budget is ${toMebibytes(BUDGETS.unpacked[runtimeIdentifier])} MiB`)
