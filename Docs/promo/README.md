@@ -18,7 +18,7 @@ Outputs (not committed; rebuild locally):
 | First Linux promo | `origin/electron` @ `2ed697e6d` (later deleted) | Theme preview chrome still used macOS-style traffic lights. |
 | Second promo (looked “abnormal”) | **`v6.0.0`** tag → `f09e76640` | Correct Windows caption-button tiles, but Linux mica CSS punched chrome transparent over `#202020`. Mixed dark shell / white cards. |
 | Third promo (still wrong) | **`v6.0.0`** + first Linux opaque-backdrop commit (`e69dde8ad`) | Forced `data-backdrop=none` and recorded **dark 跟随系统**. Opaque, but a dark Linux-looking app — not the Windows light mica console. |
-| Current promo | **`v6.0.0`** + Linux mica-approx (`cursor/linux-opaque-backdrop-6fe9` @ `49e0451b8`) | **亮色**, 1600×900, UI scale **100%**. Linux keeps chrome opaque (no DWM) but paints the Win11-style sage sidebar (`#d5ded5` / RGB 213,222,213). Poster is the 控制台 frame. |
+| Current promo | **`v6.0.0`** + Linux mica-approx (`cursor/linux-opaque-backdrop-6fe9` @ `49e0451b8`) + Host stub `Docs/promo/linux-host-stub` | **亮色**, 1600×900, UI scale **100%**. Sage sidebar. **控制台 gauges have numbers** (not 等待传感器数据). Poster is the 控制台 frame. |
 
 Do not invent a fake 6.0.0. Do not generate AI mockups of the Windows UI.
 
