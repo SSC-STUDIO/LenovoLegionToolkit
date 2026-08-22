@@ -14,9 +14,10 @@
 #   4. /opt/cursor/artifacts/udt-real-ui-demo-v3.mp4
 #
 # Optional env:
-#   UDT_PROMO_START     trim start seconds (default 10)
-#   UDT_PROMO_DURATION  trim length seconds (default 43)
-#   UDT_PROMO_FONT_BOLD / UDT_PROMO_FONT_REG
+#   UDT_PROMO_START     trim start seconds (default 1)
+#   UDT_PROMO_DURATION  trim length seconds (default 48)
+#   UDT_PROMO_CROP      ffmpeg crop, e.g. 1600:900:160:90
+#   UDT_PROMO_LABELS    CSV lines start,end,label (omit for no lower-thirds)
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
@@ -68,12 +69,15 @@ EOF
   exit 1
 fi
 
-# Defaults match the 1920x1200 XFCE capture of git tag v6.0.0 (f09e76640).
-START="${UDT_PROMO_START:-2}"
+# Defaults match the 1920x1080 capture of a 1600x900 v6.0.0 window.
+START="${UDT_PROMO_START:-1}"
 DURATION="${UDT_PROMO_DURATION:-48}"
 POSTER_SS="${UDT_PROMO_POSTER_SS:-36}"
 CRF="${UDT_PROMO_CRF:-18}"
 PRESET="${UDT_PROMO_PRESET:-medium}"
+# Crop the 1600x900 app window out of a 1920x1080 desktop. Override or set
+# empty to use the full frame (already 16:9).
+CROP="${UDT_PROMO_CROP-1600:900:160:90}"
 
 WORKDIR="$(mktemp -d /tmp/udt-promo.XXXXXX)"
 cleanup() { rm -rf "${WORKDIR}"; }
@@ -81,80 +85,53 @@ trap cleanup EXIT
 
 mkdir -p "$(dirname "${OUT_MP4}")" "$(dirname "${OUT_POSTER}")" "${WORKDIR}/txt"
 
-# Output-relative lower thirds for the v6.0.0 click-through (source t=2..50).
-# Settings appearance (three theme tiles) is held on camera for several seconds.
-# Adjust UDT_PROMO_LABELS (start,end,label per line) if you recapture.
 LABELS_FILE="${UDT_PROMO_LABELS:-}"
-if [[ -z "${LABELS_FILE}" ]]; then
-  LABELS_FILE="${WORKDIR}/labels.txt"
-  python3 - "${LABELS_FILE}" <<'PY'
-from pathlib import Path
-import sys
-Path(sys.argv[1]).write_text(
-    "\n".join(
-        [
-            "0.3,9.6,控制台",
-            "10.2,14.0,系统优化",
-            "14.2,16.6,垃圾清理",
-            "16.8,19.2,网络与加速",
-            "20.0,23.6,自动化",
-            "24.2,27.6,自定义宏",
-            "28.2,33.6,插件扩展",
-            "34.2,43.2,设置",
-            "44.0,46.8,关于",
-        ]
-    )
-    + "\n",
-    encoding="utf-8",
-)
-PY
-fi
 
 VF_FILE="${WORKDIR}/vf.txt"
-python3 - "${LABELS_FILE}" "${FONT_BOLD}" "${FONT_REG}" "${VF_FILE}" "${DURATION}" <<'PY'
+python3 - "${LABELS_FILE}" "${FONT_BOLD}" "${FONT_REG}" "${VF_FILE}" "${DURATION}" "${CROP}" <<'PY'
 from pathlib import Path
 import sys
 
-labels_path, font_bold, font_reg, vf_path, duration = sys.argv[1:6]
-lines = [
-    ln.strip()
-    for ln in Path(labels_path).read_text(encoding="utf-8").splitlines()
-    if ln.strip() and not ln.lstrip().startswith("#")
-]
-parts = [
-    "crop=1920:1080:0:0",
-    "format=yuv420p",
-    "drawbox=x=0:y=ih-88:w=iw:h=88:color=black@0.42:t=fill",
-    "drawbox=x=40:y=ih-62:w=5:h=32:color=0x1677FF@1:t=fill",
-]
+labels_path, font_bold, font_reg, vf_path, duration, crop = sys.argv[1:7]
+lines = []
+if labels_path:
+    lines = [
+        ln.strip()
+        for ln in Path(labels_path).read_text(encoding="utf-8").splitlines()
+        if ln.strip() and not ln.lstrip().startswith("#")
+    ]
+parts = []
+if crop:
+    parts.append(f"crop={crop}")
+parts.extend(["scale=1920:1080:flags=lanczos", "format=yuv420p"])
 
-workdir = Path(vf_path).parent / "txt"
-workdir.mkdir(parents=True, exist_ok=True)
-for i, line in enumerate(lines):
-    start, end, label = line.split(",", 2)
-    text_file = workdir / f"label-{i:02d}.txt"
-    text_file.write_text(label, encoding="utf-8")
-    # Escape path for ffmpeg filter parser (colon, backslash, quotes).
-    tf = str(text_file).replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
-    fb = font_bold.replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
-    parts.append(
-        "drawtext="
-        f"fontfile={fb}:font='Noto Sans CJK SC':"
-        f"textfile={tf}:fontsize=32:fontcolor=white:"
-        "shadowcolor=black@0.55:shadowx=1:shadowy=1:"
-        f"x=58:y=h-58:enable='between(t,{start},{end})'"
-    )
+if lines:
+    workdir = Path(vf_path).parent / "txt"
+    workdir.mkdir(parents=True, exist_ok=True)
+    parts.append("drawbox=x=0:y=ih-56:w=iw:h=56:color=black@0.28:t=fill")
+    parts.append("drawbox=x=36:y=ih-40:w=4:h=22:color=0x1677FF@1:t=fill")
+    for i, line in enumerate(lines):
+        start, end, label = line.split(",", 2)
+        text_file = workdir / f"label-{i:02d}.txt"
+        text_file.write_text(label, encoding="utf-8")
+        tf = str(text_file).replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+        fb = font_bold.replace("\\", "\\\\").replace(":", "\\:").replace("'", "\\'")
+        parts.append(
+            "drawtext="
+            f"fontfile={fb}:font='Noto Sans CJK SC':"
+            f"textfile={tf}:fontsize=22:fontcolor=white:"
+            "shadowcolor=black@0.55:shadowx=1:shadowy=1:"
+            f"x=50:y=h-38:enable='between(t,{start},{end})'"
+        )
 
-fade_out_start = max(0.0, float(duration) - 0.55)
-parts.append("fade=t=in:st=0:d=0.35")
-parts.append(f"fade=t=out:st={fade_out_start:.2f}:d=0.55")
-
+# Keep the first/last frames of the real UI (do not fade to crushed black).
 Path(vf_path).write_text(",\n".join(parts) + "\n", encoding="utf-8")
 PY
 
 echo "==> Real UI encode"
 echo "    raw:      ${RAW}"
 echo "    trim:     start=${START}s duration=${DURATION}s"
+echo "    crop:     ${CROP:-<full frame>}"
 echo "    output:   ${OUT_MP4}"
 
 ffmpeg -y -hide_banner -loglevel error \

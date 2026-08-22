@@ -15,33 +15,48 @@ Outputs (not committed; rebuild locally):
 
 | Capture | Git ref | Notes |
 |---|---|---|
-| First Linux promo (the one that looked “wrong”) | `origin/electron` @ `2ed697e6d0f812a463c255a4768aa027067b5a2f` (`chore(electron): tighten package footprint budgets`, 2026-08-15) | Worktree `/tmp/udt-electron`. That remote branch was later **deleted**. Package version was already `6.0.0`, but the renderer was **62 commits behind** the release tag. Settings was only hovered for ~1 s, so the theme tiles were easy to miss. Theme preview chrome still used macOS-style traffic lights. |
-| Current promo | **`v6.0.0`** tag → `f09e766405518a618a0b429b33b56457c17e4798` (`test(plugin): use LocalApplicationData for CustomMouse settings test snapshot`, 2026-08-21) | Same commit as `origin/master` at tag time. Worktree `/tmp/udt-v6`. About page shows **版本 6.0.0**. Settings → Appearance holds the three mock-window tiles on camera. |
-
-`2ed697e6d` **is an ancestor of** `v6.0.0`. The theme-tile Appearance UI (`AppearanceSection.tsx` / `udt-theme-option*`) exists on **both** refs. The release tag is the Windows-like polish (Windows caption buttons in the mocks, diagonal light/dark split for 跟随系统, font picker, settings skeleton). It was pushed; it is not a dirty local-only tree.
+| First Linux promo | `origin/electron` @ `2ed697e6d` (later deleted) | Theme preview chrome still used macOS-style traffic lights. |
+| Second promo (looked “abnormal”) | **`v6.0.0`** tag → `f09e76640` | Correct Windows caption-button tiles, but the **display** was wrong: maximized on 1920x1200, Auto UI scale 136%, 跟随系统 followed WhiteSur-Light, and Linux mica CSS punched chrome transparent over an opaque `#202020` window (dark shell + white cards). The encode then cropped 1920x1200 → 1920x1080 and burned an 88 px lower-third that looked like a misplaced UI bar. |
+| Current promo | **`v6.0.0`** + Linux opaque-backdrop fix (`cursor/linux-opaque-backdrop-6fe9`) | 1600x900 window, devicePixelRatio ~1, UI scale **100%**, dark 跟随系统 (OS `prefers-color-scheme: dark`), no mica transparency, native 16:9 encode (crop the window, scale to 1920x1080). No fade-to-black, no lower-thirds. |
 
 Do not invent a fake 6.0.0. Do not generate AI mockups of the Windows UI.
 
-## What was captured (v6.0.0)
+## What was visually wrong (second capture)
 
-Source capture: 1920x1200 XFCE desktop, Electron window `universal-device-toolkit`, title `Universal Device Toolkit - ...`.
+Evidence in `/opt/cursor/artifacts/udt-promo.mp4` (before this recapture) and `/tmp/promo-frames/`:
 
-The Electron client is gone from the current promo-branch checkout of `master` history that dropped it; recording used a **detached worktree of tag `v6.0.0`**, which still contains `UniversalDeviceToolkit.Electron`. The Windows Host sidecar does not run on this Linux VM; empty sensors, "this device does not support this feature", the Host-unavailable network banner, and the title-bar model string **Linux Desktop** (from `system.info`) are real UI states, not mocked success.
+- **f01 / f11**: first and last frames crushed to black (fade-in / fade-out).
+- **f02–f04 dashboard**: light-gray sensor board on a `#202020` sidebar; empty 1920x1200 chrome; Auto scale 1.36.
+- **f09 / poster**: Settings tiles were the real v6.0.0 mocks (Windows caption buttons, 跟随系统 blue border), but the page sat on the same mixed light-content / dark-shell theme, with the encode overlay covering 界面缩放.
+
+Root cause in product CSS (v6.0.0 on Linux): `applyWindowBackdrop('Windows')` set `data-backdrop=mica` while Electron ignores DWM `backgroundMaterial` on Linux. `WindowBackdrop.css` then made `.udt-nav` / `.udt-titlebar` transparent over `backgroundColor: '#202020'`. 跟随系统 + a light XFCE theme = washed-out mixed UI.
+
+The fix lives on `cursor/linux-opaque-backdrop-6fe9` (from tag `v6.0.0`): force `data-backdrop=none` on Linux and skip mica/acrylic transparency for `[data-platform=linux]`.
+
+## What was captured (current)
+
+Source capture: 1920x1080 desktop, Electron window **1600x900** at (160, 90), title `Universal Device Toolkit - ...`.
+
+Worktree: `/tmp/udt-v6` at `v6.0.0` plus the Linux backdrop fix. About page shows **版本 6.0.0**. Settings → Appearance holds the three mock-window tiles:
+
+- 亮色 / 暗色 / **跟随系统** (blue border)
+- Windows caption-button mocks, diagonal split on 跟随系统
+- 「调整全局界面颜色时修改系统颜色」 unchecked
+- UI scale **100%**
+
+The Windows Host sidecar does not run on this Linux VM; empty sensors, Host-unavailable network copy, and the title-bar model string **Linux Desktop** are real UI states.
 
 Click-through (see `record-clickthrough.py`):
 
 | Screen | Shown |
 |---|---|
 | Dashboard (控制台) | CPU / battery / GPU gauges waiting for sensor data |
-| Windows optimization (系统优化) | Beautify checklists, then 垃圾清理 |
-| Network acceleration (网络与加速) | Honest Host-unavailable banner on Linux |
+| Windows optimization (系统优化) | Beautify checklists, then 垃圾清理 / 网络与加速 |
 | Automation (自动化) | Empty pipeline list |
 | Macro (自定义宏) | Numpad editor |
 | Plugins (插件扩展) | Cursor and Pointer, Nilesoft Shell Manager, ViVeTool |
-| Settings (设置) | **Appearance: 全局界面颜色模式 — 亮色 / 暗色 / 跟随系统 tiles** (跟随系统 selected with blue border; 「调整全局界面颜色时修改系统颜色」 unchecked) |
+| Settings (设置) | Appearance theme tiles (held on camera) |
 | About (关于) | **版本 6.0.0** and project links |
-
-Keyboard page was not part of this pass. The XFCE/Plank dock shows the running Electron icon.
 
 ## Rebuild from a recording
 
@@ -50,37 +65,26 @@ Dependencies: `ffmpeg`, Noto Sans CJK (`fonts-noto-cjk`).
 ```bash
 sudo apt-get install -y ffmpeg fonts-noto-cjk
 cp /path/to/capture.mp4 /opt/cursor/artifacts/udt-real-ui-source.mp4
-./Docs/promo/build-promo.sh
+UDT_PROMO_CROP=1600:900:160:90 ./Docs/promo/build-promo.sh
 ```
 
-Optional output paths:
+The script crops the 1600x900 window out of a 1920x1080 desktop (no 16:10→16:9 chop), scales to 1920x1080, and writes H.264 `yuv420p` `+faststart` plus a poster frame (default: Settings appearance). It does **not** burn lower-thirds unless `UDT_PROMO_LABELS` is set.
 
-```bash
-./Docs/promo/build-promo.sh /tmp/udt-promo.mp4 /tmp/udt-promo-poster.png
-```
-
-The script:
-
-1. Loads the raw capture (`UDT_PROMO_RAW`, `Docs/promo/recordings/udt-real-ui-demo.mp4`, or `/opt/cursor/artifacts/udt-real-ui-source.mp4`)
-2. Trims the click-through (default start 2 s, duration 48 s)
-3. Crops 1920x1200 to 1920x1080 (top of the frame, keeps the title bar)
-4. Burns light Chinese lower-thirds (function names only)
-5. Writes H.264 `yuv420p` `+faststart` and a poster frame (default: Settings appearance)
-
-If you recapture, set `UDT_PROMO_START` / `UDT_PROMO_DURATION` and optionally `UDT_PROMO_LABELS` (CSV lines `start,end,label` in output time).
+If you recapture, set `UDT_PROMO_START` / `UDT_PROMO_DURATION` / `UDT_PROMO_CROP` / `UDT_PROMO_POSTER_SS`.
 
 ## Recapture the Electron UI
 
-1. Worktree a revision that still has `UniversalDeviceToolkit.Electron` (prefer **`v6.0.0`**, not the deleted `origin/electron` tip). Do not merge that tree into the promo branch unless you only need it to launch the app.
-2. In that client: `npm install`, then start the renderer. Example:
+1. Worktree tag **`v6.0.0`** (or that tag plus the Linux opaque-backdrop fix). Do not merge Electron back onto the promo branch unless you only need it to launch the app.
+2. Desktop: 1920x1080, dark `prefers-color-scheme`, UI scale 100%, window 1600x900.
+3. In that client: `npm install`, then:
 
    ```bash
    DISPLAY=:1 ELECTRON_DISABLE_SANDBOX=1 UDT_HOST_PATH=/tmp/udt-stub-host/UniversalDeviceToolkit.Host \
      npx electron-vite dev -- --no-sandbox --disable-dev-shm-usage --ozone-platform=x11
    ```
 
-3. Host/hardware may fail on Linux. That is expected. Record the real shell anyway.
-4. Record the desktop (full 1920x1080 or native), then run `record-clickthrough.py` (or click the same nav items by hand) so the mouse is visible. **Leave Settings → Appearance on screen long enough that the three theme tiles are readable.**
-5. Point `build-promo.sh` at the new MP4.
+4. Host/hardware may fail on Linux. That is expected. Record the real shell anyway.
+5. Run `record-clickthrough.py` so the mouse is visible. **Leave Settings → Appearance on screen long enough that the three theme tiles are readable.**
+6. Point `build-promo.sh` at the new MP4.
 
 Do not add Lenovo or Legion branding. Do not replace the MP4 with generated UI mockups.
