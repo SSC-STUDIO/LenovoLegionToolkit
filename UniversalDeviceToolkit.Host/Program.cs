@@ -210,12 +210,13 @@ public static class Program
         GameBoostHandlers.Register(rpc);
 #else
         PortableCoreHandlers.Register(rpc);
+        PortableStoreHandlers.Register(rpc);
         RegisterPlatformUnsupportedHandlers(rpc);
 #endif
 
-        // MacroHandlers compiles on every platform: real hooks on Windows, its
-        // own -32099 stubs elsewhere (previously only registered on Windows,
-        // which surfaced macro.* as -32601 unknown-method on portable hosts).
+        // MacroHandlers compiles on every platform: real hooks on Windows,
+        // configuration-backed sequence storage (and honest -32099 for
+        // playback/recording) on portable hosts.
         MacroHandlers.Register(rpc);
 
         PluginHandlers.Register(rpc);
@@ -284,7 +285,11 @@ public static class Program
         }
 
         foreach (var method in RpcMethodNames.WindowsOnly)
+        {
+            if (rpc.HasHandler(method))
+                continue;
             rpc.RegisterHandler(method, NotSupportedAsync);
+        }
     }
 #endif
 

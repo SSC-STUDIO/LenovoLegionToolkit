@@ -10,7 +10,7 @@ import { createServer } from 'http'
 import { existsSync } from 'fs'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import { isRunnableHost } from './host-sidecar.mjs'
+import { isRunnableHost, listHostCandidates } from './host-sidecar.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const PROJECT_ROOT = join(__dirname, '..')
@@ -60,31 +60,7 @@ function resolveHostPath() {
     return fromEnv
   }
 
-  const hostExeName =
-    process.platform === 'win32' ? 'UniversalDeviceToolkit.Host.exe' : 'UniversalDeviceToolkit.Host'
-  const tfm = 'net10.0-windows10.0.26100.0'
-  const candidates = []
-
-  if (process.platform === 'win32') {
-    candidates.push(
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Debug', tfm, 'win-x64', hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Release', tfm, 'win-x64', hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'win-x64', hostExeName)
-    )
-  } else if (process.platform === 'darwin') {
-    candidates.push(
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', `osx-${process.arch}`, hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'osx-x64', hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'osx-arm64', hostExeName)
-    )
-  } else {
-    candidates.push(
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', `linux-${process.arch}`, hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'linux-x64', hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'linux-arm64', hostExeName)
-    )
-  }
-  candidates.push(join(PROJECT_ROOT, 'host', hostExeName))
+  const candidates = listHostCandidates({ electronRoot: PROJECT_ROOT })
 
   const incomplete = []
   for (const candidate of candidates) {
