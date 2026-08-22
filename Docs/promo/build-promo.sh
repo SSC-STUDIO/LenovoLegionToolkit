@@ -72,11 +72,12 @@ fi
 # Defaults match the 1920x1080 capture of a 1600x900 v6.0.0 window.
 START="${UDT_PROMO_START:-1}"
 DURATION="${UDT_PROMO_DURATION:-48}"
-POSTER_SS="${UDT_PROMO_POSTER_SS:-36}"
+POSTER_SS="${UDT_PROMO_POSTER_SS:-2}"
 CRF="${UDT_PROMO_CRF:-18}"
 PRESET="${UDT_PROMO_PRESET:-medium}"
 # Crop the 1600x900 app window out of a 1920x1080 desktop. Override or set
-# empty to use the full frame (already 16:9).
+# empty to use the full frame (already 16:9). Poster default is the early
+# 控制台 frame (light mica), not Settings.
 CROP="${UDT_PROMO_CROP-1600:900:160:90}"
 
 WORKDIR="$(mktemp -d /tmp/udt-promo.XXXXXX)"
