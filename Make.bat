@@ -112,7 +112,7 @@ IF "%ENABLE_CROSS_PLATFORM_CLI%"=="1" (
 SET CROSS_PLATFORM_CLI_FINALIZE_ARG=
 IF "%ENABLE_CROSS_PLATFORM_CLI%"=="1" SET CROSS_PLATFORM_CLI_FINALIZE_ARG=-IncludeCrossPlatformCli
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -FinalizeOnly -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%" -FullInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup.exe" -OnlineInstallerPath "BuildInstaller\UniversalDeviceToolkitOnlineSetup.exe" %CROSS_PLATFORM_CLI_FINALIZE_ARG%
+powershell -NoProfile -ExecutionPolicy Bypass -File "Scripts\Build-LanguageAssets.ps1" -FinalizeOnly -ReleaseOutput "%RELEASE_ASSET_DIR%" -PagesOutput "%PAGES_ASSET_DIR%" -Version "%VERSION%" -FullInstallerPath "BuildInstaller\UniversalDeviceToolkitSetup.exe" -OnlineInstallerPath "BuildInstaller\UniversalDeviceToolkitOnlineSetup.exe" -FullZipPath "BuildInstaller\UniversalDeviceToolkit_v%VERSION%_Full_win-x64.zip" -OnlineZipPath "BuildInstaller\UniversalDeviceToolkit_v%VERSION%_Online_win-x64.zip" %CROSS_PLATFORM_CLI_FINALIZE_ARG%
 IF %ERRORLEVEL% NEQ 0 (
     echo Release asset finalization failed.
     set ERROR_COUNT=1
