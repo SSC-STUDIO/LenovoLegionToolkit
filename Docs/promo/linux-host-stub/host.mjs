@@ -92,7 +92,10 @@ function buildSnapshot() {
   const gpuTemp = round(wave(19, 44, 61, 0.9), 1)
   const gpuClock = round(wave(14, 1200, 1850, 0.3), 0)
   const batteryLevel = round(wave(90, 68, 82, 2.2), 0)
-  const chargeRate = round(wave(21, -14800, -7200, 0.5), 0)
+  // Renderer formatRate prepends +/- and also keeps toFixed's sign, so send
+  // a positive mW charging rate (isCharging true) rather than a negative
+  // discharge that would render as "--12.50 W".
+  const chargeRate = round(wave(21, 7200, 14800, 0.5), 0)
   return {
     ts: new Date().toISOString(),
     source: 'vendor',
@@ -148,7 +151,7 @@ function buildSnapshot() {
       cycleCount: 142,
       manufactureDate: '2024-03-12',
       firstUseDate: '2024-04-02',
-      isCharging: false,
+      isCharging: true,
       isLowBattery: batteryLevel < 20,
       isLowPowerAdapter: false,
       modelName: 'Generic Battery'
