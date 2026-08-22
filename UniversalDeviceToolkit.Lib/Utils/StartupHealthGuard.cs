@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
@@ -219,12 +219,7 @@ public class StartupHealthGuard
                 run.GetAwaiter().GetResult();
             }
 
-            var elapsedMs = Environment.TickCount64 - startedMs;
-            var timedOut = cts.IsCancellationRequested
-                || (timeout != Timeout.InfiniteTimeSpan
-                    && elapsedMs >= timeout.TotalMilliseconds);
-
-            if (timedOut)
+            if (cts.IsCancellationRequested)
             {
                 error = new TimeoutException(
                     $"Step '{name}' exceeded its timeout of {timeout}.");
