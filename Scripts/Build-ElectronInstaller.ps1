@@ -100,7 +100,7 @@ function Invoke-ElectronWinTarget {
         [string]$PrepackagedPath
     )
 
-    $arguments = @('electron-builder', '--config', 'electron-builder.yml', '--win', $Target)
+    $arguments = @('electron-builder', '--config', 'electron-builder.yml', '--win', $Target, '--publish', 'never')
     if (-not [string]::IsNullOrWhiteSpace($PrepackagedPath)) {
         $arguments += @('--prepackaged', $PrepackagedPath)
     }
@@ -242,7 +242,7 @@ try {
         # Electron shell separately so CI can sign the executable that becomes
         # the installed uninstaller before the portable wrapper is created.
         Copy-Item -LiteralPath $fullPayloadDir -Destination $unpackedDir -Recurse -Force
-        & npx electron-builder --config custom-installer.yml --win dir
+        & npx electron-builder --config custom-installer.yml --win dir --publish never
         if ($LASTEXITCODE -ne 0) {
             throw 'Custom Electron installer shell preparation failed.'
         }
@@ -275,7 +275,7 @@ try {
         try {
             $env:ELECTRON_BUILDER_NSIS_DIR = $nsisToolsetDir
 
-            & npx electron-builder --config custom-installer.yml --win portable --prepackaged $installerShellDir
+            & npx electron-builder --config custom-installer.yml --win portable --prepackaged $installerShellDir --publish never
             if ($LASTEXITCODE -ne 0) {
                 throw 'Custom Electron installer failed.'
             }
