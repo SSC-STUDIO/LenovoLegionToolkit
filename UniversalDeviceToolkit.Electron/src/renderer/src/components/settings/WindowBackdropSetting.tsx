@@ -15,9 +15,9 @@ interface WindowBackdropSettingProps {
 
 const PLATFORM: string = window.bridge?.platform ?? 'win32'
 
-/** Options meaningful on the current platform (mica/acrylic are not native on Linux). */
+/** Native mica is Windows-only; Linux still offers Windows/macOS as opaque approximations. */
 const OPTIONS: WindowBackdropStyle[] =
-  PLATFORM === 'win32' ? ['Windows', 'macOS', 'Off'] : PLATFORM === 'linux' ? ['Off'] : ['macOS', 'Off']
+  PLATFORM === 'darwin' ? ['macOS', 'Off'] : ['Windows', 'macOS', 'Off']
 
 export default function WindowBackdropSetting({
   application,

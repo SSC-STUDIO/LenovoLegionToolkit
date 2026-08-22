@@ -3,8 +3,8 @@
    ========================================================================== */
 
 /* ── Base Transparency when a native backdrop is active ──
-   Linux has no DWM mica/acrylic; never punch chrome transparent there
-   (opaque #202020 window + light 跟随系统 = mixed dark shell / white cards). */
+   Linux has no DWM mica/acrylic; never punch chrome transparent there.
+   Light Linux mica/acrylic uses the opaque stand-in further below. */
 :root[data-backdrop='mica']:not([data-platform='linux']),
 :root[data-backdrop='acrylic']:not([data-platform='linux']) {
   background: transparent !important;
@@ -109,6 +109,68 @@
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ── Linux opaque mica / acrylic stand-in ────────────────────────────
+   Electron has no DWM. Transparency is already skipped above; these
+   fills composite the same light-mica alphas from this file
+   (content 55% white, cards 78% white) over --udt-surface-navigation
+   (#f6f6f6) plus a Win11 bloom wallpaper sample so the sidebar/title
+   bar read as light green-gray instead of a dark #202020 flash.
+   Dark theme stays the existing opaque navigation/window tokens. */
+:root[data-theme='light'] {
+  --udt-mica-wallpaper-sample: #9bb39a;
+  --udt-mica-chrome: color-mix(in srgb, var(--udt-mica-wallpaper-sample) 36%, #f6f6f6);
+  --udt-mica-pane: color-mix(in srgb, #ffffff 55%, var(--udt-mica-chrome));
+  --udt-mica-card: color-mix(in srgb, #ffffff 78%, var(--udt-mica-chrome));
+}
+
+:root[data-theme='light'][data-platform='linux'][data-backdrop='mica'],
+:root[data-theme='light'][data-platform='linux'][data-backdrop='acrylic'] {
+  --udt-surface-navigation: var(--udt-mica-chrome);
+  background: var(--udt-mica-chrome) !important;
+}
+
+:root[data-platform='linux'][data-backdrop='mica'],
+:root[data-platform='linux'][data-backdrop='acrylic'] {
+  background: var(--udt-surface-navigation) !important;
+}
+
+:root[data-platform='linux'][data-backdrop='mica'] body,
+:root[data-platform='linux'][data-backdrop='mica'] #root,
+:root[data-platform='linux'][data-backdrop='mica'] .udt-app-shell,
+:root[data-platform='linux'][data-backdrop='acrylic'] body,
+:root[data-platform='linux'][data-backdrop='acrylic'] #root,
+:root[data-platform='linux'][data-backdrop='acrylic'] .udt-app-shell {
+  background: var(--udt-surface-navigation) !important;
+}
+
+:root[data-platform='linux'][data-backdrop='mica'] .udt-app-shell__content,
+:root[data-platform='linux'][data-backdrop='mica'] .udt-app-shell__main,
+:root[data-platform='linux'][data-backdrop='acrylic'] .udt-app-shell__content,
+:root[data-platform='linux'][data-backdrop='acrylic'] .udt-app-shell__main {
+  background: var(--udt-surface-window) !important;
+}
+
+:root[data-theme='light'][data-platform='linux'][data-backdrop='mica'] .udt-app-shell__content,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='mica'] .udt-app-shell__main,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='acrylic'] .udt-app-shell__content,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='acrylic'] .udt-app-shell__main {
+  background: var(--udt-mica-pane) !important;
+}
+
+:root[data-theme='light'][data-platform='linux'][data-backdrop='mica'] .udt-parity-card,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='mica'] .udt-sensor-board,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='mica'] .udt-card-base,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='mica'] .udt-settings-card,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='mica'] .udt-backdrop-setting,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='acrylic'] .udt-parity-card,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='acrylic'] .udt-sensor-board,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='acrylic'] .udt-card-base,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='acrylic'] .udt-settings-card,
+:root[data-theme='light'][data-platform='linux'][data-backdrop='acrylic'] .udt-backdrop-setting {
+  background: var(--udt-mica-card) !important;
+  border-color: rgba(0, 0, 0, 0.07) !important;
 }
 
 /* Settings card styling for Backdrop Option row */

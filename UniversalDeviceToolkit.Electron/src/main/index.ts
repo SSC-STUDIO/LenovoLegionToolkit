@@ -161,6 +161,27 @@ if (process.platform === 'win32') {
   nativeTheme.on('updated', reapplyMainWindowBackgroundMaterial)
 }
 
+/** Opaque Linux stand-in for WindowBackdrop.css --udt-mica-chrome (light). */
+const LINUX_MICA_CHROME_LIGHT = '#d5ded5'
+const LINUX_WINDOW_BACKGROUND_DARK = '#202020'
+
+function linuxWindowBackgroundColor(): string {
+  return nativeTheme.shouldUseDarkColors ? LINUX_WINDOW_BACKGROUND_DARK : LINUX_MICA_CHROME_LIGHT
+}
+
+function applyLinuxWindowBackgroundColor(): void {
+  if (process.platform !== 'linux' || !mainWindow || mainWindow.isDestroyed()) return
+  try {
+    mainWindow.setBackgroundColor(linuxWindowBackgroundColor())
+  } catch (error) {
+    console.error('[main] failed to apply Linux window background:', error)
+  }
+}
+
+if (process.platform === 'linux') {
+  nativeTheme.on('updated', applyLinuxWindowBackgroundColor)
+}
+
 function resolveHostPath(): string {
   const fromEnv = process.env['UDT_HOST_PATH']
   if (fromEnv) {
@@ -722,12 +743,12 @@ function createWindow(): void {
         ? {
             // Linux: frameless custom title bar like Windows. backgroundMaterial
             // (mica/acrylic) is a Windows-only API — Electron ignores it on
-            // Linux, so an opaque window background keeps the load flash from
-            // being jarring (matches the renderer's --udt-surface-window #202020).
+            // Linux. Match the renderer: dark #202020, light mica-approx chrome
+            // (WindowBackdrop.css --udt-mica-chrome ≈ #d5ded5).
             autoHideMenuBar: true,
             frame: false,
-            backgroundColor: '#202020',
-            backgroundMaterial: 'acrylic' as const
+            backgroundColor: linuxWindowBackgroundColor(),
+            backgroundMaterial: 'none' as const
           }
         : {
             autoHideMenuBar: true,
@@ -1009,6 +1030,7 @@ app.whenReady().then(() => {
   ipcMain.on('window:set-theme-source', (_event, source: unknown) => {
     if (source !== 'system' && source !== 'light' && source !== 'dark') return
     nativeTheme.themeSource = source
+    applyLinuxWindowBackgroundColor()
   })
 
   ipcMain.handle('shell:open-log-folder', async () => {
