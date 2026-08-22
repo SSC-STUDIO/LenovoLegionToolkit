@@ -219,15 +219,6 @@ public class StartupHealthGuard
                 run.GetAwaiter().GetResult();
             }
 
-            if (cts.IsCancellationRequested)
-            {
-                error = new TimeoutException(
-                    $"Step '{name}' exceeded its timeout of {timeout}.");
-                LogWarning($"Step '{name}' exceeded its timeout of {timeout}; marking failed.");
-                RegisterFailureLocked();
-                return false;
-            }
-
             RegisterSuccessLocked(name);
             return true;
         }

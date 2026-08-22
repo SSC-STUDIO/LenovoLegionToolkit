@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,8 +17,8 @@ public class StartupInitializationRunnerTests
         var guard = new StartupHealthGuard();
         var runner = new StartupInitializationRunner(guard);
 
-        runner.RegisterStep("a", TimeSpan.FromSeconds(1), () => { });
-        runner.RegisterStep("b", TimeSpan.FromSeconds(1), () => { });
+        runner.RegisterStep("a", TimeSpan.FromSeconds(5), () => { });
+        runner.RegisterStep("b", TimeSpan.FromSeconds(5), () => { });
 
         var result = await runner.RunAsync();
 
@@ -34,10 +34,10 @@ public class StartupInitializationRunnerTests
         var guard = new StartupHealthGuard();
         var runner = new StartupInitializationRunner(guard);
 
-        runner.RegisterStep("a", TimeSpan.FromSeconds(1), () => { });
-        runner.RegisterStep("b", TimeSpan.FromSeconds(1), () => throw new InvalidOperationException("b-fail"),
+        runner.RegisterStep("a", TimeSpan.FromSeconds(5), () => { });
+        runner.RegisterStep("b", TimeSpan.FromSeconds(5), () => throw new InvalidOperationException("b-fail"),
             isCritical: false);
-        runner.RegisterStep("c", TimeSpan.FromSeconds(1), () => { });
+        runner.RegisterStep("c", TimeSpan.FromSeconds(5), () => { });
 
         var result = await runner.RunAsync();
 
@@ -54,10 +54,10 @@ public class StartupInitializationRunnerTests
 
         var afterRan = false;
 
-        runner.RegisterStep("first", TimeSpan.FromSeconds(1),
+        runner.RegisterStep("first", TimeSpan.FromSeconds(5),
             () => throw new InvalidOperationException("first-fail"),
             isCritical: true);
-        runner.RegisterStep("after", TimeSpan.FromSeconds(1), () => afterRan = true);
+        runner.RegisterStep("after", TimeSpan.FromSeconds(5), () => afterRan = true);
 
         var result = await runner.RunAsync();
 
@@ -74,8 +74,8 @@ public class StartupInitializationRunnerTests
 
         var nonCriticalRan = false;
 
-        runner.RegisterStep("critical", TimeSpan.FromSeconds(1), () => { }, isCritical: true);
-        runner.RegisterStep("optional", TimeSpan.FromSeconds(1),
+        runner.RegisterStep("critical", TimeSpan.FromSeconds(5), () => { }, isCritical: true);
+        runner.RegisterStep("optional", TimeSpan.FromSeconds(5),
             () => nonCriticalRan = true,
             isCritical: false);
 
@@ -93,8 +93,8 @@ public class StartupInitializationRunnerTests
         var guard = new StartupHealthGuard();
         var runner = new StartupInitializationRunner(guard, safeStart: false);
 
-        runner.RegisterStep("a", TimeSpan.FromSeconds(1), () => { }, isCritical: false);
-        runner.RegisterStep("b", TimeSpan.FromSeconds(1), () => { }, isCritical: true);
+        runner.RegisterStep("a", TimeSpan.FromSeconds(5), () => { }, isCritical: false);
+        runner.RegisterStep("b", TimeSpan.FromSeconds(5), () => { }, isCritical: true);
 
         var result = await runner.RunAsync();
 

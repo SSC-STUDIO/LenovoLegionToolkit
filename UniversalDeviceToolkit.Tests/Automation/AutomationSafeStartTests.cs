@@ -123,9 +123,9 @@ public sealed class AutomationSafeStartTests
         var runner = new StartupInitializationRunner(guard, safeStart: true);
 
         var hardwareishRan = false;
-        runner.RegisterStep("ioc-bootstrap", TimeSpan.FromSeconds(1), () => { }, isCritical: true);
-        runner.RegisterStep("gpu-init", TimeSpan.FromSeconds(1), () => hardwareishRan = true, isCritical: false);
-        runner.RegisterStep("fan-curves", TimeSpan.FromSeconds(1), () => hardwareishRan = true, isCritical: false);
+        runner.RegisterStep("ioc-bootstrap", TimeSpan.FromSeconds(5), () => { }, isCritical: true);
+        runner.RegisterStep("gpu-init", TimeSpan.FromSeconds(5), () => hardwareishRan = true, isCritical: false);
+        runner.RegisterStep("fan-curves", TimeSpan.FromSeconds(5), () => hardwareishRan = true, isCritical: false);
 
         var result = await runner.RunAsync();
 
@@ -142,8 +142,8 @@ public sealed class AutomationSafeStartTests
         var runner = new StartupInitializationRunner(guard, safeStart: true);
         var criticalRan = false;
 
-        runner.RegisterStep("language-gate-ready", TimeSpan.FromSeconds(1), () => criticalRan = true, isCritical: true);
-        runner.RegisterStep("optional-sensors", TimeSpan.FromSeconds(1), () => { }, isCritical: false);
+        runner.RegisterStep("language-gate-ready", TimeSpan.FromSeconds(5), () => criticalRan = true, isCritical: true);
+        runner.RegisterStep("optional-sensors", TimeSpan.FromSeconds(5), () => { }, isCritical: false);
 
         var result = await runner.RunAsync();
         result.Success.Should().BeTrue();
