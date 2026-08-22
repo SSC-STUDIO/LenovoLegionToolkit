@@ -158,20 +158,19 @@ public class ThrottleLastDispatcherTests
         var executionOrder = new System.Collections.Generic.List<int>();
 
         // Act
-        Task? last = null;
+        var tasks = new System.Collections.Generic.List<Task>();
         for (int i = 0; i < 5; i++)
         {
             var value = i;
-            last = dispatcher.DispatchAsync(async () =>
+            tasks.Add(dispatcher.DispatchAsync(async () =>
             {
                 await Task.Delay(10);
                 lock (executionOrder) executionOrder.Add(value);
-            });
-            await Task.Delay(10);
+            }));
         }
 
         // Wait for completion
-        if (last != null) await last;
+        await Task.WhenAll(tasks);
 
         // Assert - Only the last call should have executed
         executionOrder.Should().ContainSingle().Which.Should().Be(4);
@@ -184,20 +183,18 @@ public class ThrottleLastDispatcherTests
         var dispatcher = new ThrottleLastDispatcher(TimeSpan.FromMilliseconds(100));
         var executionCount = 0;
 
-        // Act: sequential triggers spaced apart; await the last dispatch so completion does not race wall-clock sleeps (flaky on some runners).
-        Task? last = null;
+        // Act: rapid triggers; await all dispatches so completion is completely deterministic.
+        var tasks = new System.Collections.Generic.List<Task>();
         for (var i = 0; i < 3; i++)
         {
-            last = dispatcher.DispatchAsync(async () =>
+            tasks.Add(dispatcher.DispatchAsync(async () =>
             {
                 await Task.CompletedTask;
                 Interlocked.Increment(ref executionCount);
-            });
-            if (i < 2)
-                await Task.Delay(20);
+            }));
         }
 
-        await last!;
+        await Task.WhenAll(tasks);
 
         // Assert: only the winning dispatch runs the callback
         executionCount.Should().Be(1);
@@ -501,19 +498,18 @@ public class ThrottleLastDispatcherTests
         var lastValue = -1;
 
         // Act
-        Task? last = null;
+        var tasks = new System.Collections.Generic.List<Task>();
         for (int i = 0; i < 3; i++)
         {
             var value = i;
-            last = dispatcher.DispatchAsync(async () =>
+            tasks.Add(dispatcher.DispatchAsync(async () =>
             {
                 await Task.Delay(10);
                 lastValue = value;
-            });
-            await Task.Delay(10);
+            }));
         }
 
-        if (last != null) await last;
+        await Task.WhenAll(tasks);
 
         // Assert
         lastValue.Should().Be(2);
