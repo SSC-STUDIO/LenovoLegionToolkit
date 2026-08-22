@@ -31,6 +31,16 @@ export function applyWindowBackdrop(style: WindowBackdropStyle): void {
     return
   }
 
+  // Electron backgroundMaterial (mica/acrylic) is a Windows DWM API. On Linux
+  // the main window is an opaque #202020 surface (see createWindow); leaving
+  // data-backdrop=mica/acrylic punches chrome transparent so light 跟随系统
+  // paints white cards on a dark shell — the washed-out mixed theme.
+  if (CURRENT_PLATFORM === 'linux') {
+    document.documentElement.dataset.backdrop = 'none'
+    void window.bridge?.setBackgroundMaterial?.('none')
+    return
+  }
+
   const material = MATERIAL_BY_STYLE[style]
   document.documentElement.dataset.backdrop = material
   void window.bridge?.setBackgroundMaterial(material)
