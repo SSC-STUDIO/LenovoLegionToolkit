@@ -243,7 +243,7 @@ jobs:
 
     - name: Sign Host payload
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
-      uses: azure/trusted-signing-action@v0.5
+      uses: azure/trusted-signing-action@v2
       with:
         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -262,7 +262,7 @@ jobs:
 
     - name: Sign release payload
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
-      uses: azure/trusted-signing-action@v0.5
+      uses: azure/trusted-signing-action@v2
       with:
         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -330,7 +330,7 @@ jobs:
 
     - name: Sign Electron installer payloads
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
-      uses: azure/trusted-signing-action@v0.5
+      uses: azure/trusted-signing-action@v2
       with:
         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -364,7 +364,7 @@ jobs:
 
     - name: Sign Electron installer shell
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
-      uses: azure/trusted-signing-action@v0.5
+      uses: azure/trusted-signing-action@v2
       with:
         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -398,7 +398,7 @@ jobs:
 
     - name: Sign installers
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
-      uses: azure/trusted-signing-action@v0.5
+      uses: azure/trusted-signing-action@v2
       with:
         azure-tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
