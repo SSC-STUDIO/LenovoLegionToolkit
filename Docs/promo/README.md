@@ -22,6 +22,16 @@ Outputs (not committed; rebuild locally):
 
 Do not invent a fake 6.0.0. Do not generate AI mockups of the Windows UI.
 
+## Why gauges and pages were blank (Linux recordings)
+
+The first Linux promos used `/tmp/udt-stub-host/host.mjs` because `UniversalDeviceToolkit.Host` is Windows-only. That stub:
+
+- `emptySnapshot()` / `sensors.getSnapshot` — `initialized: false`, empty `cpu` / `gpu` / `battery` objects, then `sensors.updated` with the same empty payload (gauges skeleton, charts 等待传感器数据).
+- `feature.list` — every key `supported: false` (dashboard cards hidden; remaining hardware pages 此设备不支持该功能).
+- `automation.getState` / `macro.getState` — empty lists.
+
+The reproducible stub is now `Docs/promo/linux-host-stub/`. A Linux .NET Host (`PortableCoreHandlers.HandleFeatureListAsync`) has the same all-unsupported feature list; recordings still use the Node stub.
+
 ## What was visually wrong (previous captures)
 
 - Transparent mica on Linux revealed Electron’s `#202020` window (white cards on a dark shell).
@@ -37,18 +47,19 @@ Worktree: `/tmp/udt-v6` at `v6.0.0` plus `cursor/linux-opaque-backdrop-6fe9`. Ab
 
 Honest leftover differences vs a real Windows Legion machine:
 
-- Title-bar model is **Linux Desktop** (Host stub `system.info`). Do not paint `Legion Y9000P IRX9`.
-- Sensor gauges show 等待传感器数据 (no Windows hardware).
+- Title-bar model is **Linux Desktop** (`system.info`). Do not paint `Legion Y9000P IRX9`.
+- Sensor numbers come from the Linux Host stub (`Docs/promo/linux-host-stub`), not LibreHardwareMonitor / Legion EC. CPU names follow this machine; GPU/battery are generic.
+- Legion EC dashboard cards (power mode, hybrid GPU, keyboard backlight, Fn lock, …) stay hidden as unsupported, with Host reason `-1001`.
 - No Vantage / Hotkeys toasts (Host cannot detect them on Linux).
 
 Click-through (see `record-clickthrough.py`):
 
 | Screen | Shown |
 |---|---|
-| Dashboard (控制台) | Light sage sidebar, orange **日志**, skeleton CPU / battery / GPU gauges |
+| Dashboard (控制台) | Light sage sidebar, orange **日志**, **populated** CPU / battery / GPU gauges and charts (not 等待传感器数据). Display / microphone cards when the stub marks those OS features supported. |
 | Windows optimization (系统优化) | Beautify checklists, then 垃圾清理 / 网络与加速 |
-| Automation (自动化) | Empty pipeline list |
-| Macro (自定义宏) | Numpad editor |
+| Automation (自动化) | Sample pipelines (not an empty unsupported page) |
+| Macro (自定义宏) | Numpad editor with a sample sequence |
 | Plugins (插件扩展) | Cursor and Pointer, Nilesoft Shell Manager, ViVeTool |
 | Settings (设置) | Appearance tiles; **亮色** selected |
 | About (关于) | **版本 6.0.0** and project links |
@@ -78,7 +89,9 @@ If you recapture, set `UDT_PROMO_START` / `UDT_PROMO_DURATION` / `UDT_PROMO_CROP
      npx electron-vite dev -- --no-sandbox --disable-dev-shm-usage --ozone-platform=x11
    ```
 
-4. Host/hardware may fail on Linux. That is expected. Record the real shell anyway.
+   Copy `Docs/promo/linux-host-stub/` to `/tmp/udt-stub-host` first (or point `UDT_HOST_PATH` at the in-repo launcher). The previous minimal stub returned empty `sensors.getSnapshot` / `supported: false` for every feature — that is why gauges were blank. Smoke: `node Docs/promo/linux-host-stub/smoke.mjs`.
+
+4. Legion EC still has no hardware. Record the real shell with stub sensors and Host-only pages populated.
 5. Run `record-clickthrough.py` so the mouse is visible. Start on 控制台 so the first impression is the light-green console.
 6. Point `build-promo.sh` at the new MP4 (`UDT_PROMO_POSTER_SS=2` for the console frame).
 
