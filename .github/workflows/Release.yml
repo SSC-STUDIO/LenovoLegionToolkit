@@ -140,12 +140,6 @@ jobs:
     - name: Build main solution
       run: dotnet build UniversalDeviceToolkit.sln --configuration Release --no-restore -m:1 --disable-build-servers
 
-    - name: Restore plugin solution
-      run: dotnet restore Plugins/UniversalDeviceToolkit.Plugins.sln --locked-mode
-
-    - name: Build plugin solution
-      run: dotnet build Plugins/UniversalDeviceToolkit.Plugins.sln --configuration Release --no-restore -m:1 --disable-build-servers
-
     - name: Record skipped release test gate
       if: ${{ env.RELEASE_SKIP_TESTS == 'true' }}
       shell: pwsh
@@ -170,7 +164,7 @@ jobs:
 
     - name: Test (Stateful)
       if: ${{ env.RELEASE_SKIP_TESTS != 'true' }}
-      run: dotnet test UniversalDeviceToolkit.Tests.Stateful/UniversalDeviceToolkit.Tests.Stateful.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Stateful.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
+      run: dotnet test UniversalDeviceToolkit.Tests.Stateful/UniversalDeviceToolkit.Tests.Stateful.csproj --framework net10.0-windows10.0.26100.0 --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.Release.Stateful.trx"
 
     - name: Upload release test coverage
       uses: actions/upload-artifact@v7
@@ -243,6 +237,9 @@ jobs:
           -Configuration Release
         if ($LASTEXITCODE -ne 0) { throw "Plugin runtime staging failed." }
         ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
+
+    - name: Build in-tree plugin solution
+      run: dotnet build Plugins/UniversalDeviceToolkit.Plugins.sln --configuration Release --disable-build-servers -m:1
 
     - name: Sign Host payload
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}
