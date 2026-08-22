@@ -56,14 +56,14 @@ function makeSnapshot(step = 0) {
     },
     battery: {
       chargeLevel: 97,
-      health: 96.08,
-      temperature: 31,
-      chargeRate: 0,
+      health: 0.9608,
+      temperature: Math.round(31 + Math.sin(step * 0.2) * 2),
+      chargeRate: Math.round(25000 + Math.sin(step * 0.3) * 3000),
       voltage: 16.8,
       designCapacity: 80000,
       fullChargeCapacity: 76800,
       cycleCount: 42,
-      isCharging: false
+      isCharging: true
     },
     memory: {
       usage: 38,

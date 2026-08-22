@@ -175,7 +175,8 @@ function formatFan(speed: number | null | undefined): string {
 
 function formatHealth(health: number | null | undefined): string {
   if (health == null || !Number.isFinite(health) || health < 0) return '-'
-  return `${(health * 100).toFixed(2)}%`
+  const normalized = health > 1 ? health : health * 100
+  return `${normalized.toFixed(2)}%`
 }
 
 function formatRate(mw: number | null | undefined): string {
@@ -710,7 +711,11 @@ export default function SensorSection(): React.JSX.Element {
   const batteryTemperature = temperatureColor(battery?.temperature)
 
   const healthPercent =
-    battery?.health != null && Number.isFinite(battery.health) && battery.health >= 0 ? battery.health * 100 : null
+    battery?.health != null && Number.isFinite(battery.health) && battery.health >= 0
+      ? battery.health > 1
+        ? battery.health
+        : battery.health * 100
+      : null
 
   const rateValid =
     battery?.chargeRate != null && Number.isFinite(battery.chargeRate) && battery.chargeRate !== -1
