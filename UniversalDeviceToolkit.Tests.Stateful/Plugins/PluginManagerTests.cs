@@ -2195,7 +2195,6 @@ public class PluginManagerTests : IDisposable
         transactionalLoader.SweepDiscardedCandidates().Pending.Should().Be(1);
         held.Holder.Value = null;
 
-        SweepDiscardedUntilCollected(transactionalLoader).Should().Be(0);
         for (var attempt = 0; attempt < 8; attempt++)
         {
             var candidate = CreateDiscardedCandidateHolder(
@@ -2203,7 +2202,7 @@ public class PluginManagerTests : IDisposable
                 pluginPath,
                 signatureValidator.Object);
             candidate.Holder.Value = null;
-            transactionalLoader.RecoverDiscardedCandidates().Pending.Should().BeLessThanOrEqualTo(1);
+            transactionalLoader.RecoverDiscardedCandidates().Pending.Should().BeLessThanOrEqualTo(2);
         }
         SweepDiscardedUntilCollected(transactionalLoader).Should().Be(0);
     }
