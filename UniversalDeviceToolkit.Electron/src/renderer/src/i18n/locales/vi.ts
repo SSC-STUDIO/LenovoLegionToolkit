@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Một số trang không được chọn khi cài đặt nên sẽ bị ẩn.",
+      },
+    },
     titlebar: {
       log: 'Nhật ký',
       openLogs: 'Mở thư mục nhật ký',

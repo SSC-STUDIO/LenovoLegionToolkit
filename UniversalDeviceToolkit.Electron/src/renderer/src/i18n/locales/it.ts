@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Alcune pagine non sono state selezionate durante l'installazione, quindi restano nascoste.",
+      },
+    },
     titlebar: {
       log: 'Registro',
       openLogs: 'Apri cartella dei registri',

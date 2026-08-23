@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Certaines pages n'ont pas été sélectionnées lors de l'installation, elles restent donc masquées.",
+      },
+    },
     titlebar: {
       log: 'Journal',
       openLogs: 'Ouvrir le dossier des journaux',

@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "O'rnatish vaqtida tanlanmagan sahifalar yashirin qoladi.",
+      },
+    },
     titlebar: {
       log: 'Jurnal',
       openLogs: 'Jurnallar papkasini ochish',

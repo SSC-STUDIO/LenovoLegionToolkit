@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Einige Seiten wurden bei der Installation nicht ausgewählt und bleiben daher ausgeblendet.",
+      },
+    },
     titlebar: {
       log: 'Protokoll',
       openLogs: 'Protokollordner öffnen',

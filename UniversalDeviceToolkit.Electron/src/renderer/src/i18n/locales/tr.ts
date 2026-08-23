@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Kurulum sırasında seçilmeyen sayfalar gizli kalır.",
+      },
+    },
     titlebar: {
       log: 'Günlük',
       openLogs: 'Günlükler klasörünü aç',

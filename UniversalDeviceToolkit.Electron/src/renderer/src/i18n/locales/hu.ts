@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Egyes oldalak nem lettek kiválasztva a telepítés során, ezért rejtve maradnak.",
+      },
+    },
     titlebar: {
       log: 'Napló',
       openLogs: 'Naplómappa megnyitása',

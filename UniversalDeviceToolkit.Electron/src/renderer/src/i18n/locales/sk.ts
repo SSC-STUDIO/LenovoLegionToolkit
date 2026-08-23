@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Niektoré stránky neboli počas inštalácie vybrané, preto zostanú skryté.",
+      },
+    },
     titlebar: {
       log: 'Denník',
       openLogs: 'Otvoriť priečinok denníkov',

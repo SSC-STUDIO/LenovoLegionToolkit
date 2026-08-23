@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "部分頁面未在安裝時選擇，因此不會顯示。",
+      },
+    },
     titlebar: {
       log: 'Log',
       openLogs: 'Open logs folder',

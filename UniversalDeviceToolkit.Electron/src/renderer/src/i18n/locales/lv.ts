@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Dažas lapas netika atlasītas instalēšanas laikā, tāpēc tās paliek slēptas.",
+      },
+    },
     titlebar: {
       log: 'Žurnāls',
       openLogs: 'Atvērt žurnālu mapi',

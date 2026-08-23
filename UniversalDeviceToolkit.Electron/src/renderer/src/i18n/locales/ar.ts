@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "لم يتم تحديد بعض الصفحات أثناء الإعداد، لذا تبقى مخفية.",
+      },
+    },
     titlebar: {
       log: 'السجل',
       openLogs: 'فتح مجلد السجلات',

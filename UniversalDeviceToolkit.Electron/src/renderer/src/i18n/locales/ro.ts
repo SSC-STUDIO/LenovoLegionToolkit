@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Unele pagini nu au fost selectate în timpul instalării, deci rămân ascunse.",
+      },
+    },
     titlebar: {
       log: 'Jurnal',
       openLogs: 'Deschide folderul de jurnale',

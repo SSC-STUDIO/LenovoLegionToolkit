@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Některé stránky nebyly při instalaci vybrány, proto zůstanou skryté.",
+      },
+    },
     titlebar: {
       log: 'Protokol',
       openLogs: 'Otevřít složku protokolů',

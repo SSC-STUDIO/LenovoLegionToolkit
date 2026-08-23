@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "セットアップ時に選択されなかったページは表示されません。",
+      },
+    },
     titlebar: {
       log: 'ログ',
       openLogs: 'ログフォルダーを開く',

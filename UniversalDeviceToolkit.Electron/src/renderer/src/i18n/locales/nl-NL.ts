@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Sommige pagina's zijn tijdens de installatie niet geselecteerd en blijven daarom verborgen.",
+      },
+    },
     titlebar: {
       log: 'Logboek',
       openLogs: 'Logmap openen',

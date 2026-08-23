@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Некоторые страницы не были выбраны при установке, поэтому они скрыты.",
+      },
+    },
     titlebar: {
       log: 'Журнал',
       openLogs: 'Открыть папку журналов',

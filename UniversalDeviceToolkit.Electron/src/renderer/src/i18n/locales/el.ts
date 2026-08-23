@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Ορισμένες σελίδες δεν επιλέχθηκαν κατά την εγκατάσταση, επομένως παραμένουν κρυφές.",
+      },
+    },
     titlebar: {
       log: 'Αρχείο καταγραφής',
       openLogs: 'Άνοιγμα φακέλου αρχείων καταγραφής',

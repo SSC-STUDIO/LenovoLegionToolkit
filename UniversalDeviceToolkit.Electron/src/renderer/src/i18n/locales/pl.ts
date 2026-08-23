@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: 'Universal Device Toolkit',
     },
+    installer: {
+      features: {
+        omittedHint: "Niektóre strony nie zostały wybrane podczas instalacji, dlatego pozostają ukryte.",
+      },
+    },
     titlebar: {
       log: 'Dziennik',
       openLogs: 'Otwórz folder dzienników',
