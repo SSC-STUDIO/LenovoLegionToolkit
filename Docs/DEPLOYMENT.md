@@ -356,7 +356,9 @@ Capture the Electron main window at **1300×850** logical size on an interactive
 - `Assets/Screenshot_zh-hans.png` — Simplified Chinese UI
 
 Document the refresh in `CHANGELOG.md` when user-visible UI changes ship.
-Last refreshed: 2026-07-13. Target logical window 1300×850 (pixel size scales with display DPI).
+Last refreshed: 2026-08-23. Target logical window 1300×850 (pixel size scales with display DPI).
+
+The README trailer lives at `Assets/UDT_Promo.mp4` (poster `Assets/UDT_Promo_poster.jpg`). Do not replace it with an unrelated clip.
 
 ### Manual Testing Checklist
 

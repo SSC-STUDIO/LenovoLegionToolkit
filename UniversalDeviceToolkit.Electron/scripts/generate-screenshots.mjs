@@ -9,6 +9,7 @@ mkdirSync(ASSETS_DIR, { recursive: true })
 const targetLang = process.argv[2] || 'zh-CN'
 const isEn = targetLang === 'en' || targetLang === 'en-US'
 const langCode = isEn ? 'en' : 'zh-CN'
+const hostCulture = isEn ? 'en' : 'zh-Hans'
 const outputFilename = isEn ? 'Screenshot_main.png' : 'Screenshot_zh-hans.png'
 const outputPath = join(ASSETS_DIR, outputFilename)
 
@@ -19,11 +20,9 @@ function makeSnapshot(step = 0) {
   const cpuUsage = Math.round(28 + Math.sin(step * 0.5) * 8)
   const cpuTemp = Math.round(54 + Math.sin(step * 0.3) * 4)
   const cpuClock = Math.round(2600 + Math.cos(step * 0.4) * 300)
-  
   const gpuUsage = Math.round(12 + Math.cos(step * 0.6) * 5)
   const gpuTemp = Math.round(46 + Math.sin(step * 0.4) * 3)
   const gpuClock = Math.round(1850 + Math.sin(step * 0.5) * 150)
-
   return {
     ts: new Date(Date.now() - (30 - step) * 1000).toISOString(),
     source: 'mixed',
@@ -73,6 +72,13 @@ function makeSnapshot(step = 0) {
   }
 }
 
+const APPLICATION_SETTINGS = {
+  Language: ${JSON.stringify(langCode)},
+  Theme: 'Dark',
+  FontFamily: 'system',
+  AnimationsEnabled: true
+}
+
 const DASHBOARD_CONFIG = {
   showSensors: true,
   sensorsRefreshIntervalSeconds: 1,
@@ -99,23 +105,36 @@ const FEATURES_LIST = [
 
 const listeners = new Map()
 
+function emit(event, data) {
+  const set = listeners.get(event)
+  if (!set) return
+  for (const callback of set) callback(data)
+}
+
 const mockBridge = {
   platform: 'win32',
   installerSelection: null,
   async invoke(method, params) {
     if (method === 'host.isReady') return true
-    if (method === 'device.info' || method === 'system.info') return { model: 'Legion Y9000P IRX9', machineName: 'Legion Y9000P IRX9', serialNumber: 'PF4XXXXX', biosVersion: 'KWCN44WW' }
-    if (method === 'system.getAccentColor') return { color: '#0078D4', r: 0, g: 120, b: 212 }
-    if (method === 'localization.setCulture') return { synchronized: true }
+    if (method === 'device.info' || method === 'system.info') {
+      return { vendor: 'Lenovo', model: 'Legion Y9000P IRX9', machineType: 'Legion Y9000P IRX9', serialNumber: 'PF4XXXXX', biosVersion: 'KWCN44WW', isCompatible: true }
+    }
+    if (method === 'system.getAccentColor' || method === 'system.accentColor.get') {
+      return { color: '#0078D4', r: 0, g: 120, b: 212 }
+    }
+    if (method === 'system.powerAdapterStatus') return { status: 'Connected' }
+    if (method === 'localization.getCulture' || method === 'localization.setCulture') {
+      return { culture: ${JSON.stringify(hostCulture)} }
+    }
     if (method === 'dashboard.getConfig') return DASHBOARD_CONFIG
+    if (method === 'dashboard.saveConfig') return { saved: true }
     if (method === 'dashboard.getHardwareSupport') return { cpu: 'Intel Core i9-14900HX', gpu: 'GeForce RTX 4060', battery: 'L22B4PC0' }
-    
-    // Feature API
+
     if (method === 'feature.list') return { features: FEATURES_LIST }
     if (method === 'feature.getSupported') return { supported: true }
     if (method === 'feature.isHdrBlocked') return { blocked: false }
     if (method === 'feature.getState') {
-      const k = params?.feature
+      const k = params && params.feature
       if (k === 'powerMode') return { state: 'Balance' }
       if (k === 'battery') return { state: 'Conservation' }
       if (k === 'alwaysOnUsb') return { state: 'OnAlways' }
@@ -129,7 +148,7 @@ const mockBridge = {
       return { state: null }
     }
     if (method === 'feature.getStates') {
-      const k = params?.feature
+      const k = params && params.feature
       if (k === 'powerMode') return { states: ['Quiet', 'Balance', 'Performance', 'Custom'] }
       if (k === 'battery') return { states: ['Normal', 'Conservation', 'RapidCharge'] }
       if (k === 'alwaysOnUsb') return { states: ['Off', 'OnWhenSleeping', 'OnAlways'] }
@@ -139,26 +158,48 @@ const mockBridge = {
     }
     if (method === 'feature.setState') return { ok: true }
 
-    // Sensors API
     if (method === 'sensors.getStatus') return { initialized: true, isHybrid: true, cpuName: 'Intel Core i9-14900HX', gpuName: 'GeForce RTX 4060', gpuIsIntegrated: false }
-    if (method === 'sensors.getSnapshot') return makeSnapshot(30)
-    if (method === 'sensors.getDetailed') return makeSnapshot(30)
+    if (method === 'sensors.getSnapshot' || method === 'sensors.getDetailed') return makeSnapshot(30)
     if (method === 'sensors.subscribe') return { subscribed: true, effectiveIntervalSec: 1 }
     if (method === 'sensors.unsubscribe') return { unsubscribed: true }
     if (method === 'sensors.getFps') return { fps: 144, lowFps: 120, frameTimeMs: 6.94 }
-    if (method === 'sensors.getSettings') return { enableHardwareSensors: true, showCpuAverageFrequency: false, displayMemoryInGigabytes: true }
+    if (method === 'sensors.subscribeFps' || method === 'sensors.unsubscribeFps') return { monitoring: true }
+    if (method === 'sensors.getSettings') {
+      return {
+        enableHardwareSensors: true,
+        showCpuAverageFrequency: false,
+        displayMemoryInGigabytes: true,
+        visibleSections: ['CPU', 'Battery', 'GPU'],
+        sectionOrder: ['CPU', 'Battery', 'GPU']
+      }
+    }
+    if (method === 'sensors.setSettings') return { saved: true }
 
-    // Settings API
-    if (method === 'settings.get') return { application: { Language: ` + JSON.stringify(langCode) + `, Theme: 'Dark', FontFamily: 'system', AnimationsEnabled: true } }
-    if (method === 'settings.getAll') return { application: { Language: ` + JSON.stringify(langCode) + `, Theme: 'Dark', FontFamily: 'system', AnimationsEnabled: true }, appearance: {} }
+    if (method === 'settings.get') return { scope: params && params.scope, value: APPLICATION_SETTINGS }
+    if (method === 'settings.getAll') {
+      return {
+        scopes: {
+          application: APPLICATION_SETTINGS,
+          dashboard: DASHBOARD_CONFIG,
+          hardwareSensors: {
+            selectedGpuIsIgpu: false,
+            showCpuAverageFrequency: false,
+            displayMemoryInGigabytes: true,
+            visibleSections: ['CPU', 'Battery', 'GPU'],
+            sectionOrder: ['CPU', 'Battery', 'GPU']
+          }
+        }
+      }
+    }
     if (method === 'settings.set') return true
-    if (method === 'settings.save') return true
+    if (method === 'settings.save') return { saved: ['application'] }
 
-    if (method === 'optimization.getRules') return []
-    if (method === 'automation.getPipelines') return []
-    if (method === 'plugins.getInstalled') return []
+    if (method === 'optimization.getRules' || method === 'optimization.getCategories') return { categories: [], rules: [] }
+    if (method === 'automation.getPipelines') return { pipelines: [] }
+    if (method === 'plugins.getInstalled' || method === 'plugins.list') return { plugins: [] }
     if (method === 'app.update.status') return { status: 'Disabled', disable: true }
-    return null
+    if (method === 'keyboard.getState' || method === 'keyboard.backlight.getState') return { supported: false }
+    return {}
   },
   async getHostStatus() {
     return { running: true, ready: true, lastError: null, readyPayload: {} }
@@ -166,38 +207,38 @@ const mockBridge = {
   on(event, callback) {
     if (!listeners.has(event)) listeners.set(event, new Set())
     listeners.get(event).add(callback)
-    if (event === 'host:status') {
+    if (event === 'host:status' || event === 'host.ready') {
       setTimeout(() => callback({ running: true, ready: true }), 10)
     }
     if (event === 'sensors.updated') {
       let step = 0
-      for (let i = 0; i < 20; i++) {
-        setTimeout(() => callback(makeSnapshot(i)), i * 30)
+      for (let i = 0; i < 8; i++) {
+        setTimeout(() => callback(makeSnapshot(i)), i * 40)
       }
       const interval = setInterval(() => {
         step++
-        callback(makeSnapshot(20 + step))
-      }, 500)
+        callback(makeSnapshot(8 + step))
+      }, 400)
       return () => clearInterval(interval)
     }
     return () => {
-      listeners.get(event)?.delete(callback)
+      listeners.get(event) && listeners.get(event).delete(callback)
     }
   },
   async isMaximized() { return false },
   async isFullscreen() { return false },
-  onFullscreenChanged(cb) { return () => {} },
-  onMaximizedChanged(cb) { return () => {} },
-  setTrayLanguage(lang) {},
+  onFullscreenChanged() { return () => {} },
+  onMaximizedChanged() { return () => {} },
+  setTrayLanguage() {},
   refreshTrayMenu() {},
-  setThemeSource(source) {},
+  setThemeSource() {},
   async setUiScale(scale) { return { ok: true, scale } },
   async getMemoryUsage() { return { processes: [], totalMB: 48 } },
-  log(level, message) {},
+  log() {},
   minimize() {},
   maximizeToggle() {},
   closeWindow() {},
-  async setBackgroundMaterial(mat) {},
+  async setBackgroundMaterial() {},
   async openLogFolder() {},
   async getPluginPreloadPath() { return '' },
   getPathForFile() { return '' }
@@ -205,6 +246,20 @@ const mockBridge = {
 
 contextBridge.exposeInMainWorld('bridge', mockBridge)
 `
+
+function waitForLoad(win) {
+  return new Promise((resolveLoad, reject) => {
+    const timer = setTimeout(() => reject(new Error('did-finish-load timeout')), 20000)
+    win.webContents.once('did-finish-load', () => {
+      clearTimeout(timer)
+      resolveLoad()
+    })
+    win.webContents.once('did-fail-load', (_e, code, desc) => {
+      clearTimeout(timer)
+      reject(new Error('did-fail-load ' + code + ' ' + desc))
+    })
+  })
+}
 
 app.whenReady().then(async () => {
   mkdirSync(resolve('out/preload'), { recursive: true })
@@ -226,10 +281,9 @@ app.whenReady().then(async () => {
     console.log('[RENDERER]:', message)
   })
 
-  const entryUrl = pathToFileURL(resolve('out/renderer/index.html')).href
+  const entryUrl = pathToFileURL(resolve('out/renderer/index.html')).href + '#/dashboard'
   await win.loadURL(entryUrl)
 
-  // Configure language and theme in localStorage
   await win.webContents.executeJavaScript(
     "localStorage.setItem('udt-language', " + JSON.stringify(langCode) + ");" +
     "localStorage.setItem('udt.lang', " + JSON.stringify(langCode) + ");" +
@@ -240,14 +294,28 @@ app.whenReady().then(async () => {
     "document.documentElement.style.colorScheme = 'dark';"
   )
 
-  // Reload so i18n bootstraps with target language cleanly
-  await win.loadURL(entryUrl)
+  const reloaded = waitForLoad(win)
+  win.reload()
+  await reloaded
+  await new Promise((r) => setTimeout(r, 5000))
 
-  await new Promise((r) => setTimeout(r, 3200))
-
-  const image = await win.webContents.capturePage({ x: 0, y: 0, width: 1300, height: 850 })
+  let image = null
+  for (let attempt = 1; attempt <= 4; attempt++) {
+    try {
+      image = await win.capturePage()
+      break
+    } catch (error) {
+      console.warn('capturePage attempt', attempt, error)
+      await new Promise((r) => setTimeout(r, 800))
+    }
+  }
+  if (image == null) throw new Error('capturePage failed')
   writeFileSync(outputPath, image.toPNG())
   console.log('Saved screenshot:', outputPath)
   win.close()
   app.quit()
+}).catch((error) => {
+  console.error(error)
+  app.quit()
+  process.exit(1)
 })

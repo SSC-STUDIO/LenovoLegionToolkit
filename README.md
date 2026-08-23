@@ -29,6 +29,16 @@
 
 </div>
 
+### Trailer
+
+<div align="center">
+
+<a href="Assets/UDT_Promo.mp4"><img src="Assets/UDT_Promo_poster.jpg" width="700" alt="Universal Device Toolkit 30-second trailer" /></a>
+
+<sub>A 30-second trailer we cut ourselves — open source, no account, no telemetry. <a href="Assets/UDT_Promo.mp4">Play the MP4</a></sub>
+
+</div>
+
 ---
 
 #### Other language versions of this README file:
@@ -128,6 +138,7 @@ However, **architectural discipline and deep engineering optimizations make all 
 ---
 
 # Table of Contents
+  - [Trailer](#trailer)
   - [Key Features at a Glance](#key-features-at-a-glance)
   - [Why choose UDT?](#why-choose-udt)
   - [Disclaimer](#disclaimer)
@@ -964,6 +975,8 @@ Captured at **1300×850** logical window size (pixel dimensions follow Windows d
 
 | File | Description |
 |------|-------------|
+| `Assets/UDT_Promo.mp4` | 30-second trailer we cut ourselves (click the poster in the [Trailer](#trailer) section) |
+| `Assets/UDT_Promo_poster.jpg` | Trailer poster |
 | `Assets/Screenshot_main.png` | Main application interface (English, Dark theme) |
 | `Assets/Screenshot_zh-hans.png` | Chinese localization interface (Dark theme) |
 

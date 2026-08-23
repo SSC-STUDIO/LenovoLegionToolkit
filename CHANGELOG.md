@@ -18,6 +18,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Advanced Utilities Matrix**: Integrated system cache cleaning (DirectX/Vulkan shaders, chat caches, dev tool temps), battery health analytics & discharge telemetry, and automated macro workflows.
 
 - Official plugins (CustomMouse, ShellIntegration, ViveTool) ship real Electron `contributes.webPage` settings UIs, backed by Host `plugin.customMouse.*` / `plugin.shell.*` / `plugin.vive.*` RPC rather than plugin-directory `config.json`.
+- README trailer (`Assets/UDT_Promo.mp4`) and refreshed console screenshots (`Assets/Screenshot_main.png`, `Assets/Screenshot_zh-hans.png`). Promo recording kit lives under `Docs/promo/`.
+- Linux Host now starts on Linux and returns live sysfs/proc sensors instead of a stub.
+- Windows installer can omit optional modules; omitted pages stay hidden in the shell.
 - Unified log directory `%LOCALAPPDATA%\UniversalDeviceToolkit\logs` (`main.log`, `renderer.log`, `host.log`); Host forwards Serilog lines as `host.log` events and wires `SharedLog` to Serilog. `UDT_LOG_PATH` is the current env alias; `LLT_LOG_PATH` remains a compatibility alias.
 - Dual plugin catalogs: shipped **v5.0.2** still reads rolling `plugin-catalog` (1.x). **v6.0.0-preview.N** hosts (InformationalVersion contains `-`) read `plugin-catalog-preview`. `IncludePrereleaseUpdates` stays an application-update switch and does not change the plugin catalog.
 

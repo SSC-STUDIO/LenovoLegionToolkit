@@ -102,11 +102,22 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_zh-hans.png" width="700" alt="UDT 主界面（简体中文）" /></a>
 
+### 宣传片
+
+<div align="center">
+
+<a href="Assets/UDT_Promo.mp4"><img src="Assets/UDT_Promo_poster.jpg" width="700" alt="通用设备工具箱 30 秒宣传片" /></a>
+
+<sub>我们自己剪的 30 秒宣传片：开源、不用账号、不碰遥测。<a href="Assets/UDT_Promo.mp4">播放 MP4</a></sub>
+
+</div>
+
 &nbsp;
 
 # 目录
   - [为什么选择 UDT？](#为什么选择-udt)
   - [功能一览](#功能一览)
+  - [宣传片](#宣传片)
   - [免责声明](#免责声明)
   - [下载](#下载)
   - [兼容性](#兼容性)
@@ -936,6 +947,8 @@ crowdin download --config crowdin.yml
 
 | 文件 | 说明 |
 |------|------|
+| `Assets/UDT_Promo.mp4` | 我们自己剪的 30 秒宣传片（点 [宣传片](#宣传片) 海报即可播放） |
+| `Assets/UDT_Promo_poster.jpg` | 宣传片封面 |
 | `Assets/Screenshot_main.png` | 主界面（英文，深色主题） |
 | `Assets/Screenshot_zh-hans.png` | 主界面（简体中文，深色主题） |
 
