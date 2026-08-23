@@ -13,19 +13,18 @@
 
 > **Open source · No account · No telemetry**
 >
-> The lightweight Windows utility for Legion laptops &amp; beyond. Fn+Q, RGB, fan curves, dGPU control — without Vantage bloat. Runs on other PCs too via basic mode.
+> Drop Lenovo Vantage. Keep Fn+Q, RGB, fan curves, and dGPU control. UDT is a GPL-3.0 Windows toolkit: no background service, no Lenovo account, and it still helps on other PCs via basic mode.
 
 <div align="center">
 
-**⭐ Star this repo if UDT helps you — it really helps the project grow! ⭐**
-
 [![Download from GitHub Releases](https://img.shields.io/badge/Download-GitHub%20Releases-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
 [![Install via Scoop](https://img.shields.io/badge/Install-via%20Scoop-F24E1E?style=for-the-badge&logo=powershell&logoColor=white)](https://github.com/SSC-STUDIO/scoop-bucket)
-**Install:** download the installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest), or use Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/universaldevicetoolkit`
 
-> **Goal: 1,000 stars.** If UDT keeps your laptop running lean, a star helps more people find it -- and tells us the plugin model is worth building out.
+**Install:** [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) · Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket ; scoop install ssc-studio/universaldevicetoolkit`
 
-<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_main.png" width="700" alt="UDT Main Interface" /></a>
+<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_main.png" width="700" alt="UDT console: live sensors, power modes, and Hybrid Mode on a Legion Y9000P" /></a>
+
+<sub>Dark-mode console with UDT's own accent -- not a Windows-blue overlay. <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers">Star the repo</a> if this replaced Vantage for you; that is the fastest way the next Legion owner finds it.</sub>
 
 </div>
 
@@ -35,7 +34,7 @@
 
 <a href="Assets/UDT_Promo.mp4"><img src="Assets/UDT_Promo_poster.jpg" width="700" alt="Universal Device Toolkit 30-second trailer" /></a>
 
-<sub>A 30-second trailer we cut ourselves — open source, no account, no telemetry. <a href="Assets/UDT_Promo.mp4">Play the MP4</a></sub>
+<sub>30 seconds, cut by us: open source, no account, no telemetry. <a href="Assets/UDT_Promo.mp4">Play the MP4</a></sub>
 
 </div>
 
@@ -73,7 +72,7 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 - Anyone on Windows who just wants plugins and general tools (basic mode)
 - Tinkerers: `udt-cli.exe` CLI, macros, GPL source you can actually read
 
-Promotion copy (conversational): [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
+Ready-to-post copy: [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [PROMOTION_CN.md](Docs/PROMOTION_CN.md) · posting playbook [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
 <details>
 <summary>🎮 Want to see more screenshots?</summary>
@@ -1003,9 +1002,9 @@ This project is a modified continuation derived from [Lenovo Legion Toolkit](htt
 
 <div align="center">
 
-### ⭐ Help us reach 1,000 stars! ⭐
+### ⭐ If UDT helped, star it
 
-If UDT makes your Legion (or any Windows PC) run leaner -- Fn+Q, RGB, dGPU, plugins, no Vantage bloat -- please give us a star. Every star helps us reach 1,000 and signals that the plugin model is worth building out.
+GitHub ranks repos by stars. One click is how the next Legion owner finds a Vantage-free toolkit. Target: **1,000 stars**.
 
 [![Star this repo](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=social&label=Star%20UDT)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
 

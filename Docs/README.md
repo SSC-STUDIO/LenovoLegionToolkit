@@ -9,6 +9,9 @@ Start here, then follow the topic docs. Do not treat WPF/Avalonia audit notes as
 | Doc | Notes |
 | --- | --- |
 | [../README.md](../README.md) / [../README_zh-hans.md](../README_zh-hans.md) | Product overview |
+| [PROMOTION_EN.md](./PROMOTION_EN.md) / [PROMOTION_CN.md](./PROMOTION_CN.md) | Ready-to-post social copy |
+| [COMMUNITY_OUTREACH.md](./COMMUNITY_OUTREACH.md) | Where to post without looking like spam |
+| [SUBMISSIONS.md](./SUBMISSIONS.md) | Directory and awesome-list tracker |
 | [../CONTRIBUTING.md](../CONTRIBUTING.md) | How to build and contribute |
 | [../CHANGELOG.md](../CHANGELOG.md) | Project changelog |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Process model: Electron UI + Host |

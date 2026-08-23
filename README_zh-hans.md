@@ -4,16 +4,46 @@
 
 [![CI Tests](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml/badge.svg?branch=master)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/actions/workflows/Ci-tests.yml)
 [![GitHub release](https://img.shields.io/github/v/release/SSC-STUDIO/UniversalDeviceToolkit?color=blue)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
+[![GitHub stars](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=social)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![GitHub downloads](https://img.shields.io/github/downloads/SSC-STUDIO/UniversalDeviceToolkit/total)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases)
 <a href="https://hellogithub.com/repository/dd55be3ac0c146208259f17b29d2162f" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=dd55be3ac0c146208259f17b29d2162f&claim_uid=LBbuUlZqTIm1JAP&theme=small" alt="Featured｜HelloGitHub" /></a>
 
 > **开源 · 不用账号 · 不碰遥测**
 >
-> 拯救者用户可以不用 Vantage 也能管 Fn+Q 和 RGB；其他 Windows 电脑也能装插件凑合用。
+> 卸掉 Vantage，留下 Fn+Q、RGB、风扇曲线和独显控制。GPL-3.0，不跑后台服务，其他 Windows 电脑也能用基础模式。
+
+<div align="center">
+
+[![从 GitHub Releases 下载](https://img.shields.io/badge/下载-GitHub%20Releases-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
+[![用 Scoop 安装](https://img.shields.io/badge/安装-Scoop-F24E1E?style=for-the-badge&logo=powershell&logoColor=white)](https://github.com/SSC-STUDIO/scoop-bucket)
+
+**安装：** [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) · Scoop：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket ; scoop install ssc-studio/universaldevicetoolkit`
+
+<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_zh-hans.png" width="700" alt="UDT 控制台：传感器、性能模式与混合模式（简体中文深色界面）" /></a>
+
+<sub>深色控制台，用的是 UDT 自己的主题色。如果它帮你卸掉了 Vantage，<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers">点个 Star</a> 就能让下一个拯救者用户找到它。</sub>
+
+</div>
+
+### 宣传片
+
+<div align="center">
+
+<a href="Assets/UDT_Promo.mp4"><img src="Assets/UDT_Promo_poster.jpg" width="700" alt="通用设备工具箱 30 秒宣传片" /></a>
+
+<sub>我们自己剪的 30 秒：开源、不用账号、不碰遥测。<a href="Assets/UDT_Promo.mp4">播放 MP4</a></sub>
+
+</div>
 
 ---
 
-Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 Windows 设备工具：在受支持的联想游戏本上提供完整硬件控制，在其他联想机型及非联想 PC 上则以**基础模式**运行（隐藏不支持的硬件项，仍可使用插件、系统优化、主题、更新与日志等功能）。插件扩展是一等公民能力，可在「插件扩展」页面安装、更新、配置与卸载。
+#### 其他语言版本
+* [English README](README.md)
+
+---
+
+Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 Windows 设备工具：在受支持的联想游戏本上提供完整硬件控制，在其他联想机型及非联想 PC 上则以**基础模式**运行（隐藏不支持的硬件项，仍可使用插件、系统优化、主题、更新与日志等功能）。插件可在「插件扩展」页面安装、更新、配置与卸载。
 
 > [!NOTE]
 > **「Universal」的含义**
@@ -36,7 +66,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 - 随便哪台 Windows，想试试插件和系统工具（基础模式）
 - 爱折腾的：命令行 `udt-cli.exe`、宏、代码是 GPL 开源能自己看
 
-宣发文案（口语版）：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
+现成发帖文案：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · 投放手册 [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
 本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户升级后可保留设置、插件与数据；包管理器身份在 6.x 断代（winget 改为 `SSC-STUDIO.UniversalDeviceToolkit`，Scoop 改为 `universaldevicetoolkit`），旧包 ID 不支持原地升级。正式产品以 **Windows 为先**：GitHub Releases 发布 Windows NSIS Full/Online 安装包，内嵌自包含 win-x64 Host。macOS 与 Linux 为**实验面**（Electron 壳、可移植 Host、CrossPlatform 诊断 CLI），在对应发布流水线落地前**没有官方 Electron 发行包**。Android 和移动端伴侣应用不在项目范围内，也不受支持。
 
@@ -100,24 +130,12 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 </details>
 
-<a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_zh-hans.png" width="700" alt="UDT 主界面（简体中文）" /></a>
-
-### 宣传片
-
-<div align="center">
-
-<a href="Assets/UDT_Promo.mp4"><img src="Assets/UDT_Promo_poster.jpg" width="700" alt="通用设备工具箱 30 秒宣传片" /></a>
-
-<sub>我们自己剪的 30 秒宣传片：开源、不用账号、不碰遥测。<a href="Assets/UDT_Promo.mp4">播放 MP4</a></sub>
-
-</div>
-
 &nbsp;
 
 # 目录
+  - [宣传片](#宣传片)
   - [为什么选择 UDT？](#为什么选择-udt)
   - [功能一览](#功能一览)
-  - [宣传片](#宣传片)
   - [免责声明](#免责声明)
   - [下载](#下载)
   - [兼容性](#兼容性)
@@ -973,9 +991,9 @@ crowdin download --config crowdin.yml
 
 <div align="center">
 
-### ⭐ 帮我们冲向 1,000 stars！ ⭐
+### ⭐ 如果 UDT 帮到你，请点个 Star
 
-如果 UDT 让你的拯救者（或任意 Windows PC）更清爽——Fn+Q、RGB、独显、插件、没有 Vantage 臃肿——请点个 star。每一颗星都帮助项目成长。
+GitHub 靠 Star 排序。点一下，下一个想卸 Vantage 的拯救者用户才找得到这个工具。目标：**1,000 stars**。
 
 [![Star this repo](https://img.shields.io/github/stars/SSC-STUDIO/UniversalDeviceToolkit?style=social&label=Star%20UDT)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/stargazers)
 

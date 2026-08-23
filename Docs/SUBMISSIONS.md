@@ -21,8 +21,9 @@ curated list converts well because the visitor already wants a tool like this.
 
 | Week ending | Stars | Delta | Notes |
 |-------------|-------|-------|-------|
-| 2026-07-06 | 18 | - | baseline, v5.0.0-preview published |
+| 2026-08-23 | 28 | +10 | README hero + trailer + retaken console screenshots; PROMOTION_* restored |
 | 2026-07-07 | 18 | 0 | OpenAI Founders Hub 申请 [VERIFY] 用真实数据填默认（[CONFIRM] 等你核）；SUBMISSIONS winget-pkgs 错误修正；awesome-dotnet PR #1466 open+mergeable+0 comments；首发三站文案齐备，等你今晚或明天首发 |
+| 2026-07-06 | 18 | - | baseline, v5.0.0-preview published |
 
 (add a row each Sunday; pair with PILLAR_D_PROMOTION_PLAN.md)
 
