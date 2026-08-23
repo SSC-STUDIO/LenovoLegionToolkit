@@ -27,6 +27,11 @@ const enUS = {
     app: {
       name: 'Universal Device Toolkit'
     },
+    installer: {
+      features: {
+        omittedHint: 'Some pages were not selected during setup, so they stay hidden.'
+      }
+    },
     titlebar: {
       log: 'Log',
       openLogs: 'Open logs folder',

@@ -29,6 +29,7 @@ import UtilsModalHost from '../components/utils/UtilsModalHost'
 import UnsupportedDeviceGate from '../components/utils/UnsupportedDeviceGate'
 import { openStatusModal } from '../components/utils/StatusModal'
 import { on } from '../api/bridge'
+import { isInstallerOptionalFeatureEnabled } from '../../../shared/installer-selection'
 import { useSettingsStore } from '../stores/settingsStore'
 import WindowBackdropController from '../theme/WindowBackdropController'
 import './NavigationParity.css'
@@ -158,6 +159,7 @@ export default function AppLayout(): React.JSX.Element {
     const app = (scopes.application ?? {}) as Record<string, unknown>
     return ((app.NavigationItemsVisibility as Record<string, boolean> | undefined) ?? {})
   }, [scopes.application])
+  const installerFeatures = window.bridge?.installerSelection?.features
 
   const isNavItemVisible = useCallback(
     (item: NavItemDef): boolean => {
@@ -172,11 +174,13 @@ export default function AppLayout(): React.JSX.Element {
         '/about': 'about'
       }
       const pageTag: string = pageTagMap[item.key] ?? item.key.replace('/', '')
-      if (pageTag === 'dashboard' || pageTag === 'settings' || pageTag === 'pluginExtensions') return true
+      if (pageTag === 'dashboard' || pageTag === 'settings') return true
+      if (!isInstallerOptionalFeatureEnabled(installerFeatures, pageTag)) return false
+      if (pageTag === 'pluginExtensions') return true
       if (navVisibility[pageTag] === false) return false
       return true
     },
-    [navVisibility]
+    [installerFeatures, navVisibility]
   )
 
   const visibleMainItems = useMemo(() => MAIN_ITEMS.filter(isNavItemVisible), [isNavItemVisible])
@@ -283,6 +287,16 @@ export default function AppLayout(): React.JSX.Element {
   const handleResizerDoubleClick = useCallback((): void => {
     setCollapsed((prev) => !prev)
   }, [])
+
+  useEffect(() => {
+    const knownHidden = [...MAIN_ITEMS, ...FOOTER_ITEMS].some(
+      (item) => isRouteActive(location.pathname, item.key) && !isNavItemVisible(item)
+    )
+    const pluginsHidden =
+      location.pathname.startsWith('/plugins') &&
+      !isInstallerOptionalFeatureEnabled(installerFeatures, 'pluginExtensions')
+    if (knownHidden || pluginsHidden) navigate('/dashboard', { replace: true })
+  }, [installerFeatures, isNavItemVisible, location.pathname, navigate])
 
   // Tray navigation (Electron TrayHelper → NavigationStore.Navigate) and optional
   // status popup (legacy Electron-only; not part of the original tray menu).

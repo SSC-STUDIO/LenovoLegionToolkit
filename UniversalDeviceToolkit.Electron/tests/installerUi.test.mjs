@@ -31,6 +31,14 @@ const styleSource = readFileSync(
   fileURLToPath(new URL('../installer/styles.css', import.meta.url)),
   'utf8'
 )
+const i18nSource = readFileSync(
+  fileURLToPath(new URL('../installer/i18n.mjs', import.meta.url)),
+  'utf8'
+)
+const featuresSource = readFileSync(
+  fileURLToPath(new URL('../installer/features.mjs', import.meta.url)),
+  'utf8'
+)
 
 test('installer uses a real Windows four-pane icon for the platform badge', () => {
   assert.match(rendererSource, /class="platform-icon"/)
@@ -45,6 +53,8 @@ test('installer keeps the reference visual language and setup choices', () => {
   assert.match(rendererSource, /准备安装/)
   assert.match(rendererSource, /语言选择/)
   assert.match(rendererSource, /设备选择/)
+  assert.match(rendererSource, /featuresTitle/)
+  assert.match(rendererSource, /data-feature/)
   assert.match(rendererSource, /需要管理员权限/)
   assert.doesNotMatch(rendererSource, /不会修改设备设置，安装后由你控制/)
   assert.doesNotMatch(rendererSource, /安装器只保存你的选择，不会修改设备配置/)
@@ -62,6 +72,22 @@ test('installer keeps the reference visual language and setup choices', () => {
   assert.match(styleSource, /prefers-reduced-motion:\s*reduce/)
   assert.match(styleSource, /\.choice-description\s*\{[^}]*display:\s*block/)
   assert.match(styleSource, /\.brand-panel\s*\{/)
+})
+
+test('custom installer feature page persists optional modules and can omit NetworkProxy', () => {
+  assert.match(i18nSource, /选择功能/)
+  assert.match(i18nSource, /Choose features/)
+  assert.match(i18nSource, /系统优化/)
+  assert.match(i18nSource, /网络加速/)
+  assert.match(featuresSource, /windowsOptimization/)
+  assert.match(featuresSource, /networkAcceleration/)
+  assert.match(mainSource, /normalizeFeatures/)
+  assert.match(mainSource, /isNetworkProxySidecarFile/)
+  assert.match(mainSource, /installer-selection.ini/)
+  assert.match(installerSource, /Page custom UdtFeaturesPage UdtFeaturesLeave/)
+  assert.match(installerSource, /windowsOptimization/)
+  assert.match(installerSource, /UniversalDeviceToolkit.NetworkProxy.exe/)
+  assert.match(styleSource, /\.feature-groups\s*\{/)
 })
 
 test('custom installer rebuilds its application payload before packaging', () => {

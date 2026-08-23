@@ -1,6 +1,7 @@
-import { Suspense, lazy } from 'react'
+import { Suspense, lazy, type ReactNode } from 'react'
 import { Spin } from 'antd'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { isInstallerOptionalFeatureEnabled, type InstallerOptionalFeature } from '../../shared/installer-selection'
 import AppLayout from './layout/AppLayout'
 
 const DashboardPage = lazy(() => import('./pages/DashboardParityPage'))
@@ -21,6 +22,19 @@ function PageFallback(): React.JSX.Element {
   )
 }
 
+function InstalledFeatureRoute({
+  feature,
+  children
+}: {
+  feature: InstallerOptionalFeature
+  children: ReactNode
+}): React.JSX.Element {
+  if (!isInstallerOptionalFeatureEnabled(window.bridge?.installerSelection?.features, feature)) {
+    return <Navigate to="/dashboard" replace />
+  }
+  return <>{children}</>
+}
+
 export default function App(): React.JSX.Element {
   return (
     <Suspense fallback={<PageFallback />}>
@@ -29,12 +43,12 @@ export default function App(): React.JSX.Element {
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/automation" element={<AutomationPage />} />
-          <Route path="/keyboard" element={<KeyboardBacklightPage />} />
-          <Route path="/macro" element={<MacroPage />} />
-          <Route path="/optimization" element={<WindowsOptimizationPage />} />
-          <Route path="/plugins" element={<PluginExtensionsPage />} />
-          <Route path="/plugins/:pluginId" element={<PluginPageView />} />
+          <Route path="/automation" element={<InstalledFeatureRoute feature="automation"><AutomationPage /></InstalledFeatureRoute>} />
+          <Route path="/keyboard" element={<InstalledFeatureRoute feature="keyboard"><KeyboardBacklightPage /></InstalledFeatureRoute>} />
+          <Route path="/macro" element={<InstalledFeatureRoute feature="macro"><MacroPage /></InstalledFeatureRoute>} />
+          <Route path="/optimization" element={<InstalledFeatureRoute feature="windowsOptimization"><WindowsOptimizationPage /></InstalledFeatureRoute>} />
+          <Route path="/plugins" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginExtensionsPage /></InstalledFeatureRoute>} />
+          <Route path="/plugins/:pluginId" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginPageView /></InstalledFeatureRoute>} />
           <Route path="/about" element={<AboutPage />} />
         </Route>
       </Routes>

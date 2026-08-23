@@ -19,6 +19,7 @@ import type {
   OptimizationCategoryDefinition
 } from '../api/optimization'
 import { useDriverStore } from '../stores/driverStore'
+import { isInstallerOptionalFeatureEnabled } from '../../../shared/installer-selection'
 import { localizeHostError } from '../api/bridge'
 import { useOptimizationStore } from '../stores/optimizationStore'
 import { SkeletonCard, SkeletonList } from '../components/Skeleton'
@@ -41,6 +42,7 @@ import {
   resolveActionError,
   runExclusivePoll,
   shouldShowEmptyPlaceholder,
+  visibleOptimizationTabs,
   type OptimizationTabKey
 } from '../utils/optimizationPresentation'
 import { openActionDetails } from '../components/utils/ActionDetailsModal'
@@ -589,7 +591,7 @@ const TAB_FALLBACK_KEYS: Record<TabKey, string> = {
   gameBoost: 'optimization.tabs.gameBoost'
 }
 
-const TABS: TabKey[] = ['optimization', 'cleanup', 'driverDownload', 'networkAcceleration', 'gameBoost']
+const TABS: OptimizationTabKey[] = ['optimization', 'cleanup', 'driverDownload', 'networkAcceleration', 'gameBoost']
 
 export default function WindowsOptimizationPage(): React.JSX.Element {
   const { t } = useTranslation()
@@ -608,11 +610,23 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
   const [cleanupSelectedKeys, setCleanupSelectedKeys] = useState<string[]>([])
   const [chromeBusy, setChromeBusy] = useState(false)
   const cleanupDefaultsApplied = useRef(false)
+  const networkAccelerationInstalled = isInstallerOptionalFeatureEnabled(
+    window.bridge?.installerSelection?.features,
+    'networkAcceleration'
+  )
+  const visibleTabs = useMemo(
+    () => visibleOptimizationTabs(TABS, networkAccelerationInstalled),
+    [networkAccelerationInstalled]
+  )
 
   useEffect(() => {
     void load()
-    void loadNetwork()
-  }, [load, loadNetwork])
+    if (networkAccelerationInstalled) void loadNetwork()
+  }, [load, loadNetwork, networkAccelerationInstalled])
+
+  useEffect(() => {
+    if (!visibleTabs.includes(tab)) setTab(visibleTabs[0] ?? 'optimization')
+  }, [tab, visibleTabs])
 
   useEffect(() => {
     if (cleanupDefaultsApplied.current || categories.length === 0) return
@@ -763,7 +777,7 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
 
       <div className="udt-opt-chrome">
         <div className="udt-segmented-nav" role="tablist" aria-label={t('optimization.title')}>
-          {TABS.map((key) => (
+          {visibleTabs.map((key) => (
             <button
               key={key}
               type="button"

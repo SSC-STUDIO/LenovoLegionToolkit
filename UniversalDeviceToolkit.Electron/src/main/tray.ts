@@ -1,6 +1,8 @@
 import { app, BrowserWindow, Tray, nativeImage, nativeTheme, screen, type Rectangle } from 'electron'
 import { existsSync } from 'fs'
 import { join } from 'path'
+import { isInstallerOptionalFeatureEnabled } from '../shared/installer-selection'
+import { readInstallerSelection } from './installer-selection'
 import { trayIconSvgForSymbol, trayNavSvg } from './tray-icons'
 import { localizePipelineName, setTrayLanguage, trayStrings } from './tray-i18n'
 import {
@@ -198,6 +200,7 @@ async function readBatteryBadge(): Promise<string | undefined> {
 
 async function buildPopupNodes(): Promise<TrayPopupNode[]> {
   const s = trayStrings()
+  const installerFeatures = readInstallerSelection()?.features
   const [visibility, quickActions, powerMode, batteryBadge] = await Promise.all([
     readNavigationVisibility(),
     readQuickActions(),
@@ -234,6 +237,7 @@ async function buildPopupNodes(): Promise<TrayPopupNode[]> {
   nodes.push({ type: 'separator' })
 
   for (const nav of NAV_ITEMS) {
+    if (nav.visibilityKey && !isInstallerOptionalFeatureEnabled(installerFeatures, nav.visibilityKey)) continue
     if (!isNavVisible(nav.visibilityKey, visibility)) continue
     nodes.push({
       type: 'item',

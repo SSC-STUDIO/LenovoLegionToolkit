@@ -23,9 +23,21 @@
 Var udtSelectionInitialized
 Var udtLanguage
 Var udtDeviceMode
+Var udtFeatOpt
+Var udtFeatNet
+Var udtFeatAuto
+Var udtFeatMacro
+Var udtFeatKbd
+Var udtFeatPlug
 Var udtLanguageCombo
 Var udtAutoRadio
 Var udtBasicRadio
+Var udtFeatOptCheck
+Var udtFeatNetCheck
+Var udtFeatAutoCheck
+Var udtFeatMacroCheck
+Var udtFeatKbdCheck
+Var udtFeatPlugCheck
 Var udtPathEdit
 Var udtBrowseButton
 Var udtRequiredLabel
@@ -43,9 +55,33 @@ Function UdtLoadSelection
   ; existed. An existing valid selection is retained on an upgrade.
   StrCpy $udtLanguage "zh-CN"
   StrCpy $udtDeviceMode "auto"
+  StrCpy $udtFeatOpt "1"
+  StrCpy $udtFeatNet "1"
+  StrCpy $udtFeatAuto "1"
+  StrCpy $udtFeatMacro "1"
+  StrCpy $udtFeatKbd "1"
+  StrCpy $udtFeatPlug "1"
   IfFileExists "${UDT_SELECTION_FILE}" 0 udtSelectionValidate
     ReadINIStr $udtLanguage "${UDT_SELECTION_FILE}" "installation" "language"
     ReadINIStr $udtDeviceMode "${UDT_SELECTION_FILE}" "installation" "deviceMode"
+    ReadINIStr $0 "${UDT_SELECTION_FILE}" "installation" "windowsOptimization"
+    StrCmp $0 "0" 0 +2
+      StrCpy $udtFeatOpt "0"
+    ReadINIStr $0 "${UDT_SELECTION_FILE}" "installation" "networkAcceleration"
+    StrCmp $0 "0" 0 +2
+      StrCpy $udtFeatNet "0"
+    ReadINIStr $0 "${UDT_SELECTION_FILE}" "installation" "automation"
+    StrCmp $0 "0" 0 +2
+      StrCpy $udtFeatAuto "0"
+    ReadINIStr $0 "${UDT_SELECTION_FILE}" "installation" "macro"
+    StrCmp $0 "0" 0 +2
+      StrCpy $udtFeatMacro "0"
+    ReadINIStr $0 "${UDT_SELECTION_FILE}" "installation" "keyboard"
+    StrCmp $0 "0" 0 +2
+      StrCpy $udtFeatKbd "0"
+    ReadINIStr $0 "${UDT_SELECTION_FILE}" "installation" "pluginExtensions"
+    StrCmp $0 "0" 0 +2
+      StrCpy $udtFeatPlug "0"
 
   udtSelectionValidate:
   StrCmp $udtLanguage "en" udtLanguageValid
@@ -78,6 +114,9 @@ Function UdtLoadSelection
   StrCmp $udtDeviceMode "basic" udtDeviceModeValid
   StrCpy $udtDeviceMode "auto"
   udtDeviceModeValid:
+  ${If} $udtFeatOpt != "1"
+    StrCpy $udtFeatNet "0"
+  ${EndIf}
   StrCpy $udtSelectionInitialized "1"
 FunctionEnd
 
@@ -425,6 +464,156 @@ Function UdtDeviceLeave
   ${EndIf}
 FunctionEnd
 
+Function UdtApplyFeatureCheck
+  ${NSD_GetState} $udtFeatOptCheck $0
+  ${If} $0 == ${BST_CHECKED}
+    EnableWindow $udtFeatNetCheck 1
+  ${Else}
+    ${NSD_SetState} $udtFeatNetCheck ${BST_UNCHECKED}
+    EnableWindow $udtFeatNetCheck 0
+  ${EndIf}
+FunctionEnd
+
+Function UdtOptClicked
+  Pop $0
+  Call UdtApplyFeatureCheck
+FunctionEnd
+
+Function UdtFeaturesPage
+  Call UdtLoadSelection
+  Call UdtHideNativeChrome
+  Call UdtCreateFonts
+  nsDialogs::Create 1018
+  Pop $0
+  ${If} $0 == error
+    Abort
+  ${EndIf}
+  System::Call 'user32::SetWindowPos(i $0, i 0, i 0, i 0, i 750, i 500, i 0)'
+  SetCtlColors $0 "" "${UDT_BG}"
+  ${NSD_CreateLabel} 22u 12u 300u 24u "选择功能 / Choose features"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  SendMessage $1 ${WM_SETFONT} $udtFontTitle 0
+  ${NSD_CreateLabel} 22u 38u 300u 18u "Required components stay installed. Optional modules can be omitted."
+  Pop $1
+  SetCtlColors $1 "${UDT_MUTED}" "transparent"
+
+  ${NSD_CreateLabel} 22u 62u 145u 14u "Required / 必选"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 22u 80u 145u 14u "Host runtime"
+  Pop $1
+  ${NSD_SetState} $1 ${BST_CHECKED}
+  EnableWindow $1 0
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 22u 96u 145u 14u "Desktop shell"
+  Pop $1
+  ${NSD_SetState} $1 ${BST_CHECKED}
+  EnableWindow $1 0
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 22u 112u 145u 14u "Console / 控制台"
+  Pop $1
+  ${NSD_SetState} $1 ${BST_CHECKED}
+  EnableWindow $1 0
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 22u 128u 145u 14u "Settings / 设置"
+  Pop $1
+  ${NSD_SetState} $1 ${BST_CHECKED}
+  EnableWindow $1 0
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 22u 144u 145u 14u "About / 关于"
+  Pop $1
+  ${NSD_SetState} $1 ${BST_CHECKED}
+  EnableWindow $1 0
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+
+  ${NSD_CreateLabel} 175u 62u 155u 14u "Optional / 可选"
+  Pop $1
+  SetCtlColors $1 "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 175u 80u 155u 14u "System optimization"
+  Pop $udtFeatOptCheck
+  SetCtlColors $udtFeatOptCheck "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 175u 96u 155u 14u "Network acceleration"
+  Pop $udtFeatNetCheck
+  SetCtlColors $udtFeatNetCheck "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 175u 112u 155u 14u "Automation"
+  Pop $udtFeatAutoCheck
+  SetCtlColors $udtFeatAutoCheck "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 175u 128u 155u 14u "Custom macro"
+  Pop $udtFeatMacroCheck
+  SetCtlColors $udtFeatMacroCheck "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 175u 144u 155u 14u "Keyboard"
+  Pop $udtFeatKbdCheck
+  SetCtlColors $udtFeatKbdCheck "${UDT_TEXT}" "transparent"
+  ${NSD_CreateCheckbox} 175u 160u 155u 14u "Plugins & extensions"
+  Pop $udtFeatPlugCheck
+  SetCtlColors $udtFeatPlugCheck "${UDT_TEXT}" "transparent"
+
+  ${If} $udtFeatOpt == "1"
+    ${NSD_SetState} $udtFeatOptCheck ${BST_CHECKED}
+  ${EndIf}
+  ${If} $udtFeatNet == "1"
+    ${NSD_SetState} $udtFeatNetCheck ${BST_CHECKED}
+  ${EndIf}
+  ${If} $udtFeatAuto == "1"
+    ${NSD_SetState} $udtFeatAutoCheck ${BST_CHECKED}
+  ${EndIf}
+  ${If} $udtFeatMacro == "1"
+    ${NSD_SetState} $udtFeatMacroCheck ${BST_CHECKED}
+  ${EndIf}
+  ${If} $udtFeatKbd == "1"
+    ${NSD_SetState} $udtFeatKbdCheck ${BST_CHECKED}
+  ${EndIf}
+  ${If} $udtFeatPlug == "1"
+    ${NSD_SetState} $udtFeatPlugCheck ${BST_CHECKED}
+  ${EndIf}
+  ${NSD_OnClick} $udtFeatOptCheck UdtOptClicked
+  Call UdtApplyFeatureCheck
+  nsDialogs::Show
+FunctionEnd
+
+Function UdtFeaturesLeave
+  ${NSD_GetState} $udtFeatOptCheck $0
+  ${If} $0 == ${BST_CHECKED}
+    StrCpy $udtFeatOpt "1"
+  ${Else}
+    StrCpy $udtFeatOpt "0"
+  ${EndIf}
+  ${NSD_GetState} $udtFeatNetCheck $0
+  ${If} $0 == ${BST_CHECKED}
+    StrCpy $udtFeatNet "1"
+  ${Else}
+    StrCpy $udtFeatNet "0"
+  ${EndIf}
+  ${NSD_GetState} $udtFeatAutoCheck $0
+  ${If} $0 == ${BST_CHECKED}
+    StrCpy $udtFeatAuto "1"
+  ${Else}
+    StrCpy $udtFeatAuto "0"
+  ${EndIf}
+  ${NSD_GetState} $udtFeatMacroCheck $0
+  ${If} $0 == ${BST_CHECKED}
+    StrCpy $udtFeatMacro "1"
+  ${Else}
+    StrCpy $udtFeatMacro "0"
+  ${EndIf}
+  ${NSD_GetState} $udtFeatKbdCheck $0
+  ${If} $0 == ${BST_CHECKED}
+    StrCpy $udtFeatKbd "1"
+  ${Else}
+    StrCpy $udtFeatKbd "0"
+  ${EndIf}
+  ${NSD_GetState} $udtFeatPlugCheck $0
+  ${If} $0 == ${BST_CHECKED}
+    StrCpy $udtFeatPlug "1"
+  ${Else}
+    StrCpy $udtFeatPlug "0"
+  ${EndIf}
+  ${If} $udtFeatOpt != "1"
+    StrCpy $udtFeatNet "0"
+  ${EndIf}
+FunctionEnd
+
 ; Define the first page in place of the default white welcome page. The path
 ; selector lives inside the branded page, therefore the stock directory page
 ; is disabled in electron-builder.yml.
@@ -436,6 +625,7 @@ FunctionEnd
 !macro customPageAfterChangeDir
   Page custom UdtLanguagePage UdtLanguageLeave
   Page custom UdtDevicePage UdtDeviceLeave
+  Page custom UdtFeaturesPage UdtFeaturesLeave
 !macroend
 !endif
 
@@ -443,6 +633,19 @@ FunctionEnd
   Call UdtLoadSelection
   WriteINIStr "${UDT_SELECTION_FILE}" "installation" "language" "$udtLanguage"
   WriteINIStr "${UDT_SELECTION_FILE}" "installation" "deviceMode" "$udtDeviceMode"
+  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "windowsOptimization" "$udtFeatOpt"
+  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "networkAcceleration" "$udtFeatNet"
+  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "automation" "$udtFeatAuto"
+  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "macro" "$udtFeatMacro"
+  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "keyboard" "$udtFeatKbd"
+  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "pluginExtensions" "$udtFeatPlug"
+  ${If} $udtFeatNet != "1"
+    Delete "$INSTDIR\resources\host\UniversalDeviceToolkit.NetworkProxy.exe"
+    Delete "$INSTDIR\resources\host\UniversalDeviceToolkit.NetworkProxy.dll"
+    Delete "$INSTDIR\resources\host\UniversalDeviceToolkit.NetworkProxy.runtimeconfig.json"
+    Delete "$INSTDIR\resources\host\UniversalDeviceToolkit.NetworkProxy.deps.json"
+    Delete "$INSTDIR\resources\host\UniversalDeviceToolkit.NetworkProxy.pdb"
+  ${EndIf}
 !macroend
 
 !macro customUnInstall

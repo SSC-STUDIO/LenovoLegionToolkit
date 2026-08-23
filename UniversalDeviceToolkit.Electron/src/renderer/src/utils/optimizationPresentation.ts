@@ -13,6 +13,14 @@ export type OptimizationTabKey =
   | 'networkAcceleration'
   | 'gameBoost'
 
+export function visibleOptimizationTabs(
+  tabs: readonly OptimizationTabKey[],
+  networkAccelerationInstalled: boolean
+): OptimizationTabKey[] {
+  if (networkAccelerationInstalled) return [...tabs]
+  return tabs.filter((tab) => tab !== 'networkAcceleration')
+}
+
 export const NETWORK_ACCELERATION_MODES = [
   'Off',
   'SystemProxy',

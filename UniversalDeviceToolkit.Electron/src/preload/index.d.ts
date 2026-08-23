@@ -5,6 +5,14 @@ export interface Bridge {
   installerSelection: {
     language: string
     deviceMode: 'auto' | 'basic'
+    features: {
+      windowsOptimization: boolean
+      networkAcceleration: boolean
+      automation: boolean
+      macro: boolean
+      keyboard: boolean
+      pluginExtensions: boolean
+    }
   } | null
   invoke: (method: string, params?: unknown) => Promise<unknown>
   getHostStatus: () => Promise<{

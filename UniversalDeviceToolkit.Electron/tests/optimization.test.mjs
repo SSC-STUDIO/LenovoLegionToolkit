@@ -59,7 +59,8 @@ const {
   presentActionNotification,
   resolveActionError,
   runExclusivePoll,
-  shouldShowEmptyPlaceholder
+  shouldShowEmptyPlaceholder,
+  visibleOptimizationTabs
 } = await import('../src/renderer/src/utils/optimizationPresentation.ts')
 
 function action(key, applied, recommended = false) {
@@ -643,4 +644,15 @@ test('action notifications keep a short title and put the host detail in the mes
   assert.deepEqual(presentActionNotification('  Host detail  ', '  '), {
     title: 'Host detail'
   })
+})
+
+test('optimization tabs hide network acceleration when it was not installed', () => {
+  const tabs = ['optimization', 'cleanup', 'driverDownload', 'networkAcceleration', 'gameBoost']
+  assert.deepEqual(visibleOptimizationTabs(tabs, true), tabs)
+  assert.deepEqual(visibleOptimizationTabs(tabs, false), [
+    'optimization',
+    'cleanup',
+    'driverDownload',
+    'gameBoost'
+  ])
 })
