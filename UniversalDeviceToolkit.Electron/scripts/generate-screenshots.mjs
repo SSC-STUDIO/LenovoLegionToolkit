@@ -76,7 +76,10 @@ const APPLICATION_SETTINGS = {
   Language: ${JSON.stringify(langCode)},
   Theme: 'Dark',
   FontFamily: 'system',
-  AnimationsEnabled: true
+  AnimationsEnabled: true,
+  AccentColorSource: 'Custom',
+  AccentColor: { R: 255, G: 33, B: 33 },
+  ApplyAccentColorToTheme: false
 }
 
 const DASHBOARD_CONFIG = {
@@ -289,6 +292,9 @@ app.whenReady().then(async () => {
     "localStorage.setItem('udt.lang', " + JSON.stringify(langCode) + ");" +
     "localStorage.setItem('i18nextLng', " + JSON.stringify(langCode) + ");" +
     "localStorage.setItem('udt.theme', 'dark');" +
+    "localStorage.setItem('udt.accent-source', 'Custom');" +
+    "localStorage.setItem('udt.accent', '#ff2121');" +
+    "localStorage.setItem('udt.accent-tints', 'false');" +
     "localStorage.setItem('udt.font-family', 'system');" +
     "document.documentElement.setAttribute('data-theme', 'dark');" +
     "document.documentElement.style.colorScheme = 'dark';"

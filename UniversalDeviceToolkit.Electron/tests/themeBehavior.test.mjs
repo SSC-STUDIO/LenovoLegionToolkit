@@ -484,6 +484,16 @@ test('Electron renderer theme behavior', async (t) => {
     runtime.cleanup()
   })
 
+  await t.test('accent surface palette does not retint control strokes', () => {
+    const source = readFileSync(
+      new URL('../src/renderer/src/theme/accentPalette.ts', import.meta.url),
+      'utf8'
+    )
+    assert.match(source, /slot: 'controlFillDefault'/)
+    assert.doesNotMatch(source, /variable: '--udt-control-stroke-default'/)
+    assert.doesNotMatch(source, /variable: '--udt-control-stroke-secondary'/)
+  })
+
   await t.test('global theme tokens define light strokes and reduced-motion coverage', () => {
     const globalCss = readFileSync(
       new URL('../src/renderer/src/styles/global.css', import.meta.url),

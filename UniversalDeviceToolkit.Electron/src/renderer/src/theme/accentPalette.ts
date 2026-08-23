@@ -97,15 +97,15 @@ export function createAccentPalette(accentHex: string, isDark: boolean): AccentP
 
 /** CSS custom properties the palette tints (removed to restore global.css defaults).
  *  The navigation surface stays neutral on purpose: the nav pane must remain
- *  visually distinct from the accent-tinted content area in both themes. */
+ *  visually distinct from the accent-tinted content area in both themes.
+ *  Strokes stay on the global.css tokens too: blending them toward the accent
+ *  turns feature cards into colored boxes, especially with Windows blue. */
 const SURFACE_VARIABLES: ReadonlyArray<{ slot: keyof AccentPalette; variable: string }> = [
   { slot: 'applicationBackground', variable: '--udt-surface-window' },
   { slot: 'controlFillDefault', variable: '--udt-surface-card' },
   { slot: 'controlFillDefault', variable: '--udt-control-fill-default' },
   { slot: 'controlFillSecondary', variable: '--udt-control-fill-secondary' },
   { slot: 'controlFillTertiary', variable: '--udt-control-fill-tertiary' },
-  { slot: 'controlStrokeDefault', variable: '--udt-control-stroke-default' },
-  { slot: 'controlStrokeSecondary', variable: '--udt-control-stroke-secondary' },
   { slot: 'textSecondary', variable: '--udt-text-secondary' }
 ]
 
