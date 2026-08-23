@@ -14,8 +14,9 @@ namespace UniversalDeviceToolkit.Host.Rpc;
 /// Not listed here:
 /// - Always-on methods registered on every platform (see <see cref="AlwaysOn"/>,
 ///   plus plugins.* / plugin.*).
-/// - macro.*: MacroHandlers compiles on every platform and registers its own
-///   non-Windows stubs (see MacroHandlers.cs).
+/// - macro.*: MacroHandlers compiles on every platform. Windows uses global
+///   hooks; portable hosts persist sequences via IConfigurationStore and
+///   report -32099 only for playback/recording.
 /// - Electron-main methods that never reach the Host (powerPlans.*, power.*,
 ///   update.getRelease/download/launchInstaller, device.info, dialog:*).
 /// </summary>
@@ -33,6 +34,7 @@ public static class RpcMethodNames
         "localization.getCulture",
         "localization.setCulture",
         "host.getCapabilities",
+        "app.setUiActive",
     ];
 
     /// <summary>
@@ -66,6 +68,11 @@ public static class RpcMethodNames
         "feature.isHdrBlocked",
         "app.getAutorun",
         "app.setAutorun",
+        "automation.getState",
+        "automation.setEnabled",
+        "automation.savePipelines",
+        "automation.runNow",
+        "automation.getSupportedSteps",
     ];
 
     /// <summary>Windows-only methods; stubbed with -32099 on other platforms.</summary>
@@ -78,7 +85,6 @@ public static class RpcMethodNames
         "godMode.apply",
         "software.getStatus",
         "software.setEnabled",
-        "app.setUiActive",
         "app.update.check",
         "app.update.status",
         "system.accentColor.get",
@@ -96,11 +102,6 @@ public static class RpcMethodNames
         "dashboardHardware.setOverclockEnabled",
         "dashboardHardware.setOverclock",
         "dashboardHardware.turnOffMonitors",
-        "automation.getState",
-        "automation.setEnabled",
-        "automation.savePipelines",
-        "automation.runNow",
-        "automation.getSupportedSteps",
         "keyboard.detect",
         "rgb.isSupported",
         "rgb.getState",

@@ -1,79 +1,81 @@
-using System.Diagnostics;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
 
 namespace UniversalDeviceToolkit.Platform.Linux.Lifecycle;
 
 /// <summary>
-/// Linux implementation of <see cref="IAutorunManager"/>.
-/// Manages autostart via a systemd user service unit.
+/// Linux autostart via the same XDG desktop file Electron writes
+/// (<c>~/.config/autostart/universal-device-toolkit.desktop</c>).
+/// Prefers <c>UDT_SHELL_PATH</c> (the Electron UI) when Host was spawned by it.
 /// </summary>
 public sealed class LinuxAutorunManager : IAutorunManager
 {
-    private static readonly string ServiceDir = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-        ".config", "systemd", "user");
+    public const string DesktopFileName = "universal-device-toolkit.desktop";
 
-    private static readonly string ServicePath = Path.Combine(ServiceDir, "udt.service");
+    private readonly string _desktopPath;
+    private readonly Func<string> _resolveExecPath;
 
-    private const string ServiceUnit = """
-        [Unit]
-        Description=Universal Device Toolkit
+    public LinuxAutorunManager()
+        : this(
+            Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+                ".config",
+                "autostart",
+                DesktopFileName),
+            ResolveExecPath)
+    {
+    }
 
-        [Service]
-        Type=simple
-        ExecStart=/usr/local/bin/udt
-        Restart=on-failure
-        RestartSec=5
-
-        [Install]
-        WantedBy=default.target
-        """;
+    public LinuxAutorunManager(string desktopPath, Func<string>? resolveExecPath = null)
+    {
+        _desktopPath = desktopPath ?? throw new ArgumentNullException(nameof(desktopPath));
+        _resolveExecPath = resolveExecPath ?? ResolveExecPath;
+    }
 
     /// <inheritdoc />
-    public Task<bool> IsEnabledAsync()
-    {
-        return Task.FromResult(File.Exists(ServicePath));
-    }
+    public Task<bool> IsEnabledAsync() => Task.FromResult(File.Exists(_desktopPath));
 
     /// <inheritdoc />
     public async Task EnableAsync()
     {
-        Directory.CreateDirectory(ServiceDir);
-        await File.WriteAllTextAsync(ServicePath, ServiceUnit).ConfigureAwait(false);
-        await RunSystemdAsync("daemon-reload").ConfigureAwait(false);
-        await RunSystemdAsync("enable", "udt.service").ConfigureAwait(false);
+        var directory = Path.GetDirectoryName(_desktopPath);
+        if (!string.IsNullOrEmpty(directory))
+            Directory.CreateDirectory(directory);
+
+        var exec = _resolveExecPath();
+        var contents =
+            "[Desktop Entry]\n" +
+            "Type=Application\n" +
+            "Name=Universal Device Toolkit\n" +
+            $"Exec={QuoteDesktopExec(exec)}\n" +
+            "X-GNOME-Autostart-enabled=true\n";
+        await File.WriteAllTextAsync(_desktopPath, contents).ConfigureAwait(false);
     }
 
     /// <inheritdoc />
-    public async Task DisableAsync()
+    public Task DisableAsync()
     {
-        await RunSystemdAsync("disable", "udt.service").ConfigureAwait(false);
-        if (File.Exists(ServicePath))
-            File.Delete(ServicePath);
-        await RunSystemdAsync("daemon-reload").ConfigureAwait(false);
+        if (File.Exists(_desktopPath))
+            File.Delete(_desktopPath);
+        return Task.CompletedTask;
     }
 
-    private static async Task RunSystemdAsync(string command, string? unit = null)
-    {
-        try
-        {
-            var args = $"--user {command}";
-            if (unit is not null)
-                args += $" {unit}";
+    internal static string QuoteDesktopExec(string filePath) =>
+        $"\"{filePath.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal)}\"";
 
-            var psi = new ProcessStartInfo("systemctl", args)
-            {
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardError = true
-            };
-            using var process = Process.Start(psi);
-            if (process is not null)
-                await process.WaitForExitAsync().ConfigureAwait(false);
-        }
-        catch
+    internal static string ResolveExecPath()
+    {
+        var shell = Environment.GetEnvironmentVariable("UDT_SHELL_PATH");
+        if (!string.IsNullOrWhiteSpace(shell) && File.Exists(shell))
+            return shell;
+
+        var appImage = Environment.GetEnvironmentVariable("APPIMAGE");
+        if (!string.IsNullOrWhiteSpace(appImage) && File.Exists(appImage) &&
+            !appImage.Contains("/tmp/.mount_", StringComparison.OrdinalIgnoreCase))
         {
-            // systemctl may not be available in all environments
+            return appImage;
         }
+
+        return Environment.ProcessPath
+            ?? throw new InvalidOperationException("Cannot enable Linux autostart: no executable path is available.");
     }
 }

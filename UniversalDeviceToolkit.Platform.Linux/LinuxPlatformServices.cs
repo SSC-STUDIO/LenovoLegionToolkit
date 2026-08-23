@@ -20,7 +20,9 @@ public sealed class LinuxPlatformServices : IPlatformServices
 
     /// <inheritdoc />
     public bool SupportsGpuManagement =>
-        _probe.FileExists("/usr/bin/nvidia-smi") || _probe.FileExists("/usr/bin/rocm-smi");
+        _probe.FileExists("/usr/bin/nvidia-smi") ||
+        _probe.FileExists("/usr/bin/rocm-smi") ||
+        HasDrmGpu();
 
     /// <inheritdoc />
     public bool SupportsFanControl =>
@@ -50,4 +52,23 @@ public sealed class LinuxPlatformServices : IPlatformServices
 
     /// <inheritdoc />
     public bool SupportsSystemTelemetry => true;
+
+    private bool HasDrmGpu()
+    {
+        foreach (var cardDir in _probe.EnumerateDirectories("/sys/class/drm"))
+        {
+            var name = Path.GetFileName(cardDir.TrimEnd('/'));
+            if (name is null ||
+                !name.StartsWith("card", StringComparison.Ordinal) ||
+                name.Contains('-', StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (_probe.FileExists($"{cardDir.TrimEnd('/')}/device/vendor"))
+                return true;
+        }
+
+        return false;
+    }
 }

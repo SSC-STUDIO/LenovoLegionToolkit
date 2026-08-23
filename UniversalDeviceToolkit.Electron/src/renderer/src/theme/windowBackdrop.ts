@@ -10,28 +10,42 @@ const MATERIAL_BY_STYLE: Record<WindowBackdropStyle, BackgroundMaterial> = {
 }
 
 /** Bridge exposes the platform (win32 | darwin | linux). */
-const CURRENT_PLATFORM: string = window.bridge?.platform ?? 'win32'
+export function currentBackdropPlatform(): string {
+  return window.bridge?.platform ?? 'win32'
+}
 
 export function normalizeWindowBackdropStyle(value: unknown): WindowBackdropStyle {
   return value === 'macOS' || value === 'Off' ? value : 'Windows'
 }
 
 export function applyWindowBackdrop(style: WindowBackdropStyle): void {
+  const platform = currentBackdropPlatform()
   const canUseNativeMaterial =
     typeof window.bridge?.setBackgroundMaterial === 'function' &&
-    window.bridge.platform !== 'web'
+    platform !== 'web'
 
   if (!canUseNativeMaterial) {
     document.documentElement.dataset.backdrop = 'none'
     return
   }
 
-  if (CURRENT_PLATFORM === 'darwin') {
-    document.documentElement.dataset.backdrop = MATERIAL_BY_STYLE[style] === 'none' ? 'none' : 'acrylic'
+  const material = MATERIAL_BY_STYLE[style]
+
+  if (platform === 'darwin') {
+    document.documentElement.dataset.backdrop = material === 'none' ? 'none' : 'acrylic'
     return
   }
 
-  const material = MATERIAL_BY_STYLE[style]
+  // Electron backgroundMaterial (mica/acrylic) is a Windows DWM API. On Linux
+  // keep data-backdrop so CSS can paint an opaque mica/acrylic approximation
+  // (light sage chrome / dark #202020 fills). Never request a native material
+  // and never punch chrome transparent over the BrowserWindow color.
+  if (platform === 'linux') {
+    document.documentElement.dataset.backdrop = material
+    void window.bridge?.setBackgroundMaterial?.('none')
+    return
+  }
+
   document.documentElement.dataset.backdrop = material
   void window.bridge?.setBackgroundMaterial(material)
 }

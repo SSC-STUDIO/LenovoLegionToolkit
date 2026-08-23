@@ -1,12 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
-using UniversalDeviceToolkit.Lib.Macro;
 using UniversalDeviceToolkit.Host.Rpc;
+#if WINDOWS
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using UniversalDeviceToolkit.Lib.Macro;
+#endif
+#if !WINDOWS
+using System.Text.Json.Nodes;
+using UniversalDeviceToolkit.Abstractions.Platform;
+#endif
 
 namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 
@@ -439,30 +445,219 @@ public static class MacroHandlers
             : fallback;
     }
 #else
+    private const string MacroSection = "udt.macro";
+    private const string MacroKey = "state";
+
     public static void Register(BridgeRpcServer rpc)
     {
-        // Global keyboard hooks are Windows-only; keep the RPC surface so the
-        // Electron client does not wait on unknown-method errors.
-        foreach (var method in new[]
-        {
-            "macro.getState",
-            "macro.setEnabled",
-            "macro.play",
-            "macro.startRecording",
-            "macro.stopRecording",
-            "macro.saveSequence",
-            "macro.clearSequence",
-        })
-        {
-            rpc.RegisterHandler(method, (_, _) => Task.FromResult(BridgeResult.Error(
-                BridgeErrorCodes.PlatformNotSupported,
-                "Macro recording/playback is not supported on this platform.")));
-        }
+        rpc.RegisterHandler("macro.getState", (_, _) => HandleGetStateAsync());
+        rpc.RegisterHandler("macro.setEnabled", (request, _) => HandleSetEnabledAsync(request));
+        rpc.RegisterHandler("macro.play", (_, _) => HooksUnavailable("playback"));
+        rpc.RegisterHandler("macro.startRecording", (_, _) => HooksUnavailable("recording"));
+        rpc.RegisterHandler("macro.stopRecording", (_, _) => HooksUnavailable("recording"));
+        rpc.RegisterHandler("macro.saveSequence", (request, _) => HandleSaveSequenceAsync(request));
+        rpc.RegisterHandler("macro.clearSequence", (request, _) => HandleClearSequenceAsync(request));
     }
 
     /// <summary>No-op: no global input hooks exist on non-Windows hosts.</summary>
     public static void StopRecordingIfActive()
     {
     }
+
+    private static Task<BridgeResult> HooksUnavailable(string action) =>
+        Task.FromResult(BridgeResult.Error(
+            BridgeErrorCodes.PlatformNotSupported,
+            $"Macro {action} requires OS global input hooks, which are not available on this platform. Sequences can still be saved."));
+
+    private static Task<BridgeResult> HandleGetStateAsync()
+    {
+        var store = IoCContainer.TryResolve<IConfigurationStore>();
+        if (store is null)
+            return Task.FromResult(BridgeResult.Ok(EmptyState()));
+
+        return Task.FromResult(BridgeResult.Ok(ReadState(store)));
+    }
+
+    private static Task<BridgeResult> HandleSetEnabledAsync(BridgeRequest request)
+    {
+        var store = IoCContainer.TryResolve<IConfigurationStore>();
+        if (store is null)
+            return Task.FromResult(MissingStore());
+
+        if (request.Parameters.ValueKind != JsonValueKind.Object ||
+            !request.Parameters.TryGetProperty("enabled", out var enabledProp) ||
+            enabledProp.ValueKind is not JsonValueKind.True and not JsonValueKind.False)
+        {
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, "Missing boolean parameter 'enabled'."));
+        }
+
+        var state = ReadState(store);
+        state["isEnabled"] = enabledProp.GetBoolean();
+        if (!TryWriteState(store, state))
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InternalError, "Failed to persist macro enable state."));
+
+        return Task.FromResult(BridgeResult.Ok(new { ok = true }));
+    }
+
+    private static Task<BridgeResult> HandleSaveSequenceAsync(BridgeRequest request)
+    {
+        var store = IoCContainer.TryResolve<IConfigurationStore>();
+        if (store is null)
+            return Task.FromResult(MissingStore());
+
+        if (request.Parameters.ValueKind != JsonValueKind.Object)
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, "Expected a sequence object."));
+
+        if (!TryReadUInt64(request.Parameters, "key", out var key))
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, "Missing number parameter 'key'."));
+
+        JsonArray events;
+        if (request.Parameters.TryGetProperty("events", out var eventsProp) && eventsProp.ValueKind == JsonValueKind.Array)
+        {
+            try
+            {
+                events = JsonNode.Parse(eventsProp.GetRawText()) as JsonArray ?? [];
+            }
+            catch (JsonException ex)
+            {
+                return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, $"Invalid events: {ex.Message}"));
+            }
+        }
+        else
+        {
+            events = [];
+        }
+
+        var slot = new JsonObject
+        {
+            ["key"] = key,
+            ["source"] = ReadString(request.Parameters, "source", "Keyboard"),
+            ["repeatCount"] = ReadInt(request.Parameters, "repeatCount", 1),
+            ["ignoreDelays"] = ReadBool(request.Parameters, "ignoreDelays", false),
+            ["interruptOnOtherKey"] = ReadBool(request.Parameters, "interruptOnOtherKey", false),
+            ["events"] = events,
+        };
+
+        var state = ReadState(store);
+        var slots = state["slots"] as JsonArray ?? [];
+        for (var i = slots.Count - 1; i >= 0; i--)
+        {
+            if (SlotKey(slots[i]) == key)
+                slots.RemoveAt(i);
+        }
+
+        slots.Add(slot);
+        state["slots"] = slots;
+        if (!TryWriteState(store, state))
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InternalError, "Failed to persist macro sequence."));
+
+        return Task.FromResult(BridgeResult.Ok(new { ok = true }));
+    }
+
+    private static Task<BridgeResult> HandleClearSequenceAsync(BridgeRequest request)
+    {
+        var store = IoCContainer.TryResolve<IConfigurationStore>();
+        if (store is null)
+            return Task.FromResult(MissingStore());
+
+        if (!TryReadUInt64(request.Parameters, "key", out var key))
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, "Missing number parameter 'key'."));
+
+        var state = ReadState(store);
+        if (state["slots"] is JsonArray slots)
+        {
+            for (var i = slots.Count - 1; i >= 0; i--)
+            {
+                if (SlotKey(slots[i]) == key)
+                    slots.RemoveAt(i);
+            }
+        }
+
+        if (!TryWriteState(store, state))
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InternalError, "Failed to persist macro sequence removal."));
+
+        return Task.FromResult(BridgeResult.Ok(new { ok = true }));
+    }
+
+    private static JsonObject ReadState(IConfigurationStore store)
+    {
+        var json = store.GetValue(MacroSection, MacroKey);
+        if (!string.IsNullOrWhiteSpace(json))
+        {
+            try
+            {
+                if (JsonNode.Parse(json) is JsonObject parsed)
+                {
+                    parsed["isEnabled"] ??= false;
+                    parsed["slots"] ??= new JsonArray();
+                    return parsed;
+                }
+            }
+            catch (JsonException)
+            {
+            }
+        }
+
+        return EmptyState();
+    }
+
+    private static JsonObject EmptyState() => new()
+    {
+        ["isEnabled"] = false,
+        ["slots"] = new JsonArray(),
+    };
+
+    private static ulong? SlotKey(JsonNode? node)
+    {
+        if (node is not JsonObject slot || slot["key"] is null)
+            return null;
+        return ulong.TryParse(slot["key"]!.ToString(), out var key) ? key : null;
+    }
+
+    private static bool TryWriteState(IConfigurationStore store, JsonObject state)
+    {
+        var json = state.ToJsonString();
+        store.SetValue(MacroSection, MacroKey, json);
+        return string.Equals(store.GetValue(MacroSection, MacroKey), json, StringComparison.Ordinal);
+    }
+
+    private static BridgeResult MissingStore() =>
+        BridgeResult.Error(BridgeErrorCodes.PlatformNotSupported, "Configuration is not available on this platform.");
+
+    private static bool TryReadUInt64(JsonElement parameters, string name, out ulong value)
+    {
+        value = 0;
+        if (parameters.ValueKind != JsonValueKind.Object ||
+            !parameters.TryGetProperty(name, out var prop) ||
+            prop.ValueKind != JsonValueKind.Number)
+        {
+            return false;
+        }
+
+        try
+        {
+            value = prop.GetUInt64();
+            return true;
+        }
+        catch (Exception ex) when (ex is FormatException or OverflowException)
+        {
+            return false;
+        }
+    }
+
+    private static string ReadString(JsonElement parameters, string name, string fallback) =>
+        parameters.TryGetProperty(name, out var prop) && prop.ValueKind == JsonValueKind.String
+            ? prop.GetString() ?? fallback
+            : fallback;
+
+    private static int ReadInt(JsonElement parameters, string name, int fallback) =>
+        parameters.TryGetProperty(name, out var prop) && prop.ValueKind == JsonValueKind.Number
+            ? prop.GetInt32()
+            : fallback;
+
+    private static bool ReadBool(JsonElement parameters, string name, bool fallback) =>
+        parameters.TryGetProperty(name, out var prop) && prop.ValueKind is JsonValueKind.True or JsonValueKind.False
+            ? prop.GetBoolean()
+            : fallback;
 #endif
 }

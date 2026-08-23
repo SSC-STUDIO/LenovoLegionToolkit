@@ -114,9 +114,9 @@ internal static class PortableCoreHandlers
 
         rpc.RegisterHandler("feature.list", HandleFeatureListAsync);
         rpc.RegisterHandler("feature.getSupported", HandleFeatureGetSupportedAsync);
-        rpc.RegisterHandler("feature.getStates", HandleFeatureUnsupportedAsync);
-        rpc.RegisterHandler("feature.getState", HandleFeatureUnsupportedAsync);
-        rpc.RegisterHandler("feature.setState", HandleFeatureUnsupportedAsync);
+        rpc.RegisterHandler("feature.getStates", HandleFeatureGetStatesAsync);
+        rpc.RegisterHandler("feature.getState", HandleFeatureGetStateAsync);
+        rpc.RegisterHandler("feature.setState", HandleFeatureSetStateAsync);
         rpc.RegisterHandler("feature.isHdrBlocked", HandleFeatureHdrBlockedAsync);
     }
 
@@ -136,6 +136,11 @@ internal static class PortableCoreHandlers
         {
             var snapshot = await adapter.ReadSnapshotAsync(cancellationToken).ConfigureAwait(false);
             var identity = snapshot.Identity;
+            var sensorBackend = IoCContainer.TryResolve<ISensorBackend>();
+            var gpu = IoCContainer.TryResolve<IGpuBackend>();
+            var readings = sensorBackend is { IsAvailable: true } ? sensorBackend.GetReadings() : Array.Empty<SensorReading>();
+            var cpuName = FindCpuName(readings);
+            var totalMb = FindValue(readings, "Total", "Memory");
             return BridgeResult.Ok(new
             {
                 vendor = EmptyToNull(identity.Vendor),
@@ -146,7 +151,23 @@ internal static class PortableCoreHandlers
                 architecture = EmptyToNull(identity.Architecture),
                 platform = identity.Platform,
                 source = snapshot.Source,
-                isCompatible = false,
+                isCompatible = true,
+                hardware = new
+                {
+                    processor = string.IsNullOrWhiteSpace(cpuName)
+                        ? null
+                        : new
+                        {
+                            name = cpuName,
+                            numberOfLogicalProcessors = Environment.ProcessorCount,
+                        },
+                    videoController = gpu is { IsAvailable: true } && !string.IsNullOrWhiteSpace(gpu.GetGpuName())
+                        ? new { name = gpu.GetGpuName() }
+                        : null,
+                    memory = totalMb is > 0
+                        ? new { totalCapacityBytes = (long)(totalMb.Value * 1024L * 1024L) }
+                        : null,
+                },
             });
         }
         catch (OperationCanceledException)
@@ -199,8 +220,8 @@ internal static class PortableCoreHandlers
             {
                 initialized = backend.IsAvailable,
                 isHybrid = false,
-                cpuName = FindReadingName(readings, "CPU", "Usage") ?? FindReadingName(readings, "CPU", "Temperature"),
-                gpuName = gpu is { IsAvailable: true } ? gpu.GetGpuName() : null,
+                cpuName = FindCpuName(readings),
+                gpuName = gpu is { IsAvailable: true } ? gpu.GetGpuName() : FindReadingName(readings, "GPU", "Temperature"),
                 gpuIsIntegrated = false,
                 initialState = backend.IsAvailable ? "Ready" : "Unavailable",
             }));
@@ -562,11 +583,15 @@ internal static class PortableCoreHandlers
     {
         _ = request;
         _ = cancellationToken;
-        var features = FeatureKeys.Select(key => new
+        var features = FeatureKeys.Select(key =>
         {
-            key,
-            supported = false,
-            stateType = "Unsupported",
+            var supported = PortableFeatureSupport.IsSupported(key);
+            return new
+            {
+                key,
+                supported,
+                stateType = supported ? PortableFeatureSupport.StateType(key) : "Unsupported",
+            };
         }).ToArray();
         return Task.FromResult(BridgeResult.Ok(new { features }));
     }
@@ -578,23 +603,41 @@ internal static class PortableCoreHandlers
             return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, "Missing string parameter 'feature'."));
         if (Array.IndexOf(FeatureKeys, feature) < 0)
             return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, $"Unknown feature '{feature}'."));
-        return Task.FromResult(BridgeResult.Ok(new { supported = false }));
+        return Task.FromResult(BridgeResult.Ok(new { supported = PortableFeatureSupport.IsSupported(feature) }));
     }
 
-    private static Task<BridgeResult> HandleFeatureUnsupportedAsync(BridgeRequest request, CancellationToken cancellationToken)
+    private static Task<BridgeResult> HandleFeatureGetStatesAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
-        _ = request;
-        _ = cancellationToken;
-        return Task.FromResult(BridgeResult.Error(
-            BridgeErrorCodes.FeatureNotSupported,
-            "Vendor hardware features are not implemented on this platform."));
+        if (!TryGetString(request.Parameters, "feature", out var feature) || feature is null)
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, "Missing string parameter 'feature'."));
+        if (Array.IndexOf(FeatureKeys, feature) < 0)
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, $"Unknown feature '{feature}'."));
+        return PortableFeatureSupport.GetStatesAsync(feature, cancellationToken);
+    }
+
+    private static Task<BridgeResult> HandleFeatureGetStateAsync(BridgeRequest request, CancellationToken cancellationToken)
+    {
+        if (!TryGetString(request.Parameters, "feature", out var feature) || feature is null)
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, "Missing string parameter 'feature'."));
+        if (Array.IndexOf(FeatureKeys, feature) < 0)
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, $"Unknown feature '{feature}'."));
+        return PortableFeatureSupport.GetStateAsync(feature, cancellationToken);
+    }
+
+    private static Task<BridgeResult> HandleFeatureSetStateAsync(BridgeRequest request, CancellationToken cancellationToken)
+    {
+        if (!TryGetString(request.Parameters, "feature", out var feature) || feature is null)
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, "Missing string parameter 'feature'."));
+        if (Array.IndexOf(FeatureKeys, feature) < 0)
+            return Task.FromResult(BridgeResult.Error(BridgeErrorCodes.InvalidParams, $"Unknown feature '{feature}'."));
+        return PortableFeatureSupport.SetStateAsync(feature, request.Parameters, cancellationToken);
     }
 
     private static Task<BridgeResult> HandleFeatureHdrBlockedAsync(BridgeRequest request, CancellationToken cancellationToken)
     {
         _ = request;
         _ = cancellationToken;
-        return Task.FromResult(Missing("HDR"));
+        return Task.FromResult(BridgeResult.Ok(new { blocked = false }));
     }
 
     private static bool TryGetSensorBackend(out ISensorBackend? backend)
@@ -610,12 +653,25 @@ internal static class PortableCoreHandlers
         var cpuTemp = FindValue(readings, "Temperature", "CPU");
         var cpuUsage = FindValue(readings, "Usage", "CPU");
         var cpuFan = FindValue(readings, "Fan", "CPU") ?? FindValue(readings, "Fan", null);
+        var cpuPower = FindValue(readings, "Power", "CPU");
+        var cpuVoltage = FindValue(readings, "Voltage", "CPU");
+        var cpuClockMax = FindValue(readings, "Frequency", "CPU");
+        var cpuClockAvg = FindValue(readings, "FrequencyAvg", "CPU");
         var memoryUsage = FindValue(readings, "Usage", "Memory");
+        var memoryUsed = FindValue(readings, "Used", "Memory");
+        var memoryTotal = FindValue(readings, "Total", "Memory");
         var gpuTemp = gpu is { IsAvailable: true } ? (double?)gpu.GetTemperatureCelsius() : FindValue(readings, "Temperature", "GPU");
         var gpuUsage = gpu is { IsAvailable: true } ? (double?)gpu.GetUsagePercent() : FindValue(readings, "Usage", "GPU");
         var gpuClock = gpu is { IsAvailable: true } ? (double?)gpu.GetCurrentClockMhz() : null;
         var gpuVramUsed = gpu is { IsAvailable: true } ? (double?)gpu.GetMemoryUsedMb() : null;
         var gpuVramTotal = gpu is { IsAvailable: true } ? (double?)gpu.GetMemoryTotalMb() : null;
+        var gpuPower = FindValue(readings, "Power", "GPU");
+        var gpuFan = FindValue(readings, "Fan", "GPU");
+        var storageTemps = readings
+            .Where(reading => string.Equals(reading.Category, "Temperature", StringComparison.OrdinalIgnoreCase)
+                && string.Equals(reading.Name, "Storage", StringComparison.OrdinalIgnoreCase))
+            .Select(reading => (double?)reading.Value)
+            .ToArray();
 
         return new
         {
@@ -625,7 +681,7 @@ internal static class PortableCoreHandlers
             isHybrid = false,
             info = new
             {
-                cpuName = FindReadingName(readings, "CPU", "Usage") ?? FindReadingName(readings, "CPU", "Temperature"),
+                cpuName = FindCpuName(readings),
                 gpuName = gpu is { IsAvailable: true } ? gpu.GetGpuName() : FindReadingName(readings, "GPU", "Temperature"),
                 gpuIsIntegrated = false,
             },
@@ -634,10 +690,10 @@ internal static class PortableCoreHandlers
                 temperature = cpuTemp,
                 usage = cpuUsage,
                 fanSpeed = cpuFan,
-                power = (double?)null,
-                voltage = (double?)null,
-                coreClockMax = (double?)null,
-                coreClockAvg = (double?)null,
+                power = cpuPower,
+                voltage = cpuVoltage,
+                coreClockMax = cpuClockMax,
+                coreClockAvg = cpuClockAvg,
             },
             gpu = new
             {
@@ -645,21 +701,58 @@ internal static class PortableCoreHandlers
                 temperature = gpuTemp,
                 coreClock = gpuClock,
                 memoryClock = (double?)null,
-                power = (double?)null,
+                power = gpuPower,
                 vramUsedMb = gpuVramUsed,
                 vramTotalMb = gpuVramTotal,
-                fanSpeed = (double?)null,
+                fanSpeed = gpuFan,
             },
             memory = new
             {
                 usage = memoryUsage,
-                usedMb = (double?)null,
-                totalMb = (double?)null,
+                usedMb = memoryUsed,
+                totalMb = memoryTotal,
                 highestTemperature = FindValue(readings, "Temperature", "Memory"),
             },
-            battery = (object?)null,
+            battery = BuildBattery(readings),
             motherboard = new { highestTemperature = FindValue(readings, "Temperature", "Motherboard") },
-            storage = new { temperatures = Array.Empty<double?>() },
+            storage = new { temperatures = storageTemps },
+        };
+    }
+
+    private static object? BuildBattery(IReadOnlyList<SensorReading> readings)
+    {
+        var charge = FindValue(readings, "Charge", "Battery");
+        var health = FindValue(readings, "Health", "Battery");
+        var temperature = FindValue(readings, "Temperature", "Battery");
+        var power = FindValue(readings, "Power", "Battery");
+        var voltage = FindValue(readings, "Voltage", "Battery");
+        var design = FindValue(readings, "DesignCapacity", "Battery");
+        var full = FindValue(readings, "FullChargeCapacity", "Battery");
+        var cycles = FindValue(readings, "CycleCount", "Battery");
+        var charging = FindValue(readings, "Charging", "Battery");
+        var model = FindReadingName(readings, nameContains: null, category: "BatteryIdentity");
+        if (charge is null && health is null && power is null && design is null)
+            return null;
+
+        return new
+        {
+            chargeLevel = charge is null ? null : (int?)Math.Round(charge.Value),
+            health = health is null ? null : health / 100.0,
+            temperature,
+            avgTemperature = (double?)null,
+            chargeRate = power,
+            minDischargeRate = (int?)null,
+            maxDischargeRate = (int?)null,
+            voltage,
+            designCapacity = design is null ? null : (int?)Math.Round(design.Value),
+            fullChargeCapacity = full is null ? null : (int?)Math.Round(full.Value),
+            cycleCount = cycles is null ? null : (int?)Math.Round(cycles.Value),
+            manufactureDate = (string?)null,
+            firstUseDate = (string?)null,
+            isCharging = charging is > 0,
+            isLowBattery = charge is < 20,
+            isLowPowerAdapter = false,
+            modelName = model,
         };
     }
 
@@ -728,14 +821,22 @@ internal static class PortableCoreHandlers
         return null;
     }
 
-    private static string? FindReadingName(IReadOnlyList<SensorReading> readings, string nameContains, string? category)
+    private static string? FindCpuName(IReadOnlyList<SensorReading> readings) =>
+        FindReadingName(readings, nameContains: null, category: "Identity")
+        ?? FindReadingName(readings, "CPU", "Usage")
+        ?? FindReadingName(readings, "CPU", "Temperature");
+
+    private static string? FindReadingName(IReadOnlyList<SensorReading> readings, string? nameContains, string? category)
     {
         foreach (var reading in readings)
         {
             if (category is not null &&
                 !string.Equals(reading.Category, category, StringComparison.OrdinalIgnoreCase))
                 continue;
-            if (reading.Name.IndexOf(nameContains, StringComparison.OrdinalIgnoreCase) < 0)
+            if (nameContains is not null &&
+                reading.Name.IndexOf(nameContains, StringComparison.OrdinalIgnoreCase) < 0)
+                continue;
+            if (string.IsNullOrWhiteSpace(reading.Name))
                 continue;
             return reading.Name;
         }

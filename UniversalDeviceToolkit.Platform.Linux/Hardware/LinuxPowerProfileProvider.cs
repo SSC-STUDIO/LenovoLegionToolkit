@@ -5,8 +5,7 @@ namespace UniversalDeviceToolkit.Platform.Linux.Hardware;
 
 /// <summary>
 /// Linux implementation of <see cref="IPowerProfileProvider"/>.
-/// Supports powerprofilesctl (power-profiles-daemon) and tuned-adm.
-/// Falls back to a stub when neither is available.
+/// Uses powerprofilesctl (power-profiles-daemon) or tuned-adm when present.
 /// </summary>
 public sealed class LinuxPowerProfileProvider : IPowerProfileProvider
 {
@@ -27,7 +26,7 @@ public sealed class LinuxPowerProfileProvider : IPowerProfileProvider
     {
         return DetectBackend() switch
         {
-            Backend.PowerProfilesCtl => ParsePowerProfilesList(),
+            Backend.PowerProfilesCtl => ParseListedProfiles(RunCli("/usr/bin/powerprofilesctl", "list")),
             Backend.TunedAdm => ParseTunedAdmList(),
             _ => Array.Empty<string>()
         };
@@ -62,21 +61,31 @@ public sealed class LinuxPowerProfileProvider : IPowerProfileProvider
         }
     }
 
-    private static IReadOnlyList<string> ParsePowerProfilesList()
+    /// <summary>
+    /// Parses <c>powerprofilesctl list</c> output. Driver rows such as
+    /// <c>CpuDriver: amd_pstate</c> are not profiles.
+    /// </summary>
+    public static IReadOnlyList<string> ParseListedProfiles(string? output)
     {
-        var output = RunCli("/usr/bin/powerprofilesctl", "list");
-        if (output is null) return Array.Empty<string>();
+        if (string.IsNullOrWhiteSpace(output))
+            return Array.Empty<string>();
 
         var profiles = new List<string>();
-        foreach (var line in output.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+        foreach (var line in output.Split('\n'))
         {
-            // Lines like "  performance:" or "* balanced:"
-            var cleaned = line.TrimStart(' ', '*', '\t').TrimEnd(':').Trim();
-            if (!string.IsNullOrWhiteSpace(cleaned))
-                profiles.Add(cleaned);
+            var trimmed = line.Trim();
+            if (trimmed.Length == 0 || !trimmed.EndsWith(':'))
+                continue;
+            if (trimmed.Contains(' ', StringComparison.Ordinal) && !trimmed.StartsWith('*'))
+                continue;
+
+            var cleaned = trimmed.TrimStart('*').Trim().TrimEnd(':').Trim();
+            if (string.IsNullOrWhiteSpace(cleaned) || cleaned.Contains(' ', StringComparison.Ordinal))
+                continue;
+            profiles.Add(cleaned);
         }
 
-        return profiles.Distinct().ToArray();
+        return profiles.Distinct(StringComparer.OrdinalIgnoreCase).ToArray();
     }
 
     private static IReadOnlyList<string> ParseTunedAdmList()
@@ -114,15 +123,20 @@ public sealed class LinuxPowerProfileProvider : IPowerProfileProvider
     {
         try
         {
-            var psi = new ProcessStartInfo(executable, string.Join(' ', args))
+            var psi = new ProcessStartInfo(executable)
             {
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
+            foreach (var arg in args)
+                psi.ArgumentList.Add(arg);
+
             using var process = Process.Start(psi);
-            if (process is null) return null;
+            if (process is null)
+                return null;
+
             var output = process.StandardOutput.ReadToEnd().Trim();
             process.WaitForExit(5000);
             return string.IsNullOrWhiteSpace(output) ? null : output;
@@ -135,11 +149,14 @@ public sealed class LinuxPowerProfileProvider : IPowerProfileProvider
 
     private static async Task RunCliAsync(string executable, params string[] args)
     {
-        var psi = new ProcessStartInfo(executable, string.Join(' ', args))
+        var psi = new ProcessStartInfo(executable)
         {
             UseShellExecute = false,
             CreateNoWindow = true
         };
+        foreach (var arg in args)
+            psi.ArgumentList.Add(arg);
+
         using var process = Process.Start(psi);
         if (process is not null)
             await process.WaitForExitAsync().ConfigureAwait(false);

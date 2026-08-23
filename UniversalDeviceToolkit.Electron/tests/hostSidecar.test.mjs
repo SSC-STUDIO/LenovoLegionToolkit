@@ -9,7 +9,9 @@ import {
   hostSidecarPath,
   isDevHostLayoutReady,
   isRunnableHost,
-  networkProxyPathBesideHost
+  listHostCandidates,
+  networkProxyPathBesideHost,
+  PORTABLE_HOST_TFM
 } from '../scripts/host-sidecar.mjs'
 
 test('hostSidecarPath strips .exe on Windows', () => {
@@ -40,6 +42,29 @@ test('isRunnableHost requires exe plus runtimeconfig and deps', () => {
   assert.equal(isRunnableHost(exe, exists, 'win32'), true)
 })
 
+test('isRunnableHost accepts Unix FDD with sidecars', () => {
+  const exe = '/repo/UniversalDeviceToolkit.Host/bin/Debug/net10.0/UniversalDeviceToolkit.Host'
+  const present = new Set([
+    exe,
+    `${exe}.dll`,
+    `${exe}.runtimeconfig.json`,
+    `${exe}.deps.json`
+  ])
+  assert.equal(isRunnableHost(exe, (path) => present.has(path), 'linux'), true)
+})
+
+test('isRunnableHost rejects Unix FDD apphost that is missing sidecars', () => {
+  const exe = '/repo/UniversalDeviceToolkit.Host/bin/Debug/net10.0/UniversalDeviceToolkit.Host'
+  const present = new Set([exe, `${exe}.dll`])
+  assert.equal(isRunnableHost(exe, (path) => present.has(path), 'linux'), false)
+})
+
+test('isRunnableHost accepts Unix single-file publish without a sibling dll', () => {
+  const exe = '/opt/udt/publish/linux-x64/UniversalDeviceToolkit.Host'
+  const present = new Set([exe])
+  assert.equal(isRunnableHost(exe, (path) => present.has(path), 'linux'), true)
+})
+
 test('networkProxyPathBesideHost keeps the Host directory', () => {
   assert.equal(
     networkProxyPathBesideHost('C:\\out\\UniversalDeviceToolkit.Host.exe', 'win32'),
@@ -67,6 +92,37 @@ test('isDevHostLayoutReady requires Host and NetworkProxy sidecars', () => {
   present.add('C:\\out\\UniversalDeviceToolkit.NetworkProxy.runtimeconfig.json')
   present.add('C:\\out\\UniversalDeviceToolkit.NetworkProxy.deps.json')
   assert.equal(isDevHostLayoutReady(host, exists, 'win32'), true)
+})
+
+test('isDevHostLayoutReady on Linux does not require NetworkProxy', () => {
+  const host = '/repo/UniversalDeviceToolkit.Host/bin/Debug/net10.0/UniversalDeviceToolkit.Host'
+  const present = new Set([
+    host,
+    `${host}.dll`,
+    `${host}.runtimeconfig.json`,
+    `${host}.deps.json`
+  ])
+  assert.equal(isDevHostLayoutReady(host, (path) => present.has(path), 'linux'), true)
+})
+
+test('listHostCandidates includes portable net10.0 Debug output on Linux', () => {
+  const candidates = listHostCandidates({
+    electronRoot: '/workspace/UniversalDeviceToolkit.Electron',
+    platform: 'linux',
+    arch: 'x64'
+  })
+  assert.ok(candidates.some((path) => path.includes(`/bin/Debug/${PORTABLE_HOST_TFM}/UniversalDeviceToolkit.Host`)))
+  assert.ok(candidates.some((path) => path.includes('/publish/linux-x64/UniversalDeviceToolkit.Host')))
+})
+
+test('Electron main resolveHostPath looks at portable net10.0 on Linux', () => {
+  const source = readFileSync(new URL('../src/main/index.ts', import.meta.url), 'utf8')
+  assert.match(source, /portableTfm = 'net10\.0'/)
+  assert.match(source, /bin', 'Debug', portableTfm/)
+  assert.doesNotMatch(
+    source,
+    /process\.platform === 'linux'[\s\S]{0,200}net10\.0-windows10\.0\.26100\.0/
+  )
 })
 
 const nodeRequire = createRequire(import.meta.url)

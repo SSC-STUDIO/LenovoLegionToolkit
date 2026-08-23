@@ -42,6 +42,8 @@
     <DefaultItemExcludes>$(DefaultItemExcludes);**/obj-*/**</DefaultItemExcludes>
     <EnableUdtTestHooks Condition="'$(EnableUdtTestHooks)' == ''">false</EnableUdtTestHooks>
     <DefineConstants Condition="'$(EnableUdtTestHooks)' == 'true'">$(DefineConstants);UDT_TEST_HOOKS</DefineConstants>
+    <DefineConstants Condition="$([MSBuild]::IsOSPlatform('Linux'))">$(DefineConstants);LINUX</DefineConstants>
+    <DefineConstants Condition="$([MSBuild]::IsOSPlatform('OSX'))">$(DefineConstants);MACOS</DefineConstants>
 
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <Nullable Condition="'$(Nullable)' == ''">enable</Nullable>

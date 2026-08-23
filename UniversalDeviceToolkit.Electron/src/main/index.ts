@@ -161,15 +161,36 @@ if (process.platform === 'win32') {
   nativeTheme.on('updated', reapplyMainWindowBackgroundMaterial)
 }
 
+/** Opaque Linux stand-in for WindowBackdrop.css --udt-mica-chrome (light). */
+const LINUX_MICA_CHROME_LIGHT = '#d5ded5'
+const LINUX_WINDOW_BACKGROUND_DARK = '#202020'
+
+function linuxWindowBackgroundColor(): string {
+  return nativeTheme.shouldUseDarkColors ? LINUX_WINDOW_BACKGROUND_DARK : LINUX_MICA_CHROME_LIGHT
+}
+
+function applyLinuxWindowBackgroundColor(): void {
+  if (process.platform !== 'linux' || !mainWindow || mainWindow.isDestroyed()) return
+  try {
+    mainWindow.setBackgroundColor(linuxWindowBackgroundColor())
+  } catch (error) {
+    console.error('[main] failed to apply Linux window background:', error)
+  }
+}
+
+if (process.platform === 'linux') {
+  nativeTheme.on('updated', applyLinuxWindowBackgroundColor)
+}
+
 function resolveHostPath(): string {
   const fromEnv = process.env['UDT_HOST_PATH']
   if (fromEnv) {
     if (!existsSync(fromEnv)) {
       throw new Error(`UDT_HOST_PATH does not exist: ${fromEnv}`)
     }
-    if (!isFrameworkDependentHost(fromEnv)) {
+    if (!isRunnableHostBinary(fromEnv)) {
       throw new Error(
-        `UDT_HOST_PATH is an incomplete Host (missing runtimeconfig.json/deps.json): ${fromEnv}`
+        `UDT_HOST_PATH is an incomplete Host (missing runtimeconfig.json/deps.json, or a Unix FDD apphost without sidecars): ${fromEnv}`
       )
     }
     return fromEnv
@@ -180,7 +201,9 @@ function resolveHostPath(): string {
   // Windows, extension-less executable on Linux/macOS.
   const hostExeName =
     process.platform === 'win32' ? 'UniversalDeviceToolkit.Host.exe' : 'UniversalDeviceToolkit.Host'
-  const tfm = 'net10.0-windows10.0.26100.0'
+  const windowsTfm = 'net10.0-windows10.0.26100.0'
+  const portableTfm = 'net10.0'
+  const hostRoot = join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host')
   const candidates: string[] = []
 
   // Packaged builds only: Host is copied into resources/host by electron-builder.
@@ -190,40 +213,33 @@ function resolveHostPath(): string {
     candidates.push(join(process.resourcesPath, 'host', hostExeName))
   }
 
-  // Dev: sibling repo folder next to the Electron project (Windows layout),
-  // staged publish folders for every platform, and a local host/ staging dir.
+  // Dev: sibling Host project output. Windows uses the windows TFM + win-x64 RID.
+  // Linux/macOS use portable net10.0 (bin/Debug/net10.0 from `dotnet build -p:UDTWindows=false`).
   if (process.platform === 'win32') {
     candidates.push(
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Debug',
-        tfm, 'win-x64', hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'bin', 'x64', 'Release',
-        tfm, 'win-x64', hostExeName),
-      // CI/installer staging: Release.yml publishes the Host here and
-      // electron-builder copies resources/host from it.
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'win-x64', hostExeName)
-    )
-  } else if (process.platform === 'darwin') {
-    candidates.push(
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', `osx-${process.arch}`, hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'osx-x64', hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'osx-arm64', hostExeName)
+      join(hostRoot, 'bin', 'x64', 'Debug', windowsTfm, 'win-x64', hostExeName),
+      join(hostRoot, 'bin', 'x64', 'Release', windowsTfm, 'win-x64', hostExeName),
+      join(hostRoot, 'publish', 'win-x64', hostExeName)
     )
   } else {
+    const ridPrefix = process.platform === 'darwin' ? 'osx' : 'linux'
+    const rid = `${ridPrefix}-${process.arch}`
     candidates.push(
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', `linux-${process.arch}`, hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'linux-x64', hostExeName),
-      join(PROJECT_ROOT, '..', 'UniversalDeviceToolkit.Host', 'publish', 'linux-arm64', hostExeName)
+      join(hostRoot, 'bin', 'Debug', portableTfm, hostExeName),
+      join(hostRoot, 'bin', 'Release', portableTfm, hostExeName),
+      join(hostRoot, 'bin', 'Debug', portableTfm, rid, hostExeName),
+      join(hostRoot, 'bin', 'Release', portableTfm, rid, hostExeName),
+      join(hostRoot, 'publish', rid, hostExeName),
+      join(hostRoot, 'publish', `${ridPrefix}-x64`, hostExeName),
+      join(hostRoot, 'publish', `${ridPrefix}-arm64`, hostExeName)
     )
   }
-  candidates.push(
-    // fallback: explicit build output inside this project / staged publish folder
-    join(PROJECT_ROOT, 'host', hostExeName)
-  )
+  candidates.push(join(PROJECT_ROOT, 'host', hostExeName))
 
   const incomplete: string[] = []
   for (const candidate of candidates) {
     if (!existsSync(candidate)) continue
-    if (isFrameworkDependentHost(candidate)) return candidate
+    if (isRunnableHostBinary(candidate)) return candidate
     incomplete.push(candidate)
   }
 
@@ -247,11 +263,14 @@ function hostSidecarPath(hostPath: string, extension: string): string {
   return `${hostPath}.${extension}`
 }
 
-function isFrameworkDependentHost(hostPath: string): boolean {
-  return (
+function isRunnableHostBinary(hostPath: string): boolean {
+  if (
     existsSync(hostSidecarPath(hostPath, 'runtimeconfig.json')) &&
     existsSync(hostSidecarPath(hostPath, 'deps.json'))
-  )
+  ) {
+    return true
+  }
+  return process.platform !== 'win32' && !existsSync(`${hostPath}.dll`)
 }
 
 /** Events that arrived before the BrowserWindow could receive IPC. */
@@ -722,12 +741,12 @@ function createWindow(): void {
         ? {
             // Linux: frameless custom title bar like Windows. backgroundMaterial
             // (mica/acrylic) is a Windows-only API — Electron ignores it on
-            // Linux, so an opaque window background keeps the load flash from
-            // being jarring (matches the renderer's --udt-surface-window #202020).
+            // Linux. Match the renderer: dark #202020, light mica-approx chrome
+            // (WindowBackdrop.css --udt-mica-chrome ≈ #d5ded5).
             autoHideMenuBar: true,
             frame: false,
-            backgroundColor: '#202020',
-            backgroundMaterial: 'acrylic' as const
+            backgroundColor: linuxWindowBackgroundColor(),
+            backgroundMaterial: 'none' as const
           }
         : {
             autoHideMenuBar: true,
@@ -1009,6 +1028,7 @@ app.whenReady().then(() => {
   ipcMain.on('window:set-theme-source', (_event, source: unknown) => {
     if (source !== 'system' && source !== 'light' && source !== 'dark') return
     nativeTheme.themeSource = source
+    applyLinuxWindowBackgroundColor()
   })
 
   ipcMain.handle('shell:open-log-folder', async () => {

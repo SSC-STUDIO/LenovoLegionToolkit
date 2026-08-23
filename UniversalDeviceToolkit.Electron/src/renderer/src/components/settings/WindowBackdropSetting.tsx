@@ -15,9 +15,9 @@ interface WindowBackdropSettingProps {
 
 const PLATFORM: string = window.bridge?.platform ?? 'win32'
 
-/** Options meaningful on the current platform (mica is Windows-only). */
+/** Native mica is Windows-only; Linux still offers Windows/macOS as opaque approximations. */
 const OPTIONS: WindowBackdropStyle[] =
-  PLATFORM === 'win32' ? ['Windows', 'macOS', 'Off'] : ['macOS', 'Off']
+  PLATFORM === 'darwin' ? ['macOS', 'Off'] : ['Windows', 'macOS', 'Off']
 
 export default function WindowBackdropSetting({
   application,
@@ -31,7 +31,7 @@ export default function WindowBackdropSetting({
     Off: t('wpf.settingsPagewindowBackdropoff')
   }
   const rawStyle = normalizeWindowBackdropStyle(application['WindowBackdropStyle'])
-  const style: WindowBackdropStyle = OPTIONS.includes(rawStyle) ? rawStyle : 'macOS'
+  const style: WindowBackdropStyle = OPTIONS.includes(rawStyle) ? rawStyle : OPTIONS[0]
 
   return (
     <SettingsCard

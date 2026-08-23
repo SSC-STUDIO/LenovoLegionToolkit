@@ -41,6 +41,20 @@ public sealed class PlatformCapabilityTests
     }
 
     [Fact]
+    public void LinuxCapabilities_ShouldDetectSysfsDrmGpuWithoutVendorCli()
+    {
+        var probe = new FakePlatformProbe(
+            files: new HashSet<string> { "/sys/class/drm/card0/device/vendor" },
+            directories: new HashSet<string>
+            {
+                "/sys/class/drm",
+                "/sys/class/drm/card0"
+            });
+
+        Assert.True(new LinuxPlatformServices(probe).SupportsGpuManagement);
+    }
+
+    [Fact]
     public void LinuxCapabilities_ShouldReturnUnavailableWhenProbeHasNoRequiredEntries()
     {
         var services = new LinuxPlatformServices(new FakePlatformProbe(
