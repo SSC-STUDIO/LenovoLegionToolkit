@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { featuresApi } from '../../api/features'
 import { keyboardApi } from '../../api/keyboard'
 import { settingsApi } from '../../api/settings'
+import { isInstallerOptionalFeatureEnabled } from '../../../../shared/installer-selection'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { SettingsCard } from './SettingsCard'
 import { SettingsLoadError } from './SettingsLoadError'
@@ -74,10 +75,18 @@ export default function NavigationItemsSetting(): React.JSX.Element {
     }
   }, [reloadToken])
 
+  const installerFeatures = window.bridge?.installerSelection?.features
+  const installerOmitted = NAVIGATION_ITEMS.some(
+    (item) => !isInstallerOptionalFeatureEnabled(installerFeatures, item.key)
+  )
   const visibleItems = useMemo(
     () =>
-      NAVIGATION_ITEMS.filter((item) => item.key !== 'keyboard' || keyboardSupported),
-    [keyboardSupported]
+      NAVIGATION_ITEMS.filter(
+        (item) =>
+          isInstallerOptionalFeatureEnabled(installerFeatures, item.key) &&
+          (item.key !== 'keyboard' || keyboardSupported)
+      ),
+    [installerFeatures, keyboardSupported]
   )
 
   const handleToggle = async (key: string, checked: boolean): Promise<void> => {
@@ -119,18 +128,23 @@ export default function NavigationItemsSetting(): React.JSX.Element {
           onRetry={() => setReloadToken((value) => value + 1)}
         />
       ) : (
-        <div className="udt-settings-toggle-grid" role="list">
-          {visibleItems.map((item) => (
-            <div key={item.key} className="udt-settings-toggle-grid__item" role="listitem">
-              <span className="udt-settings-toggle-grid__label">{t(item.labelKey)}</span>
-              <Switch
-                className="udt-settings-switch"
-                checked={visibility[item.key] === true}
-                onChange={(checked) => void handleToggle(item.key, checked)}
-              />
-            </div>
-          ))}
-        </div>
+        <>
+          {installerOmitted ? (
+            <p className="udt-settings-section__intro">{t('installer.features.omittedHint')}</p>
+          ) : null}
+          <div className="udt-settings-toggle-grid" role="list">
+            {visibleItems.map((item) => (
+              <div key={item.key} className="udt-settings-toggle-grid__item" role="listitem">
+                <span className="udt-settings-toggle-grid__label">{t(item.labelKey)}</span>
+                <Switch
+                  className="udt-settings-switch"
+                  checked={visibility[item.key] === true}
+                  onChange={(checked) => void handleToggle(item.key, checked)}
+                />
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </SettingsCard>
   )

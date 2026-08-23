@@ -167,6 +167,20 @@ button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .choice-description { display: block; margin-top: 5px; color: var(--muted); font-size: 13px; }
 .choice-meta { padding: 4px 8px; border-radius: 999px; background: color-mix(in srgb, var(--text) 6%, transparent); color: var(--muted); font-size: 12px; }
 .choice-card.selected .choice-meta { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--text); }
+
+.feature-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; min-height: 0; height: 100%; }
+.feature-group { min-height: 0; overflow: auto; padding: 12px 12px 8px; border: 1px solid var(--line); border-radius: 11px; background: var(--card-background); }
+.feature-group-title { font-size: 15px; font-weight: 700; }
+.feature-group-hint { margin: 4px 0 8px; color: var(--muted); font-size: 12px; line-height: 1.4; }
+.feature-row { display: grid; width: 100%; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; padding: 7px 6px; border: 0; border-radius: 8px; background: transparent; color: inherit; text-align: left; }
+.feature-row:hover:not(:disabled) { background: var(--accent-soft); }
+.feature-row:disabled { cursor: default; }
+.feature-row.locked { opacity: .88; }
+.feature-row.disabled { opacity: .55; }
+.feature-check { width: 16px; height: 16px; margin-top: 2px; border: 2px solid var(--muted); border-radius: 4px; background: transparent; }
+.feature-row.selected .feature-check { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--card) 70%, transparent); }
+.feature-name { display: block; font-size: 14px; font-weight: 600; }
+.feature-desc { display: block; margin-top: 2px; color: var(--muted); font-size: 12px; line-height: 1.35; }
 .language-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; max-height: 300px; overflow: auto; padding-right: 4px; }
 .language-grid::-webkit-scrollbar { width: 10px; }
 .language-grid::-webkit-scrollbar-track { background: transparent; }

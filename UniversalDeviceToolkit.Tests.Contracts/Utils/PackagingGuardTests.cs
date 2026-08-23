@@ -123,5 +123,9 @@ public sealed class PackagingGuardTests
         script.Should().Contain("$INSTDIR\\installer-selection.ini");
         script.Should().Contain("WriteINIStr");
         script.Should().Contain("deviceMode");
+        script.Should().Contain("Page custom UdtFeaturesPage UdtFeaturesLeave");
+        script.Should().Contain("windowsOptimization");
+        script.Should().Contain("networkAcceleration");
+        script.Should().Contain("UniversalDeviceToolkit.NetworkProxy.exe");
     }
 }

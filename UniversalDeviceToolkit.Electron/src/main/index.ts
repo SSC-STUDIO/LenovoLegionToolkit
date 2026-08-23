@@ -930,7 +930,9 @@ app.whenReady().then(() => {
   installerSelection = readInstallerSelection()
   if (installerSelection != null) {
     console.log(
-      `[main] installer selection: language=${installerSelection.language}, deviceMode=${installerSelection.deviceMode}`
+      `[main] installer selection: language=${installerSelection.language}, deviceMode=${installerSelection.deviceMode}, features=${Object.entries(installerSelection.features)
+        .map(([key, enabled]) => `${key}=${enabled ? '1' : '0'}`)
+        .join(',')}`
     )
   }
   if (flags.isTraceEnabled) {

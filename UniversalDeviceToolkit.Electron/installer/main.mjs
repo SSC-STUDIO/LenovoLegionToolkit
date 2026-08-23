@@ -4,6 +4,7 @@ import { execFile, spawn } from 'node:child_process'
 import { promisify } from 'node:util'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { featureFlag, isNetworkProxySidecarFile, normalizeFeatures } from './features.mjs'
 
 const execFileAsync = promisify(execFile)
 const installerRoot = dirname(fileURLToPath(import.meta.url))
@@ -100,12 +101,13 @@ async function collectFiles(root) {
   return files
 }
 
-async function copyPayload(destination) {
+async function copyPayload(destination, features) {
   const files = await collectFiles(payloadRoot)
-  const totalBytes = files.reduce((sum, file) => sum + file.size, 0)
+  const selected = files.filter((file) => features.networkAcceleration || !isNetworkProxySidecarFile(file.relative))
+  const totalBytes = selected.reduce((sum, file) => sum + file.size, 0)
   let copiedBytes = 0
   await fs.mkdir(destination, { recursive: true })
-  for (const file of files) {
+  for (const file of selected) {
     const target = join(destination, file.relative)
     await fs.mkdir(dirname(target), { recursive: true })
     await fs.copyFile(file.path, target)
@@ -120,8 +122,19 @@ async function copyPayload(destination) {
   }
 }
 
-async function writeSelection(destination, language, deviceMode) {
-  const contents = `[installation]\nlanguage=${language}\ndeviceMode=${deviceMode}\n`
+async function writeSelection(destination, language, deviceMode, features) {
+  const contents = [
+    '[installation]',
+    `language=${language}`,
+    `deviceMode=${deviceMode}`,
+    `windowsOptimization=${featureFlag(features.windowsOptimization)}`,
+    `networkAcceleration=${featureFlag(features.networkAcceleration)}`,
+    `automation=${featureFlag(features.automation)}`,
+    `macro=${featureFlag(features.macro)}`,
+    `keyboard=${featureFlag(features.keyboard)}`,
+    `pluginExtensions=${featureFlag(features.pluginExtensions)}`,
+    ''
+  ].join('\n')
   await fs.writeFile(join(destination, 'installer-selection.ini'), contents, 'utf8')
 }
 
@@ -181,6 +194,7 @@ async function installApplication(options) {
   const destination = resolve(String(options?.destination ?? ''))
   const language = String(options?.language ?? '')
   const deviceMode = String(options?.deviceMode ?? '')
+  const features = normalizeFeatures(options?.features)
   if (!destination || destination === resolve(dirname(process.execPath))) throw new Error('Choose a different installation folder.')
   if (!validLanguages.has(language)) throw new Error('Unsupported installer language.')
   if (!validDeviceModes.has(deviceMode)) throw new Error('Unsupported device mode.')
@@ -188,8 +202,8 @@ async function installApplication(options) {
   isInstalling = true
   try {
     emitProgress({ phase: 'preparing', percent: 0, file: '' })
-    await copyPayload(destination)
-    await writeSelection(destination, language, deviceMode)
+    await copyPayload(destination, features)
+    await writeSelection(destination, language, deviceMode, features)
 
     const installedExe = join(destination, 'UniversalDeviceToolkit.exe')
     const uninstallExe = join(destination, 'uninstall.exe')

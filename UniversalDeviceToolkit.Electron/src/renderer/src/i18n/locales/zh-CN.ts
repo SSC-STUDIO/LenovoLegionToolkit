@@ -5,6 +5,11 @@ export default withEnglishFallback({
     app: {
       name: '通用设备工具箱',
     },
+    installer: {
+      features: {
+        omittedHint: '部分页面未在安装时选择，因此不会显示。',
+      },
+    },
     titlebar: {
       log: '日志',
       openLogs: '打开日志文件夹',

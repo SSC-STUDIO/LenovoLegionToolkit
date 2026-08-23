@@ -53,7 +53,7 @@ test('installer selection arguments accept only supported language and device va
       '--udt-installer-language=ja',
       '--udt-installer-device-mode=basic'
     ])),
-    JSON.stringify({ language: 'ja', deviceMode: 'basic' })
+    JSON.stringify({ language: 'ja', deviceMode: 'basic', features: shared.defaultInstallerFeatures() })
   )
   assert.equal(
     shared.parseInstallerSelectionArguments([
@@ -73,7 +73,43 @@ test('installer INI parser ignores unrelated sections and rejects incomplete inp
       'language=ru',
       'deviceMode=auto'
     ].join('\n'))),
-    JSON.stringify({ language: 'ru', deviceMode: 'auto' })
+    JSON.stringify({ language: 'ru', deviceMode: 'auto', features: shared.defaultInstallerFeatures() })
   )
   assert.equal(main.parseInstallerSelectionIni('[installation]\nlanguage=en'), null)
+})
+
+test('installer feature flags default on and treat missing keys as a full install', () => {
+  const omitted = shared.parseInstallerFeaturesArgument('automation,macro')
+  assert.equal(omitted.automation, true)
+  assert.equal(omitted.macro, true)
+  assert.equal(omitted.windowsOptimization, false)
+  assert.equal(omitted.networkAcceleration, false)
+  assert.equal(omitted.keyboard, false)
+  assert.equal(omitted.pluginExtensions, false)
+  assert.equal(shared.isInstallerOptionalFeatureEnabled(null, 'windowsOptimization'), true)
+  assert.equal(shared.isInstallerOptionalFeatureEnabled(omitted, 'windowsOptimization'), false)
+  assert.equal(shared.isInstallerOptionalFeatureEnabled(omitted, 'dashboard'), true)
+  assert.equal(shared.isNetworkProxySidecarFile('resources/host/UniversalDeviceToolkit.NetworkProxy.exe'), true)
+  assert.equal(shared.isNetworkProxySidecarFile('resources/host/UniversalDeviceToolkit.Host.exe'), false)
+})
+
+test('installer INI parser honors optional feature checkboxes and caps network acceleration', () => {
+  const parsed = main.parseInstallerSelectionIni([
+    '[installation]',
+    'language=en',
+    'deviceMode=auto',
+    'windowsOptimization=0',
+    'networkAcceleration=1',
+    'automation=1',
+    'macro=0',
+    'keyboard=1',
+    'pluginExtensions=0'
+  ].join('\n'))
+  assert.equal(parsed.features.windowsOptimization, false)
+  assert.equal(parsed.features.networkAcceleration, false)
+  assert.equal(parsed.features.automation, true)
+  assert.equal(parsed.features.macro, false)
+  assert.equal(parsed.features.pluginExtensions, false)
+  assert.equal(JSON.stringify(main.buildInstallerHostArguments(parsed)), JSON.stringify(['--no-plugins']))
+  assert.ok(main.buildInstallerRendererArguments(parsed).some((argument) => argument.startsWith('--udt-installer-features=')))
 })
