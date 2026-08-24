@@ -9,8 +9,10 @@ All product brand and marketing media live **here** under the repository root.
 | `Default_exe.png` | Fallback process icon in automation UI |
 | `og-preview.png` | Open Graph / social preview |
 | `Screenshot_*.png` | README screenshots |
-| `UDT_Promo.mp4` | 30-second README trailer |
-| `UDT_Promo_poster.jpg` | Trailer poster |
+| `UDT_Promo_en.mp4` | 30-second English README trailer (spoken EN, EN captions) |
+| `UDT_Promo_zh.mp4` | 30-second Chinese README trailer (spoken ZH, ZH captions) |
+| `UDT_Promo.mp4` | Copy of `UDT_Promo_en.mp4` so old links keep working |
+| `UDT_Promo_poster.jpg` | Trailer poster (shared) |
 | `Brand/` | Trace symbol SVGs, tray PNGs, multi-size PNG icons |
 
 The Electron shell consumes these via `UniversalDeviceToolkit.Electron/buildResources` and `resources/`. Do not reintroduce a WPF `AssetResources.resx` copy of brand binaries.

@@ -30,9 +30,9 @@
 
 <div align="center">
 
-<a href="Assets/UDT_Promo.mp4"><img src="Assets/UDT_Promo_poster.jpg" width="700" alt="通用设备工具箱 30 秒宣传片" /></a>
+<a href="Assets/UDT_Promo_zh.mp4"><img src="Assets/UDT_Promo_poster.jpg" width="700" alt="通用设备工具箱 30 秒宣传片" /></a>
 
-<sub>我们自己剪的 30 秒：开源、不用账号、不碰遥测。<a href="Assets/UDT_Promo.mp4">播放 MP4</a></sub>
+<sub>我们自己剪的 30 秒中文旁白：开源、不用账号、不碰遥测。<a href="Assets/UDT_Promo_zh.mp4">播放 MP4</a> · <a href="README.md">English</a></sub>
 
 </div>
 
@@ -965,7 +965,9 @@ crowdin download --config crowdin.yml
 
 | 文件 | 说明 |
 |------|------|
-| `Assets/UDT_Promo.mp4` | 我们自己剪的 30 秒宣传片（点 [宣传片](#宣传片) 海报即可播放） |
+| `Assets/UDT_Promo_zh.mp4` | 30 秒中文旁白宣传片（点 [宣传片](#宣传片) 海报即可播放） |
+| `Assets/UDT_Promo_en.mp4` | 30 秒英文旁白宣传片（英文 README 使用） |
+| `Assets/UDT_Promo.mp4` | 与 `UDT_Promo_en.mp4` 相同（旧路径兼容） |
 | `Assets/UDT_Promo_poster.jpg` | 宣传片封面 |
 | `Assets/Screenshot_main.png` | 主界面（英文，深色主题） |
 | `Assets/Screenshot_zh-hans.png` | 主界面（简体中文，深色主题） |
