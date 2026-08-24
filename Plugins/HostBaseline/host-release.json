@@ -18,5 +18,5 @@
     ]
   },
   "source": "vendored-host-build",
-  "notes": "Phase 3 ABI hard cutover: host Lib/Lib.Plugins assembly identities are UniversalDeviceToolkit.Lib / UniversalDeviceToolkit.Lib.Plugins. Shipping UI is Electron + UniversalDeviceToolkit.Host; do not name the retired WPF assembly Universal Device Toolkit.dll. Keep this 5.0.2 baseline until the first v6.0.0-preview.1 application ZIP is published, then refresh. Official 2.x plugins declare minHostVersion 6.0.0 so a 5.x Host will refuse them at runtime. Host-only publish ships the Lib graph (Lib, Lib.Plugins, Lib.Abstractions, Lib.Shared, Lib.Automation, Lib.Macro) plus Serilog transitive dependencies; vendor those beside the host binaries."
+  "notes": "Phase 3 ABI hard cutover: host Lib/Lib.Plugins assembly identities are UniversalDeviceToolkit.Lib / UniversalDeviceToolkit.Lib.Plugins. Shipping UI is Electron + UniversalDeviceToolkit.Host; do not name the retired WPF assembly Universal Device Toolkit.dll. Keep this 5.0.2 baseline until the first v6.0.0 application ZIP is published, then refresh. Official 2.x plugins declare minHostVersion 6.0.0 so a 5.x Host will refuse them at runtime. Host-only publish ships the Lib graph (Lib, Lib.Plugins, Lib.Abstractions, Lib.Shared, Lib.Automation, Lib.Macro) plus Serilog transitive dependencies; vendor those beside the host binaries."
 }

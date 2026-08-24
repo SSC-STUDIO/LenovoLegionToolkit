@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-08-24
+
+### Changed / 变更
+- Promoted the 6.0 train to stable **2.0.0** on `plugin-catalog` (`minHostVersion` **6.0.0**). v5.0.2 hosts keep installing 1.x from the same catalog / 将 6.0 列车提升为稳定 **2.0.0** 并发布到 `plugin-catalog`（`minHostVersion` 为 **6.0.0**）。v5.0.2 宿主仍从同一目录安装 1.x
+
 ## [2.0.0-preview.1] - 2026-08-13
 
 ### Changed / 变更

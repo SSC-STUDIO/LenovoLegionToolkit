@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-08-24
+
+### Changed / 变更
+- Promoted the 6.0 train to stable **2.0.0** on `plugin-catalog` (`minHostVersion` **6.0.0**). v5.0.2 hosts keep installing 1.x from the same catalog / 将 6.0 列车提升为稳定 **2.0.0** 并发布到 `plugin-catalog`（`minHostVersion` 为 **6.0.0**）。v5.0.2 宿主仍从同一目录安装 1.x
+
 ### Fixed / 修复
 - Rejected path-traversal, device, and Windows-directory paths for ViVeTool path assignment, feature import, and feature export / 拒绝路径穿越、设备路径和 Windows 目录路径用于 ViVeTool 路径设置、功能导入与导出
 - Pinned ViVeTool download to the v0.3.4 release asset, enforced ZIP/file hash and size limits, and extracted only required runtime files / 将 ViVeTool 下载固定到 v0.3.4 发布资源，强制 ZIP/文件哈希与体积限制，并只解压必需运行时文件

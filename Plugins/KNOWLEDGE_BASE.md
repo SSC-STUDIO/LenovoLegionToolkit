@@ -7,11 +7,11 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
 | Item | Value |
 |------|--------|
 | Host app (vendored compile baseline) | Universal Device Toolkit **v5.0.2** (`Plugins/HostBaseline/host-release.json`) until a v6 ZIP exists |
-| Official store plugins | `custom-mouse` / `vive-tool` / `shell-integration` **2.0.0-preview.1** (preview catalog); shipped 1.x remains on `plugin-catalog` |
+| Official store plugins | `custom-mouse` / `vive-tool` / `shell-integration` **2.0.0** (stable catalog); shipped 1.x remains on `plugin-catalog` for v5.0.2 |
 | Tooling entry | `udt-plugin.cmd` (`llt-plugin.cmd` alias) |
 | Min host field | `plugin.manifest.json` → `minHostVersion` = **6.0.0** for 2.x; runtime `plugin.json` keeps ABI property name `MinLltVersion` with the same value |
 | Version SoT | each `plugin.manifest.json` → `version` |
-| Catalogs | stable `plugin-catalog` (v5.0.2 / 1.x) · preview `plugin-catalog-preview` (v6.0.0-preview.N / 2.x) |
+| Catalogs | stable `plugin-catalog` (v5.0.2 / 1.x and v6.0.0 / 2.0.0) · preview `plugin-catalog-preview` (prerelease 2.x) |
 
 ---
 

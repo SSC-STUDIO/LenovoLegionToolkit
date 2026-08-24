@@ -162,7 +162,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。6.x 起包管理器断代：winget 改用 `SSC-STUDIO.UniversalDeviceToolkit`，Scoop 改用 `universaldevicetoolkit`；旧包 ID 不支持原地升级。
 
 > [!NOTE]
-> **当前稳定版：v5.0.2。** 主程序使用 `vX.Y.Z` 标签发布；官方 1.x 插件包仍在独立的、非 Latest 的 rolling [`plugin-catalog` Release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) 中。源码已进入 **6.0** 列车（`Directory.Build.props` 为 `6.0.0`）；首个预览标签为 `v6.0.0-preview.1`，该构建读取 [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview) 上的 2.x 包。不要把 2.x ZIP 上传到 `plugin-catalog`。
+> **当前稳定版：v6.0.0。** 主程序使用 `vX.Y.Z` 标签发布；官方 1.x 插件包仍在独立的、非 Latest 的 rolling [`plugin-catalog` Release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) 中，供 v5.0.2 宿主使用。稳定 **v6.0.0**（InformationalVersion 不含连字符）从同一目录读取官方 **2.0.0** 包。预览标签（`v6.0.0-preview.N`）仍读取 [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview)。不要把预览插件 ZIP 上传到 `plugin-catalog`。
 > **winget 说明：** 6.x 包 ID `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但尚未合入 microsoft/winget-pkgs，因此目前 `winget install` 会失败；旧的 Lenovo Legion Toolkit 包同样不支持原地升级。请先使用 Releases 或 Scoop。
 
 - **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。**Full** 是完整离线 NSIS 安装器（内嵌 Electron 与自包含 .NET Host）。**Online** 是约 15MB 以内的分阶安装器，安装时再下载同一套运行时；语言包和机型包仍可在应用内目录安装。请始终安装最新版本；设置、插件与数据会自动迁移，包管理器安装需改用 6.x 新 ID。
@@ -628,7 +628,7 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件可在插件扩展页面中安装、更新、配置和卸载。
 
-官方插件在本仓库的 [Plugins/Official](Plugins/Official) 维护。v5.0.2 通过主仓库 rolling `plugin-catalog` 的 `store.json` 分发 1.x；v6.0 预览构建读取 `plugin-catalog-preview` 上的 2.x。
+官方插件在本仓库的 [Plugins/Official](Plugins/Official) 维护。v5.0.2 通过主仓库 rolling `plugin-catalog` 的 `store.json` 分发 1.x；稳定 v6.0.0 从同一目录读取 2.0.0；预览构建仍读取 `plugin-catalog-preview`。
 
 ### 核心特性
 

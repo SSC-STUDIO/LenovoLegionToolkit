@@ -12,7 +12,7 @@ namespace UniversalDeviceToolkit.Plugins.ViveTool;
 [Plugin(
     id: "vive-tool",
     name: "ViVeTool",
-    version: "2.0.0-preview.1",
+    version: "2.0.0",
     description: "Manage Windows feature flags using ViVeTool",
     author: "SSC-STUDIO",
     MinimumHostVersion = "6.0.0",

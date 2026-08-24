@@ -23,7 +23,7 @@ Use this when you are developing a plugin locally, in a fork, or for an early PR
 
 `udt-plugin.cmd` is the canonical entry (`llt-plugin.cmd` is a compatibility alias). It publishes the tooling CLI into `Plugins/.build/tooling` and reuses that executable. This avoids repeated `dotnet run` builds and the file-lock failures that can happen when multiple validation commands start together.
 
-**Published host baseline:** Universal Device Toolkit **v5.0.2** (`Plugins/HostBaseline/host-release.json`) until a v6 ZIP exists. Official 2.x plugins declare `minHostVersion: "6.0.0"` and publish to `plugin-catalog-preview`. Shipped 1.x packages remain on `plugin-catalog` for v5.0.2.
+**Published host baseline:** Universal Device Toolkit **v5.0.2** (`Plugins/HostBaseline/host-release.json`) until a v6 ZIP exists. Official 2.x plugins declare `minHostVersion: "6.0.0"` and publish stable **2.0.0** packages to `plugin-catalog`. Shipped 1.x packages remain on `plugin-catalog` for v5.0.2. Prerelease 2.x packages still publish to `plugin-catalog-preview`.
 
 ### Validation Profile
 
@@ -123,8 +123,8 @@ Version numbers are easy to drift because they appear in several files. Use one 
 
 | Layer | Source of truth | Example |
 |---|---|---|
-| Host app (UDT) | `Directory.Build.props` (`MajorVersion` / `MinorVersion` / `PatchVersion`) | `6.0.0` (shipped stable remains `5.0.2`) |
-| Each plugin | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | `custom-mouse` → `2.0.0-preview.1` |
+| Host app (UDT) | `Directory.Build.props` (`MajorVersion` / `MinorVersion` / `PatchVersion`) | `6.0.0` |
+| Each plugin | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | `custom-mouse` → `2.0.0` |
 | Plugin store catalog | Generated `Plugins/.build/catalog/store.json` (`--catalog-channel stable\|preview`) | per-plugin `version` + `fileSize` |
 
 Do **not** treat `UniversalDeviceToolkit/Directory.Build.props` as a plugin version. Each plugin keeps its own SemVer.
@@ -132,13 +132,13 @@ Do **not** treat `UniversalDeviceToolkit/Directory.Build.props` as a plugin vers
 ### Bump a plugin (recommended)
 
 ```powershell
-.\udt-plugin.cmd bump-version --plugin custom-mouse --version 2.0.0-preview.1
+.\udt-plugin.cmd bump-version --plugin custom-mouse --version 2.0.0
 .\udt-plugin.cmd validate --plugin custom-mouse --profile official-candidate
 .\udt-plugin.cmd package --plugin custom-mouse --build-first --output-dir Plugins\.build\release-assets
-.\udt-plugin.cmd generate-store --plugin-ids custom-mouse --asset-root Plugins\.build\release-assets --catalog-channel preview --merge-existing --require-assets
+.\udt-plugin.cmd generate-store --plugin-ids custom-mouse --asset-root Plugins\.build\release-assets --catalog-channel stable --merge-existing --require-assets
 ```
 
-`--part patch|minor|major` still yields a numeric `x.y.z` (prerelease suffix is dropped). Preview labels use explicit `--version`. `FileVersion` / `AssemblyVersion` stay numeric (`2.0.0`) when `Version` is `2.0.0-preview.1`. Publish 2.x with `plugins-release.yml` `catalog_channel=preview` only.
+`--part patch|minor|major` still yields a numeric `x.y.z` (prerelease suffix is dropped). Preview labels use explicit `--version`. `FileVersion` / `AssemblyVersion` stay numeric (`2.0.0`) when `Version` is `2.0.0-preview.1`. Publish stable 2.x with `plugins-release.yml` `catalog_channel=stable`; keep prerelease 2.x on `catalog_channel=preview` only.
 
 `bump-version` updates `plugin.manifest.json`, then `sync-version` propagates to:
 

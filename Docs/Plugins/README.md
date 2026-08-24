@@ -1,7 +1,7 @@
 # Documentation index
 
 Current author-facing docs for **Universal Device Toolkit Plugins**.
-Published host baseline: **Universal Device Toolkit v5.0.2** (see `../../Plugins/HostBaseline/host-release.json`) until a v6 ZIP exists. Official 2.x plugins require host **v6.0.0** and publish to `plugin-catalog-preview`.
+Published host baseline: **Universal Device Toolkit v5.0.2** (see `../../Plugins/HostBaseline/host-release.json`) until a v6 ZIP exists. Official 2.x plugins require host **v6.0.0** and publish stable **2.0.0** packages to `plugin-catalog`.
 CLI entry: **`../../Plugins/udt-plugin.cmd`** (`llt-plugin.cmd` is a compatibility alias).
 
 ## Start here

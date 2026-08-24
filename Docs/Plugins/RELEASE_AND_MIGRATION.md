@@ -2,7 +2,7 @@
 
 This document is the operational entry point for the plugin monorepo. The source code, SDK, tooling, tests, and release workflow now live in the main `UniversalDeviceToolkit` repository.
 
-As of 2026-08-05, the migration is live: the main repository's `v5.0.2` release is the application Latest release, `plugin-catalog` is the managed catalog release, and `UniversalDeviceToolkit-Plugins` is archived. The remaining checklist items below are validation gates, not instructions to recreate the retired repository layout.
+As of 2026-08-24, the application Latest release is **v6.0.0**. `plugin-catalog` remains the managed catalog release, and `UniversalDeviceToolkit-Plugins` is archived. The remaining checklist items below are validation gates, not instructions to recreate the retired repository layout.
 
 ## Migration Provenance
 
@@ -33,11 +33,13 @@ The migration boundary is recorded against these immutable source refs:
 
 The Releases page has three deliberately separate roles:
 
-1. Versioned application releases use tags such as `v5.0.2` or `v6.0.0-preview.1` and contain host installers, application archives, and checksums. A hyphen in the tag (`Release.yml`) marks a GitHub prerelease and skips winget.
-2. The fixed `plugin-catalog` release is a managed rolling release with `latest=false` and **must not** be a GitHub prerelease. It contains only stable 1.x packages for **v5.0.2** clients:
+1. Versioned application releases use tags such as `v5.0.2` or `v6.0.0` and contain host installers, application archives, and checksums. A hyphen in the tag (`Release.yml`) marks a GitHub prerelease and skips winget.
+2. The fixed `plugin-catalog` release is a managed rolling release with `latest=false` and **must not** be a GitHub prerelease. It contains stable packages:
+   - 1.x for **v5.0.2** clients;
+   - official **2.0.0** (`minHostVersion` 6.0.0) for **v6.0.0** clients;
    - `store.json`, the catalog asset consumed by stable hosts;
    - one package ZIP per published plugin, named `<plugin-id>-v<version>.zip`.
-3. The fixed `plugin-catalog-preview` release is a managed rolling **prerelease** (`prerelease=true`, `latest=false`) for **v6.0.0-preview.N** hosts. Official 2.x packages (`2.0.0-preview.1`, `minHostVersion` 6.0.0) publish here only. Do not upload 2.x to `plugin-catalog`.
+3. The fixed `plugin-catalog-preview` release is a managed rolling **prerelease** (`prerelease=true`, `latest=false`) for **v6.0.0-preview.N** hosts. Prerelease 2.x packages (`2.0.0-preview.N`) publish here only. Do not upload prerelease plugin ZIPs to `plugin-catalog`.
 
 Stable hosts read:
 
@@ -53,7 +55,7 @@ Dispatch `plugins-release.yml` with `catalog_channel=stable` or `catalog_channel
 
 Do not publish plugin packages as separate release tags, upload generated logs or build folders, or mark either catalog tag as the latest application release. The release workflow uploads package ZIPs first, publishes `store.json` last, and removes stale versions for the selected plugin. If catalog publication fails, it restores the previous catalog before failing the job.
 
-Vendored plugin compile baseline (`Plugins/HostBaseline/host-release.json`) stays **5.0.2** until the first `v6.0.0-preview.1` application ZIP exists; then refresh the baseline in a follow-up change. Runtime `minHostVersion` 6.0.0 already blocks 5.x Hosts from loading 2.x plugins.
+Vendored plugin compile baseline (`Plugins/HostBaseline/host-release.json`) stays **5.0.2** until the first `v6.0.0` application ZIP exists; then refresh the baseline in a follow-up change. Runtime `minHostVersion` 6.0.0 already blocks 5.x Hosts from loading 2.x plugins.
 
 ## Publish Sequence
 

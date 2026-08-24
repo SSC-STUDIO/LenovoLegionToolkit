@@ -8,12 +8,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
-## [6.0.0] - 2026-08-21
+## [6.0.0] - 2026-08-24
 
 ### Added / 新增
 - **Complete Electron Desktop Modernization**: Brand-new high-performance UI shell built with React 19, Vite, Ant Design 6, Fluent UI tokens, and ECharts.
 - **Interface Font Customization (界面字体自选)**: 6 curated typography presets (System Default, Microsoft YaHei UI, Segoe UI Variable, Noto Sans SC, HarmonyOS Sans, Geek Monospace) with zero FOUT and live hot-switching across 25 locales.
-- **Deep Engine Trimming & Extreme Low Memory**: Reduced Chromium footprint to < 95 MB active and ~38 MB when minimized to system tray with 0 MB DOM residency; instant cold start on par with VS Code.
+- **Deep Engine Trimming & Extreme Low Memory**: Field-measured working set is **30–300 MB peak** depending on pages and plugins; tray idle stays in the **30–60 MB** range after the main renderer is destroyed (0 MB DOM residency). Instant cold start on par with VS Code.
 - **Multi-Brand Universal Hardware Platform**: Full sensor monitoring and feature controls for Lenovo Legion/Xiaoxin, ASUS ROG/TUF, MSI, Tongfang/Mechrevo, and Clevo chassis.
 - **Advanced Utilities Matrix**: Integrated system cache cleaning (DirectX/Vulkan shaders, chat caches, dev tool temps), battery health analytics & discharge telemetry, and automated macro workflows.
 
@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Linux Host now starts on Linux and returns live sysfs/proc sensors instead of a stub.
 - Windows installer can omit optional modules; omitted pages stay hidden in the shell.
 - Unified log directory `%LOCALAPPDATA%\UniversalDeviceToolkit\logs` (`main.log`, `renderer.log`, `host.log`); Host forwards Serilog lines as `host.log` events and wires `SharedLog` to Serilog. `UDT_LOG_PATH` is the current env alias; `LLT_LOG_PATH` remains a compatibility alias.
-- Dual plugin catalogs: shipped **v5.0.2** still reads rolling `plugin-catalog` (1.x). **v6.0.0-preview.N** hosts (InformationalVersion contains `-`) read `plugin-catalog-preview`. `IncludePrereleaseUpdates` stays an application-update switch and does not change the plugin catalog.
+- Dual plugin catalogs: **v5.0.2** still reads rolling `plugin-catalog` (1.x). Stable **v6.0.0** hosts (no hyphen in InformationalVersion) read the same `plugin-catalog` for official **2.0.0** packages. Preview hosts (`v6.0.0-preview.N`, InformationalVersion contains `-`) still read `plugin-catalog-preview`. `IncludePrereleaseUpdates` stays an application-update switch and does not change the plugin catalog.
 
 ### Changed
 
@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Host sensor producers pause while Electron reports no visible UI surface (`app.setUiActive`), so LibreHardwareMonitor / vendor WMI are not polled into a tray-only session.
 - Electron disables unused Chromium features (translate, media router, autofill, spare renderer, breakpad), turns off spellcheck, loads Ant Design locales on demand, and splits vendor/icon/chart chunks from the actual module graph instead of barrel package entries.
 - Electron release packaging now keeps renderer-only packages out of production dependencies, limits application Chromium locales to the supported 24-locale set, removes shipping Host PDB files, and audits `app.asar`, locales, Host, unpacked directories, and final artifacts. Windows x64 unsigned local output: `app.asar` 10.08 MiB, Full Setup 181.99 MiB, Full ZIP 186.99 MiB, Online Setup 0.61 MiB, and Online ZIP 184.39 MiB (previous Full Setup/ZIP: 214.24/245.76 MiB).
-- Source version train is **6.0.0** (`Directory.Build.props`). First ship tag is `v6.0.0-preview.1` (hyphen = GitHub prerelease; winget skipped). Official plugins are **2.0.0-preview.1** with `minHostVersion` **6.0.0**. Vendored plugin host baseline stays **5.0.2** until a v6 ZIP exists.
+- Source version train is **6.0.0** (`Directory.Build.props`). Official ship tag is `v6.0.0` (no hyphen = GitHub latest, not prerelease). Official plugins are **2.0.0** with `minHostVersion` **6.0.0**. Vendored plugin host baseline stays **5.0.2** until this release's v6 ZIP exists, then refresh in a follow-up.
 - Host tests are split into `Tests.Contracts` (Guard/Security), `Tests` (parallel unit), `Tests.Stateful` (collection-bound), and existing `Fast.Tests`. Plugin tests run in `plugins-validate.yml`; Electron `npm test` runs with typecheck.
 - `PluginManager.SynchronizeStateStore` persists Windows plugin state through `ApplicationSettings.SynchronizeStore` instead of recursing into itself.
 - `plugins.list` always includes `directory` and `webPage` for installed plugins so the Electron shell can load local plugin pages. Settings opens the web page when `webPage` is present.

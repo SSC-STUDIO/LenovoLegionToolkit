@@ -1,6 +1,6 @@
 # English promotion copy
 
-Replace version numbers before posting. Write like a forum reply, not a press release. Current stable install: **v5.0.2** from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) or Scoop. winget `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not published yet.
+Replace version numbers before posting. Write like a forum reply, not a press release. Current stable install: **v6.0.0** from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) or Scoop. winget `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not published yet.
 
 ---
 

@@ -225,7 +225,7 @@ Plugin Structure (runtime, in host plugins directory):
 +-- [resources]             # Plugin resources
 ```
 
-Official plugins live under `Plugins/Official/` in this repository. They are built by the monorepo plugin workflows. Stable 1.x packages publish as assets of the rolling `plugin-catalog` release; 6.0 preview 2.x packages publish to `plugin-catalog-preview`. The host loads packaged output from the catalog that matches its version label.
+Official plugins live under `Plugins/Official/` in this repository. They are built by the monorepo plugin workflows. Stable 1.x and official 2.0.0 packages publish as assets of the rolling `plugin-catalog` release; prerelease 2.x packages publish to `plugin-catalog-preview`. The host loads packaged output from the catalog that matches its version label.
 
 ### Plugin Types
 

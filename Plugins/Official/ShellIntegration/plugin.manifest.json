@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "shell-integration",
   "name": "Nilesoft Shell Manager",
-  "version": "2.0.0-preview.1",
+  "version": "2.0.0",
   "minHostVersion": "6.0.0",
   "author": "SSC-STUDIO",
   "isSystemPlugin": true,
@@ -23,7 +23,7 @@
     ]
   },
   "package": {
-    "assetName": "shell-integration-v2.0.0-preview.1.zip",
+    "assetName": "shell-integration-v2.0.0.zip",
     "requiredFiles": [
       "UniversalDeviceToolkit.Plugins.ShellIntegration.dll",
       "UniversalDeviceToolkit.Plugins.Shared.Core.dll",

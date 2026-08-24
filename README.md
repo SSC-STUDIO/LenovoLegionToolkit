@@ -168,7 +168,7 @@ Please be patient and read through this readme carefully - it contains important
 Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. 6.x is a package-manager breaking change: winget moves to `SSC-STUDIO.UniversalDeviceToolkit` and Scoop to `universaldevicetoolkit`; the legacy package IDs are not upgraded in place.
 
 > [!NOTE]
-> **Current stable release: v5.0.2.** Application releases use the normal `vX.Y.Z` tags. Official 1.x plugin packages stay in the non-Latest rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog). Source is now the **6.0** train (`Directory.Build.props` `6.0.0`); the first preview tag is `v6.0.0-preview.1`, which reads [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview) for 2.x packages. Do not upload 2.x ZIPs to `plugin-catalog`.
+> **Current stable release: v6.0.0.** Application releases use the normal `vX.Y.Z` tags. Official 1.x plugin packages stay in the non-Latest rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) for v5.0.2 hosts. Stable **v6.0.0** (no hyphen in InformationalVersion) reads the same catalog for official **2.0.0** packages. Preview tags (`v6.0.0-preview.N`) still read [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview). Do not upload prerelease plugin ZIPs to `plugin-catalog`.
 > **Note on winget:** the 6.x package id `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships, and the legacy Lenovo Legion Toolkit package does not upgrade in place. Use Releases or Scoop in the meantime.
 
 - **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). **Full** is a complete offline NSIS installer (Electron + self-contained .NET Host). **Online** is a small stub (about 15MB or less) that downloads the same runtime during setup; language and device packs still install from the in-app catalog. Always install the newest version from the latest release page; settings, plugins, and data migrate automatically, while package-manager installs must switch to the new 6.x IDs.
@@ -653,7 +653,7 @@ Official plugins for UDT live in this repository under [`Plugins/Official`](Plug
 
 ### Available Plugins
 
-Official 1.x plugins are ZIP assets of the rolling [`plugin-catalog` release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) (v5.0.2 hosts). 6.0 preview hosts read [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview) for 2.x packages. The catalogs currently include:
+Official plugins are ZIP assets of rolling catalog releases. **v5.0.2** hosts read [`plugin-catalog`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) (1.x). Stable **v6.0.0** hosts read the same catalog for **2.0.0** packages. Preview hosts still read [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview). The catalogs currently include:
 
 - **Custom Mouse**: Cursor themes, pointer settings, and Windows optimization actions
 - **Network Acceleration**: Built into **System Optimization → Network & acceleration** (plugin removed in v5.0.0)

@@ -16,7 +16,7 @@ namespace UniversalDeviceToolkit.Plugins.ShellIntegration;
 [Plugin(
     id: "shell-integration",
     name: "Nilesoft Shell Manager",
-    version: "2.0.0-preview.1",
+    version: "2.0.0",
     description: "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
     author: "SSC-STUDIO",
     MinimumHostVersion = "6.0.0",

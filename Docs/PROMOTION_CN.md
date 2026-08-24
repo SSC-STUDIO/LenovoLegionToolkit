@@ -1,6 +1,6 @@
 # 中文发布文案
 
-发布前把版本号换成实际值。像论坛回帖，别像通稿。当前稳定安装包：**v5.0.2**，从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 或 Scoop 装。winget 的 `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但还没上架。
+发布前把版本号换成实际值。像论坛回帖，别像通稿。当前稳定安装包：**v6.0.0**，从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 或 Scoop 装。winget 的 `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但还没上架。
 
 ---
 

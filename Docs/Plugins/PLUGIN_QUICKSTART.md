@@ -2,7 +2,7 @@
 
 Shortest path for creating a plugin in this repository.
 
-**Minimum supported host for 2.x official plugins:** Universal Device Toolkit **v6.0.0+** (preview tags `v6.0.0-preview.N`). Shipped stable host **v5.0.2** still loads 1.x from `plugin-catalog`. Vendored compile baseline **v5.0.2** until a v6 ZIP exists.<br>
+**Minimum supported host for 2.x official plugins:** Universal Device Toolkit **v6.0.0+**. Shipped **v5.0.2** still loads 1.x from `plugin-catalog`. Vendored compile baseline **v5.0.2** until a v6 ZIP exists.<br>
 **CLI:** `udt-plugin.cmd` (`udt-plugin.cmd` is a compatibility alias)
 
 ## 1. Check the environment

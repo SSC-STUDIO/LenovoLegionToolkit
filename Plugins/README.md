@@ -28,7 +28,7 @@
 <p align="center">
   <b>Official plugin ecosystem for <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit">Universal Device Toolkit</a></b><br/>
   <i>Free. Open-source. No ads. No telemetry. Just better Windows.</i><br/>
-  <i>Requires host <b>v6.0.0+</b> for 2.x preview packages · shipped stable host is still <b>v5.0.2</b> · .NET 10 · Electron web UI</i>
+  <i>Requires host <b>v6.0.0+</b> for 2.x packages · v5.0.2 still loads 1.x · .NET 10 · Electron web UI</i>
 </p>
 
 <p align="center">
@@ -41,17 +41,17 @@
 
 | Status | Plugin | Version | Description | Install ID |
 |--------|--------|---------|-------------|------------|
-| Active | **Cursor & Pointer** | v2.0.0-preview.1 | Theme-aware cursor styles, Windows pointer speed, button swapping, safe cursor backup/restore | `custom-mouse` |
-| Active | **ViVeTool** | v2.0.0-preview.1 | Browse and toggle hidden Windows feature flags from a searchable GUI | `vive-tool` |
-| Active | **Nilesoft Shell Manager** | v2.0.0-preview.1 | Manage Nilesoft Shell registration and UDT-managed config (requires Nilesoft Shell) | `shell-integration` |
+| Active | **Cursor & Pointer** | v2.0.0 | Theme-aware cursor styles, Windows pointer speed, button swapping, safe cursor backup/restore | `custom-mouse` |
+| Active | **ViVeTool** | v2.0.0 | Browse and toggle hidden Windows feature flags from a searchable GUI | `vive-tool` |
+| Active | **Nilesoft Shell Manager** | v2.0.0 | Manage Nilesoft Shell registration and UDT-managed config (requires Nilesoft Shell) | `shell-integration` |
 
-> Catalog versions match `Plugins/Official/*/plugin.manifest.json` (source of truth). **v5.0.2** hosts keep reading the rolling `plugin-catalog` release (shipped 1.x ZIPs). **v6.0.0-preview.N** hosts read `plugin-catalog-preview`. Generate `Plugins/.build/catalog/store.json` with `--catalog-channel stable|preview`; never merge 2.x into the stable store. Vendored compile baseline stays **5.0.2** (`Plugins/HostBaseline/host-release.json`) until a v6 application ZIP exists.
+> Catalog versions match `Plugins/Official/*/plugin.manifest.json` (source of truth). **v5.0.2** hosts keep reading the rolling `plugin-catalog` release (shipped 1.x ZIPs). Stable **v6.0.0** hosts read the same catalog for official **2.0.0** packages. Preview hosts (`v6.0.0-preview.N`) still read `plugin-catalog-preview`. Generate `Plugins/.build/catalog/store.json` with `--catalog-channel stable|preview`; do not upload prerelease plugin ZIPs to `plugin-catalog`. Vendored compile baseline stays **5.0.2** (`Plugins/HostBaseline/host-release.json`) until a v6 application ZIP exists.
 
 ---
 
 ## Quick Install
 
-1. Open **Universal Device Toolkit** (v6.0.0-preview or later for these 2.x packages; v5.0.2 still installs 1.x from `plugin-catalog`)
+1. Open **Universal Device Toolkit** (v6.0.0 or later for these 2.x packages; v5.0.2 still installs 1.x from `plugin-catalog`)
 2. Go to **Plugins → Browse Store**
 3. Click **Install** on a plugin
 4. Restart the app if prompted
@@ -171,10 +171,10 @@ UniversalDeviceToolkit/
 
 | Layer | Source of truth | Current baseline |
 |-------|-----------------|------------------|
-| Host app (vendored compile baseline) | `Plugins/HostBaseline/host-release.json` | **5.0.2** (refresh after the first `v6.0.0-preview.1` ZIP) |
-| Each plugin SemVer | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | **2.0.0-preview.1** |
+| Host app (vendored compile baseline) | `Plugins/HostBaseline/host-release.json` | **5.0.2** (refresh after the first `v6.0.0` ZIP) |
+| Each plugin SemVer | `Plugins/Official/<Name>/plugin.manifest.json` → `version` | **2.0.0** |
 | Min host | `minHostVersion` in manifest; runtime `plugin.json` still exposes ABI field `MinLltVersion` | **6.0.0** |
-| Store catalog | Generated `Plugins/.build/catalog/store.json` | `plugin-catalog` (stable 1.x) or `plugin-catalog-preview` (6.0 preview) |
+| Store catalog | Generated `Plugins/.build/catalog/store.json` | `plugin-catalog` (stable 1.x + 2.0.0) or `plugin-catalog-preview` (prerelease 2.x) |
 
 Do not hand-edit generated `Plugins/.build/catalog/store.json` for routine authoring. Prefer:
 
