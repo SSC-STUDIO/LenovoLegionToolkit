@@ -82,7 +82,7 @@ UDT dispels the "Electron is bloated" stereotype through disciplined engineering
 | **Background Services** | 0 | 3~5 persistent services | **0 (Zero Services)** | Never burdens background gaming or startup |
 | **Cold Startup Ready Latency** | 1.8s ~ 2.5s | 4.0s ~ 8.0s+ | **≤ 400ms (Median)** | **VS Code-level instant launch** |
 | **Tray Idle Memory Footprint** | 150MB ~ 250MB | 300MB ~ 600MB+ | **30MB ~ 60MB (DOM Destroyed)** | **Far lower than WPF (~70% reduction)** |
-| **Active Peak Working Set** | 180MB ~ 300MB | 500MB ~ 1.2GB | **80MB ~ 120MB (Tuned Heap Limit)** | **Strictly bounded memory ceiling** |
+| **Active Peak Working Set** | 180MB ~ 300MB | 500MB ~ 1.2GB | **30MB ~ 300MB (field measured)** | **Varies with pages and plugins; still well below Vantage** |
 | **UI Scaling & High-DPI** | Blurry text / layout clipping | Poor | **Vector Pixel-Perfect (80%~150%)** | Crisp on OLED, 2K & 4K displays |
 | **Dynamic i18n Switching** | Requires app restart | Requires reload | **Instant live hot-switch (78+ locales)** | Seamless multi-language experience |
 
