@@ -36,6 +36,8 @@ import { QUICK_ACTION_ICON, triggerIcon } from '../components/automation/trigger
 import { stepIcon } from '../components/automation/stepIcons'
 import AutomationModal from '../components/automation/AutomationModal'
 import AutomationPresetModal from '../components/automation/AutomationPresetModal'
+import CapabilityUnavailable from '../components/utils/CapabilityUnavailable'
+import { useHostCapabilitiesStore } from '../stores/hostCapabilitiesStore'
 import TriggerPickerModal from '../components/automation/TriggerPickerModal'
 import TriggerConfigModal from '../components/automation/TriggerConfigModal'
 import type { AutomationTrigger } from '../components/automation/triggers'
@@ -199,6 +201,10 @@ function AutomationSkeleton(): React.JSX.Element {
 
 export default function AutomationPage(): React.JSX.Element {
   const { t } = useTranslation()
+  const automationAvailable = useHostCapabilitiesStore((s) => s.capabilities?.capabilities.automation)
+  if (automationAvailable === false) {
+    return <CapabilityUnavailable title={t('nav.automation')} />
+  }
   // Field-level selectors keep unrelated store churn from re-rendering the page.
   const state = useAutomationStore((s) => s.state)
   const steps = useAutomationStore((s) => s.steps)

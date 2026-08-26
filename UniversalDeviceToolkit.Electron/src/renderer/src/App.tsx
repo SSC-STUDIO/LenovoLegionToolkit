@@ -2,6 +2,7 @@ import { Suspense, lazy, type ReactNode } from 'react'
 import { Spin } from 'antd'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { isInstallerOptionalFeatureEnabled, type InstallerOptionalFeature } from '../../shared/installer-selection'
+import { CapabilityGate } from './layout/CapabilityRedirect'
 import AppLayout from './layout/AppLayout'
 
 const DashboardPage = lazy(() => import('./pages/DashboardParityPage'))
@@ -38,20 +39,22 @@ function InstalledFeatureRoute({
 export default function App(): React.JSX.Element {
   return (
     <Suspense fallback={<PageFallback />}>
-      <Routes>
-        <Route element={<AppLayout />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/automation" element={<InstalledFeatureRoute feature="automation"><AutomationPage /></InstalledFeatureRoute>} />
-          <Route path="/keyboard" element={<InstalledFeatureRoute feature="keyboard"><KeyboardBacklightPage /></InstalledFeatureRoute>} />
-          <Route path="/macro" element={<InstalledFeatureRoute feature="macro"><MacroPage /></InstalledFeatureRoute>} />
-          <Route path="/optimization" element={<InstalledFeatureRoute feature="windowsOptimization"><WindowsOptimizationPage /></InstalledFeatureRoute>} />
-          <Route path="/plugins" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginExtensionsPage /></InstalledFeatureRoute>} />
-          <Route path="/plugins/:pluginId" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginPageView /></InstalledFeatureRoute>} />
-          <Route path="/about" element={<AboutPage />} />
-        </Route>
-      </Routes>
+      <CapabilityGate>
+        <Routes>
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/automation" element={<InstalledFeatureRoute feature="automation"><AutomationPage /></InstalledFeatureRoute>} />
+            <Route path="/keyboard" element={<InstalledFeatureRoute feature="keyboard"><KeyboardBacklightPage /></InstalledFeatureRoute>} />
+            <Route path="/macro" element={<InstalledFeatureRoute feature="macro"><MacroPage /></InstalledFeatureRoute>} />
+            <Route path="/optimization" element={<InstalledFeatureRoute feature="windowsOptimization"><WindowsOptimizationPage /></InstalledFeatureRoute>} />
+            <Route path="/plugins" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginExtensionsPage /></InstalledFeatureRoute>} />
+            <Route path="/plugins/:pluginId" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginPageView /></InstalledFeatureRoute>} />
+            <Route path="/about" element={<AboutPage />} />
+          </Route>
+        </Routes>
+      </CapabilityGate>
     </Suspense>
   )
 }

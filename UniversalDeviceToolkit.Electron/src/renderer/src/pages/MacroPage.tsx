@@ -18,6 +18,8 @@ import type { MacroEvent, MacroRecordingMode, MacroSlot } from '../api/macro'
 import { useMacroStore } from '../stores/macroStore'
 import { useMacroRecorder } from '../hooks/useMacroRecorder'
 import MacroRecordingModal from '../components/macro/MacroRecordingModal'
+import CapabilityUnavailable from '../components/utils/CapabilityUnavailable'
+import { useHostCapabilitiesStore } from '../stores/hostCapabilitiesStore'
 import {
   appendCapturedEvents,
   createMacroEditorDraft,
@@ -174,6 +176,10 @@ function eventIcon(ev: MacroEvent): React.JSX.Element | null {
 
 export default function MacroPage(): React.JSX.Element {
   const { t } = useTranslation()
+  const macroAvailable = useHostCapabilitiesStore((s) => s.capabilities?.capabilities.macro)
+  if (macroAvailable === false) {
+    return <CapabilityUnavailable title={t('nav.macro')} />
+  }
   const { state, loaded, loading: macroLoading, load, setEnabled, play, saveSequence, clearSequence } = useMacroStore()
   const tx = useMemo<MacroTexts>(
     () => ({

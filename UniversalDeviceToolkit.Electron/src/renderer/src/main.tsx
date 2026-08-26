@@ -13,6 +13,7 @@ import {
   registerHostCultureRetry,
   syncCultureToHost
 } from './api/localization'
+import { initHostCapabilitiesSync } from './stores/hostCapabilitiesStore'
 import { initSettingsSync, useSettingsStore } from './stores/settingsStore'
 import { useOptimizationStore } from './stores/optimizationStore'
 import { useThemeStore } from './stores/themeStore'
@@ -115,6 +116,8 @@ function Root(): React.JSX.Element {
   }, [])
 
   useEffect(() => initSettingsSync(), [])
+
+  useEffect(() => initHostCapabilitiesSync(), [])
 
   useEffect(() => {
     const offHostReady = registerHostCultureRetry(() => i18n.resolvedLanguage ?? i18n.language)

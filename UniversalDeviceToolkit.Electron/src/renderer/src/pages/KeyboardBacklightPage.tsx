@@ -41,6 +41,8 @@ import type {
 import { useKeyboardStore } from '../stores/keyboardStore'
 import { useSoftwareStore } from '../stores/softwareStore'
 import { settingsApi } from '../api/settings'
+import CapabilityUnavailable from '../components/utils/CapabilityUnavailable'
+import { useHostCapabilitiesStore } from '../stores/hostCapabilitiesStore'
 import InfoBar from '../components/InfoBar'
 import { normalizeKeyboardLayout } from '../components/keyboard/spectrum/keyboardLayouts'
 import { normalizeSpectrumLayout } from '../components/keyboard/spectrum/deviceLayouts'
@@ -788,11 +790,16 @@ function LoadingSkeleton(): React.JSX.Element {
 
 export default function KeyboardBacklightPage(): React.JSX.Element {
   const { t } = useTranslation()
+  const keyboardAvailable = useHostCapabilitiesStore((s) => s.capabilities?.capabilities.keyboard)
   const { mode, loading, error, load, simulated } = useKeyboardStore()
 
   useEffect(() => {
     void load()
   }, [load])
+
+  if (keyboardAvailable === false) {
+    return <CapabilityUnavailable title={t('nav.keyboard')} />
+  }
 
   if (error) {
     return (

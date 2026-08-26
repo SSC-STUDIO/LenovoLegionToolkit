@@ -29,6 +29,8 @@ import UtilsModalHost from '../components/utils/UtilsModalHost'
 import UnsupportedDeviceGate from '../components/utils/UnsupportedDeviceGate'
 import { openStatusModal } from '../components/utils/StatusModal'
 import { on } from '../api/bridge'
+import type { HostCapabilityMap } from '../api/hostCapabilities'
+import { useHostCapabilitiesStore } from '../stores/hostCapabilitiesStore'
 import { isInstallerOptionalFeatureEnabled } from '../../../shared/installer-selection'
 import { useSettingsStore } from '../stores/settingsStore'
 import WindowBackdropController from '../theme/WindowBackdropController'
@@ -66,14 +68,35 @@ interface NavItemDef {
   key: string
   icon: (filled: boolean) => React.ReactNode
   labelKey: string
+  capability?: keyof HostCapabilityMap
 }
 
 const MAIN_ITEMS: NavItemDef[] = [
   { key: '/dashboard', icon: (filled) => filled ? <Home24Filled /> : <Home24Regular />, labelKey: 'nav.dashboard' },
-  { key: '/keyboard', icon: (filled) => filled ? <Keyboard24Filled /> : <Keyboard24Regular />, labelKey: 'nav.keyboard' },
-  { key: '/automation', icon: (filled) => filled ? <Rocket24Filled /> : <Rocket24Regular />, labelKey: 'nav.automation' },
-  { key: '/macro', icon: (filled) => filled ? <ReceiptPlay24Filled /> : <ReceiptPlay24Regular />, labelKey: 'nav.macro' },
-  { key: '/optimization', icon: (filled) => filled ? <Gauge24Filled /> : <Gauge24Regular />, labelKey: 'nav.windowsOptimization' }
+  {
+    key: '/keyboard',
+    icon: (filled) => filled ? <Keyboard24Filled /> : <Keyboard24Regular />,
+    labelKey: 'nav.keyboard',
+    capability: 'keyboard'
+  },
+  {
+    key: '/automation',
+    icon: (filled) => filled ? <Rocket24Filled /> : <Rocket24Regular />,
+    labelKey: 'nav.automation',
+    capability: 'automation'
+  },
+  {
+    key: '/macro',
+    icon: (filled) => filled ? <ReceiptPlay24Filled /> : <ReceiptPlay24Regular />,
+    labelKey: 'nav.macro',
+    capability: 'macro'
+  },
+  {
+    key: '/optimization',
+    icon: (filled) => filled ? <Gauge24Filled /> : <Gauge24Regular />,
+    labelKey: 'nav.windowsOptimization',
+    capability: 'optimization'
+  }
 ]
 
 const FOOTER_ITEMS: NavItemDef[] = [
@@ -119,6 +142,7 @@ export default function AppLayout(): React.JSX.Element {
   const location = useLocation()
   const navigate = useNavigate()
   const scopes = useSettingsStore((s) => s.scopes)
+  const hostCapabilities = useHostCapabilitiesStore((s) => s.capabilities)
   const loadSettings = useSettingsStore((s) => s.load)
   const [collapsed, setCollapsed] = useState(() => {
     try {
@@ -176,11 +200,12 @@ export default function AppLayout(): React.JSX.Element {
       const pageTag: string = pageTagMap[item.key] ?? item.key.replace('/', '')
       if (pageTag === 'dashboard' || pageTag === 'settings') return true
       if (!isInstallerOptionalFeatureEnabled(installerFeatures, pageTag)) return false
+      if (item.capability != null && hostCapabilities?.capabilities[item.capability] === false) return false
       if (pageTag === 'pluginExtensions') return true
       if (navVisibility[pageTag] === false) return false
       return true
     },
-    [installerFeatures, navVisibility]
+    [hostCapabilities, installerFeatures, navVisibility]
   )
 
   const visibleMainItems = useMemo(() => MAIN_ITEMS.filter(isNavItemVisible), [isNavItemVisible])
