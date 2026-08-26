@@ -111,8 +111,8 @@ test('listHostCandidates includes portable net10.0 Debug output on Linux', () =>
     platform: 'linux',
     arch: 'x64'
   })
-  assert.ok(candidates.some((path) => path.includes(`/bin/Debug/${PORTABLE_HOST_TFM}/UniversalDeviceToolkit.Host`)))
-  assert.ok(candidates.some((path) => path.includes('/publish/linux-x64/UniversalDeviceToolkit.Host')))
+  assert.ok(candidates.some((path) => path.replaceAll('\\', '/').includes(`/bin/Debug/${PORTABLE_HOST_TFM}/UniversalDeviceToolkit.Host`)))
+  assert.ok(candidates.some((path) => path.replaceAll('\\', '/').includes('/publish/linux-x64/UniversalDeviceToolkit.Host')))
 })
 
 test('Electron main resolveHostPath looks at portable net10.0 on Linux', () => {

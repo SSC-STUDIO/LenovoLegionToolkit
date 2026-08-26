@@ -50,7 +50,10 @@ function runOsxScript(command: 'restart' | 'shut down'): Promise<PowerActionResu
   return runCommand('osascript', ['-e', `tell app "System Events" to ${command}`])
 }
 
-const UNSUPPORTED_PLATFORM: PowerActionResult = { ok: false, error: '平台不支持' }
+const UNSUPPORTED_PLATFORM: PowerActionResult = {
+  ok: false,
+  error: 'Power actions are not supported on this platform.'
+}
 
 export function restartSystem(): Promise<PowerActionResult> {
   if (process.platform === 'win32') return runWindowsShutdown(['/r', '/t', '0'])

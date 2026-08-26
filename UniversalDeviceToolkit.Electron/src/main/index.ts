@@ -1148,7 +1148,15 @@ app.whenReady().then(() => {
       return { ok: true, enabled: enabled === true }
     }
     const openAtLogin = enabled === true
-    applyAutorun(openAtLogin)
+    try {
+      applyAutorun(openAtLogin)
+    } catch (error) {
+      return {
+        ok: false,
+        enabled: false,
+        error: error instanceof Error ? error.message : String(error)
+      }
+    }
     return { ok: true, enabled: openAtLogin }
   })
 
