@@ -101,6 +101,7 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public Dictionary<string, bool> NavigationItemsVisibility { get; set; } = new()
         {
             { "keyboard", true },
+            { "mouse", true },
             { "battery", true },
             { "automation", true },
             { "macro", true },

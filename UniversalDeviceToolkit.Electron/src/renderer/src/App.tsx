@@ -9,6 +9,7 @@ const DashboardPage = lazy(() => import('./pages/DashboardParityPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
 const AutomationPage = lazy(() => import('./pages/AutomationPage'))
 const KeyboardBacklightPage = lazy(() => import('./pages/KeyboardBacklightPage'))
+const MousePage = lazy(() => import('./pages/MousePage'))
 const MacroPage = lazy(() => import('./pages/MacroPage'))
 const WindowsOptimizationPage = lazy(() => import('./pages/WindowsOptimizationPage'))
 const PluginExtensionsPage = lazy(() => import('./pages/PluginExtensionsPage'))
@@ -47,6 +48,7 @@ export default function App(): React.JSX.Element {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/automation" element={<InstalledFeatureRoute feature="automation"><AutomationPage /></InstalledFeatureRoute>} />
             <Route path="/keyboard" element={<InstalledFeatureRoute feature="keyboard"><KeyboardBacklightPage /></InstalledFeatureRoute>} />
+            <Route path="/mouse" element={<MousePage />} />
             <Route path="/macro" element={<InstalledFeatureRoute feature="macro"><MacroPage /></InstalledFeatureRoute>} />
             <Route path="/optimization" element={<InstalledFeatureRoute feature="windowsOptimization"><WindowsOptimizationPage /></InstalledFeatureRoute>} />
             <Route path="/plugins" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginExtensionsPage /></InstalledFeatureRoute>} />
