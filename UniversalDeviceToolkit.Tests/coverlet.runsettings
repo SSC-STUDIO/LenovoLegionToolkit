@@ -7,7 +7,6 @@
           <Format>cobertura,opencover</Format>
           <Include>
             [UniversalDeviceToolkit.Lib]*
-            [UniversalDeviceToolkit.Lib.Plugins]*
             [UniversalDeviceToolkit.Lib.Automation]*
             [UniversalDeviceToolkit.Lib.Macro]*
             [UniversalDeviceToolkit.WPF]*

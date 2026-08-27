@@ -3,10 +3,10 @@ import type { OptimizationActionDefinition } from '../api/optimization'
 /*
  * Port of WindowsOptimizationPage/OptimizationToggleActionHelper.cs.
  *
- * Some plugins expose a feature as a pair of toggle actions: "<base>.enable"
- * (turn the feature on) and "<base>.disable" (turn it off). The pair must be
- * presented as a single row — the side matching the current machine state —
- * otherwise the user would see two contradictory checkboxes.
+ * Some optimization features are exposed as a pair of toggle actions:
+ * "<base>.enable" (turn the feature on) and "<base>.disable" (turn it off).
+ * The pair must be presented as a single row — the side matching the current
+ * machine state — otherwise the user would see two contradictory checkboxes.
  */
 
 const ENABLE_SUFFIX = '.enable'

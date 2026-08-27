@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.3.11429.125
@@ -22,8 +22,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{07C2787E-EAC7-C090-1BA3-A61EC2A24D84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HardwareValidation", "Tools\HardwareValidation\HardwareValidation.csproj", "{0D13B5A7-7D2E-4ACF-8B6E-4FB2A4A5D88B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UniversalDeviceToolkit.Lib.Plugins", "UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj", "{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}"
 EndProject
@@ -51,19 +49,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Fast
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Platform.Windows.Core", "UniversalDeviceToolkit.Platform.Windows.Core\UniversalDeviceToolkit.Platform.Windows.Core.csproj", "{F6E9BD31-65D6-4651-B479-8B5710174EA1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{07D57EEB-2F50-60C4-C011-FE4FA775C9A8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SDK", "SDK", "{DDAC9925-4715-447A-9C5B-A0261497724B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Plugins.Abstractions", "Plugins\SDK\Abstractions\UniversalDeviceToolkit.Plugins.Abstractions.csproj", "{8D04F699-A4A3-48CE-8ACA-8E976423C003}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Host", "UniversalDeviceToolkit.Host\UniversalDeviceToolkit.Host.csproj", "{981B5719-455E-465E-97CE-6609034C41E9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Tests.Contracts", "UniversalDeviceToolkit.Tests.Contracts\UniversalDeviceToolkit.Tests.Contracts.csproj", "{6745FB1F-AFDC-4651-A802-85515C1F0C2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Tests.Stateful", "UniversalDeviceToolkit.Tests.Stateful\UniversalDeviceToolkit.Tests.Stateful.csproj", "{B8EF883E-93C9-4C3F-AB57-D63CF85E2DD6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalDeviceToolkit.Tests.PluginFixture", "UniversalDeviceToolkit.Tests.PluginFixture\UniversalDeviceToolkit.Tests.PluginFixture.csproj", "{C350E7ED-22BE-442F-A867-95A907E1B8EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,18 +161,6 @@ Global
 		{0D13B5A7-7D2E-4ACF-8B6E-4FB2A4A5D88B}.Release|x86.Build.0 = Release|x64
 		{0D13B5A7-7D2E-4ACF-8B6E-4FB2A4A5D88B}.Release|Any CPU.ActiveCfg = Release|x64
 		{0D13B5A7-7D2E-4ACF-8B6E-4FB2A4A5D88B}.Release|Any CPU.Build.0 = Release|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Debug|x64.ActiveCfg = Debug|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Debug|x64.Build.0 = Debug|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Debug|x86.ActiveCfg = Debug|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Debug|x86.Build.0 = Debug|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Debug|Any CPU.ActiveCfg = Debug|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Debug|Any CPU.Build.0 = Debug|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Release|x64.ActiveCfg = Release|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Release|x64.Build.0 = Release|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Release|x86.ActiveCfg = Release|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Release|x86.Build.0 = Release|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Release|Any CPU.ActiveCfg = Release|x64
-		{65AF4289-30BE-4C3D-AFAF-6EB981F1CE41}.Release|Any CPU.Build.0 = Release|x64
 		{B2C3D4E5-F6A7-4B8C-9D0E-1F2A3B4C5D6E}.Debug|x64.ActiveCfg = Debug|x64
 		{B2C3D4E5-F6A7-4B8C-9D0E-1F2A3B4C5D6E}.Debug|x64.Build.0 = Debug|x64
 		{B2C3D4E5-F6A7-4B8C-9D0E-1F2A3B4C5D6E}.Debug|x86.ActiveCfg = Debug|x64
@@ -327,18 +305,6 @@ Global
 		{F6E9BD31-65D6-4651-B479-8B5710174EA1}.Release|x86.Build.0 = Release|Any CPU
 		{F6E9BD31-65D6-4651-B479-8B5710174EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6E9BD31-65D6-4651-B479-8B5710174EA1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Debug|x64.Build.0 = Debug|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Debug|x86.Build.0 = Debug|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Release|x64.ActiveCfg = Release|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Release|x64.Build.0 = Release|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Release|x86.ActiveCfg = Release|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Release|x86.Build.0 = Release|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003}.Release|Any CPU.Build.0 = Release|Any CPU
 		{981B5719-455E-465E-97CE-6609034C41E9}.Debug|x64.ActiveCfg = Debug|x64
 		{981B5719-455E-465E-97CE-6609034C41E9}.Debug|x64.Build.0 = Debug|x64
 		{981B5719-455E-465E-97CE-6609034C41E9}.Debug|x86.ActiveCfg = Debug|x64
@@ -400,8 +366,6 @@ Global
 		{8FDD02CE-4DE1-4F0A-B634-779F772FDF6C} = {07C2787E-EAC7-C090-1BA3-A61EC2A24D84}
 		{81A41C3C-D3D0-446E-ADD0-47F2F3E66DF0} = {A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}
 		{2EC0039E-EBA7-44E0-B6E8-3F2C9A9600E9} = {A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}
-		{DDAC9925-4715-447A-9C5B-A0261497724B} = {07D57EEB-2F50-60C4-C011-FE4FA775C9A8}
-		{8D04F699-A4A3-48CE-8ACA-8E976423C003} = {DDAC9925-4715-447A-9C5B-A0261497724B}
 		{6745FB1F-AFDC-4651-A802-85515C1F0C2B} = {A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}
 		{B8EF883E-93C9-4C3F-AB57-D63CF85E2DD6} = {A1B2C3D4-E5F6-4A7B-8C9D-0E1F2A3B4C5D}
 	EndGlobalSection

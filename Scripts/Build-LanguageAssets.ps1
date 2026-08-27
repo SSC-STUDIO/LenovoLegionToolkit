@@ -174,8 +174,8 @@ function Test-SatelliteDirectory {
 function Test-HostSatelliteDirectory {
     # The shipping app is the Electron shell plus UniversalDeviceToolkit.Host;
     # localized Host strings live in the UniversalDeviceToolkit.* satellite
-    # assemblies (Lib, Lib.Plugins, Lib.Automation, Lib.Macro). The retired WPF
-    # satellite "Universal Device Toolkit.resources.dll" no longer exists.
+    # assemblies (Lib, Lib.Automation, Lib.Macro). The retired WPF satellite
+    # "Universal Device Toolkit.resources.dll" no longer exists.
     param([Parameter(Mandatory = $true)][string]$DirectoryPath)
 
     $null -ne (

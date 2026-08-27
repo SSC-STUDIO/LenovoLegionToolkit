@@ -20,7 +20,6 @@ const NAVIGATION_ITEMS: Array<{ key: string; labelKey: string }> = [
   { key: 'automation', labelKey: 'settings.display.navigationKeys.automation' },
   { key: 'macro', labelKey: 'settings.display.navigationKeys.macro' },
   { key: 'windowsOptimization', labelKey: 'settings.display.navigationKeys.windowsOptimization' },
-  { key: 'pluginExtensions', labelKey: 'settings.display.navigationKeys.pluginExtensions' },
   { key: 'about', labelKey: 'settings.display.navigationKeys.about' }
 ]
 

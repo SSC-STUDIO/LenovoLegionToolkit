@@ -28,7 +28,6 @@ Var udtFeatNet
 Var udtFeatAuto
 Var udtFeatMacro
 Var udtFeatKbd
-Var udtFeatPlug
 Var udtLanguageCombo
 Var udtAutoRadio
 Var udtBasicRadio
@@ -37,7 +36,6 @@ Var udtFeatNetCheck
 Var udtFeatAutoCheck
 Var udtFeatMacroCheck
 Var udtFeatKbdCheck
-Var udtFeatPlugCheck
 Var udtPathEdit
 Var udtBrowseButton
 Var udtRequiredLabel
@@ -60,7 +58,6 @@ Function UdtLoadSelection
   StrCpy $udtFeatAuto "1"
   StrCpy $udtFeatMacro "1"
   StrCpy $udtFeatKbd "1"
-  StrCpy $udtFeatPlug "1"
   IfFileExists "${UDT_SELECTION_FILE}" 0 udtSelectionValidate
     ReadINIStr $udtLanguage "${UDT_SELECTION_FILE}" "installation" "language"
     ReadINIStr $udtDeviceMode "${UDT_SELECTION_FILE}" "installation" "deviceMode"
@@ -79,9 +76,6 @@ Function UdtLoadSelection
     ReadINIStr $0 "${UDT_SELECTION_FILE}" "installation" "keyboard"
     StrCmp $0 "0" 0 +2
       StrCpy $udtFeatKbd "0"
-    ReadINIStr $0 "${UDT_SELECTION_FILE}" "installation" "pluginExtensions"
-    StrCmp $0 "0" 0 +2
-      StrCpy $udtFeatPlug "0"
 
   udtSelectionValidate:
   StrCmp $udtLanguage "en" udtLanguageValid
@@ -545,9 +539,6 @@ Function UdtFeaturesPage
   ${NSD_CreateCheckbox} 175u 144u 155u 14u "Keyboard"
   Pop $udtFeatKbdCheck
   SetCtlColors $udtFeatKbdCheck "${UDT_TEXT}" "transparent"
-  ${NSD_CreateCheckbox} 175u 160u 155u 14u "Plugins & extensions"
-  Pop $udtFeatPlugCheck
-  SetCtlColors $udtFeatPlugCheck "${UDT_TEXT}" "transparent"
 
   ${If} $udtFeatOpt == "1"
     ${NSD_SetState} $udtFeatOptCheck ${BST_CHECKED}
@@ -563,9 +554,6 @@ Function UdtFeaturesPage
   ${EndIf}
   ${If} $udtFeatKbd == "1"
     ${NSD_SetState} $udtFeatKbdCheck ${BST_CHECKED}
-  ${EndIf}
-  ${If} $udtFeatPlug == "1"
-    ${NSD_SetState} $udtFeatPlugCheck ${BST_CHECKED}
   ${EndIf}
   ${NSD_OnClick} $udtFeatOptCheck UdtOptClicked
   Call UdtApplyFeatureCheck
@@ -603,12 +591,6 @@ Function UdtFeaturesLeave
   ${Else}
     StrCpy $udtFeatKbd "0"
   ${EndIf}
-  ${NSD_GetState} $udtFeatPlugCheck $0
-  ${If} $0 == ${BST_CHECKED}
-    StrCpy $udtFeatPlug "1"
-  ${Else}
-    StrCpy $udtFeatPlug "0"
-  ${EndIf}
   ${If} $udtFeatOpt != "1"
     StrCpy $udtFeatNet "0"
   ${EndIf}
@@ -638,7 +620,6 @@ FunctionEnd
   WriteINIStr "${UDT_SELECTION_FILE}" "installation" "automation" "$udtFeatAuto"
   WriteINIStr "${UDT_SELECTION_FILE}" "installation" "macro" "$udtFeatMacro"
   WriteINIStr "${UDT_SELECTION_FILE}" "installation" "keyboard" "$udtFeatKbd"
-  WriteINIStr "${UDT_SELECTION_FILE}" "installation" "pluginExtensions" "$udtFeatPlug"
   ${If} $udtFeatNet != "1"
     Delete "$INSTDIR\resources\host\UniversalDeviceToolkit.NetworkProxy.exe"
     Delete "$INSTDIR\resources\host\UniversalDeviceToolkit.NetworkProxy.dll"

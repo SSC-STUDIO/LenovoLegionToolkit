@@ -195,7 +195,7 @@ foreach ($fileName in $requiredFiles) {
 }
 
 $shippingPayloadGuard = Resolve-RepoPath 'Scripts\Assert-ShippingPayload.ps1'
-& $shippingPayloadGuard -PayloadPath $publishOutputPath -SkipPluginRuntimeCheck
+& $shippingPayloadGuard -PayloadPath $publishOutputPath
 
 Compress-DirectoryContents -SourceDir $publishOutputPath -DestinationPath $assetPath
 if (-not $SkipHashUpdate) {

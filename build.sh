@@ -93,20 +93,6 @@ dotnet build "$SCRIPT_DIR/UniversalDeviceToolkit.Lib.Abstractions/UniversalDevic
 dotnet build "$SCRIPT_DIR/UniversalDeviceToolkit.Lib.Shared/UniversalDeviceToolkit.Lib.Shared.csproj" \
     --configuration "$CONFIGURATION" --verbosity minimal
 
-case "$(uname -s)" in
-    MINGW*|MSYS*|CYGWIN*)
-        echo "--- Building official plugin solution ---"
-        dotnet build "$SCRIPT_DIR/Plugins/UniversalDeviceToolkit.Plugins.sln" \
-            --configuration "$CONFIGURATION" --verbosity minimal \
-            -m:1 --disable-build-servers
-        ;;
-    *)
-        echo "--- Building portable plugin contract ---"
-        dotnet build "$SCRIPT_DIR/Plugins/SDK/Abstractions/UniversalDeviceToolkit.Plugins.Abstractions.csproj" \
-            --configuration "$CONFIGURATION" --verbosity minimal
-        ;;
-esac
-
 # Build CrossPlatform CLI
 echo ""
 echo "--- Building CrossPlatform CLI ---"

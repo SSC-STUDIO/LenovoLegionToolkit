@@ -8,13 +8,11 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
         "sensors",
         "power-modes",
         "battery",
-        "plugins",
         "system-optimization"
     ];
 
     private static readonly string[] UniversalBasicEnabledFeatures =
     [
-        "plugins",
         "system-optimization",
         "language",
         "theme",
@@ -181,7 +179,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 ["IdeaPad Gaming", "IdeaPad Gaming 3", "IdeaPad Gaming 3i", "IdeaPad Gaming 3 15", "IdeaPad Gaming 3 16",
                  "IdeaPad Gaming 3 15IAH7", "IdeaPad Gaming 3 16IAH7",
                  "拯救者 IdeaPad Gaming", "小新 Gaming"]),
-            // Non-gaming consumer lines: basic profile (plugins/optimization only).
+            // Non-gaming consumer lines: basic profile (optimization only).
             LenovoBasicPack(
                 "lenovo-ideapad",
                 "Lenovo IdeaPad",
@@ -308,7 +306,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                     // ATK/LHM sensors. "lenovo-hardware-controls" is the generic
                     // hardware gate id (kept for compatibility). Fan curves, GPU
                     // overclock and keyboard backlight stay hidden for now.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -325,7 +323,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                     // Alienware AWCC (WMAX) provider: thermal profiles + sensors on
                     // Alienware / Dell G models; other Dell machines self-disable
                     // to the generic path.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -341,7 +339,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 {
                     // HP WMI BIOS provider (OMEN/Victus): performance modes + sensors.
                     // Fan curves, GPU OC and keyboard backlight stay hidden for now.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -357,7 +355,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 {
                     // Acer WMID Gaming provider: thermal profiles + sensors on
                     // Predator/Nitro; other Acer lines self-disable to generic.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -374,7 +372,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                     // MSI EC provider (PawnIO-backed EC channel): shift modes +
                     // sensors. Fan curves, GPU OC and keyboard backlight stay
                     // hidden for now.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -400,7 +398,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                     // Gigabyte GB_WMIACPI provider, phase 1: sensors only. No
                     // platform power profile exists on this vendor (fan modes /
                     // GPU boost need raw WMBD writes with unproven semantics).
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors"],
                     HiddenFeatures = ["power-modes", "god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -416,7 +414,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 {
                     // Razer EC-over-HID provider: performance modes + fan reads.
                     // Fan curves, GPU OC and keyboard backlight stay hidden for now.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -629,7 +627,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 with
                 {
                     // Hasee (Clevo / Tongfang ODM): EC power modes + sensors.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -644,7 +642,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 with
                 {
                     // Thunderobot (Tongfang / Clevo ODM): EC power modes + sensors.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -659,7 +657,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 with
                 {
                     // Machenike (Tongfang / Clevo ODM): EC power modes + sensors.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -674,7 +672,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 with
                 {
                     // Colorful (Clevo / Tongfang ODM): EC power modes + sensors.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -699,7 +697,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 {
                     // Tongfang / MECHREVO EC provider: performance modes (Office/Gaming/Turbo) +
                     // EC sensors (temps + fan tachometers).
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(
@@ -903,7 +901,7 @@ public sealed class LenovoDeviceSupportProvider : CatalogDeviceSupportProvider
                 with
                 {
                     // Clevo & Tongfang barebone provider: EC power modes + EC sensors.
-                    EnabledFeatures = ["plugins", "system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
+                    EnabledFeatures = ["system-optimization", "language", "theme", "updates", "logs", "lenovo-hardware-controls", "sensors", "power-modes"],
                     HiddenFeatures = ["god-mode", "gpu-overclock", "fan-curve", "keyboard-backlight"],
                 },
             BasicPack(

@@ -33,7 +33,6 @@ internal sealed class HardwareControlSurfaceReader(
     CpuGovernorStatus cpuGovernor,
     BatteryChargeLimitStatus batteryChargeLimit,
     DisplayBrightnessStatus displayBrightness,
-    PluginDiscoveryReport plugins,
     DeviceSupportStatus deviceSupport)
 {
     public HardwareControlSurface Read()
@@ -45,7 +44,6 @@ internal sealed class HardwareControlSurfaceReader(
             BuildCpuGovernorControl(cpuGovernor),
             BuildBatteryChargeLimitControl(batteryChargeLimit),
             BuildDisplayBrightnessControl(displayBrightness),
-            BuildPluginDiscoveryControl(plugins),
             BuildVendorHardwareControls(deviceSupport, isWindows)
         };
 
@@ -119,22 +117,6 @@ internal sealed class HardwareControlSurfaceReader(
             device is null
                 ? FirstPresent(brightness.Notes)
                 : $"Set through Linux backlight device {device.Id}.");
-    }
-
-    private static HardwareControlDescriptor BuildPluginDiscoveryControl(PluginDiscoveryReport plugins)
-    {
-        var candidates = plugins.Plugins.Count(plugin => plugin.IsCrossPlatformCandidate);
-        return new HardwareControlDescriptor(
-            "plugin-manifests",
-            "Plugin manifest discovery",
-            "extension-runtime",
-            true,
-            false,
-            $"{plugins.Plugins.Length} manifests",
-            [],
-            candidates == 0
-                ? FirstPresent(plugins.Notes)
-                : $"{candidates} cross-platform plugin candidates were found.");
     }
 
     private static HardwareControlDescriptor BuildVendorHardwareControls(DeviceSupportStatus deviceSupport, bool isWindows) =>

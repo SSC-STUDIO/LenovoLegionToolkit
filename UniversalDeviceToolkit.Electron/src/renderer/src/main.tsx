@@ -66,6 +66,7 @@ function Root(): React.JSX.Element {
   useTheme()
   const themeMode = useThemeStore((s) => s.themeMode)
   const themePreference = useThemeStore((s) => s.themePreference)
+  const stylePreference = useThemeStore((s) => s.stylePreference)
   const colorPrimary = useThemeStore((s) => s.colorPrimary)
   const [locale, setLocale] = useState(() => getAntDesignLocale(i18n.language))
   const [direction, setDirection] = useState(() => getUiDirection(i18n.language))
@@ -82,6 +83,11 @@ function Root(): React.JSX.Element {
     // and for the OS change listener to keep firing.
     window.bridge?.setThemeSource?.(themePreference === 'system' ? 'system' : themeMode)
   }, [themeMode, themePreference])
+
+  // 保持 <html data-style> 与风格偏好同步（default 也显式写出，供 CSS 按 [data-style] 分支）。
+  useEffect(() => {
+    document.documentElement.setAttribute('data-style', stylePreference)
+  }, [stylePreference])
 
   useEffect(() => {
     const root = document.documentElement

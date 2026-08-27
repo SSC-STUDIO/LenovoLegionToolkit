@@ -4,12 +4,8 @@ on:
   workflow_dispatch:
   push:
     branches: [ master ]
-    paths-ignore:
-      - 'Plugins/**'
   pull_request:
     branches: [ master ]
-    paths-ignore:
-      - 'Plugins/**'
 
 jobs:
   build-test-and-smoke:
@@ -335,14 +331,6 @@ jobs:
           }
           if (($profile | Out-String) -notmatch 'Power profile') {
             throw "profile command did not print power profile."
-          }
-
-          $plugins = dotnet run --project $project --configuration Release --no-build -- plugins
-          if ($LASTEXITCODE -ne 0) {
-            throw "plugins command failed with exit code $LASTEXITCODE"
-          }
-          if (($plugins | Out-String) -notmatch 'Plugin discovery') {
-            throw "plugins command did not print plugin discovery."
           }
 
           $controls = dotnet run --project $project --configuration Release --no-build -- controls

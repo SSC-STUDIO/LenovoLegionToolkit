@@ -26,6 +26,8 @@ const REPO_OWNER = 'SSC-STUDIO'
 const REPO_NAME = 'UniversalDeviceToolkit'
 const API_RELEASES = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/releases?per_page=10`
 const USER_AGENT = 'UniversalDeviceToolkit-Electron'
+// Legacy plugin-catalog release tags. The plugin system is retired, but these
+// tags still exist on GitHub and must never surface as application updates.
 const CATALOG_STABLE = 'plugin-catalog'
 const CATALOG_PREVIEW = 'plugin-catalog-preview'
 const SHA256_TOKEN = /(?<![a-fA-F0-9])([a-fA-F0-9]{64})(?![a-fA-F0-9])/i

@@ -1,7 +1,6 @@
 /**
  * Native dialog and shell-open helpers behind the bridge `dialog:*` methods
- * (plugin web pages and renderer share these through bridge:invoke) plus the
- * dedicated `dialog:select-*` IPC channels used by the preload API.
+ * plus the dedicated `dialog:select-*` IPC channels used by the preload API.
  */
 import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
 
@@ -112,19 +111,6 @@ export async function invokeDialogBridgeMethod(
 /** Registers the preload file-picker channels (dialog:select-*). */
 export function registerFileDialogIpc(getOwner: () => BrowserWindow | null): void {
   const ownerOrFocused = (): BrowserWindow | null => getOwner() ?? BrowserWindow.getFocusedWindow()
-
-  ipcMain.handle('dialog:select-plugin-files', async () => {
-    const options = {
-      title: 'Import plugin packages',
-      properties: ['openFile', 'multiSelections'] as ('openFile' | 'multiSelections')[],
-      filters: [{ name: 'Plugin packages', extensions: ['zip'] }]
-    }
-    const owner = ownerOrFocused()
-    const result = owner == null
-      ? await dialog.showOpenDialog(options)
-      : await dialog.showOpenDialog(owner, options)
-    return result.canceled ? [] : result.filePaths
-  })
 
   ipcMain.handle('dialog:select-json-file', async () => {
     const options = {

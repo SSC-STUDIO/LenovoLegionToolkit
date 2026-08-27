@@ -267,14 +267,6 @@
       "universaldevicetoolkit.lib.abstractions": {
         "type": "Project"
       },
-      "universaldevicetoolkit.lib.plugins": {
-        "type": "Project",
-        "dependencies": {
-          "Autofac": "[9.3.2, )",
-          "System.Security.Cryptography.ProtectedData": "[10.0.10, )",
-          "UniversalDeviceToolkit.Lib": "[6.0.0, )"
-        }
-      },
       "universaldevicetoolkit.lib.shared": {
         "type": "Project",
         "dependencies": {

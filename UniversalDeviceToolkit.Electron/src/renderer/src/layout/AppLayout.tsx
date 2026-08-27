@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
-  Apps24Filled,
-  Apps24Regular,
   ChevronLeft16Regular,
   ChevronRight16Regular,
   Cursor24Filled,
@@ -107,7 +105,6 @@ const MAIN_ITEMS: NavItemDef[] = [
 ]
 
 const FOOTER_ITEMS: NavItemDef[] = [
-  { key: '/plugins', icon: (filled) => filled ? <Apps24Filled /> : <Apps24Regular />, labelKey: 'nav.pluginExtensions' },
   { key: '/settings', icon: (filled) => filled ? <Settings24Filled /> : <Settings24Regular />, labelKey: 'nav.settings' },
   { key: '/about', icon: (filled) => filled ? <Info24Filled /> : <Info24Regular />, labelKey: 'nav.about' }
 ]
@@ -184,8 +181,7 @@ export default function AppLayout(): React.JSX.Element {
 
   // Electron MainWindow.UpdateNavigationItemsVisibilityFromSettings: dashboard and
   // settings are always visible; everything else defaults to visible unless
-  // NavigationItemsVisibility opts it out. Plugin Extensions stays visible by
-  // default (ExtensionsEnabled only controls whether extensions load).
+  // NavigationItemsVisibility opts it out.
   const navVisibility = useMemo(() => {
     const app = (scopes.application ?? {}) as Record<string, unknown>
     return ((app.NavigationItemsVisibility as Record<string, boolean> | undefined) ?? {})
@@ -202,14 +198,12 @@ export default function AppLayout(): React.JSX.Element {
         '/automation': 'automation',
         '/macro': 'macro',
         '/optimization': 'windowsOptimization',
-        '/plugins': 'pluginExtensions',
         '/about': 'about'
       }
       const pageTag: string = pageTagMap[item.key] ?? item.key.replace('/', '')
       if (pageTag === 'dashboard' || pageTag === 'settings') return true
       if (!isInstallerOptionalFeatureEnabled(installerFeatures, pageTag)) return false
       if (item.capability != null && hostCapabilities?.capabilities[item.capability] === false) return false
-      if (pageTag === 'pluginExtensions') return true
       if (navVisibility[pageTag] === false) return false
       return true
     },
@@ -325,11 +319,8 @@ export default function AppLayout(): React.JSX.Element {
     const knownHidden = [...MAIN_ITEMS, ...FOOTER_ITEMS].some(
       (item) => isRouteActive(location.pathname, item.key) && !isNavItemVisible(item)
     )
-    const pluginsHidden =
-      location.pathname.startsWith('/plugins') &&
-      !isInstallerOptionalFeatureEnabled(installerFeatures, 'pluginExtensions')
-    if (knownHidden || pluginsHidden) navigate('/dashboard', { replace: true })
-  }, [installerFeatures, isNavItemVisible, location.pathname, navigate])
+    if (knownHidden) navigate('/dashboard', { replace: true })
+  }, [isNavItemVisible, location.pathname, navigate])
 
   // Tray navigation (Electron TrayHelper → NavigationStore.Navigate) and optional
   // status popup (legacy Electron-only; not part of the original tray menu).

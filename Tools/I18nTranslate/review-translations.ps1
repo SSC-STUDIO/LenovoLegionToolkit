@@ -1,4 +1,4 @@
-﻿# review-translations.ps1 - batch quality review of translated resx files
+# review-translations.ps1 - batch quality review of translated resx files
 #
 # Uses a large model (gemma-3-12b, 16K context) to verify each existing
 # translation against the English source. Focuses on short strings (<= 40
@@ -250,11 +250,7 @@ $pairs = @(
     @{ Source = Join-Path $RepoRoot 'UniversalDeviceToolkit.Lib\Resources\Resource.resx'; TranslationPattern = Join-Path $RepoRoot 'UniversalDeviceToolkit.Lib\Resources\Resource.%locale%.resx' },
     @{ Source = Join-Path $RepoRoot 'UniversalDeviceToolkit.Lib.Automation\Resources\Resource.resx'; TranslationPattern = Join-Path $RepoRoot 'UniversalDeviceToolkit.Lib.Automation\Resources\Resource.%locale%.resx' },
     @{ Source = Join-Path $RepoRoot 'UniversalDeviceToolkit.Lib.Macro\Resources\Resource.resx'; TranslationPattern = Join-Path $RepoRoot 'UniversalDeviceToolkit.Lib.Macro\Resources\Resource.%locale%.resx' },
-    @{ Source = Join-Path $RepoRoot 'UniversalDeviceToolkit.Lib.Plugins\Resources\Resource.resx'; TranslationPattern = Join-Path $RepoRoot 'UniversalDeviceToolkit.Lib.Plugins\Resources\Resource.%locale%.resx' },
-    @{ Source = Join-Path $RepoRoot 'UniversalDeviceToolkit.CLI\Resources\CLI.Resources.resx'; TranslationPattern = Join-Path $RepoRoot 'UniversalDeviceToolkit.CLI\Resources\CLI.Resources.%locale%.resx' },
-    @{ Source = Join-Path $RepoRoot 'Plugins\Official\CustomMouse\Resources\Resource.resx'; TranslationPattern = Join-Path $RepoRoot 'Plugins\Official\CustomMouse\Resources\Resource.%locale%.resx' },
-    @{ Source = Join-Path $RepoRoot 'Plugins\Official\ShellIntegration\Resources\Resource.resx'; TranslationPattern = Join-Path $RepoRoot 'Plugins\Official\ShellIntegration\Resources\Resource.%locale%.resx' },
-    @{ Source = Join-Path $RepoRoot 'Plugins\Official\ViveTool\Resources\Resource.resx'; TranslationPattern = Join-Path $RepoRoot 'Plugins\Official\ViveTool\Resources\Resource.%locale%.resx' }
+    @{ Source = Join-Path $RepoRoot 'UniversalDeviceToolkit.CLI\Resources\CLI.Resources.resx'; TranslationPattern = Join-Path $RepoRoot 'UniversalDeviceToolkit.CLI\Resources\CLI.Resources.%locale%.resx' }
 )
 
 $localeFile = Join-Path $scriptDir 'locales.txt'

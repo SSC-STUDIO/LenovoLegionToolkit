@@ -151,14 +151,6 @@ jobs:
             throw "profile command did not print power profile."
           }
 
-          $plugins = dotnet run --project $project --configuration Release --no-build -- plugins
-          if ($LASTEXITCODE -ne 0) {
-            throw "plugins command failed with exit code $LASTEXITCODE"
-          }
-          if (($plugins | Out-String) -notmatch 'Plugin discovery') {
-            throw "plugins command did not print plugin discovery."
-          }
-
           $controls = dotnet run --project $project --configuration Release --no-build -- controls
           if ($LASTEXITCODE -ne 0) {
             throw "controls command failed with exit code $LASTEXITCODE"
@@ -218,9 +210,6 @@ jobs:
           }
           if (-not $payload.DisplayBrightness) {
             throw "json command returned no display brightness object."
-          }
-          if (-not $payload.Plugins) {
-            throw "json command returned no plugin discovery object."
           }
           if (-not $payload.Controls) {
             throw "json command returned no controls object."

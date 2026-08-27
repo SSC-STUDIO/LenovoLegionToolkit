@@ -69,7 +69,7 @@ public class CompatibilityTests
 
         availability.IsBasicMode.Should().BeTrue();
         availability.DevicePackId.Should().Be(expectedPackId);
-        availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization"]);
+        availability.EnabledFeatures.Should().Contain(["system-optimization"]);
         availability.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "keyboard-backlight"]);
     }
 

@@ -31,8 +31,6 @@ export interface AppFlags {
   resetHardwareState: boolean
   resetNetworkState: boolean
   restoreProcessorMinState: boolean
-  /** Host-only switches: never re-apply hardware state / load plugins. */
-  noPlugins: boolean
   noHardware: boolean
 }
 
@@ -52,7 +50,6 @@ const BOOL_SWITCHES: ReadonlyArray<readonly [string, keyof AppFlags]> = [
   ['--reset-hardware-state', 'resetHardwareState'],
   ['--reset-network-state', 'resetNetworkState'],
   ['--restore-processor-min-state', 'restoreProcessorMinState'],
-  ['--no-plugins', 'noPlugins'],
   ['--no-hardware', 'noHardware']
 ]
 
@@ -98,7 +95,6 @@ export function parseFlags(argv: string[]): AppFlags {
     resetHardwareState: false,
     resetNetworkState: false,
     restoreProcessorMinState: false,
-    noPlugins: false,
     noHardware: false
   }
 
@@ -155,7 +151,6 @@ export function toHostArgs(appFlags: AppFlags): string[] {
   const args: string[] = []
   if (appFlags.isTraceEnabled) args.push('--trace')
   if (appFlags.safeStart) args.push('--safe-start')
-  if (appFlags.noPlugins) args.push('--no-plugins')
   if (appFlags.noHardware) args.push('--no-hardware')
   if (appFlags.experimentalGpuWorkingMode) args.push('--experimental-gpu-working-mode')
   if (appFlags.proxyUrl) args.push('--proxy-url', appFlags.proxyUrl)

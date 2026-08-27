@@ -97,7 +97,7 @@ export function buildFirstRunPackOptions(
       id: GENERIC_BASIC_PACK_ID,
       displayName: 'Generic PC Basic',
       vendor: '*',
-      enabledFeatures: ['plugins', 'system-optimization', 'language', 'theme', 'updates', 'logs'],
+      enabledFeatures: ['system-optimization', 'language', 'theme', 'updates', 'logs'],
       hiddenFeatures: [HARDWARE_CONTROLS_FEATURE_ID, 'power-modes', 'keyboard-backlight', 'god-mode', 'gpu-overclock', 'fan-curve']
     }
     push(generic)

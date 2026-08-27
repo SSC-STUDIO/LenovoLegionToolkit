@@ -11,14 +11,13 @@
   <data name="Help_Telemetry"><value>&#x663E;&#x793A;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x9065;&#x6D4B;&#x4FE1;&#x606F;&#x3002;</value></data>
   <data name="Help_Power"><value>&#x663E;&#x793A;&#x53EA;&#x8BFB;&#x7684;&#x7535;&#x6C60;&#x548C;&#x5916;&#x63A5;&#x7535;&#x6E90;&#x72B6;&#x6001;&#x3002;</value></data>
   <data name="Help_Profile"><value>&#x8BFB;&#x53D6;&#x6216;&#x8BBE;&#x7F6E;&#x5E73;&#x53F0;&#x7535;&#x6E90;&#x914D;&#x7F6E;&#x3002;</value></data>
-  <data name="Help_Plugins"><value>&#x68C0;&#x67E5;&#x5DF2;&#x53D1;&#x73B0;&#x7684;&#x8DE8;&#x5E73;&#x53F0;&#x63D2;&#x4EF6;&#x3002;</value></data>
   <data name="Help_Controls"><value>&#x663E;&#x793A;&#x8DE8;&#x5E73;&#x53F0;&#x63A7;&#x5236;&#x80FD;&#x529B;&#x3002;</value></data>
   <data name="Help_Doctor"><value>&#x663E;&#x793A;&#x6C47;&#x603B;&#x8BCA;&#x65AD;&#x62A5;&#x544A;&#x3002;</value></data>
   <data name="Help_Set"><value>&#x6267;&#x884C;&#x53D7;&#x652F;&#x6301;&#x7684;&#x5199;&#x5165;&#x63A7;&#x5236;&#x3002;</value></data>
   <data name="Help_Elevate"><value>&#x9700;&#x8981;&#x65F6;&#x901A;&#x8FC7; Windows UAC &#x91CD;&#x65B0;&#x6267;&#x884C;&#x5199;&#x5165;&#x547D;&#x4EE4;&#x3002;</value></data>
   <data name="Help_Help"><value>&#x663E;&#x793A;&#x6B64;&#x5E2E;&#x52A9;&#x3002;</value></data>
   <data name="Help_Language"><value>&#x9009;&#x62E9;&#x672C;&#x6B21;&#x8FD0;&#x884C;&#x4F7F;&#x7528;&#x7684;&#x8BED;&#x8A00;&#x3002;</value></data>
-  <data name="Help_WindowsNote"><value>Windows &#x786C;&#x4EF6;&#x63A7;&#x5236;&#x4ECD;&#x5728; Windows &#x684C;&#x9762;&#x5E94;&#x7528;&#x4E2D;&#x63D0;&#x4F9B;&#x3002;macOS &#x548C; Linux &#x652F;&#x6301;&#x5305;&#x62EC;&#x8BCA;&#x65AD;&#x3001;&#x5B89;&#x5168;&#x7684;&#x57FA;&#x7840;&#x6A21;&#x5F0F;&#x68C0;&#x6D4B;&#x4EE5;&#x53CA;&#x540E;&#x7EED;&#x7684;&#x63D2;&#x4EF6;&#x548C;&#x8FD0;&#x884C;&#x65F6;&#x6269;&#x5C55;&#x3002;</value></data>
+  <data name="Help_WindowsNote"><value>Windows &#x786C;&#x4EF6;&#x63A7;&#x5236;&#x4ECD;&#x5728; Windows &#x684C;&#x9762;&#x5E94;&#x7528;&#x4E2D;&#x63D0;&#x4F9B;&#x3002;macOS &#x548C; Linux &#x652F;&#x6301;&#x5305;&#x62EC;&#x8BCA;&#x65AD;&#x4E0E;&#x5B89;&#x5168;&#x7684;&#x57FA;&#x7840;&#x6A21;&#x5F0F;&#x68C0;&#x6D4B;&#x3002;</value></data>
   <data name="Help_Support"><value>&#x663E;&#x793A;&#x5B89;&#x5168;&#x7684;&#x57FA;&#x7840;&#x6A21;&#x5F0F;&#x8BBE;&#x5907;&#x652F;&#x6301;&#x5339;&#x914D;&#x3002;</value></data>
   <data name="Error_UnknownCommand"><value>&#x672A;&#x77E5;&#x547D;&#x4EE4;&#x201C;{0}&#x201D;&#x3002;&#x8BF7;&#x8FD0;&#x884C;&#x201C;udt help&#x201D;&#x3002;</value></data>
   <data name="Hardware_Title"><value>&#x786C;&#x4EF6;&#x4FE1;&#x606F;</value></data>
@@ -36,7 +35,6 @@
   <data name="Label_CpuGovernor"><value>CPU 调速器</value></data>
   <data name="Label_BatteryChargeLimit"><value>电池充电上限</value></data>
   <data name="Label_DisplayBrightness"><value>显示器亮度</value></data>
-  <data name="Label_Plugins"><value>插件</value></data>
   <data name="Label_DevicePack"><value>设备包</value></data>
   <data name="Label_Vendor"><value>厂商</value></data>
   <data name="Label_Model"><value>型号</value></data>
@@ -92,7 +90,6 @@
   <data name="Power_Supplies"><value>电源设备：</value></data>
   <data name="PowerProfile_Title"><value>电源配置</value></data>
   <data name="PowerProfile_Available"><value>可用配置：</value></data>
-  <data name="Plugins_Title"><value>插件发现</value></data>
   <data name="Controls_Title"><value>硬件控制</value></data>
   <data name="Support_Title"><value>设备支持</value></data>
   <data name="Doctor_Title"><value>诊断报告</value></data>
@@ -115,8 +112,6 @@
   <data name="CpuGovernor_Summary"><value>{0}，共 {1} 个策略（{2}）</value></data>
   <data name="BatteryChargeLimit_Summary"><value>{1} 为 {0}%（{2}）</value></data>
   <data name="DisplayBrightness_Summary"><value>{1} 为 {0}%（{2}）</value></data>
-  <data name="Plugins_NoneFound"><value>未找到插件（{0}）</value></data>
-  <data name="Plugins_Summary"><value>{0} 个清单，{1} 个跨平台候选（{2}）</value></data>
   <data name="Controls_Summary"><value>{0} 个可用，{1} 个可写（{2}）</value></data>
   <data name="Format_Gibibytes"><value>{0:0.##} GiB</value></data>
   <data name="Format_Percent"><value>{0:0.#}%</value></data>
@@ -144,11 +139,9 @@
   <data name="Capability_CpuGovernor_Name"><value>CPU 调速器</value></data>
   <data name="Capability_BatteryChargeLimit_Name"><value>电池充电上限</value></data>
   <data name="Capability_DisplayBrightness_Name"><value>显示器亮度</value></data>
-  <data name="Capability_PluginManifestDiscovery_Name"><value>插件清单发现</value></data>
   <data name="Capability_CrossPlatformControlSurface_Name"><value>跨平台控制界面</value></data>
   <data name="Capability_BasicModeCompatibility_Name"><value>基础模式兼容性</value></data>
   <data name="Capability_WindowsHardwareControls_Name"><value>Windows 硬件控制</value></data>
-  <data name="Capability_PluginRuntime_Name"><value>插件运行时</value></data>
   <data name="Capability_LinuxDiagnostics_Name"><value>Linux 诊断</value></data>
   <data name="Capability_MacOsDiagnostics_Name"><value>macOS 诊断</value></data>
   <data name="Capability_CrossPlatformCli_Detail"><value>此 net10.0 入口不依赖 WindowsDesktop、WPF、WMI、注册表或 Win32 API。</value></data>
@@ -165,13 +158,10 @@
   <data name="Capability_BatteryChargeLimit_Other_Detail"><value>此平台不提供 Linux 电池充电阈值控制。</value></data>
   <data name="Capability_DisplayBrightness_Linux_Detail"><value>可通过 /sys/class/backlight 查看和设置 Linux 背光亮度。</value></data>
   <data name="Capability_DisplayBrightness_Other_Detail"><value>此平台不提供 Linux 背光控制。</value></data>
-  <data name="Capability_PluginManifestDiscovery_Detail"><value>在所有平台检查插件清单，不加载 WPF 或仅限 Windows 的插件组件。</value></data>
   <data name="Capability_CrossPlatformControlSurface_Detail"><value>通过统一的元数据界面列出可写的标准系统控制和隐藏的厂商专属控制。</value></data>
   <data name="Capability_BasicModeCompatibility_Detail"><value>将常见厂商匹配到安全的基础设备包，并在非 Windows 平台隐藏硬件写入功能。</value></data>
   <data name="Capability_WindowsHardwareControls_Windows_Detail"><value>Lenovo 硬件控制请使用 Windows 桌面应用或现有的 udt.exe。</value></data>
   <data name="Capability_WindowsHardwareControls_Other_Detail"><value>Windows 专属控制会在 macOS/Linux 上有意隐藏。</value></data>
-  <data name="Capability_PluginRuntime_Windows_Detail"><value>Windows 插件工作流仍可在桌面应用中使用。</value></data>
-  <data name="Capability_PluginRuntime_Other_Detail"><value>跨平台插件加载属于后续扩展点，目前尚未启用。</value></data>
   <data name="Capability_LinuxDiagnostics_Linux_Detail"><value>当前运行于 Linux，安全诊断已启用。</value></data>
   <data name="Capability_LinuxDiagnostics_Other_Detail"><value>当前未运行于 Linux。</value></data>
   <data name="Capability_MacOsDiagnostics_Mac_Detail"><value>当前运行于 macOS，安全诊断已启用。</value></data>
@@ -187,7 +177,6 @@
   <data name="Doctor_Check_CpuGovernor"><value>CPU 调速器</value></data>
   <data name="Doctor_Check_BatteryChargeLimit"><value>电池充电上限</value></data>
   <data name="Doctor_Check_DisplayBrightness"><value>显示器亮度</value></data>
-  <data name="Doctor_Check_PluginManifests"><value>插件清单</value></data>
   <data name="Doctor_Check_ControlSurface"><value>控制界面</value></data>
   <data name="Doctor_Check_DeviceSupport"><value>设备支持</value></data>
   <data name="Doctor_Check_HardwareControls"><value>硬件控制</value></data>
@@ -217,9 +206,6 @@
   <data name="Doctor_Detail_NoChargeLimit"><value>无法从 {0} 获取电池充电上限。</value></data>
   <data name="Doctor_Detail_BrightnessAvailable"><value>{0} 当前为 {1}%，来源为 {2}。</value></data>
   <data name="Doctor_Detail_NoBrightness"><value>无法从 {0} 获取显示器亮度。</value></data>
-  <data name="Doctor_Detail_NoPlugins"><value>未找到插件清单。</value></data>
-  <data name="Doctor_Detail_PluginsFound"><value>找到 {0} 个清单，其中 {1} 个为跨平台候选。</value></data>
-  <data name="Doctor_Detail_PluginsWithoutCandidates"><value>找到 {0} 个清单，但没有声明跨平台候选。</value></data>
   <data name="Doctor_Detail_NoControls"><value>未报告跨平台控制项。</value></data>
   <data name="Doctor_Detail_ControlsAvailable"><value>{0} 个可用控制项，{1} 个可写控制项，来源为 {2}。</value></data>
   <data name="Doctor_Detail_DeviceSupport"><value>{0}：{1}</value></data>
@@ -232,6 +218,5 @@
   <data name="Doctor_Note_NoGovernorProvider"><value>此操作系统没有可用的跨平台 CPU 调速器提供程序。</value></data>
   <data name="Doctor_Note_NoChargeLimitProvider"><value>此操作系统没有可用的跨平台电池充电上限提供程序。</value></data>
   <data name="Doctor_Note_NoBrightnessProvider"><value>此操作系统没有可用的跨平台显示器亮度提供程序。</value></data>
-  <data name="Doctor_Note_PluginDiscovery"><value>未找到插件清单。跨平台 CLI 只检查清单，不加载 WPF 或仅限 Windows 的插件程序集。</value></data>
   <data name="Doctor_Note_NoDevicePack"><value>没有匹配硬件信息的跨平台设备包。</value></data>
 </root>

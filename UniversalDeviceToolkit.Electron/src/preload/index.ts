@@ -38,7 +38,6 @@ const bridge = {
   openPath: (path: string): Promise<{ opened: boolean }> =>
     ipcRenderer.invoke('shell:open-path', path),
   quitApp: (): void => ipcRenderer.send('app:quit'),
-  selectPluginFiles: (): Promise<string[]> => ipcRenderer.invoke('dialog:select-plugin-files'),
   selectJsonFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-json-file'),
   selectExeFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-exe-file'),
   selectAudioFile: (): Promise<string | null> => ipcRenderer.invoke('dialog:select-audio-file'),
@@ -54,7 +53,6 @@ const bridge = {
     }
   },
   isMaximized: (): Promise<boolean> => ipcRenderer.invoke('window:is-maximized'),
-  getPluginPreloadPath: (): Promise<string> => ipcRenderer.invoke('plugin:preload-path'),
   isFullscreen: (): Promise<boolean> => ipcRenderer.invoke('window:is-fullscreen'),
   onFullscreenChanged: (callback: (fullscreen: boolean) => void): (() => void) => {
     const listener = (_event: Electron.IpcRendererEvent, fullscreen: boolean): void => {

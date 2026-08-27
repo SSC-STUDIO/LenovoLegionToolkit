@@ -208,7 +208,7 @@ public sealed class LenovoDeviceSupportProviderTests
         availability.IsSupported.Should().BeFalse();
         availability.IsBasicMode.Should().BeTrue();
         availability.DevicePackId.Should().Be("generic-pc-basic");
-        availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization"]);
+        availability.EnabledFeatures.Should().Contain(["system-optimization"]);
         availability.HiddenFeatures.Should().Contain("lenovo-hardware-controls");
     }
 
@@ -304,7 +304,7 @@ public sealed class LenovoDeviceSupportProviderTests
         availability.IsSupported.Should().BeFalse();
         availability.IsBasicMode.Should().BeTrue();
         availability.DevicePackId.Should().Be(expectedPackId);
-        availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization", "language"]);
+        availability.EnabledFeatures.Should().Contain(["system-optimization", "language"]);
         availability.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "power-modes", "gpu-overclock"]);
     }
 
@@ -378,7 +378,7 @@ public sealed class LenovoDeviceSupportProviderTests
         availability.IsSupported.Should().BeFalse();
         availability.IsBasicMode.Should().BeTrue();
         availability.DevicePackId.Should().Be("generic-pc-basic");
-        availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization", "theme"]);
+        availability.EnabledFeatures.Should().Contain(["system-optimization", "theme"]);
         availability.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "keyboard-backlight"]);
     }
 
@@ -541,7 +541,7 @@ public sealed class LenovoDeviceSupportProviderTests
                     DisplayName = "ASUS ROG Family Installed",
                     Vendor = "ASUS",
                     Families = ["ROG"],
-                    EnabledFeatures = ["plugins", "system-optimization"],
+                    EnabledFeatures = ["system-optimization"],
                     HiddenFeatures = ["lenovo-hardware-controls"]
                 }
             ]

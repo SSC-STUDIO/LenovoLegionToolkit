@@ -1,6 +1,6 @@
 {
-  "note": "Local planning stubs only. The generated plugin catalog is published as store.json in the main repository's rolling plugin-catalog release. Host app version: Directory.Build.props (Major/Minor/Patch). Plugin versions: each Plugins/Official/*/plugin.manifest.json; bump via Plugins/udt-plugin.cmd bump-version.",
-  "lastUpdated": "2026-07-14",
+  "note": "Local planning stubs only. The plugin system has been fully retired; all catalog entries below are historical records. Host app version: Directory.Build.props (Major/Minor/Patch).",
+  "lastUpdated": "2026-08-27",
   "plugins": [
     {
       "id": "network-acceleration",
@@ -20,22 +20,25 @@
     },
     {
       "id": "custom-mouse",
-      "name": "Cursor & Pointer",
-      "status": "Active",
+      "name": "Cursor & Pointer (Removed)",
+      "status": "Removed",
       "renameFrom": "Custom Mouse",
-      "description": "Cursor & Pointer: pointer speed, button swap, light/dark cursors, theme follow, backup/restore. Fake DPI/polling UI removed."
+      "removedIn": "6.1.0",
+      "migrationTarget": "built-in:MousePage (cursor & pointer)",
+      "description": "Retired with the plugin system. Capabilities absorbed into the host Mouse page."
     },
     {
       "id": "shell-integration",
       "name": "Nilesoft Shell Manager (Removed)",
       "status": "Removed",
-      "description": "Delisted from the store. Existing installs keep working. Not replaced by a host built-in."
+      "description": "Delisted from the store, then retired with the plugin system. Not replaced by a host built-in."
     },
     {
       "id": "vive-tool",
-      "name": "ViVeTool",
-      "status": "Active",
-      "riskNote": "Changing Windows feature flags can break updates, apps, and stability. Use at your own risk; create a restore point first."
+      "name": "ViVeTool (Removed)",
+      "status": "Removed",
+      "removedIn": "6.1.0",
+      "description": "Retired with the plugin system; Windows feature-flag toggling is no longer offered by UDT."
     }
   ]
 }

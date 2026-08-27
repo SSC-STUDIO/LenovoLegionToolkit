@@ -7,19 +7,6 @@ namespace UniversalDeviceToolkit.Tests.Utils;
 [Trait("Category", TestCategories.Unit)]
 public sealed class PluginCatalogTagsTests
 {
-    [Theory]
-    [InlineData("5.0.2", "plugin-catalog")]
-    [InlineData("6.0.0", "plugin-catalog")]
-    [InlineData("6.0.0+abc123", "plugin-catalog")]
-    [InlineData("v6.0.0", "plugin-catalog")]
-    [InlineData("6.0.0-preview.1", "plugin-catalog-preview")]
-    [InlineData("v6.0.0-preview.1", "plugin-catalog-preview")]
-    [InlineData("6.0.0-preview.1+deadbeef", "plugin-catalog-preview")]
-    public void ResolveTag_UsesPrereleaseHyphenLikeReleaseWorkflow(string informationalVersion, string expectedTag)
-    {
-        PluginCatalogTags.ResolveTag(informationalVersion).Should().Be(expectedTag);
-    }
-
     [Fact]
     public void IsCatalogTag_RecognizesStableAndPreview()
     {
@@ -27,16 +14,37 @@ public sealed class PluginCatalogTagsTests
         PluginCatalogTags.IsCatalogTag("plugin-catalog-preview").Should().BeTrue();
         PluginCatalogTags.IsCatalogTag("v6.0.0-preview.1").Should().BeFalse();
         PluginCatalogTags.IsCatalogTag("latest").Should().BeFalse();
+        PluginCatalogTags.IsCatalogTag(null).Should().BeFalse();
     }
 
-    [Fact]
-    public void StoreAndApiUrls_UseTheResolvedTag()
+    [Theory]
+    [InlineData("6.0.0", false)]
+    [InlineData("6.0.0+abc123", false)]
+    [InlineData("v6.0.0", false)]
+    [InlineData("6.0.0-preview.1", true)]
+    [InlineData("v6.0.0-preview.1", true)]
+    [InlineData("6.0.0-preview.1+deadbeef", true)]
+    public void IsPrereleaseApplicationVersion_MatchesSemVerHyphenLikeReleaseWorkflow(
+        string informationalVersion,
+        bool expected)
     {
-        PluginCatalogTags.StoreDownloadUrl(PluginCatalogTags.Stable)
-            .Should().Be("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog/store.json");
-        PluginCatalogTags.StoreDownloadUrl(PluginCatalogTags.Preview)
-            .Should().Be("https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/plugin-catalog-preview/store.json");
-        PluginCatalogTags.ReleasesApiUrl(PluginCatalogTags.Preview)
-            .Should().Be("https://api.github.com/repos/SSC-STUDIO/UniversalDeviceToolkit/releases/tags/plugin-catalog-preview");
+        PluginCatalogTags.IsPrereleaseApplicationVersion(informationalVersion).Should().Be(expected);
+    }
+
+    [Theory]
+    [InlineData("v1.2.3", false, false, false, true)]
+    [InlineData("v1.2.3", true, false, false, false)]
+    [InlineData("plugin-catalog", false, false, false, false)]
+    [InlineData("v6.0.0-preview.1", false, false, false, false)]
+    [InlineData("v6.0.0-preview.1", false, false, true, true)]
+    public void IsPublicApplicationRelease_FiltersReleasesForUpdateChecks(
+        string tagName,
+        bool draft,
+        bool prereleaseFlag,
+        bool includePrerelease,
+        bool expected)
+    {
+        PluginCatalogTags.IsPublicApplicationRelease(tagName, draft, prereleaseFlag, includePrerelease)
+            .Should().Be(expected);
     }
 }

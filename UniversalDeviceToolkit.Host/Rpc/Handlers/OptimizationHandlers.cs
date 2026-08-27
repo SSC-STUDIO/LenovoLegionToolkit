@@ -10,7 +10,6 @@ using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.Automation.Optimization;
 using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.Optimization;
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Resources;
 using UniversalDeviceToolkit.Lib.Serialization;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -25,9 +24,7 @@ namespace UniversalDeviceToolkit.Host.Rpc.Handlers;
 /// Elevation note: the Host process normally runs un-elevated, so apply/revert/
 /// cleanup mutations route through WindowsOptimizationElevationClient
 /// (UniversalDeviceToolkit.Lib.Automation.Optimization), which starts an elevated
-/// worker (UAC prompt) over a private named pipe when needed. The elevated worker
-/// only supports built-in actions; plugin-provided actions fall back to the
-/// in-process service and require the Host itself to run elevated.
+/// worker (UAC prompt) over a private named pipe when needed.
 /// </summary>
 public static class OptimizationHandlers
 {
@@ -99,8 +96,6 @@ public static class OptimizationHandlers
                     key = category.Key,
                     title = Localize(category.TitleResourceKey),
                     description = Localize(category.DescriptionResourceKey),
-                    pluginId = category.PluginId,
-                    hasSettings = ResolveCategoryHasSettings(category.PluginId),
                     actions = category.Actions.Select(action => new
                     {
                         key = action.Key,
@@ -482,36 +477,10 @@ public static class OptimizationHandlers
             resourceKey,
             LocalizationRuntime.CurrentCulture);
 
-    /// <summary>Mirrors WPF OptimizationCategoryViewModel.HasSettings (plugin settings page presence).</summary>
-    private static bool ResolveCategoryHasSettings(string? pluginId)
-    {
-        if (string.IsNullOrWhiteSpace(pluginId))
-            return false;
-
-        try
-        {
-            if (IoCContainer.TryResolve<IPluginManager>() is { } pluginManager)
-            {
-                var plugin = pluginManager.GetRegisteredPlugins()
-                    .FirstOrDefault(p => string.Equals(p.Id, pluginId, StringComparison.OrdinalIgnoreCase));
-                if (plugin is PluginBase pluginBase && pluginBase.GetSettingsPage() is not null)
-                    return true;
-            }
-
-            return PluginUiCapabilityResolver.ResolveFromInstalledManifest(pluginId).SupportsSettingsPage;
-        }
-        catch
-        {
-            return false;
-        }
-    }
-
     /// <summary>
-    /// Executes apply/revert mutations. Built-in actions run through the elevation
-    /// channel (WindowsOptimizationElevationClient starts an elevated worker over a
-    /// private named pipe when the bridge host is un-elevated); the worker rejects
-    /// plugin-provided actions by design, so those fall back to the in-process
-    /// service — which can only succeed when the Host itself runs elevated.
+    /// Executes apply/revert mutations through the elevation channel
+    /// (WindowsOptimizationElevationClient starts an elevated worker over a
+    /// private named pipe when the bridge host is un-elevated).
     /// </summary>
     private static async Task ExecuteOptimizationMutationsAsync(
         IReadOnlyList<string> actionKeys,
@@ -521,92 +490,25 @@ public static class OptimizationHandlers
         if (actionKeys.Count == 0)
             return;
 
-        var (builtInKeys, pluginKeys) = SplitByPluginOrigin(actionKeys);
-
-        if (builtInKeys.Count > 0)
+        if (!WindowsOptimizationElevationBridge.IsAvailable)
         {
-            if (!WindowsOptimizationElevationBridge.IsAvailable)
-            {
-                LogElevationUnavailable(apply ? "optimization.apply" : "optimization.revert");
-                throw new BridgeErrorException(
-                    ElevationRequiredErrorCode,
-                    "The optimization elevation executor is not registered; this operation requires elevation and the bridge host is not elevated.");
-            }
+            LogElevationUnavailable(apply ? "optimization.apply" : "optimization.revert");
+            throw new BridgeErrorException(
+                ElevationRequiredErrorCode,
+                "The optimization elevation executor is not registered; this operation requires elevation and the bridge host is not elevated.");
+        }
 
-            if (apply)
-            {
+        if (apply)
+        {
+            await WindowsOptimizationElevationBridge
+                .ExecuteRecommendedAsync(actionKeys, cancellationToken).ConfigureAwait(false);
+        }
+        else
+        {
+            foreach (var key in actionKeys)
                 await WindowsOptimizationElevationBridge
-                    .ExecuteRecommendedAsync(builtInKeys, cancellationToken).ConfigureAwait(false);
-            }
-            else
-            {
-                foreach (var key in builtInKeys)
-                    await WindowsOptimizationElevationBridge
-                        .ExecuteActionAsync(key, apply: false, cancellationToken).ConfigureAwait(false);
-            }
+                    .ExecuteActionAsync(key, apply: false, cancellationToken).ConfigureAwait(false);
         }
-
-        if (pluginKeys.Count > 0)
-        {
-            var service = OptimizationService;
-            foreach (var key in pluginKeys)
-            {
-                try
-                {
-                    if (apply)
-                        await service.ApplyActionAsync(key, cancellationToken).ConfigureAwait(false);
-                    else
-                        await service.RevertActionAsync(key, cancellationToken).ConfigureAwait(false);
-
-                    var applied = await service.TryGetActionAppliedAsync(key, cancellationToken).ConfigureAwait(false);
-                    if (applied.HasValue && applied.Value != apply)
-                    {
-                        throw new InvalidOperationException(
-                            $"Plugin action '{key}' could not be verified after {(apply ? "apply" : "revert")}.");
-                    }
-                }
-                catch (UnauthorizedAccessException ex)
-                {
-                    throw new BridgeErrorException(
-                        ElevationRequiredErrorCode,
-                        $"Plugin action '{key}' cannot run in the elevated worker; " +
-                        $"start the bridge host elevated to mutate plugin state. {ex.Message}");
-                }
-            }
-        }
-    }
-
-    /// <summary>Classifies action keys by origin: built-in categories vs. plugin-provided ones.</summary>
-    private static (List<string> BuiltIn, List<string> Plugin) SplitByPluginOrigin(IReadOnlyList<string> actionKeys)
-    {
-        var pluginActionKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        try
-        {
-            foreach (var category in OptimizationService.GetCategories())
-            {
-                if (string.IsNullOrWhiteSpace(category.PluginId))
-                    continue;
-                foreach (var action in category.Actions)
-                    pluginActionKeys.Add(action.Key);
-            }
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Failed to classify optimization actions by plugin origin.", ex);
-        }
-
-        var builtIn = new List<string>();
-        var plugin = new List<string>();
-        foreach (var key in actionKeys)
-        {
-            if (pluginActionKeys.Contains(key))
-                plugin.Add(key);
-            else
-                builtIn.Add(key);
-        }
-
-        return (builtIn, plugin);
     }
 
     /// <summary>Logs why the elevation channel cannot serve a mutation before returning -1006.</summary>

@@ -116,12 +116,11 @@ public class ApplicationSettingsStoreDefaultsTests
     }
 
     [Fact]
-    public void PluginExtensionsNavigation_ShouldDefaultToVisible()
+    public void PluginExtensionsNavigation_ShouldBeRemovedFromLegacySettings()
     {
         var store = new ApplicationSettings.ApplicationSettingsStore();
 
-        store.NavigationItemsVisibility.Should().ContainKey("pluginExtensions");
-        store.NavigationItemsVisibility["pluginExtensions"].Should().BeTrue();
+        store.NavigationItemsVisibility.Should().NotContainKey("pluginExtensions");
     }
 
     [Fact]

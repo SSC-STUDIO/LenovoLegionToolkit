@@ -17,7 +17,6 @@ public class CatalogDeviceSupportProvider(
 
     private static readonly string[] BasicModeEnabledFeatures =
     [
-        "plugins",
         "system-optimization",
         "language",
         "theme",

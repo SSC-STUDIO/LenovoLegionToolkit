@@ -1,4 +1,4 @@
-﻿# Crowdin configuration for UDT resource localization.
+# Crowdin configuration for UDT resource localization.
 # Keep this file in sync with all neutral resource modules.
 #
 # Culture names follow the BCP 47 canonical form (CONTRIBUTING.md):
@@ -50,67 +50,8 @@ files:
         uz-UZ: uz-Latn-UZ
         uz@Latn: uz-Latn-UZ
 
-  - source: /UniversalDeviceToolkit.Lib.Plugins/Resources/Resource.resx
-    translation: /UniversalDeviceToolkit.Lib.Plugins/Resources/Resource.%locale%.resx
-    languages_mapping:
-      locale:
-        nl: nl-NL
-        nl-NL: nl-NL
-        pt-BR: pt-BR
-        pt-PT: pt
-        zh-CN: zh-Hans
-        zh-TW: zh-Hant
-        uz: uz-Latn-UZ
-        uz-UZ: uz-Latn-UZ
-        uz@Latn: uz-Latn-UZ
-
   - source: /UniversalDeviceToolkit.CLI/Resources/CLI.Resources.resx
     translation: /UniversalDeviceToolkit.CLI/Resources/CLI.Resources.%locale%.resx
-    languages_mapping:
-      locale:
-        nl: nl-NL
-        nl-NL: nl-NL
-        pt-BR: pt-BR
-        pt-PT: pt
-        zh-CN: zh-Hans
-        zh-TW: zh-Hant
-        uz: uz-Latn-UZ
-        uz-UZ: uz-Latn-UZ
-        uz@Latn: uz-Latn-UZ
-        uz: uz-Latn-UZ
-        uz-UZ: uz-Latn-UZ
-        uz@Latn: uz-Latn-UZ
-
-  - source: /Plugins/Official/CustomMouse/Resources/Resource.resx
-    translation: /Plugins/Official/CustomMouse/Resources/Resource.%locale%.resx
-    languages_mapping:
-      locale:
-        nl: nl-NL
-        nl-NL: nl-NL
-        pt-BR: pt-BR
-        pt-PT: pt
-        zh-CN: zh-Hans
-        zh-TW: zh-Hant
-        uz: uz-Latn-UZ
-        uz-UZ: uz-Latn-UZ
-        uz@Latn: uz-Latn-UZ
-
-  - source: /Plugins/Official/ShellIntegration/Resources/Resource.resx
-    translation: /Plugins/Official/ShellIntegration/Resources/Resource.%locale%.resx
-    languages_mapping:
-      locale:
-        nl: nl-NL
-        nl-NL: nl-NL
-        pt-BR: pt-BR
-        pt-PT: pt
-        zh-CN: zh-Hans
-        zh-TW: zh-Hant
-        uz: uz-Latn-UZ
-        uz-UZ: uz-Latn-UZ
-        uz@Latn: uz-Latn-UZ
-
-  - source: /Plugins/Official/ViveTool/Resources/Resource.resx
-    translation: /Plugins/Official/ViveTool/Resources/Resource.%locale%.resx
     languages_mapping:
       locale:
         nl: nl-NL

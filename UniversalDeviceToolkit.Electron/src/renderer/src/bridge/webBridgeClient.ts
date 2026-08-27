@@ -109,8 +109,6 @@ export function createWebBridge(baseUrl: string): Bridge {
     totalMB: number
   }> => ({ processes: [], totalMB: 0 })
   const noopPaths = async (): Promise<string[]> => []
-  const noopStringArray = async (): Promise<string[]> => []
-  const noopString = async (): Promise<string> => ''
   const noopNullableString = async (): Promise<string | null> => null
   const noopClipboardOk = async (): Promise<{ ok: boolean }> => ({ ok: true })
 
@@ -176,12 +174,10 @@ export function createWebBridge(baseUrl: string): Bridge {
     },
     openPath: noopOpened,
     quitApp: noop,
-    selectPluginFiles: noopStringArray,
     selectJsonFile: noopNullableString,
     selectExeFile: noopNullableString,
     selectAudioFile: noopNullableString,
     isMaximized: noopBool,
-    getPluginPreloadPath: noopString,
     onMaximizedChanged: (): (() => void) => noop,
     isFullscreen: noopBool,
     onFullscreenChanged: (): (() => void) => noop,

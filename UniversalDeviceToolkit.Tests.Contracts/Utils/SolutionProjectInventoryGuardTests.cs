@@ -18,7 +18,6 @@ public sealed class SolutionProjectInventoryGuardTests
     private static readonly IReadOnlyList<string> RepositorySolutions =
     [
         "UniversalDeviceToolkit.sln",
-        "Plugins/UniversalDeviceToolkit.Plugins.sln",
     ];
 
     private static readonly IReadOnlyDictionary<string, string> ExternalProjects =

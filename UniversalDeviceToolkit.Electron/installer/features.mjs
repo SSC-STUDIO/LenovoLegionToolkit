@@ -4,8 +4,7 @@ export const OPTIONAL_FEATURES = [
   'networkAcceleration',
   'automation',
   'macro',
-  'keyboard',
-  'pluginExtensions'
+  'keyboard'
 ]
 
 export function defaultFeatures() {
@@ -14,8 +13,7 @@ export function defaultFeatures() {
     networkAcceleration: true,
     automation: true,
     macro: true,
-    keyboard: true,
-    pluginExtensions: true
+    keyboard: true
   }
 }
 

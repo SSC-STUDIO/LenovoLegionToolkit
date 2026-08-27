@@ -27,7 +27,6 @@
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Shared\UniversalDeviceToolkit.Lib.Shared.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Macro\UniversalDeviceToolkit.Lib.Macro.csproj" />
   </ItemGroup>
@@ -130,61 +129,6 @@
     <Error
       Condition="!Exists('$(_HostPublishDirFull)\$(_NetworkProxyWorkerName).exe')"
       Text="NetworkProxy worker was not published beside Host (missing $(_HostPublishDirFull)\$(_NetworkProxyWorkerName).exe)." />
-  </Target>
-
-  <!-- Official plugin ZIPs strip SDK/Shared so the host-owned copies are loaded.
-       Debug F5 / npm run dev:web never ran the shipping payload copy, so store
-       installs failed with FileNotFoundException for Plugins.SDK. -->
-  <PropertyGroup>
-    <_PluginSdkProject>$(MSBuildThisFileDirectory)..\Plugins\SDK\Runtime\UniversalDeviceToolkit.Plugins.SDK.csproj</_PluginSdkProject>
-    <_PluginSharedProject>$(MSBuildThisFileDirectory)..\Plugins\Shared\UniversalDeviceToolkit.Plugins.Shared.csproj</_PluginSharedProject>
-    <_PluginSharedCoreProject>$(MSBuildThisFileDirectory)..\Plugins\Shared.Core\UniversalDeviceToolkit.Plugins.Shared.Core.csproj</_PluginSharedCoreProject>
-    <_PluginSdkDll>$(MSBuildThisFileDirectory)..\Plugins\.build\sdk\UniversalDeviceToolkit.Plugins.SDK.dll</_PluginSdkDll>
-    <_PluginSharedDll>$(MSBuildThisFileDirectory)..\Plugins\.build\shared\UniversalDeviceToolkit.Plugins.Shared.dll</_PluginSharedDll>
-    <_PluginSharedCoreDll>$(MSBuildThisFileDirectory)..\Plugins\Shared.Core\bin\$(Configuration)\UniversalDeviceToolkit.Plugins.Shared.Core.dll</_PluginSharedCoreDll>
-  </PropertyGroup>
-
-  <Target Name="CopyPluginSdkRuntime"
-          AfterTargets="Build"
-          Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">
-    <ItemGroup>
-      <_PluginRuntimeProject Include="$(_PluginSdkProject)" Condition="Exists('$(_PluginSdkProject)')" />
-      <_PluginRuntimeProject Include="$(_PluginSharedProject)" Condition="Exists('$(_PluginSharedProject)')" />
-      <_PluginRuntimeProject Include="$(_PluginSharedCoreProject)" Condition="Exists('$(_PluginSharedCoreProject)')" />
-    </ItemGroup>
-    <MSBuild
-      Projects="@(_PluginRuntimeProject)"
-      Targets="Build"
-      Properties="Configuration=$(Configuration)"
-      Condition="'@(_PluginRuntimeProject)' != ''" />
-    <ItemGroup>
-      <_PluginRuntimeDll Include="$(_PluginSdkDll)" Condition="Exists('$(_PluginSdkDll)')" />
-      <_PluginRuntimeDll Include="$(_PluginSharedDll)" Condition="Exists('$(_PluginSharedDll)')" />
-      <_PluginRuntimeDll Include="$(_PluginSharedCoreDll)" Condition="Exists('$(_PluginSharedCoreDll)')" />
-    </ItemGroup>
-    <Copy
-      SourceFiles="@(_PluginRuntimeDll)"
-      DestinationFolder="$(TargetDir)"
-      SkipUnchangedFiles="true"
-      Condition="'@(_PluginRuntimeDll)' != ''" />
-    <Warning
-      Condition="!Exists('$(TargetDir)UniversalDeviceToolkit.Plugins.SDK.dll') or !Exists('$(TargetDir)UniversalDeviceToolkit.Plugins.Shared.dll')"
-      Text="Plugin SDK/Shared runtime was not copied beside Host. Official store installs cannot load plugin types until UniversalDeviceToolkit.Plugins.SDK.dll and UniversalDeviceToolkit.Plugins.Shared.dll are present in $(TargetDir)." />
-  </Target>
-
-  <Target Name="PublishPluginSdkRuntime"
-          AfterTargets="Publish"
-          Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0' and '$(PublishDir)' != ''">
-    <ItemGroup>
-      <_PluginRuntimeDll Include="$(_PluginSdkDll)" Condition="Exists('$(_PluginSdkDll)')" />
-      <_PluginRuntimeDll Include="$(_PluginSharedDll)" Condition="Exists('$(_PluginSharedDll)')" />
-      <_PluginRuntimeDll Include="$(_PluginSharedCoreDll)" Condition="Exists('$(_PluginSharedCoreDll)')" />
-    </ItemGroup>
-    <Copy
-      SourceFiles="@(_PluginRuntimeDll)"
-      DestinationFolder="$(PublishDir)"
-      SkipUnchangedFiles="true"
-      Condition="'@(_PluginRuntimeDll)' != ''" />
   </Target>
 
 </Project>

@@ -34,8 +34,8 @@ const SOFTWARE_BANNERS: { app: SoftwareDisablerApp; id: string; messageKey: stri
 
 /**
  * Host for persistent corner toasts — port of Electron MainWindow._statusNotificationStack
- * (AppStatusBanner instances): update available, plugin extensions disabled, and
- * the three software-conflict warnings (Vantage / Legion Zone / Lenovo Hotkeys).
+ * (AppStatusBanner instances): update available and the three software-conflict
+ * warnings (Vantage / Legion Zone / Lenovo Hotkeys).
  * Renders as a bottom-right overlay so page content is not pushed down.
  */
 export default function AppStatusBanners(): React.JSX.Element {

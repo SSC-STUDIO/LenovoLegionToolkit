@@ -20,7 +20,6 @@ export interface HostCapabilityMap {
   driver: boolean
   cleanup: boolean
   macro: boolean
-  plugins: boolean
   updates: boolean
   fps: boolean
   accentColor: boolean

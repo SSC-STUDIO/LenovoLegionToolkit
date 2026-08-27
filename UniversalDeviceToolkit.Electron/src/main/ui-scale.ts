@@ -4,7 +4,7 @@
  * effectiveZoom = platform base density x user "Interface scale" setting.
  * The renderer pushes its persisted uiScale over IPC at startup and on change;
  * the main process applies the product to every surface (main window, OSD,
- * status window, tray popup, plugin <webview> guests) via
+ * status window, tray popup) via
  * webContents.setZoomFactor. Zoom factor - unlike CSS zoom - keeps @media,
  * @container and window.devicePixelRatio consistent with each other.
  */
@@ -49,7 +49,7 @@ export function applyZoomTo(contents: WebContents): void {
   }
 }
 
-/** Re-applies the effective zoom to every window and plugin webview guest. */
+/** Re-applies the effective zoom to every window. */
 export function applyZoomToAllSurfaces(): void {
   for (const contents of webContents.getAllWebContents()) {
     const type = contents.getType()
@@ -60,7 +60,7 @@ export function applyZoomToAllSurfaces(): void {
 }
 
 /**
- * Keeps newly created surfaces (windows, plugin webviews) at the effective
+ * Keeps newly created windows at the effective
  * zoom. dom-ready re-applies after each navigation because Chromium tracks
  * zoom per origin and data:/file: loads can reset it.
  */

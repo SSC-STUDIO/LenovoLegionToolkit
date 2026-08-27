@@ -86,7 +86,6 @@ function toHostArgs(argv) {
   const args = []
   if (argv.includes('--trace')) args.push('--trace')
   if (argv.includes('--safe-start')) args.push('--safe-start')
-  if (argv.includes('--no-plugins')) args.push('--no-plugins')
   if (argv.includes('--no-hardware')) args.push('--no-hardware')
   if (argv.includes('--experimental-gpu-working-mode')) args.push('--experimental-gpu-working-mode')
   const proxyUrl = stringSwitch(argv, '--proxy-url')

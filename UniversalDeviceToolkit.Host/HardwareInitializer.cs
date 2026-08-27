@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib;
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Host.Rpc;
 #if WINDOWS
@@ -27,7 +25,7 @@ namespace UniversalDeviceToolkit.Host;
 
 /// <summary>
 /// Headless equivalent of the WPF startup background initialization:
-/// safe-start detection, plugin loading, network recovery and the same
+/// safe-start detection, network recovery and the same
 /// serial hardware steps + service start steps used by the desktop app.
 /// Progress is surfaced to the Electron front end via bridge events.
 /// </summary>
@@ -54,14 +52,13 @@ public sealed class HardwareInitializer
     public IReadOnlyList<string> SkippedSteps => _skippedSteps;
 
     /// <summary>
-    /// Runs the synchronous pre-flight work (safe-start decision, plugins,
+    /// Runs the synchronous pre-flight work (safe-start decision,
     /// network recovery) and kicks off the hardware background initialization.
     /// The host is responsive to bridge requests immediately after this returns.
     /// </summary>
     public async Task RunAsync()
     {
         DetermineAndApplySafeStartMode();
-        await LoadPluginsAsync().ConfigureAwait(false);
 #if WINDOWS
         await RunNetworkStartupRecoveryAsync().ConfigureAwait(false);
 #endif
@@ -122,102 +119,6 @@ public sealed class HardwareInitializer
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Resetting health guard on startup failed: {ex.Message}", ex);
         }
-    }
-
-    private async Task LoadPluginsAsync()
-    {
-        if (_flags.NoPlugins)
-        {
-            Log.Instance.Trace("Plugin loading skipped via --no-plugins.");
-            return;
-        }
-
-        if (_shouldEnterSafeMode)
-        {
-            Log.Instance.Trace("Safe-start active; skipping plugin discovery and loading.");
-            return;
-        }
-
-#if WINDOWS
-        var applicationSettings = IoCContainer.Resolve<ApplicationSettings>();
-        if (!applicationSettings.Store.ExtensionsEnabled)
-        {
-            Log.Instance.Trace("Extensions disabled in settings; skipping plugin directory scan.");
-            return;
-        }
-#endif
-
-        if (!HasInstalledPlugins())
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("No installed plugins found; skipping plugin directory scan.");
-            return;
-        }
-
-        try
-        {
-            var pluginManager = IoCContainer.Resolve<IPluginManager>();
-            pluginManager.PruneRetiredPlugins();
-            await pluginManager.ScanAndLoadPluginsAsync().ConfigureAwait(false);
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace("Plugins initialized successfully.");
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning("Failed to initialize plugins.", ex);
-        }
-    }
-
-    private static bool HasInstalledPlugins()
-    {
-        try
-        {
-            foreach (var root in PluginPaths.GetAllPossiblePluginsDirectories())
-            {
-                if (!Directory.Exists(root))
-                    continue;
-
-                IEnumerable<string> children;
-                try
-                {
-                    children = Directory.EnumerateDirectories(root);
-                }
-                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Skipping unreadable plugin root '{root}'.", ex);
-                    continue;
-                }
-
-                try
-                {
-                    foreach (var dir in children)
-                    {
-                        try
-                        {
-                            if (PluginPaths.ContainsPlugin(dir))
-                                return true;
-                        }
-                        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-                        {
-                            if (Log.Instance.IsTraceEnabled)
-                                Log.Instance.Trace($"Skipping unreadable plugin directory '{dir}'.", ex);
-                        }
-                    }
-                }
-                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
-                {
-                    if (Log.Instance.IsTraceEnabled)
-                        Log.Instance.Trace($"Plugin root '{root}' enumeration failed.", ex);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning("Plugin directory scan failed; skipping plugin loading.", ex);
-        }
-
-        return false;
     }
 
 #if WINDOWS

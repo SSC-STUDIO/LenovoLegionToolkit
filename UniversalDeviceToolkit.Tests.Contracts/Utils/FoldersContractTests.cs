@@ -36,8 +36,8 @@ public sealed class FoldersContractTests : IDisposable
     [Fact]
     public void GetAppDataSubdirectory_WithSafeName_CreatesChildDirectory()
     {
-        var path = Folders.GetAppDataSubdirectory("plugins");
-        path.Should().Be(Path.Combine(Folders.AppData, "plugins"));
+        var path = Folders.GetAppDataSubdirectory("cache");
+        path.Should().Be(Path.Combine(Folders.AppData, "cache"));
         Directory.Exists(path).Should().BeTrue();
         PathSecurity.IsPathWithinAllowedDirectory(path, Folders.AppData).Should().BeTrue();
     }

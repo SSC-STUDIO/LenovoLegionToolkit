@@ -1,4 +1,4 @@
-import { app, BrowserWindow, clipboard, ipcMain, nativeTheme, powerMonitor, screen, session, shell, webContents } from 'electron'
+import { app, BrowserWindow, clipboard, ipcMain, nativeTheme, powerMonitor, screen, session, shell } from 'electron'
 import { join } from 'path'
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
@@ -38,7 +38,6 @@ import {
   setSurfaceVisible,
   setUiActivityHandler
 } from './ui-activity'
-import { installPluginWebviewGuards } from './plugin-webview'
 
 // The Windows AppUserModelId (taskbar grouping, notifications) is meaningless
 // on macOS/Linux; setting it there is a no-op, so keep the call Windows-only.
@@ -100,7 +99,7 @@ if (flags.singleProcess) {
 }
 
 // Renderer zoom is owned by ui-scale.ts (platform base density x user scale);
-// every window and plugin webview created from here on picks it up.
+// every window created from here on picks it up.
 installZoomAutoApply()
 
 /**
@@ -278,18 +277,7 @@ const bufferedHostEvents: Array<{ event: string; data: unknown }> = []
 const BUFFERED_HOST_EVENT_LIMIT = 64
 let hostEventsAttached = false
 
-function sendHostEventToWebviewGuests(event: string, data: unknown): void {
-  if (!mainWindow || mainWindow.isDestroyed()) return
-  for (const webContentsItem of webContents.getAllWebContents()) {
-    if (webContentsItem === mainWindow.webContents) continue
-    if (webContentsItem.getType() === 'webview' && !webContentsItem.isDestroyed()) {
-      webContentsItem.send('plugin-host:event', event, data)
-    }
-  }
-}
-
 function bufferOrSendHostEvent(event: string, data: unknown): void {
-  sendHostEventToWebviewGuests(event, data)
   if (mainWindow && !mainWindow.isDestroyed() && !mainWindow.webContents.isLoadingMainFrame()) {
     mainWindow.webContents.send('bridge:event', event, data)
     return
@@ -392,10 +380,6 @@ async function invokeBridgeMethod(method: string, params?: unknown): Promise<unk
     return launchVerifiedInstaller(params)
   }
   return hostClient.invoke(method, params)
-}
-
-function pluginHostPreloadPath(): string {
-  return join(__dirname, '../preload/plugin-host.js')
 }
 
 function parseWindowVisibilityAction(data: unknown): 'Show' | 'Hide' | null {
@@ -766,9 +750,7 @@ function createWindow(): void {
         installerSelection == null ? [] : buildInstallerRendererArguments(installerSelection),
       // First paint already at the effective zoom (installZoomAutoApply keeps
       // later navigations in sync).
-      zoomFactor: zoom,
-      // Plugin web pages (contributes.webPage) are hosted in <webview> elements.
-      webviewTag: true
+      zoomFactor: zoom
     }
   })
 
@@ -916,7 +898,6 @@ function applyShellLaunchEnvironment(): void {
 
 app.whenReady().then(() => {
   initMainLogger()
-  installPluginWebviewGuards(pluginHostPreloadPath(), app)
   // Apply the last persisted interface scale before the window exists so the
   // first paint (and the derived minimum size) already match; the renderer
   // re-pushes its localStorage value over IPC right after boot.
@@ -987,10 +968,6 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('window:is-maximized', () => mainWindow?.isMaximized() ?? false)
-
-  // Absolute path of the plugin webview guest preload (built by electron-vite
-  // into out/preload/plugin-host.js).
-  ipcMain.handle('plugin:preload-path', () => pluginHostPreloadPath())
 
   // Port of Electron FullscreenHelper (renderer-observable window state).
   // The enter/leave-full-screen push listeners are attached in createWindow.

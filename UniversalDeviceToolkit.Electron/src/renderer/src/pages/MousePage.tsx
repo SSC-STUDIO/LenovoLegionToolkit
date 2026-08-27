@@ -49,9 +49,9 @@ const THEME_MODE_VALUES: CursorThemeMode[] = [
 ]
 
 /**
- * Native replacement for the CustomMouse plugin page. Host state lives in the
- * store; this component only keeps unsaved local edits ("drafts") which are
- * cleared again once the matching host write succeeds.
+ * Cursor & pointer page (absorbed the retired CustomMouse plugin). Host state
+ * lives in the store; this component only keeps unsaved local edits ("drafts")
+ * which are cleared again once the matching host write succeeds.
  */
 export default function MousePage(): React.JSX.Element {
   const { t } = useTranslation()

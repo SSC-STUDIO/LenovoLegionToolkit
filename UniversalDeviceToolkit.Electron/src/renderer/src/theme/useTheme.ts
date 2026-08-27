@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { settingsApi } from '../api/settings'
 import { systemApi } from '../api/system'
 import { applyUiScale, useThemeStore } from '../stores/themeStore'
-import type { ThemeMode } from '../stores/themeStore'
+import type { StylePreference, ThemeMode } from '../stores/themeStore'
 import { computeAutoUiScale, layoutWidthChanged, readLayoutWidth, UI_SCALE_AUTO } from './uiScale'
 import {
   applyAccentSurfacePalette,
@@ -93,10 +93,12 @@ function rgbToHex(color: { R: number; G: number; B: number }): string {
 export interface ThemeController {
   themeMode: ThemeMode
   themePreference: 'system' | 'light' | 'dark'
+  stylePreference: StylePreference
   colorPrimary?: string
   uiScale: number
   setThemeMode: (mode: ThemeMode) => void
   setThemePreference: (preference: 'system' | 'light' | 'dark') => void
+  setStylePreference: (preference: StylePreference) => void
   setAccent: (color?: string) => void
   setUiScale: (scale: number) => void
 }
@@ -104,6 +106,9 @@ export interface ThemeController {
 export function useTheme(): ThemeController {
   const themeMode = useThemeStore((s) => s.themeMode)
   const themePreference = useThemeStore((s) => s.themePreference)
+  // 风格偏好是纯本地状态，不参与 host settings 同步。
+  const stylePreference = useThemeStore((s) => s.stylePreference)
+  const setStylePreference = useThemeStore((s) => s.setStylePreference)
   const colorPrimary = useThemeStore((s) => s.colorPrimary)
   const uiScale = useThemeStore((s) => s.uiScale)
   const uiScalePreference = useThemeStore((s) => s.uiScalePreference)
@@ -255,6 +260,17 @@ export function useTheme(): ThemeController {
     }
   }, [uiScalePreference, applyComputedUiScale])
 
-  return { themeMode, themePreference, colorPrimary, uiScale, setThemeMode, setThemePreference, setAccent, setUiScale }
+  return {
+    themeMode,
+    themePreference,
+    colorPrimary,
+    uiScale,
+    stylePreference,
+    setThemeMode,
+    setThemePreference,
+    setStylePreference,
+    setAccent,
+    setUiScale
+  }
 }
 

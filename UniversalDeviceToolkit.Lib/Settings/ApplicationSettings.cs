@@ -91,9 +91,6 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         public List<string> ExcludedProcesses { get; set; } = [];
 
         public List<CustomCleanupRule> CustomCleanupRules { get; set; } = [];
-        public bool ExtensionsEnabled { get; set; } = false;
-        public List<string> InstalledExtensions { get; set; } = [];
-        public List<string> PendingDeletionExtensions { get; set; } = [];
 
         public List<string>? SelectedCleanupActions { get; set; }
         public List<string>? SelectedOptimizationActions { get; set; }
@@ -106,16 +103,9 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
             { "automation", true },
             { "macro", true },
             { "windowsOptimization", true },
-            { "pluginExtensions", true },
 
             { "about", true }
         };
-
-        /// <summary>
-        /// One-time migration marker for the former opt-in plugin extensions default.
-        /// Kept for settings compatibility so older settings can be migrated to visible once.
-        /// </summary>
-        public bool PluginExtensionsOptInMigrationDone { get; set; }
     }
 
     public ApplicationSettings() : base("settings.json") { }
@@ -156,8 +146,6 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
         store.SmartKeyDoublePressActionList ??= [];
         store.ExcludedProcesses ??= [];
         store.CustomCleanupRules = NormalizeCleanupRules(store.CustomCleanupRules);
-        store.InstalledExtensions ??= [];
-        store.PendingDeletionExtensions ??= [];
         store.NavigationItemsVisibility ??= new ApplicationSettingsStore().NavigationItemsVisibility;
         // Fill any missing nav keys with defaults without overwriting values the user already
         // persisted (except the one-time migration from the former hidden default below).
@@ -168,13 +156,9 @@ public class ApplicationSettings : AbstractSettings<ApplicationSettings.Applicat
                 store.NavigationItemsVisibility[pair.Key] = pair.Value;
         }
 
-        // Older builds used a hidden-by-default plugin extensions entry. Migrate that legacy
-        // default once so the page is visible after upgrading, then let the user control it.
-        if (!store.PluginExtensionsOptInMigrationDone)
-        {
-            store.NavigationItemsVisibility["pluginExtensions"] = true;
-            store.PluginExtensionsOptInMigrationDone = true;
-        }
+        // Older builds kept a plugin-extensions nav entry; drop it now that the
+        // extension system has been retired.
+        store.NavigationItemsVisibility.Remove("pluginExtensions");
 
         return store;
     }

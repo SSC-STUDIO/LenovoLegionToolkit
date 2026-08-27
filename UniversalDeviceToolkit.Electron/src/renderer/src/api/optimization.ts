@@ -15,7 +15,6 @@ export interface OptimizationCategoryDefinition {
   key: string
   title: string
   description: string
-  pluginId: string | null
   hasSettings: boolean
   actions: OptimizationActionDefinition[]
 }

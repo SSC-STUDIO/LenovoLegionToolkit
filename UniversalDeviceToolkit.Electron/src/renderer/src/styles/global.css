@@ -260,6 +260,93 @@
   --udt-shadow-toast: 0 6px 20px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
+/* --- Style preset: anime cartoon (二次元卡通) ---
+   Opt-in skin activated by adding data-style="anime" to <html>.
+   Decoration is fully static (gradients / shadows / radii only, no keyframes).
+   六个带 !important 的变量会被 accentPalette 以内联自定义属性写在 <html> 上，
+   只有作者 !important 声明才能胜过普通内联样式。 */
+
+/* Layer 1 - dark combination (dark baseline recolored to a pastel violet night). */
+:root[data-style='anime'] {
+  --udt-surface-window: #241c2e !important;
+  --udt-surface-card: #2f2440 !important;
+  --udt-surface-navigation: #291f36;
+  --udt-control-fill-default: rgba(255, 158, 207, 0.09) !important;
+  --udt-control-fill-secondary: rgba(255, 158, 207, 0.15) !important;
+  --udt-control-fill-tertiary: rgba(173, 140, 255, 0.05) !important;
+  --udt-text-secondary: rgba(255, 214, 235, 0.80) !important;
+  --udt-control-stroke-default: rgba(255, 158, 207, 0.16);
+  --udt-control-stroke-secondary: rgba(255, 158, 207, 0.20);
+  --udt-control-stroke-strong: rgba(255, 158, 207, 0.34);
+  --udt-subtle-fill-secondary: rgba(255, 158, 207, 0.07);
+  --udt-subtle-fill-tertiary: rgba(255, 158, 207, 0.05);
+  /* Soft pink-violet shadows with a touch of near-black kept for depth. */
+  --udt-shadow-low: 0 2px 10px rgba(255, 121, 198, 0.10), 0 1px 3px rgba(18, 8, 28, 0.26);
+  --udt-shadow-medium: 0 4px 16px rgba(255, 121, 198, 0.14), 0 2px 6px rgba(18, 8, 28, 0.30);
+  --udt-shadow-glass: 0 4px 18px rgba(173, 140, 255, 0.15), 0 2px 8px rgba(18, 8, 28, 0.24);
+}
+
+/* Static bokeh wash folded into the body background itself (multi-background,
+   no extra DOM layers). Higher specificity than the base body rule below,
+   so no !important is needed here. */
+:root[data-style='anime'] body {
+  background:
+    radial-gradient(640px 420px at 8% -6%, rgba(255, 158, 207, 0.13), transparent 62%),
+    radial-gradient(520px 380px at 96% 4%, rgba(146, 120, 255, 0.11), transparent 60%),
+    radial-gradient(600px 420px at 50% 108%, rgba(126, 196, 255, 0.08), transparent 58%),
+    var(--udt-surface-window);
+}
+
+/* Layer 2 - shared shape adjustments for both combinations
+   (micro/progress radii intentionally untouched). */
+:root[data-style='anime'] {
+  --udt-radius-small: 10px;
+  --udt-radius-sm: 10px;
+  --udt-radius-control: 14px;
+  --udt-radius-md: 14px;
+  --udt-radius-card: 22px;
+  --udt-radius-surface: 26px;
+}
+
+/* Layer 3 - light combination (sakura cream). Its higher specificity
+   outweighs layer 1 whenever both attributes are present, including the
+   six repeated !important tokens. */
+:root[data-theme='light'][data-style='anime'] {
+  --udt-surface-window: #fff3f9 !important;
+  --udt-surface-card: #ffffff !important;
+  --udt-surface-navigation: #ffeaf5;
+  --udt-control-fill-default: rgba(240, 98, 166, 0.08) !important;
+  --udt-control-fill-secondary: rgba(240, 98, 166, 0.13) !important;
+  --udt-control-fill-tertiary: rgba(150, 102, 255, 0.05) !important;
+  --udt-text-secondary: rgba(103, 62, 86, 0.72) !important;
+  --udt-control-stroke-default: rgba(240, 98, 166, 0.22);
+  --udt-control-stroke-secondary: rgba(240, 98, 166, 0.28);
+  --udt-control-stroke-strong: rgba(240, 98, 166, 0.42);
+  --udt-subtle-fill-secondary: rgba(240, 98, 166, 0.09);
+  --udt-subtle-fill-tertiary: rgba(240, 98, 166, 0.06);
+  /* Rose-toned soft shadows. */
+  --udt-shadow-low: 0 2px 10px rgba(240, 98, 166, 0.12), 0 1px 3px rgba(103, 62, 86, 0.06);
+  --udt-shadow-medium: 0 4px 16px rgba(240, 98, 166, 0.15), 0 2px 6px rgba(103, 62, 86, 0.08);
+  --udt-shadow-glass: 0 4px 18px rgba(240, 98, 166, 0.18), 0 2px 8px rgba(103, 62, 86, 0.07);
+}
+
+:root[data-theme='light'][data-style='anime'] body {
+  background:
+    radial-gradient(640px 420px at 8% -6%, rgba(255, 182, 222, 0.35), transparent 62%),
+    radial-gradient(520px 380px at 96% 4%, rgba(196, 168, 255, 0.22), transparent 60%),
+    radial-gradient(600px 420px at 50% 108%, rgba(163, 216, 255, 0.20), transparent 58%),
+    var(--udt-surface-window);
+}
+
+/* Tinted scrollbar thumbs per combination. */
+:root[data-style='anime'] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 158, 207, 0.35);
+}
+
+:root[data-theme='light'][data-style='anime'] ::-webkit-scrollbar-thumb {
+  background: rgba(240, 98, 166, 0.40);
+}
+
 *,
 *::before,
 *::after {
@@ -1704,7 +1791,7 @@ select.udt-select {
 }
 /* ── Animation system polish ────────────────────────────────────── */
 
-/* Staggered list entrance: pipeline cards, plugin cards, optimization
+/* Staggered list entrance: pipeline cards, optimization
    categories, settings cards cascade in with a soft rise (35ms/step,
    capped at 240ms — matches the skeleton stagger rhythm). */
 @keyframes udt-list-item-enter {
@@ -1719,7 +1806,6 @@ select.udt-select {
 }
 
 .udt-pipeline-list > .udt-pipeline,
-.udt-plugins-page__list > .udt-plugin-card,
 .udt-optimization-layout__main > .udt-card,
 .udt-settings-section > .udt-settings-card,
 .udt-macro-page .udt-macro-list > *,
@@ -1728,28 +1814,24 @@ select.udt-select {
 }
 
 .udt-pipeline-list > .udt-pipeline:nth-child(1),
-.udt-plugins-page__list > .udt-plugin-card:nth-child(1),
 .udt-optimization-layout__main > .udt-card:nth-child(1),
 .udt-settings-section > .udt-settings-card:nth-child(1),
 .udt-modal__list > :nth-child(1) {
   animation-delay: 0ms;
 }
 .udt-pipeline-list > .udt-pipeline:nth-child(2),
-.udt-plugins-page__list > .udt-plugin-card:nth-child(2),
 .udt-optimization-layout__main > .udt-card:nth-child(2),
 .udt-settings-section > .udt-settings-card:nth-child(2),
 .udt-modal__list > :nth-child(2) {
   animation-delay: 35ms;
 }
 .udt-pipeline-list > .udt-pipeline:nth-child(3),
-.udt-plugins-page__list > .udt-plugin-card:nth-child(3),
 .udt-optimization-layout__main > .udt-card:nth-child(3),
 .udt-settings-section > .udt-settings-card:nth-child(3),
 .udt-modal__list > :nth-child(3) {
   animation-delay: 70ms;
 }
 .udt-pipeline-list > .udt-pipeline:nth-child(n + 4),
-.udt-plugins-page__list > .udt-plugin-card:nth-child(n + 4),
 .udt-optimization-layout__main > .udt-card:nth-child(n + 4),
 .udt-settings-section > .udt-settings-card:nth-child(n + 4),
 .udt-modal__list > :nth-child(n + 4) {
@@ -1837,7 +1919,6 @@ select.udt-select {
 /* Reduced motion: disable the new decorations too */
 @media (prefers-reduced-motion: reduce) {
   .udt-pipeline-list > *,
-  .udt-plugins-page__list > .udt-plugin-card,
   .udt-optimization-layout__main > .udt-card,
   .udt-settings-section > .udt-settings-card,
   .udt-macro-page .udt-macro-list > *,
@@ -1871,7 +1952,6 @@ select.udt-select {
   .udt-utils-progress-fill,
   .udt-loading-overlay__progress-bar,
   .udt-notification-item__progress-fill,
-  .udt-plugin-card__progress-fill,
   .ant-progress-line .ant-progress-bg {
     transition: none;
   }

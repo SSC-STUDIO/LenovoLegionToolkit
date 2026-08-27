@@ -17,7 +17,6 @@ const PAGE_LABELS: Record<string, string> = {
   '/automation': 'nav.automation',
   '/macro': 'nav.macro',
   '/optimization': 'nav.windowsOptimization',
-  '/plugins': 'nav.pluginExtensions',
   '/settings': 'nav.settings',
   '/about': 'nav.about'
 }

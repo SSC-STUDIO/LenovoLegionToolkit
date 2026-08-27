@@ -23,7 +23,6 @@ using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.Features.Hybrid;
 using UniversalDeviceToolkit.Lib.Features.Hybrid.Notify;
 #endif
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Host.Rpc;
 using UniversalDeviceToolkit.Host.Rpc.Handlers;
@@ -57,8 +56,8 @@ public static class Program
 
         try
         {
-            // Restore the shared language before plugins, hardware services, or
-            // RPC handlers are initialized so Host-owned resources start in that
+            // Restore the shared language before hardware services or RPC
+            // handlers are initialized so Host-owned resources start in that
             // culture. Startup failures remain inside the normal fatal handler.
             LocalizationRuntime.Initialize();
 
@@ -68,7 +67,6 @@ public static class Program
             IoCContainer.Initialize(
                 cb => cb.RegisterInstance(settings).As<ApplicationSettings>().AsSelf().SingleInstance(),
                 new UniversalDeviceToolkit.Lib.IoCModule(),
-                new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
                 new BridgeModule());
@@ -76,13 +74,10 @@ public static class Program
             IoCContainer.Initialize(
                 preBuild: null,
                 new UniversalDeviceToolkit.Lib.IoCModule(),
-                new UniversalDeviceToolkit.Lib.Plugins.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Automation.IoCModule(),
                 new UniversalDeviceToolkit.Lib.Macro.IoCModule(),
                 new BridgeModule());
 #endif
-
-            PluginHostContext.SetCurrent(new HostPluginHostContext());
 
             IoCContainer.Resolve<HttpClientFactory>().SetProxy(
                 flags.ProxyUrl is null ? null : new Uri(flags.ProxyUrl),
@@ -220,9 +215,6 @@ public static class Program
         // playback/recording) on portable hosts.
         MacroHandlers.Register(rpc);
 
-        PluginHandlers.Register(rpc);
-        PluginOfficialHandlers.Register(rpc);
-
         VerifyRpcSurface(rpc);
 
         _ = flags;
@@ -261,9 +253,7 @@ public static class Program
         {
             if (listed.Contains(method))
                 continue;
-            if (method.StartsWith("plugins.", StringComparison.Ordinal) ||
-                method.StartsWith("plugin.", StringComparison.Ordinal) ||
-                method.StartsWith("macro.", StringComparison.Ordinal))
+            if (method.StartsWith("macro.", StringComparison.Ordinal))
                 continue;
             Log.Instance.Warning($"RPC registry drift: '{method}' is registered but missing from RpcMethodNames (portable hosts would answer -32601).");
         }
@@ -370,8 +360,6 @@ public static class Program
             }
 #endif
 
-            await StopPluginsAsync().ConfigureAwait(false);
-
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Host shutdown completed in {totalStopwatch.ElapsedMilliseconds}ms.");
         }
@@ -382,45 +370,10 @@ public static class Program
         }
         finally
         {
-            PluginHostContext.Reset();
-
             try { Log.Instance.Flush(); } catch { /* ignore */ }
             try { await Log.Instance.ShutdownAsync().ConfigureAwait(false); } catch { /* ignore */ }
 
             try { IoCContainer.Dispose(); } catch { /* ignore */ }
-        }
-    }
-
-    private static async Task StopPluginsAsync()
-    {
-        try
-        {
-            if (IoCContainer.TryResolve<IPluginManager>() is not { } pluginManager)
-                return;
-
-            var registeredPlugins = pluginManager.GetRegisteredPlugins().ToList();
-            if (registeredPlugins.Count == 0)
-                return;
-
-            var shutdownTasks = registeredPlugins.Select(plugin => Task.Run(() =>
-            {
-                try { plugin.OnShutdown(); }
-                catch (Exception ex)
-                {
-                    Log.Instance.Warning($"Plugin OnShutdown failed. [{plugin.GetType().Name}]", ex);
-                }
-            })).ToList();
-
-            await Task.WhenAll(shutdownTasks).ConfigureAwait(false);
-
-            await Task.Delay(200).ConfigureAwait(false);
-
-            if (pluginManager is PluginManager manager)
-                await manager.PerformPendingDeletionsAsync().ConfigureAwait(false);
-        }
-        catch (Exception ex)
-        {
-            Log.Instance.Warning("Plugin shutdown process failed; continuing app shutdown.", ex);
         }
     }
 

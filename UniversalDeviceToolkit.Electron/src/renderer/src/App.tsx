@@ -12,9 +12,7 @@ const KeyboardBacklightPage = lazy(() => import('./pages/KeyboardBacklightPage')
 const MousePage = lazy(() => import('./pages/MousePage'))
 const MacroPage = lazy(() => import('./pages/MacroPage'))
 const WindowsOptimizationPage = lazy(() => import('./pages/WindowsOptimizationPage'))
-const PluginExtensionsPage = lazy(() => import('./pages/PluginExtensionsPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
-const PluginPageView = lazy(() => import('./components/plugins/PluginPageView'))
 
 function PageFallback(): React.JSX.Element {
   return (
@@ -51,8 +49,6 @@ export default function App(): React.JSX.Element {
             <Route path="/mouse" element={<MousePage />} />
             <Route path="/macro" element={<InstalledFeatureRoute feature="macro"><MacroPage /></InstalledFeatureRoute>} />
             <Route path="/optimization" element={<InstalledFeatureRoute feature="windowsOptimization"><WindowsOptimizationPage /></InstalledFeatureRoute>} />
-            <Route path="/plugins" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginExtensionsPage /></InstalledFeatureRoute>} />
-            <Route path="/plugins/:pluginId" element={<InstalledFeatureRoute feature="pluginExtensions"><PluginPageView /></InstalledFeatureRoute>} />
             <Route path="/about" element={<AboutPage />} />
           </Route>
         </Routes>

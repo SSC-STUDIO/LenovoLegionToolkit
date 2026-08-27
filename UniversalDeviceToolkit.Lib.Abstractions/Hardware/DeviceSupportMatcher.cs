@@ -27,8 +27,7 @@ public static class DeviceSupportMatcher
         "battery-conservation",
         "keyboard-backlight",
         "fan-curve",
-        "gpu-overclock",
-        "plugin-runtime"
+        "gpu-overclock"
     ];
 
     public static DeviceSupportInfo Evaluate(

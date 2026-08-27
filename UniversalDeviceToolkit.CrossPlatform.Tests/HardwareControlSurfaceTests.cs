@@ -18,11 +18,6 @@ public sealed class HardwareControlSurfaceTests
             ],
             true,
             []);
-        var plugins = new PluginDiscoveryReport(
-            "test",
-            [],
-            [new PluginDescriptor("cross", "Cross", "1.0.0", "/plugins/cross/plugin.json", true, true, 1, ["linux"], "test")],
-            []);
         var cpuGovernor = new CpuGovernorStatus(
             "linux-cpufreq",
             "schedutil",
@@ -46,11 +41,11 @@ public sealed class HardwareControlSurfaceTests
             "Basic",
             "framework-basic",
             "Framework Basic",
-            ["plugins"],
+            ["diagnostics"],
             ["vendor-hardware-controls"],
             "test");
 
-        var surface = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, batteryChargeLimit, brightness, plugins, deviceSupport).Read();
+        var surface = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, batteryChargeLimit, brightness, deviceSupport).Read();
 
         surface.Controls.Should().ContainEquivalentOf(new HardwareControlDescriptor(
             "power-profile",
@@ -80,11 +75,6 @@ public sealed class HardwareControlSurfaceTests
             control.IsAvailable &&
             control.IsWritable &&
             control.CurrentValue == "50%");
-        surface.Controls.Should().Contain(control =>
-            control.Id == "plugin-manifests" &&
-            control.IsAvailable &&
-            !control.IsWritable &&
-            control.Detail.Contains("1 cross-platform", StringComparison.OrdinalIgnoreCase));
         surface.Controls.Should().Contain(control =>
             control.Id == "vendor-hardware-controls" &&
             !control.IsAvailable &&

@@ -17,7 +17,6 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" />
 	  <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Abstractions\UniversalDeviceToolkit.Lib.Abstractions.csproj" />
-	  <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj" />
 	  <ProjectReference Include="..\UniversalDeviceToolkit.CLI.Lib\UniversalDeviceToolkit.CLI.Lib.csproj" />
 	</ItemGroup>
 	<!--

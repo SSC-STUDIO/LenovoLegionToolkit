@@ -43,16 +43,14 @@ public record WindowsOptimizationCategoryDefinition(
     string TitleResourceKey,
     string DescriptionResourceKey,
     IReadOnlyList<WindowsOptimizationActionDefinition> Actions,
-    string? PluginId = null,
     Type? ResourceAnchorType = null)
 {
     public WindowsOptimizationCategoryDefinition(
         string key,
         string titleResourceKey,
         string descriptionResourceKey,
-        IReadOnlyList<WindowsOptimizationActionDefinition> actions,
-        string? pluginId)
-        : this(key, titleResourceKey, descriptionResourceKey, actions, pluginId, null)
+        IReadOnlyList<WindowsOptimizationActionDefinition> actions)
+        : this(key, titleResourceKey, descriptionResourceKey, actions, null)
     {
     }
 }
@@ -118,22 +116,7 @@ public class WindowsOptimizationService
     }
 
     public IReadOnlyList<WindowsOptimizationCategoryDefinition> GetCategories()
-    {
-        var list = new List<WindowsOptimizationCategoryDefinition>(_categoryProvider.BuildCategories());
-
-        try
-        {
-            var extender = IoCContainer.Resolve<IOptimizationCategoryExtender>();
-            list.AddRange(extender.GetPluginCategories());
-        }
-        catch (Exception ex)
-        {
-            if (Log.Instance.IsTraceEnabled)
-                Log.Instance.Trace($"Failed to get optimization categories from plugins", ex);
-        }
-
-        return list;
-    }
+        => new List<WindowsOptimizationCategoryDefinition>(_categoryProvider.BuildCategories());
 
     public async Task ApplyActionAsync(string actionKey, CancellationToken cancellationToken)
     {

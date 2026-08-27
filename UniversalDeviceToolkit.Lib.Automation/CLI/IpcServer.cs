@@ -21,7 +21,6 @@ using UniversalDeviceToolkit.Lib.Messaging;
 using UniversalDeviceToolkit.Lib.Messaging.Messages;
 using UniversalDeviceToolkit.Lib.Network;
 using UniversalDeviceToolkit.Lib.Settings;
-using UniversalDeviceToolkit.Lib.Plugins;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
 using UniversalDeviceToolkit.Abstractions.Lifecycle;
@@ -630,47 +629,29 @@ public class IpcServer(
 
     private static Task<string> IsShellRegisteredAsync()
     {
-        // Shell functionality moved to ShellIntegration plugin
-        // Use plugin system to check shell status
-        try
-        {
-            var pluginManager = IoCContainer.Resolve<IPluginManager>();
-            var shellPlugin = pluginManager.GetRegisteredPlugins()
-                .FirstOrDefault(p => p.Id == "shell-integration" && pluginManager.IsInstalled(p.Id));
-            
-            if (shellPlugin != null)
-            {
-                // Plugin provides shell functionality
-                return Task.FromResult("true");
-            }
-            return Task.FromResult("false");
-        }
-        catch
-        {
-            return Task.FromResult("false");
-        }
+        // Shell integration (and the plugin system that provided it) has been
+        // retired; the shell registration state is no longer managed here.
+        return Task.FromResult("false");
     }
-
-
 
 
 
 
     private static string IsShellInstalled()
     {
-        // Shell integration is now handled by plugin. Use GUI for shell management.
+        // Shell integration was retired with the plugin system. Use the OS directly.
         return "false";
     }
 
     private static Task InstallShellAsync()
     {
-        // Shell integration is now handled by plugin. Use GUI for shell management.
-        return Task.FromException(new IpcException("Shell installation is managed by the Shell Integration plugin if it is already installed. The plugin is no longer listed in the store."));
+        // Shell integration was retired with the plugin system.
+        return Task.FromException(new IpcException("Shell integration is no longer available."));
     }
 
     private static Task UninstallShellAsync()
     {
-        // Shell integration is now handled by plugin. Use GUI for shell management.
-        return Task.FromException(new IpcException("Shell uninstallation is managed by the Shell Integration plugin if it is already installed. The plugin is no longer listed in the store."));
+        // Shell integration was retired with the plugin system.
+        return Task.FromException(new IpcException("Shell integration is no longer available."));
     }
 }

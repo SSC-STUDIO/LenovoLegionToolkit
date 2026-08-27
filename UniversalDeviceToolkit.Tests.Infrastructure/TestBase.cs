@@ -56,7 +56,6 @@ public abstract class UnitTestBase : IDisposable
             "UniversalDeviceToolkit.Lib.Resources.Resource",
             "UniversalDeviceToolkit.Lib.Automation.Resources.Resource",
             "UniversalDeviceToolkit.Lib.Macro.Resources.Resource",
-            "UniversalDeviceToolkit.Lib.Plugins.Resources.Resource",
         ];
 
         foreach (var typeName in resourceTypeNames)

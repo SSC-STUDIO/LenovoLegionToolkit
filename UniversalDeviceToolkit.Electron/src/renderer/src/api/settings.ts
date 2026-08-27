@@ -33,7 +33,7 @@ export const settingsApi = {
 
 /**
  * Settings store models mirroring the Electron settings files. The host persists
- * these stores to JSON (dashboard.json / hardware_sensors.json / plugins.json);
+ * these stores to JSON (dashboard.json / hardware_sensors.json);
  * these projections document the renderer-side schema. The dashboard store is
  * also exposed through dashboardApi (api/dashboard.ts) and the sensor store
  * through sensorsApi (api/sensors.ts).
@@ -57,12 +57,6 @@ export interface HardwareSensorSettingsStore {
   visibleSections: string[]
   /** Defaults to ['CPU', 'Battery', 'GPU']. */
   sectionOrder: string[]
-}
-
-/** Settings/PluginSettings.cs — plugins.json (plugin ID → culture, e.g. 'zh-Hans'). */
-export interface PluginSettingsStore {
-  /** Missing entry = plugin uses the application default language. */
-  pluginLanguages: Record<string, string>
 }
 
 /**

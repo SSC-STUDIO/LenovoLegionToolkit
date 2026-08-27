@@ -21,7 +21,6 @@ return command.ToLowerInvariant() switch
     "telemetry" => PrintTelemetry(),
     "power" => PrintPower(),
     "profile" or "power-profile" => PrintOrSetPowerProfile(commandArguments),
-    "plugins" => PrintPlugins(commandArguments),
     "controls" => PrintControls(),
     "set" => SetControl(commandArguments),
     "elevate" => Elevate(commandArguments),
@@ -55,7 +54,6 @@ static int PrintStatus()
     Console.WriteLine($"{T("Label_CpuGovernor", "CPU governor")}: {FormatCpuGovernorSummary(status.CpuGovernor)}");
     Console.WriteLine($"{T("Label_BatteryChargeLimit", "Battery charge limit")}: {FormatBatteryChargeLimitSummary(status.BatteryChargeLimit)}");
     Console.WriteLine($"{T("Label_DisplayBrightness", "Display brightness")}: {FormatDisplayBrightnessSummary(status.DisplayBrightness)}");
-    Console.WriteLine($"{T("Label_Plugins", "Plugins")}: {FormatPluginSummary(status.Plugins)}");
     Console.WriteLine($"{T("Label_Controls", "Controls")}: {FormatControlSummary(status.Controls)}");
     Console.WriteLine($"{T("Label_DevicePack", "Device pack")}: {status.DeviceSupport.DisplayName} ({status.DeviceSupport.DevicePackId})");
     Console.WriteLine($"{T("Label_SupportLevel", "Support level")}: {LocalizeSupportLevel(status.SupportLevel)}");
@@ -199,38 +197,6 @@ static int PrintPowerProfile()
     return 0;
 }
 
-static int PrintPlugins(IReadOnlyList<string> arguments)
-{
-    var explicitRoot = arguments.Count > 0 ? arguments[0] : null;
-    var plugins = explicitRoot is null
-        ? CrossPlatformStatus.Create().Plugins
-        : new PluginDiscoveryReader(new PhysicalFileSystem(), explicitRoot).Read();
-
-    Console.WriteLine(T("Plugins_Title", "Plugin discovery"));
-    Console.WriteLine($"{T("Label_Source", "Source")}: {plugins.Source}");
-    Console.WriteLine($"{T("Label_SearchRoots", "Search roots")}: {plugins.SearchRoots.Length}");
-    foreach (var root in plugins.SearchRoots)
-        Console.WriteLine($"  {root}");
-
-    Console.WriteLine($"{T("Label_Plugins", "Plugins")}: {plugins.Plugins.Length}");
-    foreach (var plugin in plugins.Plugins)
-    {
-        Console.WriteLine($"  {plugin.Id} ({plugin.Version})");
-        Console.WriteLine($"    {T("Label_Name", "Name")}: {ValueOrUnknown(plugin.Name)}");
-        Console.WriteLine($"    {T("Label_CrossPlatformCandidate", "Cross-platform candidate")}: {FormatBoolean(plugin.IsCrossPlatformCandidate)}");
-        Console.WriteLine($"    {T("Label_RuntimeContribution", "Runtime contribution")}: {FormatBoolean(plugin.HasRuntimeContribution)}");
-        Console.WriteLine($"    {T("Label_OptimizationActions", "Optimization actions")}: {plugin.OptimizationActionCount}");
-        Console.WriteLine($"    {T("Label_TargetPlatforms", "Target platforms")}: {(plugin.TargetPlatforms.Length == 0 ? T("Value_Unspecified", "unspecified") : string.Join(", ", plugin.TargetPlatforms))}");
-        Console.WriteLine($"    {T("Label_Reason", "Reason")}: {plugin.Reason}");
-        Console.WriteLine($"    {T("Label_Manifest", "Manifest")}: {plugin.ManifestPath}");
-    }
-
-    foreach (var note in plugins.Notes)
-        Console.WriteLine($"{T("Label_Note", "Note")}: {note}");
-
-    return 0;
-}
-
 static int PrintControls()
 {
     var controls = CrossPlatformStatus.Create().Controls;
@@ -333,7 +299,6 @@ static string LocalizeDoctorCheckName(string name) => name switch
     "CPU governor" => T("Doctor_Check_CpuGovernor", name),
     "Battery charge limit" => T("Doctor_Check_BatteryChargeLimit", name),
     "Display brightness" => T("Doctor_Check_DisplayBrightness", name),
-    "Plugin manifests" => T("Doctor_Check_PluginManifests", name),
     "Control surface" => T("Doctor_Check_ControlSurface", name),
     "Device support" => T("Doctor_Check_DeviceSupport", name),
     "Hardware controls" => T("Doctor_Check_HardwareControls", name),
@@ -351,7 +316,6 @@ static int PrintHelp()
     Console.WriteLine($"  udt telemetry {T("Help_Telemetry", "Print safe read-only CPU, memory, and temperature telemetry.")}");
     Console.WriteLine($"  udt power     {T("Help_Power", "Print safe read-only battery and external power status.")}");
     Console.WriteLine($"  udt profile   {T("Help_Profile", "Print platform power profile, or set it with a profile argument.")}");
-    Console.WriteLine($"  udt plugins   {T("Help_Plugins", "Inspect plugin manifests without loading Windows/WPF assemblies.")}");
     Console.WriteLine($"  udt controls  {T("Help_Controls", "Print writable and hidden cross-platform hardware controls.")}");
     Console.WriteLine($"  udt set <id> <value>  {T("Help_Set", "Set a writable cross-platform control.")}");
     Console.WriteLine($"  udt elevate <command> [arguments]  {T("Help_Elevate", "Restart a write command through Windows UAC when needed.")}");
@@ -360,7 +324,7 @@ static int PrintHelp()
     Console.WriteLine($"  udt help      {T("Help_Help", "Show this help.")}");
     Console.WriteLine($"  udt --language <culture>  {T("Help_Language", "Select a language for this invocation.")}");
     Console.WriteLine();
-    Console.WriteLine(T("Help_WindowsNote", "Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion."));
+    Console.WriteLine(T("Help_WindowsNote", "Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics and safe basic-mode discovery."));
     return 0;
 }
 
@@ -460,15 +424,6 @@ static string FormatDisplayBrightnessSummary(DisplayBrightnessStatus brightness)
         : T("DisplayBrightness_Summary", "{0}% on {1} ({2})", device.Percent, device.Id, brightness.Source);
 }
 
-static string FormatPluginSummary(PluginDiscoveryReport plugins)
-{
-    var candidates = plugins.Plugins.Count(plugin => plugin.IsCrossPlatformCandidate);
-    return plugins.Plugins.Length == 0
-        ? T("Plugins_NoneFound", "none found ({0})", plugins.Source)
-        : T("Plugins_Summary", "{0} manifests, {1} cross-platform candidates ({2})",
-            plugins.Plugins.Length, candidates, plugins.Source);
-}
-
 static string FormatControlSummary(HardwareControlSurface controls)
 {
     var writable = controls.Controls.Count(control => control.IsWritable);
@@ -534,7 +489,6 @@ internal sealed record CrossPlatformStatus(
     CpuGovernorStatus CpuGovernor,
     BatteryChargeLimitStatus BatteryChargeLimit,
     DisplayBrightnessStatus DisplayBrightness,
-    PluginDiscoveryReport Plugins,
     HardwareControlSurface Controls,
     DeviceSupportStatus DeviceSupport,
     DoctorReport Doctor,
@@ -572,12 +526,10 @@ internal sealed record CrossPlatformStatus(
             new PhysicalFileSystem()).Read();
         var displayBrightness = new DisplayBrightnessReader(
             new PhysicalFileSystem()).Read();
-        var plugins = new PluginDiscoveryReader(
-            new PhysicalFileSystem()).Read();
         var deviceSupport = deviceSnapshot is null
             ? new CrossPlatformDeviceSupportEvaluator().Evaluate(hardware, isWindows)
             : DeviceSupportStatus.From(deviceSnapshot.Support);
-        var controls = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, batteryChargeLimit, displayBrightness, plugins, deviceSupport).Read();
+        var controls = new HardwareControlSurfaceReader(powerProfile, cpuGovernor, batteryChargeLimit, displayBrightness, deviceSupport).Read();
         var status = new CrossPlatformStatus(
             "Universal Device Toolkit",
             GetVersion(),
@@ -592,7 +544,6 @@ internal sealed record CrossPlatformStatus(
             cpuGovernor,
             batteryChargeLimit,
             displayBrightness,
-            plugins,
             controls,
             deviceSupport,
             DoctorReport.CreatePlaceholder(),
@@ -631,7 +582,6 @@ internal sealed record CrossPlatformStatus(
                 ? "Can inspect and set Linux backlight brightness through /sys/class/backlight."
                 : "Linux backlight control is not available on this platform.",
             isLinux ? "Capability_DisplayBrightness_Linux_Detail" : "Capability_DisplayBrightness_Other_Detail"),
-        Capability("PluginManifestDiscovery", "Plugin manifest discovery", true, "Inspects plugin manifests on every platform without loading WPF or Windows-only plugin assemblies."),
         Capability("CrossPlatformControlSurface", "Cross-platform control surface", true, "Lists writable standard OS controls and hidden vendor-specific controls through one metadata surface."),
         Capability("BasicModeCompatibility", "Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
         Capability("WindowsHardwareControls", "Windows hardware controls", isWindows,
@@ -639,11 +589,6 @@ internal sealed record CrossPlatformStatus(
                 ? "Use the Windows desktop app or existing udt CLI for Lenovo hardware controls."
                 : "Windows-only controls are intentionally hidden on macOS/Linux.",
             isWindows ? "Capability_WindowsHardwareControls_Windows_Detail" : "Capability_WindowsHardwareControls_Other_Detail"),
-        Capability("PluginRuntime", "Plugin runtime", isWindows,
-            isWindows
-                ? "Windows plugin workflows remain available in the desktop app."
-                : "Cross-platform plugin loading is a future expansion point and is not enabled yet.",
-            isWindows ? "Capability_PluginRuntime_Windows_Detail" : "Capability_PluginRuntime_Other_Detail"),
         Capability("LinuxDiagnostics", "Linux diagnostics", isLinux,
             isLinux ? "Running on Linux; safe diagnostics are enabled." : "Not running on Linux.",
             isLinux ? "Capability_LinuxDiagnostics_Linux_Detail" : "Capability_LinuxDiagnostics_Other_Detail"),

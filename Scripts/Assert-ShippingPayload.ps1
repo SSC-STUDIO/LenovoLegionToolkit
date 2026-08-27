@@ -1,10 +1,6 @@
 param(
     [Parameter(Mandatory = $true)]
-    [string]$PayloadPath,
-
-    # Standalone payloads that intentionally ship no plugin runtime (e.g. the
-    # cross-platform CLI zip) can skip the plugin SDK/Shared.Core/Shared check.
-    [switch]$SkipPluginRuntimeCheck
+    [string]$PayloadPath
 )
 
 $ErrorActionPreference = 'Stop'
@@ -18,12 +14,6 @@ if (-not $resolvedPath) {
 $pathTrimChars = [char[]]@([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar)
 $payloadRoot = $resolvedPath.Path.TrimEnd($pathTrimChars)
 
-$requiredExactNames = @(
-    'UniversalDeviceToolkit.Plugins.Shared.Core.dll',
-    'UniversalDeviceToolkit.Plugins.SDK.dll',
-    'UniversalDeviceToolkit.Plugins.Shared.dll'
-)
-
 $forbiddenExactNames = @(
     'SpectrumTester.exe',
     'SpectrumTester.dll',
@@ -35,7 +25,6 @@ $forbiddenNamePrefixes = @(
     'UniversalDeviceToolkit.Tests',
     'UniversalDeviceToolkit.CrossPlatform.Tests',
     'UniversalDeviceToolkit.PerformanceTest',
-    'MainAppPluginUi.Smoke',
     'LanguagePackUi.Smoke',
     'LanguagePackInstallProgressSmoke',
     'VisualRegression.Smoke',
@@ -120,25 +109,6 @@ function Test-ContainsBinaryMarker {
     }
 
     return $false
-}
-
-$missingRequired = @()
-if (-not $SkipPluginRuntimeCheck) {
-    foreach ($requiredName in $requiredExactNames) {
-        $requiredPath = Join-Path $payloadRoot $requiredName
-        if (-not (Test-Path -LiteralPath $requiredPath)) {
-            $missingRequired += $requiredName
-        }
-    }
-}
-
-if ($missingRequired.Count -gt 0) {
-    [Console]::Error.WriteLine('Shipping payload is missing required plugin runtime files:')
-    foreach ($missingName in $missingRequired) {
-        [Console]::Error.WriteLine(" - $missingName")
-    }
-
-    exit 1
 }
 
 $violations = @()

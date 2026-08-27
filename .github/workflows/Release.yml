@@ -206,10 +206,6 @@ jobs:
 
         # Publish the self-contained .NET host that the Electron app embeds via
         # extraResources (UniversalDeviceToolkit.Electron/electron-builder.yml).
-        # It must exist before plugin runtime staging: the Host publish output
-        # (UniversalDeviceToolkit.Host.dll plus the Lib/Lib.Plugins graph) is the
-        # assembly set the plugin SDK compiles against now that the WPF client
-        # no longer ships in BUILD_OUTPUT.
         Remove-Item -Recurse -Force $env:HOST_BUILD_OUTPUT -ErrorAction SilentlyContinue
         dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj `
           --configuration Release `
@@ -227,19 +223,10 @@ jobs:
           -PayloadPath $env:HOST_BUILD_OUTPUT `
           -AllowedCultures 'ar;bg;cs;de;el;en;es;fr;hu;it;ja;lv;nl-nl;pl;pt;pt-br;ro;ru;sk;tr;uk;uz-latn-uz;vi;zh-hans;zh-hant'
 
-    - name: Build plugin runtime assets
+    - name: Assert shipping payload
       shell: pwsh
       run: |
-        ./Scripts/Build-PluginRuntimeAssets.ps1 `
-          -PluginsRepositoryRoot "$env:GITHUB_WORKSPACE/Plugins" `
-          -HostSourceDir $env:HOST_BUILD_OUTPUT `
-          -DestinationPath $env:BUILD_OUTPUT `
-          -Configuration Release
-        if ($LASTEXITCODE -ne 0) { throw "Plugin runtime staging failed." }
         ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath $env:BUILD_OUTPUT
-
-    - name: Build in-tree plugin solution
-      run: dotnet build Plugins/UniversalDeviceToolkit.Plugins.sln --configuration Release --disable-build-servers -m:1
 
     - name: Sign Host payload
       if: ${{ env.RELEASE_SKIP_SIGNING != 'true' }}

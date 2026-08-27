@@ -132,7 +132,6 @@ async function writeSelection(destination, language, deviceMode, features) {
     `automation=${featureFlag(features.automation)}`,
     `macro=${featureFlag(features.macro)}`,
     `keyboard=${featureFlag(features.keyboard)}`,
-    `pluginExtensions=${featureFlag(features.pluginExtensions)}`,
     ''
   ].join('\n')
   await fs.writeFile(join(destination, 'installer-selection.ini'), contents, 'utf8')

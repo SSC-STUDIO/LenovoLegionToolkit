@@ -148,6 +148,6 @@ public sealed class DeviceSupportStatusTests
         support.DevicePackId.Should().Be("generic-pc-basic");
         support.DisplayName.Should().Be("Generic PC Basic");
         support.EnabledFeatures.Should().Contain("safe-basic-mode");
-        support.HiddenFeatures.Should().Contain("plugin-runtime");
+        support.HiddenFeatures.Should().Contain("gpu-overclock");
     }
 }

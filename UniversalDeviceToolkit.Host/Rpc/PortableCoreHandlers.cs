@@ -916,7 +916,6 @@ internal static class PortableCoreHandlers
                 ["NavigationPaneExpanded"] = true,
                 ["TemperatureUnit"] = "C",
                 ["EnableHardwareSensors"] = true,
-                ["ExtensionsEnabled"] = false,
                 ["ForceSoftwareRendering"] = false,
                 ["Notifications"] = new JsonObject
                 {
@@ -931,7 +930,6 @@ internal static class PortableCoreHandlers
                     ["automation"] = true,
                     ["macro"] = true,
                     ["windowsOptimization"] = true,
-                    ["pluginExtensions"] = true,
                     ["about"] = true,
                 },
             },

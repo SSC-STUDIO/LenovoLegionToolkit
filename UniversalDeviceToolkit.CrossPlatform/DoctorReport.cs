@@ -19,7 +19,6 @@ internal sealed record DoctorReport(
             CheckCpuGovernor(status.CpuGovernor),
             CheckBatteryChargeLimit(status.BatteryChargeLimit),
             CheckDisplayBrightness(status.DisplayBrightness),
-            CheckPlugins(status.Plugins),
             CheckControls(status.Controls),
             CheckDeviceSupport(status.DeviceSupport),
             CheckHardwareControls(status)
@@ -345,41 +344,6 @@ internal sealed record DoctorReport(
             : Note("Display brightness", DoctorCheckStatus.Warn, note);
     }
 
-    private static DoctorCheck CheckPlugins(PluginDiscoveryReport plugins)
-    {
-        if (plugins.Plugins.Length == 0)
-        {
-            var note = plugins.Notes.FirstOrDefault(note => !string.IsNullOrWhiteSpace(note));
-            return string.IsNullOrWhiteSpace(note)
-                ? new DoctorCheck(
-                    "Plugin manifests",
-                    DoctorCheckStatus.Warn,
-                    "No plugin manifests were found.",
-                    () => CrossPlatformStrings.Get("Doctor_Detail_NoPlugins", "No plugin manifests were found."))
-                : Note("Plugin manifests", DoctorCheckStatus.Warn, note);
-        }
-
-        var candidates = plugins.Plugins.Count(plugin => plugin.IsCrossPlatformCandidate);
-        return candidates > 0
-            ? new DoctorCheck(
-                "Plugin manifests",
-                DoctorCheckStatus.Pass,
-                $"{plugins.Plugins.Length} manifests found; {candidates} cross-platform candidates.",
-                () => CrossPlatformStrings.Format(
-                    "Doctor_Detail_PluginsFound",
-                    "{0} manifests found; {1} cross-platform candidates.",
-                    plugins.Plugins.Length,
-                    candidates))
-            : new DoctorCheck(
-                "Plugin manifests",
-                DoctorCheckStatus.Warn,
-                $"{plugins.Plugins.Length} manifests found, but none declare cross-platform candidates.",
-                () => CrossPlatformStrings.Format(
-                    "Doctor_Detail_PluginsWithoutCandidates",
-                    "{0} manifests found, but none declare cross-platform candidates.",
-                    plugins.Plugins.Length));
-    }
-
     private static DoctorCheck CheckControls(HardwareControlSurface controls)
     {
         if (controls.Controls.Length == 0)
@@ -474,8 +438,6 @@ internal sealed record DoctorReport(
             CrossPlatformStrings.Get("Doctor_Note_NoChargeLimitProvider", note),
         "No cross-platform display brightness provider is available for this OS." =>
             CrossPlatformStrings.Get("Doctor_Note_NoBrightnessProvider", note),
-        "No plugin manifests were found. The cross-platform CLI only inspects manifests and does not load WPF or Windows-only plugin assemblies." =>
-            CrossPlatformStrings.Get("Doctor_Note_PluginDiscovery", note),
         "No cross-platform controls were reported." =>
             CrossPlatformStrings.Get("Doctor_Detail_NoControls", note),
         "No cross-platform device pack matched the hardware identity." =>

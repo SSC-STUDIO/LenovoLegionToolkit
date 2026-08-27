@@ -9,6 +9,8 @@ import {
 
 export type ThemeMode = 'light' | 'dark'
 export type ThemePreference = 'system' | 'light' | 'dark'
+/** 风格偏好：与明暗正交的外观维度，驱动 <html data-style> 属性。 */
+export type StylePreference = 'default' | 'anime'
 export {
   UI_SCALE_AUTO,
   UI_SCALE_OPTIONS,
@@ -20,6 +22,7 @@ export interface ThemeStore {
   themeMode: ThemeMode
   /** The user's theme preference ('system' follows the OS light/dark). */
   themePreference: ThemePreference
+  stylePreference: StylePreference
   colorPrimary?: string
   /** Currently applied UI scale factor (1.0 = default). */
   uiScale: number
@@ -36,6 +39,7 @@ export interface ThemeStore {
   accentTintsSurfaces: boolean
   setThemeMode: (mode: ThemeMode) => void
   setThemePreference: (preference: ThemePreference) => void
+  setStylePreference: (preference: StylePreference) => void
   setAccent: (color?: string) => void
   setUiScale: (scale: number) => void
   setUiScalePreference: (preference: UiScalePreference) => void
@@ -45,6 +49,7 @@ export interface ThemeStore {
 
 const UI_SCALE_STORAGE_KEY = 'udt-ui-scale'
 const THEME_STORAGE_KEY = 'udt.theme'
+const STYLE_STORAGE_KEY = 'udt.theme-style'
 export const ACCENT_TINTS_STORAGE_KEY = 'udt.accent-tints'
 
 function readStoredAccentTintsPreference(): boolean {
@@ -66,6 +71,16 @@ function readStoredThemePreference(): ThemePreference {
     /* ignore quota / private mode */
   }
   return 'system'
+}
+
+function readStoredStylePreference(): StylePreference {
+  try {
+    const stored = localStorage.getItem(STYLE_STORAGE_KEY)
+    if (stored === 'default' || stored === 'anime') return stored
+  } catch {
+    /* ignore quota / private mode */
+  }
+  return 'default'
 }
 
 function persistUiScalePreference(preference: UiScalePreference): void {
@@ -111,12 +126,19 @@ export function applyUiScale(scale: number): void {
   }
 }
 
+/** 应用风格维度：<html data-style="default|anime">，始终显式写出属性值（含 default）。 */
+export function applyThemeStyle(style: StylePreference): void {
+  document.documentElement.setAttribute('data-style', style)
+}
+
 const initialUiScalePreference = readStoredUiScalePreference()
 const initialUiScale = resolveUiScale(initialUiScalePreference)
+const initialStylePreference = readStoredStylePreference()
 
 export const useThemeStore = create<ThemeStore>()((set, get) => ({
   themeMode: 'dark',
   themePreference: readStoredThemePreference(),
+  stylePreference: initialStylePreference,
   colorPrimary: undefined,
   uiScale: initialUiScale,
   uiScalePreference: initialUiScalePreference,
@@ -126,6 +148,14 @@ export const useThemeStore = create<ThemeStore>()((set, get) => ({
     set({ themePreference })
     try {
       localStorage.setItem(THEME_STORAGE_KEY, themePreference)
+    } catch {
+      /* ignore quota / private mode */
+    }
+  },
+  setStylePreference: (stylePreference) => {
+    set({ stylePreference })
+    try {
+      localStorage.setItem(STYLE_STORAGE_KEY, stylePreference)
     } catch {
       /* ignore quota / private mode */
     }
@@ -158,3 +188,5 @@ export const useThemeStore = create<ThemeStore>()((set, get) => ({
 // Apply the persisted scale once at startup (themeStore is imported by main.tsx
 // before the first render, so the whole interface is scaled from launch).
 applyUiScale(useThemeStore.getState().uiScale)
+// 启动时应用一次持久化的风格（含显式 default），保证首帧即带 data-style 属性。
+applyThemeStyle(useThemeStore.getState().stylePreference)

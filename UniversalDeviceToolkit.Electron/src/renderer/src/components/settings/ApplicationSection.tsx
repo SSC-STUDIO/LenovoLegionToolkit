@@ -239,9 +239,7 @@ export default function ApplicationSection(): React.JSX.Element {
     ['MinimizeToTray', 'MinimizeOnClose'].includes(item.field)
   )
   const sensorFields = TOGGLE_ITEMS.filter((item) => item.field === 'EnableHardwareSensors')
-  const noticeFields = TOGGLE_ITEMS.filter((item) =>
-    ['DontShowNotifications', 'ExtensionsEnabled'].includes(item.field)
-  )
+  const noticeFields = TOGGLE_ITEMS.filter((item) => item.field === 'DontShowNotifications')
 
   return (
     <div className="udt-settings-section udt-settings-section--application">

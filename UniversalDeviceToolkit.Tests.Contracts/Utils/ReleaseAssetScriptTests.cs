@@ -10,7 +10,6 @@ namespace UniversalDeviceToolkit.Tests.Utils;
 public sealed class ReleaseAssetScriptTests
 {
     private const string HostLibFile = "UniversalDeviceToolkit.Lib.dll";
-    private const string HostPluginLibFile = "UniversalDeviceToolkit.Lib.Plugins.dll";
     private const string HostAbstractionsFile = "UniversalDeviceToolkit.Lib.Abstractions.dll";
     private const string HostSharedFile = "UniversalDeviceToolkit.Lib.Shared.dll";
     private const string HostAutomationFile = "UniversalDeviceToolkit.Lib.Automation.dll";
@@ -18,8 +17,6 @@ public sealed class ReleaseAssetScriptTests
     private const string SerilogFile = "Serilog.dll";
     private const string SerilogAsyncFile = "Serilog.Sinks.Async.dll";
     private const string SerilogFileSinkFile = "Serilog.Sinks.File.dll";
-    private const string RetiredWpfFile = "Universal Device Toolkit.dll";
-    private const string TestHostVersion = "test-host";
     private const string TestReleaseVersion = "9.8.7";
 
     private static readonly string[] NonEnglishCultures =
@@ -27,19 +24,6 @@ public sealed class ReleaseAssetScriptTests
         "ar", "bg", "cs", "de", "el", "es", "fr", "hu", "it", "ja", "lv",
         "nl-NL", "pl", "pt", "pt-BR", "ro", "ru", "sk", "tr", "uk", "vi",
         "zh-Hans", "zh-Hant", "uz-Latn-UZ",
-    ];
-
-    private static readonly string[] RequiredPluginHostFiles =
-    [
-        HostLibFile,
-        HostPluginLibFile,
-        HostAbstractionsFile,
-        HostSharedFile,
-        HostAutomationFile,
-        HostMacroFile,
-        SerilogFile,
-        SerilogAsyncFile,
-        SerilogFileSinkFile,
     ];
 
     [Fact]
@@ -216,112 +200,6 @@ public sealed class ReleaseAssetScriptTests
         }
     }
 
-    [Fact]
-    public void BuildPluginRuntimeAssets_ShouldPreferPublishedHostAndNotRequireRetiredWpfAssembly()
-    {
-        var repositoryRoot = RepositoryPaths.FindRoot();
-        var tempRoot = NewTempDirectory("UDT-plugin-runtime-assets");
-
-        try
-        {
-            var sandbox = CreatePluginRuntimeSandbox(repositoryRoot, tempRoot);
-            var publishedHostDirectory = Path.Combine(
-                tempRoot,
-                "UniversalDeviceToolkit.Host",
-                "publish",
-                "win-x64");
-            var legacyBuildDirectory = Path.Combine(tempRoot, "Build");
-            SeedPluginHostPayload(publishedHostDirectory, "published");
-            SeedPluginHostPayload(legacyBuildDirectory, "legacy");
-
-            File.Exists(Path.Combine(publishedHostDirectory, RetiredWpfFile))
-                .Should()
-                .BeFalse("the published Host no longer contains the retired WPF assembly");
-            File.Exists(Path.Combine(legacyBuildDirectory, RetiredWpfFile)).Should().BeFalse();
-
-            var destinationDirectory = Path.Combine(tempRoot, "runtime-assets");
-            var output = RunPowerShellScript(
-                sandbox.ScriptPath,
-                [
-                    "-PluginsRepositoryRoot", sandbox.PluginsRoot,
-                    "-DestinationPath", destinationDirectory,
-                    "-Configuration", "Release",
-                ],
-                tempRoot,
-                environmentVariables: CreateFakeDotNetEnvironment(sandbox));
-
-            output.Should().Contain($"Refreshing plugin host dependencies from {publishedHostDirectory}");
-            File.ReadAllText(Path.Combine(
-                    sandbox.PluginsRoot,
-                    ".host",
-                    TestHostVersion,
-                    HostLibFile))
-                .Should()
-                .Be($"published:{HostLibFile}");
-            File.ReadAllText(Path.Combine(legacyBuildDirectory, HostLibFile))
-                .Should()
-                .Be($"legacy:{HostLibFile}");
-
-            File.Exists(Path.Combine(destinationDirectory, "UniversalDeviceToolkit.Plugins.Shared.Core.dll"))
-                .Should()
-                .BeTrue();
-            File.Exists(Path.Combine(destinationDirectory, "UniversalDeviceToolkit.Plugins.Shared.dll"))
-                .Should()
-                .BeTrue();
-            File.Exists(Path.Combine(destinationDirectory, "UniversalDeviceToolkit.Plugins.SDK.dll"))
-                .Should()
-                .BeTrue();
-            File.ReadAllLines(sandbox.DotNetLogPath).Should().HaveCount(4);
-        }
-        finally
-        {
-            DeleteDirectory(tempRoot);
-        }
-    }
-
-    [Theory]
-    [InlineData(HostLibFile)]
-    [InlineData(HostPluginLibFile)]
-    [InlineData(HostAbstractionsFile)]
-    [InlineData(HostSharedFile)]
-    [InlineData(SerilogFile)]
-    [InlineData(SerilogAsyncFile)]
-    [InlineData(SerilogFileSinkFile)]
-    public void BuildPluginRuntimeAssets_ShouldRejectMissingRequiredHostFile(string missingFile)
-    {
-        var repositoryRoot = RepositoryPaths.FindRoot();
-        var tempRoot = NewTempDirectory("UDT-plugin-runtime-assets-missing-file");
-
-        try
-        {
-            var sandbox = CreatePluginRuntimeSandbox(repositoryRoot, tempRoot);
-            var hostDirectory = Path.Combine(tempRoot, "explicit-host");
-            SeedPluginHostPayload(hostDirectory, "host", missingFile);
-
-            var output = RunPowerShellScript(
-                sandbox.ScriptPath,
-                [
-                    "-PluginsRepositoryRoot", sandbox.PluginsRoot,
-                    "-HostSourceDir", hostDirectory,
-                    "-DestinationPath", Path.Combine(tempRoot, "runtime-assets"),
-                    "-Configuration", "Release",
-                ],
-                tempRoot,
-                expectSuccess: false,
-                environmentVariables: CreateFakeDotNetEnvironment(sandbox));
-
-            output.Should().Contain("Missing required file:");
-            output.Should().Contain(missingFile);
-            File.Exists(sandbox.DotNetLogPath)
-                .Should()
-                .BeFalse("dependency validation must fail before restore or build");
-        }
-        finally
-        {
-            DeleteDirectory(tempRoot);
-        }
-    }
-
     private static void SeedLanguageHostPayload(string hostDirectory, string? omittedCulture = null)
     {
         foreach (var culture in NonEnglishCultures)
@@ -335,85 +213,6 @@ public sealed class ReleaseAssetScriptTests
                 hostDirectory,
                 Path.Combine(culture, "UniversalDeviceToolkit.Lib.resources.dll"),
                 $"host satellite:{culture}");
-        }
-    }
-
-    private static PluginRuntimeSandbox CreatePluginRuntimeSandbox(
-        string repositoryRoot,
-        string tempRoot)
-    {
-        var scriptsDirectory = Path.Combine(tempRoot, "Scripts");
-        var pluginsRoot = Path.Combine(tempRoot, "Plugins");
-        var pluginScriptsDirectory = Path.Combine(pluginsRoot, "Scripts");
-        var hostBaselineDirectory = Path.Combine(pluginsRoot, "HostBaseline");
-        var toolsDirectory = Path.Combine(tempRoot, "test-tools");
-
-        Directory.CreateDirectory(scriptsDirectory);
-        Directory.CreateDirectory(pluginScriptsDirectory);
-        Directory.CreateDirectory(hostBaselineDirectory);
-        Directory.CreateDirectory(toolsDirectory);
-
-        var scriptPath = Path.Combine(scriptsDirectory, "Build-PluginRuntimeAssets.ps1");
-        File.Copy(
-            Path.Combine(repositoryRoot, "Scripts", "Build-PluginRuntimeAssets.ps1"),
-            scriptPath);
-        File.Copy(
-            Path.Combine(repositoryRoot, "Plugins", "Scripts", "ensure-host-dependencies.ps1"),
-            Path.Combine(pluginScriptsDirectory, "ensure-host-dependencies.ps1"));
-        File.Copy(
-            Path.Combine(repositoryRoot, "Plugins", "Scripts", "refresh-host-references.ps1"),
-            Path.Combine(pluginScriptsDirectory, "refresh-host-references.ps1"));
-
-        File.WriteAllText(
-            Path.Combine(hostBaselineDirectory, "host-release.json"),
-            $$"""{"hostVersion":"{{TestHostVersion}}"}""");
-
-        File.WriteAllText(
-            Path.Combine(toolsDirectory, "dotnet.cmd"),
-            """
-            @echo off
-            if not exist "%UDT_TEST_PLUGINS_ROOT%\.build\sdk" mkdir "%UDT_TEST_PLUGINS_ROOT%\.build\sdk"
-            if not exist "%UDT_TEST_PLUGINS_ROOT%\.build\shared" mkdir "%UDT_TEST_PLUGINS_ROOT%\.build\shared"
-            echo fake runtime>"%UDT_TEST_PLUGINS_ROOT%\.build\sdk\UniversalDeviceToolkit.Plugins.Shared.Core.dll"
-            echo fake runtime>"%UDT_TEST_PLUGINS_ROOT%\.build\sdk\UniversalDeviceToolkit.Plugins.SDK.dll"
-            echo fake runtime>"%UDT_TEST_PLUGINS_ROOT%\.build\shared\UniversalDeviceToolkit.Plugins.Shared.dll"
-            echo %*>>"%UDT_TEST_DOTNET_LOG%"
-            exit /b 0
-            """);
-
-        return new PluginRuntimeSandbox(
-            scriptPath,
-            pluginsRoot,
-            toolsDirectory,
-            Path.Combine(tempRoot, "dotnet-invocations.log"));
-    }
-
-    private static IReadOnlyDictionary<string, string> CreateFakeDotNetEnvironment(
-        PluginRuntimeSandbox sandbox)
-    {
-        var inheritedPath = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-        return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-        {
-            ["PATH"] = $"{sandbox.ToolsDirectory}{Path.PathSeparator}{inheritedPath}",
-            ["UDT_TEST_PLUGINS_ROOT"] = sandbox.PluginsRoot,
-            ["UDT_TEST_DOTNET_LOG"] = sandbox.DotNetLogPath,
-        };
-    }
-
-    private static void SeedPluginHostPayload(
-        string hostDirectory,
-        string marker,
-        string? omittedFile = null)
-    {
-        Directory.CreateDirectory(hostDirectory);
-        foreach (var fileName in RequiredPluginHostFiles)
-        {
-            if (string.Equals(fileName, omittedFile, StringComparison.Ordinal))
-            {
-                continue;
-            }
-
-            File.WriteAllText(Path.Combine(hostDirectory, fileName), $"{marker}:{fileName}");
         }
     }
 
@@ -522,10 +321,4 @@ public sealed class ReleaseAssetScriptTests
             Directory.Delete(path, recursive: true);
         }
     }
-
-    private sealed record PluginRuntimeSandbox(
-        string ScriptPath,
-        string PluginsRoot,
-        string ToolsDirectory,
-        string DotNetLogPath);
 }

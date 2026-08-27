@@ -18,7 +18,6 @@ public sealed class ReleaseSigningGuardTests
         var job = workflow.Job("build");
         var payloadSigning = job.Step("Sign release payload");
         var payloadVerification = job.Step("Verify release payload signatures");
-        var pluginStaging = job.Step("Build plugin runtime assets");
         var hostSigning = job.Step("Sign Host payload");
         var hostVerification = job.Step("Verify Host payload signatures");
         var prepareAssets = job.Step("Prepare release and Pages resources");
@@ -70,7 +69,6 @@ public sealed class ReleaseSigningGuardTests
         installerVerification.Run.Should().Contain("Assert-AuthenticodeSignatures.ps1");
         script.Should().Contain("Get-AuthenticodeSignature");
         script.Should().Contain("Status -ne 'Valid'");
-        job.Steps.IndexOf(pluginStaging).Should().BeLessThan(job.Steps.IndexOf(hostSigning));
         job.Steps.IndexOf(hostSigning).Should().BeLessThan(job.Steps.IndexOf(hostVerification));
         job.Steps.IndexOf(hostVerification).Should().BeLessThan(job.Steps.IndexOf(payloadSigning));
         job.Steps.IndexOf(hostVerification).Should().BeLessThan(job.Steps.IndexOf(prepareAssets));

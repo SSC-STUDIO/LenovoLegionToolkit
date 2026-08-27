@@ -257,8 +257,7 @@
           "System.Windows.Extensions": "[10.0.8, )",
           "UniversalDeviceToolkit.CLI.Lib": "[6.0.0, )",
           "UniversalDeviceToolkit.Lib": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Plugins": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
         }
       },
       "universaldevicetoolkit.lib.macro": {
@@ -266,14 +265,6 @@
         "dependencies": {
           "UniversalDeviceToolkit.Lib": "[6.0.0, )",
           "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
-        }
-      },
-      "universaldevicetoolkit.lib.plugins": {
-        "type": "Project",
-        "dependencies": {
-          "Autofac": "[9.3.2, )",
-          "System.Security.Cryptography.ProtectedData": "[10.0.10, )",
-          "UniversalDeviceToolkit.Lib": "[6.0.0, )"
         }
       },
       "universaldevicetoolkit.lib.shared": {

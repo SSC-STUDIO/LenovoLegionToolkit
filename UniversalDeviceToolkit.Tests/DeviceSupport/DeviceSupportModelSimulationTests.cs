@@ -24,7 +24,7 @@ public sealed class DeviceSupportModelSimulationTests
         availability.IsSupported.Should().BeFalse();
         availability.IsBasicMode.Should().BeTrue();
         availability.DevicePackId.Should().Be(expectedPackId);
-        availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization", "language", "theme"]);
+        availability.EnabledFeatures.Should().Contain(["system-optimization", "language", "theme"]);
         availability.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "power-modes", "gpu-overclock", "fan-curve"]);
     }
 
@@ -53,7 +53,7 @@ public sealed class DeviceSupportModelSimulationTests
         availability.IsSupported.Should().BeFalse();
         availability.IsBasicMode.Should().BeTrue();
         availability.DevicePackId.Should().Be(expectedPackId);
-        availability.EnabledFeatures.Should().Contain(["plugins", "system-optimization", "language", "theme"]);
+        availability.EnabledFeatures.Should().Contain(["system-optimization", "language", "theme"]);
         availability.HiddenFeatures.Should().Contain(["lenovo-hardware-controls", "power-modes", "gpu-overclock", "fan-curve"]);
     }
 

@@ -11,14 +11,13 @@
   <data name="Help_Telemetry"><value>Print operating system telemetry.</value></data>
   <data name="Help_Power"><value>Print safe read-only battery and external power status.</value></data>
   <data name="Help_Profile"><value>Read or set the platform power profile.</value></data>
-  <data name="Help_Plugins"><value>Inspect discovered cross-platform plugins.</value></data>
   <data name="Help_Controls"><value>Print cross-platform control capabilities.</value></data>
   <data name="Help_Doctor"><value>Print a consolidated diagnostic report.</value></data>
   <data name="Help_Set"><value>Run a supported write control.</value></data>
   <data name="Help_Elevate"><value>Restart a write command through Windows UAC when needed.</value></data>
   <data name="Help_Help"><value>Show this help.</value></data>
   <data name="Help_Language"><value>Select a language for this invocation.</value></data>
-  <data name="Help_WindowsNote"><value>Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics, safe basic-mode discovery, and future plugin/runtime expansion.</value></data>
+  <data name="Help_WindowsNote"><value>Windows hardware controls remain in the Windows desktop app. macOS and Linux support starts with diagnostics and safe basic-mode discovery.</value></data>
   <data name="Help_Support"><value>Print safe basic-mode device support matching.</value></data>
   <data name="Error_UnknownCommand"><value>Unknown command '{0}'. Run 'udt help'.</value></data>
   <data name="Label_Version"><value>Version</value></data>
@@ -115,8 +114,6 @@
   <data name="CpuGovernor_Summary"><value>{0} across {1} policies ({2})</value></data>
   <data name="BatteryChargeLimit_Summary"><value>{0}% on {1} ({2})</value></data>
   <data name="DisplayBrightness_Summary"><value>{0}% on {1} ({2})</value></data>
-  <data name="Plugins_NoneFound"><value>none found ({0})</value></data>
-  <data name="Plugins_Summary"><value>{0} manifests, {1} cross-platform candidates ({2})</value></data>
   <data name="Controls_Summary"><value>{0} available, {1} writable ({2})</value></data>
   <data name="Format_Gibibytes"><value>{0:0.##} GiB</value></data>
   <data name="Format_Percent"><value>{0:0.#}%</value></data>
@@ -144,11 +141,9 @@
   <data name="Capability_CpuGovernor_Name"><value>CPU governor</value></data>
   <data name="Capability_BatteryChargeLimit_Name"><value>Battery charge limit</value></data>
   <data name="Capability_DisplayBrightness_Name"><value>Display brightness</value></data>
-  <data name="Capability_PluginManifestDiscovery_Name"><value>Plugin manifest discovery</value></data>
   <data name="Capability_CrossPlatformControlSurface_Name"><value>Cross-platform control surface</value></data>
   <data name="Capability_BasicModeCompatibility_Name"><value>Basic-mode compatibility</value></data>
   <data name="Capability_WindowsHardwareControls_Name"><value>Windows hardware controls</value></data>
-  <data name="Capability_PluginRuntime_Name"><value>Plugin runtime</value></data>
   <data name="Capability_LinuxDiagnostics_Name"><value>Linux diagnostics</value></data>
   <data name="Capability_MacOsDiagnostics_Name"><value>macOS diagnostics</value></data>
   <data name="Capability_CrossPlatformCli_Detail"><value>This net10.0 entry point runs without WindowsDesktop, WPF, WMI, registry, or Win32 APIs.</value></data>
@@ -165,13 +160,10 @@
   <data name="Capability_BatteryChargeLimit_Other_Detail"><value>Linux battery charge threshold control is not available on this platform.</value></data>
   <data name="Capability_DisplayBrightness_Linux_Detail"><value>Can inspect and set Linux backlight brightness through /sys/class/backlight.</value></data>
   <data name="Capability_DisplayBrightness_Other_Detail"><value>Linux backlight control is not available on this platform.</value></data>
-  <data name="Capability_PluginManifestDiscovery_Detail"><value>Inspects plugin manifests on every platform without loading WPF or Windows-only plugin assemblies.</value></data>
   <data name="Capability_CrossPlatformControlSurface_Detail"><value>Lists writable standard OS controls and hidden vendor-specific controls through one metadata surface.</value></data>
   <data name="Capability_BasicModeCompatibility_Detail"><value>Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms.</value></data>
   <data name="Capability_WindowsHardwareControls_Windows_Detail"><value>Use the Windows desktop app or existing udt.exe CLI for Lenovo hardware controls.</value></data>
   <data name="Capability_WindowsHardwareControls_Other_Detail"><value>Windows-only controls are intentionally hidden on macOS/Linux.</value></data>
-  <data name="Capability_PluginRuntime_Windows_Detail"><value>Windows plugin workflows remain available in the desktop app.</value></data>
-  <data name="Capability_PluginRuntime_Other_Detail"><value>Cross-platform plugin loading is a future expansion point and is not enabled yet.</value></data>
   <data name="Capability_LinuxDiagnostics_Linux_Detail"><value>Running on Linux; safe diagnostics are enabled.</value></data>
   <data name="Capability_LinuxDiagnostics_Other_Detail"><value>Not running on Linux.</value></data>
   <data name="Capability_MacOsDiagnostics_Mac_Detail"><value>Running on macOS; safe diagnostics are enabled.</value></data>
@@ -187,7 +179,6 @@
   <data name="Doctor_Check_CpuGovernor"><value>CPU governor</value></data>
   <data name="Doctor_Check_BatteryChargeLimit"><value>Battery charge limit</value></data>
   <data name="Doctor_Check_DisplayBrightness"><value>Display brightness</value></data>
-  <data name="Doctor_Check_PluginManifests"><value>Plugin manifests</value></data>
   <data name="Doctor_Check_ControlSurface"><value>Control surface</value></data>
   <data name="Doctor_Check_DeviceSupport"><value>Device support</value></data>
   <data name="Doctor_Check_HardwareControls"><value>Hardware controls</value></data>
@@ -217,9 +208,6 @@
   <data name="Doctor_Detail_NoChargeLimit"><value>No battery charge limit provider was available from {0}.</value></data>
   <data name="Doctor_Detail_BrightnessAvailable"><value>{0} is at {1}% from {2}.</value></data>
   <data name="Doctor_Detail_NoBrightness"><value>No display brightness provider was available from {0}.</value></data>
-  <data name="Doctor_Detail_NoPlugins"><value>No plugin manifests were found.</value></data>
-  <data name="Doctor_Detail_PluginsFound"><value>{0} manifests found; {1} cross-platform candidates.</value></data>
-  <data name="Doctor_Detail_PluginsWithoutCandidates"><value>{0} manifests found, but none declare cross-platform candidates.</value></data>
   <data name="Doctor_Detail_NoControls"><value>No cross-platform controls were reported.</value></data>
   <data name="Doctor_Detail_ControlsAvailable"><value>{0} available controls; {1} writable controls from {2}.</value></data>
   <data name="Doctor_Detail_DeviceSupport"><value>{0}: {1}</value></data>
@@ -232,6 +220,5 @@
   <data name="Doctor_Note_NoGovernorProvider"><value>No cross-platform CPU governor provider is available for this OS.</value></data>
   <data name="Doctor_Note_NoChargeLimitProvider"><value>No cross-platform battery charge limit provider is available for this OS.</value></data>
   <data name="Doctor_Note_NoBrightnessProvider"><value>No cross-platform display brightness provider is available for this OS.</value></data>
-  <data name="Doctor_Note_PluginDiscovery"><value>No plugin manifests were found. The cross-platform CLI only inspects manifests and does not load WPF or Windows-only plugin assemblies.</value></data>
   <data name="Doctor_Note_NoDevicePack"><value>No cross-platform device pack matched the hardware identity.</value></data>
 </root>

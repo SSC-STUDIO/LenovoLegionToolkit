@@ -36,16 +36,8 @@ public class BrandCompatibilityTests
     }
 
     [Fact]
-    public void LegacyAssemblyLibPlugins_IsLenovoLegionToolkitLibPlugins()
-    {
-        BrandCompatibility.LegacyAssemblyLibPlugins.Should().Be("LenovoLegionToolkit.Lib.Plugins");
-        BrandCompatibility.LegacyAssemblyLibPlugins.Should().NotBeNullOrWhiteSpace();
-    }
-
-    [Fact]
-    public void PreferredAssemblyNames_ArePrimaryUdtAssemblyNames()
+    public void PreferredAssemblyLib_IsPrimaryUdtAssemblyName()
     {
         BrandCompatibility.PreferredAssemblyLib.Should().Be("UniversalDeviceToolkit.Lib");
-        BrandCompatibility.PreferredAssemblyLibPlugins.Should().Be("UniversalDeviceToolkit.Lib.Plugins");
     }
 }

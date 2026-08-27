@@ -199,7 +199,6 @@ const mockBridge = {
 
     if (method === 'optimization.getRules' || method === 'optimization.getCategories') return { categories: [], rules: [] }
     if (method === 'automation.getPipelines') return { pipelines: [] }
-    if (method === 'plugins.getInstalled' || method === 'plugins.list') return { plugins: [] }
     if (method === 'app.update.status') return { status: 'Disabled', disable: true }
     if (method === 'keyboard.getState' || method === 'keyboard.backlight.getState') return { supported: false }
     return {}
@@ -243,7 +242,6 @@ const mockBridge = {
   closeWindow() {},
   async setBackgroundMaterial() {},
   async openLogFolder() {},
-  async getPluginPreloadPath() { return '' },
   getPathForFile() { return '' }
 }
 

@@ -205,52 +205,6 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
-    public void PluginValidationWorkflow_ShouldPrimeToolingWithHelpCommand()
-    {
-        var step = ReadWorkflow("plugins-validate.yml")
-            .Job("validate")
-            .Step("Prime plugin tooling CLI");
-
-        step.Run.Should().Contain("Invoke-PluginTooling.ps1 --help --repository-root .\\Plugins");
-    }
-
-    [Fact]
-    public void CiTestsWorkflow_ShouldIgnorePluginDirectoryChanges()
-    {
-        var workflow = ReadWorkflow("Ci-tests.yml");
-
-        workflow.Triggers["push"].Paths.Should().Contain("Plugins/**");
-        workflow.Triggers["pull_request"].Paths.Should().Contain("Plugins/**");
-        workflow.Triggers["push"].Paths.Should().NotContain("plugins/**");
-        workflow.Triggers["pull_request"].Paths.Should().NotContain("plugins/**");
-    }
-
-    [Fact]
-    public void PluginValidationWorkflow_ShouldRunPluginSolutionTests()
-    {
-        var job = ReadWorkflow("plugins-validate.yml").Job("validate");
-        var restore = job.Step("Restore plugin solution");
-        var test = job.Step("Test plugin solution");
-
-        restore.Run.Should().Contain("Plugins/UniversalDeviceToolkit.Plugins.sln");
-        restore.Run.Should().Contain("--locked-mode");
-        test.Run.Should().Contain("dotnet test Plugins/UniversalDeviceToolkit.Plugins.sln");
-        test.OptionValue("--logger").Should().Be("trx;LogFileName=UniversalDeviceToolkit.Plugins.Tests.trx");
-    }
-
-    [Fact]
-    public void PluginValidationWorkflow_ShouldRunElectronNpmTest()
-    {
-        var test = ReadWorkflow("plugins-validate.yml")
-            .Job("validate")
-            .Step("Test Electron plugin RPC contract");
-
-        test.WorkingDirectory.Should().Be("UniversalDeviceToolkit.Electron");
-        test.Run.Should().Contain("npm ci");
-        test.Run.Should().Contain("npm test");
-    }
-
-    [Fact]
     public void CiTestsWorkflow_ShouldTypecheckAndTestElectronUi()
     {
         var job = ReadWorkflow("Ci-tests.yml").Job("electron-ui-tests");
@@ -259,30 +213,6 @@ public sealed class CiWorkflowGuardTests
 
         typecheck.Run.Should().Contain("npm run typecheck");
         test.Run.Should().Contain("npm test");
-    }
-
-    [Fact]
-    public void PluginCatalogReleaseWorkflow_ShouldPublishCatalogAfterPackageValidation()
-    {
-        var workflow = RepositoryPaths.ReadFile(".github", "workflows", "plugins-release.yml");
-
-        workflow.Should().Contain("group: plugin-catalog-release");
-        workflow.Should().Contain("cancel-in-progress: false");
-        workflow.Should().Contain("CATALOG_RELEASE_TITLE: 'Official Plugin Catalog (managed)'");
-        workflow.Should().Contain("catalog_channel");
-        workflow.Should().Contain("plugin-catalog-preview");
-        workflow.Should().Contain("--catalog-channel");
-        workflow.Should().Contain("Validate staged release contents");
-        workflow.Should().Contain("$previousCatalog");
-        workflow.Should().Contain("throw $catalogError");
-
-        var packageUploadIndex = workflow.IndexOf("- name: Upload new package assets", StringComparison.Ordinal);
-        var catalogUploadIndex = workflow.IndexOf("- name: Publish catalog asset last and prune stale packages", StringComparison.Ordinal);
-        var staleAssetDeleteIndex = workflow.IndexOf("gh release delete-asset", StringComparison.Ordinal);
-
-        packageUploadIndex.Should().BeGreaterThanOrEqualTo(0);
-        catalogUploadIndex.Should().BeGreaterThan(packageUploadIndex);
-        staleAssetDeleteIndex.Should().BeGreaterThan(catalogUploadIndex);
     }
 
     private static GitHubWorkflowContract ReadWorkflow(string fileName) =>

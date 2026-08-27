@@ -80,6 +80,5 @@ export function buildInstallerRendererArguments(selection: InstallerSelection): 
 export function buildInstallerHostArguments(selection: InstallerSelection | null): string[] {
   const args: string[] = []
   if (selection?.deviceMode === 'basic') args.push('--no-hardware')
-  if (selection != null && !selection.features.pluginExtensions) args.push('--no-plugins')
   return args
 }

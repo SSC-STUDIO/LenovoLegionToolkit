@@ -40,8 +40,7 @@ export const INSTALLER_OPTIONAL_FEATURES = [
   'networkAcceleration',
   'automation',
   'macro',
-  'keyboard',
-  'pluginExtensions'
+  'keyboard'
 ] as const
 
 export type InstallerOptionalFeature = (typeof INSTALLER_OPTIONAL_FEATURES)[number]
@@ -60,8 +59,7 @@ export function defaultInstallerFeatures(): InstallerFeatures {
     networkAcceleration: true,
     automation: true,
     macro: true,
-    keyboard: true,
-    pluginExtensions: true
+    keyboard: true
   }
 }
 

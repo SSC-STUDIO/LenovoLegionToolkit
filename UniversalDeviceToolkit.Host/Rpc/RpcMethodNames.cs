@@ -12,8 +12,7 @@ namespace UniversalDeviceToolkit.Host.Rpc;
 /// instead of a clean "not supported").
 ///
 /// Not listed here:
-/// - Always-on methods registered on every platform (see <see cref="AlwaysOn"/>,
-///   plus plugins.* / plugin.*).
+/// - Always-on methods registered on every platform (see <see cref="AlwaysOn"/>).
 /// - macro.*: MacroHandlers compiles on every platform. Windows uses global
 ///   hooks; portable hosts persist sequences via IConfigurationStore and
 ///   report -32099 only for playback/recording.

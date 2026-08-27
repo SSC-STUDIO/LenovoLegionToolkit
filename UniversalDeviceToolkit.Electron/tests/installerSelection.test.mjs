@@ -85,7 +85,6 @@ test('installer feature flags default on and treat missing keys as a full instal
   assert.equal(omitted.windowsOptimization, false)
   assert.equal(omitted.networkAcceleration, false)
   assert.equal(omitted.keyboard, false)
-  assert.equal(omitted.pluginExtensions, false)
   assert.equal(shared.isInstallerOptionalFeatureEnabled(null, 'windowsOptimization'), true)
   assert.equal(shared.isInstallerOptionalFeatureEnabled(omitted, 'windowsOptimization'), false)
   assert.equal(shared.isInstallerOptionalFeatureEnabled(omitted, 'dashboard'), true)
@@ -102,14 +101,12 @@ test('installer INI parser honors optional feature checkboxes and caps network a
     'networkAcceleration=1',
     'automation=1',
     'macro=0',
-    'keyboard=1',
-    'pluginExtensions=0'
+    'keyboard=1'
   ].join('\n'))
   assert.equal(parsed.features.windowsOptimization, false)
   assert.equal(parsed.features.networkAcceleration, false)
   assert.equal(parsed.features.automation, true)
   assert.equal(parsed.features.macro, false)
-  assert.equal(parsed.features.pluginExtensions, false)
-  assert.equal(JSON.stringify(main.buildInstallerHostArguments(parsed)), JSON.stringify(['--no-plugins']))
+  assert.equal(JSON.stringify(main.buildInstallerHostArguments(parsed)), JSON.stringify([]))
   assert.ok(main.buildInstallerRendererArguments(parsed).some((argument) => argument.startsWith('--udt-installer-features=')))
 })

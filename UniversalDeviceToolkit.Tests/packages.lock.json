@@ -357,7 +357,6 @@
           "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
           "UniversalDeviceToolkit.Lib.Automation": "[6.0.0, )",
           "UniversalDeviceToolkit.Lib.Macro": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Plugins": "[6.0.0, )",
           "UniversalDeviceToolkit.Lib.Shared": "[6.0.0, )"
         }
       },
@@ -367,6 +366,7 @@
           "Autofac": "[9.3.2, )",
           "LibreHardwareMonitorLib": "[0.9.6, )",
           "ManagedNativeWifi": "[3.0.2, )",
+          "Microsoft.Win32.SystemEvents": "[10.0.8, )",
           "NAudio.Wasapi": "[2.3.0, )",
           "NeoSmart.AsyncLock": "[3.2.1, )",
           "Octokit": "[14.0.0, )",
@@ -398,8 +398,7 @@
           "System.Windows.Extensions": "[10.0.8, )",
           "UniversalDeviceToolkit.CLI.Lib": "[6.0.0, )",
           "UniversalDeviceToolkit.Lib": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Plugins": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
         }
       },
       "universaldevicetoolkit.lib.macro": {
@@ -407,14 +406,6 @@
         "dependencies": {
           "UniversalDeviceToolkit.Lib": "[6.0.0, )",
           "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
-        }
-      },
-      "universaldevicetoolkit.lib.plugins": {
-        "type": "Project",
-        "dependencies": {
-          "Autofac": "[9.3.2, )",
-          "System.Security.Cryptography.ProtectedData": "[10.0.10, )",
-          "UniversalDeviceToolkit.Lib": "[6.0.0, )"
         }
       },
       "universaldevicetoolkit.lib.shared": {

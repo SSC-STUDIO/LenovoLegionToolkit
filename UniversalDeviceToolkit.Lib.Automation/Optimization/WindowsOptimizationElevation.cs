@@ -59,7 +59,7 @@ public sealed class WindowsOptimizationElevationClient : IWindowsOptimizationExe
             return Task.CompletedTask;
 
         return ElevatedOptimizationWorker.IsCurrentProcessElevated()
-            ? ElevatedOptimizationWorker.ExecuteOperationsAsync(_localService, operations, cancellationToken, requireBuiltInActions: false)
+            ? ElevatedOptimizationWorker.ExecuteOperationsAsync(_localService, operations, cancellationToken)
             : ExecuteViaWorkerAsync(operations, cancellationToken);
     }
 
@@ -405,7 +405,7 @@ internal static class ElevatedOptimizationWorker
                 }
                 else
                 {
-                    await ExecuteOperationsAsync(service, request.Operations, timeout.Token, requireBuiltInActions: true)
+                    await ExecuteOperationsAsync(service, request.Operations, timeout.Token)
                         .ConfigureAwait(false);
                 }
 
@@ -485,11 +485,9 @@ internal static class ElevatedOptimizationWorker
     internal static async Task ExecuteOperationsAsync(
         WindowsOptimizationService service,
         IReadOnlyList<WindowsOptimizationOperation> operations,
-        CancellationToken cancellationToken,
-        bool requireBuiltInActions)
+        CancellationToken cancellationToken)
     {
         var allowedActions = service.GetCategories()
-            .Where(category => !requireBuiltInActions || category.PluginId is null)
             .Where(category => !category.Key.StartsWith(WindowsOptimizationService.CleanupCategoryKey, StringComparison.OrdinalIgnoreCase))
             .SelectMany(category => category.Actions)
             .Select(action => action.Key)
@@ -529,7 +527,6 @@ internal static class ElevatedOptimizationWorker
         CancellationToken cancellationToken)
     {
         var allowedCleanupActions = service.GetCategories()
-            .Where(category => category.PluginId is null)
             .Where(category => category.Key.StartsWith("cleanup.", StringComparison.OrdinalIgnoreCase))
             .SelectMany(category => category.Actions)
             .Select(action => action.Key)

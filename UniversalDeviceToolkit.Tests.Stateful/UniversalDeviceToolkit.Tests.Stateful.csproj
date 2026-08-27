@@ -27,9 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\UniversalDeviceToolkit.Tests.Infrastructure\UniversalDeviceToolkit.Tests.Infrastructure.csproj" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Tests.PluginFixture\UniversalDeviceToolkit.Tests.PluginFixture.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib\UniversalDeviceToolkit.Lib.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
-    <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Plugins\UniversalDeviceToolkit.Lib.Plugins.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Lib.Automation\UniversalDeviceToolkit.Lib.Automation.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
     <ProjectReference Include="..\UniversalDeviceToolkit.Platform.Windows\UniversalDeviceToolkit.Platform.Windows.csproj" />
     <ProjectReference Include="..\UniversalDeviceToolkit.CLI.Lib\UniversalDeviceToolkit.CLI.Lib.csproj" AdditionalProperties="EnableUdtTestHooks=true" />
@@ -42,7 +40,6 @@
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="..\UniversalDeviceToolkit.Tests\Infrastructure\MockFactory.cs" Link="Infrastructure\MockFactory.cs" />
   </ItemGroup>
 
 </Project>

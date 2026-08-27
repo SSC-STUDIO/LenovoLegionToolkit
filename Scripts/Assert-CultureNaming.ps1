@@ -19,8 +19,6 @@
 
   Resource file names are checked for BCP 47 form, not catalog membership:
     - host/app resx must use CultureInfo.Name byte-for-byte (af, en-GB, zh-Hans)
-    - plugin resx may keep legacy case (zh-hans, pt-br, nl-nl, uz-latn-uz)
-      so this gate does not require mass-renaming Official plugin files
 #>
 param(
     [string]$RepositoryRoot = ''
@@ -61,16 +59,12 @@ if ($canonicalCultures.Count -eq 0) {
 $canonicalSet = New-Object 'System.Collections.Generic.HashSet[string]' ([StringComparer]::Ordinal)
 foreach ($c in $canonicalCultures) { [void]$canonicalSet.Add($c) }
 
-# Tokens with valid canonical spelling that are allowed in plugin scan
-# exclusion lists and satellite build matrices even without app resx.
+# Tokens with valid canonical spelling that are allowed in satellite build
+# matrices even without app resx.
 $extraAllowed = @('bs','ca','ko','no','tools')
 foreach ($c in $extraAllowed) { [void]$canonicalSet.Add($c) }
 
 $failures = New-Object System.Collections.Generic.List[string]
-
-function Test-PluginPath([string]$Path) {
-    return $Path -match '[\\/]Plugins[\\/]'
-}
 
 function Get-DotNetCultureName([string]$Name) {
     try {
@@ -98,9 +92,6 @@ function Assert-ResxCultureName([string]$Name, [string]$Where, [string]$Context)
     $dotnetName = Get-DotNetCultureName $Name
     if (-not [string]::IsNullOrWhiteSpace($dotnetName)) {
         if ($Name -ceq $dotnetName) {
-            return
-        }
-        if ((Test-PluginPath $Context) -and $Name.Equals($dotnetName, [System.StringComparison]::OrdinalIgnoreCase)) {
             return
         }
         $failures.Add("Non-canonical culture '$Name' in $Where ($Context). Use '$dotnetName'")

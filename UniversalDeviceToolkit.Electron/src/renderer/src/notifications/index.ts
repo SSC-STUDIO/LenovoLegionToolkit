@@ -5,7 +5,6 @@ import {
   type NotificationSettings
 } from './notificationCenterStore'
 import { maybePlayNotificationSound, readNotificationPreferences } from '../components/NotificationCenter'
-import { initPluginInstallToast } from './pluginInstallToast'
 import './notifications.css'
 
 /**
@@ -39,7 +38,6 @@ export function initNotifications(): () => void {
     return unsubscribe
   }
   unsubscribe = on<AppNotificationRequest>('notifications.changed', notify)
-  initPluginInstallToast()
   return unsubscribe
 }
 
