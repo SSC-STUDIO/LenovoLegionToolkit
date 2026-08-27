@@ -136,7 +136,8 @@ public partial class PluginRepositoryService : IDisposable
             Directory.CreateDirectory(_tempDownloadDirectory);
         }
 
-        CleanupStaleTempArtifacts();
+        // Run stale cleanup off the hot path so constructor never blocks on IO.
+        _ = Task.Run(() => CleanupStaleTempArtifacts());
     }
 
     /// <summary>

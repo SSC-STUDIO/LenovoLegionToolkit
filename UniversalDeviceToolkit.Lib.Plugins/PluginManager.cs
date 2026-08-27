@@ -315,7 +315,7 @@ public class PluginManager : IPluginManager
                         return;
                     }
 
-                    using var mutation = AcquirePluginMutation(expectedRuntimeId);
+                    using var mutation = await AcquirePluginMutationAsync(expectedRuntimeId, ct).ConfigureAwait(false);
                     if (ShouldReuseRegisteredRuntime(pluginFile, forceRefresh, mutation))
                         return;
                     await LoadPluginFromFileAsync(pluginFile, mutation).ConfigureAwait(false);
@@ -1388,6 +1388,54 @@ public class PluginManager : IPluginManager
         else if (!gateAlreadyAcquired)
         {
             gate.Wait();
+        }
+        var prior = held;
+        _heldPluginMutations.Value = held is null
+            ? new HashSet<string>(StringComparer.OrdinalIgnoreCase) { mutationKey }
+            : new HashSet<string>(held, StringComparer.OrdinalIgnoreCase) { mutationKey };
+        return new PluginMutationLease(mutationKey, () =>
+        {
+            _heldPluginMutations.Value = prior;
+            gate.Release();
+        });
+    }
+
+    public async Task<IDisposable> AcquirePluginMutationAsync(string pluginId, CancellationToken cancellationToken = default)
+    {
+        if (!PathSecurity.IsValidPluginId(pluginId))
+            throw new ArgumentException("Invalid plugin ID.", nameof(pluginId));
+
+        var mutationKey = NormalizePluginIdentityToken(pluginId);
+        var held = _heldPluginMutations.Value;
+        var gate = _pluginMutationGates.GetOrAdd(mutationKey, static _ => new SemaphoreSlim(1, 1));
+        var gateAlreadyAcquired = false;
+        if (held?.Contains(mutationKey) == true)
+        {
+            if (!await gate.WaitAsync(0, cancellationToken).ConfigureAwait(false))
+            {
+                throw new InvalidOperationException(
+                    $"Reentrant public mutation for plugin {pluginId} is not allowed. Internal work must present its explicit lease.");
+            }
+
+            held = new HashSet<string>(held, StringComparer.OrdinalIgnoreCase);
+            held.Remove(mutationKey);
+            _heldPluginMutations.Value = held.Count == 0 ? null : held;
+            gateAlreadyAcquired = true;
+        }
+
+        var requestsLowerOrderedPlugin = held?.Any(heldPluginId =>
+            StringComparer.OrdinalIgnoreCase.Compare(heldPluginId, mutationKey) > 0) == true;
+        if (!gateAlreadyAcquired && requestsLowerOrderedPlugin)
+        {
+            if (!await gate.WaitAsync(0, cancellationToken).ConfigureAwait(false))
+            {
+                throw new InvalidOperationException(
+                    $"Plugin mutation lock ordering would deadlock while acquiring {pluginId}.");
+            }
+        }
+        else if (!gateAlreadyAcquired)
+        {
+            await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
         }
         var prior = held;
         _heldPluginMutations.Value = held is null

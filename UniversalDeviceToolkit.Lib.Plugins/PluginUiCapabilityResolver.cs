@@ -60,40 +60,53 @@ public static class PluginUiCapabilityResolver
         ManifestCache.TryRemove(pluginId, out _);
         // Incremental index update: remove stale entry instead of nuking the
         // entire id→path map which would force a full disk scan on next
-        // plugins.list (previously froze UI).
+        // plugins.list (previously froze UI). IO is done outside the lock
+        // so plugins.list is not blocked.
+        bool hadMap;
         lock (IdIndexGate)
         {
-            if (_manifestIdToPath is null)
-                return;
+            hadMap = _manifestIdToPath is not null;
+            if (hadMap)
+                _manifestIdToPath!.Remove(pluginId);
+        }
 
-            _manifestIdToPath.Remove(pluginId);
+        if (!hadMap)
+            return;
 
-            // Best-effort: probe known directories for the (possibly new) manifest
-            // so the index stays warm without a full scan.
-            try
+        string? probedPath = null;
+        try
+        {
+            foreach (var dir in GetInstalledPluginDirectories(pluginId))
             {
-                foreach (var dir in GetInstalledPluginDirectories(pluginId))
+                foreach (var fileName in ManifestFileNames)
                 {
-                    foreach (var fileName in ManifestFileNames)
+                    var path = Path.Combine(dir, fileName);
+                    if (File.Exists(path))
                     {
-                        var path = Path.Combine(dir, fileName);
-                        if (File.Exists(path))
-                        {
-                            _manifestIdToPath[pluginId] = path;
-                            return;
-                        }
+                        probedPath = path;
+                        break;
                     }
                 }
-
-                // Also check the fallback scan path (bare id search) — add if found.
-                var fallback = FindInstalledManifestPathByScan(pluginId);
-                if (!string.IsNullOrWhiteSpace(fallback))
-                    _manifestIdToPath[pluginId] = fallback;
+                if (probedPath is not null)
+                    break;
             }
-            catch
+
+            if (string.IsNullOrWhiteSpace(probedPath))
+                probedPath = FindInstalledManifestPathByScan(pluginId);
+        }
+        catch
+        {
+            // Index stays valid but missing this key; next EnsureManifestIdIndex
+            // will lazily rebuild if needed.
+            probedPath = null;
+        }
+
+        if (!string.IsNullOrWhiteSpace(probedPath))
+        {
+            lock (IdIndexGate)
             {
-                // Index stays valid but missing this key; next EnsureManifestIdIndex
-                // will lazily rebuild if needed.
+                if (_manifestIdToPath is not null && !_manifestIdToPath.ContainsKey(pluginId))
+                    _manifestIdToPath[pluginId] = probedPath;
             }
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace UniversalDeviceToolkit.Lib.Plugins;
@@ -317,6 +318,11 @@ public interface IPluginManager : IDisposable
     /// Acquires the shared per-plugin mutation lease.
     /// </summary>
     IDisposable AcquirePluginMutation(string pluginId);
+
+    /// <summary>
+    /// Async variant that avoids blocking the thread-pool during parallel scans.
+    /// </summary>
+    Task<IDisposable> AcquirePluginMutationAsync(string pluginId, CancellationToken cancellationToken = default);
     
     /// <summary>
     /// Perform pending plugin deletions asynchronously
