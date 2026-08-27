@@ -201,6 +201,8 @@ jobs:
 
           # Solution builds map Release|Any CPU -> Release|x64, so outputs live under bin\x64\...
           $cliCandidates = @(
+            (Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\x64\Release\net10.0-windows10.0.26100.0\win-x64\udt.exe'),
+            (Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\udt.exe'),
             (Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\x64\Release\net10.0-windows10.0.26100.0\win-x64\udt-cli.exe'),
             (Join-Path $PWD 'UniversalDeviceToolkit.CLI\bin\Release\net10.0-windows10.0.26100.0\win-x64\udt-cli.exe')
           )

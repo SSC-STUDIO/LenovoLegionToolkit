@@ -1,11 +1,11 @@
 ---
 name: udt-hardware-cli
-description: Control Universal Device Toolkit hardware via udt-cli (laptop power mode, Fn+Q, RGB, battery care, UDT CLI). Use when the user mentions UDT, udt-cli, Fn+Q, Legion/LOQ power modes, Spectrum/RGB, or local hardware toggles. Not a general Windows optimizer.
+description: Control Universal Device Toolkit hardware via udt (laptop power mode, Fn+Q, RGB, battery care, UDT CLI). Use when the user mentions UDT, udt, Fn+Q, Legion/LOQ power modes, Spectrum/RGB, or local hardware toggles. Not a general Windows optimizer.
 ---
 
 # UDT hardware CLI
 
-UDT is trusted local hardware control. Humans use the tray / Fn+Q. Agents use `udt-cli`.
+UDT is trusted local hardware control. Humans use the tray / Fn+Q. Agents use `udt`.
 
 ## Install
 
@@ -40,10 +40,12 @@ Copy-Item -Path "$src\*" -Destination $dst -Recurse -Force
 
 ## Procedure
 
-1. Run `udt-cli doctor --json`.
+1. Run `udt doctor --json`.
 2. If `ready` is false, **stop**. Tell the user to open Settings → Integrations → CLI and keep UDT in the tray. Do **not** edit `integrations.json`.
-3. Run `udt-cli feature --list --json`. Never invent a feature name.
+3. Run `udt feature --list --json`. Never invent a feature name.
 4. Get or set only listed features. Prefer `--json`.
+
+Compatibility: `udt-cli` is an alias of `udt` (shim). Prefer `udt` in new scripts and docs.
 
 ## Allow
 
@@ -56,7 +58,7 @@ Copy-Item -Path "$src\*" -Destination $dst -Recurse -Force
 - `network` start/stop (acceleration)
 - `shell install` / uninstall
 - Sensors, God Mode, fan curves, GPU overclock (not on CLI)
-- Treating CrossPlatform `udt` as hardware control
+- Treating CrossPlatform `udt` diagnostics asset (`*_CLI_cross-platform.zip`) as hardware control
 - Acting as a generic Windows cleaner/optimizer
 
 Feature name table: [reference.md](reference.md). Human contract: [../../CLI.md](../../CLI.md).

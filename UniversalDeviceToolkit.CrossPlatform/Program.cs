@@ -636,7 +636,7 @@ internal sealed record CrossPlatformStatus(
         Capability("BasicModeCompatibility", "Basic-mode compatibility", true, "Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms."),
         Capability("WindowsHardwareControls", "Windows hardware controls", isWindows,
             isWindows
-                ? "Use the Windows desktop app or existing udt-cli.exe CLI for Lenovo hardware controls."
+                ? "Use the Windows desktop app or existing udt CLI for Lenovo hardware controls."
                 : "Windows-only controls are intentionally hidden on macOS/Linux.",
             isWindows ? "Capability_WindowsHardwareControls_Windows_Detail" : "Capability_WindowsHardwareControls_Other_Detail"),
         Capability("PluginRuntime", "Plugin runtime", isWindows,

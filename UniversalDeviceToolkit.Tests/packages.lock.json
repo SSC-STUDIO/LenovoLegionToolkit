@@ -339,7 +339,7 @@
           "UniversalDeviceToolkit.Lib": "[6.0.0, )"
         }
       },
-      "udt-cli": {
+      "udt": {
         "type": "Project",
         "dependencies": {
           "System.CommandLine": "[2.0.10, )",

@@ -316,8 +316,8 @@ User-facing product names and **primary plugin/host ABI** are both **Universal D
 | Product / Electron process | Universal Device Toolkit |
 | Core Lib assembly / namespaces | `UniversalDeviceToolkit.Lib` |
 | Plugins host assembly / namespaces | `UniversalDeviceToolkit.Lib.Plugins` |
-| Windows IPC CLI executable | `udt-cli.exe` (`AssemblyName` = `udt-cli`) |
-| Cross-platform diagnostics CLI | `udt` (`UniversalDeviceToolkit.CrossPlatform`) |
+| Windows IPC CLI executable | `udt.exe` (`AssemblyName` = `udt`; `udt-cli.exe` one-train alias) |
+| Cross-platform diagnostics CLI | `udt` (`UniversalDeviceToolkit.CrossPlatform`, framework-dependent `udt.dll` + `udt`/`udt.cmd`) |
 
 Phase 3 hard cutover from `LenovoLegionToolkit.Lib*` is **complete**. Remaining LLT tokens (legacy IPC pipe `LenovoLegionToolkit-IPC-0`, `BrandCompatibility.Legacy*`, dual-written `LLT_*` env keys, legacy `LenovoLegionToolkit.Plugins.*` load prefixes, packaging IDs) are deliberate compatibility surfaces — not the primary ABI.
 

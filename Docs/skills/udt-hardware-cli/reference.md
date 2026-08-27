@@ -1,4 +1,4 @@
-# udt-cli feature names
+# udt feature names
 
 CLI uses kebab-case. Host JSON-RPC uses camelCase. Do not mix them.
 
@@ -6,7 +6,7 @@ CLI only exposes names that probe as supported on **this** machine. Always `feat
 
 ## On CLI
 
-| CLI (`udt-cli feature`) | RPC `feature` key |
+| CLI (`udt feature`) | RPC `feature` key |
 | --- | --- |
 | `always-on-usb` | `alwaysOnUsb` |
 | `battery` | `battery` |
@@ -30,6 +30,8 @@ CLI only exposes names that probe as supported on **this** machine. Always `feat
 | `white-keyboard-backlight` | `whiteKeyboard` |
 
 Typical `power-mode` values: `quiet`, `balance`, `performance` (and machine-specific extras). Use `feature set power-mode --list`.
+
+`udt-cli` is a one-train alias of `udt`; `udt feature` and `udt-cli feature` are equivalent.
 
 ## RPC only (not CLI)
 

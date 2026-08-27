@@ -46,7 +46,7 @@ UniversalDeviceToolkit.sln
 ├── UniversalDeviceToolkit.Lib.Plugins/    # Plugin host
 ├── UniversalDeviceToolkit.Lib.Abstractions/ / Lib.Shared # Portable, net10.0
 ├── UniversalDeviceToolkit.CrossPlatform/  # Cross-platform diagnostics CLI (net10.0)
-├── UniversalDeviceToolkit.CLI/            # Windows IPC CLI (udt-cli.exe)
+├── UniversalDeviceToolkit.CLI/            # Windows IPC CLI (udt.exe, alias udt-cli.exe)
 ├── UniversalDeviceToolkit.CLI.Lib/        # CLI core
 ├── UniversalDeviceToolkit.Tests.Contracts/ # Guard + Security
 ├── UniversalDeviceToolkit.Tests/          # Parallel unit tests

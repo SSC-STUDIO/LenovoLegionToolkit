@@ -81,4 +81,4 @@ if (-not $didAny) {
 Write-Host ""
 Write-Host "Source: $source"
 Write-Host "Verify with your agent, e.g.:"
-Write-Host "  udt-cli doctor --json"
+Write-Host "  udt doctor --json   # udt-cli doctor --json still works via shim"

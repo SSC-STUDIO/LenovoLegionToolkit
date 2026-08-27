@@ -40,7 +40,7 @@ C# types under these projects live in `UniversalDeviceToolkit.Lib*` namespaces (
 | `UniversalDeviceToolkit.Host` | `UniversalDeviceToolkit.Host` | `UniversalDeviceToolkit.Host` | Headless JSON-RPC backend |
 | `UniversalDeviceToolkit.Lib.Automation` | `UniversalDeviceToolkit.Lib.Automation` | *(project default)* | Not a public plugin ABI assembly |
 | `UniversalDeviceToolkit.Lib.Macro` | `UniversalDeviceToolkit.Lib.Macro` | *(project default)* | Not a public plugin ABI assembly |
-| `UniversalDeviceToolkit.CLI` | `UniversalDeviceToolkit.CLI` | **`udt-cli`** | Windows CLI executable → `udt-cli.exe` (was `llt`) |
+| `UniversalDeviceToolkit.CLI` | `UniversalDeviceToolkit.CLI` | **`udt`** | Windows CLI executable → `udt.exe` (alias `udt-cli.exe` one-train shim; was `llt`/`udt-cli`) |
 | `UniversalDeviceToolkit.CLI.Lib` | `UniversalDeviceToolkit.CLI.Lib` | *(project default)* | Shared CLI IPC models |
 | `UniversalDeviceToolkit.NetworkProxy` | `UniversalDeviceToolkit.NetworkProxy` | `UniversalDeviceToolkit.NetworkProxy` | Fully UDT-named |
 | `UniversalDeviceToolkit.CrossPlatform` | `UniversalDeviceToolkit.CrossPlatform` | **`udt`** | Cross-platform CLI entry name |
@@ -68,7 +68,7 @@ IPC defaults (e.g. pipe base name `udt-network-proxy`) are UDT-oriented. No rena
 | Lib `RootNamespace` / `AssemblyName` | `LenovoLegionToolkit.Lib` | `UniversalDeviceToolkit.Lib` |
 | Lib.Plugins `RootNamespace` / `AssemblyName` | `LenovoLegionToolkit.Lib.Plugins` | `UniversalDeviceToolkit.Lib.Plugins` |
 | C# namespaces in Lib* | `LenovoLegionToolkit.Lib*` | `UniversalDeviceToolkit.Lib*` |
-| Windows CLI `AssemblyName` | `llt` → `llt.exe` | `udt-cli` → `udt-cli.exe` (+ release ships `llt.exe` copy as one-train shim) |
+| Windows CLI `AssemblyName` | `llt` → `llt.exe` | `udt` → `udt.exe` (alias `udt-cli.exe` one-train shim; prior train was `udt-cli`) (+ release ships `llt.exe` copy as one-train shim) |
 | Preferred CLI IPC pipe | (introduced in Phase 2) | `UniversalDeviceToolkit-IPC-0` |
 | Legacy CLI IPC pipe | `LenovoLegionToolkit-IPC-0` | **Still accepted** (compat) |
 | winget `PackageIdentifier` | `SSC-STUDIO.LenovoLegionToolkit` | **Unchanged** (in-place upgrades; do not rewrite historical manifests) |
@@ -186,7 +186,7 @@ New host modules that are not part of the public plugin contract use `UniversalD
 
 - `AssemblyName` / `RootNamespace` for Lib and Lib.Plugins → `UniversalDeviceToolkit.Lib` / `UniversalDeviceToolkit.Lib.Plugins`
 - Source namespaces `LenovoLegionToolkit.Lib*` → `UniversalDeviceToolkit.Lib*`
-- Windows CLI `AssemblyName` `llt` → `udt-cli`
+- Windows CLI `AssemblyName` `llt` → `udt-cli` → `udt` (current: `udt.exe`; `udt-cli.exe` one-train shim)
 - Primary plugin/host contract is UDT-named; legacy plugin prefixes and pipes remain as **compat**, not primary ABI
 
 TypeForwardedTo dual-package packaging for **external** consumers of the old assembly simple names was **not** required for this in-tree hard cutover; third-party plugins built against `LenovoLegionToolkit.Lib*` must recompile against `UniversalDeviceToolkit.Lib*` (or rely only on remaining host-side name tolerances where they apply).
@@ -197,7 +197,7 @@ TypeForwardedTo dual-package packaging for **external** consumers of the old ass
 
 | Concern | Current value | Guidance |
 | --- | --- | --- |
-| CLI `AssemblyName` | `udt-cli` (`UniversalDeviceToolkit.CLI`) | Ship/docs use `udt-cli.exe`; CrossPlatform uses `udt` |
+| CLI `AssemblyName` | `udt` (`UniversalDeviceToolkit.CLI`) | Ship/docs use `udt.exe` (alias `udt-cli.exe`); CrossPlatform `udt` is framework-dependent diagnostics (`udt.dll` + `udt`/`udt.cmd` launchers) |
 | Named pipe — **preferred UDT** | `UniversalDeviceToolkit-IPC-0` (`PREFERRED_PIPE_NAME`) | Client-preferred; host dual-listens |
 | Named pipe — **legacy** | `LenovoLegionToolkit-IPC-0` (`DEFAULT_PIPE_NAME`) | Older CLI / tooling; keep until a deliberate pipe-only cutover |
 | Automation env vars | `LLT_*` + `UDT_*` dual-write | Compatibility surface for user scripts |
@@ -227,7 +227,7 @@ Core Lib DLL:          UniversalDeviceToolkit.Lib.dll          (was LenovoLegion
 Plugins host DLL:      UniversalDeviceToolkit.Lib.Plugins.dll  (was LenovoLegionToolkit.Lib.Plugins.dll)
 Plugin prefixes:       UniversalDeviceToolkit.Plugins.* (preferred)
                        LenovoLegionToolkit.Plugins.*   (legacy accepted)
-CLI exe (Windows):    udt-cli.exe   (was llt.exe)
+CLI exe (Windows):    udt.exe   (was llt.exe / udt-cli.exe; udt-cli.exe shim kept one train)
 CLI IPC pipes:         UniversalDeviceToolkit-IPC-0 (preferred)
                        LenovoLegionToolkit-IPC-0    (legacy)
 Automation env:        LLT_* + UDT_* (dual-write)

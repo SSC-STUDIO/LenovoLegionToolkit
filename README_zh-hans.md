@@ -64,7 +64,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 - 拯救者 / LOQ 用户，想卸 Vantage 但还要 Fn+Q、RGB、独显控制
 - 不支持的机器：希望硬件项被诚实隐藏（基础模式），而不是假开关
-- 人和 Agent 共用 `udt-cli.exe`（应用在跑，设置里打开 CLI），代码是 GPL 开源能自己看
+- 人和 Agent 共用 `udt`（应用在跑，设置里打开 CLI；`udt-cli` 仍为兼容别名），代码是 GPL 开源能自己看
 
 现成发帖文案：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · 投放手册 [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
@@ -178,7 +178,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 |---|---|---|
 | UI / Releases 产品名 | Universal Device Toolkit (UDT) | 当前对外品牌 |
 | winget / Scoop 包 ID | `SSC-STUDIO.UniversalDeviceToolkit`（6.x 新 ID，待上架）/ `universaldevicetoolkit`（6.x 新 Scoop 名） | 6.x 包管理器断代；旧 `SSC-STUDIO.LenovoLegionToolkit` / `lenovolegiontoolkit` 不支持原地升级 |
-| CLI 可执行文件 | `udt-cli.exe` | 脚本与自动化兼容 |
+| CLI 可执行文件 | `udt.exe`（`udt-cli.exe` 一代兼容别名） | 短命名；旧脚本仍可用 |
 | 数据目录 | `%LOCALAPPDATA%\UniversalDeviceToolkit` | 设置/插件自动迁移 |
 | 自动化环境变量 | `LLT_*` + `UDT_*`（双写） | 用户脚本兼容；同时提供 UDT 别名 |
 | 插件/核心程序集 | `UniversalDeviceToolkit.Lib*`（主 ABI） | 第三阶段 ABI；旧插件前缀仍可加载 |
@@ -600,7 +600,7 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 ### 命令行界面
 
-你可以在命令行内直接控制 UDT 的部分功能。UDT 命令行界面的可执行文件位于安装文件夹下，名为 `udt-cli.exe`。
+你可以在命令行内直接控制 UDT 的部分功能。UDT 命令行界面的可执行文件位于安装文件夹下，名为 `udt.exe`（`udt-cli.exe` 为一代兼容别名）。
 
 命令行界面需要 UDT 在后台运行并且在设置内启用命令行界面，否则其无法正常工作。你也可以选择将命令行界面添加至你的用户 `PATH` 环境变量。
 
@@ -611,18 +611,20 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 <details>
 <summary>功能</summary>
 
-* `udt-cli quickAction --list` - 列出所有快捷操作
-* `udt-cli quickAction <name>` - 执行快捷操作 `<name>`
-* `udt-cli feature --list` - 列出所有可用功能
-* `udt-cli feature get <name>` - 打印功能 `<name>` 当前的值
-* `udt-cli feature set <name> --list` - 列出功能 `<name>` 所有可设定的值
-* `udt-cli feature set <name> <value>` - 将功能 `<name>` 的值设定为 `<value>`
-* `udt-cli spectrum profile get` - 打印当前 Spectrum RGB 预设
-* `udt-cli spectrum profile set <profile>` - 将 Spectrum RGB 预设设定为 `<profile>`
-* `udt-cli spectrum brightness get` - 打印当前 Spectrum RGB 的亮度
-* `udt-cli spectrum brightness set <brightness>` - 将 Spectrum RGB 的亮度设定为 `<brightness>`
-* `udt-cli rgb get` - 打印当前四分区 RGB 预设
-* `udt-cli rgb set <profile>` - 将四分区 RGB 预设设定为 `<preset>`
+* `udt doctor` - 检查 CLI 是否就绪（`--json` 供 Agent 使用，无需 IPC）
+* `udt --json …` - 所有命令统一以单个 JSON 对象输出
+* `udt quickAction --list` - 列出所有快捷操作
+* `udt quickAction <name>` - 执行快捷操作 `<name>`
+* `udt feature --list` - 列出所有可用功能
+* `udt feature get <name>` - 打印功能 `<name>` 当前的值
+* `udt feature set <name> --list` - 列出功能 `<name>` 所有可设定的值
+* `udt feature set <name> <value>` - 将功能 `<name>` 的值设定为 `<value>`
+* `udt spectrum profile get` - 打印当前 Spectrum RGB 预设
+* `udt spectrum profile set <profile>` - 将 Spectrum RGB 预设设定为 `<profile>`
+* `udt spectrum brightness get` - 打印当前 Spectrum RGB 的亮度
+* `udt spectrum brightness set <brightness>` - 将 Spectrum RGB 的亮度设定为 `<brightness>`
+* `udt rgb get` - 打印当前四分区 RGB 预设
+* `udt rgb set <profile>` - 将四分区 RGB 预设设定为 `<preset>`
 
 </details>
 

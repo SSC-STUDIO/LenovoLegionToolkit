@@ -168,7 +168,7 @@
   <data name="Capability_PluginManifestDiscovery_Detail"><value>Inspects plugin manifests on every platform without loading WPF or Windows-only plugin assemblies.</value></data>
   <data name="Capability_CrossPlatformControlSurface_Detail"><value>Lists writable standard OS controls and hidden vendor-specific controls through one metadata surface.</value></data>
   <data name="Capability_BasicModeCompatibility_Detail"><value>Matches common vendors to safe basic device packs and hides hardware-write features on non-Windows platforms.</value></data>
-  <data name="Capability_WindowsHardwareControls_Windows_Detail"><value>Use the Windows desktop app or existing udt-cli.exe CLI for Lenovo hardware controls.</value></data>
+  <data name="Capability_WindowsHardwareControls_Windows_Detail"><value>Use the Windows desktop app or existing udt.exe CLI for Lenovo hardware controls.</value></data>
   <data name="Capability_WindowsHardwareControls_Other_Detail"><value>Windows-only controls are intentionally hidden on macOS/Linux.</value></data>
   <data name="Capability_PluginRuntime_Windows_Detail"><value>Windows plugin workflows remain available in the desktop app.</value></data>
   <data name="Capability_PluginRuntime_Other_Detail"><value>Cross-platform plugin loading is a future expansion point and is not enabled yet.</value></data>
@@ -224,7 +224,7 @@
   <data name="Doctor_Detail_ControlsAvailable"><value>{0} available controls; {1} writable controls from {2}.</value></data>
   <data name="Doctor_Detail_DeviceSupport"><value>{0}: {1}</value></data>
   <data name="Doctor_Detail_HardwareControlsAvailable"><value>Hardware controls are available.</value></data>
-  <data name="Doctor_Detail_WindowsHardwareControls"><value>Use the Windows desktop app or udt-cli.exe for supported hardware controls.</value></data>
+  <data name="Doctor_Detail_WindowsHardwareControls"><value>Use the Windows desktop app or udt.exe for supported hardware controls.</value></data>
   <data name="Doctor_Detail_HardwareControlsHidden"><value>Hardware-write controls are intentionally hidden on macOS/Linux.</value></data>
   <data name="Doctor_Note_NoTelemetryProvider"><value>No cross-platform telemetry provider is available for this OS.</value></data>
   <data name="Doctor_Note_NoPowerProvider"><value>No cross-platform power provider is available for this OS.</value></data>

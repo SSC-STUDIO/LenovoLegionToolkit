@@ -168,7 +168,7 @@
   <data name="Capability_PluginManifestDiscovery_Detail"><value>在所有平台检查插件清单，不加载 WPF 或仅限 Windows 的插件组件。</value></data>
   <data name="Capability_CrossPlatformControlSurface_Detail"><value>通过统一的元数据界面列出可写的标准系统控制和隐藏的厂商专属控制。</value></data>
   <data name="Capability_BasicModeCompatibility_Detail"><value>将常见厂商匹配到安全的基础设备包，并在非 Windows 平台隐藏硬件写入功能。</value></data>
-  <data name="Capability_WindowsHardwareControls_Windows_Detail"><value>Lenovo 硬件控制请使用 Windows 桌面应用或现有的 udt-cli.exe。</value></data>
+  <data name="Capability_WindowsHardwareControls_Windows_Detail"><value>Lenovo 硬件控制请使用 Windows 桌面应用或现有的 udt.exe。</value></data>
   <data name="Capability_WindowsHardwareControls_Other_Detail"><value>Windows 专属控制会在 macOS/Linux 上有意隐藏。</value></data>
   <data name="Capability_PluginRuntime_Windows_Detail"><value>Windows 插件工作流仍可在桌面应用中使用。</value></data>
   <data name="Capability_PluginRuntime_Other_Detail"><value>跨平台插件加载属于后续扩展点，目前尚未启用。</value></data>
@@ -224,7 +224,7 @@
   <data name="Doctor_Detail_ControlsAvailable"><value>{0} 个可用控制项，{1} 个可写控制项，来源为 {2}。</value></data>
   <data name="Doctor_Detail_DeviceSupport"><value>{0}：{1}</value></data>
   <data name="Doctor_Detail_HardwareControlsAvailable"><value>硬件控制可用。</value></data>
-  <data name="Doctor_Detail_WindowsHardwareControls"><value>支持的硬件控制请使用 Windows 桌面应用或 udt-cli.exe。</value></data>
+  <data name="Doctor_Detail_WindowsHardwareControls"><value>支持的硬件控制请使用 Windows 桌面应用或 udt.exe。</value></data>
   <data name="Doctor_Detail_HardwareControlsHidden"><value>macOS/Linux 上会有意隐藏硬件写入控制。</value></data>
   <data name="Doctor_Note_NoTelemetryProvider"><value>此操作系统没有可用的跨平台遥测提供程序。</value></data>
   <data name="Doctor_Note_NoPowerProvider"><value>此操作系统没有可用的跨平台电源提供程序。</value></data>

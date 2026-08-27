@@ -32,8 +32,8 @@ Start here, then follow the topic docs. Do not treat WPF/Avalonia audit notes as
 | [TEST_DIAGNOSTICS.md](./TEST_DIAGNOSTICS.md) | Test map: Host / Plugins / Electron, CI ladder, testhost locks |
 | [SUBMISSIONS.md](./SUBMISSIONS.md) | Directory and awesome-list tracker |
 | [AUTOMATION.md](./AUTOMATION.md) | Community growth campaign (not the in-app automation engine) |
-| [CLI.md](./CLI.md) | `udt-cli` contract: `--json`, `doctor`, exit codes |
-| [skills/udt-hardware-cli/SKILL.md](./skills/udt-hardware-cli/SKILL.md) | Copyable Agent skill for local `udt-cli` |
+| [CLI.md](./CLI.md) | `udt` contract: `--json`, `doctor`, exit codes (`udt-cli` alias) |
+| [skills/udt-hardware-cli/SKILL.md](./skills/udt-hardware-cli/SKILL.md) | Copyable Agent skill for local `udt` |
 | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) | Community guidelines |
 
 ## Plugins

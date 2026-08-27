@@ -282,14 +282,19 @@ jobs:
     - name: Smoke CLI help and version
       shell: pwsh
       run: |
-        $cliExePath = Join-Path $PWD "$env:BUILD_OUTPUT\udt-cli.exe"
-        $cliDllPath = Join-Path $PWD "$env:BUILD_OUTPUT\udt-cli.dll"
+        $cliExePath = Join-Path $PWD "$env:BUILD_OUTPUT\udt.exe"
+        $cliDllPath = Join-Path $PWD "$env:BUILD_OUTPUT\udt.dll"
         if (-not (Test-Path $cliExePath)) {
           throw "CLI executable not found at $cliExePath"
         }
         if (-not (Test-Path $cliDllPath)) {
           throw "CLI assembly not found at $cliDllPath"
         }
+        # One-train shim: old scripts still call udt-cli.*
+        $shimExe = Join-Path $PWD "$env:BUILD_OUTPUT\udt-cli.exe"
+        $shimDll = Join-Path $PWD "$env:BUILD_OUTPUT\udt-cli.dll"
+        if (-not (Test-Path $shimExe)) { Copy-Item -LiteralPath $cliExePath -Destination $shimExe }
+        if (-not (Test-Path $shimDll)) { Copy-Item -LiteralPath $cliDllPath -Destination $shimDll }
 
         $help = (& dotnet $cliDllPath --help 2>&1 | Out-String).Trim()
         if ($LASTEXITCODE -ne 0) {

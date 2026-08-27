@@ -5,7 +5,7 @@
         <RootNamespace>UniversalDeviceToolkit.CLI</RootNamespace>
         <Copyright>$(ProjectCopyright)</Copyright>
         <IsUdtShippingApp>true</IsUdtShippingApp>
-        <AssemblyName>udt-cli</AssemblyName>
+        <AssemblyName>udt</AssemblyName>
         <NeutralLanguage>en</NeutralLanguage>
         <SatelliteResourceLanguages>$(UdtSatelliteResourceLanguages)</SatelliteResourceLanguages>
     </PropertyGroup>
@@ -24,4 +24,10 @@
     <ItemGroup>
         <ProjectReference Include="..\UniversalDeviceToolkit.CLI.Lib\UniversalDeviceToolkit.CLI.Lib.csproj" />
     </ItemGroup>
+  <!-- Compatibility shim: keep udt-cli.exe / udt-cli.dll as one-train alias for scripts that still call the old name. -->
+  <Target Name="CopyUdtCliCompatShim" AfterTargets="Build;Publish" Condition="'$(TargetFramework)' == '$(UDTTargetFramework)'">
+    <Copy SourceFiles="$(TargetDir)udt.exe" DestinationFiles="$(TargetDir)udt-cli.exe" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)udt.exe')" />
+    <Copy SourceFiles="$(TargetDir)udt.dll" DestinationFiles="$(TargetDir)udt-cli.dll" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)udt.dll')" />
+    <Copy SourceFiles="$(TargetDir)udt.pdb" DestinationFiles="$(TargetDir)udt-cli.pdb" SkipUnchangedFiles="true" Condition="Exists('$(TargetDir)udt.pdb')" />
+  </Target>
 </Project>

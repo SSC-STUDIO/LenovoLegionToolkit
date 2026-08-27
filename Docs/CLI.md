@@ -1,8 +1,8 @@
-# udt-cli contract
+# udt contract
 
-`udt-cli.exe` is the Windows IPC client for local hardware control. People and agents share the same surface. It does not start Host or Electron.
+`udt.exe` is the Windows IPC client for local hardware control. People and agents share the same surface. It does not start Host or Electron.
 
-The CrossPlatform `udt` binary is diagnostics only. Do not use it for Legion/LOQ hardware.
+The CrossPlatform `udt` binary (asset `*_CLI_cross-platform.zip` containing `udt.dll` + launchers `udt`/`udt.cmd`) is diagnostics only. Do not use it for Legion/LOQ hardware.
 
 ## Preconditions
 
@@ -10,7 +10,9 @@ The CrossPlatform `udt` binary is diagnostics only. Do not use it for Legion/LOQ
 2. Settings → Integrations → CLI is on. Default is off. The toggle starts the named pipe immediately; do not edit `integrations.json`.
 3. Same Windows user as the running app.
 
-`udt-cli doctor` (and `udt-cli doctor --json`) inspects those facts **without IPC**.
+`udt doctor` (and `udt doctor --json`) inspects those facts **without IPC**.
+
+Compatibility: `udt-cli.exe` / `udt-cli.dll` remain as a one-train shim (copy of `udt.exe` / `udt.dll`) so old scripts keep working.
 
 ## `--json`
 

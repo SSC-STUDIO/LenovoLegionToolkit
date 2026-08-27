@@ -70,7 +70,7 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 
 - Legion / LOQ owners who want to drop Vantage but keep Fn+Q, RGB, and dGPU controls
 - Owners of unsupported machines who want those hardware items hidden honestly (basic mode)
-- People and agents sharing `udt-cli.exe` (app running, Settings → CLI on), plus GPL source you can actually read
+- People and agents sharing `udt` (app running, Settings → CLI on; `udt-cli` still works as an alias), plus GPL source you can actually read
 
 Ready-to-post copy: [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [PROMOTION_CN.md](Docs/PROMOTION_CN.md) · posting playbook [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
@@ -191,7 +191,7 @@ During the rename from Lenovo Legion Toolkit, runtime identifiers intentionally 
 |---|---|---|
 | Product name in UI / Releases | Universal Device Toolkit (UDT) | Current public branding |
 | winget ID (pending) / Scoop ID | `SSC-STUDIO.UniversalDeviceToolkit` (new 6.x ID, not yet in winget-pkgs) / `universaldevicetoolkit` (new 6.x Scoop name) | 6.x package break; legacy `SSC-STUDIO.LenovoLegionToolkit` / `lenovolegiontoolkit` do not upgrade in place |
-| CLI executable | `udt-cli.exe` | Scripts and automation compatibility |
+| CLI executable | `udt.exe` (`udt-cli.exe` alias for one train) | Short name; old scripts keep working |
 | Data directory | `%LOCALAPPDATA%\UniversalDeviceToolkit` | Settings/plugins migrate automatically |
 | Action env vars | `LLT_*` + `UDT_*` (dual-write) | Existing user scripts; UDT aliases available |
 | Plugin/core assemblies | `UniversalDeviceToolkit.Lib*` (primary) | Phase 3 ABI; legacy plugin prefixes still load |
@@ -601,12 +601,12 @@ If "Wait for exit" is checked, UDT will capture the output from standard output 
 
 UDT ships two command-line surfaces with different responsibilities:
 
-- `udt-cli.exe` is the Windows IPC remote control client. It requires the Electron app to be running in the background and the CLI option to be enabled.
-- `udt` is the independent `UniversalDeviceToolkit.CrossPlatform` diagnostics CLI. It runs without the Electron app and is the Windows/macOS/Linux path for safe platform discovery and diagnostics.
+- `udt.exe` is the Windows IPC remote control client. It requires the Electron app to be running in the background and the CLI option to be enabled. `udt-cli.exe` remains as a one-train alias (copy) so old scripts keep working.
+- `udt` inside `*_CLI_cross-platform.zip` (`dotnet udt.dll` / `udt` / `udt.cmd`) is the independent `UniversalDeviceToolkit.CrossPlatform` diagnostics CLI. It runs without the Electron app and is the Windows/macOS/Linux path for safe platform discovery and diagnostics.
 
-The Windows IPC CLI executable is `udt-cli.exe` and can be found in the install directory.
+The Windows IPC CLI executable is `udt.exe` (alias `udt-cli.exe`) and can be found in the install directory.
 
-For CLI to work properly, UDT needs to run in the background and CLI option needs to be enabled in UDT settings. You can also chose to add `udt-cli.exe` to your PATH variable for easier access.
+For CLI to work properly, UDT needs to run in the background and CLI option needs to be enabled in UDT settings. You can also chose to add `udt.exe` to your PATH variable for easier access.
 
 Contract, `--json`, and `doctor`: [Docs/CLI.md](Docs/CLI.md). Agent skill (copy into `~/.cursor/skills/udt-hardware-cli/`): [Docs/skills/udt-hardware-cli/SKILL.md](Docs/skills/udt-hardware-cli/SKILL.md).
 
@@ -615,21 +615,21 @@ CLI does not need to be ran as Administrator.
 <details>
 <summary>Features</summary>
 
-* `udt-cli doctor` - inspect CLI readiness without IPC (`--json` for agents)
-* `udt-cli --json …` - single JSON object on stdout for scripts and agents
+* `udt doctor` - inspect CLI readiness without IPC (`--json` for agents)
+* `udt --json …` - single JSON object on stdout for scripts and agents
 
-* `udt-cli quickAction --list` - list all Quick Actions
-* `udt-cli quickAction <name>` - run Quick Action with given `<name>`
-* `udt-cli feature --list` - list all supported features
-* `udt-cli feature get <name>` - get value of a feature with given `<name>`
-* `udt-cli feature set <name> --list` - list all values for a feature with given `<name>`
-* `udt-cli feature set <name> <value>` - set feature with given `<name>` to a specified `<value>`
-* `udt-cli spectrum profile get` - get current profile Spectrum RGB is set to
-* `udt-cli spectrum profile set <profile>` - set Spectrum RGB profile to `<profile>`
-* `udt-cli spectrum brightness get` - get current brightness Spectrum RGB is set to
-* `udt-cli spectrum brightness set <brightness>` - set Spectrum RGB brightness to `<brightness>`
-* `udt-cli rgb get` - get current 4-zone RGB preset
-* `udt-cli rgb set <profile>` - set 4-zone RGB to `<preset>`
+* `udt quickAction --list` - list all Quick Actions
+* `udt quickAction <name>` - run Quick Action with given `<name>`
+* `udt feature --list` - list all supported features
+* `udt feature get <name>` - get value of a feature with given `<name>`
+* `udt feature set <name> --list` - list all values for a feature with given `<name>`
+* `udt feature set <name> <value>` - set feature with given `<name>` to a specified `<value>`
+* `udt spectrum profile get` - get current profile Spectrum RGB is set to
+* `udt spectrum profile set <profile>` - set Spectrum RGB profile to `<profile>`
+* `udt spectrum brightness get` - get current brightness Spectrum RGB is set to
+* `udt spectrum brightness set <brightness>` - set Spectrum RGB brightness to `<brightness>`
+* `udt rgb get` - get current 4-zone RGB preset
+* `udt rgb set <profile>` - set 4-zone RGB to `<preset>`
 
 </details>
 
