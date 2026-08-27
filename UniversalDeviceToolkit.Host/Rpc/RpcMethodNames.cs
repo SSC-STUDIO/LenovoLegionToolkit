@@ -156,5 +156,11 @@ public static class RpcMethodNames
         "gameBoost.saveConfig",
         "gameBoost.boostNow",
         "gameBoost.revertNow",
+        "mouse.getState",
+        "mouse.applyWindows",
+        "mouse.setCursorThemeMode",
+        "mouse.applyCursorThemeNow",
+        "mouse.syncFromWindows",
+        "mouse.restoreWindowsDefault",
     ];
 }

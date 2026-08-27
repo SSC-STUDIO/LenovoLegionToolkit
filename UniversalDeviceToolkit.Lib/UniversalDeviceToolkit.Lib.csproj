@@ -18,6 +18,7 @@
 	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">
 		<PackageReference Include="Autofac" />
 		<PackageReference Include="ManagedNativeWifi" />
+		<PackageReference Include="Microsoft.Win32.SystemEvents" />
 		<PackageReference Include="Microsoft.Windows.CsWin32">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -203,5 +204,16 @@
 	    <Generator>PublicResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Resource.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
+	</ItemGroup>
+	<!--
+	  Cursor & pointer theme pack (absorbed custom-mouse plugin). Copied beside
+	  the host executable as CursorPointerAssets\ so CursorPointerService can
+	  resolve it via AppContext.BaseDirectory.
+	-->
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows10.0.26100.0'">
+	  <Content Include="Features\CursorPointer\Assets\W11-CC-V2.2-HDPI\**\*">
+	    <Link>CursorPointerAssets\W11-CC-V2.2-HDPI\%(RecursiveDir)%(Filename)%(Extension)</Link>
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
 	</ItemGroup>
 </Project>

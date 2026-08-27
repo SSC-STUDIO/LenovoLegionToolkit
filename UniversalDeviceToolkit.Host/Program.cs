@@ -208,6 +208,7 @@ public static class Program
         StartupHandlers.Register(rpc);
         GodModeHandlers.Register(rpc);
         GameBoostHandlers.Register(rpc);
+        MouseHandlers.Register(rpc);
 #else
         PortableCoreHandlers.Register(rpc);
         PortableStoreHandlers.Register(rpc);

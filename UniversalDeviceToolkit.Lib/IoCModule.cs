@@ -20,6 +20,7 @@ using UniversalDeviceToolkit.Lib.Features;
 using UniversalDeviceToolkit.Lib.Features.Acer;
 using UniversalDeviceToolkit.Lib.Features.Asus;
 using UniversalDeviceToolkit.Lib.Features.Clevo;
+using UniversalDeviceToolkit.Lib.Features.CursorPointer;
 using UniversalDeviceToolkit.Lib.Features.Dell;
 using UniversalDeviceToolkit.Lib.Features.FlipToStart;
 using UniversalDeviceToolkit.Lib.Features.Hp;
@@ -106,6 +107,8 @@ public class IoCModule : Autofac.Module
         builder.Register<SunriseSunsetSettings>();
         builder.Register<UpdateCheckSettings>();
         builder.Register<GameBoostSettings>();
+        builder.Register<CursorPointerSettings>().SingleInstance();
+        builder.Register<CursorPointerService>().SingleInstance();
 
         builder.Register<AlwaysOnUSBFeature>();
         builder.Register<HardwareSensorsFeature>();
