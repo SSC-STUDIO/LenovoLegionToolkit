@@ -12,7 +12,7 @@ _Due to large number of issues created, those that do not meet the criteria will
 <br/>
 
 
-**Development setup**
+**Development setup** — scripts & tools index: [`Docs/SCRIPTS.md`](Docs/SCRIPTS.md)
 
 1. Install [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0). The supported product build is Windows; macOS/Linux can build portable libraries and the CrossPlatform CLI.
 2. Install [Node.js 20+](https://nodejs.org/) (Electron client; official packaging is Windows-only)

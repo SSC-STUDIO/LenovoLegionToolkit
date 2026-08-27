@@ -34,6 +34,7 @@ Start here, then follow the topic docs. Do not treat WPF/Avalonia audit notes as
 | [AUTOMATION.md](./AUTOMATION.md) | Community growth campaign (not the in-app automation engine) |
 | [CLI.md](./CLI.md) | `udt` contract: `--json`, `doctor`, exit codes (`udt-cli` alias) |
 | [skills/udt-hardware-cli/SKILL.md](./skills/udt-hardware-cli/SKILL.md) | Copyable Agent skill for local `udt` |
+| [SCRIPTS.md](./SCRIPTS.md) | Scripts & Tools index: `Scripts/*.ps1` and `Tools/` usage |
 | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) | Community guidelines |
 
 ## Plugins
