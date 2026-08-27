@@ -36,6 +36,8 @@ public class PluginManager : IPluginManager
     private readonly object _installationMarkerLock = new();
     private readonly HashSet<string> _rejectedAssemblyPaths = new(StringComparer.OrdinalIgnoreCase);
     private readonly object _rejectedAssemblyLock = new();
+    private readonly ConcurrentDictionary<string, SignatureCacheEntry> _signatureCache =
+        new(StringComparer.OrdinalIgnoreCase);
     private readonly ConcurrentDictionary<string, SemaphoreSlim> _pluginMutationGates =
         new(StringComparer.OrdinalIgnoreCase);
     private readonly AsyncLocal<HashSet<string>?> _heldPluginMutations = new();
@@ -54,6 +56,11 @@ public class PluginManager : IPluginManager
     private sealed record PreparedPluginInstallation(
         IReadOnlyList<string> CallbackPluginIds,
         IReadOnlyList<IDisposable> DependencyMutationLeases);
+
+    private sealed record SignatureCacheEntry(
+        DateTime LastWriteTimeUtc,
+        long Length,
+        PluginSignatureResult Result);
 
     private sealed class PendingUninstallTransaction(
         string pluginId,
@@ -634,7 +641,25 @@ public class PluginManager : IPluginManager
             //      there is no UI dispatcher to deadlock against either.
             // If any of those assumptions change, this call must be replaced
             // with a pre-load/cache strategy rather than a blocking wait.
+            // Mitigation: cache validated assemblies by (path, mtime, length)
+            // so repeated dependency resolves do not block on WinVerifyTrust.
+            if (TryGetCachedSignatureResult(normalizedCandidatePath, out var cachedResult))
+            {
+                if (!cachedResult.IsValid)
+                {
+                    lock (_rejectedAssemblyLock)
+                        _rejectedAssemblyPaths.Add(normalizedCandidatePath);
+
+                    if (Log.Instance.IsTraceEnabled)
+                        Log.Instance.Trace($"Rejected {context} due to invalid signature (cached). [path={normalizedCandidatePath}, status={cachedResult.Status}]");
+                    return null;
+                }
+
+                return Assembly.LoadFrom(normalizedCandidatePath);
+            }
+
             var signatureResult = _signatureValidator.ValidateAsync(normalizedCandidatePath).GetAwaiter().GetResult();
+            CacheSignatureResult(normalizedCandidatePath, signatureResult);
             if (!signatureResult.IsValid)
             {
                 lock (_rejectedAssemblyLock)
@@ -682,6 +707,85 @@ public class PluginManager : IPluginManager
         }
 
         return true;
+    }
+
+    private bool TryGetCachedSignatureResult(string normalizedPath, out PluginSignatureResult result)
+    {
+        result = null!;
+        try
+        {
+            if (!_signatureCache.TryGetValue(normalizedPath, out var entry))
+                return false;
+
+            var info = new FileInfo(normalizedPath);
+            if (!info.Exists ||
+                info.LastWriteTimeUtc != entry.LastWriteTimeUtc ||
+                info.Length != entry.Length)
+            {
+                _signatureCache.TryRemove(normalizedPath, out _);
+                return false;
+            }
+
+            if (!entry.Result.IsValid && TrustedPluginPackageStore.IsTrustedFile(normalizedPath))
+            {
+                _signatureCache.TryRemove(normalizedPath, out _);
+                return false;
+            }
+
+            result = entry.Result;
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private void CacheSignatureResult(string normalizedPath, PluginSignatureResult result)
+    {
+        try
+        {
+            var info = new FileInfo(normalizedPath);
+            if (!info.Exists)
+                return;
+
+            var entry = new SignatureCacheEntry(info.LastWriteTimeUtc, info.Length, result);
+            _signatureCache[normalizedPath] = entry;
+
+            if (_signatureCache.Count > 256)
+            {
+                var toRemove = _signatureCache.Keys.FirstOrDefault();
+                if (toRemove is not null)
+                    _signatureCache.TryRemove(toRemove, out _);
+            }
+        }
+        catch
+        {
+        }
+    }
+
+    private void InvalidateSignatureCache(string? pluginIdOrPath)
+    {
+        if (string.IsNullOrWhiteSpace(pluginIdOrPath))
+        {
+            _signatureCache.Clear();
+            lock (_rejectedAssemblyLock)
+                _rejectedAssemblyPaths.Clear();
+            return;
+        }
+
+        var needle = pluginIdOrPath!;
+        foreach (var key in _signatureCache.Keys.ToArray())
+        {
+            if (key.Contains(needle, StringComparison.OrdinalIgnoreCase))
+                _signatureCache.TryRemove(key, out _);
+        }
+
+        lock (_rejectedAssemblyLock)
+        {
+            foreach (var p in _rejectedAssemblyPaths.Where(p => p.Contains(needle, StringComparison.OrdinalIgnoreCase)).ToArray())
+                _rejectedAssemblyPaths.Remove(p);
+        }
     }
 
     /// <summary>
@@ -762,10 +866,21 @@ public class PluginManager : IPluginManager
             var effectiveSignatureValidator =
                 packageAuthorization?.Scope(_signatureValidator) ?? _signatureValidator;
 
-            // Validate plugin signature before loading (security check)
-            var signatureResult = await effectiveSignatureValidator
-                .ValidateAsync(pluginFilePath)
-                .ConfigureAwait(false);
+            var normalizedForCache = Path.GetFullPath(pluginFilePath);
+            PluginSignatureResult signatureResult;
+            if (packageAuthorization is null && TryGetCachedSignatureResult(normalizedForCache, out var cachedMain))
+            {
+                signatureResult = cachedMain;
+            }
+            else
+            {
+                signatureResult = await effectiveSignatureValidator
+                    .ValidateAsync(pluginFilePath)
+                    .ConfigureAwait(false);
+                if (packageAuthorization is null)
+                    CacheSignatureResult(normalizedForCache, signatureResult);
+            }
+
             if (!signatureResult.IsValid)
             {
                 Log.Instance.Warning($"Plugin signature validation failed for {pluginFilePath}. Status: {signatureResult.Status}, Error: {signatureResult.ErrorMessage}");
@@ -1101,6 +1216,7 @@ public class PluginManager : IPluginManager
 
         _loadedPluginFileIdentities.TryRemove(pluginId, out _);
         _runtimeGenerations.TryRemove(pluginId, out _);
+        InvalidateSignatureCache(pluginId);
         return true;
     }
 
