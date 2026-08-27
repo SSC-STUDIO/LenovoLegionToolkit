@@ -18,7 +18,7 @@ I uninstalled Vantage and switched to Universal Device Toolkit (the Legion Toolk
 
 Universal Device Toolkit vX.Y.Z is out.
 
-Same idea: stay light, no background service, no telemetry. Plugin Extensions still lets you install or remove add-ons. Old Lenovo Legion Toolkit settings migrate.
+Same idea: stay light, no background service, no telemetry. Cursor & pointer themes are built in. Old Lenovo Legion Toolkit settings migrate.
 
 Installers: **Full** (offline) and **Online** (small stub). Prefer GitHub Releases or Scoop until winget 6.x is live. Check `SHA256.txt` on the release page if you mirror it.
 

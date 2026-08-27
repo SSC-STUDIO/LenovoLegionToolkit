@@ -27,7 +27,6 @@ _Due to large number of issues created, those that do not meet the criteria will
 > `net10.0-windows10.0.26100.0` with forced win-x64). On macOS/Linux use the
 > portable path instead: `./build.sh Release` builds the cross-platform
 > libraries, the `UniversalDeviceToolkit.CrossPlatform` CLI, and
-> the plugin SDK contract on any of the three platforms, and
 > `UniversalDeviceToolkit.CrossPlatform.Tests` run there (see
 > `Docs/DEPLOYMENT.md` → "Cross-platform builds").
 
@@ -71,7 +70,7 @@ npm run typecheck # TS type check
 ```
 
 A portable Host (`net10.0`, `UDTWindows=false`) stubs most Windows-only RPC
-as `-32099`. Official plugins are Windows TFMs. Do not publish the default
+as `-32099`. Do not publish the default
 Windows TFM for `osx-*` / `linux-x64`.
 
 ```bash
@@ -112,7 +111,7 @@ The solution has 25 projects (24 .NET + the Electron launcher). Build sequential
 
 Process-wide mutable tests use `[Collection(TestCollections.…)]` and live in `Tests.Stateful` (`parallelizeTestCollections: false`). Contracts and Unit keep collection parallelism on.
 
-Plugin implementation tests: `Plugins/Official/*.Tests` via `Plugins/UniversalDeviceToolkit.Plugins.sln` (independent CI job). Electron UI contracts: `npm test` in `UniversalDeviceToolkit.Electron`. Official plugin RPC names: `Plugins/Official/plugin-rpc-contract.json`.
+Electron UI contracts: `npm test` in `UniversalDeviceToolkit.Electron`.
 
 <br/>
 **1. Before reporting an issue make yourself familiar with the README**

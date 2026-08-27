@@ -10,11 +10,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Fixed
-- Official store plugin install now stages host-owned `UniversalDeviceToolkit.Plugins.SDK.dll` and `UniversalDeviceToolkit.Plugins.Shared.dll` next to Host so 2.x packages can load after the installer strips bundled SDK/Shared copies. `plugins.list` also overlays installed `contributes.webPage` from disk because the catalog JSON does not carry that block.
+### Added / 新增
+- **Cursor & Pointer (built-in)**: Former CustomMouse plugin capabilities are now native Host features — custom high-DPI cursor themes (`W11-CC-V2.2-HDPI` shipped with the host), per-UI-scale cursor sizing, and pointer speed controls on the Mouse page. Existing settings from the retired plugin's `config.json` are imported automatically.
 
-### Removed
-- `shell-integration` (Nilesoft Shell Manager) is delisted from the plugin store (`lifecycle: Removed`). Existing installs keep working; it is not a host built-in replacement. Publishing the catalog still requires dispatching `plugins-release.yml`.
+### Changed / 变更
+- Electron now ships a fully native Mouse (cursor & pointer) page replacing the retired CustomMouse plugin webview, including navigation, i18n copy for 25 locales, and installer feature flags without the former `pluginExtensions` option.
+- The Windows CLI IPC server keeps the legacy shell-integration operation codes as compatibility stubs: status checks report not-installed and install/uninstall requests fail with "Shell integration is no longer available."
+
+### Removed / 移除
+- **The entire plugin system is retired** (~15k lines of infrastructure):
+  - Deleted `UniversalDeviceToolkit.Lib.Plugins`, the Plugins source tree (`Plugins/`) with official CustomMouse/ShellIntegration/ViVeTool sources and tests, the plugins SDK tooling, the plugins issue templates, and the `plugins-build` / `plugins-validate` / `plugins-release` CI workflows.
+  - Deleted the Electron Plugin Extensions page, plugin stores/views/IPC webview plumbing, plus all plugin RPC handlers (`plugins.*`, `plugin.*`).
+  - Pruned `--no-plugins` host flag, plugin settings/navigation keys, optimization-category extension pipeline, plugin catalog tags from update filtering docs, crowdin/i18n references to plugin resources, and coverage/tooling lists referencing retired projects.
+  - Legacy `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins` data stays on disk but is no longer loaded; the `plugin-catalog` / `plugin-catalog-preview` release tags are historical archives only.
+- Store entry stubs mark `custom-mouse`, `shell-integration`, and `vive-tool` as `Removed`; `shell-integration` was previously delisted from the store.
 
 ## [6.0.0] - 2026-08-24
 

@@ -16,7 +16,6 @@
 | [Assert-ShippingPayload.ps1](#assert-shippingpayloadps1) | CI/发布门禁 | 拦截发布包中的测试/验证残留（`*.Tests*`、`Tools/`、`*.pdb`、`UDT_APPDATA_OVERRIDE`） | 打包后、发布前必过 |
 | [Assert-AuthenticodeSignatures.ps1](#assert-authenticodesignaturesps1) | 发布门禁 | 校验 `exe`/`dll` 的 Authenticode 签名有效 | Release 签名后验证 |
 | [Prune-ShippingFootprint.ps1](#prune-shippingfootprintps1) | 发布裁剪 | 删除 `*.pdb`、非 `win-x64` 原生、`AllowedCultures` 之外的卫星资源 | `dotnet publish` 后、打包前 |
-| [Build-PluginRuntimeAssets.ps1](#build-pluginruntimeassetsps1) | 发布组装 | 从 `Host/publish/win-x64` 抽取插件运行时（SDK/Shared）落盘到 `Build/` | Release 发布阶段 |
 | [Build-CrossPlatformCliAsset.ps1](#build-crossplatformcliassetps1) | 发布组装 | 发布 `UniversalDeviceToolkit.CrossPlatform` 并打 `*_CLI_cross-platform.zip` | Release 可选（≥5.x） |
 | [Build-LanguageAssets.ps1](#build-languageassetps1) | 发布组装 | 从 Host 卫星资源生成语言包与目录，并收尾 `release-assets/` | Release 多阶段（Host 后、收尾） |
 | [Build-ElectronInstaller.ps1](#build-electroninstallerps1) | 发布组装 | 构建 Electron Full/Online 载荷与 NSIS 安装器（支持分阶段签名） | 本地 `BuildInstaller/` 或 Release 三阶段 |
@@ -87,10 +86,10 @@ pwsh ./Scripts/Assert-CultureNaming.ps1 -RepositoryRoot C:\repo
 
 ```powershell
 pwsh ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath Build
-pwsh ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath Build-CrossPlatformCli -SkipPluginRuntimeCheck
+pwsh ./Scripts/Assert-ShippingPayload.ps1 -PayloadPath Build-CrossPlatformCli
 ```
 
-必填：`UniversalDeviceToolkit.Plugins.Shared.Core.dll` / `SDK.dll` / `Shared.dll`（跨平台 CLI 资产可跳过）。禁入：`SpectrumTester*`、`*.Tests*`、`*.Smoke*`、路径段 `Tools`/`Tests`/`x86`/`arm64`、`*.pdb`、`UDT_APPDATA_OVERRIDE`（`Lib.Abstractions.dll` 豁免）。
+禁入：`SpectrumTester*`、`*.Tests*`、`*.Smoke*`、路径段 `Tools`/`Tests`/`x86`/`arm64`、`*.pdb`、`UDT_APPDATA_OVERRIDE`（`Lib.Abstractions.dll` 豁免）。
 
 ### Assert-AuthenticodeSignatures.ps1
 
@@ -109,15 +108,6 @@ pwsh ./Scripts/Prune-ShippingFootprint.ps1 -PayloadPath UniversalDeviceToolkit.H
 ```
 
 删除：`*.pdb`、非 `win-x64` 目录（`x86`/`arm64`/`libMonoPosixHelper*`）、`AllowedCultures` 之外的卫星资源。`AllowedCultures` 为空时不过滤语言。
-
-### Build-PluginRuntimeAssets.ps1
-
-```powershell
-pwsh ./Scripts/Build-PluginRuntimeAssets.ps1 -DestinationPath Build -Configuration Release
-pwsh ./Scripts/Build-PluginRuntimeAssets.ps1 -PluginsRepositoryRoot ./Plugins -HostSourceDir UniversalDeviceToolkit.Host/publish/win-x64 -DestinationPath Build
-```
-
-从 Host 发布产物中抽取插件运行时并校验 `Assert-ShippingPayload`。
 
 ### Build-CrossPlatformCliAsset.ps1
 
@@ -216,7 +206,7 @@ UAC 提权后校验：UI 功耗模式点击→回读 `SmartFanMode`、God Mode �
 | 本地提交前快检 | `Run-TestFailFast.ps1` → `node Tools/CheckSourceUnicode/check-unicode.mjs` → `Assert-CultureNaming.ps1` |
 | Windows 有状态测试前 | `Test-WindowsTestEnvironment.ps1` |
 | 跨平台验证 | `Test-CrossPlatformInWsl.ps1` |
-| 本地一键发布（未签名） | `dotnet publish Host --self-contained win-x64` → `Prune-ShippingFootprint.ps1` → `Build-PluginRuntimeAssets.ps1` → `Build-LanguageAssets.ps1` → `Build-ElectronInstaller.ps1 -Version X.Y.Z` |
+| 本地一键发布（未签名） | `dotnet publish Host --self-contained win-x64` → `Prune-ShippingFootprint.ps1` → `Build-LanguageAssets.ps1` → `Build-ElectronInstaller.ps1 -Version X.Y.Z` |
 | Release 三阶段 | `Release.yml` 按 `PreparePayloadsOnly` → `PrepareInstallerShellOnly` → `PackagePreparedPayloads` 调用 `Build-ElectronInstaller.ps1`，中间穿插 `Assert-ShippingPayload.ps1` / `Assert-AuthenticodeSignatures.ps1` |
 
 更完整的构建与发布流程见 [DEPLOYMENT.md](./DEPLOYMENT.md)；测试分层见 [TEST_DIAGNOSTICS.md](./TEST_DIAGNOSTICS.md)。

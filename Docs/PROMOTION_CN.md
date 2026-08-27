@@ -18,7 +18,7 @@
 
 Universal Device Toolkit vX.Y.Z 发布了。
 
-还是老样子：尽量轻、不跑后台服务、不碰遥测。插件扩展页可以继续装/卸插件；以前装过 Lenovo Legion Toolkit 的直接升，设置会留着。
+还是老样子：尽量轻、不跑后台服务、不碰遥测。以前装过 Lenovo Legion Toolkit 的直接升，设置会留着。
 
 安装包两个：Full 离线完整，Online 体积小。winget 6.x 上架前请用 GitHub Releases 或 Scoop。镜像转发请带上 Release 里的 `SHA256.txt`。
 
@@ -49,7 +49,7 @@ Vantage 太重，开机一堆东西，还要账号。UDT 是 GPL-3.0 开源，�
 
 在支持的机型上，Fn+Q、Spectrum 键盘灯、Hybrid 独显、电池养护这些日常需求都能覆盖。它**故意不跑独立后台服务**，所以 Fn+Q 同步、宏之类需要让它待在托盘里，别完全退出。
 
-插件按需装。旧版用户直接升级，设置和插件会保留。
+指针与光标定制已内置到「鼠标」页。旧版用户直接升级，设置会保留。
 
 **下载**：GitHub Releases，或 Scoop：`scoop install ssc-studio/universaldevicetoolkit`
 

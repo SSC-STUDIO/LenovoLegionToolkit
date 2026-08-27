@@ -43,11 +43,11 @@
 
 ---
 
-Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 Windows 设备工具：在受支持的机器上直接做硬件控制。不支持的 PC 进入**基础模式**，硬件开关保持隐藏，界面不会假装有 Vantage 级能力。插件是可选的设备侧扩展，不是通用 Windows 工具箱。
+Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 Windows 设备工具：在受支持的机器上直接做硬件控制。不支持的 PC 进入**基础模式**，硬件开关保持隐藏，界面不会假装有 Vantage 级能力。
 
 > [!NOTE]
 > **「Universal」的含义**
-> UDT 是可扩展的硬件控制，并带安全降级：**完整硬件控制**面向联想拯救者、LOQ、IdeaPad Gaming 等受支持机型，以及已有可测 provider 的其他品牌；**基础模式**隐藏不支持的硬件项，而不是承诺每台电脑都有 Vantage 级控制。名称不是「通用 Windows 工具平台」的意思。
+> UDT 是聚焦硬件控制的工具，并带安全降级：**完整硬件控制**面向联想拯救者、LOQ、IdeaPad Gaming 等受支持机型，以及已有可测 provider 的其他品牌；**基础模式**隐藏不支持的硬件项，而不是承诺每台电脑都有 Vantage 级控制。名称不是「通用 Windows 工具平台」的意思。
 
 ### 为什么选择 UDT？
 
@@ -56,9 +56,11 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 | 后台服务 | **无** | 需要 |
 | 遥测 / 联想账号 | **无** | 需要 |
 | 开源（GPL-3.0） | **是** | 否 |
-| 插件扩展 | **是** | 有限 |
+| 指针与光标定制 | **内置** | 有限 |
 | 命令行与自动化 | **是** | 否 |
 | 非联想 PC 可用 | **基础模式** | 否 |
+
+> 插件系统已在 **6.1** 退役：Custom Mouse 成为内置的指针与光标控制，网络加速自 5.0 起内置于系统优化；详见 [插件系统（已退役）](#插件系统已退役)。
 
 **适合谁**
 
@@ -68,7 +70,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 现成发帖文案：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · 投放手册 [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
-本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别、插件扩展与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户升级后可保留设置、插件与数据；包管理器身份在 6.x 断代（winget 改为 `SSC-STUDIO.UniversalDeviceToolkit`，Scoop 改为 `universaldevicetoolkit`），旧包 ID 不支持原地升级。正式产品以 **Windows 为先**：GitHub Releases 发布 Windows NSIS Full/Online 安装包，内嵌自包含 win-x64 Host。macOS 与 Linux 为**实验面**（Electron 壳、可移植 Host、CrossPlatform 诊断 CLI），在对应发布流水线落地前**没有官方 Electron 发行包**。Android 和移动端伴侣应用不在项目范围内，也不受支持。
+本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户升级后可保留设置与数据；包管理器身份在 6.x 断代（winget 改为 `SSC-STUDIO.UniversalDeviceToolkit`，Scoop 改为 `universaldevicetoolkit`），旧包 ID 不支持原地升级。正式产品以 **Windows 为先**：GitHub Releases 发布 Windows NSIS Full/Online 安装包，内嵌自包含 win-x64 Host。macOS 与 Linux 为**实验面**（Electron 壳、可移植 Host、CrossPlatform 诊断 CLI），在对应发布流水线落地前**没有官方 Electron 发行包**。Android 和移动端伴侣应用不在项目范围内，也不受支持。
 
 本软件不运行后台服务，典型内存约 400MB（Electron 界面 + .NET Host；托盘空闲更低），不收集用户信息。
 
@@ -84,7 +86,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 | 🎛️ **托盘控制中心** | 任务栏托盘弹出微型控制台，内嵌电源模式胶囊切换器与电量徽章 |
 | ⚡ **自动化与宏** | 插电、游戏运行等触发，支持内置推荐模板与 JSON/剪贴板快速导入导出 |
 | 🖥️ **传感器** | CPU/GPU 温度、风扇转速、频率监测 |
-| 🔧 **插件扩展** | CPU/GPU 工具、内置网络与加速、Shell、鼠标指针等 |
+| 🖱️ **指针与光标** | 高分屏自定义光标主题、随 UI 缩放调节光标大小（内置） |
 | 🌍 **78+ 语言** | 完整本地化 + 社区翻译 |
 | 📦 **极致轻量** | 托盘空闲深度休眠、无后台常驻服务、无遥测、无账号 |
 
@@ -96,7 +98,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 #### 1. 前后端职责高度清晰，各展所长
 - **前端（Electron + React 19 + TypeScript）**：仅专注负责高精度像素渲染、Windows 11 Mica 亚克力动态流光材质、跨 DPI 高清缩放与 78+ 语言热重载。
-- **后端（.NET 10 / C# 13 无头宿主进程）**：所有底层硬件访问（WMI/ACPI、内核驱动直通、电源策略交互、传感器数据流轮询、自动化管线引擎与安全插件沙箱）全部在原生高性能 .NET 运行时内执行，通过基于 stdio 的极速 JSON-RPC 与前端通讯。
+- **后端（.NET 10 / C# 13 无头宿主进程）**：所有底层硬件访问（WMI/ACPI、内核驱动直通、电源策略交互、传感器数据流轮询与自动化管线引擎）全部在原生高性能 .NET 运行时内执行，通过基于 stdio 的极速 JSON-RPC 与前端通讯。
 
 #### 2. UDT 专属的五大底层性能优化
 - 🍃 **托盘休眠「零内存伪装」机制 (Zero-Memory Tray Sleeping)**：
@@ -117,7 +119,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 | **常驻后台 Windows 服务** | 0 个 | 3~5 个常驻服务 | **0 个 (无常驻服务)** | 绝不拖慢系统开机与后台游戏 |
 | **冷启动首屏就绪时间** | 1.8s ~ 2.5s | 4.0s ~ 8.0s+ | **≤ 400ms (中位数)** | **媲美 VS Code 级敏捷秒开** |
 | **托盘后台常驻内存** | 150MB ~ 250MB | 300MB ~ 600MB+ | **30MB ~ 60MB (彻底销毁 DOM)** | **远低于 WPF 版本（降幅超 70%）** |
-| **前台活跃峰值内存** | 180MB ~ 300MB | 500MB ~ 1.2GB | **30MB ~ 300MB (实地测得)** | **随页面和插件波动，仍远低于 Vantage** |
+| **前台活跃峰值内存** | 180MB ~ 300MB | 500MB ~ 1.2GB | **30MB ~ 300MB (实地测得)** | **随页面波动，仍远低于 Vantage** |
 | **多语言热重载能力** | 需重启应用生效 | 需重新加载 | **毫秒级热切换 (78+ 语言)** | 真正的跨语言现代化体验 |
 | **UI 缩放与高 DPI 适配** | 易产生字体发虚/布局变形 | 较差 | **矢量像素级缩放 (80%~150%)** | 跨 2K/4K/OLED 屏幕清晰细腻 |
 
@@ -140,7 +142,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
   - [下载](#下载)
   - [兼容性](#兼容性)
   - [功能介绍](#功能介绍)
-  - [插件系统](#插件系统)
+  - [插件系统（已退役）](#插件系统已退役)
   - [FAQ](#faq)
   - [如何开启记录 Log](#如何开启记录-log)
   - [本地化翻译](#本地化翻译)
@@ -162,26 +164,26 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 请认准当前维护仓库 `SSC-STUDIO/UniversalDeviceToolkit` 的发布页下载版本。6.x 起包管理器断代：winget 改用 `SSC-STUDIO.UniversalDeviceToolkit`，Scoop 改用 `universaldevicetoolkit`；旧包 ID 不支持原地升级。
 
 > [!NOTE]
-> **当前稳定版：v6.0.0。** 主程序使用 `vX.Y.Z` 标签发布；官方 1.x 插件包仍在独立的、非 Latest 的 rolling [`plugin-catalog` Release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) 中，供 v5.0.2 宿主使用。稳定 **v6.0.0**（InformationalVersion 不含连字符）从同一目录读取官方 **2.0.0** 包。预览标签（`v6.0.0-preview.N`）仍读取 [`plugin-catalog-preview`](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog-preview)。不要把预览插件 ZIP 上传到 `plugin-catalog`。
+> **当前稳定版：v6.0.0。** 主程序使用 `vX.Y.Z` 标签发布。历史插件目录发布（`plugin-catalog` / `plugin-catalog-preview`）仅作归档——插件系统已在 6.1 退役，宿主不再读取。
 > **winget 说明：** 6.x 包 ID `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但尚未合入 microsoft/winget-pkgs，因此目前 `winget install` 会失败；旧的 Lenovo Legion Toolkit 包同样不支持原地升级。请先使用 Releases 或 Scoop。
 
-- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。**Full** 是完整离线 NSIS 安装器（内嵌 Electron 与自包含 .NET Host）。**Online** 是约 15MB 以内的分阶安装器，安装时再下载同一套运行时；语言包和机型包仍可在应用内目录安装。请始终安装最新版本；设置、插件与数据会自动迁移，包管理器安装需改用 6.x 新 ID。
+- **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。**Full** 是完整离线 NSIS 安装器（内嵌 Electron 与自包含 .NET Host）。**Online** 是约 15MB 以内的分阶安装器，安装时再下载同一套运行时；语言包和机型包仍可在应用内目录安装。请始终安装最新版本；设置与数据会自动迁移，包管理器安装需改用 6.x 新 ID。
 - ~~**winget**（待上架）~~：6.x 标识 `SSC-STUDIO.UniversalDeviceToolkit` 已预留，提交 winget-pkgs 后才会可用；旧包不支持原地升级。
 - **Scoop**：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/universaldevicetoolkit`。6.x manifest 使用 Full 便携 ZIP（`innosetup: false`）；旧 `lenovolegiontoolkit` 包停留在 5.x，请先卸载再安装 `universaldevicetoolkit`。
 - **校验文件**：每个 Release 附带 `SHA256.txt`，建议下载前校验。
 
 #### 命名与升级兼容
 
-更名期间，以下运行时标识**故意保留旧名**以保证设置与插件延续；包管理器 ID 是例外——6.x 启用全新 ID，不支持原地升级：
+更名期间，以下运行时标识**故意保留旧名**以保证设置延续；包管理器 ID 是例外——6.x 启用全新 ID，不支持原地升级：
 
 | 用户可见 | 遗留标识 | 保留原因 |
 |---|---|---|
 | UI / Releases 产品名 | Universal Device Toolkit (UDT) | 当前对外品牌 |
 | winget / Scoop 包 ID | `SSC-STUDIO.UniversalDeviceToolkit`（6.x 新 ID，待上架）/ `universaldevicetoolkit`（6.x 新 Scoop 名） | 6.x 包管理器断代；旧 `SSC-STUDIO.LenovoLegionToolkit` / `lenovolegiontoolkit` 不支持原地升级 |
 | CLI 可执行文件 | `udt.exe`（`udt-cli.exe` 一代兼容别名） | 短命名；旧脚本仍可用 |
-| 数据目录 | `%LOCALAPPDATA%\UniversalDeviceToolkit` | 设置/插件自动迁移 |
+| 数据目录 | `%LOCALAPPDATA%\UniversalDeviceToolkit` | 设置自动迁移 |
 | 自动化环境变量 | `LLT_*` + `UDT_*`（双写） | 用户脚本兼容；同时提供 UDT 别名 |
-| 插件/核心程序集 | `UniversalDeviceToolkit.Lib*`（主 ABI） | 第三阶段 ABI；旧插件前缀仍可加载 |
+| 核心程序集 | `UniversalDeviceToolkit.Lib*`（主 ABI） | 第三阶段 ABI 延续 |
 
 仓库目录使用 `UniversalDeviceToolkit.*`。新用户从 Releases 安装 UDT；上表遗留名为兼容别名，并非另一款产品。
 
@@ -220,7 +222,7 @@ UDT 在后台运行时效果最好，请在设置中启用**开机启动**和**�
 
 ## 兼容性
 
-UDT 通过目录化设备支持识别机型：受支持的联想游戏/创作本获得完整硬件控制；不匹配的联想型号及非联想 PC 进入**基础模式**，不支持的硬件项保持隐藏。插件、语言、主题、更新、日志与安全流程可能仍在——那不是安装 UDT 的理由。
+UDT 通过目录化设备支持识别机型：受支持的联想游戏/创作本获得完整硬件控制；不匹配的联想型号及非联想 PC 进入**基础模式**，不支持的硬件项保持隐藏。语言、主题、更新、日志与安全流程可能仍在——那不是安装 UDT 的理由。
 
 **完整硬件控制系列**：
 - Legion 5、Legion Slim 5、Legion Pro 5
@@ -248,12 +250,12 @@ UDT 正式产品以 **Windows 为先**。官方 GitHub Releases 发布 Windows N
 - 可移植 `net10.0` 库，以及用 `UDTWindows=false` / `UDT_PLATFORM=linux|macos` 构建的可移植 Host（`build.sh host`）
 - 适配标题栏、菜单、托盘与 OSD 的 Electron 壳代码
 
-可移植 Host 对大多数 Windows 专属 RPC 返回 `-32099`（`Not supported on this platform.`）。官方插件面向 Windows TFM。不要把本地 `npm run dist:mac` / `npm run dist:linux` 产物当作官方发行包。
+可移植 Host 对大多数 Windows 专属 RPC 返回 `-32099`（`Not supported on this platform.`）。不要把本地 `npm run dist:mac` / `npm run dist:linux` 产物当作官方发行包。
 
 | 能力 | Windows（已支持） | macOS / Linux（实验） |
 |---|---|---|
 | 联想硬件控制（Fn+Q、RGB、风扇曲线、独显、电池养护） | 是 | 否 |
-| 官方插件与 Windows 系统优化 | 是 | 否（可移植 Host 对这些域打桩；官方插件为 Windows TFM） |
+| Windows 系统优化 | 是 | 否（可移植 Host 对该域打桩） |
 | 主题、应用内更新、日志界面 | 是 | 壳层可能渲染；无官方更新通道或发行资源 |
 | 标题栏 / 菜单 / 托盘 / OSD 壳 | 是 | 壳代码存在；不是已发布产品 |
 | 重启 / 关机 / 睡眠操作 | 是 | 否 |
@@ -297,14 +299,13 @@ dotnet run --project UniversalDeviceToolkit.CrossPlatform -- hardware
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- telemetry
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- power
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- profile
-dotnet run --project UniversalDeviceToolkit.CrossPlatform -- plugins
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- controls
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- elevate set cpu-governor performance
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- support
 dotnet run --project UniversalDeviceToolkit.CrossPlatform -- doctor
 ```
 
-在 macOS/Linux 上，该 CLI 报告平台/运行时信息，从 Linux DMI（`/sys/class/dmi/id`）或 macOS `sysctl`/`system_profiler` 读取基础硬件身份，从 Linux procfs/sysfs 或 macOS `sysctl` 读取安全的 CPU/内存/频率/温度/风扇遥测数据，从 Linux `power_supply` 或 macOS `pmset` 读取电池与外部电源状态，通过 Linux `powerprofilesctl` 或 macOS `pmset` 检查平台电源配置，扫描插件清单而不加载 Windows 程序集，将常见厂商匹配到安全的基础设备包，并将机器视为安全基础模式。`doctor` 命令将就绪检查汇总为通过/警告/失败报告。厂商专用控制后端与跨平台插件加载是未来的 5.x 扩展点。
+在 macOS/Linux 上，该 CLI 报告平台/运行时信息，从 Linux DMI（`/sys/class/dmi/id`）或 macOS `sysctl`/`system_profiler` 读取基础硬件身份，从 Linux procfs/sysfs 或 macOS `sysctl` 读取安全的 CPU/内存/频率/温度/风扇遥测数据，从 Linux `power_supply` 或 macOS `pmset` 读取电池与外部电源状态，通过 Linux `powerprofilesctl` 或 macOS `pmset` 检查平台电源配置，将常见厂商匹配到安全的基础设备包，并将机器视为安全基础模式。`doctor` 命令将就绪检查汇总为通过/警告/失败报告。厂商专用控制后端是未来的扩展点。
 
 </details>
 
@@ -366,43 +367,9 @@ UDT 可以做到：
   - **电池电量徽章**：实时显示剩余电量百分比、养护模式状态与充放电状态。
   - **即开即走**：托盘浮窗在失去焦点后自动完全卸载，不留任何后台内存开销。
 
-### 插件扩展
+### 指针与光标（内置）
 
-UDT 的官方插件维护在本仓库的 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/tree/master/Plugins/Official) 目录中。该目录包含插件源码、清单、发布元数据，以及通过“插件扩展”页面分发的集成资源。
-
-插件扩展页面提供了现代化、用户友好的插件管理界面：
-
-**功能特点：**
-- **列表式布局**：插件以清晰的列表格式显示，所有必要信息一目了然
-- **完整信息**：每个插件条目显示图标、名称、版本和描述
-- **快捷操作**：安装、配置、打开、卸载按钮直接在每个条目上
-- **智能按钮显示**：根据插件安装状态显示/隐藏按钮
-- **多语言支持**：所有按钮文本支持 20+ 语言
-- **搜索筛选**：实时搜索和按安装状态筛选
-
-**界面布局：**
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│ [搜索框]                         [全部 ▼]  [刷新]                      │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  [图标]  插件名称 v1.0.0                       [安装/更新]              │
-│         插件描述文字（可换行显示，最大3行）                               │
-│                                                                     │
-│  ─────────────────────────────────────────────────────────────────  │
-│                                                                     │
-│  [图标]  已安装的插件 v2.1.0                 [安装] [配置] [打开]        │
-│         这个插件支持配置和打开操作             [卸载]                    │
-│                                                                     │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-**支持的语言：**
-- 英语、中文（简体/繁体）、日语、韩语
-- 德语、法语、西班牙语、葡萄牙语、俄语、意大利语、波兰语
-- 土耳其语、乌克兰语、越南语、泰语、阿拉伯语 等
-
-详细的插件开发文档请查看 [PLUGINS.md](PLUGINS_zh-hans.md)。
+「鼠标」页面内置指针与光标控制：高分屏自定义光标主题（宿主附带 `W11-CC-V2.2-HDPI`）、随 UI 缩放调节光标大小与指针速度。该能力原由 Custom Mouse 插件提供；插件系统退役后已收编为宿主内置功能，已有光标主题与设置会自动导入。
 
 ### 自定义模式
 
@@ -628,70 +595,17 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 </details>
 
-## 插件系统
+## 插件系统（已退役）
 
-UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件可在插件扩展页面中安装、更新、配置和卸载。
+插件系统已在 **6.1** 退役：插件加载、「插件扩展」页面与插件目录工具链均已从本仓库移除。
 
-官方插件在本仓库的 [Plugins/Official](Plugins/Official) 维护。v5.0.2 通过主仓库 rolling `plugin-catalog` 的 `store.json` 分发 1.x；稳定 v6.0.0 从同一目录读取 2.0.0；预览构建仍读取 `plugin-catalog-preview`。
+原有能力去向：
 
-### 核心特性
+- **自定义鼠标（Custom Mouse）** → 内置于「鼠标」页面的指针与光标控制（已有光标主题与设置自动导入）
+- **网络加速（Network Acceleration）** → 自 5.0 起内置于「系统优化 → 网络与加速」
+- **Shell 集成 / ViVeTool** → 已下架，宿主无内置替代
 
-- **动态加载**：插件从宿主 `plugins` 目录在运行时加载（开发构建为 `Plugins/.build/plugins`，安装后为 `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`）
-- **在线插件仓库**：从在线仓库浏览和安装插件
-- **依赖管理**：自动安装和检查插件依赖
-- **UI 集成**：插件可以提供自定义 UI 页面和设置
-- **功能扩展**：插件可以扩展现有功能或添加新功能
-- **生命周期管理**：完整的插件生命周期管理，从安装到卸载
-- **下载进度**：在线插件的实时下载进度显示
-- **可执行文件支持**：插件可以提供独立的可执行文件
-- **语言支持**：每个插件都支持独立的语言设置
-
-### 插件类型
-
-- **系统插件**：内置插件，提供核心功能
-- **第三方插件**：社区创建的插件，扩展 UDT 功能
-
-### 可用插件
-
-官方插件发布自 [Plugins/Official](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/tree/master/Plugins/Official)。在线目录当前包括：
-
-- **Custom Mouse（自定义鼠标）**：光标主题、指针设置与 Windows 优化动作
-- **Network Acceleration（网络加速）**：已内置到主程序「系统优化 → 网络与加速」；v5.0.0 起插件已移除
-- **Shell Integration（Shell 集成）**：商店已下架（已安装用户可继续使用，并非宿主内置）
-- **ViVeTool**：管理 Windows 功能标志与实验性功能
-
-### 插件管理 UI
-
-UDT 提供了功能全面的插件扩展页面，具有以下特点：
-
-- **插件浏览**：查看所有可用插件（本地和在线）
-- **搜索和筛选**：按名称或描述搜索插件，按安装状态筛选
-- **插件详情**：查看每个插件的详细信息
-- **安装/卸载**：一键式安装和卸载操作
-- **在线更新**：检查并安装来自在线仓库的更新
-- **永久删除**：可选择永久删除插件文件
-- **语言设置**：为每个插件设置语言首选项
-
-### 安装插件
-
-插件可以通过两种方式安装：
-
-1. **在线安装**：
-   - 打开插件扩展页面
-   - 浏览可用插件
-   - 点击插件查看详情
-   - 点击"安装"自动下载并安装
-
-2. **手动安装**（进阶）：
-   - 从 [主仓库 plugin-catalog Release](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/tag/plugin-catalog) 下载插件 ZIP，或在使用 `Plugins\\udt-plugin.cmd package` 本地打包
-   - 解压到宿主 `plugins` 目录（每个插件单独子文件夹）：
-     - 已安装 UDT：`%LOCALAPPDATA%\UniversalDeviceToolkit\plugins\`
-      - 本地开发构建：`Plugins\.build\plugins\`
-   - 重启 UDT，或在插件扩展页面刷新已安装插件
-
-### 插件开发
-
-请在主仓库的 [Plugins/Official](Plugins/Official) 中开发插件，从 [PLUGIN_QUICKSTART.md](Docs/Plugins/PLUGIN_QUICKSTART.md) 开始。宿主侧契约与 UI 规范见 [Docs/Plugins/PLUGIN_DEVELOPMENT.md](Docs/Plugins/PLUGIN_DEVELOPMENT.md)。
+`%LOCALAPPDATA%\UniversalDeviceToolkit\plugins` 中遗留的数据保留在磁盘但不再加载。历史 `plugin-catalog` GitHub Release 标签仅作归档，不得用作应用更新通道。详见 [CHANGELOG](CHANGELOG.md)。
 
 ## 贡献者
 
@@ -922,11 +836,10 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 
 UDT 的本地化通过 Crowdin 管理，仓库配置文件为 `crowdin.yml`。
 
-- 源文件：5 个模块下的中立资源 `Resource.resx`
+- 源文件：4 个模块下的中立资源 `Resource.resx`
   - `UniversalDeviceToolkit.Lib/Resources`
   - `UniversalDeviceToolkit.Lib.Automation/Resources`
   - `UniversalDeviceToolkit.Lib.Macro/Resources`
-  - `UniversalDeviceToolkit.Lib.Plugins/Resources`
   - `UniversalDeviceToolkit.CLI/Resources`（`CLI.Resources.resx`）
   Electron 界面文案位于 `UniversalDeviceToolkit.Electron/src/renderer/src/i18n/locales/`（TS 模块）。
 - 目标文件：与源文件同目录的 `Resource.<locale>.resx`（CLI 为 `CLI.Resources.<locale>.resx`）。文化名使用 BCP 47 规范形式（`zh-Hans`、`zh-Hant`、`pt-BR`、`nl-NL`、`uz-Latn-UZ`），由 `Scripts/Assert-CultureNaming.ps1` 在 CI 强制校验。
@@ -953,8 +866,6 @@ crowdin download --config crowdin.yml
 |------|------|
 | [ARCHITECTURE.md](Docs/ARCHITECTURE.md) | 系统架构、组件与数据流 |
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | 构建、测试、部署与发布流程 |
-| [PLUGIN_DEVELOPMENT.md](Docs/Plugins/PLUGIN_DEVELOPMENT.md) | 插件开发与 SDK 指南 |
-| [RELEASE_AND_MIGRATION.md](Docs/Plugins/RELEASE_AND_MIGRATION.md) | 插件发布、仓库迁移与旧客户端升级 |
 | [LanguagePacks.md](Docs/LanguagePacks.md) | 语言包目录协议与生命周期 |
 | [NetworkAcceleration.md](Docs/NetworkAcceleration.md) | 内置网络与加速模块 |
 | [PROMOTION_CN.md](Docs/PROMOTION_CN.md) | 发布与社区宣发文案（中文） |

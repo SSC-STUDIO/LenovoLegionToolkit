@@ -1,6 +1,6 @@
 # Documentation index
 
-Shipping UI is the **Electron** shell (`UniversalDeviceToolkit.Electron`) talking to a headless **.NET Host** (`UniversalDeviceToolkit.Host`) over JSON-RPC. Business logic stays in .NET; Electron renders Host data and plugin `contributes.webPage` entries.
+Shipping UI is the **Electron** shell (`UniversalDeviceToolkit.Electron`) talking to a headless **.NET Host** (`UniversalDeviceToolkit.Host`) over JSON-RPC. Business logic stays in .NET; Electron renders Host data only (the plugin system was retired in 6.1).
 
 Start here, then follow the topic docs. Do not treat WPF/Avalonia audit notes as current product guidance.
 
@@ -29,7 +29,7 @@ Start here, then follow the topic docs. Do not treat WPF/Avalonia audit notes as
 | [UI_PERFORMANCE.md](./UI_PERFORMANCE.md) | Renderer hot-path rules |
 | [../UniversalDeviceToolkit.Electron/resources/README.md](../UniversalDeviceToolkit.Electron/resources/README.md) | Runtime extras vs `Assets/` vs `buildResources/` |
 | [SECURITY.md](./SECURITY.md) | Vulnerability reporting |
-| [TEST_DIAGNOSTICS.md](./TEST_DIAGNOSTICS.md) | Test map: Host / Plugins / Electron, CI ladder, testhost locks |
+| [TEST_DIAGNOSTICS.md](./TEST_DIAGNOSTICS.md) | Test map: Host / Electron, CI ladder, testhost locks |
 | [SUBMISSIONS.md](./SUBMISSIONS.md) | Directory and awesome-list tracker |
 | [AUTOMATION.md](./AUTOMATION.md) | Community growth campaign (not the in-app automation engine) |
 | [CLI.md](./CLI.md) | `udt` contract: `--json`, `doctor`, exit codes (`udt-cli` alias) |
@@ -37,18 +37,9 @@ Start here, then follow the topic docs. Do not treat WPF/Avalonia audit notes as
 | [SCRIPTS.md](./SCRIPTS.md) | Scripts & Tools index: `Scripts/*.ps1` and `Tools/` usage |
 | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) | Community guidelines |
 
-## Plugins
+## Plugins (retired)
 
-| Doc | Notes |
-| --- | --- |
-| [Plugins/PLUGIN_QUICKSTART.md](./Plugins/PLUGIN_QUICKSTART.md) | doctor → init → web page → package |
-| [Plugins/PLUGIN_DEVELOPMENT.md](./Plugins/PLUGIN_DEVELOPMENT.md) | Manifests, versioning, validation |
-| [Plugins/HOST_INTEGRATION.md](./Plugins/HOST_INTEGRATION.md) | Lifecycle, `webPage`, Host RPC |
-| [Plugins/ARCHITECTURE.md](./Plugins/ARCHITECTURE.md) | SDK layers and layout |
-| [Plugins/CODING_STANDARDS.md](./Plugins/CODING_STANDARDS.md) | C# + plugin web UI kit |
-| [Plugins/SDK_CHANGELOG.md](./Plugins/SDK_CHANGELOG.md) | SDK compatibility |
-| [Plugins/BUILD_SMOKE.md](./Plugins/BUILD_SMOKE.md) | Plugin CI smoke |
-| [Plugins/RELEASE_AND_MIGRATION.md](./Plugins/RELEASE_AND_MIGRATION.md) | Catalog release |
+The plugin system was retired in 6.1; plugin loading, the Plugin Extensions page, and catalog tooling are gone from this repository. Former `Docs/Plugins/` authoring docs live only in git history.
 
 ## Historical (not current SoT)
 
@@ -66,4 +57,4 @@ These files record past WPF/Avalonia work. They are not the shipping UI contract
 | [archive/PluginConsolidation.md](./archive/PluginConsolidation.md) | Plugin monorepo move |
 | [archive/UpstreamCapabilityMatrix.md](./archive/UpstreamCapabilityMatrix.md) | Upstream feature matrix |
 
-Agent entry points: root [AGENTS.md](../AGENTS.md), [UniversalDeviceToolkit.Electron/AGENTS.md](../UniversalDeviceToolkit.Electron/AGENTS.md), [UniversalDeviceToolkit.Host](../UniversalDeviceToolkit.Host) RPC handlers, [Plugins/AGENTS.md](../Plugins/AGENTS.md).
+Agent entry points: root [AGENTS.md](../AGENTS.md), [UniversalDeviceToolkit.Electron/AGENTS.md](../UniversalDeviceToolkit.Electron/AGENTS.md), [UniversalDeviceToolkit.Host](../UniversalDeviceToolkit.Host) RPC handlers.
