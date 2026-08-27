@@ -6,7 +6,7 @@ on:
       plugin_ids:
         description: 'Comma-separated plugin ids to publish'
         required: true
-        default: 'custom-mouse,shell-integration,vive-tool'
+        default: 'custom-mouse,vive-tool'
       catalog_channel:
         description: 'Catalog channel: stable (plugin-catalog, no prerelease versions) or preview (plugin-catalog-preview)'
         required: true

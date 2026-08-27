@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
+using UniversalDeviceToolkit.Abstractions.Lifecycle;
 using UniversalDeviceToolkit.Lib;
 using UniversalDeviceToolkit.Lib.GameDetection;
 using UniversalDeviceToolkit.Lib.Network;
@@ -165,7 +166,7 @@ public static class SettingsHandlers
                 ?? throw new BridgeErrorException(-32603, "Deserialized settings value is null.");
 
             CopyProperties(replacement, store);
-            await Task.CompletedTask;
+            await ApplyIntegrationsLifecycleAsync(scope).ConfigureAwait(false);
 
             rpc.Publish("settings.changed", new { scope, reason = "set" });
             return BridgeResult.Ok(new { scope, applied = true });
@@ -197,7 +198,9 @@ public static class SettingsHandlers
                 rpc.Publish("settings.changed", new { scope, reason = "save" });
             }
 
-            await Task.CompletedTask;
+            if (saved.Contains("integrations", StringComparer.Ordinal))
+                await ApplyIntegrationsLifecycleAsync("integrations").ConfigureAwait(false);
+
             return BridgeResult.Ok(new { saved });
         }
         catch (BridgeErrorException ex)
@@ -231,6 +234,21 @@ public static class SettingsHandlers
         {
             return BridgeResult.Error(-32603, $"{ex.GetType().Name}: {ex.Message}");
         }
+    }
+
+    internal static ICliHostLifecycle? LifecycleOverrideForTests { get; set; }
+
+    /// <summary>
+    /// settings.set and settings.save both call this so the CLI named pipe
+    /// starts or stops as soon as the Integrations CLI toggle is applied.
+    /// </summary>
+    internal static async Task ApplyIntegrationsLifecycleAsync(string scope)
+    {
+        if (!string.Equals(scope, "integrations", StringComparison.Ordinal))
+            return;
+
+        var lifecycle = LifecycleOverrideForTests ?? IoCContainer.Resolve<ICliHostLifecycle>();
+        await lifecycle.StartStopIfNeededAsync().ConfigureAwait(false);
     }
 
     private static string GetRequiredString(BridgeRequest request, string property)

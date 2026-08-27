@@ -60,7 +60,7 @@ Click-through (see `record-clickthrough.py`):
 | Windows optimization (系统优化) | Beautify checklists, then 垃圾清理 / 网络与加速 |
 | Automation (自动化) | Sample pipelines (not an empty unsupported page) |
 | Macro (自定义宏) | Numpad editor with a sample sequence |
-| Plugins (插件扩展) | Cursor and Pointer, Nilesoft Shell Manager, ViVeTool |
+| Plugins (插件扩展) | Cursor and Pointer, ViVeTool |
 | Settings (设置) | Appearance tiles; **亮色** selected |
 | About (关于) | **版本 6.0.0** and project links |
 

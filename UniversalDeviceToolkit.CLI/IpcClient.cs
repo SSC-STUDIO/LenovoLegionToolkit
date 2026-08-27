@@ -11,6 +11,10 @@ namespace UniversalDeviceToolkit.CLI;
 
 public static class IpcClient
 {
+    /// <summary>When true, skip the long legacy-pipe retry so --json callers fail fast.</summary>
+    public static bool FastFail { get; set; }
+
+
     public static async Task<string> GetAppStatusAsync()
     {
         var req = new IpcRequest
@@ -245,7 +249,7 @@ public static class IpcClient
 
     private static async Task<string?> SendRequestAsync(IpcRequest req)
     {
-        using var loading = ConsoleLoadingAnimation.Start(GetLoadingMessage(req));
+        using var loading = ConsoleLoadingAnimation.Start(GetLoadingMessage(req), enabled: !FastFail);
         using var pipe = await ConnectToAvailablePipeAsync().ConfigureAwait(false);
 
         var challengeResponse = await pipe.ReadObjectAsync<IpcResponse>().ConfigureAwait(false);
@@ -276,7 +280,9 @@ public static class IpcClient
         {
             var pipeName = pipeNames[i];
             var isFallback = i > 0;
-            var attempts = isFallback ? ConnectMaxAttempts : PreferredConnectAttempts;
+            var attempts = isFallback
+                ? (FastFail ? PreferredConnectAttempts : ConnectMaxAttempts)
+                : PreferredConnectAttempts;
             var pipe = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut);
 
             try

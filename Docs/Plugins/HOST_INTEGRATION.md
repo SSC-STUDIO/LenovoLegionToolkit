@@ -481,7 +481,7 @@ public class MyPlugin : PluginBase { }
 | 插件 ID                    | 页面模型             | 说明                                                 |
 | ------------------------ | ---------------- | -------------------------------------------------- |
 | **custom-mouse**         | `webPage` + Windows 优化 | `web/index.html`；Host `plugin.customMouse.*` |
-| **shell-integration**    | `webPage`（系统插件）  | `isSystemPlugin: true`；Host `plugin.shell.*` |
+| **shell-integration**    | `webPage`（系统插件，商店已下架） | `isSystemPlugin: true`；Host `plugin.shell.*` 仍保留给已安装用户 |
 | **vive-tool**            | `webPage`        | 特性表 + 路径/下载；Host `plugin.vive.*` |
 
 

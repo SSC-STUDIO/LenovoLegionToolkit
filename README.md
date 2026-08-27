@@ -13,7 +13,7 @@
 
 > **Open source · No account · No telemetry**
 >
-> Drop Lenovo Vantage. Keep Fn+Q, RGB, fan curves, and dGPU control. UDT is a GPL-3.0 Windows toolkit: no background service, no Lenovo account, and it still helps on other PCs via basic mode.
+> Drop Lenovo Vantage. Keep Fn+Q, RGB, fan curves, and dGPU control. UDT is a GPL-3.0 Windows toolkit: no background service, no Lenovo account. Unsupported machines hide hardware toggles instead of pretending they work.
 
 <div align="center">
 
@@ -45,7 +45,7 @@
 
 ---
 
-Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows device utility that keeps Lenovo hardware control direct on supported machines and still remains useful on other PCs through basic mode. It runs without background services, keeps typical memory around 400MB (Electron UI + .NET Host), contains no telemetry, and is built around plugin extensions for device-specific workflows.
+Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows device utility that keeps hardware control direct on supported machines. On unsupported PCs it enters basic mode: hardware toggles stay hidden so the UI does not fake Vantage-class control. It runs without background services, keeps typical memory around 400MB (Electron UI + .NET Host), contains no telemetry, and uses plugins as optional device-side extensions rather than as a general Windows toolbox.
 
 Plugin extensions are a first-class part of this project. You can install, update, configure, open, and remove plugins from the Plugin Extensions page to add CPU, GPU, network, shell, mouse, and other specialized tools without bloating the base application.
 
@@ -53,7 +53,7 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 
 > [!NOTE]
 > **What "Universal" means**
-> UDT is a Windows utility platform: **full hardware control** targets supported Lenovo Legion, LOQ, and IdeaPad Gaming machines; **basic mode** on other Lenovo models and non-Lenovo PCs still provides plugins, system optimization, themes, updates, and logs while hiding unsupported hardware toggles. The name reflects extensibility and basic-mode coverage, not a promise of Vantage-class control on every PC brand.
+> UDT is extensible hardware control with a safe fallback: **full hardware control** targets supported Lenovo Legion, LOQ, and IdeaPad Gaming machines, plus other brands only where a tested provider exists; **basic mode** hides unsupported hardware toggles instead of promising Vantage-class control on every PC. The name is not a claim that UDT is a general Windows utility platform.
 
 ### Why choose UDT?
 
@@ -69,8 +69,8 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 **Who it's for**
 
 - Legion / LOQ owners who want to drop Vantage but keep Fn+Q, RGB, and dGPU controls
-- Anyone on Windows who just wants plugins and general tools (basic mode)
-- Tinkerers: `udt-cli.exe` CLI, macros, GPL source you can actually read
+- Owners of unsupported machines who want those hardware items hidden honestly (basic mode)
+- People and agents sharing `udt-cli.exe` (app running, Settings → CLI on), plus GPL source you can actually read
 
 Ready-to-post copy: [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [PROMOTION_CN.md](Docs/PROMOTION_CN.md) · posting playbook [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
@@ -236,7 +236,7 @@ After following these steps, you can open Terminal and type: `dotnet --info`. In
 
 ## Compatibility
 
-Universal Device Toolkit now uses catalog-backed device support. Supported Lenovo gaming and creator machines get hardware controls; unsupported Lenovo models and non-Lenovo PCs enter basic mode so unavailable hardware entries stay hidden while plugins, system optimization, language, theme, update, log, and safety workflows remain available.
+Universal Device Toolkit now uses catalog-backed device support. Supported Lenovo gaming and creator machines get hardware controls; unsupported Lenovo models and non-Lenovo PCs enter basic mode so unavailable hardware entries stay hidden. Plugins, language, theme, update, log, and safety workflows may still be present — they are not the reason to install UDT.
 
 Hardware-control families:
 - Legion 5, Legion Slim 5, Legion Pro 5
@@ -252,7 +252,7 @@ Basic-mode families:
 
 Hardware-control matching is driven by `UniversalDeviceToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs` and online data-only device packs. Generations 6 (MY2021), 7 (MY2022), 8 (MY2023), 9 (MY2024) and newer are the primary Lenovo hardware-control target. Some features may also work on selected 5th generation (MY2020) devices. Basic-mode vendor matching normalizes common BIOS/DMI formatting differences, so punctuation, casing, spacing, diacritics, and company suffix variants do not usually block a match.
 
-If UDT starts in basic mode, it is doing that intentionally to avoid showing unsupported hardware controls. You can still use plugins and general system tools, and you can contribute logs or device-pack data for broader support.
+If UDT starts in basic mode, it is doing that intentionally to avoid showing unsupported hardware controls. Do not expect Vantage-class hardware control there. Logs and device-pack data for a tested provider are the path to broader hardware support.
 
 ### macOS and Linux (experimental)
 
@@ -608,10 +608,15 @@ The Windows IPC CLI executable is `udt-cli.exe` and can be found in the install 
 
 For CLI to work properly, UDT needs to run in the background and CLI option needs to be enabled in UDT settings. You can also chose to add `udt-cli.exe` to your PATH variable for easier access.
 
+Contract, `--json`, and `doctor`: [Docs/CLI.md](Docs/CLI.md). Agent skill (copy into `~/.cursor/skills/udt-hardware-cli/`): [Docs/skills/udt-hardware-cli/SKILL.md](Docs/skills/udt-hardware-cli/SKILL.md).
+
 CLI does not need to be ran as Administrator.
 
 <details>
 <summary>Features</summary>
+
+* `udt-cli doctor` - inspect CLI readiness without IPC (`--json` for agents)
+* `udt-cli --json …` - single JSON object on stdout for scripts and agents
 
 * `udt-cli quickAction --list` - list all Quick Actions
 * `udt-cli quickAction <name>` - run Quick Action with given `<name>`
@@ -657,7 +662,7 @@ Official plugins are ZIP assets of rolling catalog releases. **v5.0.2** hosts re
 
 - **Custom Mouse**: Cursor themes, pointer settings, and Windows optimization actions
 - **Network Acceleration**: Built into **System Optimization → Network & acceleration** (plugin removed in v5.0.0)
-- **Shell Integration**: Context menu and shell styling (system plugin)
+- **Shell Integration**: Delisted from the store (existing installs keep working; not a host built-in)
 - **ViVeTool**: Manage Windows feature flags and experimental features
 
 ### Plugin Management UI
@@ -904,7 +909,7 @@ Pull Requests are also welcome, but make sure to check out [CONTRIBUTING.md](CON
 > [!IMPORTANT]
 > **Hardware-control requests** are limited to Lenovo Legion, IdeaPad Gaming, and LOQ series — please do not open issues asking for full Vantage-style control on other brands or unsupported Lenovo lines.
 >
-> **Basic-mode contributions are welcome**: Non-Lenovo and unsupported Lenovo PCs run in basic mode (plugins, system tools, language/theme/update/log workflows). Device-pack data, logs, and testing feedback for broader basic-mode coverage are appreciated.
+> **Hardware-provider contributions are welcome**: Non-Lenovo and unsupported Lenovo PCs run in basic mode until a tested provider exists. Device-pack data, logs, and hardware testing for a real provider are appreciated; generic Windows-utility feature requests are not.
 
 It would be great to expand the list of compatible devices, but to do it your help is needed!
 

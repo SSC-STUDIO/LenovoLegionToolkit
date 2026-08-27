@@ -27,8 +27,8 @@ internal sealed class ConsoleLoadingAnimation : IDisposable
             _task = Task.Run(RenderLoopAsync);
     }
 
-    public static ConsoleLoadingAnimation Start(string message)
-        => new(message, IsInteractiveConsole());
+    public static ConsoleLoadingAnimation Start(string message, bool enabled = true)
+        => new(message, enabled && IsInteractiveConsole());
 
     public void Dispose()
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Plugins.Resources;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -21,8 +22,13 @@ public partial class PluginRepositoryService
         return outcome.Success && !outcome.Degraded;
     }
 
+    public Task<PluginOperationOutcome> DownloadAndInstallPluginWithOutcomeAsync(
+        PluginManifest manifest) =>
+        DownloadAndInstallPluginWithOutcomeAsync(manifest, CancellationToken.None);
+
     public async Task<PluginOperationOutcome> DownloadAndInstallPluginWithOutcomeAsync(
-        PluginManifest manifest)
+        PluginManifest manifest,
+        CancellationToken cancellationToken)
     {
         if (!PathSecurity.IsValidPluginId(manifest.Id))
         {
@@ -36,12 +42,13 @@ public partial class PluginRepositoryService
         }
 
         using var mutation = _pluginManager.AcquirePluginMutation(manifest.Id);
-        return await DownloadAndInstallPluginCoreAsync(manifest, mutation).ConfigureAwait(false);
+        return await DownloadAndInstallPluginCoreAsync(manifest, mutation, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<PluginOperationOutcome> DownloadAndInstallPluginCoreAsync(
         PluginManifest manifest,
-        IDisposable mutationLease)
+        IDisposable mutationLease,
+        CancellationToken cancellationToken = default)
     {
         var tempFilePath = Path.Combine(_tempDownloadDirectory, $"{manifest.Id}.zip");
         var extractPath = Path.Combine(_tempDownloadDirectory, manifest.Id);
@@ -71,7 +78,8 @@ public partial class PluginRepositoryService
                 return new PluginOperationOutcome(false, Error: compatibilityMessage);
             }
 
-            var downloadResult = await DownloadPluginAsync(manifest, tempFilePath).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            var downloadResult = await DownloadPluginAsync(manifest, tempFilePath, cancellationToken).ConfigureAwait(false);
             if (!downloadResult.Success)
             {
                 DownloadFailed?.Invoke(this, string.Format(Resource.Plugin_Error_Repository_DownloadFailed, manifest.Id));
@@ -146,6 +154,9 @@ public partial class PluginRepositoryService
             transaction.Commit();
             transaction = null;
             runtimeBaseline = null;
+            // Patch memory catalog so UI sees new version without waiting for 15min expiry.
+            try { UpsertAvailablePluginInMemoryCache(manifest); } catch { }
+            PluginUiCapabilityResolver.InvalidateCache(manifest.Id);
             var completionSubscribers = DownloadCompleted?.GetInvocationList();
             if (completionSubscribers is not null)
             {

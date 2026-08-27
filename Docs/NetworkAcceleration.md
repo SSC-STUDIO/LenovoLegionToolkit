@@ -101,5 +101,5 @@ See `Docs/archive/PluginConsolidation.md`.
 - **Network Acceleration** plugin: **delisted** from store; migration source only.
 - **Battery Health** plugin: **delisted** from store; thresholds live in main battery/sensors.
 - **Custom Mouse** → **Cursor & Pointer**.
-- **Shell Integration** → **Nilesoft Shell Manager**.
+- **Shell Integration** → **Nilesoft Shell Manager** (delisted from the store; existing installs keep working).
 - **ViVeTool**: keep with risk copy.

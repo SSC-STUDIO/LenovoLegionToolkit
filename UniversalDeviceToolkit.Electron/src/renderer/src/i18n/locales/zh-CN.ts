@@ -635,7 +635,7 @@ export default withEnglishFallback({
         hwinfo: 'HWiNFO64',
         hwinfoDesc: '将风扇速度、电池温度等数据与 HWiNFO64 共享。切换后可能需要重启 HWiNFO64。',
         cli: '命令行界面',
-        cliDesc: '启用命令行界面，允许使用命令行进行控制。',
+        cliDesc: '启用命令行界面，供脚本和 AI Agent 调用 udt-cli。',
       },
     },
     keyboard: {

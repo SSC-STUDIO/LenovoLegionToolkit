@@ -10,7 +10,7 @@ body:
       options:
         - Cursor & Pointer (custom-mouse)
         - ViVeTool (vive-tool)
-        - Nilesoft Shell Manager (shell-integration)
+        - Nilesoft Shell Manager (shell-integration, delisted / existing installs)
         - Battery Health (migrated / legacy)
         - Network Acceleration (migrated / legacy)
         - Plugin SDK / Tooling

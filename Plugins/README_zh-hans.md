@@ -27,7 +27,7 @@
 |------|------|------|------|---------|
 | 上架 | **光标与指针** | v2.0.0 | 主题感知光标、指针速度、主按键交换、安全备份/还原 | `custom-mouse` |
 | 上架 | **ViVeTool** | v2.0.0 | 可视化浏览/开关 Windows 隐藏功能标志 | `vive-tool` |
-| 上架 | **Nilesoft Shell 管理器** | v2.0.0 | 管理 Nilesoft Shell 注册与 UDT 配置（需单独安装 Shell） | `shell-integration` |
+| 下架 | **Nilesoft Shell 管理器** | v2.0.0 | 商店已下架；已安装用户可继续使用，并非宿主内置替代 | `shell-integration` |
 
 > 版本以各插件 `plugin.manifest.json` 为准。已发布的 **v5.0.2** 继续读 `plugin-catalog`（1.x）；稳定 **v6.0.0** 从同一目录读取 **2.0.0**；预览宿主（`v6.0.0-preview.N`）仍读 `plugin-catalog-preview`。不要把预览插件 ZIP 上传到 `plugin-catalog`。
 
@@ -65,9 +65,8 @@ Shared + 官方插件有完整单元测试，GitHub Actions 覆盖构建/校验/
 - 功能页 + 设置页
 
 ### Nilesoft Shell 管理器（`shell-integration`）
-- 在 UDT 中注册/注销 Nilesoft Shell
-- 应用或回滚 UDT 管理的配置项
-- 需要本机已安装 Nilesoft Shell
+- 商店已下架。源码保留，供已安装用户和本地导入使用。
+- 不是宿主内置的 Nilesoft 管理器。
 
 ---
 

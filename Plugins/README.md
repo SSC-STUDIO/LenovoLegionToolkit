@@ -43,7 +43,7 @@
 |--------|--------|---------|-------------|------------|
 | Active | **Cursor & Pointer** | v2.0.0 | Theme-aware cursor styles, Windows pointer speed, button swapping, safe cursor backup/restore | `custom-mouse` |
 | Active | **ViVeTool** | v2.0.0 | Browse and toggle hidden Windows feature flags from a searchable GUI | `vive-tool` |
-| Active | **Nilesoft Shell Manager** | v2.0.0 | Manage Nilesoft Shell registration and UDT-managed config (requires Nilesoft Shell) | `shell-integration` |
+| Removed | **Nilesoft Shell Manager** | v2.0.0 | Delisted from the store. Existing installs keep working; not a host built-in. | `shell-integration` |
 
 > Catalog versions match `Plugins/Official/*/plugin.manifest.json` (source of truth). **v5.0.2** hosts keep reading the rolling `plugin-catalog` release (shipped 1.x ZIPs). Stable **v6.0.0** hosts read the same catalog for official **2.0.0** packages. Preview hosts (`v6.0.0-preview.N`) still read `plugin-catalog-preview`. Generate `Plugins/.build/catalog/store.json` with `--catalog-channel stable|preview`; do not upload prerelease plugin ZIPs to `plugin-catalog`. Vendored compile baseline stays **5.0.2** (`Plugins/HostBaseline/host-release.json`) until a v6 application ZIP exists.
 
@@ -92,9 +92,8 @@ Hundreds of unit tests across Shared + official plugins, plus CI workflows for b
 - Safe defaults; feature pages + settings page
 
 ### Nilesoft Shell Manager (`shell-integration`)
-- Register/unregister Nilesoft Shell from UDT
-- Apply or roll back UDT-managed configuration
-- Requires a separate Nilesoft Shell install
+- Delisted from the store. Source remains for existing installs and sideload.
+- Not replaced by a host built-in Nilesoft manager.
 
 ---
 

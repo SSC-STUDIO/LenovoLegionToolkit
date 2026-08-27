@@ -533,6 +533,14 @@ public static class PluginHandlers
         updates.TryGetValue(id, out var availableVersion);
         var capabilities = PluginUiCapabilityResolver.ResolveFromManifest(manifest);
         var webPage = manifest.Contributes?.WebPage;
+        if (isInstalled)
+        {
+            capabilities = capabilities.Merge(
+                PluginUiCapabilityResolver.ResolveFromInstalledManifest(id));
+            var installedManifest = PluginUiCapabilityResolver.ReadInstalledManifest(id);
+            if (webPage is not { Entry.Length: > 0 })
+                webPage = installedManifest?.Contributes?.WebPage;
+        }
 
         return new
         {

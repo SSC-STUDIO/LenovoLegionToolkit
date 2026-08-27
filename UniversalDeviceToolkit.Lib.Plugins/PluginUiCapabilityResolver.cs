@@ -58,8 +58,62 @@ public static class PluginUiCapabilityResolver
 
         CapabilityCache.TryRemove(pluginId, out _);
         ManifestCache.TryRemove(pluginId, out _);
+        // Incremental index update: remove stale entry instead of nuking the
+        // entire id→path map which would force a full disk scan on next
+        // plugins.list (previously froze UI).
         lock (IdIndexGate)
-            _manifestIdToPath = null;
+        {
+            if (_manifestIdToPath is null)
+                return;
+
+            _manifestIdToPath.Remove(pluginId);
+
+            // Best-effort: probe known directories for the (possibly new) manifest
+            // so the index stays warm without a full scan.
+            try
+            {
+                foreach (var dir in GetInstalledPluginDirectories(pluginId))
+                {
+                    foreach (var fileName in ManifestFileNames)
+                    {
+                        var path = Path.Combine(dir, fileName);
+                        if (File.Exists(path))
+                        {
+                            _manifestIdToPath[pluginId] = path;
+                            return;
+                        }
+                    }
+                }
+
+                // Also check the fallback scan path (bare id search) — add if found.
+                var fallback = FindInstalledManifestPathByScan(pluginId);
+                if (!string.IsNullOrWhiteSpace(fallback))
+                    _manifestIdToPath[pluginId] = fallback;
+            }
+            catch
+            {
+                // Index stays valid but missing this key; next EnsureManifestIdIndex
+                // will lazily rebuild if needed.
+            }
+        }
+    }
+
+    private static string? FindInstalledManifestPathByScan(string pluginId)
+    {
+        // Lightweight single-id scan without building the full index.
+        foreach (var manifestPath in EnumerateInstalledManifestPaths())
+        {
+            try
+            {
+                var id = ReadManifestIdFromJson(manifestPath);
+                if (string.Equals(id, pluginId, StringComparison.OrdinalIgnoreCase))
+                    return manifestPath;
+            }
+            catch
+            {
+            }
+        }
+        return null;
     }
 
     public static PluginUiCapabilities ResolveFromInstalledManifest(string pluginId)
@@ -72,6 +126,8 @@ public static class PluginUiCapabilityResolver
 
         try
         {
+            var merged = default(PluginUiCapabilities);
+            var found = false;
             foreach (var pluginDirectory in GetInstalledPluginDirectories(pluginId))
             {
                 foreach (var manifestFileName in ManifestFileNames)
@@ -80,17 +136,22 @@ public static class PluginUiCapabilityResolver
                     if (!File.Exists(manifestPath))
                         continue;
 
-                    var caps = ReadCapabilitiesFromJson(manifestPath);
-                    CapabilityCache[pluginId] = caps;
-                    return caps;
+                    merged = merged.Merge(ReadCapabilitiesFromJson(manifestPath));
+                    found = true;
+                    break;
                 }
             }
 
-            if (FindInstalledManifestPathByManifestId(pluginId) is { } matchingManifestPath)
+            if (!found && FindInstalledManifestPathByManifestId(pluginId) is { } matchingManifestPath)
             {
-                var caps = ReadCapabilitiesFromJson(matchingManifestPath);
-                CapabilityCache[pluginId] = caps;
-                return caps;
+                merged = ReadCapabilitiesFromJson(matchingManifestPath);
+                found = true;
+            }
+
+            if (found)
+            {
+                CapabilityCache[pluginId] = merged;
+                return merged;
             }
         }
         catch (Exception ex)
@@ -170,6 +231,7 @@ public static class PluginUiCapabilityResolver
 
         try
         {
+            PluginManifest? preferred = null;
             foreach (var pluginDirectory in GetInstalledPluginDirectories(pluginId))
             {
                 foreach (var manifestFileName in ManifestFileNames)
@@ -179,9 +241,23 @@ public static class PluginUiCapabilityResolver
                         continue;
 
                     var manifest = JsonSerializer.Deserialize<PluginManifest>(File.ReadAllText(manifestPath));
-                    ManifestCache[pluginId] = manifest;
-                    return manifest;
+                    if (manifest is null)
+                        continue;
+
+                    if (manifest.Contributes?.WebPage is { Entry.Length: > 0 })
+                    {
+                        ManifestCache[pluginId] = manifest;
+                        return manifest;
+                    }
+
+                    preferred ??= manifest;
                 }
+            }
+
+            if (preferred is not null)
+            {
+                ManifestCache[pluginId] = preferred;
+                return preferred;
             }
 
             var byId = FindInstalledManifestByManifestId(pluginId);

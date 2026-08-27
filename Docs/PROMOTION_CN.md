@@ -39,7 +39,7 @@ Vantage 卸了之后靠它管 Fn+Q 和键盘 RGB，不占后台，也不要联�
 
 下载：https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest
 
-不是拯救者的话有个「基础模式」，硬件项会少一些，插件和系统工具还能用。
+不是拯救者的话会进「基础模式」：硬件开关会被藏起来，别指望 Vantage 级控制。
 
 ### 知乎 / 论坛
 
@@ -53,11 +53,11 @@ Vantage 太重，开机一堆东西，还要账号。UDT 是 GPL-3.0 开源，�
 
 **下载**：GitHub Releases，或 Scoop：`scoop install ssc-studio/universaldevicetoolkit`
 
-**也要说清楚**：不是所有电脑都能完整控硬件。对不上的机型会进「基础模式」。别指望它在戴尔、华硕上当完整的 Vantage 用。
+**也要说清楚**：不是所有电脑都能完整控硬件。对不上的机型会进「基础模式」，硬件开关会被藏起来。别指望它在戴尔、华硕上当完整的 Vantage 用。
 
 ### 小红书
 
-拯救者卸了 Vantage 之后，Fn+Q 和 RGB 我是用 UDT 解决的，全名 Universal Device Toolkit，开源不要钱。GitHub 搜 UniversalDeviceToolkit 就能下。不是拯救者可以试基础模式。
+拯救者卸了 Vantage 之后，Fn+Q 和 RGB 我是用 UDT 解决的，全名 Universal Device Toolkit，开源不要钱。GitHub 搜 UniversalDeviceToolkit 就能下。不是拯救者会进基础模式，硬件控不了就别硬试。
 
 ### V2EX（分享创造）
 
@@ -72,7 +72,7 @@ Y9000P 用了几年，Vantage 实在用不下去：后台服务、登录、偶�
 - 项目：https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 - Scoop：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket ; scoop install ssc-studio/universaldevicetoolkit`
 
-不是拯救者的话有个「基础模式」，硬件控制会少一些。有用过的可以说下机型，方便后来的人对号入座。
+不是拯救者的话会进「基础模式」，硬件控制会少。有用过的可以说下机型，方便后来的人对号入座。
 
 ### Linux.do
 

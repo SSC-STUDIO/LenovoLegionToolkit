@@ -135,6 +135,53 @@ public partial class PluginRepositoryService : IDisposable
         {
             Directory.CreateDirectory(_tempDownloadDirectory);
         }
+
+        CleanupStaleTempArtifacts();
+    }
+
+    /// <summary>
+    /// Removes stale temp artifacts (>7 days) left by crashed installs. Keeps the
+    /// hot path clean without blocking the current installation.
+    /// </summary>
+    private void CleanupStaleTempArtifacts()
+    {
+        try
+        {
+            if (!Directory.Exists(_tempDownloadDirectory))
+                return;
+
+            var cutoff = DateTime.UtcNow - TimeSpan.FromDays(7);
+            foreach (var file in Directory.EnumerateFiles(_tempDownloadDirectory, "*", SearchOption.AllDirectories))
+            {
+                try
+                {
+                    if (File.GetLastWriteTimeUtc(file) < cutoff)
+                        File.Delete(file);
+                }
+                catch
+                {
+                    // Best-effort cleanup — ignore locked files.
+                }
+            }
+
+            foreach (var dir in Directory.EnumerateDirectories(_tempDownloadDirectory))
+            {
+                try
+                {
+                    if (Directory.GetLastWriteTimeUtc(dir) < cutoff &&
+                        !Directory.EnumerateFileSystemEntries(dir).Any())
+                        Directory.Delete(dir, recursive: false);
+                }
+                catch
+                {
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace($"Failed to cleanup stale temp artifacts: {ex.Message}", ex);
+        }
     }
 
     private static string? ReadInformationalVersion() =>
@@ -282,7 +329,10 @@ public partial class PluginRepositoryService : IDisposable
         return AllowedDownloadHosts.Contains(uri.Host);
     }
 
-    private async Task<bool> TryDownloadPluginWithNativeCurlAsync(PluginManifest manifest, string candidateUrl, string destinationPath)
+    private Task<bool> TryDownloadPluginWithNativeCurlAsync(PluginManifest manifest, string candidateUrl, string destinationPath) =>
+        TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath, CancellationToken.None);
+
+    private async Task<bool> TryDownloadPluginWithNativeCurlAsync(PluginManifest manifest, string candidateUrl, string destinationPath, CancellationToken cancellationToken)
     {
         if (!ShouldUseNativeCurlDownloadFallback(candidateUrl))
             return false;
@@ -300,6 +350,7 @@ public partial class PluginRepositoryService : IDisposable
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             DeletePartialDownload(destinationPath);
 
             var startInfo = new ProcessStartInfo
@@ -317,8 +368,9 @@ public partial class PluginRepositoryService : IDisposable
             if (process is null)
                 return false;
 
-            using var cts = new CancellationTokenSource(GetDownloadTimeout(candidateUrl) + NativeCurlDownloadTimeoutPadding);
-            await process.WaitForExitAsync(cts.Token).ConfigureAwait(false);
+            using var timeoutCts = new CancellationTokenSource(GetDownloadTimeout(candidateUrl) + NativeCurlDownloadTimeoutPadding);
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+            await process.WaitForExitAsync(linkedCts.Token).ConfigureAwait(false);
 
             var standardError = await process.StandardError.ReadToEndAsync().ConfigureAwait(false);
             if (process.ExitCode != 0)
@@ -363,6 +415,12 @@ public partial class PluginRepositoryService : IDisposable
 
             manifest.DownloadUrl = candidateUrl;
             return true;
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            KillProcessTree(process);
+            DeletePartialDownload(destinationPath);
+            throw;
         }
         catch (OperationCanceledException)
         {

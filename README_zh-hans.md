@@ -11,7 +11,7 @@
 
 > **开源 · 不用账号 · 不碰遥测**
 >
-> 卸掉 Vantage，留下 Fn+Q、RGB、风扇曲线和独显控制。GPL-3.0，不跑后台服务，其他 Windows 电脑也能用基础模式。
+> 卸掉 Vantage，留下 Fn+Q、RGB、风扇曲线和独显控制。GPL-3.0，不跑后台服务。不支持的机器会隐藏硬件开关，而不是假装能控。
 
 <div align="center">
 
@@ -43,11 +43,11 @@
 
 ---
 
-Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 Windows 设备工具：在受支持的联想游戏本上提供完整硬件控制，在其他联想机型及非联想 PC 上则以**基础模式**运行（隐藏不支持的硬件项，仍可使用插件、系统优化、主题、更新与日志等功能）。插件可在「插件扩展」页面安装、更新、配置与卸载。
+Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 Windows 设备工具：在受支持的机器上直接做硬件控制。不支持的 PC 进入**基础模式**，硬件开关保持隐藏，界面不会假装有 Vantage 级能力。插件是可选的设备侧扩展，不是通用 Windows 工具箱。
 
 > [!NOTE]
 > **「Universal」的含义**
-> UDT 是 Windows 工具平台：**完整硬件控制**面向联想拯救者、LOQ、IdeaPad Gaming 等受支持机型；**基础模式**面向其他联想型号及华硕、戴尔、惠普、宏碁、小米、华为等非联想 PC，提供插件与通用系统工具，而非全品牌 Vantage 级硬件控制。名称强调可扩展性与基础模式覆盖范围。
+> UDT 是可扩展的硬件控制，并带安全降级：**完整硬件控制**面向联想拯救者、LOQ、IdeaPad Gaming 等受支持机型，以及已有可测 provider 的其他品牌；**基础模式**隐藏不支持的硬件项，而不是承诺每台电脑都有 Vantage 级控制。名称不是「通用 Windows 工具平台」的意思。
 
 ### 为什么选择 UDT？
 
@@ -63,8 +63,8 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 **适合谁**
 
 - 拯救者 / LOQ 用户，想卸 Vantage 但还要 Fn+Q、RGB、独显控制
-- 随便哪台 Windows，想试试插件和系统工具（基础模式）
-- 爱折腾的：命令行 `udt-cli.exe`、宏、代码是 GPL 开源能自己看
+- 不支持的机器：希望硬件项被诚实隐藏（基础模式），而不是假开关
+- 人和 Agent 共用 `udt-cli.exe`（应用在跑，设置里打开 CLI），代码是 GPL 开源能自己看
 
 现成发帖文案：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · 投放手册 [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
 
@@ -220,7 +220,7 @@ UDT 在后台运行时效果最好，请在设置中启用**开机启动**和**�
 
 ## 兼容性
 
-UDT 通过目录化设备支持识别机型：受支持的联想游戏/创作本获得完整硬件控制；不匹配的联想型号及非联想 PC 进入**基础模式**——隐藏不支持的硬件项，插件、系统优化、语言、主题、更新、日志与安全流程仍可用。
+UDT 通过目录化设备支持识别机型：受支持的联想游戏/创作本获得完整硬件控制；不匹配的联想型号及非联想 PC 进入**基础模式**，不支持的硬件项保持隐藏。插件、语言、主题、更新、日志与安全流程可能仍在——那不是安装 UDT 的理由。
 
 **完整硬件控制系列**：
 - Legion 5、Legion Slim 5、Legion Pro 5
@@ -230,13 +230,13 @@ UDT 通过目录化设备支持识别机型：受支持的联想游戏/创作本
 - IdeaPad Gaming、ThinkBook、YOGA 及选定联想游戏系列
 - 国行命名如 R7000/R7000P/R9000/Y7000/Y7000P/Y9000（含 Y7000P 2020H）
 
-**基础模式系列**（插件与通用工具，无完整硬件控制）：
+**基础模式系列**（隐藏硬件开关，无完整硬件控制）：
 - 联想 ThinkPad、ThinkCentre、ThinkStation、IdeaCentre、拯救者台式、小新、V 系列等未匹配联想型号
 - 摩托罗拉、华硕、戴尔、惠普、宏碁、微星、Surface、技嘉/AORUS、雷蛇、三星 Galaxy Book、苹果 Mac、华为 MateBook、小米/RedmiBook、realme、Infinix、荣耀 MagicBook、LG gram、Framework 及更多常见 PC 品牌
 
 匹配逻辑见 `UniversalDeviceToolkit.Lib/DeviceSupport/LenovoDeviceSupportProvider.cs` 与在线 device pack。硬件控制主要面向 6 代（MY2021）至 9 代（MY2024）及更新；部分 5 代（MY2020）机型部分功能可用。
 
-若 UDT 以基础模式启动，属于有意隐藏不支持的硬件控制。你仍可使用插件与通用工具，欢迎提交日志或 device-pack 数据以扩大基础模式覆盖。
+若 UDT 以基础模式启动，属于有意隐藏不支持的硬件控制。不要指望那里有 Vantage 级硬件能力。可测 provider 的日志与 device-pack 数据才是扩大硬件支持的路径。
 
 ### macOS 与 Linux（实验）
 
@@ -604,6 +604,8 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 命令行界面需要 UDT 在后台运行并且在设置内启用命令行界面，否则其无法正常工作。你也可以选择将命令行界面添加至你的用户 `PATH` 环境变量。
 
+约定、`--json` 与 `doctor` 见 [Docs/CLI.md](Docs/CLI.md)。给 Agent 用的 skill（复制到 `~/.cursor/skills/udt-hardware-cli/`）：[Docs/skills/udt-hardware-cli/SKILL.md](Docs/skills/udt-hardware-cli/SKILL.md)。
+
 使用命令行界面无需管理员权限。
 
 <details>
@@ -653,7 +655,7 @@ UDT 支持全面的插件系统，允许动态扩展应用程序功能。插件�
 
 - **Custom Mouse（自定义鼠标）**：光标主题、指针设置与 Windows 优化动作
 - **Network Acceleration（网络加速）**：已内置到主程序「系统优化 → 网络与加速」；v5.0.0 起插件已移除
-- **Shell Integration（Shell 集成）**：右键菜单与 Shell 样式（系统插件）
+- **Shell Integration（Shell 集成）**：商店已下架（已安装用户可继续使用，并非宿主内置）
 - **ViVeTool**：管理 Windows 功能标志与实验性功能
 
 ### 插件管理 UI
@@ -895,7 +897,7 @@ Windows 可能无法正确识别所有的游戏，但你可以在 Xbox Game Bar 
 > [!IMPORTANT]
 > **完整硬件控制适配请求**仅面向联想拯救者、IdeaPad Gaming 与 LOQ 系列——请勿为其他品牌或不支持的联想产品线提交 Vantage 级硬件控制需求。
 >
-> **基础模式贡献欢迎**：非联想及不匹配的联想 PC 以基础模式运行（插件、系统工具、语言/主题/更新/日志）。欢迎提交 device-pack 数据、日志与测试反馈以扩大基础模式覆盖。
+> **硬件 provider 贡献欢迎**：非联想及不匹配的联想 PC 在有可测 provider 之前以基础模式运行。欢迎提交 device-pack 数据、日志与真机测试；通用 Windows 工具类需求不接受。
 
 若能适配更多设备当然更好，但这需要你的帮助！
 

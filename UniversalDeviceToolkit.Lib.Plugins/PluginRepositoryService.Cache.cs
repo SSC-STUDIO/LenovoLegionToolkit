@@ -15,6 +15,29 @@ public partial class PluginRepositoryService
         }
     }
 
+    /// <summary>
+    /// Locally patch the in-memory catalog after a successful install so the UI
+    /// does not wait up to <see cref="AvailablePluginsMemoryCacheDuration"/> to
+    /// see the new version. Copy-on-write: only the mutated entry is cloned.
+    /// </summary>
+    private void UpsertAvailablePluginInMemoryCache(PluginManifest installed)
+    {
+        lock (_availablePluginsCacheLock)
+        {
+            if (_availablePluginsMemoryCache is null)
+                return;
+
+            var idx = _availablePluginsMemoryCache.FindIndex(m =>
+                string.Equals(m.Id, installed.Id, StringComparison.OrdinalIgnoreCase));
+            if (idx >= 0)
+                _availablePluginsMemoryCache[idx] = ClonePluginManifest(installed);
+            else
+                _availablePluginsMemoryCache.Add(ClonePluginManifest(installed));
+
+            _availablePluginsMemoryCacheUpdatedAt = DateTimeOffset.UtcNow;
+        }
+    }
+
     private static List<PluginManifest> ClonePluginManifestList(IEnumerable<PluginManifest> plugins) =>
         plugins.Select(ClonePluginManifest).ToList();
 

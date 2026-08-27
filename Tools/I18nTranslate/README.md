@@ -6,16 +6,16 @@
 
 ## 前置条件
 
-1. 启动推理引擎（见 `..\..\LocalAI-API\`）：
+1. 启动推理引擎（见 `..\..\LocalAI-Studio\local-llm\`）：
    ```powershell
-   ..\..\LocalAI-API\start-ai.ps1 -Model translategemma   # 55 语种主力
-   ..\..\LocalAI-API\start-ai.ps1 -Model gemma4-e4b       # 140+ 语种兜底
+   ..\..\LocalAI-Studio\local-llm\start-ai.ps1 -Model translategemma   # 55 语种主力
+   ..\..\LocalAI-Studio\local-llm\start-ai.ps1 -Model gemma4-e4b       # 140+ 语种兜底
    ```
    两个模型端口不同（11434/11435），可同时运行。
 
 2. 翻译引擎健康检查：
    ```powershell
-   ..\..\LocalAI-API\bench.ps1
+   ..\..\LocalAI-Studio\local-llm\bench.ps1
    ```
 
 ## 用法

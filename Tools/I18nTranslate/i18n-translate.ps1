@@ -14,7 +14,7 @@
 #   .\i18n-translate.ps1 -DryRun             # list what would be done
 #   .\i18n-translate.ps1 -ParallelJobs 4     # parallel locale workers
 #
-# Requires: llama-server running (see ..\..\LocalAI-API\start-ai.ps1)
+# Requires: llama-server running (see ..\..\LocalAI-Studio\local-llm\start-ai.ps1)
 param(
     [string[]]$Locales,
     [switch]$DryRun,

@@ -282,9 +282,18 @@ public class PluginManager : IPluginManager
                 _fileSystemManager.ClearFileCache();
             }
 
-            var pluginFiles = _fileSystemManager.GetPluginDllFiles();
+            var pluginFiles = _fileSystemManager.GetPluginDllFiles().ToList();
 
-            foreach (var pluginFile in pluginFiles)
+            // Pipelined parallel load: I/O (SHA) + ALC creation are the hot spots.
+            // Limit DOP to avoid saturating the thread-pool and to keep per-plugin
+            // mutation ordering predictable. 4 is a good balance for typical 5-20 plugins.
+            var parallelFailures = new ConcurrentBag<PluginOperationOutcome>();
+            var parallelOptions = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = Math.Min(4, Math.Max(1, Environment.ProcessorCount))
+            };
+
+            await Parallel.ForEachAsync(pluginFiles, parallelOptions, async (pluginFile, ct) =>
             {
                 try
                 {
@@ -293,19 +302,19 @@ public class PluginManager : IPluginManager
                     {
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Skipping plugin candidate with no safe filename identity: {pluginFile}");
-                        failures.Add(new PluginOperationOutcome(
+                        parallelFailures.Add(new PluginOperationOutcome(
                             false,
                             Error: $"Plugin candidate has no safe filename identity: {pluginFile}"));
-                        continue;
+                        return;
                     }
 
                     using var mutation = AcquirePluginMutation(expectedRuntimeId);
                     if (ShouldReuseRegisteredRuntime(pluginFile, forceRefresh, mutation))
-                        continue;
+                        return;
                     await LoadPluginFromFileAsync(pluginFile, mutation).ConfigureAwait(false);
                     if (!_registry.IsRegistered(expectedRuntimeId))
                     {
-                        failures.Add(new PluginOperationOutcome(
+                        parallelFailures.Add(new PluginOperationOutcome(
                             false,
                             RecoveryId: expectedRuntimeId,
                             Error: $"Plugin candidate did not register a runtime: {pluginFile}"));
@@ -318,7 +327,7 @@ public class PluginManager : IPluginManager
                         !string.IsNullOrWhiteSpace(expectedRuntimeId) &&
                         GetPluginRuntimeUnloadState(expectedRuntimeId) ==
                         PluginRuntimeUnloadState.UnloadRequested;
-                    failures.Add(new PluginOperationOutcome(
+                    parallelFailures.Add(new PluginOperationOutcome(
                         false,
                         Degraded: unloadPending ||
                                   ex is PluginLoadContextUnloadPendingException ||
@@ -332,7 +341,9 @@ public class PluginManager : IPluginManager
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Failed to load plugin from {pluginFile}: {ex.Message}", ex);
                 }
-            }
+            }).ConfigureAwait(false);
+
+            failures.AddRange(parallelFailures);
 
             var discardedPending = SweepDiscardedPluginCandidates();
             if (discardedPending > 0)
@@ -1899,6 +1910,7 @@ public class PluginManager : IPluginManager
             throw new ArgumentException("Invalid plugin ID.", nameof(pluginId));
 
         using var mutation = EnterPluginMutation(pluginId, mutationLease);
+        PluginUiCapabilityResolver.InvalidateCache(pluginId);
         var authorization = mutationLease ?? mutation;
         if (!_preparedInstallations.TryGetValue(pluginId, out var preparation))
         {
@@ -2320,6 +2332,7 @@ public class PluginManager : IPluginManager
             return false;
 
         using var mutation = AcquirePluginMutation(pluginId);
+        PluginUiCapabilityResolver.InvalidateCache(pluginId);
         if (_pendingUninstallTransactions.TryGetValue(
                 pluginId,
                 out var pendingTransaction))

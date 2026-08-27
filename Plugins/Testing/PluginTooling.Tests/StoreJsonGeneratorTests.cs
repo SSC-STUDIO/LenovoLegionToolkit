@@ -35,6 +35,7 @@ public class StorePluginEntryTests
     [InlineData(PluginLifecycleStatus.Active)]
     [InlineData(PluginLifecycleStatus.Deprecated)]
     [InlineData(PluginLifecycleStatus.Migrated)]
+    [InlineData(PluginLifecycleStatus.Removed)]
     public void PluginLifecycleStatus_ExposesExpectedValues(string value)
     {
         Assert.False(string.IsNullOrWhiteSpace(value));
@@ -99,6 +100,48 @@ public class StoreJsonGeneratorTests : IDisposable
         var store = InvokeGenerate();
 
         Assert.Equal(PluginLifecycleStatus.Migrated, store.Plugins.Single().Status);
+    }
+
+    [Fact]
+    public void Generate_MergeExisting_RestampsUnselectedRemovedLifecycle()
+    {
+        CreatePluginFolder("custom-mouse", manifestLifecycle: "Active", manifestName: "Cursor & Pointer",
+            description: "Cursor themes and pointer settings.");
+        CreatePluginFolder("shell-integration", manifestLifecycle: "Removed", manifestName: "Nilesoft Shell Manager",
+            description: "No longer offered in the plugin store. Existing installs keep working.");
+
+        var storePath = Path.Combine(_tempRoot, ".build", "catalog", "store.json");
+        File.WriteAllText(storePath,
+            """
+            {
+              "lastUpdated": "2026-07-14T00:00:00.0000000+00:00",
+              "storeVersion": "1.0.0",
+              "plugins": [
+                {
+                  "id": "custom-mouse",
+                  "name": "Cursor & Pointer",
+                  "version": "1.0.0",
+                  "status": "Active"
+                },
+                {
+                  "id": "shell-integration",
+                  "name": "Nilesoft Shell Manager",
+                  "version": "2.0.0",
+                  "zipHash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                  "fileHash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+                  "status": "Active"
+                }
+              ]
+            }
+            """);
+
+        var store = InvokeGenerate(mergeExisting: true, pluginIds: ["custom-mouse"]);
+
+        var shell = Assert.Single(store.Plugins, entry => entry.Id == "shell-integration");
+        Assert.Equal(PluginLifecycleStatus.Removed, shell.Status);
+        Assert.Equal("2.0.0", shell.Version);
+        Assert.Equal("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", shell.ZipHash);
+        Assert.Contains(store.Plugins, entry => entry.Id == "custom-mouse" && entry.Status == PluginLifecycleStatus.Active);
     }
 
     [Fact]

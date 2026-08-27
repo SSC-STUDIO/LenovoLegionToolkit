@@ -11,6 +11,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased] — store delist & install load (2026-08-26)
+
+### Removed
+- `shell-integration` is delisted (`lifecycle: Removed`). Existing installs keep working; source and `plugin.shell.*` remain. Not a host built-in replacement.
+
+### Fixed
+- Host Debug/dev layouts now copy `UniversalDeviceToolkit.Plugins.SDK.dll` and `UniversalDeviceToolkit.Plugins.Shared.dll` beside Host so official 2.x store ZIPs can load after SDK/Shared are stripped from the package.
+
 ## [Unreleased] — docs & host baseline alignment (2026-07-18)
 
 ### Changed / 变更

@@ -15,10 +15,14 @@ public partial class PluginRepositoryService
     /// <summary>
     /// Download plugin package.
     /// </summary>
-    private async Task<PluginDownloadResult> DownloadPluginAsync(PluginManifest manifest, string destinationPath)
+    private Task<PluginDownloadResult> DownloadPluginAsync(PluginManifest manifest, string destinationPath) =>
+        DownloadPluginAsync(manifest, destinationPath, CancellationToken.None);
+
+    private async Task<PluginDownloadResult> DownloadPluginAsync(PluginManifest manifest, string destinationPath, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         var candidateUrls = GetDownloadUrlCandidates(manifest);
-        var publishedAsset = await TryResolvePublishedAssetAsync(manifest).ConfigureAwait(false);
+        var publishedAsset = await TryResolvePublishedAssetAsync(manifest, cancellationToken).ConfigureAwait(false);
 
         if (publishedAsset is not null)
         {
@@ -43,7 +47,8 @@ public partial class PluginRepositoryService
                      .SelectMany(GitHubDownloadMirrors.WithMirrorFallbacks)
                      .Where(IsUrlAllowed))
         {
-            var downloaded = await TryDownloadPluginFromUrlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            var downloaded = await TryDownloadPluginFromUrlAsync(manifest, candidateUrl, destinationPath, cancellationToken).ConfigureAwait(false);
             if (!downloaded)
                 continue;
 
@@ -83,10 +88,14 @@ public partial class PluginRepositoryService
         return new PluginDownloadResult(Success: false, TrustAsOfficialOnlinePackage: false);
     }
 
-    private async Task<bool> TryDownloadPluginFromUrlAsync(PluginManifest manifest, string candidateUrl, string destinationPath)
+    private Task<bool> TryDownloadPluginFromUrlAsync(PluginManifest manifest, string candidateUrl, string destinationPath) =>
+        TryDownloadPluginFromUrlAsync(manifest, candidateUrl, destinationPath, CancellationToken.None);
+
+    private async Task<bool> TryDownloadPluginFromUrlAsync(PluginManifest manifest, string candidateUrl, string destinationPath, CancellationToken cancellationToken)
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"Downloading plugin {manifest.Id} from {candidateUrl}");
 
@@ -130,7 +139,7 @@ public partial class PluginRepositoryService
             // UI smoke flow does not spend multiple long socket timeouts before falling back.
             var preferNativeCurl = ShouldUseNativeCurlDownloadFallback(candidateUrl);
             if (preferNativeCurl &&
-                await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath).ConfigureAwait(false))
+                await TryDownloadPluginWithNativeCurlAsync(manifest, candidateUrl, destinationPath, cancellationToken).ConfigureAwait(false))
             {
                 return true;
             }
@@ -138,14 +147,16 @@ public partial class PluginRepositoryService
 
             for (var attempt = 1; attempt <= RemoteDownloadRetryCount; attempt++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
                     DeletePartialDownload(destinationPath);
 
                     using var request = CreateGetRequest(candidateUrl);
-                    using var cts = new CancellationTokenSource(GetDownloadTimeout(candidateUrl));
+                    using var timeoutCts = new CancellationTokenSource(GetDownloadTimeout(candidateUrl, manifest.FileSize));
+                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
                     using var response = await _httpClient
-                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token)
+                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, linkedCts.Token)
                         .ConfigureAwait(false);
 
                     if (!response.IsSuccessStatusCode)
@@ -155,7 +166,7 @@ public partial class PluginRepositoryService
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Download attempt {attempt}/{RemoteDownloadRetryCount} for plugin {manifest.Id} returned {(int)response.StatusCode} {response.StatusCode}. Retrying...");
 
-                            await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                            await Task.Delay(GetRetryDelay(attempt), cancellationToken).ConfigureAwait(false);
                             continue;
                         }
 
@@ -164,29 +175,40 @@ public partial class PluginRepositoryService
                         return false;
                     }
 
-                    var totalBytes = response.Content.Headers.ContentLength ?? -1L;
+                    var totalBytes = response.Content.Headers.ContentLength ?? manifest.FileSize;
+                    if (totalBytes <= 0) totalBytes = -1L;
                     var bytesDownloaded = 0L;
+                    var lastProgressReportTicks = 0L;
+                    var lastProgressPercent = -1d;
 
-                    using var contentStream = await response.Content.ReadAsStreamAsync(cts.Token).ConfigureAwait(false);
-                    using var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    using var contentStream = await response.Content.ReadAsStreamAsync(linkedCts.Token).ConfigureAwait(false);
+                    using var fileStream = new FileStream(destinationPath, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true);
 
-                    var buffer = new byte[8192];
+                    var buffer = new byte[81920];
                     int bytesRead;
 
-                    while ((bytesRead = await contentStream.ReadAsync(buffer.AsMemory(0, buffer.Length), cts.Token).ConfigureAwait(false)) > 0)
+                    while ((bytesRead = await contentStream.ReadAsync(buffer.AsMemory(0, buffer.Length), linkedCts.Token).ConfigureAwait(false)) > 0)
                     {
-                        await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), cts.Token).ConfigureAwait(false);
+                        await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead), linkedCts.Token).ConfigureAwait(false);
                         bytesDownloaded += bytesRead;
 
                         var progress = totalBytes > 0 ? (double)bytesDownloaded / totalBytes * 100 : 0;
-
-                        DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
+                        var nowTicks = Environment.TickCount64;
+                        var shouldReport = progress >= 100 ||
+                                           progress - lastProgressPercent >= 1.0 ||
+                                           nowTicks - lastProgressReportTicks >= 200;
+                        if (shouldReport)
                         {
-                            PluginId = manifest.Id,
-                            BytesDownloaded = bytesDownloaded,
-                            TotalBytes = totalBytes > 0 ? totalBytes : 0,
-                            ProgressPercentage = progress
-                        });
+                            lastProgressPercent = progress;
+                            lastProgressReportTicks = nowTicks;
+                            DownloadProgressChanged?.Invoke(this, new PluginDownloadProgress
+                            {
+                                PluginId = manifest.Id,
+                                BytesDownloaded = bytesDownloaded,
+                                TotalBytes = totalBytes > 0 ? totalBytes : 0,
+                                ProgressPercentage = progress
+                            });
+                        }
                     }
 
                     // A proxy or server that closes the connection mid-body ends the read
@@ -201,7 +223,7 @@ public partial class PluginRepositoryService
                             if (Log.Instance.IsTraceEnabled)
                                 Log.Instance.Trace($"Incomplete download for plugin {manifest.Id} from {candidateUrl}: {bytesDownloaded}/{totalBytes} bytes on attempt {attempt}/{RemoteDownloadRetryCount}. Retrying...");
 
-                            await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                            await Task.Delay(GetRetryDelay(attempt), cancellationToken).ConfigureAwait(false);
                             continue;
                         }
 
@@ -216,6 +238,11 @@ public partial class PluginRepositoryService
                     manifest.DownloadUrl = candidateUrl;
                     return true;
                 }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    DeletePartialDownload(destinationPath);
+                    throw;
+                }
                 catch (Exception ex) when (attempt < RemoteDownloadRetryCount && IsTransientRemoteException(ex))
                 {
                     DeletePartialDownload(destinationPath);
@@ -223,7 +250,7 @@ public partial class PluginRepositoryService
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Transient error downloading plugin {manifest.Id} from {candidateUrl} on attempt {attempt}/{RemoteDownloadRetryCount}: {ex.Message}. Retrying...", ex);
 
-                    await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                    await Task.Delay(GetRetryDelay(attempt), cancellationToken).ConfigureAwait(false);
                 }
             }
 

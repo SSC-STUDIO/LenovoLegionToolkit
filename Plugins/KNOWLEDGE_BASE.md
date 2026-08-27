@@ -7,13 +7,19 @@ This file is the **Living Knowledge Ledger** for the Universal Device Toolkit Pl
 | Item | Value |
 |------|--------|
 | Host app (vendored compile baseline) | Universal Device Toolkit **v5.0.2** (`Plugins/HostBaseline/host-release.json`) until a v6 ZIP exists |
-| Official store plugins | `custom-mouse` / `vive-tool` / `shell-integration` **2.0.0** (stable catalog); shipped 1.x remains on `plugin-catalog` for v5.0.2 |
+| Official store plugins | `custom-mouse` / `vive-tool` **2.0.0** (stable catalog); `shell-integration` is delisted (`Removed`) but source remains for existing installs; shipped 1.x remains on `plugin-catalog` for v5.0.2 |
 | Tooling entry | `udt-plugin.cmd` (`llt-plugin.cmd` alias) |
 | Min host field | `plugin.manifest.json` → `minHostVersion` = **6.0.0** for 2.x; runtime `plugin.json` keeps ABI property name `MinLltVersion` with the same value |
 | Version SoT | each `plugin.manifest.json` → `version` |
 | Catalogs | stable `plugin-catalog` (v5.0.2 / 1.x and v6.0.0 / 2.0.0) · preview `plugin-catalog-preview` (prerelease 2.x) |
 
 ---
+
+### [2026-08-26] Store install needs host-owned Plugins.SDK.dll
+- **Symptom / Pitfall**: `plugins.install` downloaded official 2.0.0 ZIPs then failed with `Plugin {id} did not activate from the expected assembly`. Logs showed `Could not load file or assembly 'UniversalDeviceToolkit.Plugins.SDK'`.
+- **Root Cause**: Install copies skip SDK/Shared from the ZIP (`ShouldSkipPluginPayloadFile`) and restage them from Host `AppBase`. Debug Host never copied `Plugins.SDK.dll` beside the executable.
+- **Enforced Rule**: Windows Host build/publish must copy `UniversalDeviceToolkit.Plugins.SDK.dll` and `UniversalDeviceToolkit.Plugins.Shared.dll` next to Host. Do not add `shell-integration` to `RetiredPluginIds` when only delisting from the store.
+- **.NET/OS Version**: .NET 10, Windows 11
 
 ### [2026-08-05] Plugin monorepo migration is live
 - **Symptom / Pitfall**: A sibling plugin checkout and per-plugin GitHub Releases made the source tree and Releases page look like separate products.
@@ -230,9 +236,9 @@ When evaluating UI via FlaUI + WinRT OCR:
 
 ---
 
-## Brand Generalization Rule - User-Visible Text Must Not Pin to Lenovo Legion
-- **Timestamp / Version**: 2026-07-14 (Phase 3), .NET 10
-- **Enforced Rule**: (1) User-visible product framing MUST use "Universal Device Toolkit" / "通用设备工具包" / universal OEM scope — never Lenovo-Legion-exclusive positioning. (2) Community: `r/Lenovo` is fine; `r/LenovoLegion` is not. Competitor comparisons (e.g. "Lenovo Vantage") and historical GitHub topics may remain as factual references. (3) Compile identifiers (namespaces, assemblies, solution/csproj, manifest `class`) are now `UniversalDeviceToolkit.*` after Phase 3 hard cutover.
+## Brand Generalization Rule - Hardware Control, Not a Windows Toolbox
+- **Timestamp / Version**: 2026-08-26, .NET 10
+- **Enforced Rule**: (1) User-visible product framing MUST treat UDT as trusted local hardware control: Lenovo first, other brands only when a tested provider exists. Do not sell a generic Windows toolbox or "any PC utility platform." (2) Community: `r/Lenovo` is fine; `r/LenovoLegion` is not. Competitor comparisons (e.g. "Lenovo Vantage") and historical GitHub topics may remain as factual references. (3) Compile identifiers (namespaces, assemblies, solution/csproj, manifest `class`) are `UniversalDeviceToolkit.*` after Phase 3 hard cutover.
 
 ## Cross-Repo Data-Root Alignment - Dual-Name Migration Contract
 - **Timestamp / Version**: 2026-07-14, .NET 10

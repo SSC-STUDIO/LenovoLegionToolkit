@@ -35,7 +35,7 @@
     ]
   },
   "store": {
-    "description": "Manage Nilesoft Shell registration and its UDT-managed configuration. Requires Nilesoft Shell to be installed.",
+    "description": "No longer offered in the plugin store. Existing installs keep working. This is not a host built-in replacement.",
     "icon": "Folder24",
     "iconBackground": "#0F766E",
     "tags": [
@@ -80,7 +80,7 @@
     ],
     "repositoryUrl": "https://github.com/SSC-STUDIO/UniversalDeviceToolkit"
   },
-  "lifecycle": "Active",
+  "lifecycle": "Removed",
   "localizedNames": {},
   "localizedDescriptions": {},
   "localizedTags": {}

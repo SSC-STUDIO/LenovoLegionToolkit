@@ -15,7 +15,10 @@ namespace UniversalDeviceToolkit.Lib.Plugins;
 
 public partial class PluginRepositoryService
 {
-    private async Task<string> FetchStoreJsonFromRemoteAsync()
+    private Task<string> FetchStoreJsonFromRemoteAsync() =>
+        FetchStoreJsonFromRemoteAsync(CancellationToken.None);
+
+    private async Task<string> FetchStoreJsonFromRemoteAsync(CancellationToken cancellationToken)
     {
         Exception? lastException = null;
 
@@ -23,15 +26,17 @@ public partial class PluginRepositoryService
         {
             for (var attempt = 1; attempt <= RemoteRequestRetryCount; attempt++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Fetching store.json from GitHub: {url} (attempt {attempt}/{RemoteRequestRetryCount})");
 
                     using var request = CreateGetRequest(url);
-                    using var cts = new CancellationTokenSource(StoreRequestTimeout);
+                    using var timeoutCts = new CancellationTokenSource(StoreRequestTimeout);
+                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
                     using var response = await _httpClient
-                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token)
+                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, linkedCts.Token)
                         .ConfigureAwait(false);
 
                     if (attempt < RemoteRequestRetryCount && IsRetryableStatusCode(response.StatusCode))
@@ -39,15 +44,19 @@ public partial class PluginRepositoryService
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Store metadata request to {url} returned {(int)response.StatusCode} {response.StatusCode}. Retrying...");
 
-                        await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                        await Task.Delay(GetRetryDelay(attempt), cancellationToken).ConfigureAwait(false);
                         continue;
                     }
 
                     response.EnsureSuccessStatusCode();
 
-                    var storeJson = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    var storeJson = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
                     TryWriteStoreCache(storeJson);
                     return storeJson;
+                }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
                 }
                 catch (Exception ex) when (attempt < RemoteRequestRetryCount && IsTransientRemoteException(ex))
                 {
@@ -56,7 +65,7 @@ public partial class PluginRepositoryService
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Transient failure fetching store.json from {url} on attempt {attempt}/{RemoteRequestRetryCount}: {ex.Message}. Retrying...", ex);
 
-                    await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                    await Task.Delay(GetRetryDelay(attempt), cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -82,18 +91,23 @@ public partial class PluginRepositoryService
         throw new HttpRequestException(Resource.Plugin_Error_Repository_FetchFailed, lastException);
     }
 
-    private async Task<PublishedPluginAsset?> TryResolvePublishedAssetAsync(PluginManifest manifest)
+    private Task<PublishedPluginAsset?> TryResolvePublishedAssetAsync(PluginManifest manifest) =>
+        TryResolvePublishedAssetAsync(manifest, CancellationToken.None);
+
+    private async Task<PublishedPluginAsset?> TryResolvePublishedAssetAsync(PluginManifest manifest, CancellationToken cancellationToken)
     {
         foreach (var releaseApiUrl in _pluginReleasesApiUrls)
         {
             for (var attempt = 1; attempt <= RemoteRequestRetryCount; attempt++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
                     using var request = CreateGetRequest(releaseApiUrl);
-                    using var cts = new CancellationTokenSource(ReleaseMetadataRequestTimeout);
+                    using var timeoutCts = new CancellationTokenSource(ReleaseMetadataRequestTimeout);
+                    using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
                     using var response = await _httpClient
-                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, cts.Token)
+                        .SendAsync(request, HttpCompletionOption.ResponseHeadersRead, linkedCts.Token)
                         .ConfigureAwait(false);
 
                     if (attempt < RemoteRequestRetryCount && IsRetryableStatusCode(response.StatusCode))
@@ -101,7 +115,7 @@ public partial class PluginRepositoryService
                         if (Log.Instance.IsTraceEnabled)
                             Log.Instance.Trace($"Published asset metadata request for plugin {manifest.Id} from {releaseApiUrl} returned {(int)response.StatusCode} {response.StatusCode}. Retrying...");
 
-                        await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                        await Task.Delay(GetRetryDelay(attempt), cancellationToken).ConfigureAwait(false);
                         continue;
                     }
 
@@ -168,12 +182,16 @@ public partial class PluginRepositoryService
                         }
                     }
                 }
+                catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
                 catch (Exception ex) when (attempt < RemoteRequestRetryCount && IsTransientRemoteException(ex))
                 {
                     if (Log.Instance.IsTraceEnabled)
                         Log.Instance.Trace($"Transient failure resolving published GitHub asset for plugin {manifest.Id} from {releaseApiUrl} on attempt {attempt}/{RemoteRequestRetryCount}: {ex.Message}. Retrying...", ex);
 
-                    await Task.Delay(GetRetryDelay(attempt)).ConfigureAwait(false);
+                    await Task.Delay(GetRetryDelay(attempt), cancellationToken).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {
@@ -365,10 +383,23 @@ public partial class PluginRepositoryService
                && uri.AbsolutePath.Contains("/releases/download/", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static TimeSpan GetDownloadTimeout(string candidateUrl)
+    private static TimeSpan GetDownloadTimeout(string candidateUrl) =>
+        GetDownloadTimeout(candidateUrl, 0);
+
+    private static TimeSpan GetDownloadTimeout(string candidateUrl, long fileSize)
     {
-        return IsGitHubReleaseAssetApiUrl(candidateUrl)
+        var baseTimeout = IsGitHubReleaseAssetApiUrl(candidateUrl)
             ? ApiAssetDownloadRequestTimeout
             : BrowserDownloadRequestTimeout;
+
+        if (fileSize > 0)
+        {
+            // Adaptive: ~2s per MB, capped at +60s to avoid infinite waits for huge files.
+            var extra = TimeSpan.FromSeconds(Math.Min(60, fileSize / (1024d * 1024d) * 2));
+            if (extra > TimeSpan.Zero)
+                baseTimeout += extra;
+        }
+
+        return baseTimeout;
     }
 }

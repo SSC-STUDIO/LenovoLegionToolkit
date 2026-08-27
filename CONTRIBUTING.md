@@ -129,7 +129,7 @@ This makes it easier for everyone to follow the conversation.
 
 **4. Respect scope of the project**
 
-This is not meant to be a do-it-all type of application. The vision for the project is clear: provide a replacement of Vantage for Legion laptops. Do not request support for other types/models/etc devices.
+This is not meant to be a do-it-all type of application. The vision is trusted local hardware control for machines with a testable provider (Lenovo Legion first; other brands only with a real provider), plus CLI for people and agents. Do not request generic Windows-utility features. New brands need a testable provider, not a feature-request issue.
 
 **5. Verify your problem before creating an issue**
 

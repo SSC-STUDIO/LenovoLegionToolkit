@@ -162,6 +162,31 @@ public sealed class StoreJsonGenerator
             }
         }
 
+        if (request.MergeExisting)
+        {
+            foreach (var plugin in repository.Plugins.Values)
+            {
+                if (!HasStoreMetadata(plugin))
+                    continue;
+
+                var lifecycleStatus = ResolveLifecycleStatus(plugin);
+                if (string.Equals(lifecycleStatus, PluginLifecycleStatus.Active, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var catalogEntry = store.Plugins.FirstOrDefault(entry =>
+                    string.Equals(entry.Id, plugin.Manifest.Id, StringComparison.OrdinalIgnoreCase));
+                if (catalogEntry is null)
+                    continue;
+
+                if (string.Equals(catalogEntry.Status, lifecycleStatus, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                catalogEntry.Status = lifecycleStatus;
+                store.LastUpdated = releaseDate.ToString("O");
+                storeContentChanged = true;
+            }
+        }
+
         store.Plugins = store.Plugins
             .OrderBy(entry => entry.Id, StringComparer.OrdinalIgnoreCase)
             .ToList();

@@ -8,6 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 并遵循 [语义化版本](https://semver.org/spec/v2.0.0.html)。
 
+## [Unreleased]
+
+### Fixed
+- Official store plugin install now stages host-owned `UniversalDeviceToolkit.Plugins.SDK.dll` and `UniversalDeviceToolkit.Plugins.Shared.dll` next to Host so 2.x packages can load after the installer strips bundled SDK/Shared copies. `plugins.list` also overlays installed `contributes.webPage` from disk because the catalog JSON does not carry that block.
+
+### Removed
+- `shell-integration` (Nilesoft Shell Manager) is delisted from the plugin store (`lifecycle: Removed`). Existing installs keep working; it is not a host built-in replacement. Publishing the catalog still requires dispatching `plugins-release.yml`.
+
 ## [6.0.0] - 2026-08-24
 
 ### Added / 新增

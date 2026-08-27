@@ -2,6 +2,7 @@ using System;
 using System.CommandLine;
 using System.CommandLine.Parsing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Globalization;
 using UniversalDeviceToolkit.Abstractions.Localization;
@@ -15,6 +16,8 @@ public class Program
     {
         try
         {
+            CliOutput.Json = args.Any(argument => string.Equals(argument, "--json", StringComparison.OrdinalIgnoreCase));
+            IpcClient.FastFail = CliOutput.Json;
             var culture = LocalizationRuntime.Initialize(ReadLanguageOverride(args), persist: false);
             Strings.ApplyCulture(culture);
             return await BuildCommandLine()
@@ -42,7 +45,14 @@ public class Program
         {
             Description = Strings.Get("CLI_Option_Language_Description", "Temporarily select the display language.")
         });
+        var jsonOption = new Option<bool>("--json")
+        {
+            Description = Strings.Get("CLI_Option_Json_Description", "Write a single JSON object to stdout."),
+            Recursive = true,
+        };
+        root.Options.Add(jsonOption);
 
+        root.Add(BuildDoctorCommand());
         root.Add(BuildQuickActionsCommand());
         root.Add(BuildFeatureCommand());
         root.Add(BuildSpectrumCommand());
@@ -70,6 +80,25 @@ public class Program
         return null;
     }
 
+    private static Command BuildDoctorCommand()
+    {
+        var cmd = new Command("doctor", Strings.Get(
+            "CLI_Command_Doctor_Description",
+            "Inspect CLI readiness without talking to the running app"));
+        cmd.SetAction(_ =>
+        {
+            var report = CliDoctor.Inspect();
+            if (CliOutput.Json)
+            {
+                CliOutput.Write(CliDoctor.ToJsonPayload(report));
+                return;
+            }
+
+            CliDoctor.WriteHuman(report);
+        });
+        return cmd;
+    }
+
     private static Command BuildStatusCommand()
     {
         var cmd = new Command("status", Strings.Get(
@@ -79,7 +108,7 @@ public class Program
         cmd.SetAction(async _ =>
         {
             var result = await IpcClient.GetAppStatusAsync().ConfigureAwait(false);
-            Console.WriteLine(result);
+            CliOutput.Success("status", result);
         });
 
         return cmd;
@@ -108,12 +137,13 @@ public class Program
             if (parseResult.GetValue(listOption))
             {
                 var result = await IpcClient.ListQuickActionsAsync().ConfigureAwait(false);
-                Console.WriteLine(result);
+                CliOutput.SuccessList("quickAction.list", result);
                 return;
             }
 
             var name = parseResult.GetRequiredValue(nameArgument);
             await IpcClient.RunQuickActionAsync(name).ConfigureAwait(false);
+            CliOutput.Success("quickAction.run", name: name);
         });
         cmd.Validators.Add(result =>
         {
@@ -154,7 +184,7 @@ public class Program
                 return;
 
             var value = await IpcClient.ListFeaturesAsync().ConfigureAwait(false);
-            Console.WriteLine(value);
+            CliOutput.SuccessList("feature.list", value);
         });
         cmd.Validators.Add(result =>
         {
@@ -192,7 +222,7 @@ public class Program
         {
             var name = parseResult.GetRequiredValue(nameArgument);
             var result = await IpcClient.GetFeatureValueAsync(name).ConfigureAwait(false);
-            Console.WriteLine(result);
+            CliOutput.Success("feature.get", result, name);
         });
 
         return cmd;
@@ -229,17 +259,17 @@ public class Program
             if (parseResult.GetValue(listOption))
             {
                 var result = await IpcClient.ListFeatureValuesAsync(name!).ConfigureAwait(false);
-                Console.WriteLine(result);
-                return;
+                CliOutput.SuccessList("feature.values", result, name);
+                return 0;
             }
 
             var value = parseResult.GetValue(valueArgument);
             if (string.IsNullOrEmpty(value))
-            {
-                Console.Error.WriteLine($"Error: A value is required for feature '{name}'.");
-                return;
-            }
+                return CliOutput.Fail("invalid", $"A value is required for feature '{name}'.", "feature.set");
+
             await IpcClient.SetFeatureValueAsync(name!, value).ConfigureAwait(false);
+            CliOutput.Success("feature.set", value, name);
+            return 0;
         });
         cmd.Validators.Add(result =>
         {
@@ -290,7 +320,7 @@ public class Program
         cmd.SetAction(async _ =>
         {
             var result = await IpcClient.GetSpectrumProfileAsync().ConfigureAwait(false);
-            Console.WriteLine(result);
+            CliOutput.Success("spectrum.profile.get", result);
         });
 
         return cmd;
@@ -311,6 +341,7 @@ public class Program
         {
             var value = parseResult.GetRequiredValue(valueArgument);
             await IpcClient.SetSpectrumProfileAsync($"{value}").ConfigureAwait(false);
+            CliOutput.Success("spectrum.profile.set", $"{value}");
         });
 
         return cmd;
@@ -336,7 +367,7 @@ public class Program
         cmd.SetAction(async _ =>
         {
             var result = await IpcClient.GetSpectrumBrightnessAsync().ConfigureAwait(false);
-            Console.WriteLine(result);
+            CliOutput.Success("spectrum.brightness.get", result);
         });
 
         return cmd;
@@ -357,6 +388,7 @@ public class Program
         {
             var value = parseResult.GetRequiredValue(valueArgument);
             await IpcClient.SetSpectrumBrightnessAsync($"{value}").ConfigureAwait(false);
+            CliOutput.Success("spectrum.brightness.set", $"{value}");
         });
 
         return cmd;
@@ -382,7 +414,7 @@ public class Program
         cmd.SetAction(async _ =>
         {
             var result = await IpcClient.GetRGBPresetAsync().ConfigureAwait(false);
-            Console.WriteLine(result);
+            CliOutput.Success("rgb.get", result);
         });
 
         return cmd;
@@ -403,6 +435,7 @@ public class Program
         {
             var value = parseResult.GetRequiredValue(valueArgument);
             await IpcClient.SetRGBPresetAsync($"{value}").ConfigureAwait(false);
+            CliOutput.Success("rgb.set", $"{value}");
         });
 
         return cmd;
@@ -430,24 +463,24 @@ public class Program
         {
             if (parseResult.GetValue(statusOption))
             {
-                Console.WriteLine(await IpcClient.GetNetworkAccelerationStatusAsync().ConfigureAwait(false));
+                CliOutput.Success("network.status", await IpcClient.GetNetworkAccelerationStatusAsync().ConfigureAwait(false));
                 return;
             }
 
             if (parseResult.GetValue(startOption))
             {
-                Console.WriteLine(await IpcClient.StartNetworkAccelerationAsync().ConfigureAwait(false));
+                CliOutput.Success("network.start", await IpcClient.StartNetworkAccelerationAsync().ConfigureAwait(false));
                 return;
             }
 
             if (parseResult.GetValue(stopOption))
             {
-                Console.WriteLine(await IpcClient.StopNetworkAccelerationAsync().ConfigureAwait(false));
+                CliOutput.Success("network.stop", await IpcClient.StopNetworkAccelerationAsync().ConfigureAwait(false));
                 return;
             }
 
             if (parseResult.GetValue(diagnosticsOption))
-                Console.WriteLine(await IpcClient.RunNetworkDiagnosticsAsync().ConfigureAwait(false));
+                CliOutput.Success("network.diagnostics", await IpcClient.RunNetworkDiagnosticsAsync().ConfigureAwait(false));
         });
         cmd.Validators.Add(result =>
         {
@@ -497,32 +530,58 @@ public class Program
             if (status)
             {
                 var isRegistered = await IpcClient.IsShellRegisteredAsync().ConfigureAwait(false);
-                Console.WriteLine(isRegistered
-                    ? Strings.Get("CLI_Shell_RegisteredYes", "Shell is registered")
-                    : Strings.Get("CLI_Shell_RegisteredNo", "Shell is not registered"));
+                if (CliOutput.Json)
+                {
+                    CliOutput.Success("shell.status", isRegistered ? "true" : "false");
+                }
+                else
+                {
+                    Console.WriteLine(isRegistered
+                        ? Strings.Get("CLI_Shell_RegisteredYes", "Shell is registered")
+                        : Strings.Get("CLI_Shell_RegisteredNo", "Shell is not registered"));
+                }
                 return;
             }
 
             if (installStatus)
             {
                 var isInstalled = await IpcClient.IsShellInstalledAsync().ConfigureAwait(false);
-                Console.WriteLine(isInstalled
-                    ? Strings.Get("CLI_Shell_InstalledYes", "Shell is installed")
-                    : Strings.Get("CLI_Shell_InstalledNo", "Shell is not installed"));
+                if (CliOutput.Json)
+                {
+                    CliOutput.Success("shell.installStatus", isInstalled ? "true" : "false");
+                }
+                else
+                {
+                    Console.WriteLine(isInstalled
+                        ? Strings.Get("CLI_Shell_InstalledYes", "Shell is installed")
+                        : Strings.Get("CLI_Shell_InstalledNo", "Shell is not installed"));
+                }
                 return;
             }
 
             if (install)
             {
                 await IpcClient.InstallShellAsync().ConfigureAwait(false);
-                Console.WriteLine(Strings.Get("CLI_Shell_InstallInitiated", "Shell installation initiated"));
+                if (CliOutput.Json)
+                    CliOutput.Success("shell.install", "initiated");
+                else
+                    Console.WriteLine(Strings.Get("CLI_Shell_InstallInitiated", "Shell installation initiated"));
                 return;
             }
 
             if (uninstall)
             {
                 await IpcClient.UninstallShellAsync().ConfigureAwait(false);
-                Console.WriteLine(Strings.Get("CLI_Shell_UninstallInitiated", "Shell uninstallation initiated"));
+                if (CliOutput.Json)
+                    CliOutput.Success("shell.uninstall", "initiated");
+                else
+                    Console.WriteLine(Strings.Get("CLI_Shell_UninstallInitiated", "Shell uninstallation initiated"));
+                return;
+            }
+
+            if (CliOutput.Json)
+            {
+                CliOutput.Error("invalid", Strings.Get("CLI_Error_ShellAtLeastOneAction", "At least one action option should be specified"), "shell");
                 return;
             }
 
@@ -588,6 +647,19 @@ public class Program
             IpcException => -2,
             _ => -99
         };
+
+        var code = ex switch
+        {
+            IpcConnectException => "connect",
+            IpcException => "ipc",
+            _ => "error"
+        };
+
+        if (CliOutput.Json)
+        {
+            CliOutput.Error(code, message);
+            return exitCode;
+        }
 
         if (!Console.IsOutputRedirected)
         {

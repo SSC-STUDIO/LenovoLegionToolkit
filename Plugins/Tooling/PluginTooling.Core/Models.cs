@@ -303,6 +303,7 @@ public static class PluginLifecycleStatus
     public const string Active = "Active";
     public const string Deprecated = "Deprecated";
     public const string Migrated = "Migrated";
+    public const string Removed = "Removed";
 }
 
 public sealed class ValidationRequest

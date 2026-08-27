@@ -43,7 +43,7 @@ Not affiliated, just a user. I got tired of Vantage (background services, Lenovo
 
 Trade-off: it **does not run a separate Windows service**. Keep it in the tray if you want Fn+Q sync and macros. Fully quitting it means those stop. That is intentional.
 
-Not on a supported Legion? There is a basic mode with plugins and general tools. Do not expect Vantage-class hardware control on random brands.
+Not on a supported Legion? Basic mode hides hardware toggles. Do not expect Vantage-class hardware control on random brands.
 
 - https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 - Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket ; scoop install ssc-studio/universaldevicetoolkit`
@@ -56,4 +56,4 @@ Legion folks -- if Vantage annoys you, try UDT. Fn+Q + RGB + dGPU, no account. K
 
 ### Show HN comment
 
-UDT is the community continuation of Lenovo Legion Toolkit. Lightweight Windows utility for Legion/LOQ: power modes, RGB, battery, plugins. No telemetry, GPL-3.0. Honest limit: full hardware control is for supported Lenovo gaming laptops; other PCs get basic mode plus plugins.
+UDT is the community continuation of Lenovo Legion Toolkit. Lightweight Windows utility for Legion/LOQ: power modes, RGB, battery. No telemetry, GPL-3.0. Honest limit: full hardware control is for supported machines with a tested provider; other PCs get basic mode that hides hardware toggles.

@@ -665,12 +665,12 @@ public class IpcServer(
     private static Task InstallShellAsync()
     {
         // Shell integration is now handled by plugin. Use GUI for shell management.
-        return Task.FromException(new IpcException("Shell installation is now managed through the Shell Integration plugin. Please use the Windows Optimization page in the application."));
+        return Task.FromException(new IpcException("Shell installation is managed by the Shell Integration plugin if it is already installed. The plugin is no longer listed in the store."));
     }
 
     private static Task UninstallShellAsync()
     {
         // Shell integration is now handled by plugin. Use GUI for shell management.
-        return Task.FromException(new IpcException("Shell uninstallation is now managed through the Shell Integration plugin. Please use the Windows Optimization page in the application."));
+        return Task.FromException(new IpcException("Shell uninstallation is managed by the Shell Integration plugin if it is already installed. The plugin is no longer listed in the store."));
     }
 }

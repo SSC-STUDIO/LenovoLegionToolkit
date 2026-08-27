@@ -27,8 +27,9 @@
     },
     {
       "id": "shell-integration",
-      "name": "Nilesoft Shell Manager",
-      "status": "Active"
+      "name": "Nilesoft Shell Manager (Removed)",
+      "status": "Removed",
+      "description": "Delisted from the store. Existing installs keep working. Not replaced by a host built-in."
     },
     {
       "id": "vive-tool",

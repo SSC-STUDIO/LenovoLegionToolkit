@@ -668,7 +668,7 @@ const enUS = {
         hwinfo: 'HWiNFO64',
         hwinfoDesc: 'Share fan speeds, battery temperature and other data with HWiNFO64. HWiNFO64 may need a restart after toggling.',
         cli: 'Command Line Interface',
-        cliDesc: 'Enable the command line interface to allow control from the command line.'
+        cliDesc: 'Enable the command line interface so scripts and AI agents can call udt-cli.'
       }
     },
     keyboard: {
