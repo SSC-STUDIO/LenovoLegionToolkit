@@ -16,7 +16,6 @@ import { SettingsLoadError } from './SettingsLoadError'
 
 const NAVIGATION_ITEMS: Array<{ key: string; labelKey: string }> = [
   { key: 'keyboard', labelKey: 'settings.display.navigationKeys.keyboard' },
-  { key: 'mouse', labelKey: 'settings.display.navigationKeys.mouse' },
   { key: 'automation', labelKey: 'settings.display.navigationKeys.automation' },
   { key: 'macro', labelKey: 'settings.display.navigationKeys.macro' },
   { key: 'windowsOptimization', labelKey: 'settings.display.navigationKeys.windowsOptimization' },

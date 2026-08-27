@@ -303,7 +303,15 @@ function createAppearanceFixture({
     }
   }
   const globals = {
-    document: { documentElement: { style } },
+    document: {
+      documentElement: {
+        style,
+        // themeStore applies <html data-style="..."> on module load
+        setAttribute() {},
+        getAttribute: () => null,
+        removeAttribute() {}
+      }
+    },
     localStorage,
     window: { bridge: { platform: 'web' } }
   }

@@ -12,6 +12,7 @@ export type OptimizationTabKey =
   | 'driverDownload'
   | 'networkAcceleration'
   | 'gameBoost'
+  | 'cursor'
 
 export function visibleOptimizationTabs(
   tabs: readonly OptimizationTabKey[],

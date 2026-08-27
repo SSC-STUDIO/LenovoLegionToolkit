@@ -1,20 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Select, Skeleton, Slider, Spin, Switch } from 'antd'
+import { Select, Slider, Spin, Switch } from 'antd'
 import { useTranslation } from 'react-i18next'
 import {
   ArrowSync24Regular,
   Cursor24Regular,
-  ErrorCircle24Regular,
   PaintBrush24Regular
-} from '../components/icons/fluent'
-import { localizeHostError } from '../api/bridge'
+} from '../icons/fluent'
+import { localizeHostError } from '../../api/bridge'
 import {
   CURSOR_THEME_MODES,
   type CursorThemeMode
-} from '../api/mouse'
-import { notify } from '../notifications'
-import { useMouseStore } from '../stores/mouseStore'
-import { createDebounceDispatcher } from '../utils/debounce'
+} from '../../api/mouse'
+import { notify } from '../../notifications'
+import { useMouseStore } from '../../stores/mouseStore'
+import { createDebounceDispatcher } from '../../utils/debounce'
+import { SkeletonCard } from '../Skeleton'
 
 const POINTER_APPLY_DEBOUNCE_MS = 600
 
@@ -49,11 +49,12 @@ const THEME_MODE_VALUES: CursorThemeMode[] = [
 ]
 
 /**
- * Cursor & pointer page (absorbed the retired CustomMouse plugin). Host state
- * lives in the store; this component only keeps unsaved local edits ("drafts")
- * which are cleared again once the matching host write succeeds.
+ * Cursor & pointer panel inside System Optimization (absorbed the retired
+ * CustomMouse plugin page). Host state lives in the store; this component only
+ * keeps unsaved local edits ("drafts") which are cleared again once the
+ * matching host write succeeds.
  */
-export default function MousePage(): React.JSX.Element {
+export default function CursorPointerPanel(): React.JSX.Element {
   const { t } = useTranslation()
   const state = useMouseStore((s) => s.state)
   const loading = useMouseStore((s) => s.loading)
@@ -68,7 +69,7 @@ export default function MousePage(): React.JSX.Element {
 
   const pointerApplyDebounce = useRef(createDebounceDispatcher())
 
-  // Cancel any pending debounced pointer apply when leaving the page.
+  // Cancel any pending debounced pointer apply when leaving the tab.
   useEffect(() => () => pointerApplyDebounce.current.cancel(), [])
 
   useEffect(() => {
@@ -220,29 +221,19 @@ export default function MousePage(): React.JSX.Element {
 
   if (loading && state === null) {
     return (
-      <div className="udt-page udt-content-column udt-content-fill">
-        <h1 className="udt-page__title">{t('mouse.title')}</h1>
-        <p className="udt-page__subtitle">{t('mouse.subtitle')}</p>
-        <section className="udt-card">
-          <Skeleton active paragraph={{ rows: 2 }} title={false} />
-        </section>
-        <section className="udt-card">
-          <Spin size="small" />
-        </section>
+      <div className="udt-cursor-layout">
+        <SkeletonCard lines={3} withIcon />
+        <SkeletonCard lines={2} />
       </div>
     )
   }
 
   if (loadError != null || state === null) {
     return (
-      <div className="udt-page udt-content-column udt-content-fill">
-        <h1 className="udt-page__title">{t('mouse.title')}</h1>
-        <p className="udt-page__subtitle">{t('mouse.subtitle')}</p>
-        <section className="udt-card">
+      <div className="udt-cursor-layout">
+        <section className="udt-card udt-cursor-layout__sync">
           <div className="udt-card__copy">
-            <div className="udt-card__title">
-              <ErrorCircle24Regular /> {t('mouse.loadFailed')}
-            </div>
+            <div className="udt-card__title">{t('mouse.loadFailed')}</div>
             <div className="udt-card__desc">{loadError ?? ''}</div>
           </div>
           <button
@@ -267,10 +258,7 @@ export default function MousePage(): React.JSX.Element {
     (state.lastAppliedTheme === 'light' || state.lastAppliedTheme === 'dark')
 
   return (
-    <div className="udt-page udt-content-column udt-content-fill">
-      <h1 className="udt-page__title">{t('mouse.title')}</h1>
-      <p className="udt-page__subtitle">{t('mouse.subtitle')}</p>
-
+    <div className="udt-cursor-layout">
       <section className="udt-card">
         <div className="udt-card__copy">
           <div className="udt-card__title">{t('mouse.pointerSection')}</div>
@@ -344,17 +332,16 @@ export default function MousePage(): React.JSX.Element {
         ) : null}
       </section>
 
-      <section className="udt-card">
-        <div className="udt-card__copy">
-          <div className="udt-card__desc">{t('mouse.syncFromWindowsDesc')}</div>
-        </div>
+      <section className="udt-card udt-cursor-layout__sync">
+        <div className="udt-card__desc">{t('mouse.syncFromWindowsDesc')}</div>
         <button
           type="button"
           className="udt-btn udt-btn--secondary"
           disabled={writing}
           onClick={() => void handleSyncFromWindows()}
         >
-          <ArrowSync24Regular /> {t('mouse.syncFromWindows')}
+          {writing ? <Spin size="small" /> : <ArrowSync24Regular />}{' '}
+          {t('mouse.syncFromWindows')}
         </button>
       </section>
     </div>

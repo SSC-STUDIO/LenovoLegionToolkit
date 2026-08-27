@@ -2,8 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ChevronLeft16Regular,
   ChevronRight16Regular,
-  Cursor24Filled,
-  Cursor24Regular,
   Gauge24Filled,
   Gauge24Regular,
   Home24Filled,
@@ -78,11 +76,6 @@ const MAIN_ITEMS: NavItemDef[] = [
     icon: (filled) => filled ? <Keyboard24Filled /> : <Keyboard24Regular />,
     labelKey: 'nav.keyboard',
     capability: 'keyboard'
-  },
-  {
-    key: '/mouse',
-    icon: (filled) => filled ? <Cursor24Filled /> : <Cursor24Regular />,
-    labelKey: 'nav.mouse'
   },
   {
     key: '/automation',
@@ -194,7 +187,6 @@ export default function AppLayout(): React.JSX.Element {
         '/dashboard': 'dashboard',
         '/settings': 'settings',
         '/keyboard': 'keyboard',
-        '/mouse': 'mouse',
         '/automation': 'automation',
         '/macro': 'macro',
         '/optimization': 'windowsOptimization',

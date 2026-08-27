@@ -25,6 +25,7 @@ import { useOptimizationStore } from '../stores/optimizationStore'
 import { SkeletonCard, SkeletonList } from '../components/Skeleton'
 import CardExpander from '../components/CardExpander'
 import CleanupRulesPanel from '../components/optimization/CleanupRulesPanel'
+import CursorPointerPanel from '../components/optimization/CursorPointerPanel'
 import DriverDownloadPanel from '../components/optimization/DriverDownloadPanel'
 import GameBoostPanel from '../components/optimization/GameBoostPanel'
 import { NetworkPanels } from '../components/optimization/NetworkPanels'
@@ -580,7 +581,8 @@ const TAB_I18N_KEYS: Record<TabKey, string> = {
   cleanup: 'wpf.windowsOptimizationPagetabcleanup',
   driverDownload: 'wpf.windowsOptimizationPagetabdriverDownload',
   networkAcceleration: 'wpf.windowsOptimizationPagetabnetworkAcceleration',
-  gameBoost: 'optimization.tabs.gameBoost'
+  gameBoost: 'optimization.tabs.gameBoost',
+  cursor: 'mouse.title'
 }
 
 const TAB_FALLBACK_KEYS: Record<TabKey, string> = {
@@ -588,10 +590,18 @@ const TAB_FALLBACK_KEYS: Record<TabKey, string> = {
   cleanup: 'optimization.tabs.cleanup',
   driverDownload: 'optimization.tabs.driverDownload',
   networkAcceleration: 'optimization.tabs.networkAcceleration',
-  gameBoost: 'optimization.tabs.gameBoost'
+  gameBoost: 'optimization.tabs.gameBoost',
+  cursor: 'mouse.title'
 }
 
-const TABS: OptimizationTabKey[] = ['optimization', 'cleanup', 'driverDownload', 'networkAcceleration', 'gameBoost']
+const TABS: OptimizationTabKey[] = [
+  'optimization',
+  'cleanup',
+  'driverDownload',
+  'networkAcceleration',
+  'gameBoost',
+  'cursor'
+]
 
 export default function WindowsOptimizationPage(): React.JSX.Element {
   const { t } = useTranslation()
@@ -832,6 +842,7 @@ export default function WindowsOptimizationPage(): React.JSX.Element {
         {tab === 'driverDownload' && <DriverDownloadPanel />}
         {tab === 'networkAcceleration' && <NetworkTab />}
         {tab === 'gameBoost' && <GameBoostPanel />}
+        {tab === 'cursor' && <CursorPointerPanel />}
       </div>
     </div>
   )
