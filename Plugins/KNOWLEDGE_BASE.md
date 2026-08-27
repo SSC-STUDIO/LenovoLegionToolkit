@@ -240,6 +240,18 @@ When evaluating UI via FlaUI + WinRT OCR:
 - **Timestamp / Version**: 2026-08-26, .NET 10
 - **Enforced Rule**: (1) User-visible product framing MUST treat UDT as trusted local hardware control: Lenovo first, other brands only when a tested provider exists. Do not sell a generic Windows toolbox or "any PC utility platform." (2) Community: `r/Lenovo` is fine; `r/LenovoLegion` is not. Competitor comparisons (e.g. "Lenovo Vantage") and historical GitHub topics may remain as factual references. (3) Compile identifiers (namespaces, assemblies, solution/csproj, manifest `class`) are `UniversalDeviceToolkit.*` after Phase 3 hard cutover.
 
+## Plugin Catalog Admission - Device Capabilities Only, Not a Tool Drawer
+- **Timestamp / Version**: 2026-08-27, .NET 10
+- **Symptom / Pitfall**: Plugin ecosystem narrative drifted toward "more store entries = more value." Script-shaped plugins (one-shot Windows toggles) and generic system tools were treated as catalog growth, diluting the trusted-hardware-control story.
+- **Root Cause**: No written admission bar; plugin count became a stand-in for ecosystem health while AI agents make script-shaped plugins redundant.
+- **Enforced Rule**:
+  - Plugins exist ONLY for capabilities that must enter the process, touch a device, or stay resident. Everything generic belongs to the host (`udt`, automation), not the store.
+  - Every new official-plugin proposal passes the three-question screen in `Docs/Plugins/STRATEGY.md`: (1) would an AI-written script suffice without real hardware/driver/protocol work? (2) will users run it repeatedly, not once? (3) can it expose a narrow default-off auditable interface like `udt-cli`? All three must pass; failures go community/self-built, not the official catalog.
+  - Track assignments: hardware/peripheral (main track), resident integrations (strict evidence of daily use), agent-facing narrow CLI/RPC extensions (secondary; never a second UI).
+  - Store health metric is trusted machine coverage and capability invocation counts - NOT entry count. Official catalog expected to stay single-digit.
+  - Current dispositions: `custom-mouse` = hardware main track (add narrow agent surface); `vive-tool` = legacy, keep uninstalled-new only, do not promote, candidate for future `Removed`; `shell-integration` = delisted (`Removed`), no return without residency evidence.
+- **Evidence**: NetworkAcceleration moved from plugin into host in v5.0.0 (correct direction); shell-integration delisted via `lifecycle: Removed` in `StoreJsonGenerator` while keeping installed clients working.
+
 ## Cross-Repo Data-Root Alignment - Dual-Name Migration Contract
 - **Timestamp / Version**: 2026-07-14, .NET 10
 - **Symptom / Pitfall**: After LenovoLegionToolkit → UniversalDeviceToolkit rebrand, a contributor might "fix" hard-coded legacy path segments, breaking migration for pre-rebrand users.

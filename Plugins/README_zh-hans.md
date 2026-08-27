@@ -2,11 +2,17 @@
 
 <p align="center">
   <b><a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit">Universal Device Toolkit</a> 官方插件生态</b><br/>
-  Free. Open-source. No ads. No telemetry. Just better Windows.<br/>
+  官方还没写进宿主的那块硬件 - 不是 Windows 工具箱。<br/>
   需要宿主 <b>v6.0.0+</b> 才能安装 2.x 包 · v5.0.2 仍加载 1.x · .NET 10 · Electron web UI
 </p>
 
 [English README](README.md)
+
+---
+
+## 定位
+
+插件**只**在硬件、厂商协议或驻留集成需要时扩展 UDT。目录刻意保持精简；准入门槛见 [Docs/Plugins/STRATEGY.md](../Docs/Plugins/STRATEGY.md)（设备能力三轨 + 三问筛子）。通用系统工具不收——那些面由宿主的 `udt` CLI 与自动化引擎承担。
 
 ---
 
@@ -35,38 +41,22 @@
 
 ## 为什么选择这些插件？
 
+每一项都是**设备能力**（或通过严选的驻留集成），按[策略筛子](../Docs/Plugins/STRATEGY.md)准入：
+
+### 光标与指针（`custom-mouse`）——硬件主轨
+鼠标/指针控制需要按设备写代码：随系统浅色/深色切换的光标主题、指针速度、主按键交换、安全备份与还原。后续计划：为 `udt` CLI 暴露窄接口，让 Agent 调同一能力。
+
+### ViVeTool（`vive-tool`）——遗留，不是样板
+功能标志开关是脚本形态；它先于当前准入门槛存在，保留给已安装用户。不再作为商店门面宣传；未来目录整理可标 `Removed`。
+
+### Nilesoft Shell 管理器（`shell-integration`）——已下架
+驻留轨道需要每天使用的真实证据。商店已下架；源码保留给已安装用户和本地导入。不是宿主内置的 Nilesoft 管理器。
+
 ### 100% 免费开源
 MIT 许可，无广告、无付费墙、无遥测。
 
-### 原生 Windows 11 体验
-**.NET 10**。插件设置页是 Electron `contributes.webPage`（`web/index.html` + `plugin-ui.css`）。
-
-### 可扩展
-SDK、脚手架与 **PluginWorkbench** 支持不启动完整宿主即可预览。
-
-### 本地化
-官方插件提供约 **32** 种资源区域（含 `en` / `zh-Hans` / `zh-Hant`）。
-
 ### 测试
 Shared + 官方插件有完整单元测试，GitHub Actions 覆盖构建/校验/发布。
-
----
-
-## 功能亮点
-
-### 光标与指针（`custom-mouse`）
-- 随系统浅色/深色切换的光标主题
-- 指针速度与主按键交换
-- 安全备份与还原
-
-### ViVeTool（`vive-tool`）
-- 可搜索的功能标志列表
-- 无需手写 CLI 即可启用/禁用
-- 功能页 + 设置页
-
-### Nilesoft Shell 管理器（`shell-integration`）
-- 商店已下架。源码保留，供已安装用户和本地导入使用。
-- 不是宿主内置的 Nilesoft 管理器。
 
 ---
 
@@ -130,11 +120,12 @@ UniversalDeviceToolkit/
 
 ## 贡献
 
-1. 从 `master` 开分支  
-2. `.\udt-plugin.cmd doctor`  
-3. `.\udt-plugin.cmd dev` 开发  
-4. `validate` + 测试通过  
-5. 提 PR  
+1. 先过[策略筛子](../Docs/Plugins/STRATEGY.md)——只收设备能力或经严选的驻留集成
+2. 从 `master` 开分支  
+3. `.\udt-plugin.cmd doctor`  
+4. `.\udt-plugin.cmd dev` 开发  
+5. `validate` + 测试通过  
+6. 提 PR  
 
 详见 [CONTRIBUTING.md](../CONTRIBUTING.md) 与 [Docs/PLUGIN_DEVELOPMENT.md](../Docs/Plugins/PLUGIN_DEVELOPMENT.md)。
 
@@ -143,6 +134,7 @@ UniversalDeviceToolkit/
 ## 文档
 
 - [文档索引](../Docs/Plugins/README.md)
+- [插件策略](../Docs/Plugins/STRATEGY.md)（什么进目录、准入筛子）
 - [快速开始](../Docs/Plugins/PLUGIN_QUICKSTART.md)
 - [开发指南](../Docs/Plugins/PLUGIN_DEVELOPMENT.md)
 - [架构](../Docs/Plugins/ARCHITECTURE.md)

@@ -27,13 +27,19 @@
 
 <p align="center">
   <b>Official plugin ecosystem for <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit">Universal Device Toolkit</a></b><br/>
-  <i>Free. Open-source. No ads. No telemetry. Just better Windows.</i><br/>
+  <i>Device capabilities the host does not ship yet - not a Windows toolbox.</i><br/>
   <i>Requires host <b>v6.0.0+</b> for 2.x packages · v5.0.2 still loads 1.x · .NET 10 · Electron web UI</i>
 </p>
 
 <p align="center">
   <a href="README_zh-hans.md">中文说明</a>
 </p>
+
+---
+
+## Scope
+
+Plugins extend UDT **only** where hardware, a vendor protocol, or a resident integration requires it. The catalog stays deliberately small; admission is gated by [Docs/Plugins/STRATEGY.md](../Docs/Plugins/STRATEGY.md) (device-capability tracks + three-question screen). Generic system tools are not accepted - the host owns those surfaces via `udt` and the automation engine.
 
 ---
 
@@ -62,38 +68,25 @@ No manual downloads required for store plugins.
 
 ## Why These Plugins?
 
+Each entry is a **device capability** (or an approved resident integration), admitted through the [strategy screen](../Docs/Plugins/STRATEGY.md):
+
+### Cursor & Pointer (`custom-mouse`) - hardware track
+Mouse/pointer control that requires per-device code: theme-aware cursor styles, pointer speed, primary-button swap, safe backup/restore. Planned follow-up: a narrow `udt` CLI surface so agents can drive the same ability.
+
+### ViVeTool (`vive-tool`) - legacy, not the template
+Feature-flag toggling is script-shaped; it predates the current admission bar and stays for existing installs. Not promoted as a store highlight; a future catalog pass may mark it `Removed`.
+
+### Nilesoft Shell Manager (`shell-integration`) - delisted
+Resident-integration track requires daily-use evidence. Delisted from the store; source remains for existing installs and sideload. Not replaced by a host built-in.
+
 ### 100% Free & Open Source
 No paywalls, premium tiers, or ads. MIT-licensed source on GitHub.
-
-### Native Windows 11 Look & Feel
-Built with **.NET 10**. Plugin settings pages are Electron `contributes.webPage` entries (`web/index.html` + `plugin-ui.css`).
 
 ### Extensible by Design
 Clean SDK and scaffolder. Preview `contributes.webPage` in the Electron shell against a real Host. The WPF PluginWorkbench host is retired.
 
-### Localized
-Official plugins ship resource satellites for **32 cultures** (including `en`, `zh-Hans`, `zh-Hant`).
-
 ### Tested
 Hundreds of unit tests across Shared + official plugins, plus CI workflows for build/validate/release.
-
----
-
-## Feature Highlights
-
-### Cursor & Pointer (`custom-mouse`)
-- Theme-aware cursor styles (follow Windows Light/Dark)
-- Pointer speed and primary-button swap
-- Safe cursor backup and restore
-
-### ViVeTool (`vive-tool`)
-- Searchable feature-flag browser
-- Enable/disable without hand-written CLI
-- Safe defaults; feature pages + settings page
-
-### Nilesoft Shell Manager (`shell-integration`)
-- Delisted from the store. Source remains for existing installs and sideload.
-- Not replaced by a host built-in Nilesoft manager.
 
 ---
 
@@ -187,11 +180,12 @@ Do not hand-edit generated `Plugins/.build/catalog/store.json` for routine autho
 
 ## Contributing
 
-1. Fork and branch from `master`
-2. `.\udt-plugin.cmd doctor`
-3. Build with `.\udt-plugin.cmd build` and preview in the Electron shell
-4. `validate` + tests green
-5. Open a PR
+1. Check the [strategy screen](../Docs/Plugins/STRATEGY.md) - device capability or approved resident integration only
+2. Fork and branch from `master`
+3. `.\udt-plugin.cmd doctor`
+4. Build with `.\udt-plugin.cmd build` and preview in the Electron shell
+5. `validate` + tests green
+6. Open a PR
 
 Read [CONTRIBUTING.md](../CONTRIBUTING.md) and [Docs/Plugins/PLUGIN_DEVELOPMENT.md](../Docs/Plugins/PLUGIN_DEVELOPMENT.md).
 
@@ -202,6 +196,7 @@ Read [CONTRIBUTING.md](../CONTRIBUTING.md) and [Docs/Plugins/PLUGIN_DEVELOPMENT.
 | Doc | Description |
 |-----|-------------|
 | [Docs/Plugins/README.md](../Docs/Plugins/README.md) | Documentation index |
+| [Strategy](../Docs/Plugins/STRATEGY.md) | What belongs in the catalog; admission screen |
 | [Quick Start](../Docs/Plugins/PLUGIN_QUICKSTART.md) | First plugin in minutes |
 | [Development Guide](../Docs/Plugins/PLUGIN_DEVELOPMENT.md) | API, validation, release flow |
 | [Architecture](../Docs/Plugins/ARCHITECTURE.md) | Layout and dependency map |

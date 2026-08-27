@@ -8,6 +8,7 @@ CLI entry: **`../../Plugins/udt-plugin.cmd`** (`llt-plugin.cmd` is a compatibili
 
 | Doc | Audience | Notes |
 |-----|----------|-------|
+| [STRATEGY.md](./STRATEGY.md) | Maintainers / proposers | What belongs in the catalog; three tracks + admission screen |
 | [PLUGIN_QUICKSTART.md](./PLUGIN_QUICKSTART.md) | New authors | Shortest path: doctor → init → dev → package |
 | [PLUGIN_DEVELOPMENT.md](./PLUGIN_DEVELOPMENT.md) | Authors / reviewers | Paths, validation profiles, versioning, Workbench |
 | [HOST_INTEGRATION.md](./HOST_INTEGRATION.md) | Host/plugin maintainers | ABI, lifecycle, host-side UI integration |

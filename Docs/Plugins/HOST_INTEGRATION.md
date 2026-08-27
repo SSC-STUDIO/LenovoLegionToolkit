@@ -31,6 +31,8 @@ Universal Device Toolkit 支持通过插件系统扩展功能。插件可以：
 - 经 Host JSON-RPC（`pluginHost.invoke`）调用插件 C# API
 - 访问主程序已暴露的 bridge 方法（含 `dialog:*`）
 
+> **准入边界**：只收「必须进进程、必须碰设备、必须长期驻留」的能力。通用系统工具属于宿主（`udt` CLI、自动化），不进插件商店。三轨定位与三问筛子见 [STRATEGY.md](./STRATEGY.md)。
+
 ### 插件类型
 
 
@@ -282,6 +284,17 @@ Shipping UI 是 Electron。插件不要再提供 WPF `UserControl` / `IPluginPag
 复用 `web/plugin-ui.css`（`up-*` 类：卡片、行、开关、按钮）。文案用插件 resx 或页面内英文+中文，不要另开一套 i18n。
 
 `IPluginPage` 仍留在 SDK 里（冻结 ABI / 历史别名），新插件不要实现它来承载 UI。
+
+### Agent 窄接口（辅轨约束）
+
+插件能力若计划暴露给 AI Agent / 脚本，必须在设计期同步规划与 `udt-cli` 同级的窄接口，而不是只做 `webPage`：
+
+1. **默认关**：能力默认不驻留、不改系统状态；显式动作才生效
+2. **可审计**：方法命名沿用 `plugin.<id>.*` 前缀，登记进 `Plugins/Official/plugin-rpc-contract.json`（Guard 契约测试覆盖）
+3. **失败可回滚**：写操作提供读回校验与恢复路径
+4. **doctor 可探**：能力探测不依赖完整 UI 加载
+
+参考 `Docs/CLI.md` 的命令面纪律（`--json` 机器可读输出、无 IPC 自检、稳定退出码）。Agent 调用是「这块灯 / 这只鼠标」，不是「再打开一个网页」。
 
 ---
 
