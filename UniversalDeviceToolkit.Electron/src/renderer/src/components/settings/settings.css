@@ -1336,39 +1336,43 @@
   background: #c4c4c4;
 }
 
-/* 二次元卡通风格：樱花粉 x 薰衣草紫粉彩，内缩悬浮 + 明显大圆角胶囊行 */
-.udt-style-option--anime .udt-style-option__mockup {
+/* 新粗野主义风格：奶油纸面 x 粗黑描边硬投影，块状小圆角与撞色圆点 */
+.udt-style-option--neubrutalism .udt-style-option__mockup {
   inset: 7px;
   gap: 7px;
   padding: 9px 11px;
-  background: linear-gradient(140deg, #ffe1ec 0%, #f4e7ff 55%, #e2dcff 100%);
-  border-radius: 18px;
+  background: #fdf8ec;
+  border: 2px solid #17151f;
+  box-shadow: 3px 3px 0 #17151f;
+  border-radius: 8px;
 }
 
-.udt-style-option--anime .udt-style-option__bar {
-  background: rgba(255, 255, 255, 0.75);
-  border-radius: 999px;
+.udt-style-option--neubrutalism .udt-style-option__bar {
+  background: #ffd24a;
+  border: 2px solid #17151f;
+  border-radius: 4px;
 }
 
-.udt-style-option--anime .udt-style-option__dot {
-  background: #ff9ec4;
+.udt-style-option--neubrutalism .udt-style-option__dot {
+  background: #ff5d8f;
 }
 
-.udt-style-option--anime .udt-style-option__bar-line {
-  background: #c9a6e8;
+.udt-style-option--neubrutalism .udt-style-option__bar-line {
+  background: #17151f;
 }
 
-.udt-style-option--anime .udt-style-option__row {
-  background: rgba(255, 255, 255, 0.72);
-  border-radius: 999px;
+.udt-style-option--neubrutalism .udt-style-option__row {
+  background: #ffffff;
+  border: 2px solid #17151f;
+  border-radius: 4px;
 }
 
-.udt-style-option--anime .udt-style-option__row-dot {
-  background: #f78fb8;
+.udt-style-option--neubrutalism .udt-style-option__row-dot {
+  background: #53c1de;
 }
 
-.udt-style-option--anime .udt-style-option__row-line {
-  background: #d7bdf2;
+.udt-style-option--neubrutalism .udt-style-option__row-line {
+  background: #b9b3a6;
 }
 
 /* ── Accent options under theme mode (Electron SettingsAppearanceControl) ── */

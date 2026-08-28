@@ -18,9 +18,56 @@ const previewAccentValue = process.argv.find((argument) => argument.startsWith('
 const previewAccentColor = setupIsPreview && /^#[0-9a-f]{6}$/i.test(previewAccentValue ?? '')
   ? previewAccentValue
   : null
-const payloadRoot = app.isPackaged
-  ? join(process.resourcesPath, 'payload')
-  : join(projectRoot, 'dist', 'win-unpacked')
+
+async function resolvePayloadRoot() {
+  const exeDir = dirname(process.execPath)
+  const appDir = app.getAppPath()
+  const candidates = [
+    join(process.resourcesPath, 'payload'),
+    join(exeDir, 'resources', 'payload'),
+    join(exeDir, 'app', 'resources', 'payload'),
+    join(exeDir, '..', 'resources', 'payload'),
+    join(appDir, 'resources', 'payload'),
+    join(appDir, '..', 'resources', 'payload'),
+    join(appDir, '..', 'payload'),
+    join(projectRoot, 'dist', 'win-unpacked'),
+    join(projectRoot, 'dist', 'custom-installer', 'win-unpacked', 'resources', 'payload'),
+    join(projectRoot, '..', 'BuildInstallerPayload', 'full'),
+    join(projectRoot, '..', 'BuildInstallerPayload', 'online'),
+    join(projectRoot, '..', 'Build')
+  ]
+  for (const candidate of candidates) {
+    try {
+      const stats = await fs.stat(join(candidate, 'UniversalDeviceToolkit.exe'))
+      if (stats.isFile()) return candidate
+    } catch {
+      // Continue checking
+    }
+  }
+  return join(process.resourcesPath, 'payload')
+}
+
+async function resolveLogoData() {
+  const exeDir = dirname(process.execPath)
+  const appDir = app.getAppPath()
+  const candidates = [
+    join(process.resourcesPath, 'installer-assets', 'icon.png'),
+    join(exeDir, 'resources', 'installer-assets', 'icon.png'),
+    join(exeDir, 'installer-assets', 'icon.png'),
+    join(appDir, 'resources', 'icon.png'),
+    join(projectRoot, 'resources', 'icon.png')
+  ]
+  for (const candidate of candidates) {
+    try {
+      const data = await fs.readFile(candidate)
+      return `data:image/png;base64,${data.toString('base64')}`
+    } catch {
+      // Continue checking
+    }
+  }
+  return ''
+}
+
 const validLanguages = new Set([
   'en', 'zh-CN', 'zh-Hant', 'ja', 'de', 'fr', 'es', 'it', 'pt-BR', 'pt', 'ru',
   'uk', 'pl', 'cs', 'sk', 'hu', 'ro', 'bg', 'tr', 'el', 'ar', 'lv', 'nl-NL',
@@ -102,6 +149,7 @@ async function collectFiles(root) {
 }
 
 async function copyPayload(destination, features) {
+  const payloadRoot = await resolvePayloadRoot()
   const files = await collectFiles(payloadRoot)
   const selected = files.filter((file) => features.networkAcceleration || !isNetworkProxySidecarFile(file.relative))
   const totalBytes = selected.reduce((sum, file) => sum + file.size, 0)
@@ -189,6 +237,7 @@ async function removeUninstallRegistration() {
 async function installApplication(options) {
   if (setupIsPreview) throw new Error('Preview mode does not install files.')
   if (isInstalling) throw new Error('Installation is already in progress.')
+  const payloadRoot = await resolvePayloadRoot()
   if (!payloadRoot) throw new Error('The embedded application payload is missing.')
   const destination = resolve(String(options?.destination ?? ''))
   const language = String(options?.language ?? '')
@@ -273,13 +322,11 @@ function createWindow() {
 }
 
 ipcMain.handle('installer:info', async () => {
-  const payloadFiles = await collectFiles(payloadRoot).catch(() => [])
+  const payloadRoot = await resolvePayloadRoot()
+  const payloadFiles = payloadRoot ? await collectFiles(payloadRoot).catch(() => []) : []
   const payloadSize = payloadFiles.reduce((sum, file) => sum + file.size, 0)
   const stats = await directoryStats(dirname(defaultInstallPath()))
-  const logoPath = app.isPackaged
-    ? join(process.resourcesPath, 'installer-assets', 'icon.png')
-    : join(projectRoot, 'resources', 'icon.png')
-  const logoData = await fs.readFile(logoPath).then((data) => `data:image/png;base64,${data.toString('base64')}`).catch(() => '')
+  const logoData = await resolveLogoData()
   return {
     version: await displayVersion(),
     defaultPath: defaultInstallPath(),

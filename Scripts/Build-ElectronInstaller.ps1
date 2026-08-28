@@ -270,6 +270,7 @@ try {
             Remove-Item -LiteralPath $distDir -Recurse -Force
         }
         New-Item -ItemType Directory -Path $distDir -Force | Out-Null
+        Copy-Item -LiteralPath $fullPayloadDir -Destination $unpackedDir -Recurse -Force
 
         $previousNsisToolset = [System.Environment]::GetEnvironmentVariable('ELECTRON_BUILDER_NSIS_DIR')
         try {

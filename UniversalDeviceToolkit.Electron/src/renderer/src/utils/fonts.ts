@@ -1,17 +1,23 @@
 /**
  * Font management — port of Electron Utils/AppFontManager.cs.
- * The CSS variable --udt-font-family (global.css) already mirrors the Electron
- * AppFontFamily stack including SimSun; this module keeps the JS-side copy.
+ * The CSS variable --udt-font-family (global.css) mirrors the Electron
+ * AppFontFamily intent; this module keeps the JS-side copy.
+ *
+ * NOTE: unlike WPF, Chromium resolves fonts PER CHARACTER down the list.
+ * A serif CJK face (SimSun) must never appear before the CJK sans faces,
+ * otherwise Chinese text renders in 宋体 while Latin stays Segoe - which
+ * was the reported bug. SimSun therefore only lives at the very end of the
+ * stylesheet fallback, never ahead of Microsoft YaHei / PingFang.
  */
 export const AppFontStack = [
   'Segoe UI Variable Text',
   'Segoe UI Variable',
   'Segoe UI',
-  'SimSun',
   'Microsoft YaHei UI',
   'Microsoft YaHei',
   'PingFang SC',
   'Hiragino Sans GB',
+  'Noto Sans SC',
   'sans-serif'
 ].join(', ')
 
@@ -50,7 +56,7 @@ export const FONT_PRESETS: { value: string; labelKey: string; defaultLabel: stri
     value: 'cascadia',
     labelKey: 'settings.appearance.fontPresets.cascadia',
     defaultLabel: 'Cascadia Code / Consolas (等宽极客)',
-    stack: "'Cascadia Code', Consolas, 'Courier New', monospace"
+    stack: "'Cascadia Code', Consolas, 'Courier New', 'Microsoft YaHei UI', monospace"
   }
 ]
 

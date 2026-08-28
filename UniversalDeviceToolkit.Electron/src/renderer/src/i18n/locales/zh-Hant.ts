@@ -7,7 +7,7 @@ export default withEnglishFallback({
     },
     installer: {
       features: {
-        omittedHint: "部分頁面未在安裝時選擇，因此不會顯示。",
+        omittedHint: '部分頁面未在安裝時選擇，因此不會顯示。',
       },
     },
     titlebar: {
@@ -61,7 +61,7 @@ export default withEnglishFallback({
       themeModeFailed: '設定游標主題模式失敗。',
       restoreFailed: '還原 Windows 預設游標配置失敗。',
       cursorThemeFailed: '套用自訂游標樣式失敗。若系統阻止 INF 安裝，請嘗試以系統管理員身分執行。',
-      actionFailed: '滑鼠設定錯誤'
+      actionFailed: '滑鼠設定錯誤',
     },
     home: {
       title: 'Universal Device Toolkit',
@@ -446,6 +446,12 @@ export default withEnglishFallback({
           noto: 'Noto Sans SC / PingFang SC',
           harmony: 'HarmonyOS Sans',
           cascadia: 'Cascadia Code / Consolas (Monospace)',
+        },
+        style: 'Theme Style',
+        styleDesc: 'Pick a personality style that layers on top of light/dark mode',
+        styleOptions: {
+          default: 'Classic',
+          neubrutalism: 'Neo-Brutalism',
         },
       },
       application: {

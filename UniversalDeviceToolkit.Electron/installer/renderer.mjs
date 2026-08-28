@@ -108,24 +108,29 @@ function renderPage(info) {
   return renderWelcome(info)
 }
 
+function renderError() {
+  if (!state.error) return ''
+  return `<div class="error-banner" role="alert"><span class="error-icon" aria-hidden="true">⚠</span><div class="error-text">${escapeHtml(state.error)}</div></div>`
+}
+
 function renderWelcome(info) {
   return `<h2 class="heading">准备安装</h2><p class="subtitle">选择安装位置，然后开始安装。</p><div class="divider"></div>${renderSteps('welcome')}
     <section class="page"><h3 class="section-title">安装位置</h3><label class="field-label" for="destination">选择 Universal Device Toolkit 要安装的文件夹</label>
       <div class="path-row"><input id="destination" class="path-input" value="${escapeHtml(state.destination)}" spellcheck="false"/><button class="button-secondary" data-action="browse">浏览</button></div>
       <div class="space-card"><div class="space-item"><div class="space-label">需要空间</div><div class="space-value">${formatBytes(info.payloadBytes)}</div></div><div class="space-item"><div class="space-label">可用空间</div><div class="space-value">${formatBytes(info.availableBytes)}</div></div></div>
-      <div class="info-card admin"><span class="info-icon">i</span><span>需要管理员权限</span></div><div class="error-message">${escapeHtml(state.error)}</div>
-    </section>${footer('下一步', false)}`
+      <div class="info-card admin"><span class="info-icon">i</span><span>需要管理员权限</span></div>
+    </section>${renderError()}${footer('下一步', false)}`
 }
 
 function renderLanguage() {
-  return `<h2 class="heading">语言选择</h2><p class="subtitle">选择安装后首次启动使用的语言。</p><div class="divider"></div>${renderSteps('language')}<section class="page"><div class="language-grid">${languageOptions.map(([id, label]) => `<button class="language-option ${state.language === id ? 'selected' : ''}" data-language="${id}" aria-pressed="${state.language === id}">${label}</button>`).join('')}</div><div class="error-message">${escapeHtml(state.error)}</div></section>${footer('下一步', true)}`
+  return `<h2 class="heading">语言选择</h2><p class="subtitle">选择安装后首次启动使用的语言。</p><div class="divider"></div>${renderSteps('language')}<section class="page"><div class="language-grid">${languageOptions.map(([id, label]) => `<button class="language-option ${state.language === id ? 'selected' : ''}" data-language="${id}" aria-pressed="${state.language === id}">${label}</button>`).join('')}</div></section>${renderError()}${footer('下一步', true)}`
 }
 
 function renderDevice() {
   return `<h2 class="heading">设备选择</h2><p class="subtitle">选择启动时使用的设备支持模式。</p><div class="divider"></div>${renderSteps('device')}<section class="page"><div class="choice-grid" role="radiogroup" aria-label="设备支持模式">
     <button class="choice-card ${state.deviceMode === 'auto' ? 'selected' : ''}" data-device="auto" role="radio" aria-checked="${state.deviceMode === 'auto'}"><span class="choice-radio"></span><span><span class="choice-name">自动检测设备</span><span class="choice-description">启用完整的硬件监控和设备功能。</span></span><span class="choice-meta">推荐</span></button>
     <button class="choice-card ${state.deviceMode === 'basic' ? 'selected' : ''}" data-device="basic" role="radio" aria-checked="${state.deviceMode === 'basic'}"><span class="choice-radio"></span><span><span class="choice-name">基础模式</span><span class="choice-description">不读取硬件传感器，适用于受限环境。</span></span><span class="choice-meta">安全</span></button>
-  </div><div class="error-message">${escapeHtml(state.error)}</div></section>${footer('下一步', true)}`
+  </div></section>${renderError()}${footer('下一步', true)}`
 }
 
 function featureRow(id, locked) {
@@ -147,7 +152,7 @@ function renderFeatures() {
     <section class="page"><div class="feature-groups">
       <div class="feature-group"><div class="feature-group-title">${escapeHtml(text('requiredGroup'))}</div><div class="feature-group-hint">${escapeHtml(text('requiredHint'))}</div>${required.map((id) => featureRow(id, true)).join('')}</div>
       <div class="feature-group"><div class="feature-group-title">${escapeHtml(text('optionalGroup'))}</div><div class="feature-group-hint">${escapeHtml(text('optionalHint'))}</div>${optional.map((id) => featureRow(id, false)).join('')}</div>
-    </div><div class="error-message">${escapeHtml(state.error)}</div></section>${footer(text('startInstall'), true)}`
+    </div></section>${renderError()}${footer(text('startInstall'), true)}`
 }
 
 function featuresSummaryLabel() {
@@ -157,15 +162,15 @@ function featuresSummaryLabel() {
 
 function renderInstall(info) {
   const progress = Math.max(0, Math.min(100, state.progress.percent))
-  return `<h2 class="heading">正在安装</h2><p class="subtitle">请稍候，Universal Device Toolkit 正在准备运行环境。</p><div class="divider"></div>${renderSteps('install')}<section class="page"><div class="install-summary"><div class="summary-line"><span>安装位置</span><strong>${escapeHtml(state.destination)}</strong></div><div class="summary-line"><span>语言</span><strong>${escapeHtml(languageOptions.find(([id]) => id === state.language)?.[1] ?? state.language)}</strong></div><div class="summary-line"><span>设备模式</span><strong>${state.deviceMode === 'auto' ? '自动检测设备' : '基础模式'}</strong></div><div class="summary-line"><span>${escapeHtml(text('featuresSummary'))}</span><strong>${escapeHtml(featuresSummaryLabel())}</strong></div></div><div class="progress-track"><div class="progress-bar" style="width:${progress}%"></div></div><div class="progress-caption"><span>${escapeHtml(state.progress.file || '正在复制应用文件...')}</span><span>${progress.toFixed(0)}%</span></div><div class="log-line">${escapeHtml(state.progress.message || `需要空间 ${formatBytes(info.payloadBytes)}`)}</div><div class="error-message">${escapeHtml(state.error)}</div></section><div class="footer"><button class="button-secondary" data-action="close" ${state.installing ? 'disabled' : ''}>取消</button></div>`
+  return `<h2 class="heading">正在安装</h2><p class="subtitle">请稍候，Universal Device Toolkit 正在准备运行环境。</p><div class="divider"></div>${renderSteps('install')}<section class="page"><div class="install-summary"><div class="summary-line"><span>安装位置</span><strong>${escapeHtml(state.destination)}</strong></div><div class="summary-line"><span>语言</span><strong>${escapeHtml(languageOptions.find(([id]) => id === state.language)?.[1] ?? state.language)}</strong></div><div class="summary-line"><span>设备模式</span><strong>${state.deviceMode === 'auto' ? '自动检测设备' : '基础模式'}</strong></div><div class="summary-line"><span>${escapeHtml(text('featuresSummary'))}</span><strong>${escapeHtml(featuresSummaryLabel())}</strong></div></div><div class="progress-track"><div class="progress-bar" style="width:${progress}%"></div></div><div class="progress-caption"><span>${escapeHtml(state.progress.file || '正在复制应用文件...')}</span><span>${progress.toFixed(0)}%</span></div><div class="log-line">${escapeHtml(state.progress.message || `需要空间 ${formatBytes(info.payloadBytes)}`)}</div></section>${renderError()}<div class="footer"><button class="button-secondary" data-action="close" ${state.installing ? 'disabled' : ''}>取消</button></div>`
 }
 
 function renderComplete() {
-  return `<section class="page success"><div><div class="success-mark">✓</div><h2>安装完成</h2><p>Universal Device Toolkit 已安装到你的设备。</p><div class="error-message">${escapeHtml(state.error)}</div><div class="footer"><button class="button-secondary" data-action="close">关闭</button><button class="button-primary" data-action="launch">启动应用</button></div></div></section>`
+  return `<section class="page success"><div><div class="success-mark">✓</div><h2>安装完成</h2><p>Universal Device Toolkit 已安装到你的设备。</p>${renderError()}<div class="footer"><button class="button-secondary" data-action="close">关闭</button><button class="button-primary" data-action="launch">启动应用</button></div></div></section>`
 }
 
 function renderUninstall() {
-  return `<h2 class="heading">卸载 Universal Device Toolkit</h2><p class="subtitle">移除应用及其快捷方式。</p><div class="divider"></div><section class="page"><div class="info-card"><span class="info-icon">i</span><span>应用程序文件和开始菜单、桌面快捷方式将被移除。</span></div><div class="info-card admin"><span class="info-icon">!</span><span>卸载需要管理员权限</span></div><div class="error-message">${escapeHtml(state.error)}</div></section><div class="footer"><button class="button-secondary" data-action="close">取消</button><button class="button-primary" data-action="uninstall">卸载</button></div>`
+  return `<h2 class="heading">卸载 Universal Device Toolkit</h2><p class="subtitle">移除应用及其快捷方式。</p><div class="divider"></div><section class="page"><div class="info-card"><span class="info-icon">i</span><span>应用程序文件和开始菜单、桌面快捷方式将被移除。</span></div><div class="info-card admin"><span class="info-icon">!</span><span>卸载需要管理员权限</span></div></section>${renderError()}<div class="footer"><button class="button-secondary" data-action="close">取消</button><button class="button-primary" data-action="uninstall">卸载</button></div>`
 }
 
 function footer(primary, back) {

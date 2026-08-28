@@ -10,7 +10,7 @@ import {
 export type ThemeMode = 'light' | 'dark'
 export type ThemePreference = 'system' | 'light' | 'dark'
 /** 风格偏好：与明暗正交的外观维度，驱动 <html data-style> 属性。 */
-export type StylePreference = 'default' | 'anime'
+export type StylePreference = 'default' | 'neubrutalism'
 export {
   UI_SCALE_AUTO,
   UI_SCALE_OPTIONS,
@@ -76,7 +76,7 @@ function readStoredThemePreference(): ThemePreference {
 function readStoredStylePreference(): StylePreference {
   try {
     const stored = localStorage.getItem(STYLE_STORAGE_KEY)
-    if (stored === 'default' || stored === 'anime') return stored
+    if (stored === 'default' || stored === 'neubrutalism') return stored
   } catch {
     /* ignore quota / private mode */
   }

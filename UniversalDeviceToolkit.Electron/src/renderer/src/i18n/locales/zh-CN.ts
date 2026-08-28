@@ -61,7 +61,7 @@ export default withEnglishFallback({
       themeModeFailed: '设置光标主题模式失败。',
       restoreFailed: '恢复 Windows 默认光标方案失败。',
       cursorThemeFailed: '应用自定义光标样式失败。如果系统阻止 INF 安装，请尝试以管理员身份运行。',
-      actionFailed: '鼠标设置错误'
+      actionFailed: '鼠标设置错误',
     },
     home: {
       title: '通用设备工具箱',
@@ -451,7 +451,7 @@ export default withEnglishFallback({
         styleDesc: '选择一套界面个性风格，与明暗模式叠加生效',
         styleOptions: {
           default: '经典',
-          anime: '二次元卡通',
+          neubrutalism: '新粗野主义',
         },
       },
       application: {

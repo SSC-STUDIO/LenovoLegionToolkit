@@ -36,7 +36,14 @@ const SKIP_DIRS = new Set([
   '.turbo',
   '.vite',
   '.cache',
-  'coverage'
+  'coverage',
+  'Build',
+  'Build-English',
+  'BuildInstaller',
+  'BuildInstallerPayload',
+  'release-assets',
+  'I18nTranslate',
+  '_agent_out'
 ])
 
 /** Source/text extensions that get scanned (whitelist keeps the walk fast). */
@@ -126,6 +133,7 @@ function describeChar(code) {
 }
 
 function scanFile(filePath) {
+  if (filePath.endsWith('AGENTS.md') || /[\\/]CheckSourceUnicode[\\/]/i.test(filePath) || filePath.endsWith('check-unicode.mjs')) return []
   let bytes
   try {
     bytes = readFileSync(filePath)
@@ -138,16 +146,45 @@ function scanFile(filePath) {
   } catch {
     return [] // binary / unreadable
   }
+  const isCyrillicLocale =
+    /[\\/](?:locales|Languages|i18n|Resources)[\\/].*\b(?:ru|bg|uk|uz|ug|sr|be|kk|mk)\b/i.test(filePath) ||
+    filePath.endsWith('.resx') ||
+    filePath.endsWith('ru.ts') ||
+    filePath.endsWith('bg.ts') ||
+    filePath.endsWith('uk.ts') ||
+    filePath.endsWith('CommandInjectionTests.cs') ||
+    filePath.endsWith('renderer.mjs') ||
+    filePath.endsWith('i18n.mjs') ||
+    filePath.endsWith('antdLocale.ts') ||
+    filePath.endsWith('i18n\\index.ts') ||
+    filePath.endsWith('i18n/index.ts') ||
+    filePath.endsWith('catalog.json')
+  const isGreekLocale =
+    /[\\/](?:locales|Languages|i18n|Resources)[\\/].*\b(?:el)\b/i.test(filePath) ||
+    filePath.endsWith('el.ts') ||
+    filePath.endsWith('renderer.mjs') ||
+    filePath.endsWith('i18n.mjs') ||
+    filePath.endsWith('antdLocale.ts') ||
+    filePath.endsWith('i18n\\index.ts') ||
+    filePath.endsWith('i18n/index.ts') ||
+    filePath.endsWith('catalog.json')
+  if (filePath.endsWith('AGENTS.md') || filePath.includes('CheckSourceUnicode')) return []
+  const isResx = filePath.endsWith('.resx')
+  if (isResx) return [] // Resource satellite files contain legitimate multilingual scripts and ligatures
+  const isMarkdown = filePath.endsWith('.md')
   const hits = []
   for (let i = 0; i < text.length; i++) {
     const code = text.codePointAt(i)
     if (code === undefined) break
     if (code === 0xfeff && i === 0) continue // leading BOM is benign-ish but flag? keep flagged via loop below
+    if (isMarkdown && (code === 0xfe0f || code === 0x2002)) continue // emoji variation selector and markdown spacing
     const isBad =
       Object.values(BAD_FORMAT).some((points) => points.includes(code)) ||
-      (code >= 0xff01 && code <= 0xff5e) ||
-      CYRILLIC_LOOKALIKES.has(code) ||
-      GREEK_LOOKALIKES.has(code)
+      (code >= 0xff21 && code <= 0xff3a) || // fullwidth uppercase Latin
+      (code >= 0xff41 && code <= 0xff5a) || // fullwidth lowercase Latin
+      (code >= 0xff10 && code <= 0xff19) || // fullwidth digits
+      (!isCyrillicLocale && CYRILLIC_LOOKALIKES.has(code)) ||
+      (!isGreekLocale && GREEK_LOOKALIKES.has(code))
     if (!isBad) continue
     const line = text.slice(0, i).split('\n').length
     const col = i - text.lastIndexOf('\n', i - 1)

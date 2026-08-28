@@ -66,7 +66,7 @@ const THEME_OPTIONS: { value: ThemePreference; labelKey: string; previewClass: s
 
 const STYLE_OPTIONS: { value: StylePreference; labelKey: string; previewClass: string }[] = [
   { value: 'default', labelKey: 'settings.appearance.styleOptions.default', previewClass: 'udt-style-option--default' },
-  { value: 'anime', labelKey: 'settings.appearance.styleOptions.anime', previewClass: 'udt-style-option--anime' }
+  { value: 'neubrutalism', labelKey: 'settings.appearance.styleOptions.neubrutalism', previewClass: 'udt-style-option--neubrutalism' }
 ]
 
 const TEMPERATURE_UNIT_OPTIONS: { value: TemperatureUnit; label: string }[] = [

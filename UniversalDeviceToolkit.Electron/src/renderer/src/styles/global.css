@@ -260,91 +260,126 @@
   --udt-shadow-toast: 0 6px 20px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
-/* --- Style preset: anime cartoon (二次元卡通) ---
-   Opt-in skin activated by adding data-style="anime" to <html>.
-   Decoration is fully static (gradients / shadows / radii only, no keyframes).
+/* --- Style preset: neo-brutalism (新粗野主义) ---
+   Opt-in skin activated by adding data-style="neubrutalism" to <html>.
+   Heavy solid strokes, hard zero-blur offset shadows, blocky radii and a
+   static dot-grid wash. Decoration is fully static (no keyframes).
    六个带 !important 的变量会被 accentPalette 以内联自定义属性写在 <html> 上，
    只有作者 !important 声明才能胜过普通内联样式。 */
 
-/* Layer 1 - dark combination (dark baseline recolored to a pastel violet night). */
-:root[data-style='anime'] {
-  --udt-surface-window: #241c2e !important;
-  --udt-surface-card: #2f2440 !important;
-  --udt-surface-navigation: #291f36;
-  --udt-control-fill-default: rgba(255, 158, 207, 0.09) !important;
-  --udt-control-fill-secondary: rgba(255, 158, 207, 0.15) !important;
-  --udt-control-fill-tertiary: rgba(173, 140, 255, 0.05) !important;
-  --udt-text-secondary: rgba(255, 214, 235, 0.80) !important;
-  --udt-control-stroke-default: rgba(255, 158, 207, 0.16);
-  --udt-control-stroke-secondary: rgba(255, 158, 207, 0.20);
-  --udt-control-stroke-strong: rgba(255, 158, 207, 0.34);
-  --udt-subtle-fill-secondary: rgba(255, 158, 207, 0.07);
-  --udt-subtle-fill-tertiary: rgba(255, 158, 207, 0.05);
-  /* Soft pink-violet shadows with a touch of near-black kept for depth. */
-  --udt-shadow-low: 0 2px 10px rgba(255, 121, 198, 0.10), 0 1px 3px rgba(18, 8, 28, 0.26);
-  --udt-shadow-medium: 0 4px 16px rgba(255, 121, 198, 0.14), 0 2px 6px rgba(18, 8, 28, 0.30);
-  --udt-shadow-glass: 0 4px 18px rgba(173, 140, 255, 0.15), 0 2px 8px rgba(18, 8, 28, 0.24);
+/* Layer 1 - dark combination (charcoal base with violet hard plates). */
+:root[data-style='neubrutalism'] {
+  --udt-surface-window: #191922 !important;
+  --udt-surface-card: #23232e !important;
+  --udt-surface-navigation: #1f1f29;
+  --udt-control-fill-default: rgba(255, 255, 255, 0.10) !important;
+  --udt-control-fill-secondary: rgba(255, 255, 255, 0.16) !important;
+  --udt-control-fill-tertiary: rgba(255, 255, 255, 0.05) !important;
+  --udt-text-secondary: rgba(237, 237, 244, 0.78) !important;
+  --udt-control-stroke-default: rgba(222, 222, 235, 0.45);
+  --udt-control-stroke-secondary: rgba(222, 222, 235, 0.60);
+  --udt-control-stroke-strong: rgba(244, 242, 255, 0.95);
+  --udt-subtle-fill-secondary: rgba(255, 255, 255, 0.09);
+  --udt-subtle-fill-tertiary: rgba(255, 255, 255, 0.05);
+  /* Hard offset shadows (zero blur). Near-black would vanish on charcoal,
+     so the plates are violet/cyan instead - a common dark neo-brutalist move.
+     Medium stacks a cyan tail plate for playful double-depth. */
+  --udt-shadow-low: 2px 2px 0 rgba(124, 108, 255, 0.85);
+  --udt-shadow-medium: 3px 3px 0 rgba(124, 108, 255, 0.90), 6px 6px 0 rgba(83, 221, 255, 0.30);
+  --udt-shadow-glass: 4px 4px 0 rgba(83, 221, 255, 0.80);
+  --udt-shadow-toast: 4px 4px 0 rgba(124, 108, 255, 0.75), 7px 7px 0 rgba(17, 16, 24, 0.90);
 }
 
-/* Static bokeh wash folded into the body background itself (multi-background,
-   no extra DOM layers). Higher specificity than the base body rule below,
-   so no !important is needed here. */
-:root[data-style='anime'] body {
-  background:
-    radial-gradient(640px 420px at 8% -6%, rgba(255, 158, 207, 0.13), transparent 62%),
-    radial-gradient(520px 380px at 96% 4%, rgba(146, 120, 255, 0.11), transparent 60%),
-    radial-gradient(600px 420px at 50% 108%, rgba(126, 196, 255, 0.08), transparent 58%),
-    var(--udt-surface-window);
+/* Static dot-grid folded into the body background itself (longhand image over
+   the existing shorthand color - no extra DOM layers, no stacking risk).
+   Higher specificity than the base body rule below, so no !important needed. */
+:root[data-style='neubrutalism'] body {
+  background-image: radial-gradient(rgba(237, 237, 244, 0.08) 1.2px, transparent 1.3px);
+  background-size: 22px 22px;
 }
 
-/* Layer 2 - shared shape adjustments for both combinations
-   (micro/progress radii intentionally untouched). */
-:root[data-style='anime'] {
-  --udt-radius-small: 10px;
-  --udt-radius-sm: 10px;
-  --udt-radius-control: 14px;
-  --udt-radius-md: 14px;
-  --udt-radius-card: 22px;
-  --udt-radius-surface: 26px;
+/* Layer 2 - shared shape adjustments for both combinations.
+   Radii lean toward soft-brutalism: chunky and friendly rather than razor
+   blocky; micro/progress tokens intentionally untouched. */
+:root[data-style='neubrutalism'] {
+  --udt-radius-small: 4px;
+  --udt-radius-sm: 4px;
+  --udt-radius-control: 6px;
+  --udt-radius-md: 6px;
+  --udt-radius-card: 10px;
+  --udt-radius-surface: 12px;
 }
 
-/* Layer 3 - light combination (sakura cream). Its higher specificity
-   outweighs layer 1 whenever both attributes are present, including the
-   six repeated !important tokens. */
-:root[data-theme='light'][data-style='anime'] {
-  --udt-surface-window: #fff3f9 !important;
-  --udt-surface-card: #ffffff !important;
-  --udt-surface-navigation: #ffeaf5;
-  --udt-control-fill-default: rgba(240, 98, 166, 0.08) !important;
-  --udt-control-fill-secondary: rgba(240, 98, 166, 0.13) !important;
-  --udt-control-fill-tertiary: rgba(150, 102, 255, 0.05) !important;
-  --udt-text-secondary: rgba(103, 62, 86, 0.72) !important;
-  --udt-control-stroke-default: rgba(240, 98, 166, 0.22);
-  --udt-control-stroke-secondary: rgba(240, 98, 166, 0.28);
-  --udt-control-stroke-strong: rgba(240, 98, 166, 0.42);
-  --udt-subtle-fill-secondary: rgba(240, 98, 166, 0.09);
-  --udt-subtle-fill-tertiary: rgba(240, 98, 166, 0.06);
-  /* Rose-toned soft shadows. */
-  --udt-shadow-low: 0 2px 10px rgba(240, 98, 166, 0.12), 0 1px 3px rgba(103, 62, 86, 0.06);
-  --udt-shadow-medium: 0 4px 16px rgba(240, 98, 166, 0.15), 0 2px 6px rgba(103, 62, 86, 0.08);
-  --udt-shadow-glass: 0 4px 18px rgba(240, 98, 166, 0.18), 0 2px 8px rgba(103, 62, 86, 0.07);
+/* Layer 3 - light combination (warm paper with signature black hard shadows).
+   Its higher specificity outweighs layer 1 whenever both attributes are
+   present, including the six repeated !important tokens. */
+:root[data-theme='light'][data-style='neubrutalism'] {
+  --udt-surface-window: #f7f3ea !important;
+  --udt-surface-card: #fffdf6 !important;
+  --udt-surface-navigation: #efe9db;
+  --udt-control-fill-default: rgba(23, 21, 31, 0.07) !important;
+  --udt-control-fill-secondary: rgba(23, 21, 31, 0.12) !important;
+  --udt-control-fill-tertiary: rgba(23, 21, 31, 0.04) !important;
+  --udt-text-secondary: rgba(37, 34, 28, 0.74) !important;
+  --udt-control-stroke-default: rgba(23, 21, 31, 0.30);
+  --udt-control-stroke-secondary: rgba(23, 21, 31, 0.46);
+  --udt-control-stroke-strong: #17151f;
+  --udt-subtle-fill-secondary: rgba(23, 21, 31, 0.08);
+  --udt-subtle-fill-tertiary: rgba(23, 21, 31, 0.05);
+  /* Hard black offset shadows - the neo-brutalist signature look -
+     with a violet echo plate on medium for softer, sticker-like depth. */
+  --udt-shadow-low: 2px 2px 0 #17151f;
+  --udt-shadow-medium: 3px 3px 0 #17151f, 5px 5px 0 rgba(124, 92, 255, 0.40);
+  --udt-shadow-glass: 4px 4px 0 #7c5cff;
+  --udt-shadow-toast: 4px 4px 0 rgba(23, 21, 31, 0.92), 6px 6px 0 rgba(124, 108, 255, 0.55);
 }
 
-:root[data-theme='light'][data-style='anime'] body {
-  background:
-    radial-gradient(640px 420px at 8% -6%, rgba(255, 182, 222, 0.35), transparent 62%),
-    radial-gradient(520px 380px at 96% 4%, rgba(196, 168, 255, 0.22), transparent 60%),
-    radial-gradient(600px 420px at 50% 108%, rgba(163, 216, 255, 0.20), transparent 58%),
-    var(--udt-surface-window);
+:root[data-theme='light'][data-style='neubrutalism'] body {
+  background-image: radial-gradient(rgba(23, 21, 31, 0.10) 1.2px, transparent 1.3px);
+  background-size: 22px 22px;
 }
 
-/* Tinted scrollbar thumbs per combination. */
-:root[data-style='anime'] ::-webkit-scrollbar-thumb {
-  background: rgba(255, 158, 207, 0.35);
+/* Hard square-ish scrollbar thumbs per combination. */
+:root[data-style='neubrutalism'] ::-webkit-scrollbar-thumb {
+  background: rgba(124, 108, 255, 0.65);
+  border-radius: 2px;
 }
 
-:root[data-theme='light'][data-style='anime'] ::-webkit-scrollbar-thumb {
-  background: rgba(240, 98, 166, 0.40);
+:root[data-theme='light'][data-style='neubrutalism'] ::-webkit-scrollbar-thumb {
+  background: rgba(23, 21, 31, 0.38);
+  border-radius: 2px;
+}
+
+/* Chunky card edges + resting hard shadows: the offset plate IS the
+   neo-brutalist signature and must exist at rest (native card styles only
+   shadow on hover). Hover lifts onto the stacked medium plates. Covers both
+   the shared .udt-card and the dashboard .udt-parity-feature-card.
+   A faint neumorphic top-left inner highlight rides along in dark mode. */
+:root[data-style='neubrutalism'] .udt-card,
+:root[data-style='neubrutalism'] .udt-parity-feature-card {
+  border-width: 2px;
+  border-color: rgba(237, 237, 244, 0.85);
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-card,
+:root[data-theme='light'][data-style='neubrutalism'] .udt-parity-feature-card {
+  border-color: #17151f;
+}
+
+:root[data-theme='dark'][data-style='neubrutalism'] .udt-card,
+:root[data-theme='dark'][data-style='neubrutalism'] .udt-parity-feature-card {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--udt-shadow-low);
+}
+
+:root[data-style='neubrutalism'] .udt-card:hover,
+:root[data-style='neubrutalism'] .udt-parity-feature-card:hover {
+  box-shadow: var(--udt-shadow-medium);
+}
+
+:root[data-theme='dark'][data-style='neubrutalism'] .udt-card:hover,
+:root[data-theme='dark'][data-style='neubrutalism'] .udt-parity-feature-card:hover {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--udt-shadow-medium);
 }
 
 *,
