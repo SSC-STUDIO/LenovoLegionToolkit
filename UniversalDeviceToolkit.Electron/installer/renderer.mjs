@@ -45,6 +45,14 @@ function windowsIcon() {
   return `<svg class="platform-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 4.5 10.8 3.3v8.4H2V4.5Zm10.1-1.4L22 1.7v10h-9.9V3.1ZM2 12.9h8.8v8.4L2 20.1v-7.2Zm10.1 0H22v10l-9.9-1.4v-8.6Z" fill="currentColor"/></svg>`
 }
 
+function minimizeIcon() {
+  return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M0 5h10" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>`
+}
+
+function closeIcon() {
+  return `<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 1l8 8m0-8l-8 8" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>`
+}
+
 function accentForeground(accent) {
   const weights = [0.2126, 0.7152, 0.0722]
   const luminance = [1, 3, 5]
@@ -72,7 +80,7 @@ function shell() {
     ? `<div class="brand-logo-frame"><img class="brand-logo" src="${escapeHtml(info.logoData)}" alt="Universal Device Toolkit" /></div>`
     : '<div class="brand-mark" aria-label="Universal Device Toolkit">U</div>'
   return `<div class="window">
-    <div class="titlebar"><div class="window-controls"><button data-action="minimize" aria-label="最小化">—</button><button class="close" data-action="close" aria-label="关闭">×</button></div></div>
+    <div class="titlebar"><div class="window-controls"><button data-action="minimize" aria-label="最小化">${minimizeIcon()}</button><button class="close" data-action="close" aria-label="关闭">${closeIcon()}</button></div></div>
     <aside class="brand-panel"><div class="brand-content">
       ${logo}
       <h1 class="brand-name">Universal Device Toolkit</h1><div class="brand-rule"></div><div class="brand-version">${escapeHtml(info.version)}</div>

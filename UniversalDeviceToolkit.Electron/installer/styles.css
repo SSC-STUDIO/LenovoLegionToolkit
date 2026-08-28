@@ -54,23 +54,34 @@ button { border: 0; color: inherit; cursor: pointer; }
   width: 100%;
   height: 100%;
   overflow: hidden;
-  border: 1px solid var(--window-border);
-  border-radius: 18px;
+  border: 0;
+  border-radius: 0;
   background: var(--bg);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, .55);
 }
 
 .titlebar {
   position: absolute;
   inset: 0 0 auto 0;
   z-index: 10;
-  height: 54px;
+  height: 44px;
   -webkit-app-region: drag;
 }
-.window-controls { position: absolute; top: 0; right: 10px; display: flex; -webkit-app-region: no-drag; }
-.window-controls button { width: 48px; height: 44px; background: transparent; color: var(--muted); font-size: 21px; }
-.window-controls button:hover { background: color-mix(in srgb, var(--text) 8%, transparent); }
-.window-controls .close:hover { background: #d92232; color: #fff; }
+.window-controls { position: absolute; top: 0; right: 0; display: flex; -webkit-app-region: no-drag; }
+.window-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 36px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  padding: 0;
+  border: 0;
+  transition: background .12s, color .12s;
+}
+.window-controls button:hover { background: color-mix(in srgb, var(--text) 8%, transparent); color: var(--text); }
+.window-controls .close:hover { background: #e81123; color: #fff; }
 
 .brand-panel {
   position: relative;
