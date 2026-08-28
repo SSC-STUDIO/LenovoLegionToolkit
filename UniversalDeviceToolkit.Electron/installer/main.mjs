@@ -1,10 +1,21 @@
+process.noAsar = true
+
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, shell, systemPreferences } from 'electron'
-import { promises as fs } from 'node:fs'
+import * as nodeFs from 'node:fs'
 import { execFile, spawn } from 'node:child_process'
 import { promisify } from 'node:util'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { featureFlag, isNetworkProxySidecarFile, normalizeFeatures } from './features.mjs'
+
+let originalFs = null
+try {
+  const mod = await import('original-fs')
+  originalFs = mod.default || mod
+} catch {
+  // Pure node environment / test runner
+}
+const fs = originalFs?.promises ?? nodeFs.promises
 
 const execFileAsync = promisify(execFile)
 const installerRoot = dirname(fileURLToPath(import.meta.url))
@@ -369,10 +380,16 @@ nativeTheme.themeSource = previewThemeMode ?? 'system'
 nativeTheme.on('updated', broadcastTheme)
 systemPreferences.on('color-changed', broadcastTheme)
 systemPreferences.on('accent-color-changed', broadcastTheme)
-app.whenReady().then(() => {
-  if (!app.requestSingleInstanceLock()) {
-    app.quit()
-    return
-  }
-  createWindow()
-})
+const gotLock = app.requestSingleInstanceLock()
+if (!gotLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      if (mainWindow.isMinimized()) mainWindow.restore()
+      mainWindow.show()
+      mainWindow.focus()
+    }
+  })
+  app.whenReady().then(createWindow)
+}

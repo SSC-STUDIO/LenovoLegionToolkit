@@ -23,7 +23,7 @@ win:
         - x64
 portable:
   artifactName: UniversalDeviceToolkitSetup-${version}.${ext}
-compression: maximum
+compression: normal
 # The installer shell has no Chromium-localized UI; its own copy of Electron
 # only needs the fallback locale. The embedded application payload retains its
 # independently audited 24 Chromium locales.
