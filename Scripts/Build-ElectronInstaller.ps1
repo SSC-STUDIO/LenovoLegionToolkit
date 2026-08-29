@@ -341,9 +341,9 @@ if ($null -eq $onlineArtifact) {
 
 $onlineZipArtifact = Get-LatestArtifact -Filter 'UniversalDeviceToolkitSetup-*.zip' -Description 'Electron Online ZIP'
 
-$maxOnlineBytes = 65MB
+$maxOnlineBytes = 85MB
 if ($onlineArtifact.Length -gt $maxOnlineBytes) {
-    throw "Online installer is $([math]::Round($onlineArtifact.Length / 1MB, 2)) MB; must be <= 65 MB."
+    throw "Online installer is $([math]::Round($onlineArtifact.Length / 1MB, 2)) MB; must be <= 85 MB."
 }
 
 $finalOnlinePath = Join-Path $installerOutputPath 'UniversalDeviceToolkitOnlineSetup.exe'

@@ -2095,3 +2095,48 @@ select.udt-select {
 :root[data-theme='light'][data-style='neubrutalism'] .udt-app-shell__content {
   border-color: #17151f;
 }
+/* Layer 4b - switches (antd Switch + ToggleSwitch). Both become blocky
+   brutalist toggles: hard stroked squared track, square thumb with a tiny
+   hard offset shadow, accent fill when on. Light combo pins near-black. */
+
+:root[data-style='neubrutalism'] .ant-switch {
+  border: 1.5px solid var(--udt-control-stroke-strong) !important;
+  border-radius: 3px;
+  background: var(--udt-control-fill-secondary) !important;
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-style='neubrutalism'] .ant-switch-checked {
+  border-color: var(--udt-control-stroke-strong) !important;
+  background: var(--udt-accent) !important;
+}
+
+:root[data-style='neubrutalism'] .ant-switch-handle {
+  border-radius: 2px;
+}
+
+:root[data-style='neubrutalism'] .ant-switch-handle::before {
+  border-radius: 2px;
+  background: var(--udt-surface-window);
+  box-shadow: var(--udt-skeleton-plate-shadow, 1.5px 1.5px 0 rgba(124, 108, 255, 0.55));
+}
+
+:root[data-style='neubrutalism'] .udt-switch__track {
+  border: 1.5px solid var(--udt-control-stroke-strong);
+  border-radius: 3px;
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-style='neubrutalism'] .udt-switch__track::after {
+  border-radius: 2px;
+  box-shadow: var(--udt-skeleton-plate-shadow, 1.5px 1.5px 0 rgba(124, 108, 255, 0.55));
+}
+
+:root[data-style='neubrutalism'] .udt-switch input:checked + .udt-switch__track {
+  border-color: var(--udt-control-stroke-strong);
+  background: var(--udt-accent);
+}
+
+:root[data-style='neubrutalism'] .udt-switch input:checked + .udt-switch__track::after {
+  background: var(--udt-surface-window);
+}
