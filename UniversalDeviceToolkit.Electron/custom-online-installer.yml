@@ -1,0 +1,29 @@
+﻿appId: com.universaldevicetoolkit.onlineinstaller
+productName: Universal Device Toolkit Online Setup
+copyright: Universal Device Toolkit Contributors
+directories:
+  output: dist/custom-online-installer
+  buildResources: buildResources
+files:
+  - installer/**
+  - package.json
+extraResources:
+  - from: resources/icon.png
+    to: installer-assets/icon.png
+win:
+  icon: buildResources/icon.ico
+  requestedExecutionLevel: requireAdministrator
+  target:
+    - target: portable
+      arch:
+        - x64
+portable:
+  artifactName: UniversalDeviceToolkitOnlineSetup-.
+  requestExecutionLevel: admin
+compression: normal
+electronLanguages:
+  - en-US
+asar: true
+beforeBuild: ./scripts/installer-builder-hooks.mjs
+extraMetadata:
+  main: installer/main.mjs

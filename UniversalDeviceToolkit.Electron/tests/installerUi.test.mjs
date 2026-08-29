@@ -90,6 +90,11 @@ test('custom installer feature page persists optional modules and can omit Netwo
   assert.match(styleSource, /\.feature-groups\s*\{/)
 })
 
+const customOnlineInstallerConfig = readFileSync(
+  fileURLToPath(new URL('../custom-online-installer.yml', import.meta.url)),
+  'utf8'
+)
+
 test('custom installer rebuilds its application payload before packaging', () => {
   const payloadBuild = buildScriptSource.indexOf("'electron-builder.yml', '--win', 'dir'")
   const installerBuild = buildScriptSource.indexOf("'custom-installer.yml', '--win', 'portable'")
@@ -97,5 +102,8 @@ test('custom installer rebuilds its application payload before packaging', () =>
   assert.ok(installerBuild > payloadBuild)
   assert.match(customInstallerConfig, /beforeBuild:\s*\.\/scripts\/installer-builder-hooks\.mjs/)
   assert.match(customInstallerConfig, /requestExecutionLevel:\s*admin/)
+  assert.match(customOnlineInstallerConfig, /requestExecutionLevel:\s*admin/)
+  assert.match(mainSource, /downloadPayloadArchive/)
+  assert.match(mainSource, /extractPayloadArchive/)
   assert.match(builderHookSource, /return false/)
 })

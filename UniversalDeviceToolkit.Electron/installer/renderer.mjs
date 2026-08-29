@@ -84,7 +84,7 @@ function shell() {
     <aside class="brand-panel"><div class="brand-content">
       ${logo}
       <h1 class="brand-name">Universal Device Toolkit</h1><div class="brand-rule"></div><div class="brand-version">${escapeHtml(info.version)}</div>
-      <div class="brand-badges"><div class="brand-badge">${windowsIcon()}<span>${escapeHtml(info.architecture)}</span></div><div class="brand-badge"><span class="dot"></span> 本地运行</div></div>
+      <div class="brand-badges"><div class="brand-badge">${windowsIcon()}<span>${escapeHtml(info.architecture)}</span></div><div class="brand-badge"><span class="dot"></span> ${info.isOnline ? '在线安装' : '本地运行'}</div></div>
     </div></aside>
     <main class="content-panel"><div class="content-inner">${renderPage(info)}</div></main>
   </div>`

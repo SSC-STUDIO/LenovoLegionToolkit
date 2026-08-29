@@ -1887,3 +1887,134 @@
 }
 
 
+
+/* ── Neo-brutalism skin (data-style="neubrutalism") ─────────────
+   Settings chrome: cards and the internal page navigation become outlined
+   plates with hard offset shadows; inputs / switches square off; preview
+   cards drop the soft glow for hard strokes. Light combo pins near-black. */
+
+:root[data-style='neubrutalism'] .udt-settings-card {
+  border: 2px solid var(--udt-control-stroke-strong);
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-settings-card {
+  border-color: #17151f;
+}
+
+:root[data-style='neubrutalism'] .udt-settings-card--action:hover {
+  filter: none;
+  border-color: var(--udt-control-stroke-strong);
+  box-shadow: var(--udt-shadow-medium);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-settings-card--action:hover {
+  border-color: #17151f;
+}
+
+/* Internal settings navigation: same plate language as the main rail. */
+:root[data-style='neubrutalism'] .udt-settings-nav-item {
+  border: 1px solid var(--udt-control-stroke-secondary);
+  background: var(--udt-control-fill-tertiary);
+}
+
+:root[data-style='neubrutalism'] .udt-settings-nav-item:hover {
+  background: var(--udt-control-fill-secondary);
+  border-color: var(--udt-control-stroke-strong);
+}
+
+:root[data-style='neubrutalism'] .udt-settings-nav-item--active {
+  background: var(--udt-accent);
+  border-color: var(--udt-control-stroke-strong);
+  box-shadow: var(--udt-shadow-low);
+  color: var(--udt-accent-text);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-settings-nav-item--active {
+  border-color: #17151f;
+}
+
+:root[data-style='neubrutalism'] .udt-settings-nav-item--active .udt-settings-nav-item__icon {
+  color: var(--udt-accent-text);
+}
+
+:root[data-style='neubrutalism'] .udt-settings-nav-item__accent {
+  width: 5px;
+  border-radius: 0;
+}
+
+:root[data-style='neubrutalism'] .udt-settings-nav-item--active .udt-settings-nav-item__accent {
+  background: var(--udt-accent-text);
+}
+
+/* Inputs square off with heavier strokes. */
+:root[data-style='neubrutalism'] .udt-settings-row .ant-input {
+  border: 1.5px solid var(--udt-control-stroke-secondary);
+  background: var(--udt-control-fill-tertiary);
+}
+
+:root[data-style='neubrutalism'] .udt-settings-row .ant-input:focus,
+:root[data-style='neubrutalism'] .udt-settings-row .ant-input-focused {
+  border-color: var(--udt-accent);
+}
+
+/* Switch: blocky track + square handle. */
+:root[data-style='neubrutalism'] .udt-settings-switch.ant-switch {
+  border: 1.5px solid var(--udt-control-stroke-strong);
+  border-radius: 3px;
+  background: var(--udt-control-fill-secondary);
+}
+
+:root[data-style='neubrutalism'] .udt-settings-switch.ant-switch.ant-switch-checked {
+  background: var(--udt-accent);
+}
+
+:root[data-style='neubrutalism'] .udt-settings-switch.ant-switch .ant-switch-handle {
+  border-radius: 1px;
+}
+
+/* Primary check button: keep the accent fill, add the hard plate. */
+:root[data-style='neubrutalism'] .udt-settings-check-button.ant-btn-primary {
+  border: 2px solid var(--udt-control-stroke-strong);
+  box-shadow: var(--udt-shadow-low);
+}
+
+/* Theme / style preview cards: hard strokes instead of soft glow. */
+:root[data-style='neubrutalism'] .udt-theme-option__preview,
+:root[data-style='neubrutalism'] .udt-style-option__preview {
+  border: 2px solid var(--udt-control-stroke-strong);
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-theme-option__preview,
+:root[data-theme='light'][data-style='neubrutalism'] .udt-style-option__preview {
+  border-color: #17151f;
+}
+
+:root[data-style='neubrutalism'] .udt-theme-option:hover:not(:disabled) .udt-theme-option__preview,
+:root[data-style='neubrutalism'] .udt-style-option:hover:not(:disabled) .udt-style-option__preview {
+  transform: none;
+  box-shadow: var(--udt-shadow-medium);
+}
+
+:root[data-style='neubrutalism'] .udt-theme-option--selected .udt-theme-option__preview,
+:root[data-style='neubrutalism'] .udt-style-option--selected .udt-style-option__preview {
+  border-color: var(--udt-accent);
+  box-shadow: var(--udt-shadow-medium);
+}
+
+/* Accent swatches: square chips with a hard selected ring. */
+:root[data-style='neubrutalism'] .udt-settings-swatch {
+  border: 1px solid var(--udt-control-stroke-secondary);
+  border-radius: var(--udt-radius-micro);
+}
+
+:root[data-style='neubrutalism'] .udt-settings-swatch--selected {
+  border: 3px solid var(--udt-accent);
+  border-radius: var(--udt-radius-micro);
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-settings-swatch--selected {
+  border-color: #17151f;
+}

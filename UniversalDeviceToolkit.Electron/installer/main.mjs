@@ -43,9 +43,7 @@ async function resolvePayloadRoot() {
     join(appDir, '..', 'payload'),
     join(projectRoot, 'dist', 'win-unpacked'),
     join(projectRoot, 'dist', 'custom-installer', 'win-unpacked', 'resources', 'payload'),
-    join(projectRoot, '..', 'BuildInstallerPayload', 'full'),
-    join(projectRoot, '..', 'BuildInstallerPayload', 'online'),
-    join(projectRoot, '..', 'Build')
+    join(projectRoot, '..', 'BuildInstallerPayload', 'full')
   ]
   for (const candidate of candidates) {
     try {
@@ -55,7 +53,7 @@ async function resolvePayloadRoot() {
       // Continue checking
     }
   }
-  return join(process.resourcesPath, 'payload')
+  return null
 }
 
 async function resolveLogoData() {
@@ -245,11 +243,108 @@ async function removeUninstallRegistration() {
   }
 }
 
+async function downloadPayloadArchive(version, destinationFile) {
+  const assetName = `UniversalDeviceToolkit_v${version}_Online_win-x64.zip`
+  const mirrors = [
+    `https://ghfast.top/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${version}/${assetName}`,
+    `https://ghproxy.net/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${version}/${assetName}`,
+    `https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${version}/${assetName}`
+  ]
+
+  let lastError = null
+  for (let i = 0; i < mirrors.length; i++) {
+    const url = mirrors[i]
+    try {
+      emitProgress({
+        phase: 'downloading',
+        percent: 0,
+        completedBytes: 0,
+        totalBytes: 180 * 1024 * 1024,
+        speed: '连接中...',
+        file: `正在连接下载节点 (${i + 1}/${mirrors.length})...`,
+        message: '正在准备下载核心应用包...'
+      })
+
+      const response = await fetch(url, { redirect: 'follow' })
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} ${response.statusText}`)
+      }
+
+      const contentLength = Number(response.headers.get('content-length')) || 0
+      const totalBytes = contentLength > 0 ? contentLength : 180 * 1024 * 1024
+      const fileStream = nodeFs.createWriteStream(destinationFile)
+      const reader = response.body.getReader()
+      let completedBytes = 0
+      let lastTime = Date.now()
+      let lastCompleted = 0
+      let currentSpeed = '0.0 MB/s'
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        fileStream.write(Buffer.from(value))
+        completedBytes += value.length
+
+        const now = Date.now()
+        if (now - lastTime >= 250) {
+          const deltaSec = (now - lastTime) / 1000
+          const deltaBytes = completedBytes - lastCompleted
+          const mbPerSec = (deltaBytes / (1024 * 1024)) / deltaSec
+          currentSpeed = `${mbPerSec.toFixed(1)} MB/s`
+          lastTime = now
+          lastCompleted = completedBytes
+
+          const percent = Math.min(100, totalBytes > 0 ? (completedBytes / totalBytes) * 100 : 0)
+          emitProgress({
+            phase: 'downloading',
+            percent,
+            completedBytes,
+            totalBytes,
+            speed: currentSpeed,
+            file: `正在下载核心应用包 (${percent.toFixed(0)}%)`,
+            message: `${(completedBytes / (1024 * 1024)).toFixed(1)} MB / ${(totalBytes / (1024 * 1024)).toFixed(1)} MB (${currentSpeed})`
+          })
+        }
+      }
+
+      await new Promise((resolve, reject) => {
+        fileStream.end(resolve)
+        fileStream.on('error', reject)
+      })
+
+      return true
+    } catch (error) {
+      lastError = error
+      try { await fs.rm(destinationFile, { force: true }) } catch {}
+    }
+  }
+  throw lastError ?? new Error('所有在线下载节点连接失败，请检查网络设置或代理。')
+}
+
+async function extractPayloadArchive(archivePath, destination) {
+  emitProgress({
+    phase: 'extracting',
+    percent: 0,
+    file: '正在解压核心组件...',
+    message: '正在解压并准备应用运行环境...'
+  })
+  await fs.mkdir(destination, { recursive: true })
+  try {
+    await execFileAsync('tar', ['-xf', archivePath, '-C', destination], { windowsHide: true })
+  } catch {
+    await execFileAsync('powershell.exe', [
+      '-NoProfile',
+      '-ExecutionPolicy',
+      'Bypass',
+      '-Command',
+      `Expand-Archive -LiteralPath '${archivePath}' -DestinationPath '${destination}' -Force`
+    ], { windowsHide: true })
+  }
+}
+
 async function installApplication(options) {
   if (setupIsPreview) throw new Error('Preview mode does not install files.')
   if (isInstalling) throw new Error('Installation is already in progress.')
-  const payloadRoot = await resolvePayloadRoot()
-  if (!payloadRoot) throw new Error('The embedded application payload is missing.')
   const destination = resolve(String(options?.destination ?? ''))
   const language = String(options?.language ?? '')
   const deviceMode = String(options?.deviceMode ?? '')
@@ -261,7 +356,32 @@ async function installApplication(options) {
   isInstalling = true
   try {
     emitProgress({ phase: 'preparing', percent: 0, file: '' })
-    await copyPayload(destination, features)
+    const payloadRoot = await resolvePayloadRoot()
+    if (payloadRoot) {
+      await copyPayload(destination, features)
+    } else {
+      const version = await displayVersion()
+      const tempArchive = join(app.getPath('temp'), `udt-payload-${version}-${Date.now()}.zip`)
+      try {
+        await downloadPayloadArchive(version, tempArchive)
+        await extractPayloadArchive(tempArchive, destination)
+      } finally {
+        try { await fs.rm(tempArchive, { force: true }) } catch {}
+      }
+      if (!features.networkAcceleration) {
+        const sidecars = [
+          join(destination, 'resources', 'host', 'UniversalDeviceToolkit.NetworkProxy.exe'),
+          join(destination, 'resources', 'host', 'UniversalDeviceToolkit.NetworkProxy.dll'),
+          join(destination, 'resources', 'host', 'UniversalDeviceToolkit.NetworkProxy.runtimeconfig.json'),
+          join(destination, 'resources', 'host', 'UniversalDeviceToolkit.NetworkProxy.deps.json'),
+          join(destination, 'resources', 'host', 'UniversalDeviceToolkit.NetworkProxy.pdb')
+        ]
+        for (const file of sidecars) {
+          try { await fs.rm(file, { force: true }) } catch {}
+        }
+      }
+    }
+
     await writeSelection(destination, language, deviceMode, features)
 
     const installedExe = join(destination, 'UniversalDeviceToolkit.exe')
@@ -336,6 +456,7 @@ ipcMain.handle('installer:info', async () => {
   const payloadRoot = await resolvePayloadRoot()
   const payloadFiles = payloadRoot ? await collectFiles(payloadRoot).catch(() => []) : []
   const payloadSize = payloadFiles.reduce((sum, file) => sum + file.size, 0)
+  const isOnline = payloadRoot === null
   const stats = await directoryStats(dirname(defaultInstallPath()))
   const logoData = await resolveLogoData()
   return {
@@ -343,10 +464,11 @@ ipcMain.handle('installer:info', async () => {
     defaultPath: defaultInstallPath(),
     availableBytes: stats.available,
     totalBytes: stats.total,
-    payloadBytes: payloadSize,
+    payloadBytes: payloadSize || 450 * 1024 * 1024,
     architecture: process.arch === 'x64' ? 'Windows x64' : `Windows ${process.arch}`,
     isUninstaller: setupIsUninstaller,
     isPreview: setupIsPreview,
+    isOnline,
     platform: process.platform,
     logoData,
     theme: themeInfo()

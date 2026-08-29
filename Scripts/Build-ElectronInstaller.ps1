@@ -48,6 +48,7 @@ $channelFile = Join-Path $electronProject 'resources\install-channel'
 $distDir = Join-Path $electronProject 'dist'
 $unpackedDir = Join-Path $distDir 'win-unpacked'
 $customDistDir = Join-Path $distDir 'custom-installer'
+$customOnlineDistDir = Join-Path $distDir 'custom-online-installer'
 $payloadOutputPath = if ([System.IO.Path]::IsPathRooted($PayloadOutput)) {
     $PayloadOutput
 }
@@ -276,9 +277,14 @@ try {
         try {
             $env:ELECTRON_BUILDER_NSIS_DIR = $nsisToolsetDir
 
-            & npx electron-builder --config custom-installer.yml --win portable --prepackaged $installerShellDir --publish never
+            & npx electron-builder --config custom-installer.yml --win portable --publish never
             if ($LASTEXITCODE -ne 0) {
-                throw 'Custom Electron installer failed.'
+                throw 'Custom Electron Full installer failed.'
+            }
+
+            & npx electron-builder --config custom-online-installer.yml --win portable --publish never
+            if ($LASTEXITCODE -ne 0) {
+                throw 'Custom Electron Online installer failed.'
             }
 
             Invoke-ElectronWinTarget -Target 'zip' -PrepackagedPath $fullPayloadDir
@@ -291,7 +297,6 @@ try {
             Remove-Item -LiteralPath $fullZipArtifact.FullName -Force
 
             Invoke-ElectronWinTarget -Target 'zip' -PrepackagedPath $onlinePayloadDir
-            Invoke-ElectronWinTarget -Target 'nsis-web' -PrepackagedPath $onlinePayloadDir
         }
         finally {
             if ($null -eq $previousNsisToolset) {
@@ -313,7 +318,7 @@ if (-not $runPackagePreparedPayloads) {
 
 # Locate the produced custom full setup artifact.
 # Full (offline) uses the portable custom setup app.
-# Online (nsis-web stub) uses UniversalDeviceToolkitOnlineSetup-*.exe
+# Online uses the portable custom online setup app.
 $customSetupArtifact = Get-ChildItem -LiteralPath $customDistDir -Filter 'UniversalDeviceToolkitSetup-*.exe' -ErrorAction SilentlyContinue |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1
@@ -326,24 +331,24 @@ $finalSetupPath = Join-Path $installerOutputPath 'UniversalDeviceToolkitSetup.ex
 Copy-Item -LiteralPath $customSetupArtifact.FullName -Destination $finalSetupPath -Force
 Write-Host "Custom Electron Full installer built: $finalSetupPath ($([math]::Round($customSetupArtifact.Length / 1MB, 1)) MB)"
 
-$onlineArtifact = Get-ChildItem -LiteralPath $distDir -Filter 'UniversalDeviceToolkitOnlineSetup-*.exe' -Recurse -ErrorAction SilentlyContinue |
+$onlineArtifact = Get-ChildItem -LiteralPath $customOnlineDistDir -Filter 'UniversalDeviceToolkitOnlineSetup-*.exe' -ErrorAction SilentlyContinue |
     Sort-Object LastWriteTime -Descending |
     Select-Object -First 1
 
 if ($null -eq $onlineArtifact) {
-    throw "NSIS Online (nsis-web) setup artifact not found under '$distDir'."
+    throw "Custom Online setup artifact not found under '$customOnlineDistDir'."
 }
 
 $onlineZipArtifact = Get-LatestArtifact -Filter 'UniversalDeviceToolkitSetup-*.zip' -Description 'Electron Online ZIP'
 
-$maxOnlineBytes = 15MB
+$maxOnlineBytes = 65MB
 if ($onlineArtifact.Length -gt $maxOnlineBytes) {
-    throw "Online installer is $([math]::Round($onlineArtifact.Length / 1MB, 2)) MB; must be <= 15 MB."
+    throw "Online installer is $([math]::Round($onlineArtifact.Length / 1MB, 2)) MB; must be <= 65 MB."
 }
 
 $finalOnlinePath = Join-Path $installerOutputPath 'UniversalDeviceToolkitOnlineSetup.exe'
 Copy-Item -LiteralPath $onlineArtifact.FullName -Destination $finalOnlinePath -Force
-Write-Host "Electron Online installer built: $finalOnlinePath ($([math]::Round($onlineArtifact.Length / 1MB, 2)) MB)"
+Write-Host "Custom Electron Online installer built: $finalOnlinePath ($([math]::Round($onlineArtifact.Length / 1MB, 2)) MB)"
 
 $onlineZipPath = Join-Path $installerOutputPath "UniversalDeviceToolkit_v${Version}_Online_win-x64.zip"
 Copy-Item -LiteralPath $onlineZipArtifact.FullName -Destination $onlineZipPath -Force

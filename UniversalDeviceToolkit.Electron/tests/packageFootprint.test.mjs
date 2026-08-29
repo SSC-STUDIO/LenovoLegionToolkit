@@ -163,7 +163,7 @@ test('artifact auditor applies full and Online package budgets', async () => {
     await onlineHandle.close()
 
     await assert.rejects(auditArtifactFiles([fullArtifact], root), /budget is 185 MiB/)
-    await assert.rejects(auditArtifactFiles([onlineArtifact], root), /budget is 15 MiB/)
+    await assert.rejects(auditArtifactFiles([onlineArtifact], root), /budget is 65 MiB/)
   } finally {
     await rm(root, { recursive: true, force: true })
   }
