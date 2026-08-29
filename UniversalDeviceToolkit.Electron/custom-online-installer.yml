@@ -1,4 +1,4 @@
-﻿appId: com.universaldevicetoolkit.onlineinstaller
+appId: com.universaldevicetoolkit.onlineinstaller
 productName: Universal Device Toolkit Online Setup
 copyright: Universal Device Toolkit Contributors
 directories:
@@ -18,7 +18,7 @@ win:
       arch:
         - x64
 portable:
-  artifactName: UniversalDeviceToolkitOnlineSetup-.
+  artifactName: UniversalDeviceToolkitOnlineSetup-${version}.${ext}
   requestExecutionLevel: admin
 compression: normal
 electronLanguages:
