@@ -33,18 +33,19 @@ const previewAccentColor = setupIsPreview && /^#[0-9a-f]{6}$/i.test(previewAccen
 async function resolvePayloadRoot() {
   const exeDir = dirname(process.execPath)
   const appDir = app.getAppPath()
-  const candidates = [
-    join(process.resourcesPath, 'payload'),
-    join(exeDir, 'resources', 'payload'),
-    join(exeDir, 'app', 'resources', 'payload'),
-    join(exeDir, '..', 'resources', 'payload'),
-    join(appDir, 'resources', 'payload'),
-    join(appDir, '..', 'resources', 'payload'),
-    join(appDir, '..', 'payload'),
-    join(projectRoot, 'dist', 'win-unpacked'),
-    join(projectRoot, 'dist', 'custom-installer', 'win-unpacked', 'resources', 'payload'),
-    join(projectRoot, '..', 'BuildInstallerPayload', 'full')
-  ]
+  const candidates = app.isPackaged
+    ? [
+        join(process.resourcesPath, 'payload'),
+        join(exeDir, 'resources', 'payload')
+      ]
+    : [
+        join(process.resourcesPath, 'payload'),
+        join(exeDir, 'resources', 'payload'),
+        join(appDir, 'resources', 'payload'),
+        join(projectRoot, 'dist', 'win-unpacked'),
+        join(projectRoot, 'dist', 'custom-installer', 'win-unpacked', 'resources', 'payload'),
+        join(projectRoot, '..', 'BuildInstallerPayload', 'full')
+      ]
   for (const candidate of candidates) {
     try {
       const stats = await fs.stat(join(candidate, 'UniversalDeviceToolkit.exe'))

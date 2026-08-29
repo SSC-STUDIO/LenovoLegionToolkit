@@ -127,7 +127,7 @@ function renderWelcome(info) {
       <div class="path-row"><input id="destination" class="path-input" value="${escapeHtml(state.destination)}" spellcheck="false"/><button class="button-secondary" data-action="browse">浏览</button></div>
       <div class="space-card"><div class="space-item"><div class="space-label">需要空间</div><div class="space-value">${formatBytes(info.payloadBytes)}</div></div><div class="space-item"><div class="space-label">可用空间</div><div class="space-value">${formatBytes(info.availableBytes)}</div></div></div>
       <div class="info-card admin"><span class="info-icon">i</span><span>需要管理员权限</span></div>
-    </section>${renderError()}${footer('下一步', false)}`
+    </section>${renderError()}<div class="footer"><button class="button-secondary" data-action="close">取消</button><button class="button-secondary" data-action="next">自定义选项</button><button class="button-primary" data-action="quick-install">立即安装</button></div>`
 }
 
 function renderLanguage() {
@@ -190,6 +190,31 @@ function render() {
   if (state.page === 'welcome') document.querySelector('#destination')?.focus()
 }
 
+async function startInstall() {
+  state.error = ''
+  state.features = normalizeFeatures(state.features)
+  state.page = 'install'
+  state.installing = true
+  render()
+  try {
+    const result = await api.install({
+      destination: state.destination,
+      language: state.language,
+      deviceMode: state.deviceMode,
+      features: state.features
+    })
+    state.installedExecutable = result.executable
+    state.installing = false
+    state.page = 'complete'
+    render()
+  } catch (error) {
+    state.installing = false
+    state.page = 'welcome'
+    state.error = error instanceof Error ? error.message : String(error)
+    render()
+  }
+}
+
 async function next() {
   state.error = ''
   if (state.page === 'welcome') {
@@ -199,27 +224,7 @@ async function next() {
   } else if (state.page === 'language') state.page = 'device'
   else if (state.page === 'device') state.page = 'features'
   else if (state.page === 'features') {
-    state.features = normalizeFeatures(state.features)
-    state.page = 'install'
-    state.installing = true
-    render()
-    try {
-      const result = await api.install({
-        destination: state.destination,
-        language: state.language,
-        deviceMode: state.deviceMode,
-        features: state.features
-      })
-      state.installedExecutable = result.executable
-      state.installing = false
-      state.page = 'complete'
-      render()
-    } catch (error) {
-      state.installing = false
-      state.page = 'features'
-      state.error = error instanceof Error ? error.message : String(error)
-      render()
-    }
+    await startInstall()
     return
   }
   render()
@@ -250,6 +255,10 @@ appRoot.addEventListener('click', async (event) => {
   else if (target.dataset.action === 'browse') {
     const selected = await api.chooseDirectory()
     if (selected) { state.destination = selected; render() }
+  } else if (target.dataset.action === 'quick-install') {
+    state.destination = document.querySelector('#destination')?.value.trim() || state.destination
+    if (!state.destination) { state.error = '请选择安装位置。'; render(); return }
+    await startInstall()
   } else if (target.dataset.action === 'next') await next()
   else if (target.dataset.action === 'back') back()
   else if (target.dataset.action === 'launch') { await api.launch(state.installedExecutable); api.close() }
