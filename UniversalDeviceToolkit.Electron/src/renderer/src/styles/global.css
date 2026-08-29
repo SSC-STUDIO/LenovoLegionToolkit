@@ -308,6 +308,7 @@
   --udt-radius-md: 6px;
   --udt-radius-card: 10px;
   --udt-radius-surface: 12px;
+  --udt-radius-progress: 2px;
 }
 
 /* Layer 3 - light combination (warm paper with signature black hard shadows).
@@ -2078,4 +2079,19 @@ select.udt-select {
   background: color-mix(in srgb, var(--udt-surface-card) 72%, transparent);
   backdrop-filter: blur(30px) saturate(1.5);
   -webkit-backdrop-filter: blur(30px) saturate(1.5);
+}
+
+/* Layer 4 - shell chrome (appended: wins cascade ties over the base rules
+   above without needing !important). The content pane takes the full
+   brutalist frame; the navigation rail lives in NavigationParity.css and
+   sensor chrome in sensor.css. */
+
+:root[data-style='neubrutalism'] .udt-app-shell__content {
+  border: 2px solid var(--udt-control-stroke-strong);
+  border-right: 0;
+  border-bottom: 0;
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-app-shell__content {
+  border-color: #17151f;
 }

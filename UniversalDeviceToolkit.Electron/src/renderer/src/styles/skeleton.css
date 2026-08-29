@@ -362,3 +362,39 @@
     outline-offset: -1px;
   }
 }
+
+/* ── Neo-brutalism (data-style="neubrutalism"): bones are static outlined
+   blocks — the shimmer sweep and reveal keyframes are Fluent decoration,
+   and the brutalist skin keeps decoration fully static. Geometry follows
+   the squared brutalist tokens from global.css. */
+
+:root[data-style='neubrutalism'] .udt-skeleton {
+  animation: none;
+  box-shadow: inset 0 0 0 1px var(--udt-control-stroke-secondary);
+}
+
+:root[data-style='neubrutalism'] .udt-skeleton::after {
+  display: none;
+}
+
+:root[data-style='neubrutalism'] .udt-skeleton--static {
+  opacity: 1;
+}
+
+:root[data-style='neubrutalism'] .udt-skeleton-gauge {
+  border-radius: var(--udt-radius-small);
+}
+
+:root[data-style='neubrutalism'] .udt-skeleton-gauge__track,
+:root[data-style='neubrutalism'] .udt-skeleton-gauge__arc {
+  stroke-linecap: butt;
+}
+
+:root[data-style='neubrutalism'] .udt-skeleton-metric-bar,
+:root[data-style='neubrutalism'] .udt-skeleton-chart-well {
+  border-radius: var(--udt-radius-small);
+}
+
+:root[data-style='neubrutalism'] .udt-skeleton-reveal {
+  animation: none;
+}
