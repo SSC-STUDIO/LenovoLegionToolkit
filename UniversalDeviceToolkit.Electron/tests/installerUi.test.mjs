@@ -96,5 +96,6 @@ test('custom installer rebuilds its application payload before packaging', () =>
   assert.ok(payloadBuild >= 0)
   assert.ok(installerBuild > payloadBuild)
   assert.match(customInstallerConfig, /beforeBuild:\s*\.\/scripts\/installer-builder-hooks\.mjs/)
+  assert.match(customInstallerConfig, /requestExecutionLevel:\s*admin/)
   assert.match(builderHookSource, /return false/)
 })
