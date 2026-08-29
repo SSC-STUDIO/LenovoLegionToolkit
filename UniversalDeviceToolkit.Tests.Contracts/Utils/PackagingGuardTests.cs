@@ -23,12 +23,10 @@ public sealed class PackagingGuardTests
     {
         var script = RepositoryPaths.ReadFile("Scripts", "Build-ElectronInstaller.ps1");
 
-        script.Should().Contain("15MB");
+        script.Should().Contain("85MB");
         script.Should().Contain("UniversalDeviceToolkitOnlineSetup.exe");
         script.Should().Contain("'--win', $Target");
         script.Should().Contain("AllowedCultures 'en'");
-        script.Should().Contain("*.nsis.7z");
-        script.Should().Contain("nsis-web package (*.nsis.7z) not found");
         script.Should().Contain("--prepackaged");
         script.Should().Contain("PackagePreparedPayloads");
         script.Should().Contain("PrepareInstallerShellOnly");

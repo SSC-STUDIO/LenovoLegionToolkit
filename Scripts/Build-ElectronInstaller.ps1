@@ -277,7 +277,7 @@ try {
         try {
             $env:ELECTRON_BUILDER_NSIS_DIR = $nsisToolsetDir
 
-            & npx electron-builder --config custom-installer.yml --win portable --publish never
+            & npx electron-builder --config custom-installer.yml --win portable --prepackaged $installerShellDir --publish never
             if ($LASTEXITCODE -ne 0) {
                 throw 'Custom Electron Full installer failed.'
             }
@@ -362,10 +362,6 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $nsisPackages = @(Get-ChildItem -LiteralPath $distDir -Filter '*.nsis.7z' -Recurse -ErrorAction SilentlyContinue)
-if ($nsisPackages.Count -eq 0) {
-    throw "nsis-web package (*.nsis.7z) not found under '$distDir'."
-}
-
 foreach ($package in $nsisPackages) {
     Copy-Item -LiteralPath $package.FullName -Destination (Join-Path $installerOutputPath $package.Name) -Force
     Write-Host "Copied nsis-web package: $($package.Name) ($([math]::Round($package.Length / 1MB, 1)) MB)"

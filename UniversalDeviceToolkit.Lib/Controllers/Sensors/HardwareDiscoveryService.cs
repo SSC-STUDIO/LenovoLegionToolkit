@@ -254,7 +254,9 @@ internal sealed class HardwareDiscoveryService
                 foreach (var h in _hardware)
                 {
                     if (h == null) continue;
-                    if (gpuInactive && h.HardwareType == HardwareType.GpuNvidia) continue;
+                    // Hybrid laptops idle the discrete GPU in Optimus mode - keep sampling
+                    // it anyway: temperature / VRAM / clocks remain valid readings that the
+                    // console should keep showing instead of blanking the whole GPU panel.
                     h.Update();
                 }
 

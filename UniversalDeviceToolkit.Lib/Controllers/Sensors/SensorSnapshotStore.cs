@@ -347,18 +347,48 @@ internal sealed class SensorSnapshotStore
             }
             else if (gpuInactive)
             {
-                _snapshotGpuVramUtilization = INVALID_VALUE_FLOAT;
-                _snapshotGpuVramUsage = INVALID_VALUE_FLOAT;
-                _snapshotGpuPower = INVALID_VALUE_FLOAT;
-                _snapshotGpuVoltage = INVALID_VALUE_FLOAT;
-                _snapshotGpuVramTemp = INVALID_VALUE_FLOAT;
-                _snapshotGpuHotSpotTemp = INVALID_VALUE_FLOAT;
-                _snapshotGpuUsage = INVALID_VALUE_FLOAT;
-                _snapshotGpuTemp = INVALID_VALUE_FLOAT;
-                _snapshotGpuClock = INVALID_VALUE_FLOAT;
-                _snapshotGpuMemoryClock = INVALID_VALUE_FLOAT;
-                _snapshotGpuPcieRxThroughput = INVALID_VALUE_FLOAT;
-                _snapshotGpuPcieTxThroughput = INVALID_VALUE_FLOAT;
+                // Hybrid laptop with an idle discrete GPU (Optimus): the dGPU
+                // readings (temperature, VRAM, clocks) are still valid and should
+                // stay on the console - do not blank the whole panel. Each field
+                // prefers the discrete value and falls back to the integrated GPU
+                // only when the discrete sensor is unavailable.
+                var dVramTotal = gpuVramTotal ?? cachedGpuVramTotal;
+                var dVramUsed = gpuVramUsed ?? INVALID_VALUE_FLOAT;
+                var dVramFree = gpuVramFree ?? INVALID_VALUE_FLOAT;
+                var dVramMetrics = ResolveGpuVramMetrics(dVramUsed, dVramTotal, dVramFree);
+
+                var iVramTotal = iGpuVramTotal ?? cachedIGpuVramTotal;
+                var iVramUsed = iGpuVramUsed ?? INVALID_VALUE_FLOAT;
+                var iVramFree = iGpuVramFree ?? INVALID_VALUE_FLOAT;
+                var iVramMetrics = ResolveGpuVramMetrics(iVramUsed, iVramTotal, iVramFree);
+
+                if (dVramMetrics.used >= 0 || dVramMetrics.utilization >= 0)
+                {
+                    _snapshotGpuVramUsage = dVramMetrics.used;
+                    _snapshotGpuVramUtilization = dVramMetrics.utilization;
+                    cachedGpuVramTotal = dVramMetrics.total > 0 ? dVramMetrics.total : cachedGpuVramTotal;
+                }
+                else
+                {
+                    _snapshotGpuVramUsage = iVramMetrics.used;
+                    _snapshotGpuVramUtilization = iVramMetrics.utilization;
+                    cachedIGpuVramTotal = iVramMetrics.total > 0 ? iVramMetrics.total : cachedIGpuVramTotal;
+                }
+
+                float gPower = gpuPower ?? iGpuPower ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuPower = ResolveGpuPower(gPower, _lastGpuPower);
+                if (_snapshotGpuPower > MIN_VALID_POWER_READING)
+                    _lastGpuPower = _snapshotGpuPower;
+
+                _snapshotGpuVoltage = gpuVoltage ?? iGpuVoltage ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuVramTemp = gpuVramTemp ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuHotSpotTemp = gpuHotSpot ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuUsage = gpuUsage ?? iGpuUsage ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuTemp = gpuTemp ?? iGpuTemp ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuClock = gpuClock ?? iGpuClock ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuMemoryClock = gpuMemoryClock ?? iGpuMemoryClock ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuPcieRxThroughput = gpuPcieRx ?? iGpuPcieRx ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuPcieTxThroughput = gpuPcieTx ?? iGpuPcieTx ?? INVALID_VALUE_FLOAT;
             }
             else
             {
