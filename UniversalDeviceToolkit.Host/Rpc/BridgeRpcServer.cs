@@ -1,4 +1,5 @@
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -131,76 +132,54 @@ public static class BridgeProtocol
         return false;
     }
 
-    public static byte[] WriteResponse(long? id, JsonElement? result, int? errorCode = null, string? errorMessage = null)
+    /// <summary>
+    /// Writes {"id":N,"result":...} in one pass: the handler result is serialized
+    /// directly into the response frame (no intermediate JsonDocument round-trip).
+    /// </summary>
+    public static void WriteResultResponse(Utf8JsonWriter writer, long? id, object? result)
     {
-        using var stream = new MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
-        {
-            writer.WriteStartObject();
-            if (id is not null)
-                writer.WriteNumber("id", id.Value);
-            else
-                writer.WriteNull("id");
-
-            if (errorCode is not null)
-            {
-                writer.WritePropertyName("error");
-                writer.WriteStartObject();
-                writer.WriteNumber("code", errorCode.Value);
-                writer.WriteString("message", errorMessage ?? "Unknown error");
-                writer.WriteEndObject();
-            }
-            else if (result is not null)
-            {
-                writer.WritePropertyName("result");
-                result.Value.WriteTo(writer);
-            }
-            else
-            {
-                writer.WritePropertyName("result");
-                writer.WriteNullValue();
-            }
-            writer.WriteEndObject();
-        }
-        return stream.ToArray();
+        writer.WriteStartObject();
+        WriteId(writer, id);
+        writer.WritePropertyName("result");
+        if (result is null)
+            writer.WriteNullValue();
+        else
+            JsonSerializer.Serialize(writer, result, result.GetType(), JsonOptions);
+        writer.WriteEndObject();
     }
 
-    public static byte[] WriteEvent(string name, object? data)
+    /// <summary>Writes {"id":N,"error":{"code":...,"message":...}}.</summary>
+    public static void WriteErrorResponse(Utf8JsonWriter writer, long? id, int errorCode, string? errorMessage)
     {
-        using var stream = new MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
-        {
-            writer.WriteStartObject();
-            writer.WriteString(EventProperty, name);
-            writer.WritePropertyName("data");
-            if (data is null)
-            {
-                writer.WriteNullValue();
-            }
-            else
-            {
-                JsonSerializer.Serialize(writer, data, data.GetType(), JsonOptions);
-            }
-            writer.WriteEndObject();
-        }
-        return stream.ToArray();
+        writer.WriteStartObject();
+        WriteId(writer, id);
+        writer.WritePropertyName("error");
+        writer.WriteStartObject();
+        writer.WriteNumber("code", errorCode);
+        writer.WriteString("message", errorMessage ?? "Unknown error");
+        writer.WriteEndObject();
+        writer.WriteEndObject();
     }
 
-    public static byte[] WriteResult(object? data)
+    /// <summary>Writes {"event":name,"data":...}.</summary>
+    public static void WriteEvent(Utf8JsonWriter writer, string name, object? data)
     {
-        using var stream = new MemoryStream();
-        using (var writer = new Utf8JsonWriter(stream))
-        {
-            if (data is null)
-            {
-                writer.WriteNullValue();
-            }
-            else
-            {
-                JsonSerializer.Serialize(writer, data, data.GetType(), JsonOptions);
-            }
-        }
-        return stream.ToArray();
+        writer.WriteStartObject();
+        writer.WriteString(EventProperty, name);
+        writer.WritePropertyName("data");
+        if (data is null)
+            writer.WriteNullValue();
+        else
+            JsonSerializer.Serialize(writer, data, data.GetType(), JsonOptions);
+        writer.WriteEndObject();
+    }
+
+    private static void WriteId(Utf8JsonWriter writer, long? id)
+    {
+        if (id is not null)
+            writer.WriteNumber("id", id.Value);
+        else
+            writer.WriteNull("id");
     }
 }
 
@@ -258,8 +237,17 @@ public sealed class BridgeRpcServer : IDisposable
     private readonly object _inflightLock = new();
     private readonly HashSet<Task> _inflight = new();
     private readonly Stream _input;
-    private readonly StreamWriter _output;
+    private readonly Stream _output;
     private readonly BoundedLineReader _lineReader;
+    private const int FrameBufferInitialBytes = 4096;
+    /// <summary>Rare oversized frames must not pin their buffer for the process lifetime.</summary>
+    private const int FrameBufferRetentionBytes = 256 * 1024;
+
+    // Frame buffer + writer are reused for every outgoing message; both are only
+    // touched under _writeLock, so a single instance is safe and steady-state
+    // writes allocate nothing for the framing itself.
+    private ArrayBufferWriter<byte> _frameBuffer = new(FrameBufferInitialBytes);
+    private readonly Utf8JsonWriter _frameWriter;
     private readonly SemaphoreSlim _concurrency = new(MaxConcurrentHandlers, MaxConcurrentHandlers);
     private readonly CancellationTokenSource _cts = new();
     private int _pending;
@@ -271,12 +259,9 @@ public sealed class BridgeRpcServer : IDisposable
     public BridgeRpcServer()
     {
         _input = Console.OpenStandardInput();
-        var stdout = Console.OpenStandardOutput();
+        _output = Console.OpenStandardOutput();
         _lineReader = new BoundedLineReader(_input);
-        _output = new StreamWriter(stdout, new UTF8Encoding(encoderShouldEmitUTF8Identifier: false))
-        {
-            AutoFlush = true,
-        };
+        _frameWriter = new Utf8JsonWriter(_frameBuffer);
     }
 
     public void RegisterHandler(string method, Func<BridgeRequest, CancellationToken, Task<BridgeResult>> handler)
@@ -449,10 +434,10 @@ public sealed class BridgeRpcServer : IDisposable
 
             if (request.Id is not null)
             {
-                var payload = result.IsError
-                    ? BridgeProtocol.WriteResponse(request.Id, null, result.ErrorCode, result.ErrorMessage)
-                    : BridgeProtocol.WriteResponse(request.Id, ToElement(result.Value));
-                WriteLine(payload);
+                if (result.IsError)
+                    WriteError(request.Id, result.ErrorCode ?? BridgeErrorCodes.InternalError, result.ErrorMessage ?? "Unknown error");
+                else
+                    WriteResult(request.Id, result.Value);
             }
         }
         finally
@@ -461,28 +446,7 @@ public sealed class BridgeRpcServer : IDisposable
         }
     }
 
-    private static JsonElement? ToElement(object? value)
-    {
-        if (value is null)
-            return null;
-
-        var bytes = BridgeProtocol.WriteResult(value);
-        using var doc = JsonDocument.Parse(bytes);
-        return doc.RootElement.Clone();
-    }
-
     public void Publish(string name, object? data)
-    {
-        var payload = BridgeProtocol.WriteEvent(name, data);
-        WriteLine(payload);
-    }
-
-    private void WriteError(long? id, int code, string message)
-    {
-        WriteLine(BridgeProtocol.WriteResponse(id, null, code, message));
-    }
-
-    private void WriteLine(byte[] payload)
     {
         lock (_writeLock)
         {
@@ -490,17 +454,92 @@ public sealed class BridgeRpcServer : IDisposable
                 return;
             try
             {
-                _output.BaseStream.Write(payload, 0, payload.Length);
-                _output.Write('\n');
+                BeginFrame();
+                BridgeProtocol.WriteEvent(_frameWriter, name, data);
+                EndFrame();
             }
-            catch (IOException)
+            catch (Exception)
             {
-                // Pipe closed by the client; ignore.
+                // Unserializable event payload; the partial buffer is discarded
+                // by the reset at the start of the next frame.
+                return;
             }
-            catch (ObjectDisposedException)
+            WriteFrameLocked();
+        }
+    }
+
+    private void WriteResult(long? id, object? value)
+    {
+        lock (_writeLock)
+        {
+            if (Volatile.Read(ref _disposed) != 0)
+                return;
+            try
             {
-                // Already disposed.
+                BeginFrame();
+                BridgeProtocol.WriteResultResponse(_frameWriter, id, value);
+                EndFrame();
             }
+            catch (Exception)
+            {
+                // A handler result that cannot be serialized must still answer
+                // the request, otherwise the client would spin until its timeout.
+                BeginFrame();
+                BridgeProtocol.WriteErrorResponse(_frameWriter, id, BridgeErrorCodes.InternalError, "Result serialization failed.");
+                EndFrame();
+            }
+            WriteFrameLocked();
+        }
+    }
+
+    private void WriteError(long? id, int code, string message)
+    {
+        lock (_writeLock)
+        {
+            if (Volatile.Read(ref _disposed) != 0)
+                return;
+            BeginFrame();
+            BridgeProtocol.WriteErrorResponse(_frameWriter, id, code, message);
+            EndFrame();
+            WriteFrameLocked();
+        }
+    }
+
+    /// <summary>Resets the shared frame buffer/writer for one message. Caller holds _writeLock.</summary>
+    private void BeginFrame()
+    {
+        _frameBuffer.ResetWrittenCount();
+        _frameWriter.Reset(_frameBuffer);
+    }
+
+    /// <summary>Flushes the JSON writer and appends the protocol newline. Caller holds _writeLock.</summary>
+    private void EndFrame()
+    {
+        _frameWriter.Flush();
+        _frameBuffer.GetSpan(1)[0] = (byte)'\n';
+        _frameBuffer.Advance(1);
+    }
+
+    /// <summary>Writes the buffered frame to stdout in a single call. Caller holds _writeLock.</summary>
+    private void WriteFrameLocked()
+    {
+        try
+        {
+            _output.Write(_frameBuffer.WrittenSpan);
+            _output.Flush();
+        }
+        catch (IOException)
+        {
+            // Pipe closed by the client; ignore.
+        }
+        catch (ObjectDisposedException)
+        {
+            // Already disposed.
+        }
+        finally
+        {
+            if (_frameBuffer.Capacity > FrameBufferRetentionBytes)
+                _frameBuffer = new ArrayBufferWriter<byte>(FrameBufferInitialBytes);
         }
     }
 
@@ -516,6 +555,8 @@ public sealed class BridgeRpcServer : IDisposable
         _concurrency.Dispose();
         try
         {
+            lock (_writeLock)
+                _frameWriter.Dispose();
             _output.Dispose();
             _input.Dispose();
         }
@@ -535,8 +576,9 @@ public sealed class BridgeRpcServer : IDisposable
     private sealed class BoundedLineReader
     {
         private readonly Stream _stream;
-        private readonly byte[] _buffer = new byte[4096];
-        private readonly List<byte> _line = new();
+        private readonly byte[] _buffer = new byte[8192];
+        private byte[] _line = new byte[4096];
+        private int _lineLength;
         private int _buffered;
         private int _offset;
 
@@ -549,7 +591,7 @@ public sealed class BridgeRpcServer : IDisposable
             int maxBytes,
             CancellationToken cancellationToken)
         {
-            _line.Clear();
+            _lineLength = 0;
             var overflow = false;
 
             while (true)
@@ -561,36 +603,60 @@ public sealed class BridgeRpcServer : IDisposable
                     _offset = 0;
                     if (_buffered == 0)
                     {
-                        if (_line.Count == 0 && !overflow)
+                        if (_lineLength == 0 && !overflow)
                             return (BoundedLineStatus.Eof, null);
                         return overflow
                             ? (BoundedLineStatus.TooLarge, null)
-                            : (BoundedLineStatus.Ok, Encoding.UTF8.GetString(_line.ToArray()));
+                            : (BoundedLineStatus.Ok, Encoding.UTF8.GetString(_line, 0, _lineLength));
                     }
                 }
 
-                var value = _buffer[_offset++];
-                if (value == (byte)'\n')
+                // Scan the buffered chunk for the newline and copy in one block
+                // instead of accumulating byte-by-byte.
+                var newlineIndex = Array.IndexOf(_buffer, (byte)'\n', _offset, _buffered - _offset);
+                var chunkEnd = newlineIndex >= 0 ? newlineIndex : _buffered;
+                var chunkLength = chunkEnd - _offset;
+
+                if (!overflow && chunkLength > 0)
                 {
-                    if (overflow)
-                        return (BoundedLineStatus.TooLarge, null);
-                    if (_line.Count > 0 && _line[_line.Count - 1] == (byte)'\r')
-                        _line.RemoveAt(_line.Count - 1);
-                    return (BoundedLineStatus.Ok, Encoding.UTF8.GetString(_line.ToArray()));
+                    if (_lineLength + chunkLength > maxBytes)
+                    {
+                        overflow = true;
+                        _lineLength = 0;
+                    }
+                    else
+                    {
+                        EnsureLineCapacity(_lineLength + chunkLength, maxBytes);
+                        Buffer.BlockCopy(_buffer, _offset, _line, _lineLength, chunkLength);
+                        _lineLength += chunkLength;
+                    }
                 }
 
+                if (newlineIndex < 0)
+                {
+                    _offset = _buffered;
+                    continue;
+                }
+
+                _offset = newlineIndex + 1;
                 if (overflow)
-                    continue;
-
-                if (_line.Count >= maxBytes)
-                {
-                    overflow = true;
-                    _line.Clear();
-                    continue;
-                }
-
-                _line.Add(value);
+                    return (BoundedLineStatus.TooLarge, null);
+                if (_lineLength > 0 && _line[_lineLength - 1] == (byte)'\r')
+                    _lineLength--;
+                return (BoundedLineStatus.Ok, Encoding.UTF8.GetString(_line, 0, _lineLength));
             }
+        }
+
+        private void EnsureLineCapacity(int required, int maxBytes)
+        {
+            if (_line.Length >= required)
+                return;
+            var newSize = Math.Max(_line.Length * 2, required);
+            if (newSize > maxBytes)
+                newSize = maxBytes;
+            var grown = new byte[newSize];
+            Buffer.BlockCopy(_line, 0, grown, 0, _lineLength);
+            _line = grown;
         }
     }
 }

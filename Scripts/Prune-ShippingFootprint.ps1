@@ -67,6 +67,10 @@ Get-ChildItem -LiteralPath $root -File -Recurse -Force -ErrorAction Stop | ForEa
     elseif ($name.StartsWith('mscordaccore', [System.StringComparison]::OrdinalIgnoreCase)) {
         $remove = $true
     }
+    elseif ($name.StartsWith('libmscordaccore', [System.StringComparison]::OrdinalIgnoreCase)) {
+        # Unix builds prefix the debugger DAC with 'lib' (libmscordaccore.so / .dylib).
+        $remove = $true
+    }
     elseif ($name.StartsWith('Microsoft.DiaSymReader.Native', [System.StringComparison]::OrdinalIgnoreCase)) {
         $remove = $true
     }
