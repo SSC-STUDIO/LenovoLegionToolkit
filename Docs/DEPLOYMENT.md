@@ -193,7 +193,9 @@ npm run dist        # current host platform default
 They expect a portable Host already published under
 `UniversalDeviceToolkit.Host/publish/osx-*` or `linux-x64`. `Release.yml`
 does not run them and does not attach DMG/AppImage/DEB assets to GitHub
-Releases.
+Releases. The manually dispatched `experimental-packages.yml` workflow (see
+[Experimental macOS/Linux release assets](#experimental-macoslinux-release-assets))
+can build and attach these experimental assets to an existing release tag.
 
 The packaging targets are defined in `UniversalDeviceToolkit.Electron/electron-builder.yml`:
 
@@ -209,8 +211,8 @@ The packaging targets are defined in `UniversalDeviceToolkit.Electron/electron-b
 |---|---|---|
 | Windows Full | `UniversalDeviceToolkitSetup-<version>.exe` (offline NSIS) | Yes |
 | Windows Online | `UniversalDeviceToolkitOnlineSetup-<version>.exe` (nsis-web stub, <= 15MB) plus `*.nsis.7z` payload | Yes |
-| macOS (experimental) | `UniversalDeviceToolkit-<version>-mac-arm64.dmg` / `-mac-x64.dmg` | No |
-| Linux (experimental) | `UniversalDeviceToolkit-<version>-linux-x64.AppImage` / `.deb` | No |
+| macOS (experimental) | `UniversalDeviceToolkit-<version>-mac-arm64.dmg` / `-mac-x64.dmg` | Optional experimental asset via `experimental-packages.yml` |
+| Linux (experimental) | `UniversalDeviceToolkit-<version>-linux-x86_64.AppImage` / `-linux-amd64.deb` | Optional experimental asset via `experimental-packages.yml` |
 
 #### Release footprint gate
 
@@ -271,6 +273,32 @@ local Windows builds are unsigned.
 `electron-builder.yml` already lists `AppImage` and `deb` (x64) as local
 targets. Neither is published by `Release.yml`. Adding `.rpm` or `.snap`
 would still be experimental local packaging, not an official product.
+
+### Experimental macOS/Linux release assets
+
+`.github/workflows/experimental-packages.yml` is a manually dispatched
+(`workflow_dispatch`) workflow that builds the experimental macOS DMGs
+(arm64 + x64, unsigned/not notarized) and Linux AppImage/DEB (x64, unsigned)
+for an **existing** `vX.Y.Z` release tag. It reuses the same pipeline as
+`package-footprint.yml` per platform: publish + prune the self-contained
+Host, smoke the Host JSON-RPC, `npm run typecheck` / `npm test` /
+`npm run build`, package with electron-builder, and enforce the distributable
+footprint budgets.
+
+Inputs:
+
+- `release_tag` (required): existing `vX.Y.Z` tag; the workflow fails if the
+  tag version does not match `Directory.Build.props`.
+- `attach_to_release` (default `false`): when `true`, uploads the DMG,
+  AppImage, and DEB assets plus a
+  `UniversalDeviceToolkit_v<version>_Experimental_SHA256.txt` manifest to
+  that GitHub release. When `false`, artifacts are only uploaded as workflow
+  run artifacts for inspection.
+
+This workflow never creates releases or tags and never touches the official
+Windows assets. The attached assets remain experimental: unsigned, without
+auto-update support, and without hardware control (the portable Host stubs
+Windows-only RPC). `Release.yml` remains the only official release pipeline.
 
 ### Known Platform Differences
 
