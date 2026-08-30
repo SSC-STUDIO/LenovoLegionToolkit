@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react'
-import { init, type ECharts, type EChartsCoreOption } from '../../utils/echarts'
+import { useEffect, useRef, useState } from 'react'
+import { loadECharts, type ECharts, type EChartsCoreOption } from '../../utils/echarts'
 import { useThemeStore } from '../../stores/themeStore'
 
 export interface TrendSeries {
@@ -48,7 +48,9 @@ export default function TrendChart({
   emptyLabel
 }: TrendChartProps): React.JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null)
-  const chartRef = useRef<ECharts | null>(null)
+  // State (not a ref) so the option effects below re-run once the lazily
+  // imported echarts runtime finishes loading and the instance exists.
+  const [chart, setChart] = useState<ECharts | null>(null)
   const isDark = useThemeStore((s) => s.themeMode === 'dark')
   // Electron _smoothedAutoMax: auto-scaled series converge toward the observed max
   // instead of jumping (rise fast, fall slow).
@@ -64,29 +66,36 @@ export default function TrendChart({
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
-    // devicePixelRatio keeps output crisp on HiDPI displays and under the
-    // main-process zoom factor (SVG today, but harmless and future-proof if
-    // the renderer switches to canvas).
-    const chart = init(el, undefined, { devicePixelRatio: window.devicePixelRatio })
-    chartRef.current = chart
-    baseOptionRef.current = null
+    let disposed = false
+    let instance: ECharts | null = null
+    let observer: ResizeObserver | null = null
     const handleResize = (): void => {
-      chart.resize()
+      instance?.resize()
     }
-    window.addEventListener('resize', handleResize)
-    const observer = new ResizeObserver(handleResize)
-    observer.observe(el)
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      observer.disconnect()
-      chart.dispose()
-      chartRef.current = null
+    void loadECharts().then(({ init }) => {
+      if (disposed) return
+      // devicePixelRatio keeps output crisp on HiDPI displays and under the
+      // main-process zoom factor (SVG today, but harmless and future-proof if
+      // the renderer switches to canvas).
+      instance = init(el, undefined, { devicePixelRatio: window.devicePixelRatio })
       baseOptionRef.current = null
+      window.addEventListener('resize', handleResize)
+      observer = new ResizeObserver(handleResize)
+      observer.observe(el)
+      setChart(instance)
+    })
+    return () => {
+      disposed = true
+      window.removeEventListener('resize', handleResize)
+      observer?.disconnect()
+      instance?.dispose()
+      instance = null
+      baseOptionRef.current = null
+      setChart(null)
     }
   }, [])
 
   useEffect(() => {
-    const chart = chartRef.current
     if (!chart) return
     const key = skeletonKey(series, isDark)
     if (baseOptionRef.current?.key === key) return
@@ -217,12 +226,11 @@ export default function TrendChart({
 
     baseOptionRef.current = { key, option }
     chart.setOption(option, { notMerge: true })
-  }, [series, isDark, labels])
+  }, [chart, series, isDark, labels])
 
   // Data-only update path: rebinds normalized data without rebuilding the
   // static option (grid, axes, area gradients, mark lines).
   useEffect(() => {
-    const chart = chartRef.current
     const base = baseOptionRef.current
     if (!chart || !base) return
 
@@ -256,7 +264,7 @@ export default function TrendChart({
       },
       { lazyUpdate: true }
     )
-  }, [series, labels, isDark])
+  }, [chart, series, labels, isDark])
 
   const waiting = emptyLabel != null && emptyLabel !== '' && !hasDrawableLine(series)
 
