@@ -3,10 +3,14 @@ process.noAsar = true
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, shell, systemPreferences } from 'electron'
 import * as nodeFs from 'node:fs'
 import { execFile, spawn } from 'node:child_process'
+import { createHash } from 'node:crypto'
+import { Readable, Transform } from 'node:stream'
+import { pipeline } from 'node:stream/promises'
 import { promisify } from 'node:util'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { featureFlag, isNetworkProxySidecarFile, normalizeFeatures } from './features.mjs'
+import { parseSha256Digest, parseSha256Manifest } from './integrity.mjs'
 
 let originalFs = null
 try {
@@ -244,79 +248,147 @@ async function removeUninstallRegistration() {
   }
 }
 
+const GITHUB_REPO = 'SSC-STUDIO/UniversalDeviceToolkit'
+// Proxy mirrors serve networks that cannot reach github.com directly; the
+// official origin stays in the list as the final fallback. Nothing fetched
+// through a mirror is installed before its SHA256 matches the release
+// manifest resolved by resolveExpectedPayloadHash().
+const RELEASE_MIRROR_PREFIXES = ['https://ghfast.top/', 'https://ghproxy.net/', '']
+const PAYLOAD_STALL_TIMEOUT_MS = 60000
+const PAYLOAD_FALLBACK_TOTAL_BYTES = 180 * 1024 * 1024
+
+function releaseDownloadUrl(version, assetName) {
+  return `https://github.com/${GITHUB_REPO}/releases/download/v${version}/${assetName}`
+}
+
+function fetchWithTimeout(url, timeoutMs, options = {}) {
+  return fetch(url, { redirect: 'follow', signal: AbortSignal.timeout(timeoutMs), ...options })
+}
+
+/**
+ * Resolves the official SHA256 for the payload archive, most trusted source
+ * first: the GitHub API asset digest, then the release `_SHA256.txt` manifest
+ * fetched from github.com. Mirror copies of the manifest are only a last
+ * resort for networks that cannot reach github.com at all — they still catch
+ * corruption and stale files, though a hostile mirror could rewrite both
+ * files consistently. Returns null when no source yields a hash, and the
+ * caller must then fail closed.
+ */
+async function resolveExpectedPayloadHash(version, assetName) {
+  try {
+    const response = await fetchWithTimeout(
+      `https://api.github.com/repos/${GITHUB_REPO}/releases/tags/v${version}`,
+      15000,
+      { headers: { Accept: 'application/vnd.github+json', 'User-Agent': 'UniversalDeviceToolkit-Installer' } }
+    )
+    if (response.ok) {
+      const release = await response.json()
+      const asset = Array.isArray(release?.assets) ? release.assets.find((entry) => entry?.name === assetName) : null
+      const digestHash = parseSha256Digest(asset?.digest)
+      if (digestHash) return digestHash
+    }
+  } catch {
+    // Fall through to the manifest asset.
+  }
+
+  const manifestUrl = releaseDownloadUrl(version, `UniversalDeviceToolkit_v${version}_SHA256.txt`)
+  for (const url of [manifestUrl, ...RELEASE_MIRROR_PREFIXES.filter(Boolean).map((prefix) => `${prefix}${manifestUrl}`)]) {
+    try {
+      const response = await fetchWithTimeout(url, 15000)
+      if (!response.ok) continue
+      const manifestHash = parseSha256Manifest(await response.text(), assetName)
+      if (manifestHash) return manifestHash
+    } catch {
+      // Try the next manifest source.
+    }
+  }
+  return null
+}
+
 async function downloadPayloadArchive(version, destinationFile) {
   const assetName = `UniversalDeviceToolkit_v${version}_Online_win-x64.zip`
-  const mirrors = [
-    `https://ghfast.top/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${version}/${assetName}`,
-    `https://ghproxy.net/https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${version}/${assetName}`,
-    `https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/download/v${version}/${assetName}`
-  ]
+  const expectedHash = await resolveExpectedPayloadHash(version, assetName)
+  if (!expectedHash) {
+    throw new Error('无法获取官方发布的 SHA256 校验信息，已停止下载以确保安全。请检查网络后重试。')
+  }
 
+  const mirrors = RELEASE_MIRROR_PREFIXES.map((prefix) => `${prefix}${releaseDownloadUrl(version, assetName)}`)
   let lastError = null
   for (let i = 0; i < mirrors.length; i++) {
     const url = mirrors[i]
+    const controller = new AbortController()
+    let watchdog = null
+    const resetWatchdog = () => {
+      clearTimeout(watchdog)
+      watchdog = setTimeout(() => controller.abort(new Error('下载超时：连接长时间无响应。')), PAYLOAD_STALL_TIMEOUT_MS)
+    }
     try {
       emitProgress({
         phase: 'downloading',
         percent: 0,
         completedBytes: 0,
-        totalBytes: 180 * 1024 * 1024,
+        totalBytes: PAYLOAD_FALLBACK_TOTAL_BYTES,
         speed: '连接中...',
         file: `正在连接下载节点 (${i + 1}/${mirrors.length})...`,
         message: '正在准备下载核心应用包...'
       })
 
-      const response = await fetch(url, { redirect: 'follow' })
-      if (!response.ok) {
+      resetWatchdog()
+      const response = await fetch(url, { redirect: 'follow', signal: controller.signal })
+      if (!response.ok || response.body == null) {
         throw new Error(`HTTP ${response.status} ${response.statusText}`)
       }
 
       const contentLength = Number(response.headers.get('content-length')) || 0
-      const totalBytes = contentLength > 0 ? contentLength : 180 * 1024 * 1024
-      const fileStream = nodeFs.createWriteStream(destinationFile)
-      const reader = response.body.getReader()
+      const totalBytes = contentLength > 0 ? contentLength : PAYLOAD_FALLBACK_TOTAL_BYTES
+      const hash = createHash('sha256')
       let completedBytes = 0
       let lastTime = Date.now()
       let lastCompleted = 0
-      let currentSpeed = '0.0 MB/s'
 
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-        fileStream.write(Buffer.from(value))
-        completedBytes += value.length
+      const progress = new Transform({
+        transform(chunk, _encoding, callback) {
+          resetWatchdog()
+          hash.update(chunk)
+          completedBytes += chunk.length
 
-        const now = Date.now()
-        if (now - lastTime >= 250) {
-          const deltaSec = (now - lastTime) / 1000
-          const deltaBytes = completedBytes - lastCompleted
-          const mbPerSec = (deltaBytes / (1024 * 1024)) / deltaSec
-          currentSpeed = `${mbPerSec.toFixed(1)} MB/s`
-          lastTime = now
-          lastCompleted = completedBytes
+          const now = Date.now()
+          if (now - lastTime >= 250) {
+            const deltaSec = (now - lastTime) / 1000
+            const deltaBytes = completedBytes - lastCompleted
+            const currentSpeed = `${((deltaBytes / (1024 * 1024)) / deltaSec).toFixed(1)} MB/s`
+            lastTime = now
+            lastCompleted = completedBytes
 
-          const percent = Math.min(100, totalBytes > 0 ? (completedBytes / totalBytes) * 100 : 0)
-          emitProgress({
-            phase: 'downloading',
-            percent,
-            completedBytes,
-            totalBytes,
-            speed: currentSpeed,
-            file: `正在下载核心应用包 (${percent.toFixed(0)}%)`,
-            message: `${(completedBytes / (1024 * 1024)).toFixed(1)} MB / ${(totalBytes / (1024 * 1024)).toFixed(1)} MB (${currentSpeed})`
-          })
+            const percent = Math.min(100, totalBytes > 0 ? (completedBytes / totalBytes) * 100 : 0)
+            emitProgress({
+              phase: 'downloading',
+              percent,
+              completedBytes,
+              totalBytes,
+              speed: currentSpeed,
+              file: `正在下载核心应用包 (${percent.toFixed(0)}%)`,
+              message: `${(completedBytes / (1024 * 1024)).toFixed(1)} MB / ${(totalBytes / (1024 * 1024)).toFixed(1)} MB (${currentSpeed})`
+            })
+          }
+          callback(null, chunk)
         }
-      }
-
-      await new Promise((resolve, reject) => {
-        fileStream.end(resolve)
-        fileStream.on('error', reject)
       })
 
+      // pipeline() applies write backpressure toward the file, surfaces
+      // errors from every stage and destroys all streams on failure.
+      await pipeline(Readable.fromWeb(response.body), progress, nodeFs.createWriteStream(destinationFile))
+
+      const actualHash = hash.digest('hex')
+      if (actualHash !== expectedHash) {
+        throw new Error(`下载文件 SHA256 校验失败，已丢弃该文件。预期 ${expectedHash}，实际 ${actualHash}。`)
+      }
       return true
     } catch (error) {
       lastError = error
       try { await fs.rm(destinationFile, { force: true }) } catch {}
+    } finally {
+      clearTimeout(watchdog)
     }
   }
   throw lastError ?? new Error('所有在线下载节点连接失败，请检查网络设置或代理。')
@@ -338,7 +410,7 @@ async function extractPayloadArchive(archivePath, destination) {
       '-ExecutionPolicy',
       'Bypass',
       '-Command',
-      `Expand-Archive -LiteralPath '${archivePath}' -DestinationPath '${destination}' -Force`
+      `Expand-Archive -LiteralPath ${quotePowerShell(archivePath)} -DestinationPath ${quotePowerShell(destination)} -Force`
     ], { windowsHide: true })
   }
 }
