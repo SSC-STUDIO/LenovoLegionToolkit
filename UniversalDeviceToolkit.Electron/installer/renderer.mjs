@@ -25,7 +25,8 @@ const state = {
   progress: { percent: 0, file: '', message: '' },
   error: '',
   themeMode: 'dark',
-  accentColor: '#ff2a38'
+  accentColor: '#ff2a38',
+  scale: 1.0
 }
 
 function formatBytes(value) {
@@ -80,7 +81,7 @@ function shell() {
     ? `<div class="brand-logo-frame"><img class="brand-logo" src="${escapeHtml(info.logoData)}" alt="Universal Device Toolkit" /></div>`
     : '<div class="brand-mark" aria-label="Universal Device Toolkit">U</div>'
   return `<div class="window">
-    <div class="titlebar"><div class="window-controls"><button data-action="minimize" aria-label="最小化">${minimizeIcon()}</button><button class="close" data-action="close" aria-label="关闭">${closeIcon()}</button></div></div>
+    <div class="titlebar"><div class="window-controls"><button class="scale-toggle" data-action="toggle-scale" aria-label="调整界面大小" title="点击切换界面缩放（标准 100% / 紧凑 85% / 放大 115%）">${Math.round(state.scale * 100)}%</button><button data-action="minimize" aria-label="最小化">${minimizeIcon()}</button><button class="close" data-action="close" aria-label="关闭">${closeIcon()}</button></div></div>
     <aside class="brand-panel"><div class="brand-content">
       ${logo}
       <h1 class="brand-name">Universal Device Toolkit</h1><div class="brand-rule"></div><div class="brand-version">${escapeHtml(info.version)}</div>
@@ -252,7 +253,13 @@ appRoot.addEventListener('click', async (event) => {
   if (!(target instanceof HTMLElement)) return
   if (target.dataset.action === 'minimize') api.minimize()
   else if (target.dataset.action === 'close') api.close()
-  else if (target.dataset.action === 'browse') {
+  else if (target.dataset.action === 'toggle-scale') {
+    const scales = [1.0, 0.85, 1.15]
+    const nextIndex = (scales.indexOf(state.scale) + 1) % scales.length
+    state.scale = scales[nextIndex]
+    document.documentElement.style.zoom = String(state.scale)
+    render()
+  } else if (target.dataset.action === 'browse') {
     const selected = await api.chooseDirectory()
     if (selected) { state.destination = selected; render() }
   } else if (target.dataset.action === 'quick-install') {

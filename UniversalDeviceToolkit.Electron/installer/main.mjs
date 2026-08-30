@@ -432,11 +432,11 @@ async function uninstallApplication() {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1080,
-    height: 720,
-    minWidth: 940,
-    minHeight: 640,
-    resizable: false,
+    width: 860,
+    height: 560,
+    minWidth: 760,
+    minHeight: 480,
+    resizable: true,
     frame: false,
     show: false,
     backgroundColor: themeInfo().mode === 'dark' ? '#171717' : '#f3f5f8',
