@@ -35,7 +35,6 @@
   <data name="Label_CpuGovernor"><value>CPU governor</value></data>
   <data name="Label_BatteryChargeLimit"><value>Battery charge limit</value></data>
   <data name="Label_DisplayBrightness"><value>Display brightness</value></data>
-  <data name="Label_Plugins"><value>Plugins</value></data>
   <data name="Label_DevicePack"><value>Device pack</value></data>
   <data name="Label_Vendor"><value>Vendor</value></data>
   <data name="Label_Model"><value>Model</value></data>
@@ -91,7 +90,6 @@
   <data name="Power_Supplies"><value>Supplies:</value></data>
   <data name="PowerProfile_Title"><value>Power profile</value></data>
   <data name="PowerProfile_Available"><value>Available profiles:</value></data>
-  <data name="Plugins_Title"><value>Plugin discovery</value></data>
   <data name="Controls_Title"><value>Hardware controls</value></data>
   <data name="Support_Title"><value>Device support</value></data>
   <data name="Doctor_Title"><value>Doctor report</value></data>

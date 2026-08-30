@@ -170,7 +170,7 @@ function formatTemperature(c: number | null | undefined, unit: TemperatureUnit =
 
 function formatFan(speed: number | null | undefined): string {
   if (speed == null || !Number.isFinite(speed) || speed < 0) return '-'
-  return `${speed.toFixed(1)} RPM`
+  return `${Math.round(speed)} RPM`
 }
 
 function formatHealth(health: number | null | undefined): string {

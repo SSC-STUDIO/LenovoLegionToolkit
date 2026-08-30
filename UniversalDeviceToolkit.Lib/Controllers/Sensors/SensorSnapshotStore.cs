@@ -383,10 +383,10 @@ internal sealed class SensorSnapshotStore
                 _snapshotGpuVoltage = gpuVoltage ?? iGpuVoltage ?? INVALID_VALUE_FLOAT;
                 _snapshotGpuVramTemp = gpuVramTemp ?? INVALID_VALUE_FLOAT;
                 _snapshotGpuHotSpotTemp = gpuHotSpot ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuUsage = gpuUsage ?? iGpuUsage ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuUsage = gpuUsage ?? iGpuUsage ?? 0f;
                 _snapshotGpuTemp = gpuTemp ?? iGpuTemp ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuClock = gpuClock ?? iGpuClock ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuMemoryClock = gpuMemoryClock ?? iGpuMemoryClock ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuClock = gpuClock ?? iGpuClock ?? 0f;
+                _snapshotGpuMemoryClock = gpuMemoryClock ?? iGpuMemoryClock ?? 0f;
                 _snapshotGpuPcieRxThroughput = gpuPcieRx ?? iGpuPcieRx ?? INVALID_VALUE_FLOAT;
                 _snapshotGpuPcieTxThroughput = gpuPcieTx ?? iGpuPcieTx ?? INVALID_VALUE_FLOAT;
             }
@@ -401,19 +401,19 @@ internal sealed class SensorSnapshotStore
                 _snapshotGpuVramUtilization = dVramMetrics.utilization;
                 cachedGpuVramTotal = dVramMetrics.total > 0 ? dVramMetrics.total : cachedGpuVramTotal;
 
-                float gPower = gpuPower ?? INVALID_VALUE_FLOAT;
+                float gPower = gpuPower ?? iGpuPower ?? INVALID_VALUE_FLOAT;
                 _snapshotGpuPower = ResolveGpuPower(gPower, _lastGpuPower);
                 if (_snapshotGpuPower > MIN_VALID_POWER_READING)
                     _lastGpuPower = _snapshotGpuPower;
-                _snapshotGpuVoltage = gpuVoltage ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuVoltage = gpuVoltage ?? iGpuVoltage ?? INVALID_VALUE_FLOAT;
                 _snapshotGpuVramTemp = gpuVramTemp ?? INVALID_VALUE_FLOAT;
                 _snapshotGpuHotSpotTemp = gpuHotSpot ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuUsage = gpuUsage ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuTemp = gpuTemp ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuClock = gpuClock ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuMemoryClock = gpuMemoryClock ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuPcieRxThroughput = gpuPcieRx ?? INVALID_VALUE_FLOAT;
-                _snapshotGpuPcieTxThroughput = gpuPcieTx ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuUsage = gpuUsage ?? iGpuUsage ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuTemp = gpuTemp ?? iGpuTemp ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuClock = gpuClock ?? iGpuClock ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuMemoryClock = gpuMemoryClock ?? iGpuMemoryClock ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuPcieRxThroughput = gpuPcieRx ?? iGpuPcieRx ?? INVALID_VALUE_FLOAT;
+                _snapshotGpuPcieTxThroughput = gpuPcieTx ?? iGpuPcieTx ?? INVALID_VALUE_FLOAT;
             }
 
             // Memory
