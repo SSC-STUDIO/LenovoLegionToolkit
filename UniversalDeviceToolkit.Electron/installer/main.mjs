@@ -307,6 +307,15 @@ async function resolveExpectedPayloadHash(version, assetName) {
 
 async function downloadPayloadArchive(version, destinationFile) {
   const assetName = `UniversalDeviceToolkit_v${version}_Online_win-x64.zip`
+  emitProgress({
+    phase: 'downloading',
+    percent: 0,
+    completedBytes: 0,
+    totalBytes: PAYLOAD_FALLBACK_TOTAL_BYTES,
+    speed: '',
+    file: '正在获取官方 SHA256 校验信息...',
+    message: '正在校验下载源的完整性信息...'
+  })
   const expectedHash = await resolveExpectedPayloadHash(version, assetName)
   if (!expectedHash) {
     throw new Error('无法获取官方发布的 SHA256 校验信息，已停止下载以确保安全。请检查网络后重试。')
