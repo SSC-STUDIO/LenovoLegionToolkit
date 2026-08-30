@@ -45,6 +45,8 @@ public sealed class ShippingFootprintPruneTests
             WriteFile(root, "createdump.exe");
             WriteFile(root, "mscordaccore.dll");
             WriteFile(root, "mscordaccore_amd64_amd64_10.0.0.0.dll");
+            WriteFile(root, "libmscordaccore.so");
+            WriteFile(root, "libmscordaccore.dylib");
             WriteFile(root, "mscordbi.dll");
             WriteFile(root, "dbgshim.dll");
             WriteFile(root, "Microsoft.DiaSymReader.Native.amd64.dll");
@@ -59,6 +61,8 @@ public sealed class ShippingFootprintPruneTests
             File.Exists(Path.Combine(root, "createdump.exe")).Should().BeFalse();
             File.Exists(Path.Combine(root, "mscordaccore.dll")).Should().BeFalse();
             File.Exists(Path.Combine(root, "mscordaccore_amd64_amd64_10.0.0.0.dll")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "libmscordaccore.so")).Should().BeFalse();
+            File.Exists(Path.Combine(root, "libmscordaccore.dylib")).Should().BeFalse();
             File.Exists(Path.Combine(root, "mscordbi.dll")).Should().BeFalse();
             File.Exists(Path.Combine(root, "dbgshim.dll")).Should().BeFalse();
             File.Exists(Path.Combine(root, "Microsoft.DiaSymReader.Native.amd64.dll")).Should().BeFalse();
