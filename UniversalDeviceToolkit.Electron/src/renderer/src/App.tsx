@@ -1,6 +1,6 @@
 import { Suspense, lazy, type ReactNode } from 'react'
-import { Spin } from 'antd'
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { ArrowSync24Regular, FluentIcon } from './components/icons/fluent'
 import { isInstallerOptionalFeatureEnabled, type InstallerOptionalFeature } from '../../shared/installer-selection'
 import { CapabilityGate } from './layout/CapabilityRedirect'
 import AppLayout from './layout/AppLayout'
@@ -13,10 +13,14 @@ const MacroPage = lazy(() => import('./pages/MacroPage'))
 const WindowsOptimizationPage = lazy(() => import('./pages/WindowsOptimizationPage'))
 const AboutPage = lazy(() => import('./pages/AboutPage'))
 
+// Fluent spinner instead of antd Spin: the route fallback is on the eager
+// startup path, and this keeps antd component code out of the entry chunk.
 function PageFallback(): React.JSX.Element {
   return (
     <div style={{ display: 'flex', justifyContent: 'center', padding: 48 }}>
-      <Spin size="large" />
+      <FluentIcon size={32} spin color="var(--udt-accent-secondary)">
+        <ArrowSync24Regular />
+      </FluentIcon>
     </div>
   )
 }

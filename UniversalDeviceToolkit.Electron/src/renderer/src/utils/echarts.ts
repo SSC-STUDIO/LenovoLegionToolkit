@@ -1,34 +1,20 @@
 /**
- * Tree-shaken echarts registration — keeps the renderer bundle small by
- * importing only the chart types/components the app actually uses.
- *
- * SVGRenderer instead of CanvasRenderer: the sensor gauges and trend charts
- * are low-frequency (1 Hz) simple line/gauge visuals, and SVG keeps the DOM
- * smaller than a backing canvas — lower renderer memory. If a future chart
- * needs canvas (dense scatter, large data), swap the renderer here.
+ * Lazy facade over the echarts runtime. Only type imports are static (erased
+ * at compile time); the actual library is loaded on first use so the ~1.3 MB
+ * charts chunk never blocks page navigation or the dashboard's first paint.
  */
-import { use, type EChartsCoreOption, type EChartsType } from 'echarts/core'
-import { GaugeChart, LineChart } from 'echarts/charts'
-import {
-  GraphicComponent,
-  GridComponent,
-  MarkLineComponent,
-  TooltipComponent
-} from 'echarts/components'
-import { SVGRenderer } from 'echarts/renderers'
-
-use([
-  GaugeChart,
-  LineChart,
-  GridComponent,
-  TooltipComponent,
-  GraphicComponent,
-  MarkLineComponent,
-  SVGRenderer
-])
+import type { EChartsCoreOption, EChartsType } from 'echarts/core'
 
 export type ECharts = EChartsType
 export type EChartsOption = EChartsCoreOption
 export type { EChartsCoreOption }
 
-export { init } from 'echarts/core'
+export type EChartsRuntime = typeof import('./echartsRuntime')
+
+let runtimePromise: Promise<EChartsRuntime> | null = null
+
+/** Import and register the tree-shaken echarts runtime exactly once. */
+export function loadECharts(): Promise<EChartsRuntime> {
+  runtimePromise ??= import('./echartsRuntime')
+  return runtimePromise
+}
