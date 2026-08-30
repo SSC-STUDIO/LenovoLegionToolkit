@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added / 新增
+- New manually dispatched `experimental-packages.yml` workflow builds the experimental macOS DMGs (arm64 + x64) and Linux AppImage/DEB (x64) for an existing release tag, audits them against the package footprint budgets, and can attach them to that GitHub release with a dedicated `*_Experimental_SHA256.txt` manifest. These assets stay experimental (unsigned, no auto-update, no hardware control); `Release.yml` remains the only official Windows release pipeline.
 - **Cursor & Pointer (built-in)**: Former CustomMouse plugin capabilities are now native Host features — custom high-DPI cursor themes (`W11-CC-V2.2-HDPI` shipped with the host), per-UI-scale cursor sizing, and pointer speed controls on the Mouse page. Existing settings from the retired plugin's `config.json` are imported automatically.
 
 ### Changed / 变更
