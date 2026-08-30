@@ -69,7 +69,20 @@ app.commandLine.appendSwitch(
     'PreloadMediaEngagementData',
     'AutofillEnableAccountWalletStorage',
     'HeavyAdIntervention',
-    'EyeDropper'
+    'EyeDropper',
+    'AudioServiceOutOfProcess',
+    'CertificateTransparencyComponentUpdater',
+    'WidgetLayering',
+    'DownloadBubble',
+    'DownloadBubbleV2',
+    'NotificationTriggers',
+    'PushMessaging',
+    'WebBluetooth',
+    'WebUSB',
+    'WebHID',
+    'WebNFC',
+    'WebAuthentication',
+    'TabHoverCardImages'
   ].join(',')
 )
 app.commandLine.appendSwitch('disable-background-networking')
@@ -85,6 +98,12 @@ app.commandLine.appendSwitch('disable-hang-monitor')
 app.commandLine.appendSwitch('disable-prompt-on-repost')
 app.commandLine.appendSwitch('disable-breakpad')
 app.commandLine.appendSwitch('disable-gpu-shader-disk-cache')
+app.commandLine.appendSwitch('disable-spell-checking')
+app.commandLine.appendSwitch('disable-cloud-import')
+app.commandLine.appendSwitch('disable-component-cloud-policy')
+app.commandLine.appendSwitch('disable-print-preview')
+app.commandLine.appendSwitch('disable-logging')
+app.commandLine.appendSwitch('disable-site-isolation-trials')
 app.commandLine.appendSwitch('no-pings')
 app.commandLine.appendSwitch('no-first-run')
 app.commandLine.appendSwitch('no-default-browser-check')
@@ -898,6 +917,8 @@ function applyShellLaunchEnvironment(): void {
 
 app.whenReady().then(() => {
   initMainLogger()
+  session.defaultSession.setSpellCheckerEnabled(false)
+  session.defaultSession.setPermissionRequestHandler((_webContents, _permission, callback) => callback(false))
   // Apply the last persisted interface scale before the window exists so the
   // first paint (and the derived minimum size) already match; the renderer
   // re-pushes its localStorage value over IPC right after boot.
