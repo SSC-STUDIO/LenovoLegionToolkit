@@ -268,8 +268,11 @@ public class ThrottleFirstDispatcherTests
     [Fact]
     public async Task DispatchAsync_WhenTaskThrows_ShouldStillRecordExecutionTime()
     {
-        // Arrange
-        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromMilliseconds(500));
+        // Arrange — long window so exception unwinding plus slow CI runners cannot
+        // let the second dispatch slip past the throttle (same fix as
+        // DispatchAsync_MultipleCallsOverTime_ShouldOnlyExecuteFirst; 500ms flaked
+        // on GitHub runners with the dispatch pair measured at 781ms).
+        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromSeconds(5));
         var executionCount = 0;
 
         // Act
