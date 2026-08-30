@@ -1,11 +1,11 @@
 {
   "version": 2,
   "dependencies": {
-    "net10.0-windows10.0.26100": {
+    "net10.0": {
       "System.CodeDom": {
         "type": "Transitive",
-        "resolved": "10.0.10",
-        "contentHash": "lru5igKxs4OgWKfMeOpMAYpfB1tNSSXHk2zyiSDO/h0u8RVAhN6KqW9d3ANybDB+ePIHg6HM/NlE8HlpOk4k5A=="
+        "resolved": "10.0.11",
+        "contentHash": "v40pNeBoZTYsiVxz+PzyZmmIr2JIhpK4VsFpQqZSZCXa51PDlNXIN2ESm8kDU0voZYVfLhxF9HvmBsxCJmkiRg=="
       },
       "universaldevicetoolkit.lib.abstractions": {
         "type": "Project"
@@ -13,28 +13,17 @@
       "universaldevicetoolkit.platform.windows.core": {
         "type": "Project",
         "dependencies": {
-          "System.Management": "[10.0.10, )",
+          "System.Management": "[10.0.11, )",
           "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
         }
       },
       "System.Management": {
         "type": "CentralTransitive",
-        "requested": "[10.0.10, )",
-        "resolved": "10.0.10",
-        "contentHash": "U13ksdXfQlF2WDdu3S4ZPVpikFs2HgV3dbJJZLeZpBIQ4z/xCmQnwEf6LsEEIC2zSamVVa1acA9RdVhZwnWKeA==",
+        "requested": "[10.0.11, )",
+        "resolved": "10.0.11",
+        "contentHash": "xyNn8KGbWI88LoUwg3rB8qcpFFST6dr8Ro/qS8GBu2GOwR0v7J82kVFHTiiPtvEKS79VbMTxs/sIKQ+Cq1Zs1g==",
         "dependencies": {
-          "System.CodeDom": "10.0.10"
-        }
-      }
-    },
-    "net10.0-windows10.0.26100/win-x64": {
-      "System.Management": {
-        "type": "CentralTransitive",
-        "requested": "[10.0.10, )",
-        "resolved": "10.0.10",
-        "contentHash": "U13ksdXfQlF2WDdu3S4ZPVpikFs2HgV3dbJJZLeZpBIQ4z/xCmQnwEf6LsEEIC2zSamVVa1acA9RdVhZwnWKeA==",
-        "dependencies": {
-          "System.CodeDom": "10.0.10"
+          "System.CodeDom": "10.0.11"
         }
       }
     }
