@@ -516,12 +516,15 @@ function enterBackground(): void {
       if (pending && !pending.isDestroyed()) {
         pending.destroy()
       }
+      // Trim once after the renderer is gone; a pre-destroy pass would clear
+      // caches the live DOM immediately repopulates and pay an extra main
+      // process GC pause while the window is still hiding.
       void trimChromiumCaches()
     })
   } else {
     setSurfaceVisible('main', false)
+    void trimChromiumCaches()
   }
-  void trimChromiumCaches()
   setTimeout(() => {
     void trimChromiumCaches()
     void logMemoryUsage('tray background')
