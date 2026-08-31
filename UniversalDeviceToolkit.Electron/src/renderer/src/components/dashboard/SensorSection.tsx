@@ -498,7 +498,11 @@ function SensorPanel({
                 <span className="udt-sensor-panel__metric-label">{metric.label}</span>
               </dt>
               <div className="udt-sensor-panel__metric-track">
-                <div className="udt-sensor-panel__metric-fill" style={{ width: `${barPercent(metric)}%` }} />
+                {/* Hot path (1Hz): scaleX composites on the GPU; width would relayout every tick. */}
+                <div
+                  className="udt-sensor-panel__metric-fill"
+                  style={{ transform: `scaleX(${barPercent(metric) / 100})` }}
+                />
               </div>
               <dd style={metric.valueColor != null ? { color: metric.valueColor } : undefined} title={metric.value}>
                 {metric.value}
@@ -803,7 +807,7 @@ export default function SensorSection(): React.JSX.Element {
           <div
             className="udt-sensor-panel__vram-clock-fill"
             style={{
-              width: `${Math.min(100, Math.max(0, (gpuMemoryClockBar.barValue / gpuMemoryClockBar.barMax) * 100))}%`
+              transform: `scaleX(${Math.min(1, Math.max(0, gpuMemoryClockBar.barValue / gpuMemoryClockBar.barMax))})`
             }}
           />
         </div>

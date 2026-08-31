@@ -295,15 +295,19 @@
   overflow: hidden;
 }
 
+/* Hot path (1Hz sensor tick): the fill spans the track at width 100% and the
+   live value drives transform scaleX — compositor-only, no relayout/repaint. */
 .udt-sensor-panel__metric-fill {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  width: 0;
+  width: 100%;
   border-radius: var(--udt-progress-radius);
   background: var(--udt-progress-fill);
-  transition: width 480ms var(--udt-ease-cubic-out);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 480ms var(--udt-ease-cubic-out);
 }
 
 /* Metric reading: never ellipsis/clip units (GHz, RPM, °C, W, %).
@@ -586,15 +590,18 @@
   overflow: hidden;
 }
 
+/* Same hot-path treatment as the metric fill: scaleX instead of width. */
 .udt-sensor-panel__vram-clock-fill {
   position: absolute;
   top: 0;
   bottom: 0;
   left: 0;
-  width: 0;
+  width: 100%;
   border-radius: var(--udt-progress-radius);
   background: var(--udt-progress-fill);
-  transition: width 480ms var(--udt-ease-cubic-out);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 480ms var(--udt-ease-cubic-out);
 }
 
 .udt-sensor-panel__vram-clock dd {
