@@ -62,19 +62,20 @@ UDT does NOT collect:
 
 | Component | Security Measure |
 |-----------|-----------------|
-| Plugin System | Isolated plugin load contexts + manifest/hash validation pipeline |
+| Electron Renderer | Chromium sandbox, context isolation, no Node.js integration |
+| IPC Boundary | Main-frame validation, narrow preload API, method and argument validation |
 | Settings Storage | Local JSON files under user profile (no cloud sync) |
-| Network Requests | HTTPS-only, certificate validation |
+| Network Requests | HTTPS-only external navigation and normal certificate validation |
 | Hardware Access | Minimal required permissions |
-| Auto-Updates | HTTPS transport + integrity checks when hashes are provided |
+| Auto-Updates | HTTPS transport and mandatory SHA-256 verification before extraction or launch |
 
-### Plugin Security
+### Renderer and IPC Security
 
-Plugins run in dedicated load contexts and should be treated as trusted code:
-- Validate plugin source before installation
-- Prefer plugins with explicit manifest metadata and checksums
-- Keep plugins updated and remove unused plugins
-- Use least-privilege Windows account for daily usage
+The plugin system was retired in 6.1. The shipping Electron renderer runs
+sandboxed and reaches privileged operations only through the preload bridge.
+Unexpected top-level navigation and new windows are denied. Main-process
+handlers validate the current main frame, restrict external URLs to HTTP(S),
+and reject executable or script paths supplied by the renderer.
 
 ## Dependencies Security
 
@@ -108,10 +109,10 @@ Plugins run in dedicated load contexts and should be treated as trusted code:
    - Run with minimal privileges
    - Disable unused features
 
-3. **Plugin Safety**
-   - Only install trusted plugins
-   - Review plugin permissions
-   - Keep plugins updated
+3. **Update Safety**
+   - Install releases from the official repository
+   - Keep checksum manifests with downloaded installers
+   - Do not bypass operating-system signature warnings
 
 ### For Developers
 
@@ -128,8 +129,8 @@ Plugins run in dedicated load contexts and should be treated as trusted code:
 
 3. **Testing Requirements**
    - Security tests for hardware interfaces
-   - Plugin API validation
-   - Permission boundary tests
+   - Electron sandbox and IPC boundary tests
+   - Path and update-integrity tests
 
 ## Known Security Considerations
 
@@ -142,18 +143,19 @@ Some features require elevated permissions:
 
 These are necessary for hardware control but increase the application's trust boundary.
 
-### Plugin System
+### Renderer Boundary
 
-The plugin system allows code execution. Users should:
-- Only install plugins from trusted sources
-- Review plugin permissions before installation
-- Keep plugins updated
+Renderer compromise is treated as a trust-boundary failure, not as permission
+to execute arbitrary local programs. Keep the preload API narrow, validate the
+calling frame in privileged IPC handlers, and do not re-enable Node.js
+integration or disable the Chromium sandbox.
 
 ### Auto-Updates
 
 The update mechanism:
 - Uses HTTPS for all downloads
-- Verifies binary signatures
+- Verifies the downloaded payload against a SHA-256 release digest or manifest
+- Launches only the installer path produced by the verified downloader
 - Allows manual update rejection
 
 ## Compliance

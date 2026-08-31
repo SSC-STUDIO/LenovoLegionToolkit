@@ -43,7 +43,6 @@ UniversalDeviceToolkit.sln
 ├── UniversalDeviceToolkit.Lib/            # Core library (assembly: UniversalDeviceToolkit.Lib)
 ├── UniversalDeviceToolkit.Lib.Automation/ # Automation features
 ├── UniversalDeviceToolkit.Lib.Macro/      # Macro system
-├── UniversalDeviceToolkit.Lib.Plugins/    # Plugin host
 ├── UniversalDeviceToolkit.Lib.Abstractions/ / Lib.Shared # Portable, net10.0
 ├── UniversalDeviceToolkit.CrossPlatform/  # Cross-platform diagnostics CLI (net10.0)
 ├── UniversalDeviceToolkit.CLI/            # Windows IPC CLI (udt.exe, alias udt-cli.exe)

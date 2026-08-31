@@ -1,24 +1,21 @@
 # Test map
 
-Host tests are split by project so Test Explorer, the solution, and CI use the same layers. Plugin tests stay under `Plugins/`. Electron UI contracts run with `npm test`.
+Host tests are split by project so Test Explorer, the solution, and CI use the same layers. Electron UI contracts run with `npm test`; the plugin system and its test projects were retired in 6.1.
 
 ## Projects
 
 | Project | What it contains | How CI runs it |
 | --- | --- | --- |
-| `UniversalDeviceToolkit.Tests.Contracts` | Guard and Security contracts (layout, CI YAML, signatures, path safety, official plugin RPC) | Fail-fast, no category filter |
+| `UniversalDeviceToolkit.Tests.Contracts` | Guard and Security contracts (layout, CI YAML, signatures, path safety) | Fail-fast, no category filter |
 | `UniversalDeviceToolkit.Fast.Tests` | Isolation-free unit tests (network proxy IPC) | After Contracts |
 | `UniversalDeviceToolkit.Tests` | Parallel unit tests (no process-wide shared state) | Main parallel layer |
 | `UniversalDeviceToolkit.Tests.Stateful` | `[Collection(Localization/Settings/ProcessState)]` and PowerMode cache tests | Last; collection parallelism off |
 | `UniversalDeviceToolkit.CrossPlatform.Tests` | Portable diagnostics CLI | `cross-platform-cli` / `linux.yml` |
-| `Plugins/Official/*.Tests` | Official plugin bodies | `plugins-validate.yml` (`Plugins/UniversalDeviceToolkit.Plugins.sln`) |
-| `UniversalDeviceToolkit.Electron/tests/*.mjs` | Electron/Host RPC and plugin web-page contracts | `npm test` (with typecheck) |
+| `UniversalDeviceToolkit.Electron/tests/*.mjs` | Electron/Host RPC, renderer, installer, and security contracts | `npm test` (with lint and typecheck) |
 
 `TestCategories` (`Security`, `Guard`, `Unit`) is at most one trait per class. After the project split, CI selects by project; Category is optional documentation. Do not add `Coverage`, `Plugin`, `Utils`, `Controller`, or `Smoke`.
 
 Host tests keep namespaces under `UniversalDeviceToolkit.Tests.*` (folder = namespace). Explorer grouping is by project.
-
-Official plugin RPC method names live in one list: `Plugins/Official/plugin-rpc-contract.json`. Host Guard tests and `UniversalDeviceToolkit.Electron/tests/pluginOfficialContract.test.mjs` both read it. Host tests cover the plugin *host*; `Plugins/Official/*.Tests` cover plugin *implementations*.
 
 ## How to run
 
@@ -34,12 +31,10 @@ dotnet test UniversalDeviceToolkit.Tests.Stateful/UniversalDeviceToolkit.Tests.S
 # Cross-platform diagnostics
 dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj -c Release
 
-# Official plugins
-udt-plugin.cmd test
-# or: dotnet test Plugins/UniversalDeviceToolkit.Plugins.sln -c Release
-
 # Electron UI contracts
 cd UniversalDeviceToolkit.Electron
+npm run lint
+npm run typecheck
 npm test
 ```
 
@@ -54,9 +49,7 @@ Windows job `build-test-and-smoke` in `.github/workflows/Ci-tests.yml`:
 3. Unit (coverage)
 4. Stateful (coverage)
 
-Same workflow also runs `electron-ui-tests` (`npm run typecheck` then `npm test`). Plugin PRs use `.github/workflows/plugins-validate.yml` (plugin solution tests + Electron `npm test`). Host CI ignores `Plugins/**` so a plugin-only change does not run the full Windows Host suite.
-
-Preview catalog: Host `PluginRepositoryService` selects `plugin-catalog` vs `plugin-catalog-preview` from the application InformationalVersion hyphen (same rule as `Release.yml`). Contracts/Unit cover tag URLs; Stateful covers fetch/trust; plugin tooling tests cover SemVer `x.y.z-preview.N` and generate-store channel isolation.
+The same workflow also runs `electron-ui-tests` (`npm run lint`, `npm run typecheck`, then `npm test`).
 
 Release.yml runs the same four Host projects after the solution build.
 

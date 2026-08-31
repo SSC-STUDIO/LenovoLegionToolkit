@@ -41,7 +41,9 @@ cd UniversalDeviceToolkit.Electron
 npm ci            # first time only (uses package-lock.json)
 npm run dev       # dev server + Electron window (hot reload)
 npm start         # run the built output (after `npm run build`)
+npm run lint      # ESLint gate (errors fail CI; compiler-migration rules stay warnings)
 npm run typecheck # TS type check (web + main/preload)
+npm test          # renderer/main/installer contract tests
 ```
 
 In Visual Studio the solution contains a thin `UniversalDeviceToolkit.Electron`
@@ -66,6 +68,7 @@ The Electron shell can be started for UI work on macOS/Linux:
 cd UniversalDeviceToolkit.Electron
 npm ci            # first time only
 npm run dev       # dev server + Electron window (hot reload)
+npm run lint      # ESLint gate
 npm run typecheck # TS type check
 ```
 
@@ -111,7 +114,7 @@ The solution has 25 projects (24 .NET + the Electron launcher). Build sequential
 
 Process-wide mutable tests use `[Collection(TestCollections.…)]` and live in `Tests.Stateful` (`parallelizeTestCollections: false`). Contracts and Unit keep collection parallelism on.
 
-Electron UI contracts: `npm test` in `UniversalDeviceToolkit.Electron`.
+Electron UI contracts in `UniversalDeviceToolkit.Electron`: `npm run lint`, `npm run typecheck`, then `npm test`.
 
 <br/>
 **1. Before reporting an issue make yourself familiar with the README**

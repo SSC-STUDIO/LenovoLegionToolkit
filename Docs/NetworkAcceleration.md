@@ -93,13 +93,8 @@ No third-party accelerator SDKs, no remote script injection, no unreviewed onlin
 | YARP MITM / DPAPI CA UI | Optional follow-up |
 | Continuous background sampling when page hidden | **Not used** (by design) |
 
-## Plugin consolidation
+## Former plugin capabilities
 
-Official plugins live in this repository under `Plugins/Official/`.
-See `Docs/archive/PluginConsolidation.md`.
-
-- **Network Acceleration** plugin: **delisted** from store; migration source only.
-- **Battery Health** plugin: **delisted** from store; thresholds live in main battery/sensors.
-- **Custom Mouse** → **Cursor & Pointer**.
-- **Shell Integration** → **Nilesoft Shell Manager** (delisted from the store; existing installs keep working).
-- **ViVeTool**: keep with risk copy.
+The plugin system was retired in 6.1. Network Acceleration is a built-in Host
+feature under System Optimization. Cursor and pointer controls live on the
+Mouse page. See [CHANGELOG.md](../CHANGELOG.md).

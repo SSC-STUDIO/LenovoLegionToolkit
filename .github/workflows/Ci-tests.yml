@@ -248,6 +248,13 @@ jobs:
         working-directory: UniversalDeviceToolkit.Electron
         run: npm ci
 
+      - name: Check source Unicode
+        run: node Tools/CheckSourceUnicode/check-unicode.mjs
+
+      - name: Lint Electron UI
+        working-directory: UniversalDeviceToolkit.Electron
+        run: npm run lint
+
       - name: Typecheck Electron UI
         working-directory: UniversalDeviceToolkit.Electron
         run: npm run typecheck

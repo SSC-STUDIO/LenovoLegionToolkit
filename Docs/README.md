@@ -16,7 +16,6 @@ Start here, then follow the topic docs. Do not treat WPF/Avalonia audit notes as
 | [../CHANGELOG.md](../CHANGELOG.md) | Project changelog |
 | [ARCHITECTURE.md](./ARCHITECTURE.md) | Process model: Electron UI + Host |
 | [DEPLOYMENT.md](./DEPLOYMENT.md) | Build, package, release |
-| [Plugins/README.md](./Plugins/README.md) | Official plugin authoring |
 
 ## Product and runtime
 

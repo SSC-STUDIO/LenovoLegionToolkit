@@ -205,12 +205,16 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
-    public void CiTestsWorkflow_ShouldTypecheckAndTestElectronUi()
+    public void CiTestsWorkflow_ShouldLintTypecheckAndTestElectronUi()
     {
         var job = ReadWorkflow("Ci-tests.yml").Job("electron-ui-tests");
+        var unicode = job.Step("Check source Unicode");
+        var lint = job.Step("Lint Electron UI");
         var typecheck = job.Step("Typecheck Electron UI");
         var test = job.Step("Test Electron UI");
 
+        unicode.Run.Should().Contain("Tools/CheckSourceUnicode/check-unicode.mjs");
+        lint.Run.Should().Contain("npm run lint");
         typecheck.Run.Should().Contain("npm run typecheck");
         test.Run.Should().Contain("npm test");
     }

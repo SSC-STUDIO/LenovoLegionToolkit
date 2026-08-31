@@ -39,7 +39,9 @@ cd UniversalDeviceToolkit.Electron
 npm ci            # 仅首次（使用 package-lock.json）
 npm run dev       # 开发服务器 + Electron 窗口（热重载）
 npm start         # 运行构建产物（先 `npm run build`）
+npm run lint      # ESLint 门禁（错误会使 CI 失败）
 npm run typecheck # TS 类型检查（web + main/preload）
+npm test          # 渲染进程 / 主进程 / 安装器契约测试
 ```
 
 在 Visual Studio 中，解决方案里有一个精简的 `UniversalDeviceToolkit.Electron`
@@ -60,10 +62,11 @@ Electron 壳可以在 macOS/Linux 上做界面开发：
 cd UniversalDeviceToolkit.Electron
 npm ci            # 仅首次
 npm run dev       # 开发服务器 + Electron 窗口（热重载）
+npm run lint      # ESLint 门禁
 npm run typecheck # TS 类型检查
 ```
 
-可移植 Host（`net10.0`，`UDTWindows=false`）会把多数 Windows 专用 RPC 标成 `-32099`。官方插件仍是 Windows TFM。不要把默认 Windows TFM 发到 `osx-*` / `linux-x64`。
+可移植 Host（`net10.0`，`UDTWindows=false`）会把多数 Windows 专用 RPC 标成 `-32099`。不要把默认 Windows TFM 发到 `osx-*` / `linux-x64`。
 
 ```bash
 # 实验性可移植 Host（不是发布产物）
@@ -86,7 +89,7 @@ dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
 > `Docs/DEPLOYMENT.md`；Electron 界面壳（标题栏、菜单栏、托盘、OSD、系统电源）
 > 见 `Docs/ARCHITECTURE.md` → 「Platform Notes」。
 
-**测试分层**见 [Docs/TEST_DIAGNOSTICS.md](Docs/TEST_DIAGNOSTICS.md)。宿主测试按工程拆分：`Tests.Contracts`（Guard/Security，fail-fast）→ `Fast.Tests` → `Tests`（并行单元）→ `Tests.Stateful`（Localization/Settings/ProcessState/PowerMode，集合不并行）。`TestCategories` 仅保留 `Security` / `Guard` / `Unit`，每个类最多一个 Category；CI 按工程选择，不再使用 `Coverage` / `Plugin` / `Smoke` 过滤。插件本体测试在 `Plugins/Official/*.Tests`（独立 CI）；Electron 为 `npm test`。官方插件 RPC 名单：`Plugins/Official/plugin-rpc-contract.json`。
+**测试分层**见 [Docs/TEST_DIAGNOSTICS.md](Docs/TEST_DIAGNOSTICS.md)。宿主测试按工程拆分：`Tests.Contracts`（Guard/Security，fail-fast）→ `Fast.Tests` → `Tests`（并行单元）→ `Tests.Stateful`（Localization/Settings/ProcessState/PowerMode，集合不并行）。`TestCategories` 仅保留 `Security` / `Guard` / `Unit`，每个类最多一个 Category；CI 按工程选择，不再使用 `Coverage` / `Plugin` / `Smoke` 过滤。插件系统已在 6.1 退役。Electron 门禁为 `npm run lint`、`npm run typecheck`、`npm test`。
 
 NuGet 还原通过各项目已提交的 `packages.lock.json` 保证可复现（`Directory.Build.props` 中启用了 `RestorePackagesWithLockFile`）。CI 始终使用 `dotnet restore … --locked-mode`。本地对齐 CI 时请带上该参数；仅在有意更新包版本后刷新锁文件时省略，并将更新后的 `packages.lock.json` 一并提交。`Make.bat` 与多数本地脚本依赖构建/发布时的隐式还原，不会强制 `--locked-mode`，因此一般离线构建不会因锁文件严格校验而中断。
 

@@ -141,9 +141,8 @@ to Host in this phase:
 
 Non-Windows Host builds register the Windows-only RPC names as `-32099`
 (`Not supported on this platform.`) so the renderer never waits on unknown-method
-errors. Plugin marketplace method names stay registered on every platform;
-official plugin packages remain Windows TFMs and are not a shipped macOS/Linux
-product.
+errors. The plugin system was retired in 6.1; those marketplace method names
+are no longer part of the Host RPC surface.
 
 Host JSON-RPC errors keep their numeric code in the message as `[UDT:<code>]`
 so the UI can map `-1006` (elevation), `-1010` (missing NetworkProxy), `-1011`
@@ -155,9 +154,9 @@ so the UI can map `-1006` (elevation), `-1010` (missing NetworkProxy), `-1011`
 
 The Electron client implementing the React UI and the window shell:
 
-- **`src/renderer/`**: Pages (Dashboard, Keyboard, Automation, Macro, Optimization, Plugins, Settings), Components, Zustand stores, `api/*` typed bridge wrappers, `i18n/locales/*` (TS modules). Live sensor panels live in `components/dashboard/`; feature cards and GPU extras live in `components/dashboard-parity/` (WPF dashboard-control parity, not a second app).
-- **`src/main/`**: Main process shell — window creation (`index.ts`), tray (`tray.ts`), OSD (`osd-window.ts`), macOS menu (`menu.ts`), single-instance, dialogs, host client (`host-client.ts`)
-- **`src/preload/`**: Context-isolated bridge (`index.ts`), plugin webview host (`plugin-host.ts`)
+- **`src/renderer/`**: Pages (Dashboard, Keyboard, Automation, Macro, Optimization, Settings), Components, Zustand stores, `api/*` typed bridge wrappers, `i18n/locales/*` (TS modules). Live sensor panels live in `components/dashboard/`; feature cards and GPU extras live in `components/dashboard-parity/` (WPF dashboard-control parity, not a second app).
+- **`src/main/`**: Main process shell — window creation (`index.ts`), tray (`tray.ts`), OSD (`osd-window.ts`), macOS menu (`menu.ts`), single-instance, dialogs, host client (`host-client.ts`), path/URL and power-action guards
+- **`src/preload/`**: Context-isolated bridge (`index.ts`)
 
 ### 2. UniversalDeviceToolkit.Lib (Core Library; assembly `UniversalDeviceToolkit.Lib`)
 
@@ -177,7 +176,6 @@ The heart of the application containing:
 - `UpdateService`: Application updates
 - `PackageDownloader`: Driver/firmware updates
 - `GameDetectionService`: Active game detection
-- `PluginManager`: Dynamic plugin loading
 
 #### Features
 - `IAutomationFeature`: Automated actions based on triggers
@@ -212,40 +210,21 @@ Command-line interface for headless operation:
 - Status monitoring
 - Automation rule management
 
-## Plugin System Architecture
+## Renderer Security Boundary
 
-UDT supports dynamic plugin loading through a structured API:
+The plugin system was retired in 6.1. The shipping UI is a sandboxed Chromium
+renderer with `contextIsolation` and no Node.js integration. Privileged work
+reaches the main process only through the preload bridge:
 
-```
-Plugin Structure (runtime, in host plugins directory):
-+-- plugin.manifest.json    # Authoring manifest (also packaged for compatibility)
-+-- plugin.json             # Generated runtime manifest output (legacy-compatible)
-+-- plugin.dll              # Main plugin assembly
-+-- [dependencies]          # Additional assemblies (e.g. UniversalDeviceToolkit.Plugins.SDK.dll)
-+-- [resources]             # Plugin resources
-```
+- IPC handlers accept requests from the current main window's main frame only
+- `window.open` and unexpected top-level navigation are denied
+- External URLs must be HTTP(S); renderer-supplied paths cannot open executables or scripts
+- Power actions are rate limited in the main process
 
-Official plugins live under `Plugins/Official/` in this repository. They are built by the monorepo plugin workflows. Stable 1.x and official 2.0.0 packages publish as assets of the rolling `plugin-catalog` release; prerelease 2.x packages publish to `plugin-catalog-preview`. The host loads packaged output from the catalog that matches its version label.
-
-### Plugin Types
-
-Host-side categories (legacy):
-
-1. **Feature Plugins**: Add new automation features
-2. **Integration Plugins**: Third-party service integrations
-3. **Tool Plugins**: Standalone utilities
-
-Author scaffolding under `Plugins/Templates/PluginArchetypes/` uses `settings-only`, `feature-settings`, and `runtime-optimization` templates, which map to settings pages, feature + settings pages, and Windows optimization integrations respectively.
-
-### Plugin Lifecycle
-
-```
-Loading -> Initialization -> Registration -> Activation -> Shutdown
-  |              |                |              |           |
-  |              +----------------+--------------+-----------+
-  |                              Active State
-  +-> Disabled/Failed -> Unloaded
-```
+Former plugin capabilities now live as built-in Host features (cursor and
+pointer controls on the Mouse page; network acceleration under System
+Optimization). Legacy `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins` data is
+not loaded.
 
 ## Data Flow
 
@@ -309,13 +288,13 @@ and mapped to localized messages by the renderer (`src/renderer/src/api/bridge.t
 
 ## Namespace and assembly naming
 
-User-facing product names and **primary plugin/host ABI** are both **Universal Device Toolkit**:
+User-facing product names use **Universal Device Toolkit**. The plugin host
+assembly (`UniversalDeviceToolkit.Lib.Plugins`) was removed in 6.1.
 
 | Surface | Primary identity |
 | --- | --- |
 | Product / Electron process | Universal Device Toolkit |
 | Core Lib assembly / namespaces | `UniversalDeviceToolkit.Lib` |
-| Plugins host assembly / namespaces | `UniversalDeviceToolkit.Lib.Plugins` |
 | Windows IPC CLI executable | `udt.exe` (`AssemblyName` = `udt`; `udt-cli.exe` one-train alias) |
 | Cross-platform diagnostics CLI | `udt` (`UniversalDeviceToolkit.CrossPlatform`, framework-dependent `udt.dll` + `udt`/`udt.cmd`) |
 

@@ -124,6 +124,8 @@ jobs:
         working-directory: UniversalDeviceToolkit.Electron
         shell: pwsh
         run: |
+          npm run lint
+          if ($LASTEXITCODE -ne 0) { throw 'Electron lint failed.' }
           npm run typecheck
           if ($LASTEXITCODE -ne 0) { throw 'Electron typecheck failed.' }
           npm test
