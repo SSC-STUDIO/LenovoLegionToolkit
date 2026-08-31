@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed / 变更
+- Neo-brutalism skin now covers every control family: buttons (custom + Ant Design solid variants) get hard plates with a press-into-the-page active shift, and inputs, selects, sliders, dropdown menus, modals, message toasts, notifications, status banners, and keyboard-page cards all take the heavy-stroke / hard-offset-shadow chrome in both light and dark combos.
+- Dashboard sensor metric and VRAM-clock bars animate via GPU-composited `transform: scaleX()` instead of `width`, removing per-second relayout during 1 Hz sensor polling.
+- The Settings "UI Animations" toggle now also stops page entrances, list stagger, tab fades, and other decorative keyframes (previously only windows/dialogs); duplicate conflicting button press rules and hardcoded status-banner colors/durations were consolidated onto the shared design tokens.
+
 ## [6.1.0] - 2026-08-31
 
 ### Added / 新增

@@ -1072,3 +1072,17 @@
   resize: vertical;
   box-sizing: border-box;
 }
+
+/* ── Neo-brutalism skin (data-style="neubrutalism") ─────────────
+   Shared modal family (.udt-modal is used by automation, macro and the
+   pickers): hard-framed dialog matching the device-info / utils modals.
+   Light combo pins the near-black stroke. */
+
+:root[data-style='neubrutalism'] .udt-modal {
+  border: 2px solid var(--udt-control-stroke-strong);
+  box-shadow: var(--udt-shadow-toast);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-modal {
+  border-color: #17151f;
+}

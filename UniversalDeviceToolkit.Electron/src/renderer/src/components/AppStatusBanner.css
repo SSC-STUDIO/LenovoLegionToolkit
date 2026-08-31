@@ -52,7 +52,7 @@
   font-size: var(--udt-font-caption);
   line-height: 1.4;
   pointer-events: auto;
-  animation: udt-status-banner-enter 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: udt-status-banner-enter var(--udt-anim-medium) var(--udt-ease-cubic-out);
 }
 
 @keyframes udt-status-banner-enter {
@@ -67,16 +67,16 @@
 }
 
 .udt-status-banner--warning .udt-status-banner__icon {
-  color: #e6a23c;
+  color: var(--udt-status-warning);
 }
 
 .udt-status-banner--success .udt-status-banner__icon {
-  color: #2eb871;
+  color: var(--udt-status-success);
 }
 
 .udt-status-banner--clickable {
   cursor: pointer;
-  transition: filter 120ms ease;
+  transition: filter var(--udt-anim-fast) ease-out;
 }
 
 .udt-status-banner--clickable:hover {
@@ -117,8 +117,8 @@
   color: var(--udt-text-tertiary, rgba(255, 255, 255, 0.55));
   cursor: pointer;
   transition:
-    background-color 120ms ease-out,
-    color 120ms ease-out;
+    background-color var(--udt-anim-fast) ease-out,
+    color var(--udt-anim-fast) ease-out;
 }
 
 .udt-status-banner__close:hover {
@@ -162,4 +162,21 @@
 
 .udt-animations-off .udt-status-banner {
   animation: none;
+}
+
+/* ── Neo-brutalism skin (data-style="neubrutalism") ─────────────
+   Persistent status cards share the toast plate language: heavy stroke,
+   hard offset shadow from the re-tokened --udt-shadow-toast, squared
+   close button. Light combo pins the near-black stroke. */
+
+:root[data-style='neubrutalism'] .udt-status-banner {
+  border: 2px solid var(--udt-control-stroke-strong);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-status-banner {
+  border-color: #17151f;
+}
+
+:root[data-style='neubrutalism'] .udt-status-banner__close {
+  border-radius: var(--udt-radius-micro);
 }

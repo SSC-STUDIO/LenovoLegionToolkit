@@ -500,6 +500,12 @@ body {
   }
 }
 
+/* Settings -> Application -> UI Animations off: page entrances stop too
+   (the toggle promises "windows, dialogs and other interface elements"). */
+.udt-animations-off .udt-page-enter {
+  animation: none;
+}
+
 .udt-app-shell__main > .udt-page-enter:has(.udt-content-fill) {
   min-height: 100%;
   display: flex;
@@ -1095,7 +1101,7 @@ body {
   flex-wrap: nowrap !important;
   align-items: center !important;
   box-sizing: border-box !important;
-  transition: border-color 0.15s ease, background 0.15s ease !important;
+  transition: border-color var(--udt-anim-fast) ease-out, background var(--udt-anim-fast) ease-out !important;
 }
 
 .ant-select:not(.ant-select-disabled):hover,
@@ -1618,6 +1624,10 @@ meter {
   }
 }
 
+.udt-animations-off .udt-fade-in {
+  animation: none;
+}
+
 /* ── Global visual polish (global pass) ─────────────────────────── */
 
 ::selection {
@@ -1669,6 +1679,7 @@ meter {
 
 .udt-btn:not(:disabled):active {
   transform: scale(0.97);
+  filter: brightness(0.94);
 }
 
 .udt-btn--primary:not(:disabled):hover {
@@ -1786,9 +1797,10 @@ select.udt-select {
   margin: 0;
 }
 
-/* Buttons: pressed state + focus ring */
+/* Buttons: pressed fill + keyboard affordance. Press transform/filter
+   feedback lives in the micro-interaction block above; a second competing
+   transform here would silently lose the cascade tie. */
 .udt-btn:active:not(:disabled) {
-  transform: translateY(1px);
   background: var(--udt-control-fill-tertiary);
 }
 
@@ -1798,17 +1810,6 @@ select.udt-select {
 }
 
 .udt-btn:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--udt-accent-secondary) 60%, transparent);
-  outline-offset: 2px;
-}
-
-/* Buttons: press feedback + keyboard affordance */
-.udt-btn:not(:disabled):active {
-  transform: scale(0.97);
-  filter: brightness(0.94);
-}
-
-.udt-btn:not(:disabled):focus-visible {
   outline: 2px solid var(--udt-accent);
   outline-offset: 2px;
 }
@@ -1950,6 +1951,19 @@ select.udt-select {
 
 .udt-empty__icon {
   animation: udt-empty-float 2.4s ease-in-out infinite alternate;
+}
+
+/* UI Animations off: entrance keyframes stop (hover/focus transitions are
+   interaction feedback and stay). Mirrors the reduced-motion block below. */
+.udt-animations-off .udt-pipeline-list > .udt-pipeline,
+.udt-animations-off .udt-optimization-layout__main > .udt-card,
+.udt-animations-off .udt-settings-section > .udt-settings-card,
+.udt-animations-off .udt-macro-page .udt-macro-list > *,
+.udt-animations-off .udt-modal__list > *,
+.udt-animations-off .udt-tab-content,
+.udt-animations-off .udt-category__body,
+.udt-animations-off .udt-empty__icon {
+  animation: none;
 }
 
 /* Reduced motion: disable the new decorations too */
@@ -2139,4 +2153,191 @@ select.udt-select {
 
 :root[data-style='neubrutalism'] .udt-switch input:checked + .udt-switch__track::after {
   background: var(--udt-surface-window);
+}
+
+/* Layer 4c - buttons (.udt-btn family + square tool buttons). Hard plate at
+   rest; press sinks the button onto the surface: it translates by the plate
+   offset while the shadow collapses (transform + box-shadow only). */
+
+:root[data-style='neubrutalism'] .udt-btn,
+:root[data-style='neubrutalism'] .udt-icon-btn,
+:root[data-style='neubrutalism'] .udt-action-btn {
+  border: 1.5px solid var(--udt-control-stroke-strong);
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .udt-btn,
+:root[data-theme='light'][data-style='neubrutalism'] .udt-icon-btn,
+:root[data-theme='light'][data-style='neubrutalism'] .udt-action-btn {
+  border-color: #17151f;
+}
+
+/* Hover keeps the fill/brightness cues from the base rules; the tool-button
+   scale pop is Fluent decoration, so pin it flat here. */
+:root[data-style='neubrutalism'] .udt-icon-btn:not(:disabled):hover,
+:root[data-style='neubrutalism'] .udt-action-btn:not(:disabled):hover {
+  transform: none;
+}
+
+:root[data-style='neubrutalism'] .udt-btn:not(:disabled):active,
+:root[data-style='neubrutalism'] .udt-btn:active:not(:disabled),
+:root[data-style='neubrutalism'] .udt-icon-btn:not(:disabled):active,
+:root[data-style='neubrutalism'] .udt-action-btn:not(:disabled):active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+  filter: none;
+}
+
+/* Disabled buttons rest flat - a floating plate reads as clickable. */
+:root[data-style='neubrutalism'] .udt-btn:disabled,
+:root[data-style='neubrutalism'] .udt-icon-btn:disabled,
+:root[data-style='neubrutalism'] .udt-action-btn:disabled {
+  box-shadow: none;
+}
+
+/* Ant Design buttons (solid variants only - text / link buttons stay flat
+   affordances and must not grow plates). */
+:root[data-style='neubrutalism'] .ant-btn:not(.ant-btn-text):not(.ant-btn-link) {
+  border: 1.5px solid var(--udt-control-stroke-strong);
+  box-shadow: var(--udt-shadow-low);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .ant-btn:not(.ant-btn-text):not(.ant-btn-link) {
+  border-color: #17151f;
+}
+
+:root[data-style='neubrutalism'] .ant-btn:not(.ant-btn-text):not(.ant-btn-link):not(:disabled):active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+:root[data-style='neubrutalism'] .ant-btn:not(.ant-btn-text):not(.ant-btn-link):disabled {
+  box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root[data-style='neubrutalism'] .udt-btn:not(:disabled):active,
+  :root[data-style='neubrutalism'] .udt-btn:active:not(:disabled),
+  :root[data-style='neubrutalism'] .udt-icon-btn:not(:disabled):active,
+  :root[data-style='neubrutalism'] .udt-action-btn:not(:disabled):active,
+  :root[data-style='neubrutalism'] .ant-btn:not(.ant-btn-text):not(.ant-btn-link):not(:disabled):active {
+    transform: none;
+  }
+}
+
+/* Layer 4d - native form controls. Heavier strokes; the soft focus glow
+   becomes a plain accent border (hard edges, no halo). */
+
+:root[data-style='neubrutalism'] .udt-select,
+:root[data-style='neubrutalism'] .udt-input,
+:root[data-style='neubrutalism'] .udt-number,
+:root[data-style='neubrutalism'] .udt-textarea {
+  border: 1.5px solid var(--udt-control-stroke-secondary);
+}
+
+:root[data-style='neubrutalism'] .udt-select:hover,
+:root[data-style='neubrutalism'] .udt-input:hover,
+:root[data-style='neubrutalism'] .udt-number:hover,
+:root[data-style='neubrutalism'] .udt-textarea:hover {
+  border-color: var(--udt-control-stroke-strong);
+}
+
+:root[data-style='neubrutalism'] .udt-select:focus,
+:root[data-style='neubrutalism'] .udt-input:focus,
+:root[data-style='neubrutalism'] .udt-number:focus,
+:root[data-style='neubrutalism'] .udt-textarea:focus,
+:root[data-style='neubrutalism'] .udt-select:focus-visible,
+:root[data-style='neubrutalism'] .udt-input:focus-visible,
+:root[data-style='neubrutalism'] .udt-number:focus-visible,
+:root[data-style='neubrutalism'] .udt-textarea:focus-visible {
+  border-color: var(--udt-accent);
+  box-shadow: none;
+}
+
+/* Layer 4e - Ant Design Select. The base chrome above pins stroke-default
+   with !important, so the heavier brutalist stroke needs it too. */
+
+:root[data-style='neubrutalism'] .ant-select:not(.ant-select-borderless):not(.ant-select-customize-input),
+:root[data-style='neubrutalism'] .ant-select .ant-select-selector {
+  border: 1.5px solid var(--udt-control-stroke-secondary) !important;
+}
+
+:root[data-style='neubrutalism'] .ant-select:not(.ant-select-disabled):hover,
+:root[data-style='neubrutalism'] .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--udt-control-stroke-strong) !important;
+}
+
+:root[data-style='neubrutalism'] .ant-select:not(.ant-select-disabled).ant-select-focused,
+:root[data-style='neubrutalism'] .ant-select:not(.ant-select-disabled).ant-select-open,
+:root[data-style='neubrutalism'] .ant-select:not(.ant-select-disabled).ant-select-focused .ant-select-selector,
+:root[data-style='neubrutalism'] .ant-select:not(.ant-select-disabled).ant-select-open .ant-select-selector {
+  border-color: var(--udt-accent) !important;
+}
+
+/* Layer 4f - overlay flyouts (Select / Dropdown / picker menus) and the
+   bottom-edge message toast: hard frames matching the dialog plates. */
+
+:root[data-style='neubrutalism'] .ant-select-dropdown,
+:root[data-style='neubrutalism'] .ant-cascader-dropdown,
+:root[data-style='neubrutalism'] .ant-mentions-dropdown,
+:root[data-style='neubrutalism'] .ant-dropdown .ant-dropdown-menu,
+:root[data-style='neubrutalism'] .ant-dropdown-menu-submenu .ant-dropdown-menu,
+:root[data-style='neubrutalism'] .ant-dropdown-menu-submenu-popup .ant-dropdown-menu,
+:root[data-style='neubrutalism'] .ant-picker-dropdown .ant-picker-panel-container,
+:root[data-style='neubrutalism'] .ant-color-picker .ant-popover-inner,
+:root[data-style='neubrutalism'] .ant-color-picker-inner {
+  border: 2px solid var(--udt-control-stroke-strong);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .ant-select-dropdown,
+:root[data-theme='light'][data-style='neubrutalism'] .ant-cascader-dropdown,
+:root[data-theme='light'][data-style='neubrutalism'] .ant-mentions-dropdown,
+:root[data-theme='light'][data-style='neubrutalism'] .ant-dropdown .ant-dropdown-menu,
+:root[data-theme='light'][data-style='neubrutalism'] .ant-dropdown-menu-submenu .ant-dropdown-menu,
+:root[data-theme='light'][data-style='neubrutalism'] .ant-dropdown-menu-submenu-popup .ant-dropdown-menu,
+:root[data-theme='light'][data-style='neubrutalism'] .ant-picker-dropdown .ant-picker-panel-container,
+:root[data-theme='light'][data-style='neubrutalism'] .ant-color-picker .ant-popover-inner,
+:root[data-theme='light'][data-style='neubrutalism'] .ant-color-picker-inner {
+  border-color: #17151f;
+}
+
+:root[data-style='neubrutalism'] .ant-message .ant-message-notice-content {
+  border: 2px solid var(--udt-control-stroke-strong);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .ant-message .ant-message-notice-content {
+  border-color: #17151f;
+}
+
+/* Ant Design modals (settings / dashboard dialogs) take the same hard
+   dialog frame as the custom .udt-modal family. */
+:root[data-style='neubrutalism'] .ant-modal .ant-modal-content {
+  border: 2px solid var(--udt-control-stroke-strong);
+  border-radius: var(--udt-radius-surface);
+  box-shadow: var(--udt-shadow-toast);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .ant-modal .ant-modal-content {
+  border-color: #17151f;
+}
+
+/* Layer 4g - Ant Design Slider (settings rows, keyboard brightness,
+   overclock offsets): squared rail / track and a blocky outlined handle. */
+
+:root[data-style='neubrutalism'] .ant-slider .ant-slider-rail,
+:root[data-style='neubrutalism'] .ant-slider .ant-slider-track {
+  border-radius: 2px;
+}
+
+:root[data-style='neubrutalism'] .ant-slider .ant-slider-handle::before,
+:root[data-style='neubrutalism'] .ant-slider .ant-slider-handle::after {
+  border-radius: 2px;
+}
+
+:root[data-style='neubrutalism'] .ant-slider .ant-slider-handle::after {
+  box-shadow: 0 0 0 2px var(--udt-control-stroke-strong);
+}
+
+:root[data-theme='light'][data-style='neubrutalism'] .ant-slider .ant-slider-handle::after {
+  box-shadow: 0 0 0 2px #17151f;
 }
