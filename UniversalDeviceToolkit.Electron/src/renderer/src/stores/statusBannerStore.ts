@@ -8,6 +8,8 @@ export interface StatusBannerItem {
   /** Mirrors Electron IsPersistent: non-persistent banners are the first to be hidden on overflow. */
   persistent: boolean
   closable: boolean
+  actionLabel?: string
+  onAction?: () => void
   onClick?: () => void
 }
 

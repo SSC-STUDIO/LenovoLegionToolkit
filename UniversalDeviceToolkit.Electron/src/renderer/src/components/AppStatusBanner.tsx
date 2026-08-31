@@ -15,6 +15,8 @@ export interface AppStatusBannerProps {
   severity?: AppStatusBannerSeverity
   message: string
   closable?: boolean
+  actionLabel?: string
+  onAction?: () => void
   onClosed?: () => void
   onClick?: () => void
 }
@@ -23,6 +25,8 @@ export default function AppStatusBanner({
   severity = 'Warning',
   message,
   closable = true,
+  actionLabel,
+  onAction,
   onClosed,
   onClick
 }: AppStatusBannerProps): React.JSX.Element {
@@ -38,6 +42,18 @@ export default function AppStatusBanner({
         {isSuccess ? <ArrowSync24Regular /> : <Warning24Filled />}
       </span>
       <span className="udt-status-banner__message">{message}</span>
+      {actionLabel && onAction && (
+        <button
+          type="button"
+          className="udt-status-banner__action"
+          onClick={(event) => {
+            event.stopPropagation()
+            onAction()
+          }}
+        >
+          {actionLabel}
+        </button>
+      )}
       {closable && (
         <button
           type="button"

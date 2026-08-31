@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
 import AppStatusBanner from './AppStatusBanner'
 import { updateApi } from '../api/update'
+import { openUpdateModal } from './utils/UpdateModal'
 import type { SoftwareDisablerApp } from '../api/software'
 import { useSoftwareStore } from '../stores/softwareStore'
 import { useStatusBannerStore } from '../stores/statusBannerStore'
@@ -40,7 +40,6 @@ const SOFTWARE_BANNERS: { app: SoftwareDisablerApp; id: string; messageKey: stri
  */
 export default function AppStatusBanners(): React.JSX.Element {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const banners = useStatusBannerStore((s) => s.banners)
   const show = useStatusBannerStore((s) => s.show)
   const hide = useStatusBannerStore((s) => s.hide)
@@ -86,6 +85,9 @@ export default function AppStatusBanners(): React.JSX.Element {
       .then((result) => {
         if (cancelled || !result?.available) return
         const version = typeof result.version === 'string' && result.version ? result.version : null
+        const openUpdater = (): void => {
+          void openUpdateModal({ version })
+        }
         show({
           id: BANNER_UPDATE,
           severity: 'Success',
@@ -93,15 +95,17 @@ export default function AppStatusBanners(): React.JSX.Element {
             ? t('statusBanner.updateAvailableWithVersion', { version })
             : t('statusBanner.updateAvailable'),
           persistent: true,
-          closable: false,
-          onClick: () => navigate('/settings')
+          closable: true,
+          actionLabel: t('wpf.update'),
+          onAction: openUpdater,
+          onClick: openUpdater
         })
       })
       .catch(() => undefined)
     return () => {
       cancelled = true
     }
-  }, [navigate, show, t])
+  }, [show, t])
 
   // Electron MainWindow software disabler indicators: banners follow the
   // VantageDisabler / LegionZoneDisabler / FnKeysDisabler status (polled).
@@ -153,6 +157,8 @@ export default function AppStatusBanners(): React.JSX.Element {
           severity={banner.severity}
           message={banner.message}
           closable={banner.closable}
+          actionLabel={banner.actionLabel}
+          onAction={banner.onAction}
           onClick={banner.onClick}
           onClosed={() => hide(banner.id)}
         />

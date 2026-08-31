@@ -102,6 +102,35 @@
   overflow-wrap: anywhere;
 }
 
+.udt-status-banner__action {
+  flex-shrink: 0;
+  margin-top: 1px;
+  padding: 2px 10px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-control, 4px);
+  background: var(--udt-accent, #1f6feb);
+  color: #fff;
+  font-size: var(--udt-font-caption);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.udt-status-banner__action:hover {
+  filter: brightness(1.08);
+}
+
+:root[data-style='neubrutalism'] .udt-status-banner__action {
+  border: 1.5px solid var(--udt-control-stroke-strong);
+  border-radius: var(--udt-radius-micro);
+  box-shadow: 2px 2px 0 var(--udt-control-stroke-strong);
+}
+
+:root[data-style='neubrutalism'] .udt-status-banner__action:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
 .udt-status-banner__close {
   flex-shrink: 0;
   display: inline-flex;
@@ -157,6 +186,10 @@
 @media (prefers-reduced-motion: reduce) {
   .udt-status-banner {
     animation: none;
+  }
+
+  :root[data-style='neubrutalism'] .udt-status-banner__action:active {
+    transform: none;
   }
 }
 
