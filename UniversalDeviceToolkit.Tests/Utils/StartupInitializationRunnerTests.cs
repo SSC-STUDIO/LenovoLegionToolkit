@@ -11,14 +11,20 @@ namespace UniversalDeviceToolkit.Tests.Utils;
 [Trait("Category", TestCategories.Unit)]
 public class StartupInitializationRunnerTests
 {
+    // Generous per-step budget: these tests exercise ordering and failure
+    // semantics, not timeouts (covered by StartupHealthGuardTests). The guard
+    // schedules finite-timeout steps via Task.Run, and on saturated CI runners
+    // thread-pool scheduling can lag by whole seconds, so tight budgets flake.
+    private static readonly TimeSpan StepBudget = TimeSpan.FromSeconds(30);
+
     [Fact]
     public async Task RunAsync_AllStepsSucceed_SuccessTrueNoFailedSteps()
     {
         var guard = new StartupHealthGuard();
         var runner = new StartupInitializationRunner(guard);
 
-        runner.RegisterStep("a", TimeSpan.FromSeconds(5), () => { });
-        runner.RegisterStep("b", TimeSpan.FromSeconds(5), () => { });
+        runner.RegisterStep("a", StepBudget, () => { });
+        runner.RegisterStep("b", StepBudget, () => { });
 
         var result = await runner.RunAsync();
 
@@ -34,10 +40,10 @@ public class StartupInitializationRunnerTests
         var guard = new StartupHealthGuard();
         var runner = new StartupInitializationRunner(guard);
 
-        runner.RegisterStep("a", TimeSpan.FromSeconds(5), () => { });
-        runner.RegisterStep("b", TimeSpan.FromSeconds(5), () => throw new InvalidOperationException("b-fail"),
+        runner.RegisterStep("a", StepBudget, () => { });
+        runner.RegisterStep("b", StepBudget, () => throw new InvalidOperationException("b-fail"),
             isCritical: false);
-        runner.RegisterStep("c", TimeSpan.FromSeconds(5), () => { });
+        runner.RegisterStep("c", StepBudget, () => { });
 
         var result = await runner.RunAsync();
 
@@ -54,10 +60,10 @@ public class StartupInitializationRunnerTests
 
         var afterRan = false;
 
-        runner.RegisterStep("first", TimeSpan.FromSeconds(5),
+        runner.RegisterStep("first", StepBudget,
             () => throw new InvalidOperationException("first-fail"),
             isCritical: true);
-        runner.RegisterStep("after", TimeSpan.FromSeconds(5), () => afterRan = true);
+        runner.RegisterStep("after", StepBudget, () => afterRan = true);
 
         var result = await runner.RunAsync();
 
@@ -74,8 +80,8 @@ public class StartupInitializationRunnerTests
 
         var nonCriticalRan = false;
 
-        runner.RegisterStep("critical", TimeSpan.FromSeconds(5), () => { }, isCritical: true);
-        runner.RegisterStep("optional", TimeSpan.FromSeconds(5),
+        runner.RegisterStep("critical", StepBudget, () => { }, isCritical: true);
+        runner.RegisterStep("optional", StepBudget,
             () => nonCriticalRan = true,
             isCritical: false);
 
@@ -93,8 +99,8 @@ public class StartupInitializationRunnerTests
         var guard = new StartupHealthGuard();
         var runner = new StartupInitializationRunner(guard, safeStart: false);
 
-        runner.RegisterStep("a", TimeSpan.FromSeconds(5), () => { }, isCritical: false);
-        runner.RegisterStep("b", TimeSpan.FromSeconds(5), () => { }, isCritical: true);
+        runner.RegisterStep("a", StepBudget, () => { }, isCritical: false);
+        runner.RegisterStep("b", StepBudget, () => { }, isCritical: true);
 
         var result = await runner.RunAsync();
 
@@ -124,9 +130,9 @@ public class StartupInitializationRunnerTests
 
         var observed = new List<string>();
 
-        runner.RegisterStep("a", TimeSpan.FromSeconds(1),
+        runner.RegisterStep("a", StepBudget,
             () => observed.Add("a-sync"));
-        runner.RegisterStep("b", TimeSpan.FromSeconds(1), async () =>
+        runner.RegisterStep("b", StepBudget, async () =>
         {
             await Task.Yield();
             observed.Add("b-async");
@@ -145,10 +151,10 @@ public class StartupInitializationRunnerTests
         var guard = new StartupHealthGuard(consecutiveFailureThreshold: 2);
         var runner = new StartupInitializationRunner(guard);
 
-        runner.RegisterStep("a", TimeSpan.FromSeconds(1),
+        runner.RegisterStep("a", StepBudget,
             () => throw new InvalidOperationException("a-fail"),
             isCritical: false);
-        runner.RegisterStep("b", TimeSpan.FromSeconds(1),
+        runner.RegisterStep("b", StepBudget,
             () => throw new InvalidOperationException("b-fail"),
             isCritical: false);
 
@@ -165,7 +171,7 @@ public class StartupInitializationRunnerTests
         var guard = new StartupHealthGuard();
         var runner = new StartupInitializationRunner(guard);
 
-        runner.RegisterStep("never", TimeSpan.FromSeconds(5),
+        runner.RegisterStep("never", StepBudget,
             () => Thread.Sleep(TimeSpan.FromSeconds(5)));
 
         using var cts = new CancellationTokenSource();
