@@ -10,6 +10,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.DeviceSupport;
 
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public sealed class LenovoDeviceSupportProviderTests
 {
     public LenovoDeviceSupportProviderTests()

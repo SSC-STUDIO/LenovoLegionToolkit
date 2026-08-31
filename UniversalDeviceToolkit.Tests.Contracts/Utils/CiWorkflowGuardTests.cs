@@ -57,6 +57,8 @@ public sealed class CiWorkflowGuardTests
         var statefulRunner = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Tests.Stateful", "xunit.runner.json");
         var collections = RepositoryPaths.ReadFile(
             "UniversalDeviceToolkit.Tests.Stateful", "Settings", "SettingsTestCollection.cs");
+        var unitCollections = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Tests", "Settings", "SettingsTestCollection.cs");
 
         unitRunner.Should().Contain("\"parallelizeAssembly\": true");
         unitRunner.Should().Contain("\"parallelizeTestCollections\": true");
@@ -67,6 +69,8 @@ public sealed class CiWorkflowGuardTests
         collections.Should().Contain("Localization");
         collections.Should().Contain("Settings");
         collections.Should().Contain("ProcessState");
+        unitCollections.Should().Contain("DisableParallelization = true");
+        unitCollections.Should().Contain("ProcessState");
     }
 
     [Fact]

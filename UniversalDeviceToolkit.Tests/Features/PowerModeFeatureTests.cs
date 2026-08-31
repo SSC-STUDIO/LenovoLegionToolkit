@@ -12,6 +12,7 @@ using Moq;
 namespace UniversalDeviceToolkit.Tests.Features;
 
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class PowerModeFeatureTests : UnitTestBase
 {
     [Fact]

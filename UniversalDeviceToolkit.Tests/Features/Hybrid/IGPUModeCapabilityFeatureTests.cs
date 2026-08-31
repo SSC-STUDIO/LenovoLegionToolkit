@@ -11,6 +11,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Features.Hybrid;
 
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class IGPUModeCapabilityFeatureTests
 {
     [Fact]

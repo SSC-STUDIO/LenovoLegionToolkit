@@ -11,6 +11,7 @@ using Xunit;
 namespace UniversalDeviceToolkit.Tests.Controllers;
 
 [Trait("Category", TestCategories.Unit)]
+[Collection(TestCollections.ProcessState)]
 public class GigabyteSensorsControllerTests
 {
     private sealed class FakeGigabyteWmi : IGigabyteWmi
