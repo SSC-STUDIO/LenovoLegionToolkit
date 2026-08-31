@@ -14,9 +14,9 @@ curated list converts well because the visitor already wants a tool like this.
 | Slant | list entry | Not started | - | add to a "Lenovo Vantage alternatives" question; non-GitHub site, out of scope for this GitHub-only round |
 | HelloGitHub | CN feature | Submitted | 2026-07-05 | see .github/outreach/hellogithub-issue.md |
 | winstall.app | winget mirror | Listed | - | winstall.app/apps/SSC-STUDIO.UniversalDeviceToolkit |
-| winget-pkgs | package manager | Not published | 2026-07-07 | id reserved (`SSC-STUDIO.UniversalDeviceToolkit`); `manifests/s/SSC-STUDIO/SSC-STUDIO.UniversalDeviceToolkit` returns 404 as of 2026-07-07 -- use Scoop or Releases installer until a clean PR lands. Packaging task, not an awesome-list submission; out of scope for this round |
+| winget-pkgs | package manager | Not published | 2026-07-07 | id reserved (`SSC-STUDIO.UniversalDeviceToolkit`); `manifests/s/SSC-STUDIO/SSC-STUDIO.UniversalDeviceToolkit` returns 404 as of 2026-07-07 -- use the Releases installer until a clean PR lands (the Scoop bucket does not exist yet either; see the Scoop bucket row below). Packaging task, not an awesome-list submission; out of scope for this round |
 | Microsoft Store | store listing | Not planned | - | optional; GPL-3.0, Electron + .NET Host, big lift |
-| Scoop bucket | package manager | **Missing (404)** | 2026-08-31 | Verified: `https://github.com/SSC-STUDIO/scoop-bucket` does not exist (confirmed via `gh repo list` and a direct fetch). README.md, README_zh-hans.md, PROMOTION_EN.md, and PROMOTION_CN.md all tell readers to `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket` -- every post using that copy currently sends readers to a 404. Needs a dedicated fix (create the bucket repo + manifest, or remove the Scoop instructions); out of scope for this promotion-audit round |
+| Scoop bucket | package manager | **Missing (404) -- public references removed** | 2026-08-31 | Verified: `https://github.com/SSC-STUDIO/scoop-bucket` does not exist (confirmed via `gh repo list` and a direct fetch). Follow-up fix: README.md, README_zh-hans.md, PROMOTION_EN.md, PROMOTION_CN.md, and DEPLOYMENT.md no longer tell readers to run `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket` -- the Scoop option was dropped from download lists and ready-to-post copy, or replaced with an honest "not available yet, use Releases" note. The bucket itself still does not exist; only reintroduce install copy once `SSC-STUDIO/scoop-bucket` is actually created and published |
 
 ## Weekly star tracker
 
@@ -139,6 +139,10 @@ Last updated: 2026-08-31 (awesome-dotnet PR #1466 confirmed closed/unmerged with
 no maintainer response; added electron/apps as a prepared-but-blocked venue --
 repo restricts PR creation to collaborators; Scoop bucket confirmed missing
 (404) even though README/PROMOTION_* instruct readers to add it; AlternativeTo
-and Slant marked out of scope for this GitHub-only round)
+and Slant marked out of scope for this GitHub-only round; follow-up: removed
+the dead Scoop-bucket install copy from README.md, README_zh-hans.md,
+PROMOTION_EN.md, PROMOTION_CN.md, and DEPLOYMENT.md so none of them tell
+readers to add the nonexistent bucket anymore -- see the Scoop bucket row
+above)
 
 Previously: 2026-07-07 (winget-pkgs 行从 Listed 修正为 Not published，附 manifest 目录 404 验证；新增 2026-07-07 周行)

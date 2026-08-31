@@ -18,9 +18,8 @@
 <div align="center">
 
 [![Download from GitHub Releases](https://img.shields.io/badge/Download-GitHub%20Releases-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
-[![Install via Scoop](https://img.shields.io/badge/Install-via%20Scoop-F24E1E?style=for-the-badge&logo=powershell&logoColor=white)](https://github.com/SSC-STUDIO/scoop-bucket)
 
-**Install:** [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) · Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket ; scoop install ssc-studio/universaldevicetoolkit`
+**Install:** [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
 
 <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_main.png" width="700" alt="UDT console: live sensors, power modes, and Hybrid Mode on a Legion Y9000P" /></a>
 
@@ -170,7 +169,7 @@ Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained buil
 
 > [!NOTE]
 > **Current stable release: v6.1.0.** Application releases use the normal `vX.Y.Z` tags. Legacy plugin catalog releases (`plugin-catalog` / `plugin-catalog-preview`) are historical archives only — the plugin system was retired in 6.1 and hosts no longer read them.
-> **Note on winget:** the 6.x package id `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships, and the legacy Lenovo Legion Toolkit package does not upgrade in place. Use Releases or Scoop in the meantime.
+> **Note on winget:** the 6.x package id `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships, and the legacy Lenovo Legion Toolkit package does not upgrade in place. Use Releases in the meantime.
 
 - **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). **Full** is a complete offline NSIS installer (Electron + self-contained .NET Host). **Online** is a small stub (about 15MB or less) that downloads the same runtime during setup; language and device packs still install from the in-app catalog. Always install the newest version from the latest release page; settings and data migrate automatically, while package-manager installs must switch to the new 6.x IDs.
 
@@ -180,8 +179,8 @@ Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained buil
 - Offline / `--safe-start` / no network: the app continues in English — it does **not** phone home for language packs unless you start an install.
 - Catalog downloads use HTTPS (or your configured catalog URL). Packages are verified with **SHA-256** before install. No account, no telemetry.
 - Corporate proxy: set system proxy as usual, or point `UDT_RESOURCE_CATALOG_URL` at an internal catalog mirror for air-gapped installs. See `Docs/LanguagePacks.md`.
- - ~~**winget** (pending)~~: the 6.x `PackageIdentifier` is `SSC-STUDIO.UniversalDeviceToolkit`; the manifest has not been submitted to microsoft/winget-pkgs yet, so `winget install` fails until it ships. The legacy Lenovo Legion Toolkit package does not upgrade in place. Use Releases or Scoop today; this bullet becomes a one-line install again once the winget-pkgs PR merges.
-- **Scoop**: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/universaldevicetoolkit`. The 6.x manifest consumes the Full portable ZIP (`innosetup: false`); the legacy `lenovolegiontoolkit` package stays on 5.x — uninstall it before installing `universaldevicetoolkit`.
+ - ~~**winget** (pending)~~: the 6.x `PackageIdentifier` is `SSC-STUDIO.UniversalDeviceToolkit`; the manifest has not been submitted to microsoft/winget-pkgs yet, so `winget install` fails until it ships. The legacy Lenovo Legion Toolkit package does not upgrade in place. Use Releases today; this bullet becomes a one-line install again once the winget-pkgs PR merges.
+- ~~**Scoop**~~: the `SSC-STUDIO/scoop-bucket` manifest repository has not been created yet, so there is no working Scoop bucket to add. Use Releases until the bucket is published.
 - **Checksum**: Each GitHub release includes a `SHA256.txt` file. Verify downloaded installers before sharing mirrors.
 
 #### Naming and upgrade compatibility
@@ -229,9 +228,6 @@ If for whatever reason the UDT installer did not setup .NET properly:
 2. Find section ".NET Desktop Runtime"
 3. Download x64 Windows installer
 4. Run the installer
-
-> [!NOTE]
-> If you installed UDT from Scoop, the required .NET runtime should have been installed automatically as a dependency. If anything fails, use `scoop update` to update all packages and try to reinstall UDT with `--force` argument.
 
 After following these steps, you can open Terminal and type: `dotnet --info`. In the output look for section `.NET runtimes installed`, in this section you should see entries for the installed runtime such as `Microsoft.NETCore.App 10.x.x` and `Microsoft.WindowsDesktop.App 10.x.x` under `C:\Program Files\dotnet\shared`.
 

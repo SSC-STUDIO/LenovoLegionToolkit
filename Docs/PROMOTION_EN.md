@@ -1,6 +1,6 @@
 # English promotion copy
 
-Replace version numbers before posting. Write like a forum reply, not a press release. Current stable install: **v6.1.0** from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) or Scoop. winget `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not published yet.
+Replace version numbers before posting. Write like a forum reply, not a press release. Current stable install: **v6.1.0** from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). winget `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not published yet; the Scoop bucket does not exist yet either (see [SUBMISSIONS.md](SUBMISSIONS.md)) -- do not tell readers to add it.
 
 ---
 
@@ -20,7 +20,7 @@ Universal Device Toolkit vX.Y.Z is out.
 
 Same idea: stay light, no background service, no telemetry. Cursor & pointer themes are built in. Old Lenovo Legion Toolkit settings migrate.
 
-Installers: **Full** (offline) and **Online** (small stub). Prefer GitHub Releases or Scoop until winget 6.x is live. Check `SHA256.txt` on the release page if you mirror it.
+Installers: **Full** (offline) and **Online** (small stub). Prefer GitHub Releases until winget 6.x is live. Check `SHA256.txt` on the release page if you mirror it.
 
 ---
 
@@ -46,7 +46,6 @@ Trade-off: it **does not run a separate Windows service**. Keep it in the tray i
 Not on a supported Legion? Basic mode hides hardware toggles. Do not expect Vantage-class hardware control on random brands.
 
 - https://github.com/SSC-STUDIO/UniversalDeviceToolkit
-- Scoop: `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket ; scoop install ssc-studio/universaldevicetoolkit`
 
 Happy to answer compatibility questions if you have a specific model.
 

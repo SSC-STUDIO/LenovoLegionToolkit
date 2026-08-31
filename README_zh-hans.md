@@ -16,9 +16,8 @@
 <div align="center">
 
 [![从 GitHub Releases 下载](https://img.shields.io/badge/下载-GitHub%20Releases-2ea44f?style=for-the-badge&logo=github&logoColor=white)](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
-[![用 Scoop 安装](https://img.shields.io/badge/安装-Scoop-F24E1E?style=for-the-badge&logo=powershell&logoColor=white)](https://github.com/SSC-STUDIO/scoop-bucket)
 
-**安装：** [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) · Scoop：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket ; scoop install ssc-studio/universaldevicetoolkit`
+**安装：** [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest)
 
 <a href="https://github.com/SSC-STUDIO/UniversalDeviceToolkit"><img src="Assets/Screenshot_zh-hans.png" width="700" alt="UDT 控制台：传感器、性能模式与混合模式（简体中文深色界面）" /></a>
 
@@ -165,11 +164,11 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 
 > [!NOTE]
 > **当前稳定版：v6.1.0。** 主程序使用 `vX.Y.Z` 标签发布。历史插件目录发布（`plugin-catalog` / `plugin-catalog-preview`）仅作归档——插件系统已在 6.1 退役，宿主不再读取。
-> **winget 说明：** 6.x 包 ID `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但尚未合入 microsoft/winget-pkgs，因此目前 `winget install` 会失败；旧的 Lenovo Legion Toolkit 包同样不支持原地升级。请先使用 Releases 或 Scoop。
+> **winget 说明：** 6.x 包 ID `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但尚未合入 microsoft/winget-pkgs，因此目前 `winget install` 会失败；旧的 Lenovo Legion Toolkit 包同样不支持原地升级。请先使用 Releases。
 
 - **GitHub Releases**：从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 下载最新版 Full 或 Online 安装包。**Full** 是完整离线 NSIS 安装器（内嵌 Electron 与自包含 .NET Host）。**Online** 是约 15MB 以内的分阶安装器，安装时再下载同一套运行时；语言包和机型包仍可在应用内目录安装。请始终安装最新版本；设置与数据会自动迁移，包管理器安装需改用 6.x 新 ID。
 - ~~**winget**（待上架）~~：6.x 标识 `SSC-STUDIO.UniversalDeviceToolkit` 已预留，提交 winget-pkgs 后才会可用；旧包不支持原地升级。
-- **Scoop**：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket && scoop install ssc-studio/universaldevicetoolkit`。6.x manifest 使用 Full 便携 ZIP（`innosetup: false`）；旧 `lenovolegiontoolkit` 包停留在 5.x，请先卸载再安装 `universaldevicetoolkit`。
+- ~~**Scoop**~~：`SSC-STUDIO/scoop-bucket` 这个 manifest 仓库尚未创建，目前没有可用的 Scoop bucket。请先使用 Releases，bucket 上线后再补充安装命令。
 - **校验文件**：每个 Release 附带 `SHA256.txt`，建议下载前校验。
 
 #### 命名与升级兼容

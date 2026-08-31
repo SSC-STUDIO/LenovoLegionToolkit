@@ -1,6 +1,6 @@
 # 中文发布文案
 
-发布前把版本号换成实际值。像论坛回帖，别像通稿。当前稳定安装包：**v6.1.0**，从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 或 Scoop 装。winget 的 `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但还没上架。
+发布前把版本号换成实际值。像论坛回帖，别像通稿。当前稳定安装包：**v6.1.0**，从 [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) 装。winget 的 `SSC-STUDIO.UniversalDeviceToolkit` 已预留，但还没上架；Scoop bucket 目前也还没建（见 [SUBMISSIONS.md](SUBMISSIONS.md)），不要在文案里让读者去加它。
 
 ---
 
@@ -20,7 +20,7 @@ Universal Device Toolkit vX.Y.Z 发布了。
 
 还是老样子：尽量轻、不跑后台服务、不碰遥测。以前装过 Lenovo Legion Toolkit 的直接升，设置会留着。
 
-安装包两个：Full 离线完整，Online 体积小。winget 6.x 上架前请用 GitHub Releases 或 Scoop。镜像转发请带上 Release 里的 `SHA256.txt`。
+安装包两个：Full 离线完整，Online 体积小。winget 6.x 上架前请用 GitHub Releases。镜像转发请带上 Release 里的 `SHA256.txt`。
 
 ---
 
@@ -51,7 +51,7 @@ Vantage 太重，开机一堆东西，还要账号。UDT 是 GPL-3.0 开源，�
 
 指针与光标定制已内置到「鼠标」页。旧版用户直接升级，设置会保留。
 
-**下载**：GitHub Releases，或 Scoop：`scoop install ssc-studio/universaldevicetoolkit`
+**下载**：GitHub Releases
 
 **也要说清楚**：不是所有电脑都能完整控硬件。对不上的机型会进「基础模式」，硬件开关会被藏起来。别指望它在戴尔、华硕上当完整的 Vantage 用。
 
@@ -70,7 +70,6 @@ Y9000P 用了几年，Vantage 实在用不下去：后台服务、登录、偶�
 后来换成 Universal Device Toolkit（UDT，以前叫 Legion Toolkit，现在 SSC-STUDIO 在维护）。日常要用的性能模式、键盘灯、独显状态、电池养护都能搞定。不会在后台常驻，也不要联想账号。README 置顶有中文截图和 30 秒宣传片。
 
 - 项目：https://github.com/SSC-STUDIO/UniversalDeviceToolkit
-- Scoop：`scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket ; scoop install ssc-studio/universaldevicetoolkit`
 
 不是拯救者的话会进「基础模式」，硬件控制会少。有用过的可以说下机型，方便后来的人对号入座。
 

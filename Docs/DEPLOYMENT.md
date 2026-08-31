@@ -596,10 +596,9 @@ After downloading translations:
    - After acceptance: `winget install SSC-STUDIO.UniversalDeviceToolkit`
    - Automatic updates via Windows Package Manager
 
-3. **Scoop**
-   - `scoop bucket add ssc-studio https://github.com/SSC-STUDIO/scoop-bucket`
-   - `scoop install ssc-studio/lenovolegiontoolkit`
-   - Manifest name remains `lenovolegiontoolkit` for now so existing installs keep upgrading cleanly
+3. **Scoop** (not yet available)
+   - The `SSC-STUDIO/scoop-bucket` manifest repository does not exist yet, so there is no bucket to add.
+   - See [Scoop Submission](#scoop-submission) for the maintainer plan to publish it; do not advertise a `scoop bucket add`/`scoop install` command until that repository is live.
 
 ### Alternative Channels
 
@@ -661,7 +660,7 @@ When promoting a release on Chinese social platforms or after winget acceptance:
 - Link to the active `SSC-STUDIO/UniversalDeviceToolkit` repository in all promotion content.
 - Use Universal Device Toolkit as the public product name, and mention that former Lenovo Legion Toolkit users can upgrade directly.
 - Keep mirrors optional and checksum-backed; GitHub Releases and winget remain the authoritative download channels.
-- Mention that winget and Scoop commands temporarily retain the old UniversalDeviceToolkit identifiers for compatibility.
+- Mention that winget commands temporarily retain the old UniversalDeviceToolkit identifiers for compatibility. Do not mention Scoop install commands until the `SSC-STUDIO/scoop-bucket` manifest repository is actually published.
 - Watch GitHub Issues for recurring reports: antivirus false positives, missing .NET 10 Desktop Runtime, unsupported machines, Lenovo Vantage conflicts, RGB/Vanguard conflicts, and plugin download failures.
 - Confirm `Build`, `CI Tests`, `CodeQL`, and release packaging workflows are green before pushing a promotional post.
 - Reuse `Docs/PROMOTION_CN.md` for platform copy so public claims stay consistent with the README and release notes.
