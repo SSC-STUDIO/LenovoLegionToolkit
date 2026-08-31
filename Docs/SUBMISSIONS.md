@@ -7,7 +7,7 @@ curated list converts well because the visitor already wants a tool like this.
 
 | Venue | Type | Status | Date | Notes |
 |-------|------|--------|------|-------|
-| awesome-dotnet | awesome-list PR | Closed, unmerged | 2026-08-30 | PR #1466 https://github.com/quozd/awesome-dotnet/pull/1466 ; closed by the SSC-STUDIO account itself, no maintainer review/comments recorded. Not currently listed. Re-evaluate before resubmitting (avoid duplicate PRs to the same list) |
+| awesome-dotnet | awesome-list PR | Open | 2026-08-31 | Replacement PR #1505 https://github.com/quozd/awesome-dotnet/pull/1505 (open, mergeable). Prior PR #1466 was closed by SSC-STUDIO on 2026-08-30 with zero maintainer comments/reviews; fork and head branch were deleted so `gh pr reopen` failed. One-line Tools entry resubmitted per CONTRIBUTING with current C#/.NET host wording |
 | awesome-windows | awesome-list PR | Skipped | 2026-07-07 | canonical repo 0PandaDEV/awesome-windows; maintainer hostile to AI PRs (hidden anti-AI README comment + visible CAUTION rejecting vibecoded slop). Revisit if stance softens |
 | electron/apps | Electron app directory | Prepared, blocked | 2026-08-31 | Entry ready on fork branch https://github.com/SSC-STUDIO/apps/tree/add-universal-device-toolkit (`apps/universal-device-toolkit/`, category Utilities, 512x512 icon). PR creation blocked by the repo's own anti-spam restriction -- `gh pr create` and the REST API both reject with a permissions/404 error matching GitHub's "limit who can open pull requests to collaborators" setting (likely enabled against AI-generated submission floods). No PR opened. Revisit later or ask a maintainer for contributor access |
 | AlternativeTo | database entry | Not started | - | suggest as alt to "Lenovo Vantage"; non-GitHub site, out of scope for this GitHub-only round |
@@ -30,23 +30,24 @@ curated list converts well because the visitor already wants a tool like this.
 
 ---
 
-## 1. awesome-dotnet  -- CLOSED, UNMERGED (2026-08-30)
+## 1. awesome-dotnet  -- OPEN (2026-08-31)
 
 - Repo: https://github.com/quozd/awesome-dotnet
-- PR: https://github.com/quozd/awesome-dotnet/pull/1466  (Add Universal Device Toolkit under Tools)
+- Current PR: https://github.com/quozd/awesome-dotnet/pull/1505  (Add Universal Device Toolkit under Tools)
+- Fork branch: https://github.com/SSC-STUDIO/awesome-dotnet/tree/add-universal-device-toolkit
 - Section: `## Tools`, appended at end of the section (matches the list's
   chronological addition style). One link per PR, per CONTRIBUTING.
-- Body lives at `_awesome_prs/body_dotnet.md` (quality-bar rationale: actively
-  maintained v5.0.0-preview, 2,343 tests, docs, winget/scoop distribution).
-- Status as of 2026-08-31: the PR was **closed by the SSC-STUDIO account itself**
-  on 2026-08-30, with zero comments and zero reviews recorded (`gh pr view
-  --json state,mergedAt,closedAt,comments`; `.../pulls/1466/reviews` and
-  `.../issues/1466/comments` both return empty). It sat open ~7 weeks with no
-  maintainer response before being closed. UDT is **not currently listed** in
-  awesome-dotnet. Don't reopen or resubmit blindly -- figure out why it was
-  closed first (stale cleanup vs. a deliberate withdrawal), then decide whether
-  a fresh, single PR is warranted. Per the one-PR-per-list rule, do not open a
-  second PR to this same list without that context.
+- Entry: open-source Windows hardware-control toolkit; GPL-3.0, C#/.NET host.
+  Wording updated from the old WPF / plugin-based line, which is no longer true.
+- Prior PR #1466 https://github.com/quozd/awesome-dotnet/pull/1466 was
+  **closed by the SSC-STUDIO account itself** on 2026-08-30, with zero comments
+  and zero reviews (`gh api .../issues/1466/timeline` shows only the original
+  commit and a `closed` event by SSC-STUDIO; reviews and issue comments were
+  empty). No maintainer rejection. The fork `SSC-STUDIO/awesome-dotnet` and
+  head branch were gone, so `gh pr reopen 1466` failed with
+  `Could not open the pull request`. Content was still valid, so a single
+  replacement PR was opened instead of leaving the list without a submission.
+  Do not open another PR to this list while #1505 is open.
 
 ## 2. awesome-windows  -- SKIPPED (2026-07-07)
 
@@ -135,14 +136,9 @@ https://github.com/SSC-STUDIO/UniversalDeviceToolkit
   platforms anti-cheat and it hurts the project's reputation.
 - One venue at a time so each submission is well written for that community.
 
-Last updated: 2026-08-31 (awesome-dotnet PR #1466 confirmed closed/unmerged with
-no maintainer response; added electron/apps as a prepared-but-blocked venue --
-repo restricts PR creation to collaborators; Scoop bucket confirmed missing
-(404) even though README/PROMOTION_* instruct readers to add it; AlternativeTo
-and Slant marked out of scope for this GitHub-only round; follow-up: removed
-the dead Scoop-bucket install copy from README.md, README_zh-hans.md,
-PROMOTION_EN.md, PROMOTION_CN.md, and DEPLOYMENT.md so none of them tell
-readers to add the nonexistent bucket anymore -- see the Scoop bucket row
-above)
+Last updated: 2026-08-31 (awesome-dotnet: #1466 was self-closed with no
+maintainer review; fork/branch gone so reopen failed; replacement PR #1505
+opened under Tools. Scoop public install copy already removed -- see the
+Scoop bucket row. electron/apps remains prepared-but-blocked.)
 
 Previously: 2026-07-07 (winget-pkgs 行从 Listed 修正为 Not published，附 manifest 目录 404 验证；新增 2026-07-07 周行)
