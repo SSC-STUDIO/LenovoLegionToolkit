@@ -56,6 +56,25 @@ public sealed class PackagingGuardTests
     }
 
     [Fact]
+    public void InAppUpdater_ShouldKeepLegacyClientLaunchContract()
+    {
+        var downloader = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Electron", "src", "main", "update-downloader.ts");
+        var installer = RepositoryPaths.ReadFile(
+            "UniversalDeviceToolkit.Electron", "installer", "main.mjs");
+
+        downloader.Should().Contain("windowsInstallerLaunchArgs");
+        downloader.Should().Contain("['/S']");
+        downloader.Should().Contain("Zone.Identifier");
+        downloader.Should().Contain("Start-Process -FilePath");
+        downloader.Should().Contain("-Verb RunAs");
+        installer.Should().Contain("isSilentSetupArgument");
+        installer.Should().Contain("shouldRelaunchElevated");
+        RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "custom-online-installer.yml")
+            .Should().Contain("requestExecutionLevel: user");
+    }
+
+    [Fact]
     public void FootprintPackaging_ShouldKeepOnlyRequiredChromiumLocalesAndAuditEveryPackage()
     {
         var builderConfig = RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "electron-builder.yml");

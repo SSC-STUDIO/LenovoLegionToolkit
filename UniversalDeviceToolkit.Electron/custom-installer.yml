@@ -16,14 +16,14 @@ extraResources:
       - "**/*"
 win:
   icon: buildResources/icon.ico
-  requestedExecutionLevel: requireAdministrator
+  requestedExecutionLevel: asInvoker
   target:
     - target: portable
       arch:
         - x64
 portable:
   artifactName: UniversalDeviceToolkitSetup-${version}.${ext}
-  requestExecutionLevel: admin
+  requestExecutionLevel: user
 compression: normal
 # The installer shell has no Chromium-localized UI; its own copy of Electron
 # only needs the fallback locale. The embedded application payload retains its

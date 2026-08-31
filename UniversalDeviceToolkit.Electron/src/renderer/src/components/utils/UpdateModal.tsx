@@ -155,7 +155,9 @@ export default function UpdateModalHost(): React.JSX.Element {
     try {
       const result = await updateApi.launchInstaller(installerPath)
       if (!result.ok) {
-        setErrorMessage(t('wpf.updateWindowlaunchFailed', { defaultValue: 'The installer could not be started.' }))
+        setErrorMessage(
+          result.error ?? t('wpf.updateWindowlaunchFailed', { defaultValue: 'The installer could not be started.' })
+        )
         setDownloadState('failed')
         return
       }

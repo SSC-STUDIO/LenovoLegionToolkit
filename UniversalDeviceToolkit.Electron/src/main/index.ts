@@ -363,7 +363,11 @@ function launchVerifiedInstaller(params: unknown): Promise<{ ok: boolean }> {
     throw new Error('No verified installer is available.')
   }
   if (requestedPath.length > 0 && requestedPath !== lastVerifiedInstallerPath) {
-    throw new Error('Installer path is not the verified download.')
+    const left = requestedPath.replaceAll('/', '\\')
+    const right = lastVerifiedInstallerPath.replaceAll('/', '\\')
+    if (left.toLowerCase() !== right.toLowerCase()) {
+      throw new Error('Installer path is not the verified download.')
+    }
   }
   if (requestedToken.length > 0 && requestedToken !== lastVerifiedInstallerPath) {
     throw new Error('Installer token is not the verified download.')

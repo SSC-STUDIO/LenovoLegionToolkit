@@ -2,14 +2,14 @@ process.noAsar = true
 
 import { app, BrowserWindow, dialog, ipcMain, nativeTheme, shell, systemPreferences } from 'electron'
 import * as nodeFs from 'node:fs'
-import { execFile, spawn } from 'node:child_process'
+import { execFile, execFileSync, spawn } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { Readable, Transform } from 'node:stream'
 import { pipeline } from 'node:stream/promises'
 import { promisify } from 'node:util'
 import { basename, dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { featureFlag, isNetworkProxySidecarFile, normalizeFeatures } from './features.mjs'
+import { defaultFeatures, featureFlag, isNetworkProxySidecarFile, normalizeFeatures } from './features.mjs'
 import { parseSha256Digest, parseSha256Manifest } from './integrity.mjs'
 
 let originalFs = null
@@ -89,6 +89,45 @@ const validLanguages = new Set([
 ])
 const validDeviceModes = new Set(['auto', 'basic'])
 const setupIsUninstaller = process.argv.includes('--uninstall') || basename(process.execPath).toLowerCase() === 'uninstall.exe'
+const setupIsSilent = process.argv.some((argument) => argument === '/S' || argument === '/s' || argument === '--silent')
+const setupAlreadyElevated = process.argv.includes('--udt-elevated')
+
+export function isSilentSetupArgument(argument) {
+  return argument === '/S' || argument === '/s' || argument === '--silent'
+}
+
+function isProcessElevated() {
+  if (process.platform !== 'win32') return true
+  try {
+    execFileSync('net', ['session'], { windowsHide: true, stdio: 'ignore' })
+    return true
+  } catch {
+    return false
+  }
+}
+
+function shouldRelaunchElevated() {
+  if (process.platform !== 'win32' || setupIsPreview || setupAlreadyElevated) return false
+  return !isProcessElevated()
+}
+
+function relaunchElevated() {
+  const extra = process.argv.slice(1).filter((argument) => argument !== '--udt-elevated')
+  extra.push('--udt-elevated')
+  const argumentList = extra.map(quotePowerShell).join(',')
+  const child = spawn(
+    'powershell.exe',
+    [
+      '-NoProfile',
+      '-ExecutionPolicy',
+      'Bypass',
+      '-Command',
+      `Start-Process -FilePath ${quotePowerShell(process.execPath)} -Verb RunAs -ArgumentList ${argumentList}`
+    ],
+    { detached: true, stdio: 'ignore', windowsHide: true }
+  )
+  child.unref()
+}
 let mainWindow = null
 let isInstalling = false
 
@@ -596,16 +635,40 @@ nativeTheme.themeSource = previewThemeMode ?? 'system'
 nativeTheme.on('updated', broadcastTheme)
 systemPreferences.on('color-changed', broadcastTheme)
 systemPreferences.on('accent-color-changed', broadcastTheme)
-const gotLock = app.requestSingleInstanceLock()
-if (!gotLock) {
+if (shouldRelaunchElevated()) {
+  relaunchElevated()
   app.quit()
 } else {
-  app.on('second-instance', () => {
-    if (mainWindow && !mainWindow.isDestroyed()) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
-      mainWindow.show()
-      mainWindow.focus()
-    }
-  })
-  app.whenReady().then(createWindow)
+  const gotLock = app.requestSingleInstanceLock()
+  if (!gotLock) {
+    app.quit()
+  } else {
+    app.on('second-instance', () => {
+      if (mainWindow && !mainWindow.isDestroyed()) {
+        if (mainWindow.isMinimized()) mainWindow.restore()
+        mainWindow.show()
+        mainWindow.focus()
+      }
+    })
+    app.whenReady().then(() => {
+      if (setupIsSilent && !setupIsUninstaller) {
+        return installApplication({
+          destination: defaultInstallPath(),
+          language: 'en',
+          deviceMode: 'auto',
+          features: defaultFeatures()
+        }).then((result) => {
+          if (result?.executable) {
+            const child = spawn(result.executable, [], { detached: true, stdio: 'ignore', windowsHide: true })
+            child.unref()
+          }
+          app.quit()
+        }).catch(() => {
+          createWindow()
+        })
+      }
+      createWindow()
+      return undefined
+    })
+  }
 }

@@ -12,14 +12,14 @@ extraResources:
     to: installer-assets/icon.png
 win:
   icon: buildResources/icon.ico
-  requestedExecutionLevel: requireAdministrator
+  requestedExecutionLevel: asInvoker
   target:
     - target: portable
       arch:
         - x64
 portable:
   artifactName: UniversalDeviceToolkitOnlineSetup-${version}.${ext}
-  requestExecutionLevel: admin
+  requestExecutionLevel: user
 compression: normal
 electronLanguages:
   - en-US

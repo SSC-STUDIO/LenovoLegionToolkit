@@ -27,9 +27,9 @@ export const updateApi = {
   getRelease: () => invokeObject<{ release: UpdateReleaseInfo | null }>('update.getRelease', {}),
   /** Downloads the installer in the main process; progress arrives via onDownloadProgress. */
   download: () => invokeObject<{ ok: boolean; path?: string; error?: string }>('update.download', {}),
-  /** Launches the downloaded NSIS installer silently and quits the app. */
+  /** Launches the downloaded installer silently and quits the app. */
   launchInstaller: (path: string) =>
-    invokeObject<{ ok: boolean }>('update.launchInstaller', { path }),
+    invokeObject<{ ok: boolean; error?: string }>('update.launchInstaller', { path }),
   onDownloadProgress: (cb: (progress: DownloadProgress) => void): (() => void) =>
     on<DownloadProgress>('update.download-progress', cb)
 }

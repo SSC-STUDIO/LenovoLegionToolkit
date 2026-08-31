@@ -558,66 +558,115 @@ export async function downloadLatestUpdate(onProgress: (progress: DownloadProgre
   }
 }
 
+export interface LaunchInstallerResult {
+  ok: boolean
+  error?: string
+}
+
+/** 6.0.0+ in-app updates always pass NSIS `/S`; the custom installer honors it too. */
+export function windowsInstallerLaunchArgs(): string[] {
+  return ['/S']
+}
+
+/** Mark-of-the-Web ADS that Windows attaches to files downloaded over HTTPS. */
+export function zoneIdentifierStreamPath(installerPath: string): string {
+  return `${installerPath}:Zone.Identifier`
+}
+
+function unblockDownloadedInstaller(filePath: string): void {
+  if (process.platform !== 'win32') return
+  tryUnlink(zoneIdentifierStreamPath(filePath))
+}
+
+function quotePowerShell(value: string): string {
+  return `'${value.replaceAll("'", "''")}'`
+}
+
+function spawnDetached(
+  command: string,
+  args: string[],
+  options: { windowsHide?: boolean; windowsVerbatimArguments?: boolean } = {}
+): Promise<LaunchInstallerResult> {
+  return new Promise((resolveLaunch) => {
+    const child = spawn(command, args, {
+      detached: true,
+      stdio: 'ignore',
+      windowsHide: options.windowsHide ?? false,
+      windowsVerbatimArguments: options.windowsVerbatimArguments ?? false
+    })
+    child.on('error', (error) => resolveLaunch({ ok: false, error: error.message }))
+    child.on('spawn', () => resolveLaunch({ ok: true }))
+  })
+}
+
+/**
+ * 6.0.0 clients `spawn(setup.exe, ['/S'])`. That CreateProcess call fails when
+ * the PE requests requireAdministrator (the 6.1 portable/online installer).
+ * Current clients try spawn first (keeps 6.0.0-compatible asInvoker builds
+ * working), then ShellExecute via Start-Process -Verb RunAs.
+ */
+async function launchWindowsInstaller(recordedPath: string): Promise<LaunchInstallerResult> {
+  unblockDownloadedInstaller(recordedPath)
+  const args = windowsInstallerLaunchArgs()
+  const direct = await spawnDetached(recordedPath, args)
+  if (direct.ok) return direct
+
+  const argumentList = args.map(quotePowerShell).join(',')
+  const command =
+    args.length > 0
+      ? `Start-Process -FilePath ${quotePowerShell(recordedPath)} -Verb RunAs -ArgumentList ${argumentList}`
+      : `Start-Process -FilePath ${quotePowerShell(recordedPath)} -Verb RunAs`
+  return spawnDetached('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-Command', command], {
+    windowsHide: true
+  })
+}
+
 /**
  * Launches the installer recorded by this session's verified download only.
  * The renderer-supplied path is accepted solely as a match check; any other
- * path is rejected. Windows uses NSIS `/S`.
+ * path is rejected. Windows uses NSIS `/S` (custom installer honors it).
  */
-export async function launchInstaller(installerPath: string): Promise<{ ok: boolean }> {
+export async function launchInstaller(installerPath: string): Promise<LaunchInstallerResult> {
   const recorded = verifiedInstaller
   if (recorded == null || installerPath.length === 0 || !samePath(installerPath, recorded.path)) {
-    return { ok: false }
+    return { ok: false, error: 'Installer path is not the verified download.' }
   }
   let recordedPath: string
   try {
     recordedPath = assertInsideDirectory(recorded.path, updatesDirectory())
   } catch {
-    return { ok: false }
+    return { ok: false, error: 'Installer path escapes the updates directory.' }
   }
   if (!existsSync(recordedPath)) {
     verifiedInstaller = null
-    return { ok: false }
+    return { ok: false, error: 'The downloaded installer is no longer on disk.' }
   }
   try {
     const actualHash = await sha256File(recordedPath)
     if (actualHash !== recorded.sha256) {
       verifiedInstaller = null
-      return { ok: false }
+      return { ok: false, error: 'The downloaded installer failed the SHA256 check.' }
     }
-  } catch {
-    return { ok: false }
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Installer hash check failed.' }
   }
 
-  return new Promise((resolveLaunch) => {
-    let child: ReturnType<typeof spawn>
-    if (process.platform === 'darwin') {
-      child = spawn('open', [recordedPath], {
-        detached: true,
-        stdio: 'ignore'
-      })
-    } else if (process.platform === 'linux') {
-      // Downloaded files lose the executable bit; AppImage refuses to run
-      // without it. Failures here surface through the spawn error below.
-      try {
-        chmodSync(recordedPath, 0o755)
-      } catch {
-        // ignore — the spawn error carries the real reason
-      }
-      child = spawn(recordedPath, [], {
-        detached: true,
-        stdio: 'ignore'
-      })
-    } else {
-      child = spawn(recordedPath, ['/S'], {
-        detached: true,
-        stdio: 'ignore',
-        windowsHide: false
-      })
+  let result: LaunchInstallerResult
+  if (process.platform === 'darwin') {
+    result = await spawnDetached('open', [recordedPath])
+  } else if (process.platform === 'linux') {
+    try {
+      chmodSync(recordedPath, 0o755)
+    } catch {
+      // The spawn error carries the real reason if the bit cannot be set.
     }
-    child.on('error', () => resolveLaunch({ ok: false }))
-    child.on('spawn', () => {
-      resolveLaunch({ ok: true })
-      app.quit()
-    })
-  })
+    result = await spawnDetached(recordedPath, [])
+  } else {
+    result = await launchWindowsInstaller(recordedPath)
+  }
+
+  if (result.ok) {
+    app.quit()
+  }
+  return result
 }
