@@ -47,7 +47,9 @@ public sealed class PackagingGuardTests
 
         workflow.Should().Contain("UniversalDeviceToolkitOnlineSetup.exe");
         workflow.Should().Contain("UniversalDeviceToolkitSetup.exe");
-        workflow.Should().Contain("*.nsis.7z");
+        // The modern online installer downloads the Online win-x64 ZIP from the
+        // release; the retired nsis-web payload must not be demanded as an asset.
+        workflow.Should().NotContain("*.nsis.7z");
         workflow.Should().Contain("Prune-ShippingFootprint.ps1");
         workflow.Should().Contain("UniversalDeviceToolkit.Host/publish/win-x64");
         workflow.Should().NotContain("OnlineInstallerPath = \"$env:INSTALLER_OUTPUT\\UniversalDeviceToolkitSetup.exe\"");
