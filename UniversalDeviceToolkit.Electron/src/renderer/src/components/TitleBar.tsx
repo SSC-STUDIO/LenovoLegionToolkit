@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Tooltip } from 'antd'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router-dom'
 import { invoke, on } from '../api/bridge'
@@ -97,28 +96,28 @@ export default function TitleBar(): React.JSX.Element {
         </span>
         {/* Right chrome: Log + device stay immediately before caption buttons (Electron parity). */}
         <div className="udt-titlebar__chrome" style={NO_DRAG_STYLE}>
+          {/* Native title tooltips: antd Tooltip here would pull the rc-trigger
+              stack into the eager titlebar bundle for two hover hints. */}
           <div className="udt-titlebar__trailing">
-            <Tooltip title={t('titlebar.openLogs')}>
+            <button
+              type="button"
+              className="udt-titlebar__log-button"
+              title={t('titlebar.openLogs')}
+              aria-label={t('titlebar.openLogs')}
+              onClick={openLogFolder}
+            >
+              {t('titlebar.log')}
+            </button>
+            <div className="udt-titlebar__device-slot">
               <button
                 type="button"
-                className="udt-titlebar__log-button"
-                aria-label={t('titlebar.openLogs')}
-                onClick={openLogFolder}
+                className="udt-titlebar__device-button"
+                title={t('titlebar.deviceInfo')}
+                aria-label={t('titlebar.deviceInfo')}
+                onClick={() => setDeviceInfoOpen(true)}
               >
-                {t('titlebar.log')}
+                {deviceModel ?? t('titlebar.deviceName')}
               </button>
-            </Tooltip>
-            <div className="udt-titlebar__device-slot">
-              <Tooltip title={t('titlebar.deviceInfo')}>
-                <button
-                  type="button"
-                  className="udt-titlebar__device-button"
-                  aria-label={t('titlebar.deviceInfo')}
-                  onClick={() => setDeviceInfoOpen(true)}
-                >
-                  {deviceModel ?? t('titlebar.deviceName')}
-                </button>
-              </Tooltip>
             </div>
           </div>
           {!isMac && (
