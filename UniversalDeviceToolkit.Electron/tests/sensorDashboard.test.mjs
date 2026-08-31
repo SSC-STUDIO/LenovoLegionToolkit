@@ -31,7 +31,7 @@ test('low-power adapter warning uses the notification center, not a dashboard ov
 })
 
 test('first sensor sample is seeded so charts can draw with the first gauge reading', () => {
-  assert.match(store, /const isFirstSample = history\.labels\.length === 0/)
-  assert.match(store, /if \(isFirstSample\) \{/)
+  assert.match(store, /const duplicateFirst = history\.labels\.length === 0/)
+  assert.match(store, /duplicateFirst \? \[value, value\] : \[\.\.\.values, value\]/)
   assert.match(trendChart, /length >= 2/)
 })

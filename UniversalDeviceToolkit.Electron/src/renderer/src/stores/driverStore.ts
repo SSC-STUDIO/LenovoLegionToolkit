@@ -125,7 +125,9 @@ export const useDriverStore = create<DriverStore>((set, get) => {
     async setOnlyShowUpdates(enabled) {
       try {
         await optimizationApi.driverSetOnlyShowUpdates(enabled)
-        set({ settings: get().settings ? { ...get().settings!, onlyShowUpdates: enabled } : null })
+        set((state) => ({
+          settings: state.settings ? { ...state.settings, onlyShowUpdates: enabled } : null
+        }))
       } catch (error) {
         set({ error: (error as Error).message })
       }
@@ -135,7 +137,9 @@ export const useDriverStore = create<DriverStore>((set, get) => {
       if (!path) return
       try {
         await optimizationApi.driverSetDownloadPath(path)
-        set({ settings: get().settings ? { ...get().settings!, downloadPath: path } : null })
+        set((state) => ({
+          settings: state.settings ? { ...state.settings, downloadPath: path } : null
+        }))
       } catch (error) {
         set({ error: (error as Error).message })
       }

@@ -17,7 +17,6 @@ export interface SensorGaugeProps {
 const SWEEP_FRACTION = 270 / 360
 const ROTATE_DEG = 135
 const SVG_RADIUS = 42
-const ANIMATION_MS = 480
 const CAPTION_MIN_DIAMETER = 80
 
 function lighten(hex: string, amount: number): string {
@@ -123,7 +122,6 @@ function SensorGauge({
           strokeLinecap="round"
           strokeDasharray={`${progressLength} ${circumference}`}
           transform={`rotate(${ROTATE_DEG} 50 50)`}
-          style={{ transitionDuration: `${ANIMATION_MS}ms` }}
         />
       </svg>
       <div className="udt-sensor-gauge__readout">

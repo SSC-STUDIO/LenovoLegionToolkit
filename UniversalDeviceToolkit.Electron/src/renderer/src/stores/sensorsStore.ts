@@ -31,22 +31,9 @@ function emptyTrend(): SensorTrendHistory {
   }
 }
 
-function appendTrendPoint(
-  history: SensorTrendHistory,
-  snapshot: SensorSnapshot,
-  label: string,
-  batteryRatePoint: number | null
-): void {
-  history.labels.push(label)
-  history.cpuTemperature.push(snapshot.cpu?.temperature ?? null)
-  history.cpuUsage.push(snapshot.cpu?.usage ?? null)
-  history.cpuClock.push(snapshot.cpu?.coreClockAvg ?? snapshot.cpu?.coreClockMax ?? null)
-  history.gpuTemperature.push(snapshot.gpu?.temperature ?? null)
-  history.gpuUsage.push(snapshot.gpu?.usage ?? null)
-  history.gpuClock.push(snapshot.gpu?.coreClock ?? null)
-  history.memoryUsage.push(snapshot.memory?.usage ?? null)
-  history.batteryRate.push(batteryRatePoint)
-  history.batteryTemperature.push(snapshot.battery?.temperature ?? null)
+function appendTrendValue<T>(values: readonly T[], value: T, duplicateFirst: boolean): T[] {
+  const next = duplicateFirst ? [value, value] : [...values, value]
+  return next.length > TREND_POINTS ? next.slice(-TREND_POINTS) : next
 }
 
 function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): SensorTrendHistory {
@@ -55,40 +42,29 @@ function pushTrend(history: SensorTrendHistory, snapshot: SensorSnapshot): Senso
   const rateMw = snapshot.battery?.chargeRate
   const batteryRatePoint =
     rateMw != null && Number.isFinite(rateMw) && rateMw !== -1 ? Math.abs(rateMw) / 1000 : null
-  const isFirstSample = history.labels.length === 0
-
-  appendTrendPoint(history, snapshot, label, batteryRatePoint)
+  const duplicateFirst = history.labels.length === 0
   // TrendChart needs two finite samples to draw a line. Gauges already show the
   // current reading after the first snapshot, so seed a second identical point
   // instead of leaving "Waiting for sensor data" until the next poll.
-  if (isFirstSample) {
-    appendTrendPoint(history, snapshot, label, batteryRatePoint)
-  }
-
-  if (history.labels.length > TREND_POINTS) {
-    history.labels.shift()
-    history.cpuTemperature.shift()
-    history.cpuUsage.shift()
-    history.cpuClock.shift()
-    history.gpuTemperature.shift()
-    history.gpuUsage.shift()
-    history.gpuClock.shift()
-    history.memoryUsage.shift()
-    history.batteryRate.shift()
-    history.batteryTemperature.shift()
-  }
-
   return {
-    labels: history.labels,
-    cpuTemperature: history.cpuTemperature,
-    cpuUsage: history.cpuUsage,
-    cpuClock: history.cpuClock,
-    gpuTemperature: history.gpuTemperature,
-    gpuUsage: history.gpuUsage,
-    gpuClock: history.gpuClock,
-    memoryUsage: history.memoryUsage,
-    batteryRate: history.batteryRate,
-    batteryTemperature: history.batteryTemperature
+    labels: appendTrendValue(history.labels, label, duplicateFirst),
+    cpuTemperature: appendTrendValue(history.cpuTemperature, snapshot.cpu?.temperature ?? null, duplicateFirst),
+    cpuUsage: appendTrendValue(history.cpuUsage, snapshot.cpu?.usage ?? null, duplicateFirst),
+    cpuClock: appendTrendValue(
+      history.cpuClock,
+      snapshot.cpu?.coreClockAvg ?? snapshot.cpu?.coreClockMax ?? null,
+      duplicateFirst
+    ),
+    gpuTemperature: appendTrendValue(history.gpuTemperature, snapshot.gpu?.temperature ?? null, duplicateFirst),
+    gpuUsage: appendTrendValue(history.gpuUsage, snapshot.gpu?.usage ?? null, duplicateFirst),
+    gpuClock: appendTrendValue(history.gpuClock, snapshot.gpu?.coreClock ?? null, duplicateFirst),
+    memoryUsage: appendTrendValue(history.memoryUsage, snapshot.memory?.usage ?? null, duplicateFirst),
+    batteryRate: appendTrendValue(history.batteryRate, batteryRatePoint, duplicateFirst),
+    batteryTemperature: appendTrendValue(
+      history.batteryTemperature,
+      snapshot.battery?.temperature ?? null,
+      duplicateFirst
+    )
   }
 }
 

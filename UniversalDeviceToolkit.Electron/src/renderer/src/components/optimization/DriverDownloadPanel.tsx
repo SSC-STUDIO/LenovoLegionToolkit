@@ -385,6 +385,12 @@ export default function DriverDownloadPanel(): React.JSX.Element {
   const pathDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
+    return () => {
+      if (pathDebounceRef.current) clearTimeout(pathDebounceRef.current)
+    }
+  }, [])
+
+  useEffect(() => {
     if (!loadingSettings && !settings) void useDriverStore.getState().loadSettings()
   }, [loadingSettings, settings])
 
