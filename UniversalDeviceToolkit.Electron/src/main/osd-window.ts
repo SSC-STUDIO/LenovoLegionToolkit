@@ -1476,6 +1476,8 @@ function ensureOsdWindow(): void {
     hasShadow: false,
     webPreferences: {
       sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
       backgroundThrottling: true
     }
   })

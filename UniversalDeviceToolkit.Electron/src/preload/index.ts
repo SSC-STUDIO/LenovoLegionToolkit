@@ -48,7 +48,8 @@ const bridge = {
   getPathForFile: (file: object): string => {
     try {
       return webUtils.getPathForFile(file as never)
-    } catch {
+    } catch (error) {
+      console.warn('[preload] Unable to resolve the selected file path:', error)
       return ''
     }
   },

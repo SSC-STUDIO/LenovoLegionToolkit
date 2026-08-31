@@ -1,7 +1,19 @@
-import { app, BrowserWindow, clipboard, ipcMain, nativeTheme, powerMonitor, screen, session, shell } from 'electron'
+import {
+  app,
+  BrowserWindow,
+  clipboard,
+  ipcMain,
+  nativeTheme,
+  powerMonitor,
+  screen,
+  session,
+  shell,
+  type IpcMainInvokeEvent
+} from 'electron'
 import { join } from 'path'
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { tmpdir } from 'os'
+import { pathToFileURL } from 'url'
 import { hostClient } from './host-client'
 import {
   initMainLogger,
@@ -30,6 +42,7 @@ import {
 import { attachResizeStability, attachMaximizeWorkAreaClamp, constrainToWorkArea } from './window-helpers'
 import { listPowerPlans, setActivePowerPlan } from './power-plans'
 import { restartSystem, shutdownSystem, sleepSystem } from './system-power'
+import { resolveSafeOpenPath } from './safe-open-path'
 import { downloadLatestUpdate, getLatestRelease, launchInstaller, type DownloadProgress } from './update-downloader'
 import { installApplicationMenu } from './menu'
 import {
@@ -151,8 +164,43 @@ let allowCloseOnce = false
 let installerSelection: ReturnType<typeof readInstallerSelection> = null
 /** Path returned by the last successful downloadLatestUpdate in this process. */
 let lastVerifiedInstallerPath: string | null = null
+let lastPowerActionAt = 0
 type WindowsBackgroundMaterial = 'none' | 'mica' | 'acrylic'
 let currentBackgroundMaterial: WindowsBackgroundMaterial = 'none'
+
+function assertMainFrame(event: IpcMainInvokeEvent): void {
+  const win = mainWindow
+  if (
+    win == null
+    || win.isDestroyed()
+    || event.sender.id !== win.webContents.id
+    || event.senderFrame !== win.webContents.mainFrame
+  ) {
+    throw new Error('IPC request rejected from an untrusted frame.')
+  }
+}
+
+function claimPowerAction(): void {
+  const now = Date.now()
+  if (now - lastPowerActionAt < 2000) {
+    throw new Error('Power actions are rate limited.')
+  }
+  lastPowerActionAt = now
+}
+
+function isAllowedRendererNavigation(targetUrl: string): boolean {
+  const developmentUrl = process.env['ELECTRON_RENDERER_URL']
+  if (!app.isPackaged && developmentUrl) {
+    try {
+      return new URL(targetUrl).origin === new URL(developmentUrl).origin
+    } catch {
+      return false
+    }
+  }
+
+  const rendererUrl = pathToFileURL(join(__dirname, '../renderer/index.html')).toString()
+  return targetUrl.split(/[?#]/, 1)[0] === rendererUrl
+}
 
 function applyMainWindowBackgroundMaterial(material: WindowsBackgroundMaterial): void {
   if (process.platform !== 'win32' || !mainWindow || mainWindow.isDestroyed()) return
@@ -368,9 +416,18 @@ async function invokeBridgeMethod(method: string, params?: unknown): Promise<unk
     }
     return setActivePowerPlan(guid).then(() => ({ ok: true }))
   }
-  if (method === 'power.restart') return restartSystem()
-  if (method === 'power.shutdown') return shutdownSystem()
-  if (method === 'power.sleep') return sleepSystem()
+  if (method === 'power.restart') {
+    claimPowerAction()
+    return restartSystem()
+  }
+  if (method === 'power.shutdown') {
+    claimPowerAction()
+    return shutdownSystem()
+  }
+  if (method === 'power.sleep') {
+    claimPowerAction()
+    return sleepSystem()
+  }
   if (method === 'update.getRelease') {
     return getLatestRelease().then((release) => ({ release }))
   }
@@ -765,7 +822,7 @@ function createWindow(): void {
       preload: join(__dirname, '../preload/index.js'),
       contextIsolation: true,
       nodeIntegration: false,
-      sandbox: false,
+      sandbox: true,
       spellcheck: false,
       backgroundThrottling: true,
       additionalArguments:
@@ -773,6 +830,14 @@ function createWindow(): void {
       // First paint already at the effective zoom (installZoomAutoApply keeps
       // later navigations in sync).
       zoomFactor: zoom
+    }
+  })
+
+  mainWindow.webContents.setWindowOpenHandler(() => ({ action: 'deny' }))
+  mainWindow.webContents.on('will-navigate', (event, targetUrl) => {
+    if (!isAllowedRendererNavigation(targetUrl)) {
+      event.preventDefault()
+      console.warn(`[main] blocked renderer navigation: ${targetUrl}`)
     }
   })
 
@@ -952,7 +1017,14 @@ app.whenReady().then(() => {
     readyPayload: hostClient.lastReadyPayload
   }))
 
-  ipcMain.handle('bridge:invoke', async (_event, method: string, params?: unknown) => {
+  ipcMain.handle('bridge:invoke', async (event, method: unknown, params?: unknown) => {
+    assertMainFrame(event)
+    if (typeof method !== 'string' || method.length === 0) {
+      throw new Error('A bridge method name is required.')
+    }
+    if (params != null && typeof params !== 'object') {
+      throw new Error('Bridge parameters must be an object.')
+    }
     return invokeBridgeMethod(method, params)
   })
 
@@ -1084,7 +1156,8 @@ app.whenReady().then(() => {
 
   // Mirrors Electron Process.Start(url) / explorer.exe for file paths (used by the
   // Utils windows: update window, device info warranty link, crash report).
-  ipcMain.handle('shell:open-external', async (_event, url: unknown) => {
+  ipcMain.handle('shell:open-external', async (event, url: unknown) => {
+    assertMainFrame(event)
     if (typeof url !== 'string' || url.length === 0) {
       throw new Error('A URL is required.')
     }
@@ -1101,11 +1174,10 @@ app.whenReady().then(() => {
     return { opened: true }
   })
 
-  ipcMain.handle('shell:open-path', async (_event, path: unknown) => {
-    if (typeof path !== 'string' || path.length === 0) {
-      throw new Error('A file path is required.')
-    }
-    const error = await shell.openPath(path)
+  ipcMain.handle('shell:open-path', async (event, path: unknown) => {
+    assertMainFrame(event)
+    const target = resolveSafeOpenPath(path)
+    const error = await shell.openPath(target)
     if (error) {
       throw new Error(error)
     }

@@ -16,31 +16,44 @@ export interface PowerActionResult {
   error?: string
 }
 
+function singleSettlement(
+  resolve: (result: PowerActionResult) => void
+): (result: PowerActionResult) => void {
+  let settled = false
+  return (result) => {
+    if (settled) return
+    settled = true
+    resolve(result)
+  }
+}
+
 function runWindowsShutdown(args: string[]): Promise<PowerActionResult> {
   return new Promise((resolve) => {
+    const settle = singleSettlement(resolve)
     const child = spawn('shutdown.exe', args, {
       windowsHide: true,
       detached: true,
       stdio: 'ignore'
     })
-    child.on('error', () => resolve({ ok: false }))
-    child.on('exit', (code) => resolve({ ok: code === 0 }))
+    child.once('error', (error) => settle({ ok: false, error: error.message }))
+    child.once('exit', (code) => settle({ ok: code === 0 }))
   })
 }
 
 /** Spawn a platform command and resolve with its exit status. */
 function runCommand(command: string, args: string[]): Promise<PowerActionResult> {
   return new Promise((resolve) => {
+    const settle = singleSettlement(resolve)
     const child = spawn(command, args, {
       windowsHide: true,
       stdio: 'ignore'
     })
-    child.on('error', (error) => resolve({ ok: false, error: error.message }))
-    child.on('exit', (code) => {
+    child.once('error', (error) => settle({ ok: false, error: error.message }))
+    child.once('exit', (code) => {
       if (code === 0) {
-        resolve({ ok: true })
+        settle({ ok: true })
       } else {
-        resolve({ ok: false, error: `${command} exited with code ${code}` })
+        settle({ ok: false, error: `${command} exited with code ${code}` })
       }
     })
   })

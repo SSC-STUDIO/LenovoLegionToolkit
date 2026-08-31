@@ -161,6 +161,8 @@ function ensureWindow(): BrowserWindow {
     fullscreenable: false,
     webPreferences: {
       sandbox: true,
+      contextIsolation: true,
+      nodeIntegration: false,
       backgroundThrottling: true
     }
   })

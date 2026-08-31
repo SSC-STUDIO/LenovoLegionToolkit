@@ -3,6 +3,7 @@
  * plus the dedicated `dialog:select-*` IPC channels used by the preload API.
  */
 import { BrowserWindow, dialog, ipcMain, shell } from 'electron'
+import { resolveSafeOpenPath } from './safe-open-path'
 
 const DIALOG_BRIDGE_METHODS = new Set([
   'dialog:select-json-file',
@@ -83,11 +84,8 @@ export async function invokeDialogBridgeMethod(
     return result.canceled ? null : (result.filePaths[0] ?? null)
   }
   if (method === 'dialog:open-path') {
-    const path = (params as { path?: unknown } | null)?.path
-    if (typeof path !== 'string' || path.length === 0) {
-      throw new Error('A file path is required.')
-    }
-    const error = await shell.openPath(path)
+    const target = resolveSafeOpenPath((params as { path?: unknown } | null)?.path)
+    const error = await shell.openPath(target)
     return { ok: error.length === 0 }
   }
   // dialog:open-url
