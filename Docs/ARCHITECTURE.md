@@ -2,7 +2,7 @@
 
 ## Overview
 
-Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows-first desktop application with an Electron UI and a headless .NET backend: full Lenovo hardware control on supported Windows machines, plugin extensions, and safe basic-mode workflows on other Windows PCs. macOS and Linux have experimental portable Host, Electron-shell, and diagnostics-CLI surfaces; they are not a shipped product. The application follows a modular architecture pattern with clear separation of concerns and treats plugin extensions as a primary expansion path.
+Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight Windows-first desktop application with an Electron UI and a headless .NET backend: full Lenovo hardware control on supported Windows machines, official Host features plus in-tree brand providers, and safe basic-mode workflows on other Windows PCs. macOS and Linux have experimental portable Host, Electron-shell, and diagnostics-CLI surfaces; they are not a shipped product. The application follows a modular architecture pattern with clear separation of concerns. New hardware support lands in the official Host and brand providers (see [DEVICE_PROVIDERS.md](./DEVICE_PROVIDERS.md)); the plugin system was retired in 6.1 and is not an extension path.
 
 ## Quick Start
 
@@ -11,7 +11,7 @@ Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight 
 1. **Download** the latest release from [GitHub Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases)
 2. **Install** the application by running the installer
 3. **Launch** UDT and configure your preferred settings
-4. **Use** supported hardware controls or basic-mode plugin and system tools
+4. **Use** supported hardware controls or basic-mode Host and system tools
 
 ### For Developers
 
@@ -31,7 +31,7 @@ Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight 
 The client UI is an **Electron app** (Node.js + electron-vite + React) in
 `UniversalDeviceToolkit.Electron/`. It talks over JSON-RPC (newline-delimited,
 stdio) to the **UniversalDeviceToolkit.Host** process — a headless .NET backend
-that hosts all business logic (hardware control, sensors, settings, plugins).
+that hosts all business logic (hardware control, sensors, settings, brand providers).
 Electron's main process only owns the UI shell (window, tray, OSD, dialogs);
 it forwards every other `bridge:invoke` call to the Host. The Host is spawned
 automatically by Electron (dev: `bin/x64/Debug/.../Host.exe`; packaged:
@@ -61,7 +61,7 @@ automatically by Electron (dev: `bin/x64/Debug/.../Host.exe`; packaged:
 | | +- Hardware Controllers (34 modules)                          |  |  |
 | | +- Services (Settings, Messaging, IoC)                        |  |  |
 | | +- Game Detection System                                      |  |  |
-| | +- Plugin System                                              |  |  |
+| | +- Brand providers / device-support catalog                   |  |  |
 | | +- Native Interop (WMI, ACPI, USB/HID)                      |  |  |
 | +--------------------------------------------------------------------+ |
 +-----------------------------------------------------------------------+
@@ -122,7 +122,7 @@ The shipping Host backend (`.NET`) is Windows-first: it targets the Windows TFM
 drivers. Official releases embed the self-contained `win-x64` publish output.
 A portable `net10.0` Host (`UDTWindows=false` / `UDT_PLATFORM=linux|macos`)
 exists for experimental macOS/Linux work and registers Windows-only RPC names
-as `-32099`. Official plugins target Windows TFMs. Per-platform Host publish
+as `-32099`. Official Host and brand providers target Windows TFMs. Per-platform Host publish
 details are in [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ### Shell exceptions (stay in Electron main)
@@ -248,7 +248,7 @@ User Action (UI)
 ```
 GameDetectionService (Background Monitor)
       -> Window Title / Process Matching
-      -> Plugin Notifications
+      -> Host event broadcast
       -> Automation Rules Evaluation
       -> Automatic Actions Execution
 ```
@@ -298,7 +298,7 @@ assembly (`UniversalDeviceToolkit.Lib.Plugins`) was removed in 6.1.
 | Windows IPC CLI executable | `udt.exe` (`AssemblyName` = `udt`; `udt-cli.exe` one-train alias) |
 | Cross-platform diagnostics CLI | `udt` (`UniversalDeviceToolkit.CrossPlatform`, framework-dependent `udt.dll` + `udt`/`udt.cmd`) |
 
-Phase 3 hard cutover from `LenovoLegionToolkit.Lib*` is **complete**. Remaining LLT tokens (legacy IPC pipe `LenovoLegionToolkit-IPC-0`, `BrandCompatibility.Legacy*`, dual-written `LLT_*` env keys, legacy `LenovoLegionToolkit.Plugins.*` load prefixes, packaging IDs) are deliberate compatibility surfaces — not the primary ABI.
+Phase 3 hard cutover from `LenovoLegionToolkit.Lib*` is **complete**. Remaining LLT tokens (legacy IPC pipe `LenovoLegionToolkit-IPC-0`, `BrandCompatibility.Legacy*`, dual-written `LLT_*` env keys, packaging IDs) are deliberate compatibility surfaces — not the primary ABI. Plugin load prefixes were removed with the plugin system in 6.1.
 
 See **[NamespaceMigration.md](./NamespaceMigration.md)** for the RootNamespace/AssemblyName inventory, completed Phases 0–3, and remaining legacy compat notes.
 
@@ -307,14 +307,14 @@ See **[NamespaceMigration.md](./NamespaceMigration.md)** for the RootNamespace/A
 1. **No Background Service**: Application runs only when user is logged in
 2. **No Telemetry**: Complete user privacy
 3. **Lightweight**: Minimal resource footprint
-4. **Plugin Extensibility**: Dynamic module loading for device-specific workflows
+4. **Official Host + brand providers**: New device workflows land in Host RPC and in-tree brand providers, not third-party modules (see [DEVICE_PROVIDERS.md](./DEVICE_PROVIDERS.md))
 5. **Catalog-backed Device Support**: Data-driven hardware/basic-mode profiles across Lenovo families and common PC vendors
-6. **Primary plugin ABI is UDT-named**: Core Lib assemblies are `UniversalDeviceToolkit.Lib*`; host still accepts selected legacy plugin prefixes and dual pipes during transition (see [NamespaceMigration.md](./NamespaceMigration.md))
+6. **Primary ABI is UDT-named**: Core Lib assemblies are `UniversalDeviceToolkit.Lib*`; the Host still accepts selected dual pipes during transition (see [NamespaceMigration.md](./NamespaceMigration.md))
 
 ## Platform Compatibility
 
 - **Windows**: 10 (1809+), 11 (x64 only) — supported product (full hardware control + basic mode)
-- **macOS / Linux**: experimental only (portable Host, Electron shell, CrossPlatform CLI). No official Electron release. Hardware control is Windows-only. Official plugins are Windows TFMs.
+- **macOS / Linux**: experimental only (portable Host, Electron shell, CrossPlatform CLI). No official Electron release. Hardware control is Windows-only. Official Host and brand providers are Windows TFMs.
 - **Hardware (code-driven detection)**:
   - Hardware-control profiles: Legion 5/Slim 5/Pro 5, Legion 7/Pro 7/9, Legion Go, LOQ, IdeaPad Gaming, ThinkBook, YOGA, Lenovo Slim, selected legacy Lenovo gaming families
   - Basic-mode profiles: ThinkPad, ThinkCentre, ThinkStation, IdeaCentre, Legion desktop, XiaoXin, V series, Motorola, ASUS, MECHREVO/Mechanical Revolution, Dell, HP, Acer, MSI, Microsoft Surface, GIGABYTE/AORUS, Razer, Samsung, HUAWEI, Xiaomi/Redmi, HONOR, LG, Framework, Panasonic, Dynabook/Toshiba, Fujitsu, VAIO, MEDION, XMG/SCHENKER, System76, Star Labs, Slimbook, Clevo/Tongfang, and generic PCs
@@ -330,18 +330,17 @@ See **[NamespaceMigration.md](./NamespaceMigration.md)** for the RootNamespace/A
 - **CPU Usage**: <1% (tray idle), <5% (active monitoring)
 - **Startup Time**: <2 seconds
 - **Power Impact**: Electron uses EcoQoS when every window is hidden; the Host stays at Normal priority so hotkeys and automation stay responsive.
-- **Installers**: Windows ships a Full offline NSIS package and an Online nsis-web stub (<= 15MB) that downloads the `.nsis.7z` payload from the GitHub Release. Host publish output is pruned (`Scripts/Prune-ShippingFootprint.ps1`); the Online payload keeps English satellites only.
+- **Installers**: Windows ships a Full offline installer and an Electron Online installer that downloads `*_Online_win-x64.zip` from the GitHub Release (the retired nsis-web `*.nsis.7z` payload is no longer published). Host publish output is pruned (`Scripts/Prune-ShippingFootprint.ps1`). In-app updates from 6.0.0 spawn the setup exe with `/S`; new installer EXEs stay `asInvoker` and self-elevate so that CreateProcess still works. Changing installer shape later must keep that 6.0.0 launch contract or ship a compatible stub.
 
 ## Security Considerations
 
 - Local-only operation (no cloud dependencies)
 - Hardware-level access (requires admin for some features)
-- Plugin isolation through dedicated load contexts and manifest checks
+- Renderer sandbox (`contextIsolation`, no Node.js) with Host-only privileged work
 - Secure update mechanism (signature verification)
 
 ## Future Architecture Goals
 
-- [ ] Plugin SDK documentation and examples
 - [ ] Web-based management interface (optional)
 - Mobile and Android companion apps are out of scope and are not supported.
 - [ ] Cloud sync for settings (privacy-first design)

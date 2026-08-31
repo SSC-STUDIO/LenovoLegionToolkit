@@ -200,7 +200,7 @@ The packaging targets are defined in `UniversalDeviceToolkit.Electron/electron-b
 
 | Platform | Target(s) | Notes |
 |---|---|---|
-| Windows (supported) | `nsis` (Full, x64) and `nsis-web` (Online stub, x64) | Official release path. Full is a complete offline installer. Online is a small web installer (asserted <= 15MB) that downloads the `.nsis.7z` payload from the GitHub Release. Both embed the self-contained Host via `extraResources`. 23 installer languages on Full; Online stays English to keep the stub small. |
+| Windows (supported) | Full offline installer + Electron Online installer (x64) | Official release path. Full is a complete offline package. Online downloads `*_Online_win-x64.zip` from the GitHub Release (not the retired nsis-web `*.nsis.7z` payload). Both installers must remain startable by 6.0.0's in-app updater (`spawn(setup.exe, ['/S'])`): PE execution level `asInvoker`/`user`, then self-elevate. |
 | macOS (experimental) | `dmg` (arm64 + x64) | Local packaging only. Category `public.app-category.utilities`; **unsigned/notarized only if credentials are configured** (see below). Not published by `Release.yml`. |
 | Linux (experimental) | `AppImage` and `deb` (x64) | Local packaging only. Category `Utility`. Not published by `Release.yml`. |
 
@@ -209,7 +209,7 @@ The packaging targets are defined in `UniversalDeviceToolkit.Electron/electron-b
 | Platform | Artifact | Official GitHub Release |
 |---|---|---|
 | Windows Full | `UniversalDeviceToolkitSetup-<version>.exe` (offline NSIS) | Yes |
-| Windows Online | `UniversalDeviceToolkitOnlineSetup-<version>.exe` (nsis-web stub, <= 15MB) plus `*.nsis.7z` payload | Yes |
+| Windows Online | `UniversalDeviceToolkit_vX.Y.Z_Online_Setup.exe` plus `*_Online_win-x64.zip` | Yes |
 | macOS (experimental) | `UniversalDeviceToolkit-<version>-mac-arm64.dmg` / `-mac-x64.dmg` | Optional experimental asset via `experimental-packages.yml` |
 | Linux (experimental) | `UniversalDeviceToolkit-<version>-linux-x86_64.AppImage` / `-linux-amd64.deb` | Optional experimental asset via `experimental-packages.yml` |
 
@@ -264,9 +264,10 @@ provide signing credentials via `CSC_LINK`/`CSC_KEY_PASSWORD` (or
 `APPLE_API_KEY`/`APPLE_API_ISSUER`). Unsigned builds may run locally
 (right-click → Open) but will trigger Gatekeeper warnings and are not
 official release artifacts. `Release.yml` does not produce or sign macOS
-packages. Windows installer signing uses Azure Trusted Signing in
-`Release.yml` (see [Security Considerations](#security-considerations));
-local Windows builds are unsigned.
+packages. Windows installer signing is optional Azure Trusted Signing in
+`Release.yml` when repository secrets exist; otherwise releases go out
+unsigned via `skip_signing` (see [Security Considerations](#security-considerations)).
+Local Windows builds are unsigned.
 
 **Linux packaging (experimental local packaging only):**
 `electron-builder.yml` already lists `AppImage` and `deb` (x64) as local
@@ -511,20 +512,21 @@ Release workflow):
 
 # Output location
 BuildInstaller/
-├── UniversalDeviceToolkitSetup.exe         # Full offline NSIS
-├── UniversalDeviceToolkitOnlineSetup.exe   # Online nsis-web stub (<= 15MB)
-└── *.nsis.7z                               # payload downloaded by the Online stub
+├── UniversalDeviceToolkitSetup.exe         # Full offline installer
+├── UniversalDeviceToolkitOnlineSetup.exe   # Electron Online installer
+└── UniversalDeviceToolkit_*_Online_win-x64.zip
 ```
 
-The Full installer follows the OS display language (23 languages), requests
-administrator elevation (per-machine), allows changing the installation
-directory, creates desktop and Start Menu shortcuts, and unregisters Nilesoft
-Shell during uninstall to release file locks (mirroring the retired Inno
-Setup behavior). The self-contained .NET host is embedded via
+The Full installer follows the OS display language, allows changing the
+installation directory, creates desktop and Start Menu shortcuts, and
+unregisters Nilesoft Shell during uninstall to release file locks.
+Installer EXEs stay `asInvoker` and self-elevate so 6.0.0's
+`spawn(setup.exe, ['/S'])` in-app updater can still start them. Do not switch
+to `requireAdministrator` (or drop `/S`) without shipping a compatible stub.
+The self-contained .NET host is embedded via
 `UniversalDeviceToolkit.Electron/electron-builder.yml` `extraResources`.
 Packaging uses `compression: maximum`. Host publish output is pruned
-(`Scripts/Prune-ShippingFootprint.ps1`); the Online nsis-web payload keeps
-English Host satellites only (other languages install from the in-app catalog).
+(`Scripts/Prune-ShippingFootprint.ps1`).
 In-app updates follow the install channel written at pack time: Full installs
 download `*_Full_Setup.exe`, Online installs download `*_Online_Setup.exe`.
 
@@ -533,7 +535,6 @@ download `*_Full_Setup.exe`, Online installs download `*_Online_Setup.exe`.
 The installer packages:
 - Main application executable
 - Core libraries and dependencies
-- Plugin SDK
 - Documentation (README, LICENSE)
 - Uninstaller configuration
 
@@ -741,7 +742,7 @@ dotnet build --configuration Release
 
 ### Build Security
 
-- Release payloads and installers are signed by the Azure Trusted Signing step in `Release.yml`; the workflow verifies every executable and DLL with `Get-AuthenticodeSignature` before publishing. Local builds are not represented as signed releases.
+- `Release.yml` **can** Azure Trusted Signing-sign payloads when the repository secrets are configured (`AZURE_TENANT_ID` / `AZURE_CLIENT_ID` / Trusted Signing account). As of 6.1.0 those secrets are not present, so official runs use `workflow_dispatch` with `skip_signing=true`. Unsigned installers trigger SmartScreen; do not document them as signed. The owner must finish the Azure Trusted Signing profile in the GitHub UI — this cannot be done from the API. When secrets exist, the workflow verifies every executable and DLL with `Get-AuthenticodeSignature` before publishing. Local builds are never represented as signed releases.
 - NuGet package verification
 - Dependency vulnerability scanning (Dependabot)
 
