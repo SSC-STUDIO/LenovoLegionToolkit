@@ -42,18 +42,18 @@ public class TongfangSensorsController(GPUController gpuController, IEcChannel e
     }
 
     protected override Task<int> GetCpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadTemp(CpuTempAddressPrimary, CpuTempAddressSecondary, base.GetCpuCurrentTemperatureAsync()));
+        ReadTempAsync(CpuTempAddressPrimary, CpuTempAddressSecondary, () => base.GetCpuCurrentTemperatureAsync());
 
     protected override Task<int> GetGpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadTemp(GpuTempAddressPrimary, GpuTempAddressSecondary, base.GetGpuCurrentTemperatureAsync()));
+        ReadTempAsync(GpuTempAddressPrimary, GpuTempAddressSecondary, () => base.GetGpuCurrentTemperatureAsync());
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadRpm(CpuFanHigh, base.GetCpuCurrentFanSpeedAsync()));
+        ReadRpmAsync(CpuFanHigh, () => base.GetCpuCurrentFanSpeedAsync());
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadRpm(GpuFanHigh, base.GetGpuCurrentFanSpeedAsync()));
+        ReadRpmAsync(GpuFanHigh, () => base.GetGpuCurrentFanSpeedAsync());
 
-    private int ReadTemp(byte primaryAddress, byte secondaryAddress, Task<int> fallback)
+    private async Task<int> ReadTempAsync(byte primaryAddress, byte secondaryAddress, Func<Task<int>> fallback)
     {
         try
         {
@@ -69,10 +69,10 @@ public class TongfangSensorsController(GPUController gpuController, IEcChannel e
                 Log.Instance.Trace($"Tongfang EC temp read failed; using fallback.", ex);
         }
 
-        return AwaitWithTimeout(fallback);
+        return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
     }
 
-    private int ReadRpm(byte highAddress, Task<int> fallback)
+    private async Task<int> ReadRpmAsync(byte highAddress, Func<Task<int>> fallback)
     {
         try
         {
@@ -98,6 +98,6 @@ public class TongfangSensorsController(GPUController gpuController, IEcChannel e
                 Log.Instance.Trace($"Tongfang EC fan read failed; using fallback. [address=0x{highAddress:X2}]", ex);
         }
 
-        return AwaitWithTimeout(fallback);
+        return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
     }
 }

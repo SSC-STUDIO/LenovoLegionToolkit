@@ -26,22 +26,24 @@ public class WMIWrapper : IWMIWrapper
             var scope = "root\\cimv2";
             using var mos = new ManagementObjectSearcher(scope, query);
             var managementObjects = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
-
-            foreach (var mo in managementObjects)
+            try
             {
-                // Convert the first result to type T
-                // This is a placeholder - real implementation would need proper conversion
-                if (mo is ManagementObject managementObject)
+                foreach (var mo in managementObjects)
                 {
-                    using (managementObject)
+                    // Convert the first result to type T
+                    // This is a placeholder - real implementation would need proper conversion
+                    if (mo is ManagementObject managementObject)
                     {
-                    var result = ConvertManagementObject<T>(managementObject);
-                    return result;
+                        return ConvertManagementObject<T>(managementObject);
                     }
                 }
-            }
 
-            return default;
+                return default;
+            }
+            finally
+            {
+                managementObjects.DisposeAll();
+            }
         }
         catch (Exception ex)
         {
@@ -118,7 +120,14 @@ public class WMIWrapper : IWMIWrapper
             var scope = "root\\cimv2";
             using var mos = new ManagementObjectSearcher(scope, "SELECT * FROM Win32_OperatingSystem");
             var results = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
-            return true;
+            try
+            {
+                return true;
+            }
+            finally
+            {
+                results.DisposeAll();
+            }
         }
         catch (Exception ex)
         {

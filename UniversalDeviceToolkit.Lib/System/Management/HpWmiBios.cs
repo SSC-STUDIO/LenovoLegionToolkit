@@ -18,7 +18,7 @@ public interface IHpWmiBios
     (int ReturnCode, byte[] Data) Execute(uint commandType, byte[] input);
 }
 
-public sealed class HpWmiBios : IHpWmiBios
+public sealed class HpWmiBios : IHpWmiBios, IDisposable
 {
     private const string Namespace = @"root\wmi";
     private const string MethodClass = "hpqBIntM";
@@ -30,6 +30,7 @@ public sealed class HpWmiBios : IHpWmiBios
 
     private readonly object _lock = new();
     private bool _initialized;
+    private bool _disposed;
     private ManagementObject? _methodObject;
     private ManagementClass? _dataInClass;
 
@@ -51,14 +52,22 @@ public sealed class HpWmiBios : IHpWmiBios
         {
             lock (_lock)
             {
-                using var inData = _dataInClass!.CreateInstance()!;
+                var dataInClass = _dataInClass;
+                var methodObject = _methodObject;
+                if (dataInClass is null || methodObject is null)
+                    return (-1, []);
+
+                using var inData = dataInClass.CreateInstance();
+                if (inData is null)
+                    return (-1, []);
+
                 inData["Sign"] = Signature;
                 inData["Command"] = CommandDefault;
                 inData["CommandType"] = commandType;
                 inData["Size"] = (uint)input.Length;
                 inData["Data"] = input;
 
-                using var outParams = (ManagementBaseObject?)_methodObject!.InvokeMethod(MethodName, [inData]);
+                using var outParams = (ManagementBaseObject?)methodObject.InvokeMethod(MethodName, [inData]);
                 if (outParams is null)
                     return (-1, []);
 
@@ -86,7 +95,7 @@ public sealed class HpWmiBios : IHpWmiBios
     {
         lock (_lock)
         {
-            if (_initialized)
+            if (_initialized || _disposed)
                 return;
 
             _initialized = true;
@@ -102,9 +111,26 @@ public sealed class HpWmiBios : IHpWmiBios
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace("HP WMI BIOS interface not available.", ex);
+                _methodObject?.Dispose();
+                _dataInClass?.Dispose();
                 _methodObject = null;
                 _dataInClass = null;
             }
+        }
+    }
+
+    public void Dispose()
+    {
+        lock (_lock)
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            _methodObject?.Dispose();
+            _dataInClass?.Dispose();
+            _methodObject = null;
+            _dataInClass = null;
         }
     }
 }

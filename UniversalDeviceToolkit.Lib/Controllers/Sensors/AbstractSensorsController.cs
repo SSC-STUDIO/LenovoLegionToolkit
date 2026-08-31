@@ -693,7 +693,6 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
 
             var output = await process.StandardOutput.ReadToEndAsync().ConfigureAwait(false);
             await process.WaitForExitAsync().ConfigureAwait(false);
-            process.Kill(true);
 
             int wattage = -1;
             double voltage = 0;
@@ -912,17 +911,20 @@ public abstract partial class AbstractSensorsController(GPUController gpuControl
     }
 
     /// <summary>
-    /// Synchronously awaits a fallback task with a timeout to prevent indefinite blocking.
+    /// Awaits a fallback task with a timeout to prevent indefinite blocking.
     /// Used by vendor-specific sensor controllers when a hardware read fails and a
     /// software fallback is needed.
     /// </summary>
-    protected static int AwaitWithTimeout(Task<int> fallback, int timeoutSeconds = 30)
+    protected static async Task<int> AwaitWithTimeoutAsync(Task<int> fallback, int timeoutSeconds = 30)
     {
-        if (!fallback.Wait(TimeSpan.FromSeconds(timeoutSeconds)))
+        try
+        {
+            return await fallback.WaitAsync(TimeSpan.FromSeconds(timeoutSeconds)).ConfigureAwait(false);
+        }
+        catch (TimeoutException)
         {
             Log.Instance.Warning($"Sensor fallback task timed out after {timeoutSeconds}s.");
             return -1;
         }
-        return fallback.Result;
     }
 }

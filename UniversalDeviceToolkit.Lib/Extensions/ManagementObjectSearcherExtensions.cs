@@ -13,19 +13,25 @@ public static class ManagementObjectSearcherExtensions
 {
     // Queries that already failed with "not supported" / missing class, etc.
     // Avoids re-hitting WMI and spamming first-chance ManagementException.
-    private static readonly ConcurrentDictionary<string, byte> _softFailedQueries = new(StringComparer.OrdinalIgnoreCase);
+    private static readonly TimeSpan _softFailureTimeToLive = TimeSpan.FromMinutes(10);
+    private static readonly ConcurrentDictionary<string, DateTimeOffset> _softFailedQueries = new(StringComparer.OrdinalIgnoreCase);
 
-    public static Task<IEnumerable<ManagementBaseObject>> GetAsyncWithTimeout(this ManagementObjectSearcher searcher, int timeoutMs = 2500) =>
+    public static Task<ManagementBaseObject[]> GetAsyncWithTimeout(this ManagementObjectSearcher searcher, int timeoutMs = 2500) =>
         searcher.GetAsync(timeoutMs);
 
-    public static async Task<IEnumerable<ManagementBaseObject>> GetAsync(this ManagementObjectSearcher mos, int timeoutMs = 2500)
+    public static async Task<ManagementBaseObject[]> GetAsync(this ManagementObjectSearcher mos, int timeoutMs = 2500)
     {
         var scopePath = mos.Scope?.Path?.Path ?? string.Empty;
         var queryString = mos.Query?.QueryString ?? throw new ArgumentException("Query is required.", nameof(mos));
         var cacheKey = string.Concat(scopePath, "\u001f", queryString);
 
-        if (_softFailedQueries.ContainsKey(cacheKey))
-            return Array.Empty<ManagementBaseObject>();
+        if (_softFailedQueries.TryGetValue(cacheKey, out var failedAt))
+        {
+            if (DateTimeOffset.UtcNow - failedAt < _softFailureTimeToLive)
+                return [];
+
+            _softFailedQueries.TryRemove(cacheKey, out _);
+        }
 
         var task = Task.Run(() => ExecuteQuery(scopePath, queryString, cacheKey));
 
@@ -70,7 +76,7 @@ public static class ManagementObjectSearcherExtensions
         }
         catch (ManagementException ex) when (IsSoftQueryFailure(ex))
         {
-            _softFailedQueries.TryAdd(cacheKey, 0);
+            _softFailedQueries[cacheKey] = DateTimeOffset.UtcNow;
 
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace(
@@ -78,6 +84,22 @@ public static class ManagementObjectSearcherExtensions
                     ex);
 
             return Array.Empty<ManagementBaseObject>();
+        }
+    }
+
+    public static void DisposeAll(this IEnumerable<ManagementBaseObject> objects)
+    {
+        foreach (var obj in objects)
+        {
+            try
+            {
+                obj.Dispose();
+            }
+            catch (Exception ex)
+            {
+                if (Log.Instance.IsTraceEnabled)
+                    Log.Instance.Trace("Failed to dispose a WMI query result.", ex);
+            }
         }
     }
 

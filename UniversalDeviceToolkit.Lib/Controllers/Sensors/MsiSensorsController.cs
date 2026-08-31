@@ -37,18 +37,18 @@ public class MsiSensorsController(GPUController gpuController, IEcChannel ec) : 
     }
 
     protected override Task<int> GetCpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadTemp(CpuTempAddress, base.GetCpuCurrentTemperatureAsync()));
+        ReadTempAsync(CpuTempAddress, () => base.GetCpuCurrentTemperatureAsync());
 
     protected override Task<int> GetGpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadTemp(GpuTempAddress, base.GetGpuCurrentTemperatureAsync()));
+        ReadTempAsync(GpuTempAddress, () => base.GetGpuCurrentTemperatureAsync());
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadRpm(CpuFanCounterHigh, base.GetCpuCurrentFanSpeedAsync()));
+        ReadRpmAsync(CpuFanCounterHigh, () => base.GetCpuCurrentFanSpeedAsync());
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadRpm(GpuFanCounterHigh, base.GetGpuCurrentFanSpeedAsync()));
+        ReadRpmAsync(GpuFanCounterHigh, () => base.GetGpuCurrentFanSpeedAsync());
 
-    private int ReadTemp(byte address, Task<int> fallback)
+    private async Task<int> ReadTempAsync(byte address, Func<Task<int>> fallback)
     {
         try
         {
@@ -61,10 +61,10 @@ public class MsiSensorsController(GPUController gpuController, IEcChannel ec) : 
                 Log.Instance.Trace($"MSI EC temp read failed; using fallback. [address=0x{address:X2}]", ex);
         }
 
-        return AwaitWithTimeout(fallback);
+        return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
     }
 
-    private int ReadRpm(byte counterHighAddress, Task<int> fallback)
+    private async Task<int> ReadRpmAsync(byte counterHighAddress, Func<Task<int>> fallback)
     {
         try
         {
@@ -82,7 +82,7 @@ public class MsiSensorsController(GPUController gpuController, IEcChannel ec) : 
                 Log.Instance.Trace($"MSI EC fan read failed; using fallback. [address=0x{counterHighAddress:X2}]", ex);
         }
 
-        return AwaitWithTimeout(fallback);
+        return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
     }
 
     private static async Task<bool> IsMsiMachineAsync()
@@ -94,8 +94,10 @@ public class MsiSensorsController(GPUController gpuController, IEcChannel ec) : 
             return vendor.Contains("Micro-Star", StringComparison.OrdinalIgnoreCase) ||
                    vendor.Contains("MSI", StringComparison.OrdinalIgnoreCase);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to read machine information for MSI sensor detection.", ex);
             return false;
         }
     }

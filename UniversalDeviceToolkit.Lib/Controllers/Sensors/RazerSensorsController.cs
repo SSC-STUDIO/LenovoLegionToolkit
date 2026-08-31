@@ -30,11 +30,13 @@ public class RazerSensorsController(GPUController gpuController, IRazerHidContro
         }
     }
 
-    protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(controller.GetFanRpm(RazerPacket.ZoneCpu) ?? AwaitWithTimeout(base.GetCpuCurrentFanSpeedAsync()));
+    protected override async Task<int> GetCpuCurrentFanSpeedAsync() =>
+        controller.GetFanRpm(RazerPacket.ZoneCpu)
+        ?? await AwaitWithTimeoutAsync(base.GetCpuCurrentFanSpeedAsync()).ConfigureAwait(false);
 
-    protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(controller.GetFanRpm(RazerPacket.ZoneGpu) ?? AwaitWithTimeout(base.GetGpuCurrentFanSpeedAsync()));
+    protected override async Task<int> GetGpuCurrentFanSpeedAsync() =>
+        controller.GetFanRpm(RazerPacket.ZoneGpu)
+        ?? await AwaitWithTimeoutAsync(base.GetGpuCurrentFanSpeedAsync()).ConfigureAwait(false);
 
     private static async Task<bool> IsRazerMachineAsync()
     {
@@ -43,8 +45,10 @@ public class RazerSensorsController(GPUController gpuController, IRazerHidContro
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
             return mi.Vendor?.Contains("Razer", StringComparison.OrdinalIgnoreCase) == true;
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to read machine information for Razer sensor detection.", ex);
             return false;
         }
     }

@@ -40,18 +40,18 @@ public class AcerSensorsController(GPUController gpuController, IAcerWmi wmi) : 
     }
 
     protected override Task<int> GetCpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadWmiSensor(CpuTempSensor, base.GetCpuCurrentTemperatureAsync()));
+        ReadWmiSensorAsync(CpuTempSensor, () => base.GetCpuCurrentTemperatureAsync());
 
     protected override Task<int> GetGpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadWmiSensor(GpuTempSensor, base.GetGpuCurrentTemperatureAsync()));
+        ReadWmiSensorAsync(GpuTempSensor, () => base.GetGpuCurrentTemperatureAsync());
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadWmiSensor(CpuFanSensor, base.GetCpuCurrentFanSpeedAsync()));
+        ReadWmiSensorAsync(CpuFanSensor, () => base.GetCpuCurrentFanSpeedAsync());
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadWmiSensor(GpuFanSensor, base.GetGpuCurrentFanSpeedAsync()));
+        ReadWmiSensorAsync(GpuFanSensor, () => base.GetGpuCurrentFanSpeedAsync());
 
-    private int ReadWmiSensor(uint sensorId, Task<int> fallback)
+    private async Task<int> ReadWmiSensorAsync(uint sensorId, Func<Task<int>> fallback)
     {
         try
         {
@@ -69,7 +69,7 @@ public class AcerSensorsController(GPUController gpuController, IAcerWmi wmi) : 
                 Log.Instance.Trace($"Acer WMI sensor read failed; using fallback. [sensor=0x{sensorId:X2}]", ex);
         }
 
-        return AwaitWithTimeout(fallback);
+        return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
     }
 
     private static async Task<bool> IsAcerMachineAsync()
@@ -82,8 +82,10 @@ public class AcerSensorsController(GPUController gpuController, IAcerWmi wmi) : 
                    vendor.Contains("Predator", StringComparison.OrdinalIgnoreCase) ||
                    vendor.Contains("Nitro", StringComparison.OrdinalIgnoreCase);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to read machine information for Acer sensor detection.", ex);
             return false;
         }
     }

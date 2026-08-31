@@ -35,10 +35,10 @@ public class HpSensorsController(GPUController gpuController, IHpWmiBios bios) :
     }
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadWmiFanSpeed(cpu: true, base.GetCpuCurrentFanSpeedAsync()));
+        ReadWmiFanSpeedAsync(cpu: true, () => base.GetCpuCurrentFanSpeedAsync());
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadWmiFanSpeed(cpu: false, base.GetGpuCurrentFanSpeedAsync()));
+        ReadWmiFanSpeedAsync(cpu: false, () => base.GetGpuCurrentFanSpeedAsync());
 
     protected override async Task<int> GetCpuCurrentTemperatureAsync()
     {
@@ -49,7 +49,7 @@ public class HpSensorsController(GPUController gpuController, IHpWmiBios bios) :
         return await base.GetCpuCurrentTemperatureAsync().ConfigureAwait(false);
     }
 
-    private int ReadWmiFanSpeed(bool cpu, Task<int> fallback)
+    private async Task<int> ReadWmiFanSpeedAsync(bool cpu, Func<Task<int>> fallback)
     {
         try
         {
@@ -67,7 +67,7 @@ public class HpSensorsController(GPUController gpuController, IHpWmiBios bios) :
                 Log.Instance.Trace("HP WMI fan read failed; using fallback.", ex);
         }
 
-        return AwaitWithTimeout(fallback);
+        return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
     }
 
     private static async Task<bool> IsHpMachineAsync()
@@ -79,8 +79,10 @@ public class HpSensorsController(GPUController gpuController, IHpWmiBios bios) :
             return vendor.Contains("HP", StringComparison.OrdinalIgnoreCase) ||
                    vendor.Contains("Hewlett", StringComparison.OrdinalIgnoreCase);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to read machine information for HP sensor detection.", ex);
             return false;
         }
     }

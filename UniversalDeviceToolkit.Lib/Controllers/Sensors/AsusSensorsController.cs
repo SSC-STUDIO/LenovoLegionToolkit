@@ -35,12 +35,12 @@ public class AsusSensorsController(GPUController gpuController, IAsusAtkDriver a
     }
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadAtkFanSpeed(CpuFanEndpoint, base.GetCpuCurrentFanSpeedAsync()));
+        ReadAtkFanSpeedAsync(CpuFanEndpoint, () => base.GetCpuCurrentFanSpeedAsync());
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadAtkFanSpeed(GpuFanEndpoint, base.GetGpuCurrentFanSpeedAsync()));
+        ReadAtkFanSpeedAsync(GpuFanEndpoint, () => base.GetGpuCurrentFanSpeedAsync());
 
-    private int ReadAtkFanSpeed(uint endpoint, Task<int> fallback)
+    private async Task<int> ReadAtkFanSpeedAsync(uint endpoint, Func<Task<int>> fallback)
     {
         try
         {
@@ -50,7 +50,7 @@ public class AsusSensorsController(GPUController gpuController, IAsusAtkDriver a
             // G-Helper: values above 120 (×100 RPM) are invalid; a zero read on an
             // unsupported (negative) raw value is invalid too.
             if (fan > 120 || (fan == 0 && raw < 0))
-                return AwaitWithTimeout(fallback);
+                return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
 
             return fan * 100;
         }
@@ -58,7 +58,7 @@ public class AsusSensorsController(GPUController gpuController, IAsusAtkDriver a
         {
             if (Log.Instance.IsTraceEnabled)
                 Log.Instance.Trace($"ATK fan read failed; using fallback. [endpoint=0x{endpoint:X8}]", ex);
-            return AwaitWithTimeout(fallback);
+            return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
         }
     }
 
@@ -69,8 +69,10 @@ public class AsusSensorsController(GPUController gpuController, IAsusAtkDriver a
             var mi = await Compatibility.GetMachineInformationAsync().ConfigureAwait(false);
             return mi.Vendor?.Contains("ASUS", StringComparison.OrdinalIgnoreCase) == true;
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to read machine information for ASUS sensor detection.", ex);
             return false;
         }
     }

@@ -42,15 +42,15 @@ public class AlienwareSensorsController(GPUController gpuController, IAlienwareW
     }
 
     protected override Task<int> GetCpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadWmi(CpuTempSensor, OpGetTemperature, base.GetCpuCurrentTemperatureAsync()));
+        ReadWmiAsync(CpuTempSensor, OpGetTemperature, () => base.GetCpuCurrentTemperatureAsync());
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadWmi(CpuFan, OpGetFanRpm, base.GetCpuCurrentFanSpeedAsync()));
+        ReadWmiAsync(CpuFan, OpGetFanRpm, () => base.GetCpuCurrentFanSpeedAsync());
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadWmi(GpuFan, OpGetFanRpm, base.GetGpuCurrentFanSpeedAsync()));
+        ReadWmiAsync(GpuFan, OpGetFanRpm, () => base.GetGpuCurrentFanSpeedAsync());
 
-    private int ReadWmi(byte resourceId, byte operation, Task<int> fallback)
+    private async Task<int> ReadWmiAsync(byte resourceId, byte operation, Func<Task<int>> fallback)
     {
         try
         {
@@ -64,7 +64,7 @@ public class AlienwareSensorsController(GPUController gpuController, IAlienwareW
                 Log.Instance.Trace($"Alienware WMI read failed; using fallback. [resource=0x{resourceId:X2}]", ex);
         }
 
-        return AwaitWithTimeout(fallback);
+        return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
     }
 
     private static async Task<bool> IsDellMachineAsync()
@@ -76,8 +76,10 @@ public class AlienwareSensorsController(GPUController gpuController, IAlienwareW
             return vendor.Contains("Dell", StringComparison.OrdinalIgnoreCase) ||
                    vendor.Contains("Alienware", StringComparison.OrdinalIgnoreCase);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to read machine information for Alienware sensor detection.", ex);
             return false;
         }
     }

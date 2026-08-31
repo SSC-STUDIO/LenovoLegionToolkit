@@ -129,7 +129,14 @@ public static partial class WMI
         {
             using var mos = new ManagementObjectSearcher(scope, queryFormatted);
             var managementObjects = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
-            return managementObjects.Any();
+            try
+            {
+                return managementObjects.Length > 0;
+            }
+            finally
+            {
+                managementObjects.DisposeAll();
+            }
         }
         catch (ManagementException ex) when (IsAccessDenied(ex))
         {
@@ -233,8 +240,14 @@ public static partial class WMI
         {
             using var mos = new ManagementObjectSearcher(scope, queryFormatted);
             var managementObjects = await mos.GetAsyncWithTimeout().ConfigureAwait(false);
-            var result = managementObjects.Select(mo => mo.Properties).Select(converter).ToArray();
-            return result;
+            try
+            {
+                return managementObjects.Select(mo => converter(mo.Properties)).ToArray();
+            }
+            finally
+            {
+                managementObjects.DisposeAll();
+            }
         }
         catch (ManagementException ex)
         {

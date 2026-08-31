@@ -18,7 +18,7 @@ public interface IAcerWmi
     (bool Ok, long Output) Execute(string methodName, uint input);
 }
 
-public sealed class AcerWmi : IAcerWmi
+public sealed class AcerWmi : IAcerWmi, IDisposable
 {
     private const string Namespace = @"root\wmi";
     private const string MethodClass = "AcerGamingFunction";
@@ -26,6 +26,7 @@ public sealed class AcerWmi : IAcerWmi
 
     private readonly object _lock = new();
     private bool _initialized;
+    private bool _disposed;
     private ManagementObject? _methodObject;
 
     public bool IsAvailable
@@ -46,7 +47,11 @@ public sealed class AcerWmi : IAcerWmi
         {
             lock (_lock)
             {
-                using var result = (ManagementBaseObject?)_methodObject!.InvokeMethod(methodName, [input]);
+                var methodObject = _methodObject;
+                if (methodObject is null)
+                    return (false, -1);
+
+                using var result = (ManagementBaseObject?)methodObject.InvokeMethod(methodName, [input]);
                 if (result is null)
                     return (false, -1);
 
@@ -66,7 +71,7 @@ public sealed class AcerWmi : IAcerWmi
     {
         lock (_lock)
         {
-            if (_initialized)
+            if (_initialized || _disposed)
                 return;
 
             _initialized = true;
@@ -81,22 +86,41 @@ public sealed class AcerWmi : IAcerWmi
                 }
                 catch (ManagementException)
                 {
+                    _methodObject?.Dispose();
+                    _methodObject = null;
                     // Fall through to enumeration.
                 }
 
                 using var searcher = new ManagementObjectSearcher(Namespace, $"SELECT * FROM {MethodClass}");
-                foreach (ManagementObject instance in searcher.Get())
+                using var collection = searcher.Get();
+                foreach (ManagementObject instance in collection)
                 {
-                    _methodObject = instance;
-                    break;
+                    if (_methodObject is null)
+                        _methodObject = instance;
+                    else
+                        instance.Dispose();
                 }
             }
             catch (Exception ex)
             {
                 if (Log.Instance.IsTraceEnabled)
                     Log.Instance.Trace("Acer gaming WMI interface not available.", ex);
+                _methodObject?.Dispose();
                 _methodObject = null;
             }
+        }
+    }
+
+    public void Dispose()
+    {
+        lock (_lock)
+        {
+            if (_disposed)
+                return;
+
+            _disposed = true;
+            _methodObject?.Dispose();
+            _methodObject = null;
         }
     }
 }

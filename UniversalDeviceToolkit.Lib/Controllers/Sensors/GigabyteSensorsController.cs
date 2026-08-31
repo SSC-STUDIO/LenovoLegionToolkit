@@ -34,18 +34,18 @@ public class GigabyteSensorsController(GPUController gpuController, IGigabyteWmi
     }
 
     protected override Task<int> GetCpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadWmi("getCpuTemp", base.GetCpuCurrentTemperatureAsync()));
+        ReadWmiAsync("getCpuTemp", () => base.GetCpuCurrentTemperatureAsync());
 
     protected override Task<int> GetGpuCurrentTemperatureAsync() =>
-        Task.FromResult(ReadWmi("getGpuTemp1", base.GetGpuCurrentTemperatureAsync()));
+        ReadWmiAsync("getGpuTemp1", () => base.GetGpuCurrentTemperatureAsync());
 
     protected override Task<int> GetCpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadWmi("getRpm1", base.GetCpuCurrentFanSpeedAsync()));
+        ReadWmiAsync("getRpm1", () => base.GetCpuCurrentFanSpeedAsync());
 
     protected override Task<int> GetGpuCurrentFanSpeedAsync() =>
-        Task.FromResult(ReadWmi("getRpm2", base.GetGpuCurrentFanSpeedAsync()));
+        ReadWmiAsync("getRpm2", () => base.GetGpuCurrentFanSpeedAsync());
 
-    private int ReadWmi(string methodName, Task<int> fallback)
+    private async Task<int> ReadWmiAsync(string methodName, Func<Task<int>> fallback)
     {
         try
         {
@@ -59,7 +59,7 @@ public class GigabyteSensorsController(GPUController gpuController, IGigabyteWmi
                 Log.Instance.Trace($"Gigabyte WMI read failed; using fallback. [method={methodName}]", ex);
         }
 
-        return AwaitWithTimeout(fallback);
+        return await AwaitWithTimeoutAsync(fallback()).ConfigureAwait(false);
     }
 
     private static async Task<bool> IsGigabyteMachineAsync()
@@ -72,8 +72,10 @@ public class GigabyteSensorsController(GPUController gpuController, IGigabyteWmi
                    vendor.Contains("AORUS", StringComparison.OrdinalIgnoreCase) ||
                    vendor.Contains("AERO", StringComparison.OrdinalIgnoreCase);
         }
-        catch
+        catch (Exception ex)
         {
+            if (Log.Instance.IsTraceEnabled)
+                Log.Instance.Trace("Failed to read machine information for Gigabyte sensor detection.", ex);
             return false;
         }
     }
