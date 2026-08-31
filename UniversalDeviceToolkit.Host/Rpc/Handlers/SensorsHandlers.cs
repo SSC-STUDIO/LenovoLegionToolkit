@@ -39,6 +39,7 @@ public static class SensorsHandlers
     private static CancellationTokenSource? _vendorPollCts;
     private static double _vendorPollIntervalSec = 1.0;
     private static double _lhmIntervalSec = 1.0;
+    private static int _snapshotPublishInFlight;
     private static bool _uiActivityHooked;
     private static FpsSensorController? _subscribedFpsController;
     private static BridgeRpcServer? _fpsRpc;
@@ -853,21 +854,30 @@ public static class SensorsHandlers
 
     private static async void OnSensorsUpdated(object? sender, EventArgs args)
     {
-        if (!HostUiActivity.IsActive || _subscribedGroup is null || _sensorsRpc is null)
+        var group = _subscribedGroup;
+        var rpc = _sensorsRpc;
+        if (!HostUiActivity.IsActive || group is null || rpc is null)
+            return;
+
+        if (Interlocked.CompareExchange(ref _snapshotPublishInFlight, 1, 0) != 0)
             return;
 
         try
         {
-            var snapshot = await BuildLhmSnapshotAsync(_subscribedGroup, CancellationToken.None).ConfigureAwait(false)
+            var snapshot = await BuildLhmSnapshotAsync(group, CancellationToken.None).ConfigureAwait(false)
                            ?? await BuildVendorSnapshotAsync(CancellationToken.None).ConfigureAwait(false);
             if (snapshot is null)
                 return;
-            _sensorsRpc.Publish("sensors.updated", snapshot);
+            rpc.Publish("sensors.updated", snapshot);
         }
         catch (Exception ex)
         {
             if (UniversalDeviceToolkit.Lib.Utils.Log.Instance.IsTraceEnabled)
                 UniversalDeviceToolkit.Lib.Utils.Log.Instance.Trace($"sensors.updated publish failed: {ex.Message}", ex);
+        }
+        finally
+        {
+            Volatile.Write(ref _snapshotPublishInFlight, 0);
         }
     }
 

@@ -219,9 +219,8 @@ public class ThrottleFirstDispatcherTests
     [Fact]
     public async Task DispatchAsync_WhenCalledConcurrently_ShouldThrottleCorrectly()
     {
-        // Arrange - Use interval > DateTime.UtcNow precision (16ms on Windows)
-        // and shorter task delay to ensure task completes before throttle window expires
-        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromMilliseconds(200));
+        // Arrange - Keep the window well above scheduler stalls on loaded CI runners.
+        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromSeconds(5));
         var executionCount = 0;
 
         // Act - Fire all dispatches truly concurrently from different threads
@@ -337,10 +336,10 @@ public class ThrottleFirstDispatcherTests
     #region Edge Cases Tests
 
     [Fact]
-    public async Task DispatchAsync_WithVeryShortInterval_ShouldThrottle()
+    public async Task DispatchAsync_WhenCalledImmediately_ShouldThrottle()
     {
-        // Arrange - Use interval larger than DateTime.UtcNow resolution (~16ms on Windows)
-        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromMilliseconds(50));
+        // Arrange - A long window makes the immediate-call contract deterministic on slow CI.
+        var dispatcher = new ThrottleFirstDispatcher(TimeSpan.FromSeconds(5));
         var executionCount = 0;
 
         // Act

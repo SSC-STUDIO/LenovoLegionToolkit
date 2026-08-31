@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
+using UniversalDeviceToolkit.Lib.Extensions;
 
 namespace UniversalDeviceToolkit.Lib.Features.CursorPointer;
 
@@ -650,7 +651,7 @@ public sealed class CursorPointerService : IDisposable
         }
 
         store.CursorBackupSaved = true;
-        _ = SaveAsync();
+        SaveAsync().Forget("persist cursor scheme backup");
     }
 
     private static int ReadCurrentWindowsPointerSpeed()

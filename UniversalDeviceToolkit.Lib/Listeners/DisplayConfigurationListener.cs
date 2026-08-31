@@ -37,12 +37,16 @@ public class DisplayConfigurationListener : IListener<DisplayConfigurationListen
 
     public Task StopAsync()
     {
+        StopCore();
+        return Task.CompletedTask;
+    }
+
+    private void StopCore()
+    {
         SystemEvents.DisplaySettingsChanged -= SystemEvents_DisplaySettingsChanged;
         _started = false;
 
         IsHDROn = null;
-
-        return Task.CompletedTask;
     }
 
     private void SystemEvents_DisplaySettingsChanged(object? sender, EventArgs e)
@@ -85,7 +89,7 @@ public class DisplayConfigurationListener : IListener<DisplayConfigurationListen
 
         if (disposing)
         {
-            _ = StopAsync();
+            StopCore();
         }
 
         _disposed = true;

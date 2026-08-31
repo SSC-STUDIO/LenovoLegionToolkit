@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.Controllers;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.Settings;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
@@ -61,6 +62,7 @@ public class SensorsGroupController : IDisposable
     private readonly Dictionary<object, TimeSpan> _subscribers = [];
     private CancellationTokenSource? _producerCts;
     private bool _producerLoopErrorLogged;
+    private int _resetInFlight;
     private int _disposed;
     public event EventHandler? SensorsUpdated;
 
@@ -347,17 +349,29 @@ public class SensorsGroupController : IDisposable
         var gpuState = await _gpuController.GetLastKnownStateAsync().ConfigureAwait(false);
         bool gpuInactive = IsGpuInactive(gpuState);
 
-        await Task.Run(() =>
+        var needReset = await Task.Run(() =>
         {
             var dGpu = _hardware.GpuHardware ?? _hardware.AmdGpuHardware;
             bool useIntegrated = ShouldUseIntegratedGpuSnapshot(dGpu);
 
-            bool needReset = _hardware.UpdateHardwareAndSnapshots(
+            return _hardware.UpdateHardwareAndSnapshots(
                 _snapshotStore, gpuInactive, useIntegrated, IsHybrid, _showAverageCpuFrequency);
-
-            if (needReset)
-                Task.Run(_hardware.ResetSensors);
         }).ConfigureAwait(false);
+
+        if (needReset && Interlocked.CompareExchange(ref _resetInFlight, 1, 0) == 0)
+            ResetSensorsAsync().Forget("reset LibreHardwareMonitor sensors");
+    }
+
+    private async Task ResetSensorsAsync()
+    {
+        try
+        {
+            await Task.Run(_hardware.ResetSensors).ConfigureAwait(false);
+        }
+        finally
+        {
+            Volatile.Write(ref _resetInFlight, 0);
+        }
     }
 
     #endregion

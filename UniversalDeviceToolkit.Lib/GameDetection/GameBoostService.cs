@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UniversalDeviceToolkit.Lib.AutoListeners;
 using UniversalDeviceToolkit.Lib.Controllers.Sensors;
+using UniversalDeviceToolkit.Lib.Extensions;
 using UniversalDeviceToolkit.Lib.System;
 using UniversalDeviceToolkit.Lib.Utils;
 using Windows.Win32;
@@ -40,6 +41,7 @@ public sealed class GameBoostService : IDisposable
     private int? _activeGamePid;
     private bool _isBoosting;
     private bool _disposed;
+    private int _optimizationInFlight;
 
     public event EventHandler<BoostStatus>? StatusChanged;
 
@@ -234,10 +236,30 @@ public sealed class GameBoostService : IDisposable
         if (int.TryParse(e.Fps, out var fps) && fps > 0)
         {
             var store = _settings.Store;
-            if (store.AutoGameBoost && !_isBoosting)
+            if (store.AutoGameBoost
+                && !_isBoosting
+                && Interlocked.CompareExchange(ref _optimizationInFlight, 1, 0) == 0)
             {
-                _ = Task.Run(async () => await OptimizeForegroundGameAsync().ConfigureAwait(false));
+                OptimizeFromFpsUpdateAsync().Forget("optimize foreground game after FPS update");
             }
+        }
+    }
+
+    private async Task OptimizeFromFpsUpdateAsync()
+    {
+        try
+        {
+            lock (_lock)
+            {
+                if (_disposed)
+                    return;
+            }
+
+            await OptimizeForegroundGameAsync().ConfigureAwait(false);
+        }
+        finally
+        {
+            Volatile.Write(ref _optimizationInFlight, 0);
         }
     }
 
@@ -464,7 +486,15 @@ public sealed class GameBoostService : IDisposable
             _disposed = true;
         }
 
-        _fpsSensorController.FpsDataUpdated -= OnFpsDataUpdated;
-        _ = RevertOptimizationsAsync();
+        try
+        {
+            var stopTask = StopAsync();
+            if (!stopTask.Wait(TimeSpan.FromSeconds(5)))
+                Log.Instance.Warning("Timed out while stopping Game Boost during disposal.");
+        }
+        catch (Exception ex)
+        {
+            Log.Instance.Error("Failed to stop Game Boost during disposal.", ex);
+        }
     }
 }
