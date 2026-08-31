@@ -230,9 +230,9 @@
   background: #4da6e8;
 }
 
-.udt-tab-content {
-  animation: udt-page-enter var(--udt-anim-medium) var(--udt-ease-cubic-out);
-}
+/* .udt-tab-content entrance lives in global.css (single canonical fade with
+   reduced-motion / animations-off guards); a duplicate here would override
+   those guards because this sheet loads later. */
 
 /*
  * Match Custom Macro card inset (.udt-macro-card: 12px 14px).

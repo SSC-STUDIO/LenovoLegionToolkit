@@ -126,7 +126,7 @@ export function applyUiScale(scale: number): void {
   }
 }
 
-/** 应用风格维度：<html data-style="default|anime">，始终显式写出属性值（含 default）。 */
+/** 应用风格维度：<html data-style="default|neubrutalism">，始终显式写出属性值（含 default）。 */
 export function applyThemeStyle(style: StylePreference): void {
   document.documentElement.setAttribute('data-style', style)
 }
