@@ -13,14 +13,14 @@
       "universaldevicetoolkit.platform.macos": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )"
         }
       },
       "universaldevicetoolkit.platform.windows.core": {
         "type": "Project",
         "dependencies": {
           "System.Management": "[10.0.11, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )"
         }
       },
       "System.Management": {

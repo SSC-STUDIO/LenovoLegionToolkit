@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using Xunit;
 
@@ -125,5 +127,46 @@ public sealed class PackagingGuardTests
         script.Should().Contain("windowsOptimization");
         script.Should().Contain("networkAcceleration");
         script.Should().Contain("UniversalDeviceToolkit.NetworkProxy.exe");
+    }
+
+    [Fact]
+    public void ShippingSurfaceVersions_ShouldMatchDirectoryBuildProps()
+    {
+        var version = ReadReleaseVersion();
+        JsonDocument.Parse(RepositoryPaths.ReadFile("package.json"))
+            .RootElement.GetProperty("version").GetString().Should().Be(version);
+        JsonDocument.Parse(RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "package.json"))
+            .RootElement.GetProperty("version").GetString().Should().Be(version);
+
+        var lockFile = JsonDocument.Parse(
+            RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "package-lock.json"));
+        lockFile.RootElement.GetProperty("version").GetString().Should().Be(version);
+        lockFile.RootElement.GetProperty("packages").GetProperty("").GetProperty("version")
+            .GetString().Should().Be(version);
+
+        RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "buildResources", "installer.nsh")
+            .Should().Contain($"\"{version}\"");
+        RepositoryPaths.ReadFile("UniversalDeviceToolkit.Electron", "installer", "renderer.mjs")
+            .Should().Contain($"version: '{version}'");
+        RepositoryPaths.ReadFile("README.md")
+            .Should().Contain($"Current stable release: v{version}.");
+        RepositoryPaths.ReadFile("README_zh-hans.md")
+            .Should().Contain($"当前稳定版：v{version}。");
+    }
+
+    private static string ReadReleaseVersion()
+    {
+        var props = RepositoryPaths.ReadFile("Directory.Build.props");
+        var major = MatchProp(props, "MajorVersion");
+        var minor = MatchProp(props, "MinorVersion");
+        var patch = MatchProp(props, "PatchVersion");
+        return $"{major}.{minor}.{patch}";
+    }
+
+    private static string MatchProp(string props, string name)
+    {
+        var match = Regex.Match(props, $"<{name}>(\\d+)</{name}>");
+        match.Success.Should().BeTrue($"Directory.Build.props must define {name}");
+        return match.Groups[1].Value;
     }
 }

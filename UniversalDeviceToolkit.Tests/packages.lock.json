@@ -336,15 +336,15 @@
         "type": "Project",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "[10.0.11, )",
-          "UniversalDeviceToolkit.Lib": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib": "[6.1.0, )"
         }
       },
       "udt": {
         "type": "Project",
         "dependencies": {
           "System.CommandLine": "[2.0.10, )",
-          "UniversalDeviceToolkit.CLI.Lib": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
+          "UniversalDeviceToolkit.CLI.Lib": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )"
         }
       },
       "universaldevicetoolkit.cli.lib": {
@@ -353,11 +353,11 @@
       "universaldevicetoolkit.host": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Automation": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Macro": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Shared": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib.Automation": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib.Macro": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib.Shared": "[6.1.0, )"
         }
       },
       "universaldevicetoolkit.lib": {
@@ -380,8 +380,8 @@
           "System.Management": "[10.0.11, )",
           "System.ServiceProcess.ServiceController": "[10.0.10, )",
           "TaskScheduler": "[2.12.2, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Shared": "[6.0.0, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib.Shared": "[6.1.0, )",
           "UniversalFanControl.Lib": "[1.0.4, )",
           "WindowsDisplayAPI": "[1.3.0.13, )",
           "ZenStates-Core": "[1.0.1, )"
@@ -396,36 +396,36 @@
           "Autofac": "[9.3.2, )",
           "NeoSmart.AsyncLock": "[3.2.1, )",
           "System.Windows.Extensions": "[10.0.11, )",
-          "UniversalDeviceToolkit.CLI.Lib": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
+          "UniversalDeviceToolkit.CLI.Lib": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )"
         }
       },
       "universaldevicetoolkit.lib.macro": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib": "[6.0.0, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib": "[6.1.0, )",
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )"
         }
       },
       "universaldevicetoolkit.lib.shared": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )"
         }
       },
       "universaldevicetoolkit.platform.windows": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )",
-          "UniversalDeviceToolkit.Platform.Windows.Core": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )",
+          "UniversalDeviceToolkit.Platform.Windows.Core": "[6.1.0, )"
         }
       },
       "universaldevicetoolkit.platform.windows.core": {
         "type": "Project",
         "dependencies": {
           "System.Management": "[10.0.11, )",
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.0.0, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )"
         }
       },
       "universaldevicetoolkit.tests.infrastructure": {

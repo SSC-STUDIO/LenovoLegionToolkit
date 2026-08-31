@@ -179,8 +179,8 @@ jobs:
       run: |
         Remove-Item -Recurse -Force $env:BUILD_OUTPUT, $env:ONLINE_BUILD_OUTPUT, $env:INSTALLER_OUTPUT, $env:RELEASE_OUTPUT, $env:PAGES_OUTPUT -ErrorAction SilentlyContinue
 
-        # FileVersion stays numeric (6.0.0). Version/InformationalVersion keep the
-        # full SemVer so a v6.0.0-preview.1 tag does not ship a stable 6.0.0 Host.
+        # FileVersion stays numeric (6.1.0). Version/InformationalVersion keep the
+        # full SemVer so a v6.1.0-preview.1 tag does not ship a stable 6.1.0 Host.
         dotnet publish UniversalDeviceToolkit.CLI/UniversalDeviceToolkit.CLI.csproj --configuration Release --output $env:BUILD_OUTPUT /p:DebugType=None /p:FileVersion=$env:BUILD_VERSION /p:Version=$env:VERSION
         if ($LASTEXITCODE -ne 0) { throw "CLI publish failed." }
 

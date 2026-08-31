@@ -10,13 +10,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.1.0] - 2026-08-31
+
 ### Added / 新增
+- **Cursor & Pointer (built-in)**: Former CustomMouse plugin capabilities are now native Host features — custom high-DPI cursor themes (`W11-CC-V2.2-HDPI` shipped with the host), per-UI-scale cursor sizing, and pointer speed controls. Existing settings from the retired plugin's `config.json` are imported automatically.
+- Renderer capability store and platform-adaptive navigation so pages that need Windows-only Host features stay hidden on experimental macOS/Linux shells.
+- Windows installer welcome flow: one-click quick install, resizable window, UI scale toggle, and an Electron-based Online installer with multi-mirror payload download.
 - New manually dispatched `experimental-packages.yml` workflow builds the experimental macOS DMGs (arm64 + x64) and Linux AppImage/DEB (x64) for an existing release tag, audits them against the package footprint budgets, and can attach them to that GitHub release with a dedicated `*_Experimental_SHA256.txt` manifest. These assets stay experimental (unsigned, no auto-update, no hardware control); `Release.yml` remains the only official Windows release pipeline.
-- **Cursor & Pointer (built-in)**: Former CustomMouse plugin capabilities are now native Host features — custom high-DPI cursor themes (`W11-CC-V2.2-HDPI` shipped with the host), per-UI-scale cursor sizing, and pointer speed controls on the Mouse page. Existing settings from the retired plugin's `config.json` are imported automatically.
 
 ### Changed / 变更
-- Electron now ships a fully native Mouse (cursor & pointer) page replacing the retired CustomMouse plugin webview, including navigation, i18n copy for 25 locales, and installer feature flags without the former `pluginExtensions` option.
-- The Windows CLI IPC server keeps the legacy shell-integration operation codes as compatibility stubs: status checks report not-installed and install/uninstall requests fail with "Shell integration is no longer available."
+- Electron ships a native Mouse (cursor & pointer) page in System Optimization, including navigation, i18n copy for 25 locales, and installer feature flags without the former `pluginExtensions` option.
+- The Windows CLI IPC binary is `udt` (`udt-cli` remains a compatibility shim). The IPC server keeps the legacy shell-integration operation codes as compatibility stubs: status checks report not-installed and install/uninstall requests fail with "Shell integration is no longer available."
+- Electron renderer sandbox is on for the main window. Unexpected top-level navigation and new windows are denied. Main-process handlers validate the current main frame, restrict `open-external` to HTTP(S), block executable/script paths from `open-path`, and rate-limit power actions.
+- Sensor trend updates stay immutable, and page timers are cleaned up on unmount so dashboard polling cannot leak intervals.
+- CI `electron-ui-tests` now runs `npm run lint` before typecheck and tests. Plugin authoring docs under `Docs/Plugins/` are gone; see `Docs/README.md`.
+- Source version train is **6.1.0** (`Directory.Build.props`). Official ship tag is `v6.1.0`.
 
 ### Removed / 移除
 - **The entire plugin system is retired** (~15k lines of infrastructure):
@@ -25,6 +33,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Pruned `--no-plugins` host flag, plugin settings/navigation keys, optimization-category extension pipeline, plugin catalog tags from update filtering docs, crowdin/i18n references to plugin resources, and coverage/tooling lists referencing retired projects.
   - Legacy `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins` data stays on disk but is no longer loaded; the `plugin-catalog` / `plugin-catalog-preview` release tags are historical archives only.
 - Store entry stubs mark `custom-mouse`, `shell-integration`, and `vive-tool` as `Removed`; `shell-integration` was previously delisted from the store.
+
+### Fixed / 修复
+- Automation and Macro pages no longer crash when a capability probe fails (Rules of Hooks: capability early-return ran before later hooks).
+- Vendor WMI searchers are disposed after use, with a short TTL cache on soft-fail probes, and Acer/HP WMI facades are disposed with the Autofac lifetime. Vendor sensor fallbacks no longer block on `.Wait` / `.Result`.
+- Sensor publish, LibreHardwareMonitor reset, and GameBoost teardown wait for in-flight work instead of racing dispose against a live poll.
+- Unit tests that mutate `Compatibility`'s static machine-information cache are serialized so parallel testhosts cannot flake `IGPUModeCapabilityFeature` (and related) assertions.
 
 ## [6.0.0] - 2026-08-24
 
