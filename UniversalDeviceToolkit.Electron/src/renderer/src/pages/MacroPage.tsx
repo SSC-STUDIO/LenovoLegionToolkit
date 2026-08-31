@@ -180,6 +180,12 @@ export default function MacroPage(): React.JSX.Element {
   if (macroAvailable === false) {
     return <CapabilityUnavailable title={t('nav.macro')} />
   }
+
+  return <MacroPageContent />
+}
+
+function MacroPageContent(): React.JSX.Element {
+  const { t } = useTranslation()
   const { state, loaded, loading: macroLoading, load, setEnabled, play, saveSequence, clearSequence } = useMacroStore()
   const tx = useMemo<MacroTexts>(
     () => ({

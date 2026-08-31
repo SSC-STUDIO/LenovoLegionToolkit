@@ -395,7 +395,11 @@ async function downloadPayloadArchive(version, destinationFile) {
       return true
     } catch (error) {
       lastError = error
-      try { await fs.rm(destinationFile, { force: true }) } catch {}
+      try {
+        await fs.rm(destinationFile, { force: true })
+      } catch {
+        // Best-effort cleanup; preserve the original download error.
+      }
     } finally {
       clearTimeout(watchdog)
     }
@@ -448,7 +452,11 @@ async function installApplication(options) {
         await downloadPayloadArchive(version, tempArchive)
         await extractPayloadArchive(tempArchive, destination)
       } finally {
-        try { await fs.rm(tempArchive, { force: true }) } catch {}
+        try {
+          await fs.rm(tempArchive, { force: true })
+        } catch {
+          // Temporary archive cleanup must not mask the installation result.
+        }
       }
       if (!features.networkAcceleration) {
         const sidecars = [
@@ -459,7 +467,11 @@ async function installApplication(options) {
           join(destination, 'resources', 'host', 'UniversalDeviceToolkit.NetworkProxy.pdb')
         ]
         for (const file of sidecars) {
-          try { await fs.rm(file, { force: true }) } catch {}
+          try {
+            await fs.rm(file, { force: true })
+          } catch {
+            // Optional sidecars may already be absent.
+          }
         }
       }
     }

@@ -12,11 +12,11 @@
  * lower than a backing canvas. If a future chart needs canvas (dense scatter,
  * large data), swap the renderer here.
  */
-import { use } from 'echarts/core'
+import { use as registerEChartsModules } from 'echarts/core'
 import { LineChart } from 'echarts/charts'
 import { GridComponent, MarkLineComponent, TooltipComponent } from 'echarts/components'
 import { SVGRenderer } from 'echarts/renderers'
 
-use([LineChart, GridComponent, TooltipComponent, MarkLineComponent, SVGRenderer])
+registerEChartsModules([LineChart, GridComponent, TooltipComponent, MarkLineComponent, SVGRenderer])
 
 export { init } from 'echarts/core'

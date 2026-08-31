@@ -143,7 +143,7 @@ export const useNotificationCenter = create<NotificationCenterState>((set, get) 
       timer: undefined,
       createdAt: Date.now()
     }
-    let items = [...get().items, item]
+    const items = [...get().items, item]
     // Electron TrimIfNeeded: hard cap on live toasts.
     dropOverflow(items)
     set({ items: scheduleAutoClose(items, id) })
@@ -164,7 +164,7 @@ export const useNotificationCenter = create<NotificationCenterState>((set, get) 
       timer: undefined,
       createdAt: Date.now()
     }
-    let items = [...get().items, item]
+    const items = [...get().items, item]
     dropOverflow(items)
     set({ items })
     return id

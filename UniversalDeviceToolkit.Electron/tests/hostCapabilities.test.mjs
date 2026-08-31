@@ -66,7 +66,7 @@ test('host capability sync refreshes when the host becomes ready', async () => {
               loads += 1
               set({ capabilities: { platform: 'macos', portable: true, capabilities: {} } })
           }
-          initializer((set) => {
+          initializer(() => {
             return { capabilities: null, loading: false, error: null, load }
           })
           const store = { getState: () => ({ ...state, load }) }

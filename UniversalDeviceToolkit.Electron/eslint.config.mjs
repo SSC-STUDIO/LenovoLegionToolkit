@@ -57,8 +57,19 @@ export default tseslint.config(
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
+      // Keep React Compiler diagnostics visible while the existing component
+      // patterns are migrated incrementally. Correctness rules remain errors.
+      'react-hooks/set-state-in-effect': 'warn',
+      'react-hooks/refs': 'warn',
+      'react-hooks/purity': 'warn',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       '@typescript-eslint/no-explicit-any': 'warn'
+    }
+  },
+  {
+    files: ['tests/**/*.mjs'],
+    languageOptions: {
+      globals: { ...globals.node }
     }
   },
   {

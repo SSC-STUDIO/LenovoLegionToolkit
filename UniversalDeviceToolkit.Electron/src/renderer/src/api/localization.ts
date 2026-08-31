@@ -48,15 +48,13 @@ export function syncCultureToHost(language: string): Promise<boolean> {
   const run = async (): Promise<boolean> => {
     if (sequence !== latestSequence) return false
 
-    let ready = false
     try {
       const status = await getHostStatus()
-      ready = status.ready
+      if (!status.ready || sequence !== latestSequence) return false
     } catch (error) {
       console.warn('[i18n] Host status unavailable during culture sync:', error)
       return false
     }
-    if (!ready || sequence !== latestSequence) return false
 
     try {
       const result = await localizationApi.setCulture(culture)

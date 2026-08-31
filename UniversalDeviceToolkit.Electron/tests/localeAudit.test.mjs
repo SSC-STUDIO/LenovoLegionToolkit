@@ -10,19 +10,6 @@ import { readdirSync } from 'node:fs'
 const localeFiles = readdirSync(localesUrl).filter((file) => file.endsWith('.ts'))
 const nonEnglishLocaleFiles = localeFiles.filter((file) => !['en-US.ts', 'dashboard-parity.ts'].includes(file))
 
-function extractStringLiterals(source) {
-  const sf = ts.createSourceFile('locale.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
-  const strings = []
-  function visit(node) {
-    if (ts.isStringLiteral(node) || ts.isNoSubstitutionTemplateLiteral(node)) {
-      strings.push(node.text)
-    }
-    ts.forEachChild(node, visit)
-  }
-  visit(sf)
-  return strings
-}
-
 /** Brand names, technical terms, and short tokens that are legitimately kept as-is. */
 const ALLOWED_ENGLISH = new Set([
   'Universal Device Toolkit',
@@ -62,7 +49,7 @@ function isLikelyEnglishResidual(value, englishValue) {
   return hasLongWord
 }
 
-function localeEntries(source, fileName, preferredVariableName) {
+function localeEntries(source, fileName) {
   const sf = ts.createSourceFile(fileName, source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS)
   let root
   // Pattern 1: withEnglishFallback({ translation: { ... } })
@@ -142,9 +129,8 @@ test('locale files contain no BOM or encoding corruption', () => {
 })
 
 test('English residual audit: report untranslated strings per locale', () => {
-  const english = localeEntries(readFileSync(enUsUrl, 'utf8'), 'en-US.ts', 'enUS')
+  const english = localeEntries(readFileSync(enUsUrl, 'utf8'), 'en-US.ts')
   const results = {}
-  let anyResidual = false
   for (const file of nonEnglishLocaleFiles) {
     const source = readFileSync(new URL(file, localesUrl), 'utf8')
     const entries = localeEntries(source, file)
@@ -155,7 +141,6 @@ test('English residual audit: report untranslated strings per locale', () => {
         residual.push(key)
       }
     }
-    if (residual.length > 0) anyResidual = true
     results[file] = residual.length
   }
   console.log('\nLocale English residual counts:')

@@ -205,6 +205,12 @@ export default function AutomationPage(): React.JSX.Element {
   if (automationAvailable === false) {
     return <CapabilityUnavailable title={t('nav.automation')} />
   }
+
+  return <AutomationPageContent />
+}
+
+function AutomationPageContent(): React.JSX.Element {
+  const { t } = useTranslation()
   // Field-level selectors keep unrelated store churn from re-rendering the page.
   const state = useAutomationStore((s) => s.state)
   const steps = useAutomationStore((s) => s.steps)
