@@ -168,7 +168,7 @@ Please be patient and read through this readme carefully - it contains important
 Use the current `SSC-STUDIO/UniversalDeviceToolkit` releases for maintained builds. 6.x is a package-manager breaking change: winget moves to `SSC-STUDIO.UniversalDeviceToolkit` and Scoop to `universaldevicetoolkit`; the legacy package IDs are not upgraded in place.
 
 > [!NOTE]
-> **Current stable release: v6.1.0.** Application releases use the normal `vX.Y.Z` tags. Legacy plugin catalog releases (`plugin-catalog` / `plugin-catalog-preview`) are historical archives only — the plugin system was retired in 6.1 and hosts no longer read them.
+> **Current stable release: v6.1.1.** Application releases use the normal `vX.Y.Z` tags. Legacy plugin catalog releases (`plugin-catalog` / `plugin-catalog-preview`) are historical archives only — the plugin system was retired in 6.1 and hosts no longer read them.
 > **Note on winget:** the 6.x package id `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not yet published to winget-pkgs, so the winget install command will not resolve until that submission ships, and the legacy Lenovo Legion Toolkit package does not upgrade in place. Use Releases in the meantime.
 
 - **GitHub Releases**: Download the latest Full or Online installer from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). **Full** is a complete offline NSIS installer (Electron + self-contained .NET Host). **Online** is a small stub (about 15MB or less) that downloads the same runtime during setup; language and device packs still install from the in-app catalog. Always install the newest version from the latest release page; settings and data migrate automatically, while package-manager installs must switch to the new 6.x IDs.

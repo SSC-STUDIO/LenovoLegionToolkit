@@ -426,7 +426,7 @@
       "universaldevicetoolkit.lib.shared": {
         "type": "Project",
         "dependencies": {
-          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.0, )"
+          "UniversalDeviceToolkit.Lib.Abstractions": "[6.1.1, )"
         }
       },
       "Microsoft.Extensions.Logging.Abstractions": {

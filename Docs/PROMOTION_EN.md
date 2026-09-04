@@ -1,6 +1,6 @@
 # English promotion copy
 
-Replace version numbers before posting. Write like a forum reply, not a press release. Current stable install: **v6.1.0** from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). winget `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not published yet; the Scoop bucket does not exist yet either (see [SUBMISSIONS.md](SUBMISSIONS.md)) -- do not tell readers to add it.
+Replace version numbers before posting. Write like a forum reply, not a press release. Current stable install: **v6.1.1** from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest). winget `SSC-STUDIO.UniversalDeviceToolkit` is reserved but not published yet; the Scoop bucket does not exist yet either (see [SUBMISSIONS.md](SUBMISSIONS.md)) -- do not tell readers to add it.
 
 ---
 

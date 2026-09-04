@@ -10,16 +10,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.1.1] - 2026-09-04
+
 ### Added / 新增
 - Startup "update available" status banner now has an Update action (opens the same dialog as Settings → Check for updates) and a dismiss X.
 
 ### Fixed / 修复
-- In-app updates from 6.0.0 failed with "The installer could not be started" because 6.1 portable/online setup EXEs requested `requireAdministrator`, so `spawn(setup.exe, /S)` from the unelevated Electron process never started. New installer builds stay `asInvoker`, honor `/S` by self-elevating then installing silently, and current clients also fall back to `Start-Process -Verb RunAs` after clearing the download Mark-of-the-Web. **6.0.0 users need a rebuilt 6.1.x Setup.exe on the GitHub Release** — the already-published v6.1.0 binaries still have the old manifest.
+- In-app updates from 6.0.0 failed with "The installer could not be started" because 6.1 portable/online setup EXEs requested `requireAdministrator`, so `spawn(setup.exe, /S)` from the unelevated Electron process never started. 6.1.1 installer builds stay `asInvoker`, honor `/S` by self-elevating then installing silently, and current clients also fall back to `Start-Process -Verb RunAs` after clearing the download Mark-of-the-Web.
 
 ### Changed / 变更
 - Neo-brutalism skin now covers every control family: buttons (custom + Ant Design solid variants) get hard plates with a press-into-the-page active shift, and inputs, selects, sliders, dropdown menus, modals, message toasts, notifications, status banners, and keyboard-page cards all take the heavy-stroke / hard-offset-shadow chrome in both light and dark combos.
 - Dashboard sensor metric and VRAM-clock bars animate via GPU-composited `transform: scaleX()` instead of `width`, removing per-second relayout during 1 Hz sensor polling.
 - The Settings "UI Animations" toggle now also stops page entrances, list stagger, tab fades, and other decorative keyframes (previously only windows/dialogs); duplicate conflicting button press rules and hardcoded status-banner colors/durations were consolidated onto the shared design tokens.
+- Source version train is **6.1.1** (`Directory.Build.props`). Official ship tag is `v6.1.1`.
 
 ## [6.1.0] - 2026-08-31
 
