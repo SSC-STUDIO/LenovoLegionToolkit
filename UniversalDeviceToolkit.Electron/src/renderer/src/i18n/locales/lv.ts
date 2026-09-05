@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'Pults',
       settings: 'Iestatījumi',
+      actions: 'Actions',
       automation: 'Automatizācija',
       keyboard: 'Tastatūra',
       keyboardBacklight: 'Tastatūras izgaismojums',
       macro: 'Pielāgotais makro',
       windowsOptimization: 'Sistēmas optimizācija',
+      tools: 'Tools',
       about: 'Par',
       mouse: 'Mouse',
     },

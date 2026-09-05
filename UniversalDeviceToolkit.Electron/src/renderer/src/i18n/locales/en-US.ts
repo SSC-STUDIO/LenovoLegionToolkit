@@ -41,12 +41,14 @@ const enUS = {
     nav: {
       dashboard: 'Console',
       settings: 'Settings',
+      actions: 'Actions',
       automation: 'Automation',
       keyboard: 'Keyboard',
       keyboardBacklight: 'Keyboard Backlight',
       mouse: 'Mouse',
       macro: 'Custom Macro',
       windowsOptimization: 'System Optimization',
+      tools: 'Tools',
       about: 'About'
     },
     mouse: {

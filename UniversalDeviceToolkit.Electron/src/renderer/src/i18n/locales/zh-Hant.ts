@@ -19,12 +19,14 @@ export default withEnglishFallback({
     nav: {
       dashboard: '主控台',
       settings: '設定',
+      actions: 'Actions',
       automation: '自動化',
       keyboard: '鍵盤',
       keyboardBacklight: '鍵盤背光',
       mouse: '滑鼠',
       macro: '自訂巨集',
       windowsOptimization: '系統優化',
+      tools: 'Tools',
       about: '關於',
     },
     mouse: {

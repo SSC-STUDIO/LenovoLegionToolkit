@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'Konzole',
       settings: 'Nastavení',
+      actions: 'Actions',
       automation: 'Automatizace',
       keyboard: 'Klávesnice',
       keyboardBacklight: 'Podsvícení klávesnice',
       macro: 'Vlastní makro',
       windowsOptimization: 'Optimalizace systému',
+      tools: 'Tools',
       about: 'O aplikaci',
       mouse: 'Mouse',
     },

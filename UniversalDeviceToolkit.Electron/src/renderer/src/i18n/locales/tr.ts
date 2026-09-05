@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'Konsol',
       settings: 'Ayarlar',
+      actions: 'Actions',
       automation: 'Otomasyon',
       keyboard: 'Klavye',
       keyboardBacklight: 'Klavye Işığı',
       macro: 'Özel Makro',
       windowsOptimization: 'Sistem Optimizasyonu',
+      tools: 'Tools',
       about: 'Hakkında',
       mouse: 'Mouse',
     },

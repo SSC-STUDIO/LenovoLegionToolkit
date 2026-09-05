@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'Painel',
       settings: 'Configurações',
+      actions: 'Actions',
       automation: 'Automação',
       keyboard: 'Teclado',
       keyboardBacklight: 'Luz do teclado',
       macro: 'Macro personalizada',
       windowsOptimization: 'Otimização do sistema',
+      tools: 'Tools',
       about: 'Sobre',
       mouse: 'Mouse',
     },

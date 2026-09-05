@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'Konzol',
       settings: 'Beállítások',
+      actions: 'Actions',
       automation: 'Automatizálás',
       keyboard: 'Billentyűzet',
       keyboardBacklight: 'Billentyűzet háttérvilágítás',
       macro: 'Egyéni makró',
       windowsOptimization: 'Rendszeroptimalizálás',
+      tools: 'Tools',
       about: 'Névjegy',
       mouse: 'Mouse',
     },

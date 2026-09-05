@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'Bảng điều khiển',
       settings: 'Cài đặt',
+      actions: 'Actions',
       automation: 'Tự động hóa',
       keyboard: 'Bàn phím',
       keyboardBacklight: 'Đèn nền bàn phím',
       macro: 'Macro tùy chỉnh',
       windowsOptimization: 'Tối ưu hóa hệ thống',
+      tools: 'Tools',
       about: 'Giới thiệu',
       mouse: 'Mouse',
     },

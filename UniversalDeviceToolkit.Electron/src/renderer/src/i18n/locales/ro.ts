@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'Consolă',
       settings: 'Setări',
+      actions: 'Actions',
       automation: 'Automatizare',
       keyboard: 'Tastatură',
       keyboardBacklight: 'Iluminare tastatură',
       macro: 'Macro personalizat',
       windowsOptimization: 'Optimizarea sistemului',
+      tools: 'Tools',
       about: 'Despre',
       mouse: 'Mouse',
     },

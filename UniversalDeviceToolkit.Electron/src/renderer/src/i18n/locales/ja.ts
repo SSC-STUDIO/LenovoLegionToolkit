@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'コンソール',
       settings: '設定',
+      actions: 'Actions',
       automation: '自動化',
       keyboard: 'キーボード',
       keyboardBacklight: 'キーボードのバックライト',
       macro: 'カスタムマクロ',
       windowsOptimization: 'システムの最適化',
+      tools: 'Tools',
       about: 'このアプリについて',
       mouse: 'Mouse',
     },

@@ -19,11 +19,13 @@ export default withEnglishFallback({
     nav: {
       dashboard: 'Κονσόλα',
       settings: 'Ρυθμίσεις',
+      actions: 'Actions',
       automation: 'Αυτοματισμός',
       keyboard: 'Πληκτρολόγιο',
       keyboardBacklight: 'Φωτισμός Πληκτρολογίου',
       macro: 'Προσαρμοσμένη Μακροεντολή',
       windowsOptimization: 'Βελτιστοποίηση Συστήματος',
+      tools: 'Tools',
       about: 'Σχετικά με',
       mouse: 'Mouse',
     },
