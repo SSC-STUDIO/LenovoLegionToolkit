@@ -72,6 +72,20 @@
   overflow: hidden;
 }
 
+.udt-settings-page__surface--groups .udt-settings-page__nav {
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
+}
+
+.udt-settings-group-empty {
+  padding: 24px 16px;
+  border: 1px solid var(--udt-control-stroke-default);
+  border-radius: var(--udt-radius-card);
+  background: var(--udt-control-fill-tertiary);
+  color: var(--udt-text-secondary);
+}
+
 /* ── Left navigation (ListBox in Electron) ────────────────────────── */
 
 .udt-settings-page__nav {

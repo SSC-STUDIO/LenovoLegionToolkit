@@ -446,8 +446,10 @@ const enUS = {
         application: 'Application',
         power: 'Power',
         display: 'Display',
+        device: 'Device',
         smartKeys: 'Smart Keys',
         update: 'Update',
+        maintenance: 'Maintenance',
         integrations: 'Integrations',
         osd: 'OSD'
       },
