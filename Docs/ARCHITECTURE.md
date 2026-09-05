@@ -154,7 +154,7 @@ so the UI can map `-1006` (elevation), `-1010` (missing NetworkProxy), `-1011`
 
 The Electron client implementing the React UI and the window shell:
 
-- **`src/renderer/`**: Pages (Dashboard, Keyboard, Automation, Macro, Optimization, Settings), Components, Zustand stores, `api/*` typed bridge wrappers, `i18n/locales/*` (TS modules). Live sensor panels live in `components/dashboard/`; feature cards and GPU extras live in `components/dashboard-parity/` (WPF dashboard-control parity, not a second app).
+- **`src/renderer/`**: Pages (Dashboard, Actions, Keyboard, Tools, Settings), Components, Zustand stores, `api/*` typed bridge wrappers, `i18n/locales/*` (TS modules). Actions contains the automation and macro workspaces; Tools contains cleanup, network, driver, system, and pointer tasks. Live sensor panels live in `components/dashboard/`; feature cards and GPU extras live in `components/dashboard-parity/` (WPF dashboard-control parity, not a second app).
 - **`src/main/`**: Main process shell — window creation (`index.ts`), tray (`tray.ts`), OSD (`osd-window.ts`), macOS menu (`menu.ts`), single-instance, dialogs, host client (`host-client.ts`), path/URL and power-action guards
 - **`src/preload/`**: Context-isolated bridge (`index.ts`)
 

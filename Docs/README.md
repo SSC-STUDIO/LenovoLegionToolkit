@@ -2,6 +2,8 @@
 
 Shipping UI is the **Electron** shell (`UniversalDeviceToolkit.Electron`) talking to a headless **.NET Host** (`UniversalDeviceToolkit.Host`) over JSON-RPC. Business logic stays in .NET; Electron renders Host data only (the plugin system was retired in 6.1).
 
+The current shell keeps the primary navigation compact: **Dashboard**, **Actions** (automation and macros), **Keyboard**, **Tools** (cleanup, network, drivers, system adjustments, and pointer controls), **Settings**, and **About**. Older `/automation`, `/macro`, and `/optimization` URLs remain compatibility redirects.
+
 Start here, then follow the topic docs. Do not treat WPF/Avalonia audit notes as current product guidance.
 
 ## Start here

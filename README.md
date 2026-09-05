@@ -53,7 +53,7 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 > UDT is extensible hardware control with a safe fallback: **full hardware control** targets supported Lenovo Legion, LOQ, and IdeaPad Gaming machines, plus other brands only where a tested provider exists; **basic mode** hides unsupported hardware toggles instead of promising Vantage-class control on every PC. The name is not a claim that UDT is a general Windows utility platform.
 
 > [!IMPORTANT]
-> The plugin system was **retired in 6.1**. All former plugin capabilities now live as built-in features (cursor & pointer controls on the Mouse page; network acceleration under System Optimization → Network & acceleration). Existing `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins` data is no longer loaded. See [CHANGELOG](CHANGELOG.md).
+> The plugin system was **retired in 6.1**. All former plugin capabilities now live as built-in features (cursor & pointer controls on the Mouse page; network acceleration under Tools → Network & acceleration). Existing `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins` data is no longer loaded. See [CHANGELOG](CHANGELOG.md).
 
 ### Why choose UDT?
 
@@ -93,7 +93,7 @@ Ready-to-post copy: [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [PROMOTION_CN.md]
 | 🔌 **Battery Care** | Conservation mode, 60%/80% charge thresholds, real-time wear rate & health rating |
 | 🧹 **Deep Cache Cleanup** | One-click cleanup for DirectX/Vulkan shader caches, WeChat/QQ caches & dev package manager caches |
 | 🎛️ **Quick Tray Control** | Instant flyout with power mode segment pills & battery badge right from the system tray |
-| ⚡ **Actions & Macros** | Presets for Mobile Eco, AC High Performance, Game Boost; JSON & clipboard sharing |
+| ⚡ **Actions** | Automation pipelines and macros in one workspace, with JSON & clipboard sharing |
 | 🖥️ **Sensors** | Real-time CPU/GPU temp, fan speed, clock monitoring |
 | 🖱️ **Cursor & Pointer** | Custom cursor themes with per-UI-scale sizing (built-in) |
 | 🌍 **78+ Languages** | Full localization with community translations |
@@ -210,7 +210,7 @@ UDT works best when it's running in the background, so go to Settings and enable
 1. **Install UDT** - Download from [Releases](https://github.com/SSC-STUDIO/UniversalDeviceToolkit/releases/latest) or upgrade directly from an existing Lenovo Legion Toolkit installation
 2. **Configure Settings** - Enable "Autorun" and "Minimize on close" in Settings
 3. **Disable Conflicts** - Uninstall or disable Lenovo Vantage and Hotkeys
-4. **Explore Features** - Supported Lenovo hardware controls, system optimization, cursor & pointer themes, language packs, themes, and logs
+4. **Explore Features** - Supported Lenovo hardware controls, Actions, Tools, cursor & pointer themes, language packs, themes, and logs
 
 > [!TIP]
 > First time? Check out the [User Guide](Docs/ARCHITECTURE.md#quick-start) for detailed walkthroughs.
@@ -369,7 +369,7 @@ The app allows to:
 
 ### Deep System Junk & Shader Cache Cleaning
 
-Located under **Windows Optimization → System & Storage**:
+Located under **Tools → System & Storage**:
 
 - 🎮 **DirectX & Vulkan Shader Caches**: Safely purge DirectX D3DSCache and NV_Cache to resolve corrupted shader stutters or reclaim multiple gigabytes of disk space.
 - 💬 **Instant Messaging Caches (WeChat / QQ)**: One-click clean temporary media, avatar caches, and discarded file transfers.
@@ -385,7 +385,7 @@ Located under **Dashboard → Battery Details**:
 
 ### Automation Preset Templates & Macro Sharing
 
-Located under **Automation** and **Keyboard Macro**:
+Located under **Actions → Automation** and **Actions → Macros**:
 
 - **Built-in Standard Presets**: Instantly apply tested automation workflows (e.g. "Auto Switch to Quiet & 60Hz on Battery", "High Refresh Rate & Beast Mode on AC").
 - **Cross-Device Config Sharing**: Export/import automation pipelines and macro sequences as JSON, or share directly via clipboard copy/paste.
@@ -634,7 +634,7 @@ The plugin system was retired in **6.1**. Plugin loading, the Plugin Extensions 
 Where former capabilities went:
 
 - **Custom Mouse** → built-in Cursor & Pointer controls on the Mouse page (existing cursor themes and settings are imported automatically)
-- **Network Acceleration** → built-in since 5.0 under **System Optimization → Network & acceleration**
+- **Network Acceleration** → built-in since 5.0 under **Tools → Network & acceleration**
 - **Shell Integration / ViVeTool** → delisted; no host built-in replacement
 
 Existing `%LOCALAPPDATA%\UniversalDeviceToolkit\plugins` data is no longer loaded. The legacy `plugin-catalog` GitHub release tags are historical archives and must not be used as application update channels. See [CHANGELOG](CHANGELOG.md) for details.
