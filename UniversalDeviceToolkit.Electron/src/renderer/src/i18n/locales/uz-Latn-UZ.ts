@@ -419,6 +419,7 @@ export default withEnglishFallback({
         styleDesc: 'Pick a personality style that layers on top of light/dark mode',
         styleOptions: {
           default: 'Classic',
+          focus: 'Focus',
           neubrutalism: 'Neo-Brutalism',
         },
       },

@@ -455,6 +455,7 @@ export default withEnglishFallback({
         styleDesc: '选择一套界面个性风格，与明暗模式叠加生效',
         styleOptions: {
           default: '经典',
+          focus: '专注',
           neubrutalism: '新粗野主义',
         },
       },

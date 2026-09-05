@@ -1350,6 +1350,40 @@
   background: #c4c4c4;
 }
 
+/* 专注风格：低对比表面、轻边框和更少装饰。 */
+.udt-style-option--focus .udt-style-option__mockup {
+  background: #e7ebef;
+  border: 1px solid #c7d0d8;
+  border-radius: 8px;
+}
+
+.udt-style-option--focus .udt-style-option__bar {
+  background: #263746;
+  border-radius: 6px;
+}
+
+.udt-style-option--focus .udt-style-option__dot {
+  background: #8bc0d8;
+}
+
+.udt-style-option--focus .udt-style-option__bar-line {
+  background: #8fa0ad;
+}
+
+.udt-style-option--focus .udt-style-option__row {
+  background: #f7f9fa;
+  border: 1px solid #d6dde3;
+  border-radius: 8px;
+}
+
+.udt-style-option--focus .udt-style-option__row-dot {
+  background: #5f9ebc;
+}
+
+.udt-style-option--focus .udt-style-option__row-line {
+  background: #c0cbd3;
+}
+
 /* 新粗野主义风格：奶油纸面 x 粗黑描边硬投影，块状小圆角与撞色圆点 */
 .udt-style-option--neubrutalism .udt-style-option__mockup {
   inset: 7px;
