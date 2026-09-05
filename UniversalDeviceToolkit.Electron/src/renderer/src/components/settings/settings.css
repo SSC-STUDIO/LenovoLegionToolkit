@@ -1167,16 +1167,16 @@
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* ── Style preference preview cards (default / anime) ────────── */
+/* ── Style preference preview cards ───────────────────────────── */
 
 .udt-style-options {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 220px));
+  grid-template-columns: repeat(3, minmax(0, 220px));
   justify-content: start;
   justify-items: stretch;
   gap: 16px;
   width: 100%;
-  max-width: calc(2 * 220px + 16px);
+  max-width: calc(3 * 220px + 2 * 16px);
   margin-top: 4px;
 }
 
