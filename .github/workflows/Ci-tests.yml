@@ -292,6 +292,10 @@ jobs:
       - name: Build cross-platform tests
         run: dotnet build UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-restore
 
+      # Lib.Shared is portable but not in the CrossPlatform graph; keep it compiling on every OS.
+      - name: Build Lib.Shared
+        run: dotnet build UniversalDeviceToolkit.Lib.Shared/UniversalDeviceToolkit.Lib.Shared.csproj --configuration Release
+
       - name: Test cross-platform diagnostics
         run: dotnet test UniversalDeviceToolkit.CrossPlatform.Tests/UniversalDeviceToolkit.CrossPlatform.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=UniversalDeviceToolkit.CrossPlatform.Tests.trx" --collect:"XPlat Code Coverage" --settings UniversalDeviceToolkit.Tests/coverlet.runsettings
 

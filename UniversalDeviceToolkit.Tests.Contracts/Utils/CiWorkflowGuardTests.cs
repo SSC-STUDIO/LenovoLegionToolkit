@@ -146,7 +146,7 @@ public sealed class CiWorkflowGuardTests
     [Fact]
     public void CrossPlatformWorkflows_ShouldPublishTestResultsAndOpenCoverCoverage()
     {
-        foreach (var workflowName in new[] { "Ci-tests.yml", "CrossPlatformCli.yml", "linux.yml" })
+        foreach (var workflowName in new[] { "Ci-tests.yml", "CrossPlatformCli.yml" })
         {
             var text = AllStepText(ReadWorkflow(workflowName));
             text.Should().Contain(".trx");
@@ -166,13 +166,18 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
-    public void LinuxCiWorkflow_ShouldRunCrossPlatformTestsOnPullRequests()
+    public void CiTestsWorkflow_ShouldRunCrossPlatformTestsOnLinuxForPullRequests()
     {
-        var workflow = ReadWorkflow("linux.yml");
-        var text = AllStepText(workflow);
+        var workflow = ReadWorkflow("Ci-tests.yml");
+        var job = workflow.Job("cross-platform-cli");
+        var text = AllStepText(job.Steps);
+        var rawWorkflow = RepositoryPaths.ReadFile(".github", "workflows", "Ci-tests.yml");
 
         workflow.Triggers.Should().ContainKey("pull_request");
+        job.RunsOn.Should().Be("${{ matrix.os }}");
+        rawWorkflow.Should().Contain("ubuntu-latest");
         text.Should().Contain("UniversalDeviceToolkit.CrossPlatform.Tests");
+        text.Should().Contain("UniversalDeviceToolkit.Lib.Shared");
         text.Should().Contain("dotnet test");
         text.Should().Contain("Smoke diagnostics CLI");
         text.Should().Contain("-- status");
@@ -183,7 +188,7 @@ public sealed class CiWorkflowGuardTests
     [Fact]
     public void CrossPlatformWorkflows_ShouldCollectCoverageAndPublishArtifacts()
     {
-        foreach (var workflowName in new[] { "Ci-tests.yml", "CrossPlatformCli.yml", "linux.yml" })
+        foreach (var workflowName in new[] { "Ci-tests.yml", "CrossPlatformCli.yml" })
         {
             var text = AllStepText(ReadWorkflow(workflowName));
             text.Should().Contain("--collect:\"XPlat Code Coverage\"");
@@ -226,10 +231,12 @@ public sealed class CiWorkflowGuardTests
     private static GitHubWorkflowContract ReadWorkflow(string fileName) =>
         GitHubWorkflowContract.Parse(RepositoryPaths.ReadFile(".github", "workflows", fileName));
 
-    private static string AllStepText(GitHubWorkflowContract workflow)
+    private static string AllStepText(GitHubWorkflowContract workflow) => AllStepText(workflow.Steps);
+
+    private static string AllStepText(IEnumerable<WorkflowStepContract> steps)
     {
         var values = new List<string>();
-        foreach (var step in workflow.Steps)
+        foreach (var step in steps)
         {
             if (step.Name is not null)
                 values.Add(step.Name);
