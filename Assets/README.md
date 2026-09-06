@@ -10,7 +10,6 @@ All product brand and marketing media live **here** under the repository root.
 | `Screenshot_*.png` | README screenshots |
 | `UDT_Promo_en.mp4` | 30-second English README trailer (spoken EN, EN captions) |
 | `UDT_Promo_zh.mp4` | 30-second Chinese README trailer (spoken ZH, ZH captions) |
-| `UDT_Promo.mp4` | Copy of `UDT_Promo_en.mp4` so old links keep working |
 | `UDT_Promo_poster.jpg` | Trailer poster (shared) |
 | `Brand/` | Trace symbol SVGs, tray PNGs, multi-size PNG icons |
 
