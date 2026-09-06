@@ -44,6 +44,8 @@ npm run typecheck # TS 类型检查（web + main/preload）
 npm test          # 渲染进程 / 主进程 / 安装器契约测试
 ```
 
+仓库根目录的 `package.json` 只是把 `npm run dev|build|lint|typecheck|start|dist*` 转发到 `UniversalDeviceToolkit.Electron/`，让这些命令在仓库根目录也能直接执行；它本身没有任何依赖。其中的 `version` 属于发布版本号的一部分，必须与 `Directory.Build.props` 一致（由 `PackagingGuardTests` 强制校验）。
+
 在 Visual Studio 中，解决方案里有一个精简的 `UniversalDeviceToolkit.Electron`
 启动器项目（无操作占位 exe）。把它设为**启动项目**并按 **F5** —— 它的
 "Electron (npm run dev)" 启动配置会自动执行 `npm run dev`。

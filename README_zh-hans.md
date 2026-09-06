@@ -67,7 +67,7 @@ Universal Device Toolkit（UDT，原 Lenovo Legion Toolkit）是一款轻量级 
 - 不支持的机器：希望硬件项被诚实隐藏（基础模式），而不是假开关
 - 人和 Agent 共用 `udt`（应用在跑，设置里打开 CLI；`udt-cli` 仍为兼容别名），代码是 GPL 开源能自己看
 
-现成发帖文案：[PROMOTION_CN.md](Docs/PROMOTION_CN.md) · [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · 投放手册 [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
+现成发帖文案：[PROMOTION_CN.md](Docs/Promotion/PROMOTION_CN.md) · [PROMOTION_EN.md](Docs/Promotion/PROMOTION_EN.md) · 投放手册 [COMMUNITY_OUTREACH.md](Docs/Promotion/COMMUNITY_OUTREACH.md)
 
 本仓库是在 GPL-3.0 许可下持续维护的独立项目，重点覆盖兼容性修复、安全加固、CI/发布自动化、新机型识别与 Windows 兼容维护。旧版 Lenovo Legion Toolkit 用户升级后可保留设置与数据；包管理器身份在 6.x 断代（winget 改为 `SSC-STUDIO.UniversalDeviceToolkit`，Scoop 改为 `universaldevicetoolkit`），旧包 ID 不支持原地升级。正式产品以 **Windows 为先**：GitHub Releases 发布 Windows NSIS Full/Online 安装包，内嵌自包含 win-x64 Host。macOS 与 Linux 为**实验面**（Electron 壳、可移植 Host、CrossPlatform 诊断 CLI），在对应发布流水线落地前**没有官方 Electron 发行包**。Android 和移动端伴侣应用不在项目范围内，也不受支持。
 
@@ -867,9 +867,9 @@ crowdin download --config crowdin.yml
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | 构建、测试、部署与发布流程 |
 | [LanguagePacks.md](Docs/LanguagePacks.md) | 语言包目录协议与生命周期 |
 | [NetworkAcceleration.md](Docs/NetworkAcceleration.md) | 内置网络与加速模块 |
-| [PROMOTION_CN.md](Docs/PROMOTION_CN.md) | 发布与社区宣发文案（中文） |
-| [PROMOTION_EN.md](Docs/PROMOTION_EN.md) | 发布与社区宣发文案（英文） |
-| [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md) | 社区发帖手册与提交记录 |
+| [PROMOTION_CN.md](Docs/Promotion/PROMOTION_CN.md) | 发布与社区宣发文案（中文） |
+| [PROMOTION_EN.md](Docs/Promotion/PROMOTION_EN.md) | 发布与社区宣发文案（英文） |
+| [COMMUNITY_OUTREACH.md](Docs/Promotion/COMMUNITY_OUTREACH.md) | 社区发帖手册与提交记录 |
 | [SECURITY.md](Docs/SECURITY.md) | 安全策略与实践 |
 | [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | 社区行为准则 |
 
@@ -881,7 +881,6 @@ crowdin download --config crowdin.yml
 |------|------|
 | `Assets/UDT_Promo_zh.mp4` | 30 秒中文旁白宣传片（点 [宣传片](#宣传片) 海报即可播放） |
 | `Assets/UDT_Promo_en.mp4` | 30 秒英文旁白宣传片（英文 README 使用） |
-| `Assets/UDT_Promo.mp4` | 与 `UDT_Promo_en.mp4` 相同（旧路径兼容） |
 | `Assets/UDT_Promo_poster.jpg` | 宣传片封面 |
 | `Assets/Screenshot_main.png` | 主界面（英文，深色主题） |
 | `Assets/Screenshot_zh-hans.png` | 主界面（简体中文，深色主题） |

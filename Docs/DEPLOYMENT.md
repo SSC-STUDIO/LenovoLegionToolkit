@@ -347,9 +347,10 @@ npm ci
 npm run dev
 ```
 
-See the `cross-platform-cli` job in `.github/workflows/Ci-tests.yml` and
-`CrossPlatformCli.yml` for CI coverage of the portable libraries and
-diagnostics CLI. Those workflows do not publish a macOS/Linux Electron
+See the `cross-platform-cli` job in `.github/workflows/Ci-tests.yml` for CI
+coverage of the portable libraries and diagnostics CLI (build, tests, a
+framework-dependent publish, and a command smoke on win-x64, linux-x64,
+osx-arm64, and osx-x64 runners). It does not publish a macOS/Linux Electron
 product. `package-footprint.yml` may exercise experimental local packaging;
 it is not `Release.yml`.
 
@@ -394,7 +395,7 @@ Capture the Electron main window at **1300×850** logical size on an interactive
 Document the refresh in `CHANGELOG.md` when user-visible UI changes ship.
 Last refreshed: 2026-08-23. Target logical window 1300×850 (pixel size scales with display DPI).
 
-README trailers live at `Assets/UDT_Promo_en.mp4` (English README) and `Assets/UDT_Promo_zh.mp4` (Chinese README). Poster is `Assets/UDT_Promo_poster.jpg`. `Assets/UDT_Promo.mp4` is a copy of the English cut so old links keep working. Do not replace these with an unrelated clip.
+README trailers live at `Assets/UDT_Promo_en.mp4` (English README) and `Assets/UDT_Promo_zh.mp4` (Chinese README). Poster is `Assets/UDT_Promo_poster.jpg`. The pre-6.1 single-trailer path `Assets/UDT_Promo.mp4` was a byte-identical copy of the English cut and was removed; posts should link `UDT_Promo_en.mp4` / `UDT_Promo_zh.mp4` directly. Do not replace these with an unrelated clip.
 
 Trailers are screen recordings of the real Electron window (1600×900 at UI scale 100%, light theme) with visible clicks through the sidebar, cropped and encoded with ffmpeg to 1920×1080 H.264 `yuv420p`; never AI mockups or Ken Burns motion over stills. When recording on Linux, run the portable Host (`UDT_PLATFORM=linux ./build.sh host`) so sensors and Host-only pages are populated. The 6.0.0 recording kit (ffmpeg script, click-through script, Node Host stub, design stills) was removed from `Docs/promo/` in 6.1.x and is available in git history.
 
@@ -422,18 +423,17 @@ Located in `.github/workflows/`:
 | `Ci-tests.yml` | `build-test-and-smoke` | Restore, Release build, Host test ladder, coverage upload, NuGet vulnerability gate, CLI smoke |
 | `CodeQL.yml` | `Analyze C#` | Security analysis |
 
-`Ci-tests.yml` also runs the `electron-ui-tests` job (Unicode check, lint, typecheck, `npm test`) and the `cross-platform-cli` matrix job (Ubuntu / macOS / Windows: `CrossPlatform.Tests`, `Lib.Shared` build, diagnostics CLI smoke) on every push and PR.
+`Ci-tests.yml` also runs the `electron-ui-tests` job (Unicode check, lint, typecheck, `npm test`) and the `cross-platform-cli` matrix job (win-x64 / linux-x64 / osx-arm64 / osx-x64: `CrossPlatform.Tests`, `Lib.Shared` build, framework-dependent CLI publish with output verification, diagnostics command smoke) on every push and PR. The matrix legs are not required checks today; add `<os> (<runtime>) diagnostics CLI` to branch protection if cross-platform breakage should block merges.
 
 **Supplementary (non-blocking on PR):**
 
 | Workflow | Purpose |
 |----------|---------|
-| `CrossPlatformCli.yml` | Path-filtered: publishes the portable diagnostics CLI on win-x64 / linux-x64 / osx-arm64 / osx-x64 runners and verifies the published output |
 | `package-footprint.yml` | Path-filtered: publish + prune the Host, package Electron, enforce distributable size budgets |
 | `experimental-packages.yml` | Manual: experimental macOS/Linux packages attached to an existing release |
 | `Release.yml` | Tag-driven release packaging |
 | `pages.yml` | GitHub Pages: `Site/` (landing page) + `Resources/` (language and device pack catalog, published under `/resources/`) |
-| `star-growth.yml` | Weekly star digest issue (see `Docs/COMMUNITY_OUTREACH.md`) |
+| `star-growth.yml` | Weekly star digest comment on the tracker issue (see `Docs/Promotion/COMMUNITY_OUTREACH.md`) |
 
 #### Build Pipeline (`Build.yml`)
 
@@ -676,7 +676,7 @@ When promoting a release on Chinese social platforms or after winget acceptance:
 - Mention that winget commands temporarily retain the old UniversalDeviceToolkit identifiers for compatibility. Do not mention Scoop install commands until the `SSC-STUDIO/scoop-bucket` manifest repository is actually published.
 - Watch GitHub Issues for recurring reports: antivirus false positives, missing .NET 10 Desktop Runtime, unsupported machines, Lenovo Vantage conflicts, and RGB/Vanguard conflicts.
 - Confirm `Build`, `CI Tests`, `CodeQL`, and release packaging workflows are green before pushing a promotional post.
-- Reuse `Docs/PROMOTION_CN.md` for platform copy so public claims stay consistent with the README and release notes.
+- Reuse `Docs/Promotion/PROMOTION_CN.md` for platform copy so public claims stay consistent with the README and release notes.
 
 ## Environment-Specific Configurations
 

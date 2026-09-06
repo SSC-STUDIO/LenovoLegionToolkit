@@ -46,6 +46,8 @@ npm run typecheck # TS type check (web + main/preload)
 npm test          # renderer/main/installer contract tests
 ```
 
+The repository-root `package.json` only forwards `npm run dev|build|lint|typecheck|start|dist*` to `UniversalDeviceToolkit.Electron/` so those commands also work from the repo root; it has no dependencies of its own. Its `version` is part of the release version train and must match `Directory.Build.props` (enforced by `PackagingGuardTests`).
+
 In Visual Studio the solution contains a thin `UniversalDeviceToolkit.Electron`
 launcher project (no-op stub exe). Set it as the **startup project** and press
 **F5** — its "Electron (npm run dev)" launch profile runs `npm run dev` for you.

@@ -72,7 +72,7 @@ UDT is an actively maintained GPL-3.0 project focused on compatibility updates, 
 - Owners of unsupported machines who want those hardware items hidden honestly (basic mode)
 - People and agents sharing `udt` (app running, Settings → CLI on; `udt-cli` still works as an alias), plus GPL source you can actually read
 
-Ready-to-post copy: [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [PROMOTION_CN.md](Docs/PROMOTION_CN.md) · posting playbook [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md)
+Ready-to-post copy: [PROMOTION_EN.md](Docs/Promotion/PROMOTION_EN.md) · [PROMOTION_CN.md](Docs/Promotion/PROMOTION_CN.md) · posting playbook [COMMUNITY_OUTREACH.md](Docs/Promotion/COMMUNITY_OUTREACH.md)
 
 <details>
 <summary>🎮 Want to see more screenshots?</summary>
@@ -904,9 +904,9 @@ Additional documentation is indexed in [Docs/README.md](Docs/README.md). Topic d
 | [DEPLOYMENT.md](Docs/DEPLOYMENT.md) | Build, test, deployment, and release procedures |
 | [LanguagePacks.md](Docs/LanguagePacks.md) | Online language pack catalog protocol and lifecycle |
 | [NetworkAcceleration.md](Docs/NetworkAcceleration.md) | Built-in network & acceleration module |
-| [PROMOTION_EN.md](Docs/PROMOTION_EN.md) | Release and social promotion copy (English) |
-| [PROMOTION_CN.md](Docs/PROMOTION_CN.md) | Release and social promotion copy (Chinese) |
-| [COMMUNITY_OUTREACH.md](Docs/COMMUNITY_OUTREACH.md) | Community posting playbook and submission tracker |
+| [PROMOTION_EN.md](Docs/Promotion/PROMOTION_EN.md) | Release and social promotion copy (English) |
+| [PROMOTION_CN.md](Docs/Promotion/PROMOTION_CN.md) | Release and social promotion copy (Chinese) |
+| [COMMUNITY_OUTREACH.md](Docs/Promotion/COMMUNITY_OUTREACH.md) | Community posting playbook and submission tracker |
 | [SECURITY.md](Docs/SECURITY.md) | Security policy and best practices |
 | [CODE_OF_CONDUCT.md](Docs/CODE_OF_CONDUCT.md) | Community guidelines and contribution standards |
 
@@ -918,7 +918,6 @@ Captured at **1300×850** logical window size (pixel dimensions follow Windows d
 |------|-------------|
 | `Assets/UDT_Promo_en.mp4` | 30-second English trailer (click the poster in the [Trailer](#trailer) section) |
 | `Assets/UDT_Promo_zh.mp4` | 30-second Chinese trailer (used by `README_zh-hans.md`) |
-| `Assets/UDT_Promo.mp4` | Same file as `UDT_Promo_en.mp4` (legacy path) |
 | `Assets/UDT_Promo_poster.jpg` | Trailer poster |
 | `Assets/Screenshot_main.png` | Main application interface (English, Dark theme) |
 | `Assets/Screenshot_zh-hans.png` | Chinese localization interface (Dark theme) |

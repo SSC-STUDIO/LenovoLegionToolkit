@@ -37,9 +37,9 @@ Start here, then follow the topic docs.
 
 | Doc | Notes |
 | --- | --- |
-| [PROMOTION_EN.md](./PROMOTION_EN.md) / [PROMOTION_CN.md](./PROMOTION_CN.md) | Ready-to-post social copy |
-| [COMMUNITY_OUTREACH.md](./COMMUNITY_OUTREACH.md) | Where to post, and the weekly star digest workflow |
-| [SUBMISSIONS.md](./SUBMISSIONS.md) | Directory and awesome-list tracker |
+| [Promotion/PROMOTION_EN.md](./Promotion/PROMOTION_EN.md) / [Promotion/PROMOTION_CN.md](./Promotion/PROMOTION_CN.md) | Ready-to-post social copy |
+| [Promotion/COMMUNITY_OUTREACH.md](./Promotion/COMMUNITY_OUTREACH.md) | Where to post, and the weekly star digest workflow |
+| [Promotion/SUBMISSIONS.md](./Promotion/SUBMISSIONS.md) | Directory and awesome-list tracker |
 
 ## Retired surfaces
 
