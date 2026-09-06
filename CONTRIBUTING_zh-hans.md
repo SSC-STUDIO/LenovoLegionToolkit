@@ -24,9 +24,9 @@ _由于 Issues 总量的增加，不符合标准的 Issue 会在无预先警告�
 > [!NOTE]
 > 完整解决方案构建**仅限 Windows**（Host 与 Lib 目标框架为
 > `net10.0-windows10.0.26100.0` 并强制 win-x64）。macOS/Linux 上请走可移植路径：
-> `./build.sh Release` 可在三平台构建跨平台库、
-> `UniversalDeviceToolkit.CrossPlatform` CLI 与插件 SDK 契约，
-> `UniversalDeviceToolkit.CrossPlatform.Tests` 亦可在三平台运行
+> `./build.sh Release` 可在三平台构建跨平台库与
+> `UniversalDeviceToolkit.CrossPlatform` CLI，
+> 并运行 `UniversalDeviceToolkit.CrossPlatform.Tests`
 > （见 `Docs/DEPLOYMENT.md` → 「Cross-platform builds」）。
 
 **Electron 客户端（界面）**
@@ -93,7 +93,7 @@ dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
 
 NuGet 还原通过各项目已提交的 `packages.lock.json` 保证可复现（`Directory.Build.props` 中启用了 `RestorePackagesWithLockFile`）。CI 始终使用 `dotnet restore … --locked-mode`。本地对齐 CI 时请带上该参数；仅在有意更新包版本后刷新锁文件时省略，并将更新后的 `packages.lock.json` 一并提交。`Make.bat` 与多数本地脚本依赖构建/发布时的隐式还原，不会强制 `--locked-mode`，因此一般离线构建不会因锁文件严格校验而中断。
 
-解决方案共有 25 个项目（24 个 .NET + Electron 启动器）。请顺序构建（`-m:1`），以避免 VBCSCompiler 锁冲突。完整项目结构见 [Docs/ARCHITECTURE.md](Docs/ARCHITECTURE.md)。
+解决方案共有 23 个项目（22 个 .NET + Electron 启动器）。请顺序构建（`-m:1`），以避免 VBCSCompiler 锁冲突。完整项目结构见 [Docs/DEPLOYMENT.md](Docs/DEPLOYMENT.md) 的「Solution Structure」。
 
 <br/>
 

@@ -96,7 +96,7 @@ Ready-to-post copy: [PROMOTION_EN.md](Docs/PROMOTION_EN.md) · [PROMOTION_CN.md]
 | ⚡ **Actions** | Automation pipelines and macros in one workspace, with JSON & clipboard sharing |
 | 🖥️ **Sensors** | Real-time CPU/GPU temp, fan speed, clock monitoring |
 | 🖱️ **Cursor & Pointer** | Custom cursor themes with per-UI-scale sizing (built-in) |
-| 🌍 **78+ Languages** | Full localization with community translations |
+| 🌍 **25 Languages** | Full localization with community translations |
 | 📦 **Ultra-Lean Footprint** | Deep tray sleeping, zero background services, no telemetry, no account |
 
 ### ⚡ Why Electron? Dispelling the "Bloat" Myth
@@ -106,14 +106,14 @@ Many users and developers associate web-based desktop frameworks (Electron / Chr
 However, **architectural discipline and deep engineering optimizations make all the difference**. UDT uses a decoupled **Modern Electron Frontend + Headless .NET 10 Backend** architecture with stringent performance controls:
 
 #### 1. Clear Separation of Concerns
-- **Frontend (Electron + React 19 + TypeScript)**: Focused solely on high-DPI responsive layout, Windows 11 Mica material styling, smooth animations, and dynamic 78+ language switching.
+- **Frontend (Electron + React 19 + TypeScript)**: Focused solely on high-DPI responsive layout, Windows 11 Mica material styling, smooth animations, and live switching across 25 languages.
 - **Backend (.NET 10 / C# 13 Headless Host)**: All low-level hardware control (WMI/ACPI, kernel driver communication, power policy dispatch, real-time sensor polling, and automation pipelines) executes in high-performance native .NET and communicates with the UI over lightweight stdio JSON-RPC.
 
 #### 2. Five Tailored Performance Optimizations
 - 🍃 **Zero-Memory Tray Sleeping**:
   When minimized or closed to the tray, UDT **completely destroys the main window and Chromium renderer DOM tree** rather than just hiding it. The tray popup itself is auto-unloaded on idle. Idle background footprint stays minimal.
 - ⚡ **Sub-400ms Median Ready Latency**:
-  Automated UI benchmark testing (`Tools/UiPerformance.Smoke`) confirms that all page transition and ready latencies stay within **≤ 400ms**, earning the highest *Excellent* performance rating.
+  Every page module is lazy-loaded and heavy chart engines are pulled in on demand, keeping median page transition and ready latencies within **≤ 400ms**.
 - 🎯 **Hot-Path Zero Allocation**:
   High-frequency sensor graphs and UI refresh loops reuse static ECharts options and mappings via `useMemo` and static caches, streaming data incrementally to eliminate garbage collection pauses.
 - 📦 **Strict Dependency Graph Pruning**:
@@ -130,7 +130,7 @@ However, **architectural discipline and deep engineering optimizations make all 
 | **Tray Idle Memory Footprint** | 150MB ~ 250MB | 300MB ~ 600MB+ | **30MB ~ 60MB (DOM Destroyed)** | **Far lower than WPF (~70% reduction)** |
 | **Active Peak Working Set** | 180MB ~ 300MB | 500MB ~ 1.2GB | **30MB ~ 300MB (field measured)** | **Varies with pages; still well below Vantage** |
 | **UI Scaling & High-DPI** | Blurry text / layout clipping | Poor | **Vector Pixel-Perfect (80%~150%)** | Crisp on OLED, 2K & 4K displays |
-| **Dynamic i18n Switching** | Requires app restart | Requires reload | **Instant live hot-switch (78+ locales)** | Seamless multi-language experience |
+| **Dynamic i18n Switching** | Requires app restart | Requires reload | **Instant live hot-switch (25 locales)** | Seamless multi-language experience |
 
 &nbsp;
 
@@ -145,7 +145,6 @@ However, **architectural discipline and deep engineering optimizations make all 
   - [Quick Start](#quick-start)
   - [Compatibility](#compatibility)
   - [Features](#features)
-  - [Donate](#donate)
   - [Credits](#credits)
   - [FAQ](#faq)
   - [Arguments](#arguments)
@@ -937,7 +936,7 @@ Refresh procedure (keep 1300×850 logical size): see [DEPLOYMENT.md](Docs/DEPLOY
 
 Universal Device Toolkit is distributed under the GNU GPL v3.0. See [LICENSE](LICENSE).
 
-This project is a modified continuation derived from [Lenovo Legion Toolkit](https://github.com/BartoszCichecki/UniversalDeviceToolkit), originally created by Bartosz Cichecki. Original author attribution and copyright information are preserved in [NOTICE](NOTICE); Universal Device Toolkit changes are maintained by Universal Device Toolkit contributors.
+This project is a modified continuation derived from [Lenovo Legion Toolkit](https://github.com/BartoszCichecki/LenovoLegionToolkit), originally created by Bartosz Cichecki. Original author attribution and copyright information are preserved in [NOTICE](NOTICE); Universal Device Toolkit changes are maintained by Universal Device Toolkit contributors.
 
 ---
 

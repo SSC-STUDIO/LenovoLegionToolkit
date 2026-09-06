@@ -24,7 +24,7 @@ Do not: buy stars, coordinate mass upvotes, or open duplicate "please star" issu
 | V2EX 分享创造 | ZH | Use the V2EX template. One post. Reply to model questions. |
 | NGA / Chiphell 笔记本版 | ZH | Same Chinese forum post. Attach the README screenshot, not a phone photo of the screen. |
 | Bilibili | ZH | Dynamic + README trailer. Link Releases, not a random mirror exe. |
-| HelloGitHub | ZH | Already submitted; see `.github/outreach/` if the draft is still there. |
+| HelloGitHub | ZH | Already submitted (2026-07-05); status in SUBMISSIONS.md. |
 | AlternativeTo | EN | List as a Lenovo Vantage alternative. Copy is in SUBMISSIONS.md. |
 
 ## Maintainer vs user
@@ -36,3 +36,7 @@ Do not: buy stars, coordinate mass upvotes, or open duplicate "please star" issu
 ## After you post
 
 Add a row to the weekly table in [SUBMISSIONS.md](./SUBMISSIONS.md) (Sunday is fine): stars, delta, which post went up. That is how we know what worked.
+
+## Weekly star digest (GitHub Actions)
+
+`.github/workflows/star-growth.yml` runs every Monday 06:00 UTC (or on demand from the Actions tab). It finds or creates one open issue titled "Star Growth Tracker" and posts a comment with stars (and the delta since the previous comment), forks, watchers, latest release, progress to 1,000 stars, and the next outreach step for the current phase. It has `issues: write` permission only and never commits. Disable it from Actions -> "Star Growth Tracker" -> "Disable workflow".

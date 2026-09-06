@@ -12,7 +12,7 @@ curated list converts well because the visitor already wants a tool like this.
 | electron/apps | Electron app directory | Prepared, blocked | 2026-08-31 | Entry ready on fork branch https://github.com/SSC-STUDIO/apps/tree/add-universal-device-toolkit (`apps/universal-device-toolkit/`, category Utilities, 512x512 icon). PR creation blocked by the repo's own anti-spam restriction -- `gh pr create` and the REST API both reject with a permissions/404 error matching GitHub's "limit who can open pull requests to collaborators" setting (likely enabled against AI-generated submission floods). No PR opened. Revisit later or ask a maintainer for contributor access |
 | AlternativeTo | database entry | Not started | - | suggest as alt to "Lenovo Vantage"; non-GitHub site, out of scope for this GitHub-only round |
 | Slant | list entry | Not started | - | add to a "Lenovo Vantage alternatives" question; non-GitHub site, out of scope for this GitHub-only round |
-| HelloGitHub | CN feature | Submitted | 2026-07-05 | see .github/outreach/hellogithub-issue.md |
+| HelloGitHub | CN feature | Submitted | 2026-07-05 | see section 6 below |
 | winstall.app | winget mirror | Listed | - | winstall.app/apps/SSC-STUDIO.UniversalDeviceToolkit |
 | winget-pkgs | package manager | Not published | 2026-07-07 | id reserved (`SSC-STUDIO.UniversalDeviceToolkit`); `manifests/s/SSC-STUDIO/SSC-STUDIO.UniversalDeviceToolkit` returns 404 as of 2026-07-07 -- use the Releases installer until a clean PR lands (the Scoop bucket does not exist yet either; see the Scoop bucket row below). Packaging task, not an awesome-list submission; out of scope for this round |
 | Microsoft Store | store listing | Not planned | - | optional; GPL-3.0, Electron + .NET Host, big lift |
@@ -26,7 +26,7 @@ curated list converts well because the visitor already wants a tool like this.
 | 2026-07-07 | 18 | 0 | OpenAI Founders Hub 申请 [VERIFY] 用真实数据填默认（[CONFIRM] 等你核）；SUBMISSIONS winget-pkgs 错误修正；awesome-dotnet PR #1466 open+mergeable+0 comments；首发三站文案齐备，等你今晚或明天首发 |
 | 2026-07-06 | 18 | - | baseline, v5.0.0-preview published |
 
-(add a row each Sunday; pair with PILLAR_D_PROMOTION_PLAN.md)
+(add a row each Sunday; the Monday digest issue posted by `star-growth.yml` gives you the numbers, see [COMMUNITY_OUTREACH.md](./COMMUNITY_OUTREACH.md))
 
 ---
 
@@ -120,8 +120,7 @@ https://github.com/SSC-STUDIO/UniversalDeviceToolkit
 
 ## 6. HelloGitHub (already drafted)
 
-- Submission draft lives in `.github/outreach/hellogithub-issue.md`.
-- Status: submitted 2026-07-05. Watch for a reply; if rejected, ask politely what's
+- Status: submitted 2026-07-05 (the draft was not kept in the repository). Watch for a reply; if rejected, ask politely what's
   missing and address it.
 
 ---

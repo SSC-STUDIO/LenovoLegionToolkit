@@ -21,7 +21,7 @@
 | [Build-ElectronInstaller.ps1](#build-electroninstallerps1) | 发布组装 | 构建 Electron Full/Online 载荷与 NSIS 安装器（支持分阶段签名） | 本地 `BuildInstaller/` 或 Release 三阶段 |
 | [New-ReleaseNotes.ps1](#new-releasenotesps1) | 发布收尾 | 从 `CHANGELOG.md` 抽取版本段生成 `release-notes.md` | Release 生成说明时 |
 
-`Tools/` 见 [TOOLS.md](#tools) 小节。
+`Tools/` 见下方 [TOOLS](#tools) 小节。
 
 ---
 
@@ -193,9 +193,7 @@ node Tools/CheckSourceUnicode/check-unicode.mjs Tools/I18nTranslate
 
 UAC 提权后校验：UI 功耗模式点击→回读 `SmartFanMode`、God Mode 批量写入→回读→还原、直接 `SmartFanMode` 写入→回读→还原。结果落 `PerformanceEffectVerification-*.result.txt`。
 
-### translate_comments.py
-
-根目录 `translate_comments.py` 为独立的注释翻译辅助脚本（非构建必需），按需直接运行 `python translate_comments.py --help` 查看用法。
+`Run-HardwareValidationElevated.ps1` 是上面脚本调用的底层入口：以 UAC 提权运行同目录的 `HardwareValidation` 控制台程序（引用 `UniversalDeviceToolkit.Lib`），按 `-Scenario StatusCheck|CpuVerify|BatchDefault|PowerModeVerify` 执行 God Mode / 功耗模式的写入—回读—还原，并把结果写到 `-ResultPath`。
 
 ---
 

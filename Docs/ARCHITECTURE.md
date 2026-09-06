@@ -24,7 +24,7 @@ Universal Device Toolkit (UDT, formerly Lenovo Legion Toolkit) is a lightweight 
    the startup project and press F5 (its "Electron (npm run dev)" launch profile
    runs `npm run dev`). Do **not** set `UniversalDeviceToolkit.Host` as the startup
    project — it is a headless backend spawned automatically by Electron.
-6. **Start** developing! See [AGENTS.md](../AGENTS.md) for detailed development guidelines.
+6. **Start** developing! See [CONTRIBUTING.md](../CONTRIBUTING.md) for the build, test, and culture-naming rules.
 
 ## System Architecture
 
@@ -90,7 +90,7 @@ UDT breaks the common misconception that Electron desktop apps are inherently bl
 ### 3. Tree-Shaking and Sub-second Ready Latency
 - All page modules are lazily loaded via dynamic imports.
 - The 7,000+ Fluent UI icon catalog is trimmed down to individual used glyphs via graph-based build optimization in `electron-vite`.
-- Median UI ready latency across all views is verified under automated benchmarks (`Tools/UiPerformance.Smoke`) to stay strictly within **≤ 400ms** (*Excellent* rating).
+- Median UI ready latency across all views stays within **≤ 400ms**; see [UI_PERFORMANCE.md](./UI_PERFORMANCE.md) for how to profile it.
 
 ### 4. Zero Persistent Services & Zero Telemetry
 - UDT installs no persistent Windows services or background daemons.

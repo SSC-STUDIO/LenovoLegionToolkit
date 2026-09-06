@@ -99,7 +99,7 @@ dotnet publish UniversalDeviceToolkit.Host/UniversalDeviceToolkit.Host.csproj \
 
 NuGet restores are reproducible via committed per-project `packages.lock.json` files (`RestorePackagesWithLockFile` in `Directory.Build.props`). CI always uses `dotnet restore … --locked-mode`. Use that flag locally when validating against CI; omit it only when you intentionally refresh lock files after package version changes, then commit the updated `packages.lock.json` files. `Make.bat` and most local scripts rely on implicit restore during build/publish and do not force `--locked-mode`, so casual offline builds are not blocked by a strict lock mismatch.
 
-The solution has 25 projects (24 .NET + the Electron launcher). Build sequentially (`-m:1`) to avoid VBCSCompiler lock conflicts. See Docs/ARCHITECTURE.md for the full project map.
+The solution has 23 projects (22 .NET + the Electron launcher). Build sequentially (`-m:1`) to avoid VBCSCompiler lock conflicts. See the "Solution Structure" tree in Docs/DEPLOYMENT.md for the full project map.
 
 **Host tests** are split by project (see `Docs/TEST_DIAGNOSTICS.md`):
 
