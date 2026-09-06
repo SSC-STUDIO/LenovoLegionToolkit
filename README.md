@@ -601,7 +601,7 @@ The Windows IPC CLI executable is `udt.exe` (alias `udt-cli.exe`) and can be fou
 
 For CLI to work properly, UDT needs to run in the background and CLI option needs to be enabled in UDT settings. You can also chose to add `udt.exe` to your PATH variable for easier access.
 
-Contract, `--json`, and `doctor`: [Docs/CLI.md](Docs/CLI.md). Agent skill (copy into `~/.cursor/skills/udt-hardware-cli/`): [Docs/skills/udt-hardware-cli/SKILL.md](Docs/skills/udt-hardware-cli/SKILL.md).
+Contract, `--json`, and `doctor`: [Docs/CLI.md](Docs/CLI.md). Agent skill (copy into `~/.cursor/skills/udt-hardware-cli/`): [Docs/Skills/udt-hardware-cli/SKILL.md](Docs/Skills/udt-hardware-cli/SKILL.md).
 
 CLI does not need to be ran as Administrator.
 

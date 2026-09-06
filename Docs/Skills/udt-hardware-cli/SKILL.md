@@ -9,7 +9,7 @@ UDT is trusted local hardware control. Humans use the tray / Fn+Q. Agents use `u
 
 ## Install
 
-This skill lives in the repo at `Docs/skills/udt-hardware-cli/`. Copy it to your agent's skill directory. Do not put it in this repo's `.opencode/` or `.cursor/` (those are for repo-local automation).
+This skill lives in the repo at `Docs/Skills/udt-hardware-cli/`. Copy it to your agent's skill directory. Do not put it in this repo's `.opencode/` or `.cursor/` (those are for repo-local automation).
 
 **One-line installer (PowerShell, Windows):**
 
@@ -32,7 +32,7 @@ It copies the skill to every detected location and prints what it did. Re-run af
 Example (Cursor, PowerShell):
 
 ```powershell
-$src = "Docs/skills/udt-hardware-cli"
+$src = "Docs/Skills/udt-hardware-cli"
 $dst = "$env:USERPROFILE\.cursor\skills\udt-hardware-cli"
 New-Item -ItemType Directory -Force -Path $dst | Out-Null
 Copy-Item -Path "$src\*" -Destination $dst -Recurse -Force

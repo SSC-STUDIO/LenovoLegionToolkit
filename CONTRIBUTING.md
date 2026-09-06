@@ -101,6 +101,8 @@ NuGet restores are reproducible via committed per-project `packages.lock.json` f
 
 The solution has 23 projects (22 .NET + the Electron launcher). Build sequentially (`-m:1`) to avoid VBCSCompiler lock conflicts. See the "Solution Structure" tree in Docs/DEPLOYMENT.md for the full project map.
 
+**Folder naming.** Repository folders are PascalCase (`Assets/`, `Docs/`, `Packaging/`, `Resources/`, `Scripts/`, `Site/`, `Tools/`, `UniversalDeviceToolkit.*/`). A sub-folder keeps an external spelling only when one exists: `Packaging/winget` and `Packaging/scoop` are tool names, `Docs/Skills/udt-hardware-cli` is the skill id, and everything inside `UniversalDeviceToolkit.Electron/` follows the Node layout (`src/`, `tests/`, `resources/`). `Resources/` is published to GitHub Pages as lowercase `/resources/` because installed clients fetch that URL (`AppIdentity.ResourcesBaseUrl`); do not rename the published path.
+
 **Host tests** are split by project (see `Docs/TEST_DIAGNOSTICS.md`):
 
 | Project | Role | CI |

@@ -29,7 +29,7 @@ Start here, then follow the topic docs.
 | [SECURITY.md](./SECURITY.md) | Vulnerability reporting |
 | [TEST_DIAGNOSTICS.md](./TEST_DIAGNOSTICS.md) | Test map: Host / Electron, CI ladder, testhost locks |
 | [CLI.md](./CLI.md) | `udt` contract: `--json`, `doctor`, exit codes (`udt-cli` alias) |
-| [skills/udt-hardware-cli/SKILL.md](./skills/udt-hardware-cli/SKILL.md) | Copyable Agent skill for local `udt` |
+| [Skills/udt-hardware-cli/SKILL.md](./Skills/udt-hardware-cli/SKILL.md) | Copyable Agent skill for local `udt` |
 | [SCRIPTS.md](./SCRIPTS.md) | Scripts & Tools index: `Scripts/*.ps1` and `Tools/` usage |
 | [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) | Community guidelines |
 

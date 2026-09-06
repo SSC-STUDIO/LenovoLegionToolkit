@@ -163,7 +163,7 @@ if (Test-Path -LiteralPath $packScript) {
 
 # 5. catalog.json "culture" fields and language zip URLs
 $catalogFiles = @(
-    (Join-Path $repo 'resources\stable\catalog.json')
+    (Join-Path $repo 'Resources\stable\catalog.json')
 )
 foreach ($catalogPath in $catalogFiles) {
     if (-not (Test-Path -LiteralPath $catalogPath)) { continue }
@@ -181,7 +181,7 @@ foreach ($catalogPath in $catalogFiles) {
 # 5b. Published language-pack file names. Windows is case-insensitive, but
 # GitHub Pages and raw/CDN paths are not; mixed-case BCP 47 names must remain
 # identical between the ZIP file and the catalog URL.
-$languageRoots = Get-ChildItem -Path (Join-Path $repo 'resources\stable') -Directory -ErrorAction SilentlyContinue |
+$languageRoots = Get-ChildItem -Path (Join-Path $repo 'Resources\stable') -Directory -ErrorAction SilentlyContinue |
     ForEach-Object { Join-Path $_.FullName 'languages' } |
     Where-Object { Test-Path -LiteralPath $_ }
 foreach ($languageRoot in $languageRoots) {

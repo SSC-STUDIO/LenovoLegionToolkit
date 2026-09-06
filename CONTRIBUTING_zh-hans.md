@@ -95,6 +95,8 @@ NuGet 还原通过各项目已提交的 `packages.lock.json` 保证可复现（`
 
 解决方案共有 23 个项目（22 个 .NET + Electron 启动器）。请顺序构建（`-m:1`），以避免 VBCSCompiler 锁冲突。完整项目结构见 [Docs/DEPLOYMENT.md](Docs/DEPLOYMENT.md) 的「Solution Structure」。
 
+**目录命名。** 仓库目录统一使用 PascalCase（`Assets/`、`Docs/`、`Packaging/`、`Resources/`、`Scripts/`、`Site/`、`Tools/`、`UniversalDeviceToolkit.*/`）。只有存在外部既定拼写的子目录例外：`Packaging/winget`、`Packaging/scoop` 是工具名，`Docs/Skills/udt-hardware-cli` 是 skill 标识，`UniversalDeviceToolkit.Electron/` 内部遵循 Node 项目布局（`src/`、`tests/`、`resources/`）。`Resources/` 发布到 GitHub Pages 时路径保持小写 `/resources/`，因为已安装的客户端按该 URL 拉取（`AppIdentity.ResourcesBaseUrl`），不要改动发布路径。
+
 <br/>
 
 **1. 在报告 Issue 前请仔细阅读 README**

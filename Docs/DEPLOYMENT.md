@@ -432,7 +432,7 @@ Located in `.github/workflows/`:
 | `package-footprint.yml` | Path-filtered: publish + prune the Host, package Electron, enforce distributable size budgets |
 | `experimental-packages.yml` | Manual: experimental macOS/Linux packages attached to an existing release |
 | `Release.yml` | Tag-driven release packaging |
-| `pages.yml` | GitHub Pages: `site/` + `resources/` language and device pack catalog |
+| `pages.yml` | GitHub Pages: `Site/` (landing page) + `Resources/` (language and device pack catalog, published under `/resources/`) |
 | `star-growth.yml` | Weekly star digest issue (see `Docs/COMMUNITY_OUTREACH.md`) |
 
 #### Build Pipeline (`Build.yml`)

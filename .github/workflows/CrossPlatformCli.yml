@@ -13,7 +13,7 @@ on:
       - 'UniversalDeviceToolkit.Lib.Abstractions/**'
       - 'UniversalDeviceToolkit.Platform.MacOS/**'
       - 'UniversalDeviceToolkit.Platform.Windows.Core/**'
-      - 'resources/device-packs.json'
+      - 'Resources/device-packs.json'
       - 'Scripts/Build-CrossPlatformCliAsset.ps1'
       - '.github/workflows/CrossPlatformCli.yml'
   pull_request:
@@ -24,7 +24,7 @@ on:
       - 'UniversalDeviceToolkit.Lib.Abstractions/**'
       - 'UniversalDeviceToolkit.Platform.MacOS/**'
       - 'UniversalDeviceToolkit.Platform.Windows.Core/**'
-      - 'resources/device-packs.json'
+      - 'Resources/device-packs.json'
       - 'Scripts/Build-CrossPlatformCliAsset.ps1'
       - '.github/workflows/CrossPlatformCli.yml'
   workflow_dispatch:

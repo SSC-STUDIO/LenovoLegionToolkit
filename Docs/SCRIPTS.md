@@ -8,7 +8,7 @@
 
 | 脚本 | 归类 | 一句话 | 何时用 |
 | --- | --- | --- | --- |
-| [Install-UdtSkill.ps1](#install-udtskillps1) | 开发辅助 | 把 `Docs/skills/udt-hardware-cli` 分发到 Cursor/Claude/Codex/opencode | `git pull` 后更新技能、给 Agent 装 `udt` 能力 |
+| [Install-UdtSkill.ps1](#install-udtskillps1) | 开发辅助 | 把 `Docs/Skills/udt-hardware-cli` 分发到 Cursor/Claude/Codex/opencode | `git pull` 后更新技能、给 Agent 装 `udt` 能力 |
 | [Run-TestFailFast.ps1](#run-testfailfastps1) | 本地快检 | 与 CI 一致的快检层：Contracts → Fast | 提交前本地自检 |
 | [Test-WindowsTestEnvironment.ps1](#test-windowstestenvironmentps1) | 本地快检 | 校验 Windows 有状态测试的前置（.NET 10、临时文件、HKCU） | 跑 `Tests.Stateful` 前，CI 预检 |
 | [Test-CrossPlatformInWsl.ps1](#test-crossplatforminwslps1) | 本地快检 | 经 WSL 编译并测试跨平台面（Linux TFM） | 在 Windows 上验证 Linux 行为 |

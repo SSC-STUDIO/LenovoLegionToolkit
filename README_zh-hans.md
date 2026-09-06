@@ -570,7 +570,7 @@ UDT 会自动在进程运行环境内添加一些可被访问的环境变量。�
 
 命令行界面需要 UDT 在后台运行并且在设置内启用命令行界面，否则其无法正常工作。你也可以选择将命令行界面添加至你的用户 `PATH` 环境变量。
 
-约定、`--json` 与 `doctor` 见 [Docs/CLI.md](Docs/CLI.md)。给 Agent 用的 skill（复制到 `~/.cursor/skills/udt-hardware-cli/`）：[Docs/skills/udt-hardware-cli/SKILL.md](Docs/skills/udt-hardware-cli/SKILL.md)。
+约定、`--json` 与 `doctor` 见 [Docs/CLI.md](Docs/CLI.md)。给 Agent 用的 skill（复制到 `~/.cursor/skills/udt-hardware-cli/`）：[Docs/Skills/udt-hardware-cli/SKILL.md](Docs/Skills/udt-hardware-cli/SKILL.md)。
 
 使用命令行界面无需管理员权限。
 
