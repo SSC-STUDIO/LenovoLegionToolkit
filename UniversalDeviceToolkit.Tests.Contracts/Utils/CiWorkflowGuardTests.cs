@@ -144,25 +144,30 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
-    public void CrossPlatformWorkflows_ShouldPublishTestResultsAndOpenCoverCoverage()
+    public void CiTestsWorkflow_ShouldPublishTestResultsAndOpenCoverCoverage()
     {
-        foreach (var workflowName in new[] { "Ci-tests.yml", "CrossPlatformCli.yml" })
-        {
-            var text = AllStepText(ReadWorkflow(workflowName));
-            text.Should().Contain(".trx");
-            text.Should().Contain("coverage.opencover.xml");
-        }
+        var text = AllStepText(ReadWorkflow("Ci-tests.yml"));
+
+        text.Should().Contain(".trx");
+        text.Should().Contain("coverage.opencover.xml");
     }
 
     [Fact]
-    public void CrossPlatformCliWorkflow_ShouldRunOnPullRequests()
+    public void CiTestsWorkflow_ShouldPublishAndVerifyPortableCliOnEveryRuntime()
     {
-        var workflow = ReadWorkflow("CrossPlatformCli.yml");
-        var trigger = workflow.Triggers["pull_request"];
+        var workflow = ReadWorkflow("Ci-tests.yml");
+        var text = AllStepText(workflow.Job("cross-platform-cli").Steps);
+        var rawWorkflow = RepositoryPaths.ReadFile(".github", "workflows", "Ci-tests.yml");
 
-        trigger.Paths.Should().Contain("UniversalDeviceToolkit.CrossPlatform/**");
-        trigger.Paths.Should().Contain("UniversalDeviceToolkit.CrossPlatform.Tests/**");
+        // The portable CLI has no path filter: any change can break it, so it rides the main CI trigger.
+        workflow.Triggers["pull_request"].Paths.Should().BeEmpty();
         workflow.Triggers.Should().ContainKey("workflow_dispatch");
+        foreach (var runtime in new[] { "win-x64", "linux-x64", "osx-arm64", "osx-x64" })
+            rawWorkflow.Should().Contain($"runtime: {runtime}");
+
+        text.Should().Contain("dotnet publish $project --configuration Release --self-contained false");
+        text.Should().Contain("'udt.dll', 'udt.deps.json', 'udt.runtimeconfig.json', 'resources/device-packs.json'");
+        text.Should().Contain("Published CLI returned unexpected product name");
     }
 
     [Fact]
@@ -186,15 +191,13 @@ public sealed class CiWorkflowGuardTests
     }
 
     [Fact]
-    public void CrossPlatformWorkflows_ShouldCollectCoverageAndPublishArtifacts()
+    public void CiTestsWorkflow_ShouldCollectCoverageAndPublishArtifacts()
     {
-        foreach (var workflowName in new[] { "Ci-tests.yml", "CrossPlatformCli.yml" })
-        {
-            var text = AllStepText(ReadWorkflow(workflowName));
-            text.Should().Contain("--collect:\"XPlat Code Coverage\"");
-            text.Should().Contain("UniversalDeviceToolkit.Tests/coverlet.runsettings");
-            text.Should().Contain("coverage.cobertura.xml");
-        }
+        var text = AllStepText(ReadWorkflow("Ci-tests.yml"));
+
+        text.Should().Contain("--collect:\"XPlat Code Coverage\"");
+        text.Should().Contain("UniversalDeviceToolkit.Tests/coverlet.runsettings");
+        text.Should().Contain("coverage.cobertura.xml");
     }
 
     [Fact]
